@@ -40,6 +40,124 @@ const Car = ({
 }: CarProps) => {
   const fr = bookcarsHelper.isFrench(language)
 
+  const styles = StyleSheet.create({
+    carContainer: {
+      marginRight: 7,
+      marginLeft: 7,
+      marginBottom: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch',
+    },
+    car: {
+      width: '100%',
+      maxWidth: 480,
+      backgroundColor: '#fff',
+      paddingTop: 20,
+      paddingRight: 10,
+      paddingBottom: 20,
+      paddingLeft: 10,
+      borderWidth: 1,
+      borderColor: '#d9d8d9',
+      borderRadius: 5,
+    },
+    name: {
+      fontSize: 20,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    imgView: {
+      width: '100%',
+      height: env.CAR_IMAGE_HEIGHT,
+      alignItems: 'center',
+    },
+    img: {
+      width: env.CAR_IMAGE_WIDTH,
+      height: env.CAR_IMAGE_HEIGHT,
+      flex: 1,
+      resizeMode: 'contain',
+    },
+    infos: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    info: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: '#ddd',
+      borderRadius: 4,
+      width: 60,
+      padding: 2,
+      marginLeft: 5,
+    },
+    infoIcon: {
+      marginRight: 4,
+    },
+    text: {
+      color: '#333',
+      fontSize: 12,
+    },
+    extras: {
+      alignSelf: 'stretch',
+      marginTop: 10,
+    },
+    extra: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    footer: {
+      flexDirection: 'row',
+      alignSelf: 'stretch',
+      alignItems: 'flex-end',
+      marginBottom: 10,
+    },
+    supplier: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flex: hidePrice ? 1 : 0.5,
+    },
+    supplierImg: {
+      width: env.SUPPLIER_IMAGE_WIDTH,
+      height: env.SUPPLIER_IMAGE_HEIGHT,
+      resizeMode: 'contain',
+    },
+    supplierText: {
+      color: '#a1a1a1',
+      fontSize: 12,
+      marginLeft: 5,
+      width: hidePrice ? 200 : 120,
+    },
+    price: {
+      flex: 0.5,
+      alignSelf: 'stretch',
+      alignItems: 'flex-end',
+      marginTop: 20,
+    },
+    pricePrimary: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: '#383838',
+      lineHeight: 28,
+    },
+    priceSecondary: {
+      fontSize: 13,
+      color: '#a1a1a1',
+    },
+    buttonContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    button: {
+      width: '100%',
+      marginTop: 10,
+    },
+  })
+
   return (
     <View key={car._id} style={styles.carContainer}>
       <View style={styles.car}>
@@ -138,7 +256,7 @@ const Car = ({
                 uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
               }}
             />
-            <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
+            <Text style={styles.supplierText} numberOfLines={1} ellipsizeMode="tail">{car.supplier.fullName}</Text>
           </View>
 
           {!hidePrice && from && to && (
@@ -172,123 +290,5 @@ const Car = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  carContainer: {
-    marginRight: 7,
-    marginLeft: 7,
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-  },
-  car: {
-    width: '100%',
-    maxWidth: 480,
-    backgroundColor: '#fff',
-    paddingTop: 20,
-    paddingRight: 10,
-    paddingBottom: 20,
-    paddingLeft: 10,
-    borderWidth: 1,
-    borderColor: '#d9d8d9',
-    borderRadius: 5,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  imgView: {
-    width: '100%',
-    height: env.CAR_IMAGE_HEIGHT,
-    alignItems: 'center',
-  },
-  img: {
-    width: env.CAR_IMAGE_WIDTH,
-    height: env.CAR_IMAGE_HEIGHT,
-    flex: 1,
-    resizeMode: 'contain',
-  },
-  infos: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  info: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-    width: 60,
-    padding: 2,
-    marginLeft: 5,
-  },
-  infoIcon: {
-    marginRight: 4,
-  },
-  text: {
-    color: '#333',
-    fontSize: 12,
-  },
-  extras: {
-    alignSelf: 'stretch',
-    marginTop: 10,
-  },
-  extra: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  footer: {
-    flexDirection: 'row',
-    alignSelf: 'stretch',
-    alignItems: 'flex-end',
-    marginBottom: 10,
-  },
-  supplier: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 0.5,
-  },
-  supplierImg: {
-    width: env.SUPPLIER_IMAGE_WIDTH,
-    height: env.SUPPLIER_IMAGE_HEIGHT,
-    flex: 1,
-    resizeMode: 'contain',
-  },
-  supplierText: {
-    color: '#a1a1a1',
-    fontSize: 12,
-    marginLeft: 5,
-  },
-  price: {
-    flex: 0.5,
-    alignSelf: 'stretch',
-    alignItems: 'flex-end',
-    marginTop: 20,
-  },
-  pricePrimary: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#383838',
-    lineHeight: 28,
-  },
-  priceSecondary: {
-    fontSize: 13,
-    color: '#a1a1a1',
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    width: '100%',
-    marginTop: 10,
-  },
-})
 
 export default memo(Car)
