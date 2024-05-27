@@ -8,9 +8,6 @@ const strings = new LocalizedStrings({
   en: {
     TOTAL: 'Total:',
   },
-  el: {
-  TOTAL: 'Σύνολο:',
-},
 })
 
 langHelper.setLanguage(strings)
