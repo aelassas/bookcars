@@ -213,7 +213,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         },
         {
           $facet: {
-            resultData: [{ $sort: { fullName: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [{ $sort: { fullName: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -251,7 +251,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
     let data = await User.aggregate(
       [
         { $match: { type: bookcarsTypes.UserType.Supplier } },
-        { $sort: { fullName: 1 } },
+        { $sort: { fullName: 1, _id: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
