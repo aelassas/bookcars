@@ -858,7 +858,7 @@ export const getBookings = async (req: Request, res: Response) => {
       },
       {
         $facet: {
-          resultData: [{ $sort: { createdAt: -1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+          resultData: [{ $sort: { createdAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
           pageInfo: [
             {
               $count: 'totalRecords',

@@ -1247,7 +1247,7 @@ export const getUsers = async (req: Request, res: Response) => {
         },
         {
           $facet: {
-            resultData: [{ $sort: { fullName: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [{ $sort: { fullName: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
