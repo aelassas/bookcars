@@ -270,7 +270,7 @@ const CarList = ({
                   </div>
                 )}
               </div>
-              <div className="car-info">
+              <div className="car-info" style={hidePrice && !env.isMobile() ? { width: '57%' } : {}}>
                 <ul className="car-info-list">
                   {car.type !== bookcarsTypes.CarType.Unknown && (
                     <li className="car-type">
