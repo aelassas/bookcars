@@ -479,7 +479,7 @@ export const getCars = async (req: Request, res: Response) => {
         },
         {
           $facet: {
-            resultData: [{ $sort: { name: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [{ $sort: { name: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -533,7 +533,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
             ],
           },
         },
-        { $sort: { name: 1 } },
+        { $sort: { name: 1, _id: 1 } },
         { $skip: (page - 1) * size },
         { $limit: size },
       ],

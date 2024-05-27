@@ -211,7 +211,7 @@ export const getLocations = async (req: Request, res: Response) => {
         { $addFields: { name: '$value.value' } },
         {
           $facet: {
-            resultData: [{ $sort: { name: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [{ $sort: { name: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
