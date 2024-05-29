@@ -15,7 +15,7 @@ const Info = ({
   hideLink,
   style
 }: InfoProps) => (
-  <div style={style} className={`${className ? `${className} ` : ''}msg`}>
+  <div style={style || {}} className={`${className ? `${className} ` : ''}msg`}>
     <p>{message}</p>
     {!hideLink && <Link href="/">{commonStrings.GO_TO_HOME}</Link>}
   </div>

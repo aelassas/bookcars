@@ -88,8 +88,6 @@ if (lang) {
 
     if (country === 'France' || country === 'Morocco') {
       updateLang('fr')
-    } else if (country === 'Greece') {
-      updateLang('el')
     } else {
       updateLang(env.DEFAULT_LANGUAGE)
     }
