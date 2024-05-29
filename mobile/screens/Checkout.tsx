@@ -857,7 +857,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                           uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
                         }}
                       />
-                      <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
+                      <Text style={styles.supplierText} numberOfLines={2} ellipsizeMode="tail">{car.supplier.fullName}</Text>
                     </View>
 
                     <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
@@ -1147,16 +1147,19 @@ const styles = StyleSheet.create({
   supplier: {
     flexDirection: 'row',
     marginBottom: 10,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    flex: 1,
   },
   supplierImg: {
     width: env.SUPPLIER_IMAGE_WIDTH,
     height: env.SUPPLIER_IMAGE_HEIGHT,
+    resizeMode: 'contain',
   },
   supplierText: {
     color: '#a1a1a1',
     fontSize: 10,
     marginLeft: 5,
+    width: 200,
   },
   component: {
     alignSelf: 'stretch',

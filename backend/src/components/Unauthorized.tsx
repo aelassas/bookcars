@@ -8,7 +8,7 @@ interface UnauthorizedProps {
 }
 
 const Unauthorized = ({ style }: UnauthorizedProps) => (
-  <div className="msg" style={style}>
+  <div className="msg" style={style || {}}>
     <h2>{strings.UNAUTHORIZED}</h2>
     <p>
       <Link href="/">{commonStrings.GO_TO_HOME}</Link>

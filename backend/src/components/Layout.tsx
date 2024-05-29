@@ -120,7 +120,7 @@ const Layout = ({
     <>
       <Header user={user} hidden={hideHeader || loading} />
       {((!user && !loading) || (user && user.verified) || !strict) && !unauthorized ? (
-        <div className="content" style={style}>
+        <div className="content" style={style || {}}>
           {children}
         </div>
       ) : (

@@ -11,7 +11,7 @@ interface ErrorProps {
 }
 
 const Error = ({ message, style, homeLink }: ErrorProps) => (
-  <div style={style}>
+  <div style={style || {}}>
     <div className="error">
       <span className="message">{message}</span>
     </div>
