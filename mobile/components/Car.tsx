@@ -256,7 +256,7 @@ const Car = ({
                 uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
               }}
             />
-            <Text style={styles.supplierText} numberOfLines={1} ellipsizeMode="tail">{car.supplier.fullName}</Text>
+            <Text style={styles.supplierText} numberOfLines={2} ellipsizeMode="tail">{car.supplier.fullName}</Text>
           </View>
 
           {!hidePrice && from && to && (

@@ -48,7 +48,7 @@ const StatusList = ({
   }
 
   return (
-    <div style={style}>
+    <div style={style || {}}>
       {disabled ? (
         <span className={`bs-s-sv bs-s-${value}`} style={{ marginTop: 5 }}>
           {helper.getBookingStatus(value as bookcarsTypes.BookingStatus)}

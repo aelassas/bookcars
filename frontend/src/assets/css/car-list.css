@@ -25,7 +25,7 @@ section.car-list article .btn-book {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   section.car-list article {
     position: relative;
     background: #fff;
@@ -47,11 +47,16 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.name h2 {
-    display: inline;
     font-size: 2em;
     font-weight: 700;
     text-size-adjust: none;
     line-height: 1.3em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   section.car-list article div.car {
@@ -98,6 +103,10 @@ section.car-list article .btn-book {
     line-height: 1em;
     white-space: nowrap;
     margin-left: 5px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
   }
 
   section.car-list article div.car div.car-available,
@@ -224,7 +233,7 @@ section.car-list article .btn-book {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   section.car-list {
     padding-top: 10px;
   }
@@ -245,15 +254,21 @@ section.car-list article .btn-book {
     position: relative;
     padding: 7px 11px;
     pointer-events: none;
+    width: calc(100% - 120px);
   }
 
   section.car-list article div.name h2 {
-    display: inline;
     font-size: 1.8em;
     font-weight: 700;
     margin-left: 28%;
     text-size-adjust: none;
     line-height: 1.3em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   section.car-list article div.car {
@@ -271,21 +286,27 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.car div.car-supplier {
-    display: flex;
-    align-items: center;
     position: absolute;
     bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    color: rgb(0 0 0 / 60%);
+    font-size: 1em;
+    line-height: 1em;
+    max-width: 300px;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
-    width: 62px;
-    height: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 62px;
+    height: 32px;
+    margin-right: 5px;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo img {
@@ -299,6 +320,10 @@ section.car-list article .btn-book {
     line-height: 1em;
     white-space: nowrap;
     margin-left: 5px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
   }
 
   section.car-list article div.price {

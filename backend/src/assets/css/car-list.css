@@ -46,11 +46,22 @@ section.car-list .empty-list {
   }
 
   section.car-list article div.name h2 {
+    font-size: 2em;
+    font-weight: 700;
+    text-size-adjust: none;
+    line-height: 1.3em;
+    word-break: break-all;
     display: inline;
     font-size: 2em;
     font-weight: 700;
     text-size-adjust: none;
     line-height: 1.3em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   section.car-list article div.car {
@@ -97,6 +108,10 @@ section.car-list .empty-list {
     line-height: 1em;
     white-space: nowrap;
     margin-left: 5px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 180px;
   }
 
   section.car-list article div.car div.car-available,
@@ -227,12 +242,22 @@ section.car-list .empty-list {
   }
 
   section.car-list article div.name h2 {
-    display: inline;
-    font-size: 1.8em;
+    font-size: 2em;
     font-weight: 700;
-    margin-left: 28%;
     text-size-adjust: none;
     line-height: 1.3em;
+    word-break: break-all;
+    display: inline;
+    font-size: 2em;
+    font-weight: 700;
+    text-size-adjust: none;
+    line-height: 1.3em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   section.car-list article div.car {
@@ -250,8 +275,15 @@ section.car-list .empty-list {
   }
 
   section.car-list article div.car div.car-supplier {
+    position: absolute;
+    bottom: 20px;
     display: flex;
     align-items: center;
+    margin-top: 5px;
+    color: rgb(0 0 0 / 60%);
+    font-size: 1em;
+    line-height: 1em;
+    max-width: 200px;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo {
@@ -263,6 +295,7 @@ section.car-list .empty-list {
     justify-content: center;
     width: 62px;
     height: 32px;
+    margin-right: 5px;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo img {
@@ -272,11 +305,14 @@ section.car-list .empty-list {
 
   section.car-list article div.car div.car-supplier a.car-supplier-info {
     color: #0064c8;
-    text-decoration: underline;
     font-size: 0.9em;
     line-height: 1em;
     white-space: nowrap;
     margin-left: 5px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
   }
 
   section.car-list article div.price {
