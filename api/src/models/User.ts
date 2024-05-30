@@ -75,7 +75,6 @@ const userSchema = new Schema<env.User>(
     },
     bio: {
       type: String,
-      maxlength: 100,
       trim: true,
     },
     location: {
