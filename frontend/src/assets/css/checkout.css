@@ -120,7 +120,7 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value span
   margin-left: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-all;
+  word-break: break-word;
   width: 200px;
 }
 
