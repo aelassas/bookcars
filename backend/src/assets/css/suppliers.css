@@ -42,10 +42,6 @@ div.suppliers .info-box {
     width: 100%;
   }
 
-  div.suppliers div.col-1 .supplier-count {
-    display: none;
-  }
-
   div.suppliers div.col-2 {
     margin-top: 3px;
     padding: 1px;
