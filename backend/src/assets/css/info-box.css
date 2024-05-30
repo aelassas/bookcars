@@ -4,18 +4,25 @@ div.info-box {
   border: 1px solid #dadada;
   border-radius: 5px;
   height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 div.info-box .info-box-icon {
-  position: relative;
-  left: 5px;
-  top: 7px;
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 
 div.info-box span.info-box-text {
   color: rgb(0 0 0 / 63%);
-  position: relative;
-  left: 90px;
+  flex-grow: 1;
   font-size: 17px;
   font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: -10px;
 }

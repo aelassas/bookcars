@@ -55,10 +55,6 @@ div.cars div.col-1 div.info-box {
     display: flex;
     justify-content: center;
   }
-
-  div.cars div.col-1 .car-count {
-    display: none;
-  }
 }
 
 /* Device width is greater than or equal to 960px */
