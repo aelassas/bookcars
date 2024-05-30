@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Tooltip
+  Tooltip,
+  Link
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
@@ -148,8 +149,7 @@ const Supplier = () => {
                   hideDelete
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
-                  // readonly={!edit}
-                  readonly
+                  readonly={!edit}
                   color="disabled"
                   className="supplier-avatar"
                 />
@@ -167,10 +167,13 @@ const Supplier = () => {
                 {supplier.fullName}
               </Typography>
             )}
-            {supplier.bio && supplier.bio !== '' && (
-              <Typography variant="h6" className="supplier-info">
-                {supplier.bio}
-              </Typography>
+            {supplier.bio && (
+              helper.isValidURL(supplier.bio)
+                ? (<Link href={supplier.bio} className="supplier-bio-link">{supplier.bio}</Link>) : (
+                  <Typography variant="h6" className="supplier-info">
+                    {supplier.bio}
+                  </Typography>
+                )
             )}
             {supplier.location && supplier.location !== '' && (
               <Typography variant="h6" className="supplier-info">
@@ -190,13 +193,13 @@ const Supplier = () => {
                   </IconButton>
                 </Tooltip>
               )}
-              {/* {edit && (
+              {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={supplier._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )} */}
+              )}
             </div>
             {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
           </div>
