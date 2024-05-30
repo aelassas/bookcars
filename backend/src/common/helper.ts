@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify'
+import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
@@ -689,3 +690,11 @@ export const getBirthDateError = (minimumAge: number) =>
  */
 export const carOptionAvailable = (car: bookcarsTypes.Car | undefined, option: string) =>
   car && option in car && (car[option] as number) > -1
+
+/**
+ * Validate URL string.
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+export const isValidURL = (url: string) => validator.isURL(url, { protocols: ['http', 'https'] })
