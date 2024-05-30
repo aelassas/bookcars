@@ -8,6 +8,7 @@ div.supplier {
   text-align: center;
   font-weight: 600;
   margin-top: 15px;
+  word-wrap: break-word;
 }
 
 .supplier div.col-1 .supplier-info {
@@ -15,6 +16,13 @@ div.supplier {
   font-weight: 400;
   margin-top: 10px;
   color: #676767;
+}
+
+.supplier div.col-1 .supplier-bio-link {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
 }
 
 .supplier div.col-1 .supplier-actions {
