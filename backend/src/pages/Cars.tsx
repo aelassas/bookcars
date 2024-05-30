@@ -96,7 +96,7 @@ const Cars = () => {
                 {strings.NEW_CAR}
               </Button>
 
-              {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
+              {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
 
               <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
 
