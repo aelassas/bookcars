@@ -22,6 +22,18 @@
   display: none;
 }
 
+.header .btn {
+  background-color: transparent !important;
+  color: #121212 !important;
+}
+
+.header .logo {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: #121212;
+}
+
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {

@@ -14,6 +14,8 @@ import DateTimePicker from '../components/DateTimePicker'
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/home.css'
 
+const HIDE_COVER_TEXT = true
+
 const Home = () => {
   const navigate = useNavigate()
 
@@ -112,6 +114,7 @@ const Home = () => {
             <span className="home-logo-registered" />
           </div>
           <div className="home-search">
+            {!HIDE_COVER_TEXT && (<div className="home-cover">{strings.COVER}</div>)}
             <form onSubmit={handleSubmit} className="home-search-form">
               <FormControl className="pickup-location">
                 <LocationSelectList
