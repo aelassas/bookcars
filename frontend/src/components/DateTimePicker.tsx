@@ -51,6 +51,7 @@ const DateTimePicker = ({
         label={label}
         value={value}
         readOnly={readOnly}
+        views={['year', 'month', 'day', 'hours', 'minutes']}
         onChange={(_value) => {
           setValue(_value)
 
