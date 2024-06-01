@@ -99,6 +99,13 @@ const isFr = language === 'fr'
 
 const theme = createTheme(
   {
+    palette: {
+      primary: {
+        main: '#00ACD7',
+        contrastText: '#121212',
+        dark: '#00ACD7',
+      },
+    },
     typography: {
       fontFamily: [
         '-apple-system',
@@ -134,11 +141,11 @@ const theme = createTheme(
         styleOverrides: {
           root: {
             '& .Mui-checked': {
-              color: '#f37022 !important',
+              color: '#00ACD7 !important',
             },
             '& .Mui-checked+.MuiSwitch-track': {
               opacity: 0.7,
-              backgroundColor: '#f37022 !important',
+              backgroundColor: '#00ACD7 !important',
             },
           },
         },

@@ -13,7 +13,8 @@ import {
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Link
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -89,6 +90,7 @@ const Header = ({
     },
     menuButton: {
       marginRight: 2,
+      color: '#121212',
     },
   }
 
@@ -278,12 +280,16 @@ const Header = ({
   return (
     (!hidden && (
       <div style={classes.grow} className="header">
-        <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
+        <AppBar position="fixed" sx={{ bgcolor: '#fff', boxShadow: 'none', borderBottom: '1px solid #ddd' }}>
           <Toolbar className="toolbar">
             {isLoaded && !loading && (
-              <IconButton edge="start" sx={classes.menuButton} color="inherit" aria-label="open drawer" onClick={handleSideMenuOpen}>
-                <MenuIcon />
-              </IconButton>
+              <>
+                <IconButton edge="start" sx={classes.menuButton} aria-label="open drawer" onClick={handleSideMenuOpen}>
+                  <MenuIcon />
+                </IconButton>
+
+                <Link href="/" className="logo">BookCars</Link>
+              </>
             )}
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
               <List sx={classes.list}>
@@ -320,43 +326,43 @@ const Header = ({
             <div style={classes.grow} />
             <div className="header-desktop">
               {isSignedIn && (
-                <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
+                <IconButton aria-label="" onClick={handleNotificationsClick} className="btn">
                   <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="info">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn-primary" style={{ minWidth: '180px' }}>
+                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn" style={{ minWidth: '180px' }}>
                   {strings.SIGN_IN}
                 </Button>
               )}
               {isLoaded && !loading && (
-                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
+                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
                   {lang?.label}
                 </Button>
               )}
               {isSignedIn && (
-                <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} color="inherit">
+                <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} className="btn">
                   <Avatar loggedUser={user} user={user} size="small" readonly />
                 </IconButton>
               )}
             </div>
             <div className="header-mobile">
               {!isSignedIn && !loading && (
-                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
+                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
                   {lang?.label}
                 </Button>
               )}
               {isSignedIn && (
-                <IconButton color="inherit" onClick={handleNotificationsClick}>
+                <IconButton onClick={handleNotificationsClick} className="btn">
                   <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="info">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
               )}
               {isSignedIn && (
-                <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
+                <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} className="btn">
                   <MoreIcon />
                 </IconButton>
               )}
