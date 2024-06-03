@@ -258,7 +258,7 @@ div.home div.home-content {
     border-radius: 5px;
     color: #fff;
     height: 52px;
-    width: 190px;
+    min-width: 190px;
     margin: 0;
     white-space: nowrap;
     background: #00ACD7;
