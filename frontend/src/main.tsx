@@ -10,9 +10,28 @@ import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid/loc
 import { disableDevTools } from ':disable-react-devtools'
 import * as helper from './common/helper'
 import * as UserService from './services/UserService'
-import { strings as commonStrings } from './lang/common'
 import env from './config/env.config'
 import App from './App'
+
+import { strings as activateStrings } from './lang/activate'
+import { strings as bookingCarListStrings } from './lang/booking-car-list'
+import { strings as bookingFilterStrings } from './lang/booking-filter'
+import { strings as bookingListStrings } from './lang/booking-list'
+import { strings as bookingStrings } from './lang/booking'
+import { strings as bookingsStrings } from './lang/bookings'
+import { strings as carsStrings } from './lang/cars'
+import { strings as changePasswordStrings } from './lang/change-password'
+import { strings as checkoutStrings } from './lang/checkout'
+import { strings as commonStrings } from './lang/common'
+import { strings as headerStrings } from './lang/header'
+import { strings as homeStrings } from './lang/home'
+import { strings as masterStrings } from './lang/master'
+import { strings as noMatchStrings } from './lang/no-match'
+import { strings as notificationsStrings } from './lang/notifications'
+import { strings as resetPasswordStrings } from './lang/reset-password'
+import { strings as settingstrings } from './lang/settings'
+import { strings as signInStrings } from './lang/sign-in'
+import { strings as signUpStrings } from './lang/sign-up'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -80,7 +99,26 @@ if (lang) {
 
   const updateLang = (_lang: string) => {
     UserService.setLanguage(_lang)
+
+    activateStrings.setLanguage(_lang)
+    bookingCarListStrings.setLanguage(_lang)
+    bookingFilterStrings.setLanguage(_lang)
+    bookingListStrings.setLanguage(_lang)
+    bookingStrings.setLanguage(_lang)
+    bookingsStrings.setLanguage(_lang)
+    carsStrings.setLanguage(_lang)
+    changePasswordStrings.setLanguage(_lang)
+    checkoutStrings.setLanguage(_lang)
     commonStrings.setLanguage(_lang)
+    headerStrings.setLanguage(_lang)
+    homeStrings.setLanguage(_lang)
+    masterStrings.setLanguage(_lang)
+    noMatchStrings.setLanguage(_lang)
+    notificationsStrings.setLanguage(_lang)
+    resetPasswordStrings.setLanguage(_lang)
+    settingstrings.setLanguage(_lang)
+    signInStrings.setLanguage(_lang)
+    signUpStrings.setLanguage(_lang)
   }
 
   if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
