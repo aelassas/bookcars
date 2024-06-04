@@ -7,7 +7,6 @@ const strings = new LocalizedStrings({
     SUPPLIER: 'Fournisseur',
     DRIVER: 'Conducteur',
     PRICE: 'Prix',
-    CURRENCY: 'DH',
     STATUS: 'Statut',
     UPDATE_SELECTION: 'Modifier la sélection',
     DELETE_SELECTION: 'Supprimer la sélection',
@@ -20,7 +19,6 @@ const strings = new LocalizedStrings({
     UPDATE: 'Modifier cette réservation',
     DAYS: 'Jours',
     COST: 'Total',
-
     CANCEL: 'Annuler cette réservation',
     CANCEL_BOOKING: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
     CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
