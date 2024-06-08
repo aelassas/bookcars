@@ -33,6 +33,7 @@ import { strings } from '../lang/cars'
 import * as helper from '../common/helper'
 import * as CarService from '../services/CarService'
 import Pager from './Pager'
+import SimpleBackdrop from './SimpleBackdrop'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
@@ -595,6 +596,7 @@ const CarList = ({
             onPrevious={() => setPage(page - 1)}
           />
         )}
+        {loading && <SimpleBackdrop text={commonStrings.LOADING} />}
       </>
     )) || <></>
   )
