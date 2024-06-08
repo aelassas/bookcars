@@ -255,7 +255,7 @@ const CarList = ({
           )
           : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
           && rows.map((car) => (
-            <article key={car._id} style={sizeAuto ? { width: 'auto' } : {}}>
+            <article key={car._id}>
               <div className="name">
                 <h2>{car.name}</h2>
               </div>
