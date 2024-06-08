@@ -37,6 +37,7 @@ section.car-list article .btn-book {
     min-height: 750px;
     padding: 15px;
     max-width: 480px;
+    width: 100%;
   }
 
   section.car-list article div.name {
@@ -247,7 +248,8 @@ section.car-list article .btn-book {
     font-size: 12px;
     margin-bottom: 10px;
     min-height: 430px;
-    width: 800px;
+    max-width: 800px;
+    width: 100%;
   }
 
   section.car-list article div.name {
