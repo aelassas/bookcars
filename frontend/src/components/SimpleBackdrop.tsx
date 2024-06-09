@@ -11,6 +11,8 @@ interface SimpleBackdropProps {
   text?: string
 }
 
+const marginTop = env.isMobile() ? 56 : 64
+
 const SimpleBackdrop = ({ progress, text }: SimpleBackdropProps) => (
   <div>
     <Backdrop
@@ -19,7 +21,7 @@ const SimpleBackdrop = ({ progress, text }: SimpleBackdropProps) => (
         color: '#fff',
         zIndex: 1402,
         height: window.innerHeight,
-        marginTop: `${document.documentElement.scrollHeight - (window.innerHeight + (env.isMobile() ? 56 : 64))}px`
+        marginTop: `${document.documentElement.scrollTop - marginTop}px`
       }}
     >
       {progress && <CircularProgress color="inherit" sx={{ marginRight: 5 }} />}
