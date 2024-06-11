@@ -8,6 +8,7 @@ import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import Booking from '../models/Booking'
 import User from '../models/User'
+import Car from '../models/Car'
 import * as bookingController from './bookingController'
 
 /**
@@ -129,6 +130,9 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       booking.expireAt = undefined
       booking.status = bookcarsTypes.BookingStatus.Paid
       await booking.save()
+
+      // Mark car as unavailable
+      await Car.updateOne({ _id: booking.car }, { available: false })
 
       // Send confirmation email
       const user = await User.findById(booking.driver)
