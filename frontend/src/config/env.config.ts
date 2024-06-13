@@ -59,6 +59,8 @@ const env = {
   STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
   CURRENCY: import.meta.env.VITE_BC_CURRENCY || '$',
   SET_LANGUAGE_FROM_IP: (import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP && import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP.toLowerCase()) === 'true',
+  GOOGLE_ANALYTICS_ENABLED: (import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED && import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED.toLowerCase()) === 'true',
+  GOOGLE_ANALYTICS_ID: String(import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ID),
 }
 
 export default env

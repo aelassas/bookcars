@@ -1,6 +1,12 @@
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import env from './config/env.config'
 import { GlobalProvider } from './context/GlobalContext'
+import { init as initGA } from './common/ga4'
+
+if (env.GOOGLE_ANALYTICS_ENABLED) {
+  initGA()
+}
 
 const SignIn = lazy(() => import('./pages/SignIn'))
 const SignUp = lazy(() => import('./pages/SignUp'))

@@ -6,6 +6,7 @@ import Header from './Header'
 import * as UserService from '../services/UserService'
 import * as helper from '../common/helper'
 import { useInit } from '../common/customHooks'
+import { useAnalytics } from '../common/useAnalytics'
 
 interface LayoutProps {
   user?: bookcarsTypes.User
@@ -22,6 +23,8 @@ const Layout = ({
   children,
   onLoad
 }: LayoutProps) => {
+  useAnalytics()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
 
