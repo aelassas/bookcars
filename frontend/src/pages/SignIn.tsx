@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Paper,
   FormControl,
@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
-import Header from '../components/Header'
 import Error from '../components/Error'
-import * as langHelper from '../common/langHelper'
+import Layout from '../components/Layout'
+import * as bookcarsTypes from ':bookcars-types'
 
 import '../assets/css/signin.css'
 
@@ -77,49 +77,26 @@ const SignIn = () => {
     }
   }
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        langHelper.setLanguage(strings)
-
-        const currentUser = UserService.getCurrentUser()
-
-        if (currentUser) {
-          const status = await UserService.validateAccessToken()
-
-          if (status === 200) {
-            const user = await UserService.getUser(currentUser._id)
-
-            if (user) {
-              const params = new URLSearchParams(window.location.search)
-              if (params.has('from')) {
-                const from = params.get('from')
-                if (from === 'checkout') {
-                  navigate(`/checkout${window.location.search}`)
-                } else {
-                  navigate(`/${window.location.search}`)
-                }
-              } else {
-                navigate(`/${window.location.search}`)
-              }
-            } else {
-              await UserService.signout()
-            }
-          }
+  const onLoad = async (user?: bookcarsTypes.User) => {
+    if (user) {
+      const params = new URLSearchParams(window.location.search)
+      if (params.has('from')) {
+        const from = params.get('from')
+        if (from === 'checkout') {
+          navigate(`/checkout${window.location.search}`)
         } else {
-          setVisible(true)
+          navigate(`/${window.location.search}`)
         }
-      } catch {
-        await UserService.signout()
+      } else {
+        navigate(`/${window.location.search}`)
       }
+    } else {
+      setVisible(true)
     }
-
-    init()
-  }, [navigate])
+  }
 
   return (
-    <div>
-      <Header />
+    <Layout strict={false} onLoad={onLoad}>
       {visible && (
         <div className="signin">
           <Paper className="signin-form" elevation={10}>
@@ -169,7 +146,7 @@ const SignIn = () => {
           </Paper>
         </div>
       )}
-    </div>
+    </Layout>
   )
 }
 
