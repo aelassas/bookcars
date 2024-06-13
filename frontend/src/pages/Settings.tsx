@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -26,6 +27,8 @@ import * as helper from '../common/helper'
 import '../assets/css/settings.css'
 
 const Settings = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
@@ -189,15 +192,15 @@ const Settings = () => {
               />
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" required onChange={handleFullNameChange} autoComplete="off" value={fullName} />
+                <Input type="text" required onChange={handleFullNameChange} autoComplete="off" value={fullName} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" value={user.email} disabled />
+                <Input type="text" value={user.email} disabled />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                <Input id="phone" type="text" required error={!phoneValid} onChange={handlePhoneChange} autoComplete="off" value={phone} />
+                <Input type="text" required error={!phoneValid} onChange={handlePhoneChange} autoComplete="off" value={phone} />
                 <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
@@ -227,13 +230,28 @@ const Settings = () => {
                 <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href="/change-password">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="btn-primary btn-margin btn-margin-bottom"
+                  size="small"
+                  onClick={() => {
+                    navigate('/change-password')
+                  }}
+                >
                   {commonStrings.RESET_PASSWORD}
                 </Button>
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
+                <Button
+                  variant="contained"
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  onClick={() => {
+                    navigate('/')
+                  }}
+                >
                   {commonStrings.CANCEL}
                 </Button>
               </div>
