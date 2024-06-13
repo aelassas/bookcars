@@ -145,10 +145,15 @@ const SignUp = () => {
   }
 
   const handleRecaptchaVerify = useCallback(async (token: string) => {
-    const ip = await UserService.getIP()
-    const status = await UserService.verifyRecaptcha(token, ip)
-    const valid = status === 200
-    setRecaptchaError(!valid)
+    try {
+      const ip = await UserService.getIP()
+      const status = await UserService.verifyRecaptcha(token, ip)
+      const valid = status === 200
+      setRecaptchaError(!valid)
+    } catch (err) {
+      helper.error(err)
+      setRecaptchaError(true)
+    }
   }, [])
 
   const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
