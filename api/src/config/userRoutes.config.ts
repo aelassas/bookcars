@@ -27,6 +27,7 @@ const routes = {
   delete: '/api/delete-users',
   checkPassword: '/api/check-password/:id/:password',
   signout: '/api/sign-out',
+  verifyRecaptcha: '/api/verify-recaptcha/:token/:ip',
 }
 
 export default routes
