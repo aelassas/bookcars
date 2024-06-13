@@ -116,7 +116,7 @@ const BookingFilter = ({
         </FormControl>
         <FormControl fullWidth margin="dense">
           <LocationSelectList
-            label={strings.PICKUP_LOCATION}
+            label={strings.PICK_UP_LOCATION}
             variant="standard"
             onChange={handlePickupLocationChange}
             init

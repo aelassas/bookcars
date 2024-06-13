@@ -7,6 +7,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { CookieOptions, Request, Response } from 'express'
 import nodemailer from 'nodemailer'
+import axios from 'axios'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
@@ -1318,6 +1319,30 @@ export const deleteUsers = async (req: Request, res: Response) => {
     }
 
     return res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[user.delete] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Validate Google reCAPTCHA v3 token.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const verifyRecaptcha = async (req: Request, res: Response) => {
+  try {
+    const { token, ip } = req.params
+    const result = await axios.get(`https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${ip}`)
+    const { success } = result.data
+
+    if (success) {
+      return res.sendStatus(200)
+    }
+    return res.sendStatus(204)
   } catch (err) {
     logger.error(`[user.delete] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)

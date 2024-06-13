@@ -325,7 +325,7 @@ const Booking = () => {
 
               <FormControl fullWidth margin="dense">
                 <LocationSelectList
-                  label={bfStrings.PICKUP_LOCATION}
+                  label={bfStrings.PICK_UP_LOCATION}
                   required
                   variant="standard"
                   onChange={handlePickupLocationChange}

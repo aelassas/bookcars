@@ -1,3 +1,4 @@
+import axios from 'axios'
 import * as bookcarsTypes from ':bookcars-types'
 import axiosInstance from './axiosInstance'
 import env from '../config/env.config'
@@ -3255,3 +3256,30 @@ export const getCountryFromIP = () => {
   const country = countries[_country]
   return country
 }
+
+/**
+ * Get client IP.
+ *
+ * @async
+ * @returns {Promise<string>}
+ */
+export const getIP = async (): Promise<string> => {
+  const res = await axios.get('https://api.ipify.org/?format=json')
+  return String(res.data.ip)
+}
+
+/**
+ * Validate Google reCAPTCHA v3 token.
+ *
+ * @param {string} token
+ * @param {string} ip
+ * @returns {Promise<number>}
+ */
+export const verifyRecaptcha = (token: string, ip: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/verify-recaptcha/${encodeURIComponent(token)}/${encodeURIComponent(ip)}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
