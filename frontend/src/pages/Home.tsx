@@ -118,7 +118,7 @@ const Home = () => {
             <form onSubmit={handleSubmit} className="home-search-form">
               <FormControl className="pickup-location">
                 <LocationSelectList
-                  label={commonStrings.PICKUP_LOCATION}
+                  label={commonStrings.PICK_UP_LOCATION}
                   hidePopupIcon
                   customOpen={env.isMobile()}
                   init={!env.isMobile()}
