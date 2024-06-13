@@ -37,7 +37,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
 import './assets/css/index.css'
 
-if (import.meta.env.VITE_NODE_ENV === 'production') {
+if (env.isProduction) {
   disableDevTools()
 }
 
