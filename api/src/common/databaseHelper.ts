@@ -192,6 +192,8 @@ export const InitializeLocations = async () => {
     }
     await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
 
+    await User.updateMany({}, { payLater: false })
+
     logger.info('Locations initialized')
     return true
   } catch (err) {
