@@ -35,5 +35,6 @@ routes.route(routeNames.checkPassword).get(authJwt.verifyToken, userController.c
 routes.route(routeNames.getUsers).post(authJwt.verifyToken, userController.getUsers)
 routes.route(routeNames.delete).post(authJwt.verifyToken, userController.deleteUsers)
 routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)
+routes.route(routeNames.sendEmail).post(userController.sendEmail)
 
 export default routes

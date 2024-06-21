@@ -520,7 +520,7 @@ const BookingList = ({
                     </div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                    <span className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</span>
+                    <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
                     <div className="booking-detail-value">{(booking.pickupLocation as bookcarsTypes.Location).name}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>

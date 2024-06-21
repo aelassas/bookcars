@@ -1,0 +1,22 @@
+.supplier-carrousel {
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.supplier-carrousel div.supplier-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 52px;
+  margin: 0 auto;
+}
+
+.supplier-carrousel div.supplier-container img {
+  max-width: 72px;
+  max-height: 52px;
+}

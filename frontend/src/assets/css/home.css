@@ -36,60 +36,21 @@ div.home footer div.copyright span.part2 {
 
 @media only screen and (width <=960px) {
   div.home div.home-content {
-    padding: 110px 0;
+    padding: 60px 0;
+    justify-content: flex-start !important;
+    height: 960px;
   }
 
-  div.home div.home-content div.home-logo {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 140px;
-    display: none;
-  }
-
-  div.home div.home-content span.home-logo-main,
-  div.home div.home-content span.home-logo-registered {
-    float: left;
-    color: #121212;
-    opacity: 0.97;
-  }
-
-  div.home div.home-content span.home-logo-main {
-    font-size: 70px;
-    font-weight: 700;
-    line-height: 125px;
-  }
-
-  div.home div.home-content span.home-logo-main::after {
-    content: 'BookCars';
-  }
-
-  div.home div.home-content span.home-logo-registered {
-    margin-top: 40px;
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  div.home div.home-content span.home-logo-registered::after {
-    content: '®';
-  }
-
-  div.home div.home-content div.home-cover {
-    color: #313131;
-    font-size: 20px;
-    text-align: center;
-    margin: 10px 20px;
-    text-shadow: 0 0 #212121;
+  div.home-cover {
+    font-size: 40px;
+    font-weight: 800;
+    padding: 20px 5px 10px 5px;
   }
 
   div.home div.home-content div.home-search {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: calc(100% - 30px);
+    width: calc(100% - 40px);
     background-color: #fff;
     padding: 20px;
-    border-radius: 20px;
     margin: 10px 0;
   }
 
@@ -115,7 +76,6 @@ div.home footer div.copyright span.part2 {
     border-radius: 5px;
     height: 52px;
     white-space: nowrap;
-    background: #00ACD7;
     color: #fff;
     margin: 10px;
   }
@@ -157,71 +117,87 @@ div.home footer div.copyright span.part2 {
   }
 }
 
+div.home {
+  transform: translate3d(0, 0, 0);
+}
+
 div.home div.home-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/cover.jpg');
+  background-size: cover;
+  background-position: bottom;
+  width: 100%;
+}
+
+div.home div.home-content::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background: rgba(51, 51, 51, .22);
+  clear: both;
+  z-index: 1;
+}
+
+div.home div.home-cover {
+  z-index: 2;
+  color: #fff;
+  text-align: center;
+  letter-spacing: -.03em;
+  -webkit-font-smoothing: antialiased;
+}
+
+div.home div.home-content div.home-search {
+  box-shadow: 0px 3px 5px -1px #00000033, 0px 1px 18px 0px #0000001F, 0px 6px 10px 0px #00000024;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url(/cover.jpg);
-  background-size: cover;
-  background-position: center bottom;
-  width: 100%;
-  height: 107vh;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+div.home div.home-content div.home-search .btn-search {
+  background: #024DAF;
+}
+
+div.home div.suppliers {
+  width: 80%;
+  margin: 20px 0;
+}
+
+div.home div.suppliers h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+div.home div.home-map {
+  width: 80%;
+  margin: 15px 0 30px 0;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
-
-  div.home div.home-content div.home-logo {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 180px;
-    display: none;
+  div.home div.home-content {
+    height: 550px;
   }
 
-  div.home div.home-content span.home-logo-main,
-  div.home div.home-content span.home-logo-registered {
-    float: left;
-    color: #3FA2B9;
-    /* color: #0d63c9; */
-    opacity: 0.97;
-  }
-
-  div.home div.home-content span.home-logo-main {
-    font-size: 80px;
+  div.home div.home-cover {
+    font-size: 47px;
     font-weight: 700;
-    line-height: 135px;
-  }
-
-  div.home div.home-content span.home-logo-main::after {
-    content: 'BookCars';
-  }
-
-  div.home div.home-content span.home-logo-registered {
-    margin-top: 40px;
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  div.home div.home-content span.home-logo-registered::after {
-    content: '®';
-  }
-
-  div.home div.home-content div.home-cover {
-    color: #494949;
-    font-size: 25px;
-    text-shadow: 0 0 #a9a9a9;
-    text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
 
   div.home div.home-content div.home-search {
     background-color: #fff;
-    display: block;
     padding: 20px;
-    border-radius: 20px;
-    margin: 6% 5%;
+    margin: 0 5%;
   }
 
   div.home div.home-content div.home-search form.home-search-form {
@@ -261,7 +237,6 @@ div.home div.home-content {
     min-width: 190px;
     margin: 0;
     white-space: nowrap;
-    background: #00ACD7;
     padding: 5px 32px;
     margin-left: 2px;
   }

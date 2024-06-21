@@ -9,11 +9,13 @@ import '../assets/css/mileage-filter.css'
 
 interface MileageFilterProps {
   className?: string
+  collapse?: boolean
   onChange?: (value: bookcarsTypes.Mileage[]) => void
 }
 
 const MileageFilter = ({
   className,
+  collapse,
   onChange
 }: MileageFilterProps) => {
   const [allChecked, setAllChecked] = useState(true)
@@ -128,7 +130,7 @@ const MileageFilter = ({
   }
 
   return (
-    <Accordion title={strings.MILEAGE} className={`${className ? `${className} ` : ''}mileage-filter`}>
+    <Accordion title={strings.MILEAGE} collapse={collapse} className={`${className ? `${className} ` : ''}mileage-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={limitedRef} type="checkbox" className="mileage-checkbox" onChange={handleLimitedMileageChange} />

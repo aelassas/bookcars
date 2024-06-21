@@ -4,9 +4,9 @@ import { ToastContainer } from 'react-toastify'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 
-import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
-import { frFR, enUS } from '@mui/x-date-pickers/locales'
-import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid/locales'
+import { frFR as corefrFR, enUS as coreenUS, elGR as coreelGR } from '@mui/material/locale'
+import { frFR, enUS, elGR } from '@mui/x-date-pickers/locales'
+import { frFR as dataGridfrFR, enUS as dataGridenUS, elGR as dataGridelGR } from '@mui/x-data-grid/locales'
 import { disableDevTools } from ':disable-react-devtools'
 import * as helper from './common/helper'
 import * as UserService from './services/UserService'
@@ -23,8 +23,11 @@ import { strings as carsStrings } from './lang/cars'
 import { strings as changePasswordStrings } from './lang/change-password'
 import { strings as checkoutStrings } from './lang/checkout'
 import { strings as commonStrings } from './lang/common'
+import { strings as contactFormStrings } from './lang/contact-form'
+import { strings as footerStrings } from './lang/footer'
 import { strings as headerStrings } from './lang/header'
 import { strings as homeStrings } from './lang/home'
+import { strings as mapStrings } from './lang/map'
 import { strings as masterStrings } from './lang/master'
 import { strings as noMatchStrings } from './lang/no-match'
 import { strings as notificationsStrings } from './lang/notifications'
@@ -32,6 +35,8 @@ import { strings as resetPasswordStrings } from './lang/reset-password'
 import { strings as settingstrings } from './lang/settings'
 import { strings as signInStrings } from './lang/sign-in'
 import { strings as signUpStrings } from './lang/sign-up'
+import { strings as tosStrings } from './lang/tos'
+import { strings as carSpecsStrings } from './lang/car-specs'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -110,8 +115,11 @@ if (lang) {
     changePasswordStrings.setLanguage(_lang)
     checkoutStrings.setLanguage(_lang)
     commonStrings.setLanguage(_lang)
+    contactFormStrings.setLanguage(_lang)
+    footerStrings.setLanguage(_lang)
     headerStrings.setLanguage(_lang)
     homeStrings.setLanguage(_lang)
+    mapStrings.setLanguage(_lang)
     masterStrings.setLanguage(_lang)
     noMatchStrings.setLanguage(_lang)
     notificationsStrings.setLanguage(_lang)
@@ -119,6 +127,8 @@ if (lang) {
     settingstrings.setLanguage(_lang)
     signInStrings.setLanguage(_lang)
     signUpStrings.setLanguage(_lang)
+    tosStrings.setLanguage(_lang)
+    carSpecsStrings.setLanguage(_lang)
   }
 
   if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
@@ -126,6 +136,8 @@ if (lang) {
 
     if (country === 'France' || country === 'Morocco') {
       updateLang('fr')
+    } else if (country === 'Greece') {
+      updateLang('el')
     } else {
       updateLang(env.DEFAULT_LANGUAGE)
     }
@@ -134,14 +146,15 @@ if (lang) {
 
 language = UserService.getLanguage()
 const isFr = language === 'fr'
+const isEL = language === 'el'
 
 const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#00ACD7',
+        main: '#1976D2',
         contrastText: '#121212',
-        dark: '#00ACD7',
+        dark: '#1976D2',
       },
     },
     typography: {
@@ -162,7 +175,7 @@ const theme = createTheme(
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            backgroundColor: '#fafafa',
+            backgroundColor: '#fff',
           },
         },
       },
@@ -179,11 +192,11 @@ const theme = createTheme(
         styleOverrides: {
           root: {
             '& .Mui-checked': {
-              color: '#00ACD7 !important',
+              color: '#1976D2 !important',
             },
             '& .Mui-checked+.MuiSwitch-track': {
               opacity: 0.7,
-              backgroundColor: '#00ACD7 !important',
+              backgroundColor: '#1976D2 !important',
             },
           },
         },
@@ -215,9 +228,9 @@ const theme = createTheme(
       },
     },
   },
-  isFr ? frFR : enUS,
-  isFr ? dataGridfrFR : dataGridenUS,
-  isFr ? corefrFR : coreenUS,
+  isFr ? frFR : isEL ? elGR : enUS,
+  isFr ? dataGridfrFR : isEL ? dataGridelGR : dataGridenUS,
+  isFr ? corefrFR : isEL ? coreelGR : coreenUS,
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

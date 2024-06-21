@@ -12,5 +12,6 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, locationController.d
 routes.route(routeNames.getLocation).get(locationController.getLocation)
 routes.route(routeNames.getLocations).get(locationController.getLocations)
 routes.route(routeNames.checkLocation).get(authJwt.verifyToken, locationController.checkLocation)
+routes.route(routeNames.getLocationId).get(locationController.getLocationId)
 
 export default routes

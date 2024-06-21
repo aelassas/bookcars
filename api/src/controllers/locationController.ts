@@ -2,6 +2,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
+import * as helper from '../common/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import Location from '../models/Location'
@@ -257,6 +258,30 @@ export const checkLocation = async (req: Request, res: Response) => {
     return res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.checkLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Get location Id from location name (en).
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const getLocationId = async (req: Request, res: Response) => {
+  const { name, language } = req.params
+
+  try {
+    const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
+    if (lv) {
+      const location = await Location.findOne({ values: lv.id })
+      return res.status(200).json(location?.id)
+    }
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[location.getLocationId] ${i18n.t('DB_ERROR')} ${name}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

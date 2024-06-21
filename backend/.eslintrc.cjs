@@ -66,5 +66,6 @@ module.exports = {
     'react/prop-types': 'off',
     'no-console': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'import/no-extraneous-dependencies': 'off',
   },
 }

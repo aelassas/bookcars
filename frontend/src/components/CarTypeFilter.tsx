@@ -9,6 +9,7 @@ import '../assets/css/car-type-filter.css'
 
 interface CarTypeProps {
   className?: string
+  collapse?: boolean
   onChange?: (values: bookcarsTypes.CarType[]) => void
 }
 
@@ -16,6 +17,7 @@ const allTypes = bookcarsHelper.getAllCarTypes()
 
 const CarType = ({
   className,
+  collapse,
   onChange
 }: CarTypeProps) => {
   const [allChecked, setAllChecked] = useState(true)
@@ -288,7 +290,7 @@ const CarType = ({
   }
 
   return (
-    <Accordion title={strings.ENGINE} className={`${className ? `${className} ` : ''}car-type-filter`}>
+    <Accordion title={strings.ENGINE} collapse={collapse} className={`${className ? `${className} ` : ''}car-type-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={dieselRef} type="checkbox" className="car-type-checkbox" onChange={handleCheckDieselChange} />

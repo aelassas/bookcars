@@ -1,0 +1,32 @@
+.title {
+  text-align: center;
+}
+
+.map {
+  height: 540px;
+  width: 100%;
+}
+
+.marker .name {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.marker .action {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker .action-btn {
+  cursor: pointer;
+  background: #2981CA;
+  color: #fff;
+  border: #3777A2 1px solid;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-bottom: 5px;
+  width: 100%;
+}
