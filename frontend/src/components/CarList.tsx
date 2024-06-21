@@ -38,9 +38,11 @@ interface CarListProps {
   suppliers?: string[]
   pickupLocation?: string
   dropOffLocation?: string
+  carSpecs?: bookcarsTypes.CarSpecs
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
+  fuelPolicy?: string[]
   deposit?: number
   cars?: bookcarsTypes.Car[]
   reload?: boolean
@@ -59,9 +61,11 @@ const CarList = ({
   suppliers,
   pickupLocation,
   dropOffLocation,
+  carSpecs,
   carType: _carType,
   gearbox,
   mileage,
+  fuelPolicy,
   deposit,
   cars,
   reload,
@@ -117,9 +121,11 @@ const CarList = ({
     _page: number,
     _suppliers?: string[],
     _pickupLocation?: string,
+    _carSpecs?: bookcarsTypes.CarSpecs,
     __carType?: string[],
     _gearbox?: string[],
     _mileage?: string[],
+    _fuelPolicy?: string[],
     _deposit?: number
   ) => {
     try {
@@ -127,9 +133,11 @@ const CarList = ({
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: _suppliers ?? [],
         pickupLocation: _pickupLocation,
+        carSpecs: _carSpecs,
         carType: __carType,
         gearbox: _gearbox,
         mileage: _mileage,
+        fuelPolicy: _fuelPolicy,
         deposit: _deposit,
       }
 
@@ -172,7 +180,7 @@ const CarList = ({
   useEffect(() => {
     if (suppliers) {
       if (suppliers.length > 0) {
-        fetchData(page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit)
+        fetchData(page, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -183,7 +191,7 @@ const CarList = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit, from, to])
+  }, [page, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, from, to])
 
   useEffect(() => {
     if (cars) {
@@ -198,14 +206,14 @@ const CarList = ({
 
   useEffect(() => {
     setPage(1)
-  }, [suppliers, pickupLocation, _carType, gearbox, mileage, deposit, from, to])
+  }, [suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, from, to])
 
   useEffect(() => {
     if (reload) {
       setPage(1)
-      fetchData(1, suppliers, pickupLocation, _carType, gearbox, mileage, deposit)
+      fetchData(1, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit)
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload, suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
+  }, [reload, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit])
 
   const getExtraIcon = (option: string, extra: number) => {
     let available = false

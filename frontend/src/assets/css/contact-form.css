@@ -1,0 +1,33 @@
+.contact-form .contact-form-title {
+  text-align: center;
+  text-transform: capitalize;
+  color: #232323;
+}
+
+@media only screen and (width <=960px) {
+  .contact-form {
+    width: 350px;
+    padding: 30px;
+  }
+
+  .contact-form .recaptcha {
+    margin-top: 25px;
+    margin-left: -10px;
+  }
+}
+
+@media only screen and (width >=960px) {
+  .contact-form {
+    width: 550px;
+    padding: 30px;
+  }
+
+  .contact-form .recaptcha {
+    margin-top: 25px;
+    margin-left: 85px;
+  }
+
+  .contact-form .btn {
+    width: 120px;
+  }
+}

@@ -39,4 +39,8 @@ export const en = {
   CANCEL_BOOKING_NOTIFICATION: 'made a request to cancel the booking',
   BOOKING_UPDATED_NOTIFICATION_PART1: 'The status of the booking',
   BOOKING_UPDATED_NOTIFICATION_PART2: 'was updated.',
+  CONTACT_SUBJECT: 'New Message from Contact Form',
+  SUBJECT: 'Subject',
+  FROM: 'From',
+  MESSAGE: 'Message',
 }

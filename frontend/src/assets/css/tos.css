@@ -1,3 +1,18 @@
-.tos {
-    padding: 15px;
+div.tos {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+  white-space: pre-wrap;
+  padding: 50px 20%;
+  font-size: 15px;
+  color: #121212;
+  min-height: 100vh;
+}
+
+@media only screen and (width <=960px) {
+  div.tos {
+    padding: 30px 20px;
+  }
 }

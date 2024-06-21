@@ -29,3 +29,17 @@ export const getLocation = (id: string): Promise<bookcarsTypes.Location> =>
       `/api/location/${encodeURIComponent(id)}/${UserService.getLanguage()}`
     )
     .then((res) => res.data)
+
+/**
+ * Get Loaction ID by name (en).
+ *
+ * @param {string} name
+ * @param {string} language
+ * @returns {Promise<{ status: number, data: string }>}
+ */
+export const getLocationId = (name: string, language: string): Promise<{ status: number, data: string }> =>
+  axiosInstance
+    .get(
+      `/api/location-id/${encodeURIComponent(name)}/${language}`
+    )
+    .then((res) => ({ status: res.status, data: res.data }))

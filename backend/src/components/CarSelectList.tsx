@@ -197,11 +197,11 @@ const CarSelectList = ({
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent className="dialog-content">
           {currentSupplier === '-1' && currentPickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELDS}${blStrings.SUPPLIER} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
+            `${strings.REQUIRED_FIELDS}${blStrings.SUPPLIER} ${commonStrings.AND} ${bfStrings.PICK_UP_LOCATION}`
           ) : currentSupplier === '-1' ? (
             `${strings.REQUIRED_FIELD}${blStrings.SUPPLIER}`
           ) : currentPickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
+            `${strings.REQUIRED_FIELD}${bfStrings.PICK_UP_LOCATION}`
           ) : (
             <></>
           )}

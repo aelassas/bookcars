@@ -28,6 +28,7 @@ const routes = {
   checkPassword: '/api/check-password/:id/:password',
   signout: '/api/sign-out',
   verifyRecaptcha: '/api/verify-recaptcha/:token/:ip',
+  sendEmail: '/api/send-email',
 }
 
 export default routes

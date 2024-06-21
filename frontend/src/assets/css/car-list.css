@@ -33,11 +33,10 @@ section.car-list article .btn-book {
     border-radius: 5px;
     color: #333;
     font-size: 12px;
-    margin: 0 1px 10px;
+    margin: 0 5px 10px 5px;
     min-height: 750px;
     padding: 15px;
     max-width: 480px;
-    width: 100%;
   }
 
   section.car-list article div.name {
@@ -248,8 +247,7 @@ section.car-list article .btn-book {
     font-size: 12px;
     margin-bottom: 10px;
     min-height: 430px;
-    max-width: 800px;
-    width: 100%;
+    width: 800px;
   }
 
   section.car-list article div.name {

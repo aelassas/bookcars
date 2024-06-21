@@ -11,7 +11,7 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
     .get(
       '/api/all-suppliers',
       { withCredentials: true }
-)
+    )
     .then((res) => res.data)
 
 /**
@@ -29,3 +29,16 @@ export const getSuppliers = (keyword: string, page: number, size: number): Promi
       { withCredentials: true }
     )
     .then((res) => res.data)
+
+/**
+* Get frontend suppliers.
+*
+* @param {bookcarsTypes.GetCarsPayload} data
+* @returns {Promise<bookcarsTypes.User[]>}
+*/
+export const getFrontendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
+  axiosInstance
+    .post(
+      '/api/frontend-suppliers',
+      data
+    ).then((res) => res.data)

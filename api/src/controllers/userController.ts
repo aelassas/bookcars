@@ -1348,3 +1348,42 @@ export const verifyRecaptcha = async (req: Request, res: Response) => {
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
+
+/**
+ * Send an email. reCAPTCHA is mandatory.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const sendEmail = async (req: Request, res: Response) => {
+  try {
+    const { body }: { body: bookcarsTypes.SendEmailPayload } = req
+    const { from, to, subject, message, recaptchaToken: token, ip } = body
+    const result = await axios.get(`https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${ip}`)
+    const { success } = result.data
+
+    if (!success) {
+      return res.sendStatus(400)
+    }
+
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: env.SMTP_FROM,
+      to,
+      subject: i18n.t('CONTACT_SUBJECT'),
+      html:
+        `<p>
+              ${i18n.t('FROM')}: ${from}<br>
+              ${i18n.t('SUBJECT')}: ${subject}<br>
+              ${i18n.t('MESSAGE')}:<br>${message.replace(/(?:\r\n|\r|\n)/g, '<br>')}<br>
+         </p>`,
+    }
+    await mailHelper.sendMail(mailOptions)
+
+    return res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[user.delete] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}

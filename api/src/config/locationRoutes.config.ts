@@ -6,6 +6,7 @@ const routes = {
   getLocation: '/api/location/:id/:language',
   getLocations: '/api/locations/:page/:size/:language',
   checkLocation: '/api/check-location/:id',
+  getLocationId: '/api/location-id/:name/:language',
 }
 
 export default routes

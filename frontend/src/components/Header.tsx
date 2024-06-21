@@ -29,6 +29,8 @@ import {
   ExitToApp as SignoutIcon,
   Login as LoginIcon,
   EventSeat as BookingsIcon,
+  CarRental as SupplierIcon,
+  LocationOn as LocationIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -48,6 +50,7 @@ interface HeaderProps {
   user?: bookcarsTypes.User
   hidden?: boolean
   hideSignin?: boolean
+  headerTitle?: string
 }
 
 const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
@@ -56,6 +59,7 @@ const Header = ({
   user,
   hidden,
   hideSignin,
+  headerTitle,
 }: HeaderProps) => {
   const navigate = useNavigate()
   const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
@@ -280,7 +284,7 @@ const Header = ({
   return (
     (!hidden && (
       <div style={classes.grow} className="header">
-        <AppBar position="fixed" sx={{ bgcolor: '#fff', boxShadow: 'none', borderBottom: '1px solid #ddd' }}>
+        <AppBar position="relative" sx={{ bgcolor: '#fff', boxShadow: 'none', borderBottom: '1px solid #ddd' }}>
           <Toolbar className="toolbar">
             {isLoaded && !loading && (
               <>
@@ -289,6 +293,8 @@ const Header = ({
                 </IconButton>
 
                 <Link href="/" className="logo">BookCars</Link>
+
+                {!env.isMobile() && headerTitle && <div className="header-title">{headerTitle}</div>}
               </>
             )}
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
@@ -303,6 +309,14 @@ const Header = ({
                     <ListItemText primary={strings.BOOKINGS} />
                   </ListItemLink>
                 )}
+                <ListItemLink href="/suppliers">
+                  <ListItemIcon><SupplierIcon /></ListItemIcon>
+                  <ListItemText primary={strings.SUPPLIERS} />
+                </ListItemLink>
+                <ListItemLink href="/locations">
+                  <ListItemIcon><LocationIcon /></ListItemIcon>
+                  <ListItemText primary={strings.LOCATIONS} />
+                </ListItemLink>
                 <ListItemLink href="/about">
                   <ListItemIcon><AboutIcon /></ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
@@ -323,7 +337,7 @@ const Header = ({
                 )}
               </List>
             </Drawer>
-            <div style={classes.grow} />
+            {(env.isMobile() || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
               {isSignedIn && (
                 <IconButton aria-label="" onClick={handleNotificationsClick} className="btn">
