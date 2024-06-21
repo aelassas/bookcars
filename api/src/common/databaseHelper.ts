@@ -162,6 +162,7 @@ export const InitializeLocations = async () => {
         model: 'LocationValue',
       })
 
+    // Add missing LocationValues in env.LANGUAGES
     for (const location of locations) {
       const enLocationValue = location.values.find((val) => val.language === 'en')
 
