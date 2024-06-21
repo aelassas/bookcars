@@ -9,11 +9,13 @@ import '../assets/css/gearbox-filter.css'
 
 interface GearboxFilterProps {
   className?: string
+  collapse?: boolean
   onChange?: (value: bookcarsTypes.GearboxType[]) => void
 }
 
 const GearboxFilter = ({
   className,
+  collapse,
   onChange
 }: GearboxFilterProps) => {
   const [allChecked, setAllChecked] = useState(true)
@@ -128,7 +130,7 @@ const GearboxFilter = ({
   }
 
   return (
-    <Accordion title={strings.GEARBOX} className={`${className ? `${className} ` : ''}gearbox-filter`}>
+    <Accordion title={strings.GEARBOX} collapse={collapse} className={`${className ? `${className} ` : ''}gearbox-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={automaticRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckAutomaticChange} />

@@ -3283,3 +3283,17 @@ export const verifyRecaptcha = (token: string, ip: string): Promise<number> =>
       { withCredentials: true }
     )
     .then((res) => res.status)
+
+/**
+* Send an email. reCAPTCHA is mandatory.
+*
+* @param {bookcarsTypes.SendEmailPayload} payload
+* @returns {Promise<number>}
+*/
+export const sendEmail = (payload: bookcarsTypes.SendEmailPayload): Promise<number> =>
+  axiosInstance
+    .post(
+      '/api/send-email',
+      payload,
+    )
+    .then((res) => res.status)

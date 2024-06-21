@@ -1,5 +1,10 @@
 import LocalizedStrings from 'react-localization'
 import * as langHelper from '../common/langHelper'
+import env from '../config/env.config'
+import * as UserService from '../services/UserService'
+
+const language = UserService.getLanguage()
+const isUS = language === 'en' && env.CURRENCY === '$'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -67,9 +72,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Transmission',
     ENGINE: 'Moteur',
     DEPOSIT: 'Dépôt de garantie',
-    LESS_THAN_2500: 'Moins de 2500 DH',
-    LESS_THAN_5000: 'Moins de 5000 DH',
-    LESS_THAN_7500: 'Moins de 7500 DH',
+    LESS_THAN_VALUE_1: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_2: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_3: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
   },
   en: {
     NEW_CAR: 'New car',
@@ -136,9 +141,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Gearbox',
     ENGINE: 'Engine',
     DEPOSIT: 'Deposit at pick-up',
-    LESS_THAN_2500: 'Less than 2500 DH',
-    LESS_THAN_5000: 'Less than 5000 DH',
-    LESS_THAN_7500: 'Less than 7500 DH',
+    LESS_THAN_VALUE_1: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_2: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_3: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
   },
 })
 

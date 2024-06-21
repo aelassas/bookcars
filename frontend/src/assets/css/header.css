@@ -1,8 +1,8 @@
 /* Header */
 .header {
-  position: -webkit-sticky !important;
+  /* position: -webkit-sticky !important;
   position: sticky !important;
-  top: 0;
+  top: 0; */
   z-index: 1400;
 }
 

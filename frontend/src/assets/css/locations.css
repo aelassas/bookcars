@@ -1,0 +1,11 @@
+div.locations {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+}
+
+div.locations .map {
+  height: 800px;
+}

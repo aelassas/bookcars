@@ -39,4 +39,8 @@ export const fr = {
   CANCEL_BOOKING_NOTIFICATION: "a fait une demande d'annulation de la réservation",
   BOOKING_UPDATED_NOTIFICATION_PART1: 'Le statut de la réservation',
   BOOKING_UPDATED_NOTIFICATION_PART2: 'a été mis à jour.',
+  CONTACT_SUBJECT: 'Nouveau Message à partir du formulaire de Contact',
+  SUBJECT: 'Objet',
+  FROM: 'De',
+  MESSAGE: 'Message',
 }

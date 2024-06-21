@@ -43,10 +43,11 @@ const Accordion = ({
   }, [collapse])
 
   useEffect(() => {
-    if (accordionRef.current) {
+    if (collapse && accordionRef.current) {
       const panel = accordionRef.current.nextElementSibling as HTMLDivElement
       panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offsetHeight])
 
   return (

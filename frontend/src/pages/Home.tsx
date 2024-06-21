@@ -4,17 +4,21 @@ import { useNavigate } from 'react-router-dom'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
 import env from '../config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
 import * as UserService from '../services/UserService'
+import * as SupplierService from '../services/SupplierService'
+import * as LocationService from '../services/LocationService'
+import * as helper from '../common/helper'
 import Layout from '../components/Layout'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
+import SupplierCarrousel from '../components/SupplierCarrousel'
+import Map from '../components/Map'
+import Footer from '../components/Footer'
 
-import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/home.css'
-
-const HIDE_COVER_TEXT = true
 
 const Home = () => {
   const navigate = useNavigate()
@@ -23,7 +27,9 @@ const Home = () => {
   _minDate.setDate(_minDate.getDate() + 1)
 
   const [pickupLocation, setPickupLocation] = useState('')
+  const [selectedPickupLocation, setSelectedPickupLocation] = useState<bookcarsTypes.Location | undefined>(undefined)
   const [dropOffLocation, setDropOffLocation] = useState('')
+  const [selectedDropOffLocation, setSelectedDropOffLocation] = useState<bookcarsTypes.Location | undefined>(undefined)
   const [minDate, setMinDate] = useState(_minDate)
   const [maxDate, setMaxDate] = useState<Date>()
   const [from, setFrom] = useState<Date>()
@@ -31,6 +37,7 @@ const Home = () => {
   const [sameLocation, setSameLocation] = useState(true)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
+  const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
 
   useEffect(() => {
     const _from = new Date()
@@ -53,6 +60,15 @@ const Home = () => {
     setMinDate(__minDate)
     setFrom(_from)
     setTo(_to)
+
+    const init = async () => {
+      let _suppliers = await SupplierService.getAllSuppliers()
+      _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
+      bookcarsHelper.shuffle(_suppliers)
+      setSuppliers(_suppliers)
+    }
+
+    init()
   }, [])
 
   useEffect(() => {
@@ -63,9 +79,16 @@ const Home = () => {
     }
   }, [from])
 
-  const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
+  const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {
     const _pickupLocation = (values.length > 0 && values[0]._id) || ''
     setPickupLocation(_pickupLocation)
+
+    if (_pickupLocation) {
+      const location = await LocationService.getLocation(_pickupLocation)
+      setSelectedPickupLocation(location)
+    } else {
+      setSelectedPickupLocation(undefined)
+    }
 
     if (sameLocation) {
       setDropOffLocation(_pickupLocation)
@@ -82,8 +105,16 @@ const Home = () => {
     }
   }
 
-  const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setDropOffLocation((values.length > 0 && values[0]._id) || '')
+  const handleDropOffLocationChange = async (values: bookcarsTypes.Option[]) => {
+    const _dropOffLocation = (values.length > 0 && values[0]._id) || ''
+    setDropOffLocation(_dropOffLocation)
+
+    if (_dropOffLocation) {
+      const location = await LocationService.getLocation(_dropOffLocation)
+      setSelectedDropOffLocation(location)
+    } else {
+      setSelectedDropOffLocation(undefined)
+    }
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -107,14 +138,13 @@ const Home = () => {
 
   return (
     <Layout onLoad={onLoad} strict={false}>
+
       <div className="home">
         <div className="home-content">
-          <div className="home-logo">
-            <span className="home-logo-main" />
-            <span className="home-logo-registered" />
-          </div>
+
+          <div className="home-cover">{strings.COVER}</div>
+
           <div className="home-search">
-            {!HIDE_COVER_TEXT && (<div className="home-cover">{strings.COVER}</div>)}
             <form onSubmit={handleSubmit} className="home-search-form">
               <FormControl className="pickup-location">
                 <LocationSelectList
@@ -124,12 +154,13 @@ const Home = () => {
                   init={!env.isMobile()}
                   required
                   variant="outlined"
+                  value={selectedPickupLocation}
                   onChange={handlePickupLocationChange}
                 />
               </FormControl>
               <FormControl className="from">
                 <DateTimePicker
-                  label={commonStrings.FROM}
+                  label={strings.PICK_UP_DATE}
                   value={from}
                   minDate={_minDate}
                   maxDate={maxDate}
@@ -159,7 +190,7 @@ const Home = () => {
               </FormControl>
               <FormControl className="to">
                 <DateTimePicker
-                  label={commonStrings.TO}
+                  label={strings.DROP_OFF_DATE}
                   value={to}
                   minDate={minDate}
                   variant="outlined"
@@ -196,6 +227,7 @@ const Home = () => {
                     hidePopupIcon
                     customOpen={env.isMobile()}
                     init={!env.isMobile()}
+                    value={selectedDropOffLocation}
                     required
                     variant="outlined"
                     onChange={handleDropOffLocationChange}
@@ -217,18 +249,45 @@ const Home = () => {
               </FormControl>
             </form>
           </div>
+
         </div>
-        <footer>
-          <div className="copyright">
-            <span className="part1">{strings.COPYRIGHT_PART1}</span>
-            <span className="part2">{strings.COPYRIGHT_PART2}</span>
-            <span className="part3">{strings.COPYRIGHT_PART3}</span>
-          </div>
-          <div className="secure-payment">
-            <img src={SecurePayment} alt="" />
-          </div>
-        </footer>
+
+        <div className="suppliers">
+          {suppliers.length > 0 && (
+            <>
+              <h1>{strings.SUPPLIERS_TITLE}</h1>
+              <SupplierCarrousel suppliers={suppliers} />
+            </>
+          )}
+        </div>
+
+        <div className="home-map">
+          <Map
+            title={strings.MAP_TITLE}
+            initialZoom={2.5}
+            onSelelectPickUpLocation={async (locationId) => {
+              const location = await LocationService.getLocation(locationId)
+              setSelectedPickupLocation(location)
+              setPickupLocation(locationId)
+              if (sameLocation) {
+                setDropOffLocation(locationId)
+              } else {
+                setSameLocation(dropOffLocation === locationId)
+              }
+              helper.info(strings.MAP_PICK_UP_SELECTED)
+            }}
+            onSelelectDropOffLocation={async (locationId) => {
+              const location = await LocationService.getLocation(locationId)
+              setSelectedDropOffLocation(location)
+              setDropOffLocation(locationId)
+              setSameLocation(pickupLocation === locationId)
+              helper.info(strings.MAP_DROP_OFF_SELECTED)
+            }}
+          />
+        </div>
       </div>
+
+      <Footer />
     </Layout>
   )
 }

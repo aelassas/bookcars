@@ -161,11 +161,19 @@ export interface UpdateCarPayload extends CreateCarPayload {
   _id: string
 }
 
+export interface CarSpecs {
+  aircon?: boolean,
+  moreThanFourDoors?: boolean,
+  moreThanFiveSeats?: boolean,
+}
+
 export interface GetCarsPayload {
-  suppliers: string[]
+  carSpecs?: CarSpecs
+  suppliers?: string[]
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
+  fuelPolicy?: string[]
   deposit?: number
   availability?: string[]
   pickupLocation?: string
@@ -282,6 +290,7 @@ export interface User {
   accessToken?: string
   checked?: boolean
   customerId?: string
+  carCount?: number
 }
 
 export interface Option {
@@ -392,6 +401,15 @@ export interface PaymentResult {
   paymentIntentId?: string
   customerId: string
   clientSecret: string | null
+}
+
+export interface SendEmailPayload {
+  from: string
+  to: string
+  subject: string
+  message: string
+  recaptchaToken: string
+  ip: string
 }
 
 
