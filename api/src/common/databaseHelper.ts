@@ -179,6 +179,18 @@ export const InitializeLocations = async () => {
         console.log('English value not found for location:', location.id)
       }
     }
+
+    // Delete LocationValue nin env.LANGUAGES
+    const values = await LocationValue.find({ language: { $in: env.LANGUAGES } })
+    for (const val of values) {
+      const _locations = await Location.find({ values: val._id })
+      for (const _loc of _locations) {
+        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
+        await _loc.save()
+      }
+    }
+    await LocationValue.deleteMany({ language: { $in: env.LANGUAGES } })
+
     logger.info('Locations initialized')
     return true
   } catch (err) {
