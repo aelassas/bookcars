@@ -155,7 +155,7 @@ export const initialize = async (): Promise<boolean> => {
  */
 export const InitializeLocations = async () => {
   try {
-    console.log('Initializing locations...')
+    logger.info('Initializing locations...')
     const locations = await Location.find({})
       .populate<{ values: env.LocationValue[] }>({
         path: 'values',
@@ -179,10 +179,22 @@ export const InitializeLocations = async () => {
         console.log('English value not found for location:', location.id)
       }
     }
-    console.log('Locations initialized')
+
+    // Delete LocationValue nin env.LANGUAGES
+    // const values = await LocationValue.find({ language: { $in: env.LANGUAGES } })
+    // for (const val of values) {
+    //   const _locations = await Location.find({ values: val._id })
+    //   for (const _loc of _locations) {
+    //     _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)))
+    //     await _loc.save()
+    //   }
+    // }
+    // await LocationValue.deleteMany({ language: { $in: env.LANGUAGES } })
+
+    logger.info('Locations initialized')
     return true
   } catch (err) {
-    console.log('Error while initializing locations:', err)
+    logger.error('Error while initializing locations:', err)
     return false
   }
 }
