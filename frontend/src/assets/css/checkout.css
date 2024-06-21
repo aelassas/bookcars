@@ -205,9 +205,17 @@ div.booking .btn-cancel {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
+
   div.booking .booking-form {
-    width: 700px;
+    width: 860px;
     padding: 30px;
+  }
+
+  div.booking form,
+  div.booking div.booking-options-container,
+  div.booking div.booking-details-container,
+  div.booking div.payment-options-container {
+    width: 800px;
   }
 
   div.booking div.driver-details-form {
