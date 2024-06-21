@@ -181,7 +181,7 @@ export const InitializeLocations = async () => {
     }
 
     // Delete LocationValue nin env.LANGUAGES
-    const values = await LocationValue.find({ language: { $in: env.LANGUAGES } })
+    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     for (const val of values) {
       const _locations = await Location.find({ values: val._id })
       for (const _loc of _locations) {
@@ -189,7 +189,7 @@ export const InitializeLocations = async () => {
         await _loc.save()
       }
     }
-    await LocationValue.deleteMany({ language: { $in: env.LANGUAGES } })
+    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
 
     logger.info('Locations initialized')
     return true
