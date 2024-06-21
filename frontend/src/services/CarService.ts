@@ -13,7 +13,7 @@ import * as UserService from './UserService'
 export const getCars = (data: bookcarsTypes.GetCarsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Car>> =>
   axiosInstance
     .post(
-      `/api/frontend-cars/${page}/${size}}`,
+      `/api/frontend-cars/${page}/${size}`,
       data
     ).then((res) => res.data)
 
