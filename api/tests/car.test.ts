@@ -494,6 +494,8 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       suppliers: [SUPPLIER2_ID],
       pickupLocation: LOCATION2_ID,
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      carSpecs: {},
+      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       deposit: -1,
