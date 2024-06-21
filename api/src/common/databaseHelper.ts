@@ -185,7 +185,7 @@ export const InitializeLocations = async () => {
     // for (const val of values) {
     //   const _locations = await Location.find({ values: val._id })
     //   for (const _loc of _locations) {
-    //     _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)))
+    //     _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
     //     await _loc.save()
     //   }
     // }
