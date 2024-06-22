@@ -270,7 +270,7 @@ const CarList = ({
               <div className="car">
                 <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                 {!hideSupplier && (
-                  <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}}>
+                  <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
                     <span className="car-supplier-logo">
                       <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                     </span>

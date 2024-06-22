@@ -270,7 +270,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
 }
 
 /**
- * Get Frontend Suppliers
+ * Get Frontend Suppliers.
  *
  * @async
  * @param {Request} req
@@ -359,6 +359,119 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     return res.json(data)
   } catch (err) {
     logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Get Backend Suppliers.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const getBackendSuppliers = async (req: Request, res: Response) => {
+  try {
+    const { body }: { body: bookcarsTypes.GetCarsPayload } = req
+    const {
+      carType,
+      gearbox,
+      mileage,
+      deposit,
+      availability,
+      fuelPolicy,
+      carSpecs,
+    } = body
+    const keyword = escapeStringRegexp(String(req.query.s || ''))
+    const options = 'i'
+
+    const $match: mongoose.FilterQuery<any> = {
+      $and: [
+        { name: { $regex: keyword, $options: options } },
+        { fuelPolicy: { $in: fuelPolicy } },
+      ],
+    }
+
+    if (carSpecs) {
+      if (typeof carSpecs.aircon !== 'undefined') {
+        $match.$and!.push({ aircon: carSpecs.aircon })
+      }
+      if (typeof carSpecs.moreThanFourDoors !== 'undefined') {
+        $match.$and!.push({ doors: { $gt: 4 } })
+      }
+      if (typeof carSpecs.moreThanFiveSeats !== 'undefined') {
+        $match.$and!.push({ seats: { $gt: 5 } })
+      }
+    }
+
+    if (carType) {
+      $match.$and!.push({ type: { $in: carType } })
+    }
+
+    if (gearbox) {
+      $match.$and!.push({ gearbox: { $in: gearbox } })
+    }
+
+    if (mileage) {
+      if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
+        $match.$and!.push({ mileage: { $gt: -1 } })
+      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
+        $match.$and!.push({ mileage: -1 })
+      } else if (mileage.length === 0) {
+        return res.json([{ resultData: [], pageInfo: [] }])
+      }
+    }
+
+    if (deposit && deposit > -1) {
+      $match.$and!.push({ deposit: { $lte: deposit } })
+    }
+
+    if (Array.isArray(availability)) {
+      if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
+        $match.$and!.push({ available: true })
+      } else if (availability.length === 1
+        && availability[0] === bookcarsTypes.Availablity.Unavailable) {
+        $match.$and!.push({ available: false })
+      } else if (availability.length === 0) {
+        return res.json([{ resultData: [], pageInfo: [] }])
+      }
+    }
+
+    const data = await Car.aggregate(
+      [
+        { $match },
+        {
+          $lookup: {
+            from: 'User',
+            let: { userId: '$supplier' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$userId'] },
+                },
+              },
+            ],
+            as: 'supplier',
+          },
+        },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        {
+          $group: {
+            _id: '$supplier._id',
+            fullName: { $first: '$supplier.fullName' },
+            avatar: { $first: '$supplier.avatar' },
+            carCount: { $sum: 1 },
+          },
+        },
+        { $sort: { fullName: 1 } },
+      ],
+      { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
+    )
+
+    return res.json(data)
+  } catch (err) {
+    logger.error(`[supplier.getBackendSuppliers] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

@@ -12,5 +12,6 @@ routes.route(routeNames.getSupplier).get(authJwt.verifyToken, supplierController
 routes.route(routeNames.getSuppliers).get(authJwt.verifyToken, supplierController.getSuppliers)
 routes.route(routeNames.getAllSuppliers).get(supplierController.getAllSuppliers)
 routes.route(routeNames.getFrontendSuppliers).post(supplierController.getFrontendSuppliers)
+routes.route(routeNames.getBackendSuppliers).post(authJwt.verifyToken, supplierController.getBackendSuppliers)
 
 export default routes

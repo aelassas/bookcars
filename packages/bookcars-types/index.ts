@@ -168,8 +168,8 @@ export interface CarSpecs {
 }
 
 export interface GetCarsPayload {
-  carSpecs?: CarSpecs
   suppliers?: string[]
+  carSpecs?: CarSpecs
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
