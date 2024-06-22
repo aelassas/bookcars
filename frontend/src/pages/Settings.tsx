@@ -235,7 +235,8 @@ const Settings = () => {
                   variant="contained"
                   className="btn-primary btn-margin btn-margin-bottom"
                   size="small"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault()
                     navigate('/change-password')
                   }}
                 >
@@ -248,7 +249,8 @@ const Settings = () => {
                   variant="contained"
                   className="btn-secondary btn-margin-bottom"
                   size="small"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault()
                     navigate('/')
                   }}
                 >
