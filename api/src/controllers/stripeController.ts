@@ -8,7 +8,7 @@ import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import Booking from '../models/Booking'
 import User from '../models/User'
-import Car from '../models/Car'
+// import Car from '../models/Car'
 import * as bookingController from './bookingController'
 
 /**
