@@ -2,8 +2,9 @@
 .header {
   /* position: -webkit-sticky !important;
   position: sticky !important;
-  top: 0; */
-  z-index: 1400;
+  top: 0; 
+  z-index: 1400; */
+  transform: translate3d(0, 0, 0);
 }
 
 .menu {
