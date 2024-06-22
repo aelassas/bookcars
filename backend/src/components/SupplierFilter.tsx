@@ -15,30 +15,30 @@ interface SupplierFilterProps {
 }
 
 const SupplierFilter = ({
-  suppliers: suppliersFromProps,
+  suppliers: supliesFromProps,
   collapse,
   className,
   onChange
 }: SupplierFilterProps) => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
-  const [allChecked, setAllChecked] = useState(true)
+  const [allChecked, setAllChecked] = useState(false)
   const refs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    setSuppliers(suppliersFromProps)
-    setCheckedSuppliers(bookcarsHelper.flattenSuppliers(suppliersFromProps))
-  }, [suppliersFromProps])
+    setSuppliers(supliesFromProps)
+    // setCheckedSuppliers(bookcarsHelper.flattenSuppliers(supliesFromProps))
+  }, [supliesFromProps])
 
-  useEffect(() => {
-    if (suppliers.length > 0) {
-      refs.current.forEach((checkbox) => {
-        if (checkbox) {
-          checkbox.checked = true
-        }
-      })
-    }
-  }, [suppliers])
+  // useEffect(() => {
+  //   if (suppliers.length > 0) {
+  //     refs.current.forEach((checkbox) => {
+  //       if (checkbox) {
+  //         checkbox.checked = true
+  //       }
+  //     })
+  //   }
+  // }, [suppliers])
 
   const handleCheckSupplierChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     const supplierId = e.currentTarget.getAttribute('data-id') as string
@@ -61,7 +61,11 @@ const SupplierFilter = ({
     setCheckedSuppliers(checkedSuppliers)
 
     if (onChange) {
-      onChange(bookcarsHelper.clone(checkedSuppliers))
+      if (checkedSuppliers.length === 0) {
+        onChange(bookcarsHelper.clone(bookcarsHelper.flattenSuppliers(supliesFromProps)))
+      } else {
+        onChange(bookcarsHelper.clone(checkedSuppliers))
+      }
     }
   }
 
@@ -103,7 +107,8 @@ const SupplierFilter = ({
   }
 
   return (
-    (suppliers.length > 1
+    (
+      (suppliers.length > 1)
       && (
         <Accordion
           title={commonStrings.SUPPLIER}
@@ -124,9 +129,10 @@ const SupplierFilter = ({
                   onChange={handleCheckSupplierChange}
                 />
                 <span
-                  onClick={handleSupplierClick}
                   role="button"
                   tabIndex={0}
+                  onClick={handleSupplierClick}
+                  className="supplier"
                 >
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)}
@@ -134,6 +140,7 @@ const SupplierFilter = ({
                     title={supplier.fullName}
                   />
                 </span>
+                {!!supplier.carCount && <span className="car-count">{`(${supplier.carCount})`}</span>}
               </li>
             ))}
           </ul>

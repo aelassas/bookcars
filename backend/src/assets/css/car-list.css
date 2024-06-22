@@ -312,7 +312,7 @@ section.car-list .empty-list {
     word-break: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100px;
+    width: 140px;
   }
 
   section.car-list article div.price {

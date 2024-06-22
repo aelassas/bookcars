@@ -42,9 +42,11 @@ import '../assets/css/car-list.css'
 interface CarListProps {
   suppliers?: string[]
   keyword?: string
+  carSpecs?: bookcarsTypes.CarSpecs
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
+  fuelPolicy: string[],
   deposit?: number
   availability?: string[]
   reload?: boolean
@@ -63,9 +65,11 @@ interface CarListProps {
 const CarList = ({
   suppliers: carSuppliers,
   keyword: carKeyword,
+  carSpecs: _carSpecs,
   carType: _carType,
   gearbox: carGearbox,
   mileage: carMileage,
+  fuelPolicy: _fuelPolicy,
   deposit: carDeposit,
   availability: carAvailability,
   reload,
@@ -115,9 +119,11 @@ const CarList = ({
     _page: number,
     suppliers?: string[],
     keyword?: string,
+    carSpecs?: bookcarsTypes.CarSpecs,
     __carType?: string[],
     gearbox?: string[],
     mileage?: string[],
+    fuelPolicy?: string[],
     deposit?: number,
     availability?: string[]
   ) => {
@@ -126,9 +132,11 @@ const CarList = ({
 
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: suppliers ?? [],
+        carSpecs,
         carType: __carType,
         gearbox,
         mileage,
+        fuelPolicy,
         deposit,
         availability,
       }
@@ -175,9 +183,11 @@ const CarList = ({
           page,
           carSuppliers,
           carKeyword,
+          _carSpecs,
           _carType,
           carGearbox,
           carMileage,
+          _fuelPolicy,
           carDeposit || 0,
           carAvailability
         )
@@ -195,9 +205,11 @@ const CarList = ({
     page,
     carSuppliers,
     carKeyword,
+    _carSpecs,
     _carType,
     carGearbox,
     carMileage,
+    _fuelPolicy,
     carDeposit,
     carAvailability
   ])
@@ -219,9 +231,11 @@ const CarList = ({
   }, [
     carSuppliers,
     carKeyword,
+    _carSpecs,
     _carType,
     carGearbox,
     carMileage,
+    _fuelPolicy,
     carDeposit,
     carAvailability
   ])
@@ -233,9 +247,11 @@ const CarList = ({
         1,
         carSuppliers,
         carKeyword,
+        _carSpecs,
         _carType,
         carGearbox,
         carMileage,
+        _fuelPolicy,
         carDeposit,
         carAvailability
       )
@@ -244,9 +260,11 @@ const CarList = ({
     reload,
     carSuppliers,
     carKeyword,
+    _carSpecs,
     _carType,
     carGearbox,
     carMileage,
+    _fuelPolicy,
     carDeposit,
     carAvailability
   ])
@@ -379,7 +397,7 @@ const CarList = ({
                   <div className="car">
                     <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                     {!hideSupplier && (
-                      <div className="car-supplier">
+                      <div className="car-supplier" title={car.supplier.fullName}>
                         <span className="car-supplier-logo">
                           <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                         </span>
@@ -552,11 +570,11 @@ const CarList = ({
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        {/* <Tooltip title={commonStrings.DELETE}>
+                        <Tooltip title={commonStrings.DELETE}>
                           <IconButton data-id={car._id} data-index={index} onClick={handleDelete}>
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip> */}
+                        </Tooltip>
                       </>
                     )}
                   </div>
