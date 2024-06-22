@@ -150,13 +150,13 @@ const isEL = language === 'el'
 
 const theme = createTheme(
   {
-    palette: {
-      primary: {
-        main: '#1976D2',
-        contrastText: '#121212',
-        dark: '#1976D2',
-      },
-    },
+    // palette: {
+    //   primary: {
+    //     main: '#1976D2',
+    //     contrastText: '#121212',
+    //     dark: '#1976D2',
+    //   },
+    // },
     typography: {
       fontFamily: [
         '-apple-system',
