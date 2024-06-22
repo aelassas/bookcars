@@ -334,7 +334,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                 </div>
               ))}
             </div>
-            <div className="footer">
+            <div className="notifications-footer">
               {rowCount > -1 && <div className="row-count">{`${(page - 1) * env.PAGE_SIZE + 1}-${rowCount} ${commonStrings.OF} ${totalRecords}`}</div>}
 
               <div className="actions">
