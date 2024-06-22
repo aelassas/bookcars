@@ -34,7 +34,7 @@ section.car-list .empty-list {
     color: #333;
     font-size: 12px;
     margin: 0 1px 10px;
-    min-height: 730px;
+    min-height: 800px;
     padding: 15px;
   }
 
@@ -142,7 +142,9 @@ section.car-list .empty-list {
     font-size: 2em;
     font-weight: 700;
     white-space: nowrap;
-    text-align: center;
+    position: absolute;
+    bottom: 50px;
+    right: 15px;
   }
 
   section.car-list article div.car-info {
