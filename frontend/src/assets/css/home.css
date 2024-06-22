@@ -129,7 +129,7 @@ div.home div.home-content {
   align-items: center;
   background-image: url('/cover.jpg');
   background-size: cover;
-  background-position: bottom;
+  background-position: center;
   width: 100%;
 }
 
