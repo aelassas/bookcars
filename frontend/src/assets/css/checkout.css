@@ -182,7 +182,7 @@ div.booking .btn-cancel {
 
 @media only screen and (width <=960px) {
   div.booking .booking-form {
-    padding: 30px;
+    padding: 5px;
     margin: 10px;
   }
 
