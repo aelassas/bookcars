@@ -414,8 +414,11 @@ export const getCars = async (req: Request, res: Response) => {
       $and: [
         { name: { $regex: keyword, $options: options } },
         { supplier: { $in: suppliers } },
-        { fuelPolicy: { $in: fuelPolicy } },
       ],
+    }
+
+    if (fuelPolicy) {
+      $match.$and!.push({ fuelPolicy: { $in: fuelPolicy } })
     }
 
     if (carSpecs) {
@@ -597,8 +600,11 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         { locations: pickupLocation },
         { available: true }, { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
-        { fuelPolicy: { $in: fuelPolicy } },
       ],
+    }
+
+    if (fuelPolicy) {
+      $match.$and!.push({ fuelPolicy: { $in: fuelPolicy } })
     }
 
     if (carSpecs) {

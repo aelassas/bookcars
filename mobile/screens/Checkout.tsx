@@ -751,7 +751,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               navigation={navigation}
               cars={[car]}
               hidePrice
-              header={<Text style={styles.header}>{i18n.t('CREATE_BOOKING')}</Text>}
+              // header={<Text style={styles.header}>{i18n.t('CREATE_BOOKING')}</Text>}
               footerComponent={
                 <View style={styles.contentContainer}>
                   <View style={styles.section}>
