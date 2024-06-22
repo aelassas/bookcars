@@ -19,7 +19,11 @@ import {
   CardContent,
   Typography
 } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Check as CheckIcon
+} from '@mui/icons-material'
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
@@ -263,11 +267,11 @@ const BookingList = ({
                   <EditIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={commonStrings.DELETE}>
+              {/* <Tooltip title={commonStrings.DELETE}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </div>
           )
         },
@@ -282,7 +286,7 @@ const BookingList = ({
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={strings.DELETE_SELECTION}>
+            {/* <Tooltip title={strings.DELETE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setopenDeleteDialog(true)
@@ -290,7 +294,7 @@ const BookingList = ({
               >
                 <DeleteIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         ) : (
           <></>
@@ -606,7 +610,7 @@ const BookingList = ({
                     >
                       {commonStrings.UPDATE}
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       className="btn-secondary"
                       size="small"
@@ -615,7 +619,7 @@ const BookingList = ({
                       onClick={handleDelete}
                     >
                       {commonStrings.DELETE}
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               )

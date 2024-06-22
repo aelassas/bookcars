@@ -570,11 +570,11 @@ const CarList = ({
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={commonStrings.DELETE}>
+                        {/* <Tooltip title={commonStrings.DELETE}>
                           <IconButton data-id={car._id} data-index={index} onClick={handleDelete}>
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                       </>
                     )}
                   </div>

@@ -132,7 +132,7 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       await booking.save()
 
       // Mark car as unavailable
-      await Car.updateOne({ _id: booking.car }, { available: false })
+      // await Car.updateOne({ _id: booking.car }, { available: false })
 
       // Send confirmation email
       const user = await User.findById(booking.driver)
