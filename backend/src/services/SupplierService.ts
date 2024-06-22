@@ -85,5 +85,19 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
     .get(
       '/api/all-suppliers',
       { withCredentials: true }
-)
+    )
     .then((res) => res.data)
+
+/**
+* Get backend suppliers.
+*
+* @param {bookcarsTypes.GetCarsPayload} data
+* @returns {Promise<bookcarsTypes.User[]>}
+*/
+export const getBackendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
+  axiosInstance
+    .post(
+      '/api/backend-suppliers',
+      data,
+      { withCredentials: true }
+    ).then((res) => res.data)

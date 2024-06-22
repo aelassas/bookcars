@@ -404,12 +404,30 @@ export const getCars = async (req: Request, res: Response) => {
       mileage,
       deposit,
       availability,
+      fuelPolicy,
+      carSpecs,
     } = body
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
     const $match: mongoose.FilterQuery<any> = {
-      $and: [{ name: { $regex: keyword, $options: options } }, { supplier: { $in: suppliers } }],
+      $and: [
+        { name: { $regex: keyword, $options: options } },
+        { supplier: { $in: suppliers } },
+        { fuelPolicy: { $in: fuelPolicy } },
+      ],
+    }
+
+    if (carSpecs) {
+      if (typeof carSpecs.aircon !== 'undefined') {
+        $match.$and!.push({ aircon: carSpecs.aircon })
+      }
+      if (typeof carSpecs.moreThanFourDoors !== 'undefined') {
+        $match.$and!.push({ doors: { $gt: 4 } })
+      }
+      if (typeof carSpecs.moreThanFiveSeats !== 'undefined') {
+        $match.$and!.push({ seats: { $gt: 5 } })
+      }
     }
 
     if (carType) {
