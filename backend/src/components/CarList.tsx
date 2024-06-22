@@ -46,7 +46,7 @@ interface CarListProps {
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
-  fuelPolicy: string[],
+  fuelPolicy?: string[],
   deposit?: number
   availability?: string[]
   reload?: boolean
