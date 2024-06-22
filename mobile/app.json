@@ -54,10 +54,13 @@
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/fe1ab335-41ae-4a35-960b-0052b493db49?runtime-version=1.0.0&channel-name=production&platform=android"
+      "url": "https://u.expo.dev/fe1ab335-41ae-4a35-960b-0052b493db49"
     },
     "experiments": {
       "tsconfigPaths": true
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
