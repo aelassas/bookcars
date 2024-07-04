@@ -37,12 +37,12 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 ## Live Demo
 
 ### Frontend
-* URL: https://bookcars.v6.rocks:3002/
+* URL: https://bookcars.dynv6.net:3002/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
 ### Backend
-* URL: https://bookcars.v6.rocks:3001/
+* URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
