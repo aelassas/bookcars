@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '../components/Layout'
@@ -19,17 +19,6 @@ const Bookings = () => {
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingSuppliers, setLoadingSuppliers] = useState(true)
-  const [offset, setOffset] = useState(0)
-
-  useEffect(() => {
-    if (user && user.verified) {
-      const col1 = document.querySelector('div.col-1')
-      if (col1) {
-        setOffset(col1.clientHeight)
-      }
-    }
-  }, [user])
-
   const handleSupplierFilterChange = (_suppliers: string[]) => {
     setSuppliers(_suppliers)
   }
@@ -66,8 +55,6 @@ const Bookings = () => {
           </div>
           <div className="col-2">
             <BookingList
-              containerClassName="bookings"
-              offset={offset}
               user={user}
               language={user.language}
               suppliers={suppliers}
