@@ -1,23 +1,74 @@
 div.bookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   position: absolute;
-  bottom: 0;
+  top: 117px;
   right: 0;
+  bottom: 0;
   left: 0;
+
+  transform: translate3d(0, 0, 0);
+}
+
+div.bookings div.col-1 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  padding: 12px 0 0 12px;
+  background-color: #FAFAFA;
+  overflow: auto;
+}
+
+div.bookings div.col-1 .cl-supplier-filter,
+div.bookings div.col-1 .cl-status-filter,
+div.bookings div.col-1 .cl-booking-filter {
+  margin: 10px 10px 10px 0;
+}
+
+div.bookings div.col-1 .cl-booking-filter div.panel,
+div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+div.bookings div.col-1 .cl-status-filter,
+div.bookings div.col-1 .cl-booking-filter {
+  margin-bottom: 10px;
+}
+
+div.bookings div.col-2 {
+  position: absolute;
+  inset: 0 0 0 300px;
 }
 
 /* Device width is lower than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.bookings {
-    top: 56px;
+    position: relative;
+    top: 0;
     overflow-y: auto;
   }
 
   div.bookings div.col-1,
   div.bookings div.col-2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  div.bookings div.col-1 {
+    position: relative;
+    inset: 0;
+    padding-top: 15px;
+  }
+
+  div.bookings div.col-2 {
+    position: relative;
+    inset: 0;
   }
 
   div.bookings div.col-1 .cl-supplier-filter label.accordion,
@@ -29,10 +80,10 @@ div.bookings {
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
-    margin: 5px 10px;
+    margin: 10px;
     background-color: #fff;
-    max-width: 480px;
     width: calc(100% - 20px);
+    max-width: 480px;
   }
 
   div.bookings div.col-1 .cl-booking-filter div.panel,
@@ -45,58 +96,5 @@ div.bookings {
     width: calc(100% - 20px);
     max-width: 480px;
     margin: 15px 10px 5px;
-  }
-}
-
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >= 960px) {
-  div.bookings {
-    top: 64px;
-  }
-
-  div.bookings div.col-1 {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 300px;
-    padding: 12px 0 0 12px;
-    background: #fefefe;
-    overflow: auto;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter label.accordion,
-  div.bookings div.col-1 .cl-status-filter label.accordion,
-  div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fafafa;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter,
-  div.bookings div.col-1 .cl-status-filter,
-  div.bookings div.col-1 .cl-booking-filter {
-    margin: 10px 10px 10px 0;
-    background-color: #fafafa;
-  }
-
-  div.bookings div.col-1 .cl-booking-filter div.panel,
-  div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  div.bookings div.col-1 .cl-status-filter,
-  div.bookings div.col-1 .cl-booking-filter {
-    margin-bottom: 10px;
-  }
-
-  div.bookings div.col-1 .cl-new-booking {
-    width: 265px;
-    margin-left: 5px;
-  }
-
-  div.bookings div.col-2 {
-    position: absolute;
-    inset: 0 0 0 300px;
   }
 }

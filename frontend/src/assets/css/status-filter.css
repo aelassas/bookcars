@@ -24,53 +24,13 @@ div.status-filter ul.status-list li {
   clear: none;
 }
 
-div.status-filter ul.status-list li span.bs {
-  padding: 3px;
-  width: 80px;
-  text-align: center;
-  color: #fff;
-  box-shadow: none;
-  vertical-align: middle;
-  position: relative;
-  top: -3px;
-  left: 5px;
-  cursor: pointer;
-  overflow: hidden;
-  margin-bottom: 0;
-  display: inline-block;
-  opacity: 1;
-}
-
 div.status-filter ul.status-list li input[type='checkbox'].status-checkbox {
   cursor: pointer;
 }
 
 div.status-filter ul.status-list li span.bs:hover {
   opacity: 0.9;
-}
-
-div.status-filter ul.status-list li span.bs-void {
-  background: #999;
-}
-
-div.status-filter ul.status-list li span.bs-pending {
-  background: #e98003;
-}
-
-div.status-filter ul.status-list li span.bs-deposit {
-  background: #22bba7;
-}
-
-div.status-filter ul.status-list li span.bs-paid {
-  background: #77bc23;
-}
-
-div.status-filter ul.status-list li span.bs-reserved {
-  background: #188ace;
-}
-
-div.status-filter ul.status-list li span.bs-cancelled {
-  background: #bc2143;
+  cursor: pointer;
 }
 
 div.status-filter div.filter-actions {

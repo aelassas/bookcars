@@ -29,41 +29,6 @@ div.bs-list div.cell-supplier img {
   max-height: 100%;
 }
 
-div.bs-list span.bs {
-  padding: 3px;
-  width: 80px;
-  text-align: center;
-  color: #fff;
-  display: inline-flex;
-  height: 26px;
-  justify-content: center;
-  align-items: center;
-}
-
-div.bs-list span.bs-void {
-  background: #999;
-}
-
-div.bs-list span.bs-pending {
-  background: #e98003;
-}
-
-div.bs-list span.bs-deposit {
-  background: #22bba7;
-}
-
-div.bs-list span.bs-paid {
-  background: #77bc23;
-}
-
-div.bs-list span.bs-reserved {
-  background: #188ace;
-}
-
-div.bs-list span.bs-cancelled {
-  background: #bc2143;
-}
-
 div.bs-update-status {
   width: 444px;
   height: 70px;
