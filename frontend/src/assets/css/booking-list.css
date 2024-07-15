@@ -14,54 +14,18 @@ div.bs-list .empty-list {
   width: 250px;
 }
 
-div.bs-list div.cell-supplier {
+div.bs-list div.cell-agency {
   display: inline-flex;
   align-items: center;
   width: 60px;
   height: 30px;
   position: relative;
   vertical-align: middle;
-
 }
 
-div.bs-list div.cell-supplier img {
+div.bs-list div.cell-agency img {
   max-width: 100%;
   max-height: 100%;
-}
-
-div.bs-list span.bs {
-  padding: 3px;
-  width: 80px;
-  text-align: center;
-  color: #fff;
-  display: inline-flex;
-  height: 26px;
-  justify-content: center;
-  align-items: center;
-}
-
-div.bs-list span.bs-void {
-  background: #999;
-}
-
-div.bs-list span.bs-pending {
-  background: #e98003;
-}
-
-div.bs-list span.bs-deposit {
-  background: #22bba7;
-}
-
-div.bs-list span.bs-paid {
-  background: #77bc23;
-}
-
-div.bs-list span.bs-reserved {
-  background: #188ace;
-}
-
-div.bs-list span.bs-cancelled {
-  background: #bc2143;
 }
 
 div.bs-update-status {
@@ -105,7 +69,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   color: rgb(0 0 0 / 87%);
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.property-agency {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
@@ -113,12 +77,12 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
   height: 30px;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier img {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.property-agency img {
   max-width: 100%;
   max-height: 100%;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.property-agency-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;

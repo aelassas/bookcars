@@ -35,6 +35,7 @@ import { strings } from '../lang/booking-list'
 import * as helper from '../common/helper'
 import * as BookingService from '../services/BookingService'
 import StatusList from './StatusList'
+import BookingStatus from './BookingStatus'
 
 import '../assets/css/booking-list.css'
 
@@ -245,7 +246,7 @@ const BookingList = ({
         field: 'status',
         headerName: strings.STATUS,
         flex: 1,
-        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <span className={`bs bs-${value?.toLowerCase()}`}>{helper.getBookingStatus(value)}</span>,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <BookingStatus value={value!} showIcon />,
         valueGetter: (value: string) => value,
       },
       {
