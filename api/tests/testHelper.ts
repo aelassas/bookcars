@@ -31,8 +31,10 @@ export const SIZE = 30
 let ADMIN_USER_ID: string
 let USER_ID: string
 
-export const initializeLogger = () => {
-  logger.disableLogging()
+export const initializeLogger = (disable = true) => {
+  if (disable) {
+    logger.disableLogging()
+  }
 }
 
 export const initialize = async () => {

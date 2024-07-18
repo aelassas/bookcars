@@ -317,7 +317,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        return res.json([])
       }
     }
 
@@ -355,7 +355,6 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
-
     return res.json(data)
   } catch (err) {
     logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('DB_ERROR')}`, err)
@@ -419,7 +418,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        return res.json([])
       }
     }
 
@@ -430,11 +429,10 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     if (Array.isArray(availability)) {
       if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
         $match.$and!.push({ available: true })
-      } else if (availability.length === 1
-        && availability[0] === bookcarsTypes.Availablity.Unavailable) {
+      } else if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Unavailable) {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        return res.json([])
       }
     }
 
