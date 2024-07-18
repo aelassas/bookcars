@@ -19,9 +19,13 @@ import AdditionalDriver from '../src/models/AdditionalDriver'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const LOCATION_ID = testHelper.GetRandromObjectIdAsString()
+
 let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
 let SUPPLIER1_NAME: string
+let CAR1_ID: string
+let CAR2_ID: string
 
 //
 // Connecting and initializing the database before running the test suite
@@ -38,6 +42,59 @@ beforeAll(async () => {
   const supplierName2 = testHelper.getSupplierName()
   SUPPLIER1_ID = await testHelper.createSupplier(`${SUPPLIER1_NAME}@test.bookcars.ma`, SUPPLIER1_NAME)
   SUPPLIER2_ID = await testHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName2)
+
+  // create two cars
+  const car1 = new Car({
+    name: 'BMW X1',
+    supplier: SUPPLIER1_ID,
+    minimumAge: 21,
+    locations: [LOCATION_ID],
+    price: 78,
+    deposit: 950,
+    available: true,
+    type: bookcarsTypes.CarType.Diesel,
+    gearbox: bookcarsTypes.GearboxType.Automatic,
+    aircon: true,
+    image: undefined,
+    seats: 6,
+    doors: 5,
+    fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+    mileage: 1000,
+    cancellation: 0,
+    amendments: 0,
+    theftProtection: 90,
+    collisionDamageWaiver: 120,
+    fullInsurance: 200,
+    additionalDriver: 200,
+  })
+  await car1.save()
+  CAR1_ID = car1.id
+
+  const car2 = new Car({
+    name: 'Fiat 500',
+    supplier: SUPPLIER2_ID,
+    minimumAge: 21,
+    locations: [LOCATION_ID],
+    price: 42,
+    deposit: 750,
+    available: true,
+    type: bookcarsTypes.CarType.Diesel,
+    gearbox: bookcarsTypes.GearboxType.Automatic,
+    aircon: true,
+    image: undefined,
+    seats: 5,
+    doors: 4,
+    fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+    mileage: -1,
+    cancellation: 0,
+    amendments: 0,
+    theftProtection: 90,
+    collisionDamageWaiver: 120,
+    fullInsurance: 200,
+    additionalDriver: 200,
+  })
+  await car2.save()
+  CAR2_ID = car2.id
 })
 
 //
@@ -50,6 +107,9 @@ afterAll(async () => {
     // delete suppliers
     await testHelper.deleteSupplier(SUPPLIER1_ID)
     await testHelper.deleteSupplier(SUPPLIER2_ID)
+
+    // delete cars
+    await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
 
     await databaseHelper.close()
   }
@@ -380,6 +440,169 @@ describe('DELETE /api/delete-supplier/:id', () => {
     supplier = await User.findById(supplierId)
     expect(supplier).toBeNull()
     await testHelper.deleteLocation(locationId)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/frontend-suppliers', () => {
+  it('should return frontend suppliers', async () => {
+    const payload: bookcarsTypes.GetCarsPayload = {
+      pickupLocation: LOCATION_ID,
+      carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
+      mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
+      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.FreeTank],
+      deposit: -1,
+    }
+
+    let res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(2)
+    expect(res.body[0].carCount).toBe(1)
+    expect(res.body[1].carCount).toBe(1)
+
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+    expect(res.statusCode).toBe(400)
+
+    payload.mileage = [bookcarsTypes.Mileage.Unlimited]
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(1)
+
+    payload.mileage = [bookcarsTypes.Mileage.Limited]
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(1)
+
+    payload.mileage = []
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(0)
+
+    payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
+    payload.deposit = 1200
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(2)
+
+    // carSpecs
+    payload.carSpecs = {}
+    payload.carSpecs.aircon = true
+    payload.carSpecs.moreThanFiveSeats = true
+    payload.carSpecs.moreThanFourDoors = true
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(1)
+  })
+})
+
+describe('POST /api/backend-suppliers', () => {
+  it('should return backend suppliers', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    const payload: bookcarsTypes.GetCarsPayload = {
+      pickupLocation: LOCATION_ID,
+      carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
+      mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
+      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.FreeTank],
+      deposit: -1,
+    }
+
+    let res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    payload.mileage = [bookcarsTypes.Mileage.Unlimited]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    payload.mileage = [bookcarsTypes.Mileage.Limited]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    payload.mileage = []
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(0)
+
+    payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
+    payload.deposit = 1200
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    // carSpecs
+    payload.carSpecs = {}
+    payload.carSpecs.aircon = true
+    payload.carSpecs.moreThanFiveSeats = true
+    payload.carSpecs.moreThanFourDoors = true
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    payload.availability = [bookcarsTypes.Availablity.Available]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+
+    payload.availability = [bookcarsTypes.Availablity.Unavailable]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(0)
+
+    payload.availability = []
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(0)
 
     await testHelper.signout(token)
   })
