@@ -1304,3 +1304,32 @@ describe('POST /api/delete-users', () => {
     await testHelper.signout(token)
   })
 })
+
+describe('POST /api/verify-recaptcha/:token/:ip', () => {
+  it('should verify reCAPTCHA', async () => {
+    const ip = '134.236.60.166'
+    const recaptchaToken = 'XXXXXX'
+    const res = await request(app)
+      .post(`/api/verify-recaptcha/${recaptchaToken}/${ip}`)
+    expect(res.statusCode).toBe(204)
+  })
+})
+
+describe('POST /api/send-email', () => {
+  it('should send an email', async () => {
+    const ip = '134.236.60.166'
+    const recaptchaToken = 'XXXXXX'
+    const payload = {
+      from: 'no-replay@bookcars.ma',
+      to: 'test@test.com',
+      subject: 'test',
+      message: 'test message',
+      recaptchaToken,
+      ip,
+    }
+    const res = await request(app)
+      .post('/api/send-email')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+  })
+})
