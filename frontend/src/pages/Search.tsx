@@ -19,6 +19,9 @@ import CarList from '../components/CarList'
 
 import '../assets/css/cars.css'
 
+const allSuppliers = await SupplierService.getAllSuppliers()
+const allSuppliersIds = bookcarsHelper.flattenSuppliers(allSuppliers)
+
 const Search = () => {
   const location = useLocation()
 
@@ -28,8 +31,8 @@ const Search = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
-  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
-  const [suppliers, setSuppliers] = useState<string[]>()
+  const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [supplierIds, setSupplierIds] = useState<string[]>()
   const [loading, setLoading] = useState(true)
   const [carSpecs, setCarSpecs] = useState<bookcarsTypes.CarSpecs>({})
   const [carType, setCarType] = useState(bookcarsHelper.getAllCarTypes())
@@ -50,15 +53,20 @@ const Search = () => {
           fuelPolicy,
           deposit,
         }
-        const _allSuppliers = await SupplierService.getFrontendSuppliers(payload)
-        setAllSuppliers(_allSuppliers)
+        const _suppliers = await SupplierService.getFrontendSuppliers(payload)
+        setSuppliers(_suppliers)
       }
     }
 
     updateSuppliers()
   }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit])
 
-  const handleCarFilterSubmit = (filter: bookcarsTypes.CarFilter) => {
+  const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
+    if (suppliers.length < allSuppliers.length) {
+      const _supplierIds = bookcarsHelper.clone(allSuppliersIds)
+      setSupplierIds(_supplierIds)
+    }
+
     setPickupLocation(filter.pickupLocation)
     setDropOffLocation(filter.dropOffLocation)
     setFrom(filter.from)
@@ -70,7 +78,7 @@ const Search = () => {
   }
 
   const handleSupplierFilterChange = (newSuppliers: string[]) => {
-    setSuppliers(newSuppliers)
+    setSupplierIds(newSuppliers)
   }
 
   const handleCarTypeFilterChange = (values: bookcarsTypes.CarType[]) => {
@@ -143,15 +151,15 @@ const Search = () => {
         fuelPolicy,
         deposit,
       }
-      const _allSuppliers = await SupplierService.getFrontendSuppliers(payload)
-      const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
+      const _suppliers = await SupplierService.getFrontendSuppliers(payload)
+      const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
 
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
-      setAllSuppliers(_allSuppliers)
       setSuppliers(_suppliers)
+      setSupplierIds(_supplierIds)
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)
@@ -163,13 +171,13 @@ const Search = () => {
 
   return (
     <Layout onLoad={onLoad} strict={false}>
-      {visible && suppliers && pickupLocation && dropOffLocation && from && to && (
+      {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
         <div className="cars">
           <div className="col-1">
             {!loading && (
               <>
                 <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
-                <SupplierFilter className="filter" suppliers={allSuppliers} onChange={handleSupplierFilterChange} />
+                <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
                 <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
                 <CarType className="filter" onChange={handleCarTypeFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
@@ -182,7 +190,7 @@ const Search = () => {
           <div className="col-2">
             <CarList
               carSpecs={carSpecs}
-              suppliers={suppliers}
+              suppliers={supplierIds}
               carType={carType}
               gearbox={gearbox}
               mileage={mileage}
