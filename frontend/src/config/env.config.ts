@@ -8,11 +8,11 @@ import Const from './const'
 const LANGUAGES = [
   {
     code: 'en',
-    label: 'EN',
+    label: 'English',
   },
   {
     code: 'fr',
-    label: 'FR',
+    label: 'Français',
   },
 ]
 
