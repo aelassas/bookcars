@@ -1,10 +1,13 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
 name: test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ demo ]
   pull_request:
-    branches: [ main ]
+    branches: [ demo ]
 
 jobs:
   test:
@@ -23,6 +26,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        
         
     - name: test API
       run: |
@@ -84,10 +88,3 @@ jobs:
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
         BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}
         BC_STRIPE_SECRET_KEY: ${{ secrets.BC_STRIPE_SECRET_KEY }}
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: cobertura-coverage.xml
-          directory: ./api/coverage
-          fail_ci_if_error: true
