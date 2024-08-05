@@ -121,7 +121,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         let status
         try {
           status = await UserService.validateAccessToken()
-        } catch (err) {
+        } catch {
           status = 403
         }
 
@@ -242,7 +242,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setVisible(true)
       setFormVisible(true)
-    } catch (err) {
+    } catch {
       await UserService.signout(navigation)
     }
   }

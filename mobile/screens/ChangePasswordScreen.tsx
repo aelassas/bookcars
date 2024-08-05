@@ -70,7 +70,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
 
       setUser(_user)
       setVisible(true)
-    } catch (err) {
+    } catch {
       await UserService.signout(navigation, false, true)
     }
   }
