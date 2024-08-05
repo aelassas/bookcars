@@ -21,6 +21,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Supplier management
 * Ready for one or multiple suppliers
 * Car fleet management
+* Location, country, parking spots and map features
 * Booking management
 * Payment management
 * Customer management
