@@ -195,8 +195,6 @@ describe('GET /api/check-country/:id', () => {
   it('should check a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    const supplierName = testHelper.getSupplierName()
-    const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     const locationId = await testHelper.createLocation('test-en', 'test-fr', COUNTRY_ID)
 
     let res = await request(app)
@@ -205,7 +203,6 @@ describe('GET /api/check-country/:id', () => {
     expect(res.statusCode).toBe(200)
 
     await Location.deleteOne({ _id: locationId })
-    await testHelper.deleteSupplier(supplierId)
     res = await request(app)
       .get(`/api/check-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
