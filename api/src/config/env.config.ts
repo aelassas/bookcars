@@ -574,7 +574,7 @@ export interface Location extends Document {
   values: Types.ObjectId[]
   name?: string
   image?: string | null
-  parkingSpots?: Types.ObjectId[]
+  parkingSpots?: Types.ObjectId[] | null
 }
 
 /**
