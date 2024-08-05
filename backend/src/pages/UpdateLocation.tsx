@@ -64,7 +64,7 @@ const UpdateLocation = () => {
 
     for (let i = 0; i < names.length; i += 1) {
       const name = names[i]
-      if (name.value !== location.values[i].value) {
+      if (name.name !== location.values[i].value) {
         _nameChanged = true
         break
       }
@@ -90,8 +90,8 @@ const UpdateLocation = () => {
 
       for (let i = 0; i < names.length; i += 1) {
         const name = names[i]
-        if (name.value !== location.values[i].value) {
-          const _isValid = (await LocationService.validate({ language: name.language, name: name.value })) === 200
+        if (name.name !== location.values[i].value) {
+          const _isValid = (await LocationService.validate({ language: name.language, name: name.name })) === 200
           isValid = isValid && _isValid
           if (!_isValid) {
             nameErrors[i] = true
@@ -115,7 +115,7 @@ const UpdateLocation = () => {
         if (status === 200) {
           for (let i = 0; i < names.length; i += 1) {
             const name = names[i]
-            location.values[i].value = name.value
+            location.values[i].value = name.name
           }
 
           setLocation(data)
@@ -149,7 +149,7 @@ const UpdateLocation = () => {
 
               const _names: bookcarsTypes.LocationName[] = _location.values.map((value) => ({
                 language: value.language || '',
-                value: value.value || '',
+                name: value.value || '',
               }))
 
               setLocation(_location)
@@ -227,12 +227,12 @@ const UpdateLocation = () => {
                   <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES.filter((l) => l.code === value.language)[0].label})`}</InputLabel>
                   <Input
                     type="text"
-                    value={(names[index] && names[index].value) || ''}
+                    value={(names[index] && names[index].name) || ''}
                     error={nameErrors[index]}
                     required
                     onChange={(e) => {
                       nameErrors[index] = false
-                      names[index].value = e.target.value
+                      names[index].name = e.target.value
                       checkName()
                       setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
                     }}

@@ -8,12 +8,12 @@ import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import * as env from '../src/config/env.config'
 import LocationValue from '../src/models/LocationValue'
+import Country from '../src/models/Country'
 import Location from '../src/models/Location'
-import Car from '../src/models/Car'
 
-let LOCATION_ID: string
+let COUNTRY_ID: string
 
-let LOCATION_NAMES: bookcarsTypes.LocationName[] = [
+let COUNTRY_NAMES: bookcarsTypes.CountryName[] = [
   {
     language: 'en',
     name: uuid(),
@@ -49,34 +49,34 @@ afterAll(async () => {
 // Unit tests
 //
 
-describe('POST /api/validate-location', () => {
-  it('should validate a location', async () => {
+describe('POST /api/validate-country', () => {
+  it('should validate a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
     const language = testHelper.LANGUAGE
     const name = uuid()
-    const locationValue = new LocationValue({ language, value: name })
-    await locationValue.save()
-    const payload: bookcarsTypes.ValidateLocationPayload = {
+    const countryValue = new LocationValue({ language, value: name })
+    await countryValue.save()
+    const payload: bookcarsTypes.ValidateCountryPayload = {
       language,
       name,
     }
     let res = await request(app)
-      .post('/api/validate-location')
+      .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(204)
 
     payload.name = uuid()
     res = await request(app)
-      .post('/api/validate-location')
+      .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
-    await LocationValue.deleteOne({ _id: locationValue._id })
+    await LocationValue.deleteOne({ _id: countryValue._id })
 
     res = await request(app)
-      .post('/api/validate-location')
+      .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -84,30 +84,20 @@ describe('POST /api/validate-location', () => {
   })
 })
 
-describe('POST /api/create-location', () => {
-  it('should create a location', async () => {
+describe('POST /api/create-country', () => {
+  it('should create a country', async () => {
     const token = await testHelper.signinAsAdmin()
-
-    const payload: bookcarsTypes.UpsertLocationPayload = {
-      country: testHelper.GetRandromObjectIdAsString(),
-      names: LOCATION_NAMES,
-      latitude: 28.0268755,
-      longitude: 1.6528399999999976,
-    }
 
     let res = await request(app)
-      .post('/api/create-location')
+      .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
-      .send(payload)
+      .send(COUNTRY_NAMES)
     expect(res.statusCode).toBe(200)
-    expect(res.body?.country).toBe(payload.country)
     expect(res.body?.values?.length).toBe(2)
-    expect(res.body?.latitude).toBe(payload.latitude)
-    expect(res.body?.longitude).toBe(payload.longitude)
-    LOCATION_ID = res.body?._id
+    COUNTRY_ID = res.body?._id
 
     res = await request(app)
-      .post('/api/create-location')
+      .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -115,11 +105,11 @@ describe('POST /api/create-location', () => {
   })
 })
 
-describe('PUT /api/update-location/:id', () => {
-  it('should update a location', async () => {
+describe('PUT /api/update-country/:id', () => {
+  it('should update a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    LOCATION_NAMES = [
+    COUNTRY_NAMES = [
       {
         language: 'en',
         name: uuid(),
@@ -134,31 +124,21 @@ describe('PUT /api/update-location/:id', () => {
       },
     ]
 
-    const payload: bookcarsTypes.UpsertLocationPayload = {
-      country: testHelper.GetRandromObjectIdAsString(),
-      names: LOCATION_NAMES,
-      latitude: 29.0268755,
-      longitude: 2.6528399999999976,
-    }
-
     let res = await request(app)
-      .put(`/api/update-location/${LOCATION_ID}`)
+      .put(`/api/update-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
-      .send(payload)
+      .send(COUNTRY_NAMES)
     expect(res.statusCode).toBe(200)
-    expect(res.body?.country).toBe(payload.country)
     expect(res.body.values?.length).toBe(3)
-    expect(res.body?.latitude).toBe(payload.latitude)
-    expect(res.body?.longitude).toBe(payload.longitude)
 
     res = await request(app)
-      .put(`/api/update-location/${testHelper.GetRandromObjectIdAsString()}`)
+      .put(`/api/update-country/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
-      .send(payload)
+      .send(COUNTRY_NAMES)
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .put(`/api/update-location/${LOCATION_ID}`)
+      .put(`/api/update-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -166,84 +146,44 @@ describe('PUT /api/update-location/:id', () => {
   })
 })
 
-describe('GET /api/location/:id/:language', () => {
-  it('should get a location', async () => {
+describe('GET /api/country/:id/:language', () => {
+  it('should get a country', async () => {
+    const token = await testHelper.signinAsAdmin()
     const language = 'en'
 
     let res = await request(app)
-      .get(`/api/location/${LOCATION_ID}/${language}`)
+      .get(`/api/country/${COUNTRY_ID}/${language}`)
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].name)
+    expect(res.body?.name).toBe(COUNTRY_NAMES.filter((v) => v.language === language)[0].name)
 
     res = await request(app)
-      .get(`/api/location/${testHelper.GetRandromObjectIdAsString()}/${language}`)
+      .get(`/api/country/${testHelper.GetRandromObjectIdAsString()}/${language}`)
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .get(`/api/location/${LOCATION_ID}/zh`)
+      .get(`/api/country/${COUNTRY_ID}/zh`)
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
   })
 })
 
-describe('GET /api/locations/:page/:size/:language', () => {
-  it('should get locations', async () => {
+describe('GET /api/countries/:page/:size/:language', () => {
+  it('should get countries', async () => {
+    const token = await testHelper.signinAsAdmin()
     const language = 'en'
 
     let res = await request(app)
-      .get(`/api/locations/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${LOCATION_NAMES[0].name}`)
+      .get(`/api/countries/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${COUNTRY_NAMES[0].name}`)
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(1)
 
     res = await request(app)
-      .get(`/api/locations/unknown/${testHelper.SIZE}/${language}`)
-    expect(res.statusCode).toBe(400)
-  })
-})
-
-describe('GET /api/check-location/:id', () => {
-  it('should check a location', async () => {
-    const token = await testHelper.signinAsAdmin()
-
-    const supplierName = testHelper.getSupplierName()
-    const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
-    const car = new Car({
-      name: 'BMW X1',
-      supplier: supplierId,
-      minimumAge: 21,
-      locations: [LOCATION_ID],
-      price: 780,
-      deposit: 9500,
-      available: false,
-      type: bookcarsTypes.CarType.Diesel,
-      gearbox: bookcarsTypes.GearboxType.Automatic,
-      aircon: true,
-      seats: 5,
-      doors: 4,
-      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
-      mileage: -1,
-      cancellation: 0,
-      amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
-      range: bookcarsTypes.CarRange.Midi,
-    })
-    await car.save()
-    let res = await request(app)
-      .get(`/api/check-location/${LOCATION_ID}`)
-      .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(200)
-
-    await Car.deleteOne({ _id: car._id })
-    await testHelper.deleteSupplier(supplierId)
-    res = await request(app)
-      .get(`/api/check-location/${LOCATION_ID}`)
-      .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(204)
-
-    res = await request(app)
-      .get(`/api/check-location/${uuid()}`)
+      .get(`/api/countries/unknown/${testHelper.SIZE}/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -251,26 +191,55 @@ describe('GET /api/check-location/:id', () => {
   })
 })
 
-describe('DELETE /api/delete-location/:id', () => {
-  it('should delete a location', async () => {
+describe('GET /api/check-country/:id', () => {
+  it('should check a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    let location = await Location.findById(LOCATION_ID)
-    expect(location).not.toBeNull()
+    const supplierName = testHelper.getSupplierName()
+    const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    const locationId = await testHelper.createLocation('test-en', 'test-fr', COUNTRY_ID)
+
     let res = await request(app)
-      .delete(`/api/delete-location/${LOCATION_ID}`)
+      .get(`/api/check-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    location = await Location.findById(LOCATION_ID)
-    expect(location).toBeNull()
 
+    await Location.deleteOne({ _id: locationId })
+    await testHelper.deleteSupplier(supplierId)
     res = await request(app)
-      .delete(`/api/delete-location/${LOCATION_ID}`)
+      .get(`/api/check-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .delete('/api/delete-location/0')
+      .get(`/api/check-country/${uuid()}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('DELETE /api/delete-country/:id', () => {
+  it('should delete a country', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    let country = await Country.findById(COUNTRY_ID)
+    expect(country).not.toBeNull()
+    let res = await request(app)
+      .delete(`/api/delete-country/${COUNTRY_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    country = await Country.findById(COUNTRY_ID)
+    expect(country).toBeNull()
+
+    res = await request(app)
+      .delete(`/api/delete-country/${COUNTRY_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+
+    res = await request(app)
+      .delete('/api/delete-country/0')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 

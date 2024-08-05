@@ -135,7 +135,7 @@ export interface UpsertBookingPayload {
 
 export interface LocationName {
   language: string
-  value: string
+  name: string
 }
 
 export interface CountryName {
