@@ -21,7 +21,7 @@ div.supplier {
 
 .supplier div.col-1 .supplier-bio-link {
   overflow: hidden;
-  word-break: break-all;
+  word-break: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -71,7 +71,7 @@ div.supplier {
     display: flex;
     justify-content: center;
   }
-  
+
   .supplier div.col-2 {
     display: flex;
     flex-direction: column;

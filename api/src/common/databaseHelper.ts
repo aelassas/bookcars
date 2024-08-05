@@ -10,6 +10,8 @@ import NotificationCounter from '../models/NotificationCounter'
 import PushToken from '../models/PushToken'
 import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../models/Token'
 import User from '../models/User'
+import Country from '../models/Country'
+import ParkingSpot from '../models/ParkingSpot'
 
 /**
  * Connect to database.
@@ -58,6 +60,171 @@ export const close = async (force: boolean = false): Promise<void> => {
 }
 
 /**
+ * Initialize locations.
+ * If a new language is added, english values will be added by default with the new language.
+ * The new language values must be updated from the backend.
+ *
+ * @async
+ * @returns {*}
+ */
+const InitializeLocations = async () => {
+  try {
+    logger.info('Initializing locations...')
+    const locations = await Location.find({})
+      .populate<{ values: env.LocationValue[] }>({
+        path: 'values',
+        model: 'LocationValue',
+      })
+
+    // Add missing LocationValues in env.LANGUAGES
+    for (const location of locations) {
+      const enLocationValue = location.values.find((val) => val.language === 'en')
+
+      if (enLocationValue) {
+        for (const lang of env.LANGUAGES) {
+          if (!location.values.some((val) => val.language === lang)) {
+            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
+            await langLocationValue.save()
+            const loc = await Location.findById(location.id)
+            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+            await loc?.save()
+          }
+        }
+      } else {
+        console.log('English value not found for location:', location.id)
+      }
+    }
+
+    // Delete LocationValue nin env.LANGUAGES
+    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    for (const val of values) {
+      const _locations = await Location.find({ values: val._id })
+      for (const _loc of _locations) {
+        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
+        await _loc.save()
+      }
+    }
+    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
+
+    logger.info('Locations initialized')
+    return true
+  } catch (err) {
+    logger.error('Error while initializing locations:', err)
+    return false
+  }
+}
+
+/**
+ * Initialize countries.
+ * If a new language is added, english values will be added by default with the new language.
+ * The new language values must be updated from the backend.
+ *
+ * @async
+ * @returns {*}
+ */
+const InitializeCountries = async () => {
+  try {
+    logger.info('Initializing countries...')
+    const countries = await Country.find({})
+      .populate<{ values: env.LocationValue[] }>({
+        path: 'values',
+        model: 'LocationValue',
+      })
+
+    // Add missing LocationValues in env.LANGUAGES
+    for (const country of countries) {
+      const enLocationValue = country.values.find((val) => val.language === 'en')
+
+      if (enLocationValue) {
+        for (const lang of env.LANGUAGES) {
+          if (!country.values.some((val) => val.language === lang)) {
+            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
+            await langLocationValue.save()
+            const loc = await Country.findById(country.id)
+            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+            await loc?.save()
+          }
+        }
+      } else {
+        console.log('English value not found for country:', country.id)
+      }
+    }
+
+    // Delete LocationValue nin env.LANGUAGES
+    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    for (const val of values) {
+      const _countries = await Country.find({ values: val._id })
+      for (const _loc of _countries) {
+        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
+        await _loc.save()
+      }
+    }
+    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
+
+    logger.info('Countries initialized')
+    return true
+  } catch (err) {
+    logger.error('Error while initializing countries:', err)
+    return false
+  }
+}
+
+/**
+ * Initialize parkingSpots.
+ * If a new language is added, english values will be added by default with the new language.
+ * The new language values must be updated from the backend.
+ *
+ * @async
+ * @returns {*}
+ */
+const InitializeParkingSpots = async () => {
+  try {
+    logger.info('Initializing parkingSpots...')
+    const parkingSpots = await ParkingSpot.find({})
+      .populate<{ values: env.LocationValue[] }>({
+        path: 'values',
+        model: 'LocationValue',
+      })
+
+    // Add missing LocationValues in env.LANGUAGES
+    for (const parkingSpot of parkingSpots) {
+      const enLocationValue = parkingSpot.values.find((val) => val.language === 'en')
+
+      if (enLocationValue) {
+        for (const lang of env.LANGUAGES) {
+          if (!parkingSpot.values.some((val) => val.language === lang)) {
+            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
+            await langLocationValue.save()
+            const loc = await ParkingSpot.findById(parkingSpot.id)
+            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+            await loc?.save()
+          }
+        }
+      } else {
+        console.log('English value not found for parkingSpot:', parkingSpot.id)
+      }
+    }
+
+    // Delete LocationValue nin env.LANGUAGES
+    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    for (const val of values) {
+      const _parkingSpots = await ParkingSpot.find({ values: val._id })
+      for (const _loc of _parkingSpots) {
+        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
+        await _loc.save()
+      }
+    }
+    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
+
+    logger.info('ParkingSpots initialized')
+    return true
+  } catch (err) {
+    logger.error('Error while initializing parkingSpots:', err)
+    return false
+  }
+}
+
+/**
  * Create Token TTL index.
  *
  * @async
@@ -80,7 +247,7 @@ const createBookingIndex = async (): Promise<void> => {
 const createCollection = async<T>(model: Model<T>) => {
   try {
     await model.collection.indexes()
-  } catch (err) {
+  } catch {
     await model.createCollection()
     await model.createIndexes()
   }
@@ -138,64 +305,14 @@ export const initialize = async (): Promise<boolean> => {
       }
     }
 
-    return true
+    //
+    // Initialize collections
+    //
+    const res = await InitializeLocations() && await InitializeCountries() && await InitializeParkingSpots()
+
+    return res
   } catch (err) {
     logger.error('An error occured while initializing database:', err)
-    return false
-  }
-}
-
-/**
- * Initialize locations.
- * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
- *
- * @async
- * @returns {*}
- */
-export const InitializeLocations = async () => {
-  try {
-    logger.info('Initializing locations...')
-    const locations = await Location.find({})
-      .populate<{ values: env.LocationValue[] }>({
-        path: 'values',
-        model: 'LocationValue',
-      })
-
-    // Add missing LocationValues in env.LANGUAGES
-    for (const location of locations) {
-      const enLocationValue = location.values.find((val) => val.language === 'en')
-
-      if (enLocationValue) {
-        for (const lang of env.LANGUAGES) {
-          if (!location.values.some((val) => val.language === lang)) {
-            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
-            await langLocationValue.save()
-            const loc = await Location.findById(location.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
-          }
-        }
-      } else {
-        console.log('English value not found for location:', location.id)
-      }
-    }
-
-    // Delete LocationValue nin env.LANGUAGES
-    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
-    for (const val of values) {
-      const _locations = await Location.find({ values: val._id })
-      for (const _loc of _locations) {
-        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
-        await _loc.save()
-      }
-    }
-    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
-
-    logger.info('Locations initialized')
-    return true
-  } catch (err) {
-    logger.error('Error while initializing locations:', err)
     return false
   }
 }

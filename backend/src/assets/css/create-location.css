@@ -24,7 +24,6 @@ div.create-location {
 @media only screen and (width <=960px) {
   .location-form {
     width: 360px;
-    min-height: 400px;
     padding: 30px;
   }
 }
@@ -34,7 +33,6 @@ div.create-location {
 @media only screen and (width >=960px) {
   .location-form {
     width: 550px;
-    min-height: 340px;
     padding: 30px;
   }
 }

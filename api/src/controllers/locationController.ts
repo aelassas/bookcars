@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
@@ -8,6 +11,7 @@ import i18n from '../lang/i18n'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
+import ParkingSpot from '../models/ParkingSpot'
 import * as logger from '../common/logger'
 
 /**
@@ -38,6 +42,28 @@ export const validate = async (req: Request, res: Response) => {
   }
 }
 
+const createParkingSpot = async (parkingSpot: bookcarsTypes.ParkingSpot): Promise<string> => {
+  const parkinSpotValues = []
+  if (parkingSpot.values) {
+    for (const name of parkingSpot.values) {
+      const parkinSpotValue = new LocationValue({
+        language: name.language,
+        value: name.value,
+      })
+      await parkinSpotValue.save()
+      parkinSpotValues.push(parkinSpotValue._id)
+    }
+  }
+
+  const ps = new ParkingSpot({
+    longitude: parkingSpot.longitude,
+    latitude: parkingSpot.latitude,
+    values: parkinSpotValues,
+  })
+  await ps.save()
+  return ps.id
+}
+
 /**
  * Create a Location.
  *
@@ -48,22 +74,61 @@ export const validate = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const create = async (req: Request, res: Response) => {
-  const { body }: { body: bookcarsTypes.LocationName[] } = req
-  const names = body
+  const { body }: { body: bookcarsTypes.UpsertLocationPayload } = req
+  const {
+    country,
+    longitude,
+    latitude,
+    names,
+    image,
+    parkingSpots: _parkingSpots,
+  } = body
 
   try {
-    const values = []
+    const parkingSpots: string[] = []
+    if (_parkingSpots) {
+      for (const parkingSpot of _parkingSpots) {
+        const psId = await createParkingSpot(parkingSpot)
+        parkingSpots.push(psId)
+      }
+    }
+
+    const values: string[] = []
     for (const name of names) {
       const locationValue = new LocationValue({
         language: name.language,
-        value: name.name,
+        value: name.value,
       })
       await locationValue.save()
-      values.push(locationValue._id)
+      values.push(locationValue.id)
     }
 
-    const location = new Location({ values })
+    const location = new Location({
+      country,
+      longitude,
+      latitude,
+      values,
+      parkingSpots,
+    })
     await location.save()
+
+    if (image) {
+      const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
+
+      if (await helper.exists(_image)) {
+        const filename = `${location._id}_${Date.now()}${path.extname(image)}`
+        const newPath = path.join(env.CDN_LOCATIONS, filename)
+
+        await fs.rename(_image, newPath)
+        location.image = filename
+        await location.save()
+      } else {
+        await Location.deleteOne({ _id: location._id })
+        logger.error(i18n.t('LOCATION_IMAGE_NOT_FOUND'), body)
+        return res.status(400).send(i18n.t('LOCATION_IMAGE_NOT_FOUND'))
+      }
+    }
+
     return res.send(location)
   } catch (err) {
     logger.error(`[location.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
@@ -84,26 +149,96 @@ export const update = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const location = await Location.findById(id).populate<{ values: env.LocationValue[] }>('values')
+    const location = await Location
+      .findById(id)
+      .populate<{ values: env.LocationValue[] }>('values')
 
     if (location) {
-      const names: bookcarsTypes.LocationName[] = req.body
+      const { country, longitude, latitude, names, parkingSpots }: bookcarsTypes.UpsertLocationPayload = req.body
+
+      location.country = new mongoose.Types.ObjectId(country)
+      location.longitude = longitude
+      location.latitude = latitude
 
       for (const name of names) {
         const locationValue = location.values.filter((value) => value.language === name.language)[0]
         if (locationValue) {
-          locationValue.value = name.name
+          locationValue.value = name.value
           await locationValue.save()
         } else {
           const lv = new LocationValue({
             language: name.language,
-            value: name.name,
+            value: name.value,
           })
           await lv.save()
           location.values.push(lv)
-          await location.save()
         }
       }
+
+      //
+      // Parking spots
+      //
+      if (parkingSpots) {
+        if (!location.parkingSpots) {
+          location.parkingSpots = []
+        }
+
+        // Remove all parking spots not in body.parkingSpots
+        const parkingSpotIds = parkingSpots?.filter((ps) => !!ps._id).map((ps) => ps._id)
+        const parkingSpotIdsToDelete = location.parkingSpots?.filter((_id) => !parkingSpotIds?.includes(_id.toString()))
+        if (parkingSpotIdsToDelete.length > 0) {
+          for (const psId of parkingSpotIdsToDelete) {
+            location.parkingSpots?.splice(location.parkingSpots?.indexOf(psId), 1)
+          }
+
+          const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: parkingSpotIdsToDelete } })
+          for (const ps of parkingSpotsToDelete) {
+            await LocationValue.deleteMany({ _id: { $in: ps.values } })
+            await ps.deleteOne()
+          }
+        }
+
+        // Add all new parking spots
+        for (const parkingSpot of parkingSpots.filter((ps) => ps._id === undefined)) {
+          const psId = await createParkingSpot(parkingSpot)
+          location.parkingSpots.push(new mongoose.Types.ObjectId(psId))
+        }
+
+        // Update existing parking spots
+        for (const parkingSpot of parkingSpots.filter((ps) => !!ps._id)) {
+          const ps = await ParkingSpot.findById(parkingSpot._id)
+          if (ps) {
+            ps.longitude = Number(parkingSpot.longitude)
+            ps.latitude = Number(parkingSpot.latitude)
+
+            if (parkingSpot.values) {
+              // Add new values
+              for (const value of parkingSpot.values.filter((val) => val._id === undefined)) {
+                const v = new LocationValue({
+                  language: value.language,
+                  value: value.value,
+                })
+                await v.save()
+                ps.values.push(new mongoose.Types.ObjectId(v.id as string))
+              }
+
+              // Update existing values
+              for (const value of parkingSpot.values.filter((val) => !!val._id)) {
+                const v = await LocationValue.findById(value._id)
+                if (v) {
+                  v.value = value.value!
+                  await v.save()
+                }
+              }
+            }
+
+            await ps.save()
+          }
+        }
+      }
+
+      await location.save()
+
       return res.json(location)
     }
 
@@ -128,14 +263,29 @@ export const deleteLocation = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const location = await Location.findById(id)
+    const location = await Location.findById(id).populate<{ parkingSpots: env.ParkingSpot[] }>('parkingSpots')
     if (!location) {
       const msg = `[location.delete] Location ${id} not found`
       logger.info(msg)
       return res.status(204).send(msg)
     }
-    await Location.deleteOne({ _id: id })
     await LocationValue.deleteMany({ _id: { $in: location.values } })
+    await Location.deleteOne({ _id: id })
+
+    if (location.parkingSpots) {
+      const values = location.parkingSpots.map((ps) => ps.values).flat()
+      await LocationValue.deleteMany({ _id: { $in: values } })
+      const parkingSpots = location.parkingSpots.map((ps) => ps._id)
+      await ParkingSpot.deleteMany({ _id: { $in: parkingSpots } })
+    }
+
+    if (location.image) {
+      const image = path.join(env.CDN_LOCATIONS, location.image)
+      if (await helper.exists(image)) {
+        await fs.unlink(image)
+      }
+    }
+
     return res.sendStatus(200)
   } catch (err) {
     logger.error(`[location.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
@@ -156,9 +306,35 @@ export const getLocation = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const location = await Location.findById(id).populate<{ values: env.LocationValue[] }>('values').lean()
+    const location = await Location
+      .findById(id)
+      .populate<{ country: env.CountryInfo }>({
+        path: 'country',
+        populate: {
+          path: 'values',
+          model: 'LocationValue',
+        },
+      })
+      .populate<{ values: env.LocationValue[] }>('values')
+      .populate<{ parkingSpots: env.ParkingSpot[] }>({
+        path: 'parkingSpots',
+        populate: {
+          path: 'values',
+          model: 'LocationValue',
+        },
+      })
+      .lean()
 
     if (location) {
+      if (location.country) {
+        const countryName = ((location.country as env.CountryInfo).values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
+        location.country.name = countryName
+      }
+      if (location.parkingSpots) {
+        for (const parkingSpot of location.parkingSpots) {
+          parkingSpot.name = (parkingSpot.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
+        }
+      }
       const name = (location.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
       const l = { ...location, name }
       return res.json(l)
@@ -210,6 +386,46 @@ export const getLocations = async (req: Request, res: Response) => {
         },
         { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
         { $addFields: { name: '$value.value' } },
+
+        {
+          $lookup: {
+            from: 'Country',
+            let: { country: '$country' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$country'] },
+                },
+              },
+              {
+                $lookup: {
+                  from: 'LocationValue',
+                  let: { values: '$values' },
+                  pipeline: [
+                    {
+                      $match: {
+                        $and: [
+                          { $expr: { $in: ['$_id', '$$values'] } },
+                          { $expr: { $eq: ['$language', language] } },
+                        ],
+                      },
+                    },
+                  ],
+                  as: 'value',
+                },
+              },
+              { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
+              { $addFields: { name: '$value.value' } },
+            ],
+            as: 'country',
+          },
+        },
+        { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            parkingSpots: 0,
+          },
+        },
         {
           $facet: {
             resultData: [{ $sort: { name: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
@@ -227,6 +443,67 @@ export const getLocations = async (req: Request, res: Response) => {
     return res.json(locations)
   } catch (err) {
     logger.error(`[location.getLocations] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Get Locations with position.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const getLocationsWithPosition = async (req: Request, res: Response) => {
+  try {
+    const { language } = req.params
+    const keyword = escapeStringRegexp(String(req.query.s || ''))
+    const options = 'i'
+
+    const locations = await Location.aggregate(
+      [
+        {
+          $match: {
+            latitude: { $ne: null },
+            longitude: { $ne: null },
+          },
+        },
+
+        {
+          $lookup: {
+            from: 'LocationValue',
+            let: { values: '$values' },
+            pipeline: [
+              {
+                $match: {
+                  $and: [
+                    { $expr: { $in: ['$_id', '$$values'] } },
+                    { $expr: { $eq: ['$language', language] } },
+                    { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } },
+                  ],
+                },
+              },
+            ],
+            as: 'value',
+          },
+        },
+        { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
+        { $addFields: { name: '$value.value' } },
+
+        {
+          $project: {
+            parkingSpots: 0,
+          },
+        },
+      ],
+      { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
+    )
+
+    return res.json(locations)
+  } catch (err) {
+    logger.error(`[location.getLocationsWithPosition] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -283,5 +560,141 @@ export const getLocationId = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[location.getLocationId] ${i18n.t('DB_ERROR')} ${name}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Upload a Location image to temp folder.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const createImage = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      throw new Error('[location.createImage] req.file not found')
+    }
+
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filepath = path.join(env.CDN_TEMP_LOCATIONS, filename)
+
+    await fs.writeFile(filepath, req.file.buffer)
+    return res.json(filename)
+  } catch (err) {
+    logger.error(`[location.createImage] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+ * Update a Location image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const updateImage = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    if (!req.file) {
+      const msg = '[location.updateImage] req.file not found'
+      logger.error(msg)
+      return res.status(400).send(msg)
+    }
+
+    const { file } = req
+
+    const location = await Location.findById(id)
+
+    if (location) {
+      if (location.image) {
+        const image = path.join(env.CDN_LOCATIONS, location.image)
+        if (await helper.exists(image)) {
+          await fs.unlink(image)
+        }
+      }
+
+      const filename = `${location._id}_${Date.now()}${path.extname(file.originalname)}`
+      const filepath = path.join(env.CDN_LOCATIONS, filename)
+
+      await fs.writeFile(filepath, file.buffer)
+      location.image = filename
+      await location.save()
+      return res.json(filename)
+    }
+
+    logger.error('[location.updateImage] Location not found:', id)
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[location.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Delete a Location image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const deleteImage = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    const location = await Location.findById(id)
+
+    if (location) {
+      if (location.image) {
+        const image = path.join(env.CDN_LOCATIONS, location.image)
+        if (await helper.exists(image)) {
+          await fs.unlink(image)
+        }
+      }
+      location.image = null
+
+      await location.save()
+      return res.sendStatus(200)
+    }
+    logger.error('[location.deleteImage] Location not found:', id)
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[location.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Delete a temp Location image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {*}
+ */
+export const deleteTempImage = async (req: Request, res: Response) => {
+  const { image } = req.params
+
+  try {
+    const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
+    if (!await helper.exists(imageFile)) {
+      throw new Error(`[location.deleteTempImage] temp image ${imageFile} not found`)
+    }
+
+    await fs.unlink(imageFile)
+
+    res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[location.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }

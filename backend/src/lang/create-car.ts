@@ -19,6 +19,9 @@ const strings = new LocalizedStrings({
     AIRCON: 'Climatisation',
     MINIMUM_AGE: 'Âge minimum',
     MINIMUM_AGE_NOT_VALID: `L'âge minimum doit être supérieur ou égal à ${env.MINIMUM_AGE} ans.`,
+    CAR_RANGE: 'Gamme',
+    MULTIMEDIA: 'Multimédia',
+    RATING: 'Notation',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -36,6 +39,9 @@ const strings = new LocalizedStrings({
     AIRCON: 'Aircon',
     MINIMUM_AGE: 'Minimum age',
     MINIMUM_AGE_NOT_VALID: `Minimum age must be greater than or equal to ${env.MINIMUM_AGE} years old.`,
+    CAR_RANGE: 'Car Range',
+    MULTIMEDIA: 'Multimedia',
+    RATING: 'Rating'
   },
 })
 

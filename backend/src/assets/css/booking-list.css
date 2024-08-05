@@ -15,7 +15,7 @@ div.bs-list .booking-grid {
   width: 100%;
 }
 
-div.bs-list a.cell-agency {
+div.bs-list a.cell-supplier {
   display: inline-flex;
   position: relative;
   vertical-align: middle;
@@ -23,7 +23,7 @@ div.bs-list a.cell-agency {
   height: 30px;
 }
 
-div.bs-list a.cell-agency img {
+div.bs-list a.cell-supplier img {
   max-width: 100%;
   max-height: 100%;
 }
@@ -69,7 +69,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   color: rgb(0 0 0 / 87%);
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.property-agency {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
@@ -77,12 +77,12 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
   height: 30px;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.property-agency img {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier img {
   max-width: 100%;
   max-height: 100%;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.property-agency-name {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;
@@ -94,45 +94,6 @@ div.bs-list div.booking-details div.booking-detail div.booking-price {
   font-size: 17px;
   font-weight: 700;
   color: rgb(0 0 0 / 87%);
-}
-
-div.bs-list div.booking-details div.bs {
-  width: 100%;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 400;
-  margin-bottom: 5px;
-}
-
-div.bs-list div.booking-details div.bs span {
-  color: #fff;
-}
-
-div.bs-list div.booking-details div.bs-void {
-  background: #999;
-}
-
-div.bs-list div.booking-details div.bs-pending {
-  background: #e98003;
-}
-
-div.bs-list div.booking-details div.bs-deposit {
-  background: #22bba7;
-}
-
-div.bs-list div.booking-details div.bs-paid {
-  background: #77bc23;
-}
-
-div.bs-list div.booking-details div.bs-reserved {
-  background: #188ace;
-}
-
-div.bs-list div.booking-details div.bs-cancelled {
-  background: #bc2143;
 }
 
 div.bs-list div.extras {

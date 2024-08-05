@@ -1,9 +1,11 @@
 /* Activate */
-
 div.activate {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex: 1 0 auto;
+  justify-content: center;
+  margin: 45px 0;
+  transform: translate3d(0, 0, 0);
 }
 
 div.activate h1.activate-form-title {
@@ -15,6 +17,9 @@ div.resend {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 45px 0;
+  transform: translate3d(0, 0, 0);
+  flex: 1 0 auto;
   padding-bottom: 40px;
 }
 
@@ -25,10 +30,10 @@ div.resend {
 }
 
 .resend-form div.resend-form-content {
-  display: inline-block;
-  width: 350px;
-  position: relative;
-  left: calc(50% - 150px);
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
 }
 
 .resend-form div.resend-form-content span {
@@ -39,20 +44,19 @@ div.resend {
   float: left;
   clear: left;
   width: 90px;
-  margin-left: calc(50% - 65px) !important;
-  margin-top: 20px !important;
+  margin-top: 15px !important;
 }
 
 .resend-form div.resend-form-content p.go-to-home {
-  float: left;
-  clear: left;
-  width: 200px;
-  margin-left: calc(50% - 100px);
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   .activate-form {
     margin-top: 40px;
     width: 330px;
@@ -70,7 +74,7 @@ div.resend {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   .activate-form {
     margin-top: 40px;
     width: 450px;

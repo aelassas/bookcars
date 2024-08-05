@@ -9,13 +9,10 @@ import * as bookcarsTypes from ':bookcars-types'
  * @returns {string}
  */
 export const formatNumber = (x: number, language: string): string => {
-  if (typeof x === 'number') {
-    const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
-    const separator = language === 'en' ? ',' : ' '
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator)
-    return parts.join('.')
-  }
-  return ''
+  const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
+  const separator = language === 'en' ? ',' : ' '
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator)
+  return parts.join('.')
 }
 
 /**
@@ -269,3 +266,22 @@ export const shuffle = (array: any[]) => {
     array[j] = temp
   }
 }
+
+/**
+ * Return all car ranges.
+ *
+ * @returns {bookcarsTypes.CarRange[]}
+ */
+export const getAllRanges = () => [
+  bookcarsTypes.CarRange.Mini,
+  bookcarsTypes.CarRange.Midi,
+  bookcarsTypes.CarRange.Maxi,
+  bookcarsTypes.CarRange.Scooter
+]
+
+/**
+ * Return all ratings.
+ *
+ * @returns {number[]}
+ */
+export const getAllRatings = () => [0, 1, 2, 3, 4, 5]

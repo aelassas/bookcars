@@ -182,8 +182,7 @@ const Car = () => {
                   mode="update"
                   record={car}
                   size="large"
-                  // readonly={!edit}
-                  readonly
+                  readonly={!edit}
                   hideDelete
                   onBeforeUpload={handleBeforeUpload}
                   onChange={handleImageChange}
@@ -336,9 +335,9 @@ const Car = () => {
                 <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/update-car?cr=${car._id}`}>
                   {commonStrings.UPDATE}
                 </Button>
-                {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                   {commonStrings.DELETE}
-                </Button> */}
+                </Button>
               </section>
             )}
           </div>

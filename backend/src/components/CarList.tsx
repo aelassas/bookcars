@@ -58,6 +58,10 @@ interface CarListProps {
   hideSupplier?: boolean
   hidePrice?: boolean
   language?: string
+  range?: string[]
+  multimedia?: string[]
+  rating?: number[]
+  seats?: number
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
   onDelete?: (rowCount: number) => void
 }
@@ -81,6 +85,10 @@ const CarList = ({
   hideSupplier,
   hidePrice,
   language,
+  range,
+  multimedia,
+  rating,
+  seats,
   onLoad,
   onDelete
 }: CarListProps) => {
@@ -125,7 +133,11 @@ const CarList = ({
     mileage?: string[],
     fuelPolicy?: string[],
     deposit?: number,
-    availability?: string[]
+    availability?: string[],
+    _range?: string[],
+    _multimedia?: string[],
+    _rating?: number[],
+    _seats?: number,
   ) => {
     try {
       setLoading(true)
@@ -139,6 +151,10 @@ const CarList = ({
         fuelPolicy,
         deposit,
         availability,
+        ranges: _range,
+        multimedia: _multimedia,
+        rating: _rating,
+        seats: _seats,
       }
       const data = await CarService.getCars(keyword || '', payload, _page, env.CARS_PAGE_SIZE)
 
@@ -189,7 +205,11 @@ const CarList = ({
           carMileage,
           _fuelPolicy,
           carDeposit || 0,
-          carAvailability
+          carAvailability,
+          range,
+          multimedia,
+          rating,
+          seats
         )
       } else {
         setRows([])
@@ -211,7 +231,11 @@ const CarList = ({
     carMileage,
     _fuelPolicy,
     carDeposit,
-    carAvailability
+    carAvailability,
+    range,
+    multimedia,
+    rating,
+    seats,
   ])
 
   useEffect(() => {
@@ -237,7 +261,11 @@ const CarList = ({
     carMileage,
     _fuelPolicy,
     carDeposit,
-    carAvailability
+    carAvailability,
+    range,
+    multimedia,
+    rating,
+    seats,
   ])
 
   useEffect(() => {
@@ -253,7 +281,11 @@ const CarList = ({
         carMileage,
         _fuelPolicy,
         carDeposit,
-        carAvailability
+        carAvailability,
+        range,
+        multimedia,
+        rating,
+        seats,
       )
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -266,7 +298,11 @@ const CarList = ({
     carMileage,
     _fuelPolicy,
     carDeposit,
-    carAvailability
+    carAvailability,
+    range,
+    multimedia,
+    rating,
+    seats,
   ])
 
   useEffect(() => {

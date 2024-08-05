@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaf
 import L, { LatLngExpression } from 'leaflet'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
+import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
 import { strings } from '../lang/map'
 import * as LocationService from '../services/LocationService'
@@ -24,7 +25,6 @@ interface Marker {
   position: L.LatLng
 }
 
-const position: LatLngExpression = new L.LatLng(36.966428, -95.844032)
 const markers: Marker[] = [
   // { name: 'Athens (ATH)', position: new L.LatLng(37.983810, 23.727539) },
 ]
@@ -66,18 +66,22 @@ const ZoomControlledLayer = ({ zoom, minZoom, children }: ZoomControlledLayerPro
 
 interface MapProps {
   title?: string
+  position?: LatLngExpression
   initialZoom?: number,
+  locations?: bookcarsTypes.Location[]
   className?: string,
   onSelelectPickUpLocation?: (locationId: string) => void
-  onSelelectDropOffLocation?: (locationId: string) => void
+  // onSelelectDropOffLocation?: (locationId: string) => void
 }
 
 const Map = ({
   title,
+  position = new L.LatLng(31.792305849269, -7.080168000000015),
   initialZoom,
+  locations,
   className,
   onSelelectPickUpLocation,
-  onSelelectDropOffLocation,
+  // onSelelectDropOffLocation,
 }: MapProps) => {
   const _initialZoom = initialZoom || 5.5
   const [zoom, setZoom] = useState(_initialZoom)
@@ -99,6 +103,14 @@ const Map = ({
   if (language === 'el') {
     tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   }
+
+  const getLocationMarkers = (): Marker[] => (
+    (locations
+      && locations
+        .filter((l) => l.latitude && l.longitude)
+        .map((l) => ({ name: l.name!, position: new L.LatLng(l.latitude!, l.longitude!) }))
+    ) || []
+  )
 
   const getMarkers = (__markers: Marker[]) =>
     __markers.map((marker) => (
@@ -129,7 +141,7 @@ const Map = ({
                 {strings.SELECT_PICK_UP_LOCATION}
               </button>
             )}
-            {!!onSelelectDropOffLocation && (
+            {/* {!!onSelelectDropOffLocation && (
               <button
                 type="button"
                 className="action-btn"
@@ -151,7 +163,7 @@ const Map = ({
               >
                 {strings.SELECT_DROP_OFF_LOCATION}
               </button>
-            )}
+            )} */}
           </div>
         </Popup>
       </Marker>
@@ -181,6 +193,9 @@ const Map = ({
             getMarkers(markers)
           }
         </ZoomControlledLayer>
+        {
+          getMarkers(getLocationMarkers())
+        }
       </MapContainer>
     </>
   )

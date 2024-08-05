@@ -18,6 +18,18 @@ export const getLocations = (keyword: string, page: number, size: number): Promi
     .then((res) => res.data)
 
 /**
+ * Get locations with position.
+ *
+ * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Location>>}
+ */
+export const getLocationsWithPosition = (): Promise<bookcarsTypes.Location[]> =>
+  axiosInstance
+    .get(
+      `/api/locations-with-position/${UserService.getLanguage()}`
+    )
+    .then((res) => res.data)
+
+/**
  * Get a Location by ID.
  *
  * @param {string} id

@@ -420,9 +420,14 @@ export const activate = async (req: Request, res: Response) => {
 export const signin = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.SignInPayload } = req
   const { email: emailFromBody, password, stayConnected, mobile } = body
-  const email = helper.trim(emailFromBody, ' ')
 
   try {
+    if (!emailFromBody) {
+      throw new Error('body.email not found')
+    }
+
+    const email = helper.trim(emailFromBody, ' ')
+
     if (!helper.isValidEmail(email)) {
       throw new Error('body.email is not valid')
     }
@@ -513,7 +518,132 @@ export const signin = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    logger.error(`[user.signin] ${i18n.t('DB_ERROR')} ${email}`, err)
+    logger.error(`[user.signin] ${i18n.t('DB_ERROR')} ${emailFromBody}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Sign In.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const socialSignin = async (req: Request, res: Response) => {
+  const { body }: { body: bookcarsTypes.SignInPayload } = req
+  const { socialSignInType, accessToken, email: emailFromBody, fullName, avatar, stayConnected, mobile } = body
+
+  try {
+    if (!socialSignInType) {
+      throw new Error('body.socialSignInType not found')
+    }
+
+    if (!emailFromBody) {
+      throw new Error('body.email not found')
+    }
+
+    const email = helper.trim(emailFromBody, ' ')
+
+    if (!helper.isValidEmail(email)) {
+      throw new Error('body.email is not valid')
+    }
+
+    if (!accessToken) {
+      throw new Error('body.accessToken not found')
+    }
+
+    if (!await helper.validateAccessToken(socialSignInType, accessToken, email)) {
+      throw new Error('body.accessToken is not valid')
+    }
+
+    let user = await User.findOne({ email })
+
+    if (!user) {
+      user = new User({
+        email,
+        fullName,
+        active: true,
+        verified: true,
+        language: 'en',
+        enableEmailNotifications: true,
+        type: bookcarsTypes.UserType.User,
+        blacklisted: false,
+        avatar,
+      })
+      await user.save()
+    }
+
+    const payload = { id: user._id }
+
+    let options: { expiresIn?: number }
+    //
+    // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
+    // These options prevent XSS, CSRF and MITM attacks.
+    // Authentication cookies are protected against XST attacks as well via allowedMethods middleware.
+    //
+    const cookieOptions: CookieOptions = helper.clone(env.COOKIE_OPTIONS)
+
+    if (stayConnected) {
+      //
+      // Empty JWT options object will result in no expiration.
+      //
+      options = {}
+      //
+      // Cookies can no longer set an expiration date more than 400 days in the future.
+      // The limit MUST NOT be greater than 400 days in duration.
+      // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
+      // limit to be less.
+      //
+      cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
+    } else {
+      //
+      // JWT expiration is set in seconds.
+      //
+      options = { expiresIn: env.JWT_EXPIRE_AT }
+      //
+      // Cookie maxAge option is set in milliseconds.
+      //
+      cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
+    }
+
+    const token = jwt.sign(payload, env.JWT_SECRET, options)
+
+    const loggedUser: bookcarsTypes.User = {
+      _id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      language: user.language,
+      enableEmailNotifications: user.enableEmailNotifications,
+      blacklisted: user.blacklisted,
+      avatar: user.avatar,
+    }
+
+    //
+    // On mobile, we return the token in the response body.
+    //
+    if (mobile) {
+      loggedUser.accessToken = token
+
+      return res
+        .status(200)
+        .send(loggedUser)
+    }
+
+    //
+    // On web, we return the token in a httpOnly, signed, secure and strict sameSite cookie.
+    //
+    const cookieName = authHelper.getAuthCookieName(req)
+
+    return res
+      .clearCookie(cookieName)
+      .cookie(cookieName, token, cookieOptions)
+      .status(200)
+      .send(loggedUser)
+  } catch (err) {
+    logger.error(`[user.socialSignin] ${i18n.t('DB_ERROR')} ${emailFromBody}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -1044,7 +1174,7 @@ export const deleteAvatar = async (req: Request, res: Response) => {
     const user = await User.findById(userId)
 
     if (user) {
-      if (user.avatar) {
+      if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
         if (await helper.exists(avatar)) {
           await fs.unlink(avatar)
@@ -1120,7 +1250,7 @@ export const changePassword = async (req: Request, res: Response) => {
       return res.sendStatus(204)
     }
 
-    if (!user.password) {
+    if (strict && !user.password) {
       logger.error('[user.changePassword] User.password not found:', _id)
       return res.sendStatus(204)
     }
@@ -1135,7 +1265,7 @@ export const changePassword = async (req: Request, res: Response) => {
     }
 
     if (strict) {
-      const passwordMatch = await bcrypt.compare(currentPassword, user.password)
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password!)
       if (passwordMatch) {
         return _changePassword()
       }
@@ -1384,6 +1514,30 @@ export const sendEmail = async (req: Request, res: Response) => {
     return res.sendStatus(200)
   } catch (err) {
     logger.error(`[user.delete] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Check if password exists.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const hasPassword = async (req: Request, res: Response) => {
+  const { id } = req.params
+  try {
+    const passwordExists = await User.exists({ _id: id, password: { $ne: null } })
+
+    if (passwordExists) {
+      return res.sendStatus(200)
+    }
+
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[user.hasPassword] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

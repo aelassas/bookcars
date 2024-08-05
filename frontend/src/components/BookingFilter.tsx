@@ -119,6 +119,7 @@ const BookingFilter = ({
             label={strings.PICK_UP_LOCATION}
             variant="standard"
             onChange={handlePickupLocationChange}
+            init
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
@@ -126,6 +127,7 @@ const BookingFilter = ({
             label={strings.DROP_OFF_LOCATION}
             variant="standard"
             onChange={handleDropOffLocationChange}
+            init
           />
         </FormControl>
         <FormControl fullWidth margin="dense">

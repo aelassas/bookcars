@@ -14,6 +14,7 @@ import notificationRoutes from './routes/notificationRoutes'
 import carRoutes from './routes/carRoutes'
 import userRoutes from './routes/userRoutes'
 import stripeRoutes from './routes/stripeRoutes'
+import countryRoutes from './routes/countryRoutes'
 import * as helper from './common/helper'
 
 const app = express()
@@ -50,6 +51,7 @@ app.use('/', notificationRoutes)
 app.use('/', carRoutes)
 app.use('/', userRoutes)
 app.use('/', stripeRoutes)
+app.use('/', countryRoutes)
 
 i18n.locale = env.DEFAULT_LANGUAGE
 
@@ -57,5 +59,7 @@ helper.mkdir(env.CDN_USERS)
 helper.mkdir(env.CDN_TEMP_USERS)
 helper.mkdir(env.CDN_CARS)
 helper.mkdir(env.CDN_TEMP_CARS)
+helper.mkdir(env.CDN_LOCATIONS)
+helper.mkdir(env.CDN_TEMP_LOCATIONS)
 
 export default app

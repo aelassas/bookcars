@@ -103,6 +103,9 @@ describe('POST /api/create-car', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Mini,
+      multimedia: [bookcarsTypes.CarMultimedia.Bluetooth],
+      rating: 3,
     }
     let res = await request(app)
       .post('/api/create-car')
@@ -161,6 +164,9 @@ describe('PUT /api/update-car', () => {
       collisionDamageWaiver: 130,
       fullInsurance: 210,
       additionalDriver: 220,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
+      rating: 4,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -188,6 +194,9 @@ describe('PUT /api/update-car', () => {
     expect(car.collisionDamageWaiver).toBe(130)
     expect(car.fullInsurance).toBe(210)
     expect(car.additionalDriver).toBe(220)
+    expect(car.range).toBe(bookcarsTypes.CarRange.Midi)
+    expect(car.multimedia).toStrictEqual([bookcarsTypes.CarMultimedia.AndroidAuto])
+    expect(car.rating).toBe(4)
 
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -626,6 +635,7 @@ describe('DELETE /api/delete-car/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     res = await request(app)
@@ -655,6 +665,7 @@ describe('DELETE /api/delete-car/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     res = await request(app)

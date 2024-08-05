@@ -8,7 +8,8 @@ import {
   FormControlLabel,
   Switch,
   TextField,
-  FormHelperText
+  FormHelperText,
+  Rating
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
@@ -31,6 +32,8 @@ import GearboxList from '../components/GearboxList'
 import SeatsList from '../components/SeatsList'
 import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
+import MultimediaList from '../components/MultimediaList'
+import CarRangeList from '../components/CarRangeList'
 
 import '../assets/css/create-car.css'
 
@@ -47,6 +50,9 @@ const UpdateCar = () => {
   const [name, setName] = useState('')
   const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
+  const [range, setRange] = useState('')
+  const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
+  const [rating, setRating] = useState(0)
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
@@ -129,6 +135,20 @@ const UpdateCar = () => {
 
   const handleLocationsChange = (_locations: bookcarsTypes.Option[]) => {
     setLocations(_locations)
+  }
+
+  const handleCarRangeChange = (value: string) => {
+    setRange(value)
+  }
+
+  const handleMultimediaChange = (value: bookcarsTypes.CarMultimedia[]) => {
+    setMultimedia(value)
+  }
+
+  const handleRatingChange = (_: React.SyntheticEvent, value: number | null) => {
+    if (value) {
+      setRating(value)
+    }
   }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,6 +257,9 @@ const UpdateCar = () => {
         collisionDamageWaiver: extraToNumber(collisionDamageWaiver),
         fullInsurance: extraToNumber(fullInsurance),
         additionalDriver: extraToNumber(additionalDriver),
+        range,
+        multimedia,
+        rating
       }
 
       const status = await CarService.update(data)
@@ -289,6 +312,9 @@ const UpdateCar = () => {
               setLocations(lcs)
               setPrice(_car.price.toString())
               setDeposit(_car.deposit.toString())
+              setRange(_car.range)
+              setMultimedia(_car?.multimedia || [])
+              setRating(_car.rating)
               setAvailable(_car.available)
               setType(_car.type)
               setGearbox(_car.gearbox)
@@ -340,7 +366,7 @@ const UpdateCar = () => {
                 record={car}
                 hideDelete
                 size="large"
-                readonly
+                readonly={false}
                 onBeforeUpload={handleBeforeUpload}
                 onChange={handleImageChange}
                 onValidate={handleImageValidate}
@@ -416,6 +442,19 @@ const UpdateCar = () => {
                   autoComplete="off"
                   value={deposit}
                 />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <CarRangeList label={strings.CAR_RANGE} variant="standard" required value={range} onChange={handleCarRangeChange} />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <MultimediaList label={strings.MULTIMEDIA} value={multimedia} onChange={handleMultimediaChange} />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <span className="form-label">{strings.RATING}</span>
+                <Rating value={rating} onChange={handleRatingChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">

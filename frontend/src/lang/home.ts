@@ -11,6 +11,7 @@ const strings = new LocalizedStrings({
     MAP_TITLE: 'Carte des Agences de Location de Voitures',
     MAP_PICK_UP_SELECTED: 'Lieu de prise en charge sélectionné',
     MAP_DROP_OFF_SELECTED: 'Lieu de restitution sélectionné',
+    DESTINATIONS_TITLE: 'Parcourir par destinations',
   },
   en: {
     PICK_UP_DATE: 'Pick-up Date',
@@ -21,6 +22,7 @@ const strings = new LocalizedStrings({
     MAP_TITLE: 'Map of Car Rental Locations',
     MAP_PICK_UP_SELECTED: 'Pick-up Location selected',
     MAP_DROP_OFF_SELECTED: 'Drop-off Location selected',
+    DESTINATIONS_TITLE: 'Browse by Destinations',
   },
 })
 

@@ -31,6 +31,7 @@ const env = {
   BOOKINGS_MOBILE_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE), 10) || 10,
   CDN_USERS: String(import.meta.env.VITE_BC_CDN_USERS),
   CDN_CARS: String(import.meta.env.VITE_BC_CDN_CARS),
+  CDN_LOCATIONS: String(import.meta.env.VITE_BC_CDN_LOCATIONS),
   PAGE_OFFSET: 200,
   INFINITE_SCROLL_OFFSET: 40,
   SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,
@@ -66,6 +67,13 @@ const env = {
   DEPOSIT_FILTER_VALUE_1: Number.parseInt(String(import.meta.env.VITE_BC_DEPOSIT_FILTER_VALUE_1), 10),
   DEPOSIT_FILTER_VALUE_2: Number.parseInt(String(import.meta.env.VITE_BC_DEPOSIT_FILTER_VALUE_2), 10),
   DEPOSIT_FILTER_VALUE_3: Number.parseInt(String(import.meta.env.VITE_BC_DEPOSIT_FILTER_VALUE_3), 10),
+  FB_APP_ID: String(import.meta.env.VITE_BC_FB_APP_ID),
+  APPLE_ID: String(import.meta.env.VITE_BC_APPLE_ID),
+  GG_APP_ID: String(import.meta.env.VITE_BC_GG_APP_ID),
+  /**
+   * Minimum number of locations required for country tabs in homepage.
+   */
+  MIN_LOCATIONS: Number.parseInt(String(import.meta.env.VITE_BC_MIN_LOCATIONS), 10) || 4,
 }
 
 export default env

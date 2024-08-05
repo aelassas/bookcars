@@ -4,14 +4,14 @@ import {
   CircularProgress,
   Typography
 } from '@mui/material'
-import env from '../config/env.config'
+// import env from '../config/env.config'
 
 interface SimpleBackdropProps {
   progress?: boolean
   text?: string
 }
 
-const marginTop = env.isMobile() ? 56 : 64
+// const marginTop = env.isMobile() ? 56 : 64
 
 const SimpleBackdrop = ({ progress, text }: SimpleBackdropProps) => (
   <div>

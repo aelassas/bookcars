@@ -53,60 +53,6 @@ div.home footer div.copyright span.part2 {
     padding: 20px;
     margin: 10px 0;
   }
-
-  div.home div.home-content div.home-search form.home-search-form {
-    display: grid;
-    width: 100%;
-    max-width: 480px;
-  }
-
-  div.home div.home-content div.home-search .pickup-location,
-  div.home div.home-content div.home-search .drop-off-location,
-  div.home div.home-content div.home-search .from,
-  div.home div.home-content div.home-search .to {
-    width: 100%;
-    padding: 10px;
-  }
-
-  div.home div.home-content div.home-search .btn-search {
-    font-size: 20px;
-    line-height: 28px;
-    font-weight: 500;
-    border: 0;
-    border-radius: 5px;
-    height: 52px;
-    white-space: nowrap;
-    color: #fff;
-    margin: 10px;
-  }
-
-  div.home div.home-content div.home-search .btn-search:hover {
-    opacity: 0.95;
-  }
-
-  div.home div.home-content .chk-same-location {
-    color: rgb(0 0 0 / 70%);
-    font-weight: 400;
-    line-height: 1.4em;
-    font-size: 0.9em;
-    display: inline-block;
-    width: 100%;
-    margin: 10px;
-  }
-
-  div.home div.home-content .chk-same-location label {
-    cursor: pointer;
-    padding: 2px;
-    vertical-align: top;
-  }
-
-  div.home div.home-content .chk-same-location input[type='checkbox'] {
-    cursor: pointer;
-  }
-
-  div.home footer div.secure-payment {
-    display: none;
-  }
 }
 
 /* Device width is between 500px and 960px */
@@ -162,10 +108,6 @@ div.home div.home-content div.home-search {
   z-index: 2;
 }
 
-div.home div.home-content div.home-search .btn-search {
-  background: #024DAF;
-}
-
 div.home div.suppliers {
   width: 80%;
   margin: 20px 0;
@@ -174,6 +116,23 @@ div.home div.suppliers {
 div.home div.suppliers h1 {
   text-align: center;
   margin-bottom: 40px;
+}
+
+div.home div.destinations {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 50px 0 60px 0;
+}
+
+div.home div.destinations h1 {
+  width: fit-content;
+}
+
+div.home div.destinations div.tabs {
+  width: 100%;
 }
 
 div.home div.home-map {
@@ -185,7 +144,7 @@ div.home div.home-map {
 
 @media only screen and (width >=960px) {
   div.home div.home-content {
-    height: 550px;
+    height: 650px;
   }
 
   div.home div.home-cover {
@@ -198,79 +157,5 @@ div.home div.home-map {
     background-color: #fff;
     padding: 20px;
     margin: 0 5%;
-  }
-
-  div.home div.home-content div.home-search form.home-search-form {
-    display: table;
-    width: 100%;
-  }
-
-  div.home div.home-content div.home-search .pickup-location {
-    display: table-cell;
-    width: 350px;
-    padding-right: 2px;
-    padding-bottom: 10px;
-  }
-
-  div.home div.home-content div.home-search .drop-off-location {
-    display: table-row;
-    width: 350px;
-    height: 66px;
-  }
-
-  div.home div.home-content div.home-search .from,
-  div.home div.home-content div.home-search .to {
-    display: table-cell;
-    width: 235px;
-    padding: 0 2px;
-  }
-
-  div.home div.home-content div.home-search .btn-search {
-    display: table-cell;
-    font-size: 20px;
-    line-height: 28px;
-    font-weight: 500;
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
-    height: 52px;
-    min-width: 190px;
-    margin: 0;
-    white-space: nowrap;
-    padding: 5px 32px;
-    margin-left: 2px;
-  }
-
-  div.home div.home-content div.home-search .btn-search:hover {
-    opacity: 0.95;
-  }
-
-  div.home div.home-content .chk-same-location {
-    display: table-row;
-    color: rgb(0 0 0 / 70%);
-    font-weight: 400;
-    line-height: 1.4em;
-    font-size: 0.9em;
-  }
-
-  div.home div.home-content .chk-same-location label {
-    cursor: pointer;
-    padding: 2px;
-    vertical-align: top;
-  }
-
-  div.home div.home-content .chk-same-location input[type='checkbox'] {
-    cursor: pointer;
-  }
-
-  div.home footer div.secure-payment {
-    position: absolute;
-    right: 0;
-    padding: 5px;
-    display: none;
-  }
-
-  div.home footer div.secure-payment img {
-    height: 32px;
   }
 }

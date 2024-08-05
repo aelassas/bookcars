@@ -17,6 +17,7 @@ import {
   CorporateFare as SupplierIcon,
   DirectionsCar as CarIcon,
   Check as VerifiedIcon,
+  LocationOn as LocationIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -25,13 +26,15 @@ import { strings as commonStrings } from '../lang/common'
 import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
+import * as LocationService from '../services/LocationService'
 
 interface AvatarProps {
+  avatar?: string
   width?: number
   height?: number
   mode?: 'create' | 'update'
   type?: string
-  record?: bookcarsTypes.User | bookcarsTypes.Car | null
+  record?: bookcarsTypes.User | bookcarsTypes.Car | bookcarsTypes.Location | null
   size: 'small' | 'medium' | 'large'
   readonly?: boolean
   color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
@@ -44,6 +47,7 @@ interface AvatarProps {
 }
 
 const Avatar = ({
+  avatar: _avatar,
   width,
   height,
   mode,
@@ -62,9 +66,13 @@ const Avatar = ({
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [openTypeDialog, setOpenTypeDialog] = useState(false)
-  const [avatarRecord, setAvatarRecord] = useState<bookcarsTypes.User | bookcarsTypes.Car>()
+  const [avatarRecord, setAvatarRecord] = useState<bookcarsTypes.User | bookcarsTypes.Car | bookcarsTypes.Location>()
   const [avatar, setAvatar] = useState<string | undefined | null>(null)
   const [loading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setAvatar(_avatar)
+  }, [_avatar])
 
   const validate = async (file: Blob, onValid: () => void) => {
     if (width && height) {
@@ -112,6 +120,10 @@ const Avatar = ({
         if (mode === 'create') {
           const createAvatar = async () => {
             try {
+              if (avatar) {
+                await UserService.deleteTempAvatar(avatar)
+              }
+
               const data = await UserService.createAvatar(file)
 
               setAvatar(data)
@@ -164,6 +176,10 @@ const Avatar = ({
         if (mode === 'create') {
           const createAvatar = async () => {
             try {
+              if (avatar) {
+                await CarService.deleteTempImage(avatar)
+              }
+
               const data = await CarService.createImage(file)
               setAvatar(data)
 
@@ -202,6 +218,66 @@ const Avatar = ({
 
                   if (onChange) {
                     onChange(car.image || '')
+                  }
+                } else {
+                  helper.error()
+                }
+              } else {
+                helper.error()
+              }
+            } catch (err) {
+              helper.error(err)
+            }
+          }
+
+          await validate(file, updateAvatar)
+        }
+      } else if (type === bookcarsTypes.RecordType.Location) {
+        if (mode === 'create') {
+          const createAvatar = async () => {
+            try {
+              if (avatar) {
+                await LocationService.deleteTempImage(avatar)
+              }
+
+              const data = await LocationService.createImage(file)
+              setAvatar(data)
+
+              if (onChange) {
+                onChange(data)
+              }
+            } catch (err) {
+              helper.error(err)
+            }
+          }
+
+          await validate(file, createAvatar)
+        } else if (mode === 'update') {
+          const updateAvatar = async () => {
+            try {
+              if (!avatarRecord) {
+                helper.error()
+                return
+              }
+
+              const { _id } = avatarRecord
+
+              if (!_id) {
+                helper.error()
+                return
+              }
+
+              const status = await LocationService.updateImage(_id, file)
+
+              if (status === 200) {
+                const location = await LocationService.getLocation(_id)
+
+                if (location) {
+                  setAvatarRecord(location)
+                  setAvatar(location.image || '')
+
+                  if (onChange) {
+                    onChange(location.image || '')
                   }
                 } else {
                   helper.error()
@@ -322,10 +398,50 @@ const Avatar = ({
           const status = await CarService.deleteImage(_id)
 
           if (status === 200) {
-            const car = await UserService.getUser(_id)
+            const car = await CarService.getCar(_id)
 
             if (car) {
               setAvatarRecord(car)
+              setAvatar(null)
+              if (onChange) {
+                onChange('')
+              }
+              closeDialog()
+            } else {
+              helper.error()
+            }
+          } else {
+            helper.error()
+          }
+        }
+      } else if (type === bookcarsTypes.RecordType.Location) {
+        if (!avatarRecord && mode === 'create') {
+          const status = await LocationService.deleteTempImage(avatar as string)
+
+          if (status === 200) {
+            setAvatar(null)
+            if (onChange) {
+              onChange('')
+            }
+            closeDialog()
+          } else {
+            helper.error()
+          }
+        } else if (avatarRecord && mode === 'update') {
+          const { _id } = avatarRecord
+
+          if (!_id) {
+            helper.error()
+            return
+          }
+
+          const status = await LocationService.deleteImage(_id)
+
+          if (status === 200) {
+            const location = await LocationService.getLocation(_id)
+
+            if (location) {
+              setAvatarRecord(location)
               setAvatar(null)
               if (onChange) {
                 onChange('')
@@ -348,6 +464,11 @@ const Avatar = ({
     if (type === bookcarsTypes.RecordType.Car) {
       return mode === 'create' ? env.CDN_TEMP_CARS : env.CDN_CARS
     }
+
+    if (type === bookcarsTypes.RecordType.Location) {
+      return mode === 'create' ? env.CDN_TEMP_LOCATIONS : env.CDN_LOCATIONS
+    }
+
     return mode === 'create' ? env.CDN_TEMP_USERS : env.CDN_USERS
   }
 
@@ -361,8 +482,10 @@ const Avatar = ({
         setAvatarRecord(record)
         if (type === bookcarsTypes.RecordType.Car) {
           setAvatar((record as bookcarsTypes.Car).image)
+        } else if (type === bookcarsTypes.RecordType.Location) {
+          setAvatar((record as bookcarsTypes.Location).image)
         } else {
-          setAvatar(record.avatar)
+          setAvatar((record as bookcarsTypes.User).avatar)
         }
         setIsLoading(false)
       } else if (mode === 'create') {
@@ -378,7 +501,15 @@ const Avatar = ({
 
   const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
 
-  const userAvatar = avatar ? <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} /> : <></>
+  const locationImageStyle = { maxWidth: '100%', maxHeight: '100%' }
+
+  const userAvatarUrl = avatar
+    ? (avatar.startsWith('http') ? avatar : bookcarsHelper.joinURL(cdn(), avatar))
+    : ''
+
+  const userAvatar = avatar
+    ? <MaterialAvatar src={userAvatarUrl} className={size ? `avatar-${size}` : 'avatar'} />
+    : <></>
 
   const emptyAvatar = <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
 
@@ -388,30 +519,34 @@ const Avatar = ({
         readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
-          ) : type === bookcarsTypes.RecordType.Supplier ? (
-            <div className="supplier-avatar-readonly">
-              <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
-            </div>
-          ) : verified && avatarRecord && avatarRecord.verified ? (
-            <Badge
-              overlap="circular"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              badgeContent={(
-                <Tooltip title={commonStrings.VERIFIED}>
-                  <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
-                    <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
-                  </Box>
-                </Tooltip>
-              )}
-            >
-              {userAvatar}
-            </Badge>
-          ) : (
-            userAvatar
           )
+            : type === bookcarsTypes.RecordType.Location ? (
+              <img style={locationImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+            )
+              : type === bookcarsTypes.RecordType.Supplier ? (
+                <div className="supplier-avatar-readonly">
+                  <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.User).fullName} />
+                </div>
+              ) : verified && avatarRecord && (avatarRecord as bookcarsTypes.User).verified ? (
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={(
+                    <Tooltip title={commonStrings.VERIFIED}>
+                      <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
+                        <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
+                      </Box>
+                    </Tooltip>
+                  )}
+                >
+                  {userAvatar}
+                </Badge>
+              ) : (
+                userAvatar
+              )
         ) : (
           //! readonly
           <Badge
@@ -451,11 +586,17 @@ const Avatar = ({
                 <div className="car-avatar">
                   <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
                 </div>
-              ) : type === bookcarsTypes.RecordType.Supplier ? (
-                <img style={supplierImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
-              ) : (
-                <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} />
-              )}
+              )
+                : type === bookcarsTypes.RecordType.Location ? (
+                  <div className="car-avatar">
+                    <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Location).name} />
+                  </div>
+                )
+                  : type === bookcarsTypes.RecordType.Supplier ? (
+                    <img style={supplierImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.User).fullName} />
+                  ) : (
+                    <MaterialAvatar src={userAvatarUrl} className={size ? `avatar-${size}` : 'avatar'} />
+                  )}
             </Badge>
           </Badge>
         )
@@ -463,28 +604,32 @@ const Avatar = ({
         : readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <CarIcon style={carImageStyle} color={color || 'inherit'} />
-          ) : type === bookcarsTypes.RecordType.Supplier ? (
-            <SupplierIcon style={supplierImageStyle} color={color || 'inherit'} />
-          ) : verified && avatarRecord && avatarRecord.verified ? (
-            <Badge
-              overlap="circular"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              badgeContent={(
-                <Tooltip title={commonStrings.VERIFIED}>
-                  <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
-                    <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
-                  </Box>
-                </Tooltip>
-              )}
-            >
-              {emptyAvatar}
-            </Badge>
-          ) : (
-            emptyAvatar
           )
+            : type === bookcarsTypes.RecordType.Location ? (
+              <LocationIcon style={carImageStyle} color={color || 'inherit'} />
+            )
+              : type === bookcarsTypes.RecordType.Supplier ? (
+                <SupplierIcon style={supplierImageStyle} color={color || 'inherit'} />
+              ) : verified && avatarRecord && (avatarRecord as bookcarsTypes.User).verified ? (
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={(
+                    <Tooltip title={commonStrings.VERIFIED}>
+                      <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
+                        <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
+                      </Box>
+                    </Tooltip>
+                  )}
+                >
+                  {emptyAvatar}
+                </Badge>
+              ) : (
+                emptyAvatar
+              )
         ) : (
           //! readonly
           <Badge
@@ -510,11 +655,15 @@ const Avatar = ({
             >
               {type === bookcarsTypes.RecordType.Car ? (
                 <CarIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
-              ) : type === bookcarsTypes.RecordType.Supplier ? (
-                <SupplierIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
-              ) : (
-                <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
-              )}
+              )
+                : type === bookcarsTypes.RecordType.Location ? (
+                  <LocationIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+                )
+                  : type === bookcarsTypes.RecordType.Supplier ? (
+                    <SupplierIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+                  ) : (
+                    <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+                  )}
             </Badge>
           </Badge>
         )}

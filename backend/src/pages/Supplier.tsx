@@ -10,10 +10,7 @@ import {
   Tooltip,
   Link
 } from '@mui/material'
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon
-} from '@mui/icons-material'
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'

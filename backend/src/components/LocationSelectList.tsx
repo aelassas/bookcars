@@ -8,7 +8,7 @@ import * as helper from '../common/helper'
 import MultipleSelect from './MultipleSelect'
 
 interface LocationSelectListProps {
-  value?: bookcarsTypes.Location | bookcarsTypes.Location[]
+  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
   multiple?: boolean
   label?: string
   required?: boolean

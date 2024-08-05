@@ -34,7 +34,7 @@ describe('Tes logging', () => {
       logger.error('error test')
       logger.error('error test', obj)
       logger.error('error test', new Error('test error'))
-    } catch (err) {
+    } catch {
       res = false
     }
     expect(res).toBeTruthy()

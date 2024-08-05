@@ -53,7 +53,7 @@ const strings = new LocalizedStrings({
     SUCCESS: 'Your payment was successfully done. We sent you a confirmation email.',
     PAY_LATER_SUCCESS: 'Your booking was successfully done. We sent you a confirmation email.',
     PAYMENT_OPTIONS: 'Payment options',
-    PAY_LATER: 'Paye later',
+    PAY_LATER: 'Pay later',
     PAY_LATER_INFO: 'Free amendments and cancellation',
     PAY_ONLINE: 'Pay online',
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',

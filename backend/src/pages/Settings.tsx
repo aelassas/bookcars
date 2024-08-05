@@ -163,8 +163,7 @@ const Settings = () => {
                 mode="update"
                 record={user}
                 size="large"
-                // readonly={false}
-                readonly
+                readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 hideDelete={!admin}
@@ -205,7 +204,7 @@ const Settings = () => {
               </div>
             </form>
           </Paper>
-          {/* <Paper className="settings-net settings-net-wrapper" elevation={10}>
+          <Paper className="settings-net settings-net-wrapper" elevation={10}>
             <h1 className="settings-form-title">
               {' '}
               {strings.NETWORK_SETTINGS}
@@ -214,7 +213,7 @@ const Settings = () => {
             <FormControl component="fieldset">
               <FormControlLabel control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />} label={strings.SETTINGS_EMAIL_NOTIFICATIONS} />
             </FormControl>
-          </Paper> */}
+          </Paper>
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
