@@ -189,7 +189,7 @@ const SupplierList = ({
               </CardContent>
             </Card>
           )
-          : rows.map((supplier, index) => {
+          : rows.map((supplier, _index) => {
             const edit = admin || (user && user._id === supplier._id)
             const canDelete = admin
 

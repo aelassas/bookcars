@@ -211,7 +211,7 @@ const CountryList = ({
           )
         ) : (
           <List className="country-list-items">
-            {rows.map((country, index) => (
+            {rows.map((country, _index) => (
               <ListItem
                 className="country-list-item"
                 key={country._id}

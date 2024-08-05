@@ -210,7 +210,7 @@ const LocationList = ({
           )
         ) : (
           <List className="location-list-items">
-            {rows.map((location, index) => (
+            {rows.map((location, _index) => (
               <ListItem
                 className="location-list-item"
                 key={location._id}
