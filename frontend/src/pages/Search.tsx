@@ -178,6 +178,11 @@ const Search = () => {
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
 
+      const { ranges: _ranges } = state
+      if (_ranges) {
+        setRanges(_ranges)
+      }
+
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)

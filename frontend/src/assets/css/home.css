@@ -53,6 +53,15 @@ div.home footer div.copyright span.part2 {
     padding: 20px;
     margin: 10px 0;
   }
+
+  div.home div.car-size div.boxes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.home div.car-size div.boxes div.box {
+    margin-bottom: 30px;
+  }
 }
 
 /* Device width is between 500px and 960px */
@@ -116,6 +125,7 @@ div.home div.suppliers {
 div.home div.suppliers h1 {
   text-align: center;
   margin-bottom: 40px;
+  font-weight: 500;
 }
 
 div.home div.destinations {
@@ -129,10 +139,71 @@ div.home div.destinations {
 
 div.home div.destinations h1 {
   width: fit-content;
+  font-weight: 500;
 }
 
 div.home div.destinations div.tabs {
   width: 100%;
+}
+
+div.home div.car-size {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #F9F9F9;
+  padding: 50px 0;
+}
+
+div.home div.car-size h1 {
+  font-weight: 500;
+  padding: 0 10px;
+  text-align: center;
+}
+
+div.home div.car-size p {
+  max-width: 614px;
+  text-align: center;
+  line-height: 30px;
+  color: #717171;
+  margin: 0;
+  padding: 0 20px;
+}
+
+div.home div.car-size div.boxes {
+  margin: 30px 0;
+}
+
+div.home div.car-size div.boxes div.box {
+  width: 326px;
+  height: 273px;
+  background-color: #fff;
+}
+
+div.home div.car-size div.boxes div.box img {
+  max-width: 100%;
+  max-height: 140px;
+}
+
+div.home div.car-size div.boxes div.box div.box-content {
+  padding: 0 15px;
+  user-select: none;
+}
+
+div.home div.car-size div.boxes div.box div.box-content ul {
+  list-style: none;
+  padding: 0 0 0 27px;
+  margin: 10px 0;
+}
+
+div.home div.car-size div.boxes div.box div.box-content span.price {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+div.home div.car-size div.boxes div.box div.box-content span.unit {
+  font-size: 14px;
+  color: #A9A9A9;
 }
 
 div.home div.home-map {
@@ -157,5 +228,15 @@ div.home div.home-map {
     background-color: #fff;
     padding: 20px;
     margin: 0 5%;
+  }
+
+  div.home div.car-size div.boxes {
+    display: grid;
+    grid-auto-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  div.home div.car-size div.boxes div.box {
+    margin-right: 30px;
   }
 }
