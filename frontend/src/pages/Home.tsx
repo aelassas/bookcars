@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, Tab, Tabs } from '@mui/material'
+import { Button, Checkbox, Dialog, DialogContent, FormControlLabel, Tab, Tabs } from '@mui/material'
 import L from 'leaflet'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
+import * as UserService from '../services/UserService'
 import * as SupplierService from '../services/SupplierService'
 import * as CountryService from '../services/CountryService'
 import * as LocationService from '../services/LocationService'
@@ -16,6 +18,10 @@ import SearchForm from '../components/SearchForm'
 import Map from '../components/Map'
 import Footer from '../components/Footer'
 
+import Mini from '../assets/img/mini.png'
+import Midi from '../assets/img/midi.png'
+import Maxi from '../assets/img/maxi.png'
+
 import '../assets/css/home.css'
 
 const Home = () => {
@@ -25,8 +31,10 @@ const Home = () => {
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [sameLocation, setSameLocation] = useState(true)
   const [tabValue, setTabValue] = useState(0)
-  const [openSearchFormDialog, setOpenSearchFormDialog] = useState(false)
+  const [openLocationSearchFormDialog, setOpenLocationSearchFormDialog] = useState(false)
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])
+  const [ranges, setRanges] = useState([bookcarsTypes.CarRange.Mini, bookcarsTypes.CarRange.Midi])
+  const [openRangeSearchFormDialog, setOpenRangeSearchFormDialog] = useState(false)
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
@@ -41,6 +49,8 @@ const Home = () => {
     const _locations = await LocationService.getLocationsWithPosition()
     setLocations(_locations)
   }
+
+  const language = UserService.getLanguage()
 
   return (
     <Layout onLoad={onLoad} strict={false}>
@@ -94,7 +104,7 @@ const Home = () => {
                       locations={country.locations!}
                       onSelect={(location) => {
                         setPickupLocation(location._id)
-                        setOpenSearchFormDialog(true)
+                        setOpenLocationSearchFormDialog(true)
                       }}
                     />
                   </TabPanel>
@@ -103,6 +113,118 @@ const Home = () => {
             </div>
           </div>
         )}
+
+        <div className="car-size">
+          <h1>{strings.CAR_SIZE_TITLE}</h1>
+          <p>{strings.CAR_SIZE_TEXT}</p>
+          <div className="boxes">
+            <div className="box">
+              <img alt="Mini" src={Mini} />
+              <div className="box-content">
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      defaultChecked
+                      onChange={(e) => {
+                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
+                        if (e.target.checked) {
+                          _ranges.push(bookcarsTypes.CarRange.Mini)
+                        } else {
+                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Mini), 1)
+                        }
+                        setRanges(_ranges)
+                      }}
+                    />
+                  )}
+                  label={strings.MINI}
+                />
+                <ul>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(2.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · phr</span>
+                  </li>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(40, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · pday</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="box">
+              <img alt="Midi" src={Midi} />
+              <div className="box-content">
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      defaultChecked
+                      onChange={(e) => {
+                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
+                        if (e.target.checked) {
+                          _ranges.push(bookcarsTypes.CarRange.Midi)
+                        } else {
+                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Midi), 1)
+                        }
+                        setRanges(_ranges)
+                      }}
+                    />
+                  )}
+                  label={strings.MIDI}
+                />
+                <ul>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(3.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · phr</span>
+                  </li>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(50, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · pday</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="box">
+              <img alt="Maxi" src={Maxi} />
+              <div className="box-content">
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      onChange={(e) => {
+                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
+                        if (e.target.checked) {
+                          _ranges.push(bookcarsTypes.CarRange.Maxi)
+                        } else {
+                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Maxi), 1)
+                        }
+                        setRanges(_ranges)
+                      }}
+                    />
+                  )}
+                  label={strings.MAXI}
+                />
+                <ul>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(4.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · phr</span>
+                  </li>
+                  <li>
+                    <span className="price">{bookcarsHelper.formatPrice(70, commonStrings.CURRENCY, language)}</span>
+                    <span className="unit"> · pday</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <Button
+            variant="contained"
+            className="btn-primary btn-home"
+            disabled={ranges.length === 0}
+            onClick={() => {
+              setOpenRangeSearchFormDialog(true)
+            }}
+          >
+            {strings.SEARCH_FOR_CAR}
+          </Button>
+        </div>
 
         <div className="home-map">
           <Map
@@ -117,7 +239,7 @@ const Home = () => {
               } else {
                 setSameLocation(dropOffLocation === locationId)
               }
-              setOpenSearchFormDialog(true)
+              setOpenLocationSearchFormDialog(true)
             }}
           // onSelelectDropOffLocation={async (locationId) => {
           //   setDropOffLocation(locationId)
@@ -131,9 +253,9 @@ const Home = () => {
       <Dialog
         fullWidth={env.isMobile()}
         maxWidth={false}
-        open={openSearchFormDialog}
+        open={openLocationSearchFormDialog}
         onClose={() => {
-          setOpenSearchFormDialog(false)
+          setOpenLocationSearchFormDialog(false)
         }}
       >
         <DialogContent className="search-dialog-content">
@@ -141,7 +263,25 @@ const Home = () => {
             ranges={bookcarsHelper.getAllRanges()}
             pickupLocation={pickupLocation}
             onCancel={() => {
-              setOpenSearchFormDialog(false)
+              setOpenLocationSearchFormDialog(false)
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        fullWidth={env.isMobile()}
+        maxWidth={false}
+        open={openRangeSearchFormDialog}
+        onClose={() => {
+          setOpenRangeSearchFormDialog(false)
+        }}
+      >
+        <DialogContent className="search-dialog-content">
+          <SearchForm
+            ranges={ranges}
+            onCancel={() => {
+              setOpenRangeSearchFormDialog(false)
             }}
           />
         </DialogContent>
