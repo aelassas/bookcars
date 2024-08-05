@@ -178,7 +178,9 @@ export const update = async (req: Request, res: Response) => {
       //
       // Parking spots
       //
-      if (parkingSpots) {
+      if (!parkingSpots) {
+        location.parkingSpots = []
+      } else {
         if (!location.parkingSpots) {
           location.parkingSpots = []
         }
