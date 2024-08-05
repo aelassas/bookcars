@@ -113,6 +113,34 @@ const carSchema = new Schema<env.Car>(
       type: Number,
       required: [true, "can't be blank"],
     },
+    range: {
+      type: String,
+      enum: [
+        bookcarsTypes.CarRange.Mini,
+        bookcarsTypes.CarRange.Midi,
+        bookcarsTypes.CarRange.Maxi,
+        bookcarsTypes.CarRange.Scooter,
+      ],
+      required: [true, "can't be blank"],
+    },
+    multimedia: [{
+      type: String,
+      enum: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+        bookcarsTypes.CarMultimedia.AppleCarPlay,
+        bookcarsTypes.CarMultimedia.Bluetooth,
+        bookcarsTypes.CarMultimedia.Touchscreen,
+      ],
+    }],
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      validate: {
+        validator: Number.isInteger,
+        message: '{VALUE} is not an integer',
+      },
+    },
   },
   {
     timestamps: true,

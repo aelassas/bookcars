@@ -221,6 +221,13 @@ div.content {
   padding: 0;
 }
 
+.form-label {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+
 @media only screen and (width <=960px) {
   .buttons {
     margin-top: 15px;

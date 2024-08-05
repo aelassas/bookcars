@@ -1,0 +1,117 @@
+form.home-search-form .btn-search,
+form.home-search-form .btn-cancel {
+  font-size: 18px;
+  font-weight: 400;
+  height: 52px;
+  min-width: 190px;
+}
+
+form.home-search-form .btn-search {
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+form.home-search-form .btn-search:hover,
+form.home-search-form .btn-cancel:hover {
+  opacity: 0.95;
+}
+
+form.home-search-form .chk-same-location {
+  display: table-row;
+  color: rgb(0 0 0 / 70%);
+  font-weight: 400;
+  line-height: 1.4em;
+  font-size: 0.9em;
+}
+
+form.home-search-form .chk-same-location label {
+  cursor: pointer;
+  padding: 2px;
+  vertical-align: top;
+}
+
+form.home-search-form .chk-same-location input[type='checkbox'] {
+  cursor: pointer;
+}
+
+form.home-search-form .chk-same-location {
+    user-select: none;
+}
+
+form.home-search-form .btn-search {
+  background: #212121;
+}
+
+@media only screen and (width <=960px) {
+  form.home-search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  form.home-search-form .pickup-location,
+  form.home-search-form .drop-off-location,
+  form.home-search-form .from,
+  form.home-search-form .to {
+    width: 100%;
+    padding: 10px;
+  }
+
+  form.home-search-form .chk-same-location{
+    align-self: flex-start;
+    margin-left: 10px;
+  }
+
+  form.home-search-form .btn-search,
+  form.home-search-form .btn-cancel {
+    width: calc(100% - 20px);
+  }
+
+  form.home-search-form .btn-search {
+    margin: 4px 0;
+  }
+
+  form.home-search-form .btn-cancel {
+    margin: 5px 0;
+  }
+}
+
+@media only screen and (width >=960px) {
+  form.home-search-form {
+    display: table;
+    width: 100%;
+  }
+
+  form.home-search-form .pickup-location {
+    display: table-cell;
+    width: 350px;
+    padding-right: 2px;
+    padding-bottom: 10px;
+  }
+
+  form.home-search-form .drop-off-location {
+    display: table-row;
+    width: 350px;
+    height: 66px;
+  }
+
+  form.home-search-form .from,
+  form.home-search-form .to {
+    display: table-cell;
+    width: 235px;
+    padding: 0 2px;
+  }
+
+  form.home-search-form .btn-search {
+    margin: 0 4px;
+  }
+
+  form.home-search-form .btn-cancel {
+    margin: 0 2px;
+  }
+}

@@ -9,15 +9,19 @@ import '../assets/css/mileage-filter.css'
 
 interface MileageFilterProps {
   className?: string
+  collapse?: boolean
   onChange?: (value: bookcarsTypes.Mileage[]) => void
 }
 
+const allTypes = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
+
 const MileageFilter = ({
   className,
+  collapse,
   onChange
 }: MileageFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.Mileage[]>([])
 
   const limitedRef = useRef<HTMLInputElement>(null)
   const unlimitedRef = useRef<HTMLInputElement>(null)
@@ -28,6 +32,12 @@ const MileageFilter = ({
       unlimitedRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.Mileage[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleLimitedMileageChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -49,9 +59,7 @@ const MileageFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleLimitedMileageClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -82,9 +90,7 @@ const MileageFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleUnlimitedMileageClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -128,18 +134,35 @@ const MileageFilter = ({
   }
 
   return (
-    <Accordion title={strings.MILEAGE} className={`${className ? `${className} ` : ''}mileage-filter`}>
+    <Accordion title={strings.MILEAGE} collapse={collapse} className={`${className ? `${className} ` : ''}mileage-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={limitedRef} type="checkbox" className="mileage-checkbox" onChange={handleLimitedMileageChange} />
-          <span role="button" tabIndex={0} onClick={handleLimitedMileageClick}>{strings.LIMITED}</span>
+          <span
+            onClick={handleLimitedMileageClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.LIMITED}
+          </span>
         </div>
         <div className="filter-element">
           <input ref={unlimitedRef} type="checkbox" className="mileage-checkbox" onChange={handleUnlimitedMileageChange} />
-          <span role="button" tabIndex={0} onClick={handleUnlimitedMileageClick}>{strings.UNLIMITED}</span>
+          <span
+            onClick={handleUnlimitedMileageClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.UNLIMITED}
+          </span>
         </div>
         <div className="filter-actions">
-          <span role="button" tabIndex={0} onClick={handleUncheckAllChange} className="uncheckall">
+          <span
+            onClick={handleUncheckAllChange}
+            className="uncheckall"
+            role="button"
+            tabIndex={0}
+          >
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

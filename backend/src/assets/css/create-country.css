@@ -1,0 +1,38 @@
+div.create-country {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+  margin: 45px 0;
+}
+
+.country-form-wrapper {
+  margin: 32px 0;
+}
+
+.country-form-title {
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (width <=960px) {
+  .country-form {
+    width: 360px;
+    min-height: 400px;
+    padding: 30px;
+  }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (width >=960px) {
+  .country-form {
+    width: 550px;
+    min-height: 340px;
+    padding: 30px;
+  }
+}

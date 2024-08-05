@@ -6,6 +6,7 @@ import * as helper from '../common/helper'
 import env from '../config/env.config'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
+import * as SupplierService from '../services/SupplierService'
 import Layout from '../components/Layout'
 import Search from '../components/Search'
 import InfoBox from '../components/InfoBox'
@@ -18,7 +19,11 @@ import FuelPolicyFilter from '../components/FuelPolicyFilter'
 import DepositFilter from '../components/DepositFilter'
 import AvailabilityFilter from '../components/AvailabilityFilter'
 import CarList from '../components/CarList'
-import * as SupplierService from '../services/SupplierService'
+
+import CarRangeFilter from '../components/CarRangeFilter'
+import CarMultimediaFilter from '../components/CarMultimediaFilter'
+import CarRatingFilter from '../components/CarRatingFilter'
+import CarSeatsFilter from '../components/CarSeatsFilter'
 
 import '../assets/css/cars.css'
 
@@ -39,6 +44,11 @@ const Cars = () => {
   const [deposit, setDeposit] = useState(-1)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
+  const [range, setRange] = useState(bookcarsHelper.getAllRanges())
+  const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
+  const [rating, setRating] = useState(bookcarsHelper.getAllRatings())
+  const [seats, setSeats] = useState(-1)
+
   useEffect(() => {
     const updateSuppliers = async () => {
       const payload: bookcarsTypes.GetCarsPayload = {
@@ -49,13 +59,17 @@ const Cars = () => {
         fuelPolicy,
         deposit,
         availability,
+        ranges: range,
+        multimedia,
+        rating,
+        seats,
       }
       const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
       setAllSuppliers(_allSuppliers)
     }
 
     updateSuppliers()
-  }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability])
+  }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability, range, multimedia, rating, seats])
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
@@ -73,6 +87,22 @@ const Cars = () => {
 
   const handleSupplierFilterChange = (newSuppliers: string[]) => {
     setSuppliers(newSuppliers)
+  }
+
+  const handleRatingFilterChange = (value: number[]) => {
+    setRating(value)
+  }
+
+  const handleRangeFilterChange = (value: bookcarsTypes.CarRange[]) => {
+    setRange(value)
+  }
+
+  const handleMultimediaFilterChange = (value: bookcarsTypes.CarMultimedia[]) => {
+    setMultimedia(value)
+  }
+
+  const handleSeatsFilterChange = (value: number) => {
+    setSeats(value)
   }
 
   const handleCarSpecsFilterChange = (value: bookcarsTypes.CarSpecs) => {
@@ -142,6 +172,10 @@ const Cars = () => {
 
               {rowCount > -1 && (
                 <>
+                  <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
+                  <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
+                  <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
+                  <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
                   <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
                   <CarTypeFilter className="car-filter" onChange={handleCarTypeFilterChange} />
                   <GearboxFilter className="car-filter" onChange={handleGearboxFilterChange} />
@@ -164,6 +198,10 @@ const Cars = () => {
               fuelPolicy={fuelPolicy}
               deposit={deposit}
               availability={availability}
+              range={range}
+              multimedia={multimedia}
+              rating={rating}
+              seats={seats}
               keyword={keyword}
               loading={loading}
               language={language}

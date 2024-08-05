@@ -8,7 +8,8 @@ import {
   FormControlLabel,
   Switch,
   TextField,
-  FormHelperText
+  FormHelperText,
+  Rating
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
@@ -30,6 +31,8 @@ import GearboxList from '../components/GearboxList'
 import SeatsList from '../components/SeatsList'
 import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
+import CarRangeList from '../components/CarRangeList'
+import MultimediaList from '../components/MultimediaList'
 
 import '../assets/css/create-car.css'
 
@@ -44,6 +47,9 @@ const CreateCar = () => {
   const [name, setName] = useState('')
   const [supplier, setSupplier] = useState('')
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
+  const [range, setRange] = useState('')
+  const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
+  const [rating, setRating] = useState(0)
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
@@ -127,6 +133,20 @@ const CreateCar = () => {
 
   const handleLocationsChange = (_locations: bookcarsTypes.Option[]) => {
     setLocations(_locations)
+  }
+
+  const handleCarRangeChange = (value: string) => {
+    setRange(value)
+  }
+
+  const handleMultimediaChange = (value: bookcarsTypes.CarMultimedia[]) => {
+    setMultimedia(value)
+  }
+
+  const handleRatingChange = (_: React.SyntheticEvent, value: number | null) => {
+    if (value) {
+      setRating(value)
+    }
   }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,6 +254,9 @@ const CreateCar = () => {
         collisionDamageWaiver: extraToNumber(collisionDamageWaiver),
         fullInsurance: extraToNumber(fullInsurance),
         additionalDriver: extraToNumber(additionalDriver),
+        range,
+        multimedia,
+        rating
       }
 
       const car = await CarService.create(data)
@@ -343,6 +366,19 @@ const CreateCar = () => {
                 autoComplete="off"
                 value={deposit}
               />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <CarRangeList label={strings.CAR_RANGE} variant="standard" required value={range} onChange={handleCarRangeChange} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <MultimediaList label={strings.MULTIMEDIA} value={multimedia} onChange={handleMultimediaChange} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <span className="form-label">{strings.RATING}</span>
+              <Rating value={rating} onChange={handleRatingChange} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">

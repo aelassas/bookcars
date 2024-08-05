@@ -8,12 +8,13 @@ import {
   Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
 import Error from '../components/Error'
 import Layout from '../components/Layout'
-import * as bookcarsTypes from ':bookcars-types'
+import SocialLogin from '../components/SocialLogin'
 
 import '../assets/css/signin.css'
 
@@ -129,6 +130,8 @@ const SignIn = () => {
               <div className="forgot-password">
                 <Link href="/forgot-password">{strings.RESET_PASSWORD}</Link>
               </div>
+
+              <SocialLogin />
 
               <div className="signin-buttons">
                 <Button variant="contained" size="small" href="/sign-up" className="btn-secondary btn-margin btn-margin-bottom">

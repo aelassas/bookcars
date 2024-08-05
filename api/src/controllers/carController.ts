@@ -96,6 +96,9 @@ export const update = async (req: Request, res: Response) => {
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
+        range,
+        multimedia,
+        rating,
       } = body
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
@@ -118,6 +121,9 @@ export const update = async (req: Request, res: Response) => {
       car.collisionDamageWaiver = collisionDamageWaiver
       car.fullInsurance = fullInsurance
       car.additionalDriver = additionalDriver
+      car.range = range
+      car.multimedia = multimedia
+      car.rating = rating || 0
 
       await car.save()
       return res.json(car)
@@ -406,6 +412,10 @@ export const getCars = async (req: Request, res: Response) => {
       availability,
       fuelPolicy,
       carSpecs,
+      ranges,
+      multimedia,
+      rating,
+      seats,
     } = body
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -463,6 +473,30 @@ export const getCars = async (req: Request, res: Response) => {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
         return res.json([{ resultData: [], pageInfo: [] }])
+      }
+    }
+
+    if (ranges) {
+      $match.$and!.push({ range: { $in: ranges } })
+    }
+
+    if (multimedia && multimedia.length > 0) {
+      for (const multimediaOption of multimedia) {
+        $match.$and!.push({ multimedia: multimediaOption })
+      }
+    }
+
+    if (rating) {
+      $match.$and!.push({ rating: { $in: rating } })
+    }
+
+    if (seats) {
+      if (seats > -1) {
+        if (seats === 6) {
+          $match.$and!.push({ seats: { $gt: 5 } })
+        } else {
+          $match.$and!.push({ seats })
+        }
       }
     }
 
@@ -592,6 +626,10 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       fuelPolicy,
       deposit,
       carSpecs,
+      ranges,
+      multimedia,
+      rating,
+      seats,
     } = body
 
     const $match: mongoose.FilterQuery<any> = {
@@ -631,6 +669,30 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     if (deposit && deposit > -1) {
       $match.$and!.push({ deposit: { $lte: deposit } })
+    }
+
+    if (ranges) {
+      $match.$and!.push({ range: { $in: ranges } })
+    }
+
+    if (multimedia && multimedia.length > 0) {
+      for (const multimediaOption of multimedia) {
+        $match.$and!.push({ multimedia: multimediaOption })
+      }
+    }
+
+    if (rating) {
+      $match.$and!.push({ rating: { $in: rating } })
+    }
+
+    if (seats) {
+      if (seats > -1) {
+        if (seats === 6) {
+          $match.$and!.push({ seats: { $gt: 5 } })
+        } else {
+          $match.$and!.push({ seats })
+        }
+      }
     }
 
     const data = await Car.aggregate(

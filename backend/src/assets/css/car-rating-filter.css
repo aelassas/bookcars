@@ -1,0 +1,35 @@
+div.rating-filter div.filter-elements {
+  padding: 7px 5px;
+}
+
+div.rating-filter div.filter-elements div.filter-element {
+  cursor: pointer;
+  margin: 5px;
+  width: fit-content;
+}
+
+div.rating-filter div.filter-elements div.filter-element input[type='checkbox'].rating-checkbox {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+div.rating-filter div.filter-elements div.filter-element span.ratings {
+  display: inline-block;
+  padding: 0 4px;
+}
+
+div.rating-filter div.filter-elements div.filter-element .rating{
+  position: relative;
+  bottom: -4px;
+}
+
+div.rating-filter div.filter-actions {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+div.rating-filter div.filter-actions span.uncheckall {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0064c8;
+}

@@ -5,27 +5,27 @@ import {
   PauseCircle as PendingIcon,
   Cancel as CancelledIcon,
 } from '@mui/icons-material'
-import * as ohmjetTypes from ':bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '../common/helper'
 
 import '../assets/css/booking-status.css'
 
 interface BookingStatusProps {
-  value: ohmjetTypes.BookingStatus
+  value: bookcarsTypes.BookingStatus
   showIcon?: boolean,
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-const getIcon = (value: ohmjetTypes.BookingStatus) => {
-  if ([ohmjetTypes.BookingStatus.Deposit, ohmjetTypes.BookingStatus.Reserved, ohmjetTypes.BookingStatus.Paid].includes(value)) {
+const getIcon = (value: bookcarsTypes.BookingStatus) => {
+  if ([bookcarsTypes.BookingStatus.Deposit, bookcarsTypes.BookingStatus.Reserved, bookcarsTypes.BookingStatus.Paid].includes(value)) {
     return <CheckIcon className={`bs-icon bs-icon-${value?.toLowerCase()}`} />
   }
 
-  if (value === ohmjetTypes.BookingStatus.Void) {
+  if (value === bookcarsTypes.BookingStatus.Void) {
     return <VoidIcon className="bs-icon bs-icon-void" />
   }
 
-  if (value === ohmjetTypes.BookingStatus.Pending) {
+  if (value === bookcarsTypes.BookingStatus.Pending) {
     return <PendingIcon className="bs-icon bs-icon-pending" />
   }
 

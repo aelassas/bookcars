@@ -16,6 +16,10 @@ import MileageFilter from '../components/MileageFilter'
 import FuelPolicyFilter from '../components/FuelPolicyFilter'
 import DepositFilter from '../components/DepositFilter'
 import CarList from '../components/CarList'
+import CarRatingFilter from '../components/CarRatingFilter'
+import CarRangeFilter from '../components/CarRangeFilter'
+import CarMultimediaFilter from '../components/CarMultimediaFilter'
+import CarSeatsFilter from '../components/CarSeatsFilter'
 
 import '../assets/css/cars.css'
 
@@ -40,6 +44,10 @@ const Search = () => {
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [fuelPolicy, setFuelPolicy] = useState([bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike])
   const [deposit, setDeposit] = useState(-1)
+  const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
+  const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
+  const [rating, setRating] = useState(bookcarsHelper.getAllRatings())
+  const [seats, setSeats] = useState(-1)
 
   useEffect(() => {
     const updateSuppliers = async () => {
@@ -73,12 +81,28 @@ const Search = () => {
     setTo(filter.to)
   }
 
-  const handleCarSpecsFilterChange = (value: bookcarsTypes.CarSpecs) => {
-    setCarSpecs(value)
-  }
-
   const handleSupplierFilterChange = (newSuppliers: string[]) => {
     setSupplierIds(newSuppliers)
+  }
+
+  const handleRatingFilterChange = (value: number[]) => {
+    setRating(value)
+  }
+
+  const handleRangeFilterChange = (value: bookcarsTypes.CarRange[]) => {
+    setRanges(value)
+  }
+
+  const handleMultimediaFilterChange = (value: bookcarsTypes.CarMultimedia[]) => {
+    setMultimedia(value)
+  }
+
+  const handleSeatsFilterChange = (value: number) => {
+    setSeats(value)
+  }
+
+  const handleCarSpecsFilterChange = (value: bookcarsTypes.CarSpecs) => {
+    setCarSpecs(value)
   }
 
   const handleCarTypeFilterChange = (values: bookcarsTypes.CarType[]) => {
@@ -176,8 +200,21 @@ const Search = () => {
           <div className="col-1">
             {!loading && (
               <>
-                <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
+                <CarFilter
+                  className="filter"
+                  pickupLocation={pickupLocation}
+                  dropOffLocation={dropOffLocation}
+                  from={from}
+                  to={to}
+                  accordion
+                  collapse
+                  onSubmit={handleCarFilterSubmit}
+                />
                 <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
+                <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
+                <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
+                <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
+                <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
                 <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
                 <CarType className="filter" onChange={handleCarTypeFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
@@ -201,6 +238,10 @@ const Search = () => {
               loading={loading}
               from={from}
               to={to}
+              ranges={ranges}
+              multimedia={multimedia}
+              rating={rating}
+              seats={seats}
             />
           </div>
         </div>

@@ -13,13 +13,15 @@ interface MileageFilterProps {
   onChange?: (value: bookcarsTypes.Mileage[]) => void
 }
 
+const allTypes = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
+
 const MileageFilter = ({
   className,
   collapse,
   onChange
 }: MileageFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.Mileage[]>([])
 
   const limitedRef = useRef<HTMLInputElement>(null)
   const unlimitedRef = useRef<HTMLInputElement>(null)
@@ -30,6 +32,12 @@ const MileageFilter = ({
       unlimitedRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.Mileage[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleLimitedMileageChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -51,9 +59,7 @@ const MileageFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleLimitedMileageClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -84,9 +90,7 @@ const MileageFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleUnlimitedMileageClick = (e: React.MouseEvent<HTMLElement>) => {

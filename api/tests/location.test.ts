@@ -16,11 +16,11 @@ let LOCATION_ID: string
 let LOCATION_NAMES: bookcarsTypes.LocationName[] = [
   {
     language: 'en',
-    name: uuid(),
+    value: uuid(),
   },
   {
     language: 'fr',
-    name: uuid(),
+    value: uuid(),
   },
 ]
 
@@ -88,13 +88,22 @@ describe('POST /api/create-location', () => {
   it('should create a location', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    const payload: bookcarsTypes.LocationName[] = LOCATION_NAMES
+    const payload: bookcarsTypes.UpsertLocationPayload = {
+      country: testHelper.GetRandromObjectIdAsString(),
+      names: LOCATION_NAMES,
+      latitude: 28.0268755,
+      longitude: 1.6528399999999976,
+    }
+
     let res = await request(app)
       .post('/api/create-location')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
+    expect(res.body?.country).toBe(payload.country)
     expect(res.body?.values?.length).toBe(2)
+    expect(res.body?.latitude).toBe(payload.latitude)
+    expect(res.body?.longitude).toBe(payload.longitude)
     LOCATION_ID = res.body?._id
 
     res = await request(app)
@@ -113,28 +122,39 @@ describe('PUT /api/update-location/:id', () => {
     LOCATION_NAMES = [
       {
         language: 'en',
-        name: uuid(),
+        value: uuid(),
       },
       {
         language: 'fr',
-        name: uuid(),
+        value: uuid(),
       },
       {
         language: 'es',
-        name: uuid(),
+        value: uuid(),
       },
     ]
+
+    const payload: bookcarsTypes.UpsertLocationPayload = {
+      country: testHelper.GetRandromObjectIdAsString(),
+      names: LOCATION_NAMES,
+      latitude: 29.0268755,
+      longitude: 2.6528399999999976,
+    }
+
     let res = await request(app)
       .put(`/api/update-location/${LOCATION_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
-      .send(LOCATION_NAMES)
+      .send(payload)
     expect(res.statusCode).toBe(200)
+    expect(res.body?.country).toBe(payload.country)
     expect(res.body.values?.length).toBe(3)
+    expect(res.body?.latitude).toBe(payload.latitude)
+    expect(res.body?.longitude).toBe(payload.longitude)
 
     res = await request(app)
       .put(`/api/update-location/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
-      .send(LOCATION_NAMES)
+      .send(payload)
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
@@ -153,7 +173,7 @@ describe('GET /api/location/:id/:language', () => {
     let res = await request(app)
       .get(`/api/location/${LOCATION_ID}/${language}`)
     expect(res.statusCode).toBe(200)
-    expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].name)
+    expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].value)
 
     res = await request(app)
       .get(`/api/location/${testHelper.GetRandromObjectIdAsString()}/${language}`)
@@ -170,7 +190,7 @@ describe('GET /api/locations/:page/:size/:language', () => {
     const language = 'en'
 
     let res = await request(app)
-      .get(`/api/locations/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${LOCATION_NAMES[0].name}`)
+      .get(`/api/locations/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${LOCATION_NAMES[0].value}`)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(1)
 
@@ -207,6 +227,7 @@ describe('GET /api/check-location/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     let res = await request(app)

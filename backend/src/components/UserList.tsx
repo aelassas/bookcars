@@ -145,7 +145,11 @@ const UserList = ({
             if (__user.type === bookcarsTypes.RecordType.Supplier) {
               userAvatar = <img src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} alt={row.fullName} />
             } else {
-              const avatar = <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} className="avatar-small" />
+              const userAvatarUrl = __user.avatar
+                ? (__user.avatar.startsWith('http') ? __user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, __user.avatar))
+                : ''
+
+              const avatar = <Avatar src={userAvatarUrl} className="avatar-small" />
               if (__user.verified) {
                 userAvatar = (
                   <Badge

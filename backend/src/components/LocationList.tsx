@@ -14,12 +14,10 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Avatar,
 } from '@mui/material'
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
-  LocationOn as LocationIcon
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '../config/env.config'
@@ -31,6 +29,7 @@ import * as helper from '../common/helper'
 import Pager from './Pager'
 
 import '../assets/css/location-list.css'
+import Avatar from './Avatar'
 
 interface LocationListProps {
   keyword?: string
@@ -231,11 +230,22 @@ const LocationList = ({
                 )}
               >
                 <ListItemAvatar>
-                  <Avatar>
-                    <LocationIcon />
-                  </Avatar>
+                  <Avatar
+                    type={bookcarsTypes.RecordType.Location}
+                    mode="update"
+                    record={location}
+                    size="medium"
+                    readonly
+                    color="disabled"
+                    className="location-image"
+                  />
                 </ListItemAvatar>
-                <ListItemText primary={<Typography className="location-title">{location.name}</Typography>} />
+                <ListItemText
+                  primary={
+                    <Typography className="location-title">{location.name}</Typography>
+                  }
+                  secondary={location.country?.name && location.country.name}
+                />
               </ListItem>
             ))}
           </List>

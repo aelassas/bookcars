@@ -10,7 +10,11 @@ import {
   AutocompleteInputChangeReason,
   Chip
 } from '@mui/material'
-import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
+import {
+  LocationOn as LocationIcon,
+  Flag as CountryIcon,
+  AccountCircle,
+} from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
@@ -214,6 +218,28 @@ const MultipleSelect = ({
             )
           }
 
+          if (type === bookcarsTypes.RecordType.Country && !multiple && values.length === 1 && values[0]) {
+            return (
+              <TextField
+                {...params}
+                label={label}
+                variant={variant || 'outlined'}
+                required={required}
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: (
+                    <>
+                      <InputAdornment position="start">
+                        <CountryIcon />
+                      </InputAdornment>
+                      {params.InputProps.startAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )
+          }
+
           if (type === bookcarsTypes.RecordType.Car && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
@@ -275,7 +301,9 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Supplier) {
+          }
+
+          if (type === bookcarsTypes.RecordType.Supplier) {
             return (
               <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image supplier-ia">
@@ -284,7 +312,9 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Location) {
+          }
+
+          if (type === bookcarsTypes.RecordType.Location) {
             return (
               <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image">
@@ -293,7 +323,20 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Car) {
+          }
+
+          if (type === bookcarsTypes.RecordType.Country) {
+            return (
+              <li {...props} key={option._id} className={`${props.className} ms-option`}>
+                <span className="option-image">
+                  <CountryIcon />
+                </span>
+                <span className="option-name">{option.name}</span>
+              </li>
+            )
+          }
+
+          if (type === bookcarsTypes.RecordType.Car) {
             return (
               <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image car-ia">

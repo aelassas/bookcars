@@ -14,6 +14,7 @@ routes.route(routeNames.deleteTokens).delete(userController.deleteTokens)
 routes.route(routeNames.resend).post(userController.resend)
 routes.route(routeNames.activate).post(userController.activate)
 routes.route(routeNames.signin).post(userController.signin)
+routes.route(routeNames.socialSignin).post(userController.socialSignin)
 routes.route(routeNames.signout).post(userController.signout)
 routes.route(routeNames.getPushToken).get(authJwt.verifyToken, userController.getPushToken)
 routes.route(routeNames.createPushToken).post(authJwt.verifyToken, userController.createPushToken)
@@ -36,5 +37,6 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, userController.getUs
 routes.route(routeNames.delete).post(authJwt.verifyToken, userController.deleteUsers)
 routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)
 routes.route(routeNames.sendEmail).post(userController.sendEmail)
+routes.route(routeNames.hasPassword).get(authJwt.verifyToken, userController.hasPassword)
 
 export default routes

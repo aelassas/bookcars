@@ -96,45 +96,6 @@ div.bs-list div.booking-details div.booking-detail div.booking-price {
   color: rgb(0 0 0 / 87%);
 }
 
-div.bs-list div.booking-details div.bs {
-  width: 100%;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 400;
-  margin-bottom: 5px;
-}
-
-div.bs-list div.booking-details div.bs span {
-  color: #fff;
-}
-
-div.bs-list div.booking-details div.bs-void {
-  background: #999;
-}
-
-div.bs-list div.booking-details div.bs-pending {
-  background: #e98003;
-}
-
-div.bs-list div.booking-details div.bs-deposit {
-  background: #22bba7;
-}
-
-div.bs-list div.booking-details div.bs-paid {
-  background: #77bc23;
-}
-
-div.bs-list div.booking-details div.bs-reserved {
-  background: #188ace;
-}
-
-div.bs-list div.booking-details div.bs-cancelled {
-  background: #bc2143;
-}
-
 div.bs-list div.extras {
   margin-bottom: 10px;
 }
