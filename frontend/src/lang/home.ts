@@ -12,6 +12,12 @@ const strings = new LocalizedStrings({
     MAP_PICK_UP_SELECTED: 'Lieu de prise en charge sélectionné',
     MAP_DROP_OFF_SELECTED: 'Lieu de restitution sélectionné',
     DESTINATIONS_TITLE: 'Parcourir par destinations',
+    CAR_SIZE_TITLE: 'Consulter nos tailles de voitures',
+    CAR_SIZE_TEXT: 'Nos véhicules sont disponibles en trois tailles principales.',
+    MINI: 'MINI',
+    MIDI: 'MIDI',
+    MAXI: 'MAXI',
+    SEARCH_FOR_CAR: 'Rechercher une voiture',
   },
   en: {
     PICK_UP_DATE: 'Pick-up Date',
@@ -23,6 +29,12 @@ const strings = new LocalizedStrings({
     MAP_PICK_UP_SELECTED: 'Pick-up Location selected',
     MAP_DROP_OFF_SELECTED: 'Drop-off Location selected',
     DESTINATIONS_TITLE: 'Browse by Destinations',
+    CAR_SIZE_TITLE: 'Meet Some of Our Car sizes',
+    CAR_SIZE_TEXT: 'Our vehicles come in three main sizes.',
+    MINI: 'MINI',
+    MIDI: 'MIDI',
+    MAXI: 'MAXI',
+    SEARCH_FOR_CAR: 'Search for a car',
   },
 })
 
