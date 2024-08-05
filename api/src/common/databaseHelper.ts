@@ -247,7 +247,7 @@ const createBookingIndex = async (): Promise<void> => {
 const createCollection = async<T>(model: Model<T>) => {
   try {
     await model.collection.indexes()
-  } catch (err) {
+  } catch {
     await model.createCollection()
     await model.createIndexes()
   }

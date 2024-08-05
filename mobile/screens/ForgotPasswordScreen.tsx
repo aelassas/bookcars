@@ -56,7 +56,7 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
             setEmailError(false)
             setEmailValid(true)
             return true
-        } catch (err) {
+        } catch {
           helper.toast(i18n.t('GENERIC_ERROR'))
           setEmailError(false)
           setEmailValid(true)

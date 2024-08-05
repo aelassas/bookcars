@@ -498,7 +498,7 @@ const UpdateBooking = () => {
               setLoading(false)
               setNoMatch(true)
             }
-          } catch (err) {
+          } catch {
             setLoading(false)
             setError(true)
             setVisible(false)

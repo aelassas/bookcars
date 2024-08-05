@@ -129,7 +129,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                           } else {
                             helper.error()
                           }
-                        } catch (err) {
+                        } catch {
                           await UserService.signout(navigation)
                         }
                       }}
@@ -236,7 +236,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                               } else {
                                 navigate()
                               }
-                            } catch (err) {
+                            } catch {
                               await UserService.signout(navigation)
                             }
                           }}
@@ -279,7 +279,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                               } else {
                                 helper.error()
                               }
-                            } catch (err) {
+                            } catch {
                               await UserService.signout(navigation)
                             }
                           }}

@@ -94,7 +94,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setBirthDateValid(true)
 
       setVisible(true)
-    } catch (err) {
+    } catch {
       await UserService.signout(navigation, false, true)
     }
   }
@@ -134,10 +134,10 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       return _phoneValid
     }
-      setPhoneRequired(true)
-      setPhoneValid(true)
+    setPhoneRequired(true)
+    setPhoneValid(true)
 
-      return false
+    return false
   }
 
   const onChangePhone = (text: string) => {
@@ -159,10 +159,10 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setBirthDateValid(_birthDateValid)
       return _birthDateValid
     }
-      setBirthDateRequired(true)
-      setBirthDateValid(true)
+    setBirthDateRequired(true)
+    setBirthDateValid(true)
 
-      return false
+    return false
   }
 
   const onChangeBirthDate = (date: Date | undefined) => {

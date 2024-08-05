@@ -57,7 +57,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setHasBookings(_hasBookings)
 
       setVisible(true)
-    } catch (err) {
+    } catch {
       await UserService.signout(navigation, false, true)
     }
   }

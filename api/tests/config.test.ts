@@ -10,7 +10,7 @@ describe('Test configuration options', () => {
         try {
             const UNKNOWN = env.__env__('BC_UNKNOWN', true)
             expect(!!UNKNOWN).toBeFalsy()
-        } catch (err) {
+        } catch {
             res = false
         }
         expect(res).toBeFalsy()
