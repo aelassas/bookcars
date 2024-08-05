@@ -151,7 +151,7 @@ export const GetRandromObjectId = () => new mongoose.Types.ObjectId()
 
 export const GetRandromObjectIdAsString = () => GetRandromObjectId().toString()
 
-export const createLocation = async (nameEN: string, nameFR: string) => {
+export const createLocation = async (nameEN: string, nameFR: string, country?: string) => {
   const locationValueBodyEN = {
     language: 'en',
     value: nameEN,
@@ -167,7 +167,7 @@ export const createLocation = async (nameEN: string, nameFR: string) => {
   await locationValueFR.save()
 
   const values = [locationValueEN._id, locationValueFR._id]
-  const location = new Location({ country: GetRandromObjectIdAsString(), values })
+  const location = new Location({ country: country || GetRandromObjectIdAsString(), values })
   await location.save()
   expect(location.id).toBeDefined()
   return location.id as string

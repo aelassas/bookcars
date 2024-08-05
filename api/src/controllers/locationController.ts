@@ -97,7 +97,7 @@ export const create = async (req: Request, res: Response) => {
     for (const name of names) {
       const locationValue = new LocationValue({
         language: name.language,
-        value: name.value,
+        value: name.name,
       })
       await locationValue.save()
       values.push(locationValue.id)
@@ -163,12 +163,12 @@ export const update = async (req: Request, res: Response) => {
       for (const name of names) {
         const locationValue = location.values.filter((value) => value.language === name.language)[0]
         if (locationValue) {
-          locationValue.value = name.value
+          locationValue.value = name.name
           await locationValue.save()
         } else {
           const lv = new LocationValue({
             language: name.language,
-            value: name.value,
+            value: name.name,
           })
           await lv.save()
           location.values.push(lv)

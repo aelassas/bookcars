@@ -63,7 +63,7 @@ const CreateLocation = () => {
 
       for (let i = 0; i < names.length; i += 1) {
         const name = names[i]
-        const _isValid = (await LocationService.validate({ language: name.language, name: name.value })) === 200
+        const _isValid = (await LocationService.validate({ language: name.language, name: name.name })) === 200
         isValid = isValid && _isValid
         if (!_isValid) {
           nameErrors[i] = true
@@ -85,7 +85,7 @@ const CreateLocation = () => {
 
         if (status === 200) {
           for (let i = 0; i < names.length; i += 1) {
-            names[i].value = ''
+            names[i].name = ''
           }
           setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
           setImage(undefined)
@@ -147,13 +147,13 @@ const CreateLocation = () => {
                 <InputLabel className="required">{`${commonStrings.NAME} (${language.label})`}</InputLabel>
                 <Input
                   type="text"
-                  value={(names[index] && names[index].value) || ''}
+                  value={(names[index] && names[index].name) || ''}
                   error={nameErrors[index]}
                   required
                   onChange={(e) => {
                     names[index] = {
                       language: language.code,
-                      value: e.target.value,
+                      name: e.target.value,
                     }
                     setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
 
