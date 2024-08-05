@@ -15,6 +15,7 @@ const strings = new LocalizedStrings({
     LANGUAGE: 'Langue',
     SETTINGS: 'Paramètres',
     SIGN_OUT: 'Déconnexion',
+    COUNTRIES: 'Pays',
   },
   en: {
     DASHBOARD: 'Dashboard',
@@ -29,6 +30,7 @@ const strings = new LocalizedStrings({
     LANGUAGE: 'Language',
     SETTINGS: 'Settings',
     SIGN_OUT: 'Sign out',
+    COUNTRIES: 'Countries',
   },
 })
 

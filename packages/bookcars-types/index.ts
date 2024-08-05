@@ -18,6 +18,20 @@ export enum CarType {
   Unknown = 'unknown'
 }
 
+export enum CarRange {
+  Mini = 'mini',
+  Midi = 'midi',
+  Maxi = 'maxi',
+  Scooter = 'scooter',
+}
+
+export enum CarMultimedia {
+  Touchscreen = 'touchscreen',
+  Bluetooth = 'bluetooth',
+  AndroidAuto = 'androidAuto',
+  AppleCarPlay = 'appleCarPlay',
+}
+
 export enum GearboxType {
   Manual = 'manual',
   Automatic = 'automatic'
@@ -52,7 +66,8 @@ export enum RecordType {
   Supplier = 'supplier',
   User = 'user',
   Car = 'car',
-  Location = 'location'
+  Location = 'location',
+  Country = 'country',
 }
 
 export interface Booking {
@@ -113,7 +128,6 @@ export interface AdditionalDriver {
   birthDate: Date
 }
 
-
 export interface UpsertBookingPayload {
   booking: Booking
   additionalDriver?: AdditionalDriver
@@ -121,7 +135,21 @@ export interface UpsertBookingPayload {
 
 export interface LocationName {
   language: string
+  value: string
+}
+
+export interface CountryName {
+  language: string
   name: string
+}
+
+export interface UpsertLocationPayload {
+  country: string
+  longitude?: number
+  latitude?: number
+  names: LocationName[]
+  image?: string | null
+  parkingSpots?: ParkingSpot[]
 }
 
 export interface UpdateSupplierPayload {
@@ -155,6 +183,9 @@ export interface CreateCarPayload {
   collisionDamageWaiver: number
   fullInsurance: number
   additionalDriver: number
+  range: string
+  multimedia: string[]
+  rating?: number
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
@@ -177,6 +208,10 @@ export interface GetCarsPayload {
   deposit?: number
   availability?: string[]
   pickupLocation?: string
+  ranges?: string[]
+  multimedia?: string[]
+  rating?: number[]
+  seats?: number
 }
 
 export interface SignUpPayload {
@@ -233,11 +268,21 @@ export interface ValidateEmailPayload {
   email: string
 }
 
+export enum SocialSignInType {
+  Facebook = 'facebook',
+  Apple = 'apple',
+  Google = 'google'
+}
+
 export interface SignInPayload {
-  email: string
+  email?: string
   password?: string
   stayConnected?: boolean
   mobile?: boolean
+  fullName?: string
+  avatar?: string
+  accessToken?: string
+  socialSignInType?: SocialSignInType
 }
 
 export interface ResendLinkPayload {
@@ -259,6 +304,11 @@ export interface ValidateSupplierPayload {
 }
 
 export interface ValidateLocationPayload {
+  language: string
+  name: string
+}
+
+export interface ValidateCountryPayload {
   language: string
   name: string
 }
@@ -300,15 +350,38 @@ export interface Option {
 }
 
 export interface LocationValue {
+  _id?: string
   language: string
   value?: string
+}
+
+export interface ParkingSpot {
+  _id?: string
+  longitude: number | string
+  latitude: number | string
   name?: string
+  values?: LocationValue[]
 }
 
 export interface Location {
   _id: string
+  country?: Country
+  longitude?: number
+  latitude?: number
   name?: string
   values?: LocationValue[]
+  image?: string
+  parkingSpots?: ParkingSpot[]
+}
+
+export interface Country {
+  _id: string
+  name?: string
+  values?: LocationValue[]
+}
+
+export interface CountryInfo extends Country {
+  locations?: Location[]
 }
 
 export interface Car {
@@ -319,6 +392,9 @@ export interface Car {
   locations: Location[]
   price: number
   deposit: number
+  range: string
+  multimedia: CarMultimedia[] | undefined
+  rating: number
   available: boolean
   type: CarType
   gearbox: GearboxType

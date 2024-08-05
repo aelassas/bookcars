@@ -107,6 +107,24 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
     })
 
 /**
+ * Social sign in.
+ *
+ * @param {bookcarsTypes.SignInPayload} data
+ * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
+ */
+export const socialSignin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
+  axiosInstance
+    .post(
+      '/api/social-sign-in',
+      data,
+      { withCredentials: true }
+    )
+    .then((res) => {
+      localStorage.setItem('bc-user', JSON.stringify(res.data))
+      return { status: res.status, data: res.data }
+    })
+
+/**
  * Sign out.
  *
  * @param {boolean} [redirect=true]
@@ -277,6 +295,7 @@ export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
     resolve(null)
   })
 }
+
 /**
  * Update a User.
  *
@@ -3297,3 +3316,29 @@ export const sendEmail = (payload: bookcarsTypes.SendEmailPayload): Promise<numb
       payload,
     )
     .then((res) => res.status)
+
+/**
+* Parse JWT token.
+* @param {string} token
+* @returns {any}
+*/
+export const parseJwt = (token: string) => {
+  const base64Url = token.split('.')[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join(''))
+
+  return JSON.parse(jsonPayload)
+}
+
+/**
+ * Check if password exists.
+ *
+ * @param {string} id
+ * @returns {Promise<bookcarsTypes.User|null>}
+ */
+export const hasPassword = (id: string): Promise<number> => axiosInstance
+  .get(
+    `/api/has-password/${encodeURIComponent(id)}`,
+    { withCredentials: true }
+  )
+  .then((res) => res.status)

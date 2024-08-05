@@ -13,13 +13,15 @@ interface GearboxFilterProps {
   onChange?: (value: bookcarsTypes.GearboxType[]) => void
 }
 
+const allTypes = [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic]
+
 const GearboxFilter = ({
   className,
   collapse,
   onChange
 }: GearboxFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.GearboxType[]>([])
 
   const automaticRef = useRef<HTMLInputElement>(null)
   const manualRef = useRef<HTMLInputElement>(null)
@@ -30,6 +32,12 @@ const GearboxFilter = ({
       manualRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.GearboxType[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleCheckAutomaticChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -51,9 +59,7 @@ const GearboxFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleAutomaticClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -84,9 +90,7 @@ const GearboxFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleManualClick = (e: React.MouseEvent<HTMLElement>) => {

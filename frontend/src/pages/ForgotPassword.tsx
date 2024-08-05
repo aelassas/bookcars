@@ -11,11 +11,12 @@ import {
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
+import * as helper from '../common/helper'
 import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
+import SocialLogin from '../components/SocialLogin'
 import NoMatch from './NoMatch'
-import * as helper from '../common/helper'
 
 import '../assets/css/forgot-password.css'
 
@@ -140,6 +141,8 @@ const ForgotPassword = () => {
                     {(error && strings.EMAIL_ERROR) || ''}
                   </FormHelperText>
                 </FormControl>
+
+                <SocialLogin />
 
                 <div className="buttons">
                   <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">

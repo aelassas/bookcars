@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { FormControl, Button } from '@mui/material'
+import { FormControl, Button, FormControlLabel, Checkbox } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import env from '../config/env.config'
+import { format } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/home'
+import { strings } from '../lang/search-form'
 import * as UserService from '../services/UserService'
 import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
+import Accordion from './Accordion'
 
 import '../assets/css/car-filter.css'
 
@@ -17,6 +19,8 @@ interface CarFilterProps {
   pickupLocation: bookcarsTypes.Location
   dropOffLocation: bookcarsTypes.Location
   className?: string
+  accordion?: boolean
+  collapse?: boolean
   onSubmit: bookcarsTypes.CarFilterSubmitEvent
 }
 
@@ -26,6 +30,8 @@ const CarFilter = ({
   pickupLocation: filterPickupLocation,
   dropOffLocation: filterDropOffLocation,
   className,
+  accordion,
+  collapse,
   onSubmit
 }: CarFilterProps) => {
   const _minDate = new Date()
@@ -40,6 +46,8 @@ const CarFilter = ({
   const [sameLocation, setSameLocation] = useState(filterPickupLocation === filterDropOffLocation)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
+  const [offsetHeight, setOffsetHeight] = useState(0)
+  const [edit, setEdit] = useState(false)
 
   useEffect(() => {
     if (filterFrom) {
@@ -57,8 +65,28 @@ const CarFilter = ({
     }
   }, [filterTo])
 
+  useEffect(() => {
+    setPickupLocation(filterPickupLocation)
+  }, [filterPickupLocation])
+
+  useEffect(() => {
+    setDropOffLocation(filterDropOffLocation)
+  }, [filterDropOffLocation])
+
+  useEffect(() => {
+    setSameLocation(pickupLocation?._id === dropOffLocation?._id)
+  }, [pickupLocation, dropOffLocation])
+
+  useEffect(() => {
+    if (sameLocation) {
+      setOffsetHeight(0)
+    } else {
+      setOffsetHeight(56)
+    }
+  }, [sameLocation])
+
   const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    const _pickupLocation = (values.length > 0 && values[0]) || null
+    const _pickupLocation = (values.length > 0 && values[0]) as bookcarsTypes.Location || null
 
     setPickupLocation(_pickupLocation)
 
@@ -76,7 +104,7 @@ const CarFilter = ({
   }
 
   const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setDropOffLocation((values.length > 0 && values[0]) || null)
+    setDropOffLocation((values.length > 0 && values[0]) as bookcarsTypes.Location || null)
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,113 +123,251 @@ const CarFilter = ({
   }
 
   return (
-    <div className={`${className ? `${className} ` : ''}car-filter`}>
-      <form onSubmit={handleSubmit} className="home-search-form">
-        <FormControl fullWidth className="pickup-location">
-          <LocationSelectList
-            label={commonStrings.PICK_UP_LOCATION}
-            hidePopupIcon
-            customOpen={env.isMobile()}
-            init={!env.isMobile()}
-            required
-            variant="standard"
-            value={pickupLocation as bookcarsTypes.Location}
-            onChange={handlePickupLocationChange}
-          />
-        </FormControl>
-        {!sameLocation && (
-          <FormControl fullWidth className="drop-off-location">
-            <LocationSelectList
-              label={commonStrings.DROP_OFF_LOCATION}
-              value={dropOffLocation as bookcarsTypes.Location}
-              hidePopupIcon
-              customOpen={env.isMobile()}
-              init={!env.isMobile()}
-              required
-              variant="standard"
-              onChange={handleDropOffLocationChange}
-            />
-          </FormControl>
-        )}
-        <FormControl fullWidth className="from">
-          <DateTimePicker
-            label={commonStrings.FROM}
-            value={from}
-            minDate={_minDate}
-            maxDate={maxDate}
-            variant="standard"
-            required
-            onChange={(date) => {
-              if (date) {
-                const __minDate = new Date(date)
-                __minDate.setDate(date.getDate() + 1)
-                setFrom(date)
-                setMinDate(__minDate)
-                setFromError(false)
-              } else {
-                setFrom(undefined)
-                setMinDate(_minDate)
-              }
-            }}
-            onError={(err: DateTimeValidationError) => {
-              if (err) {
-                setFromError(true)
-              } else {
-                setFromError(false)
-              }
-            }}
-            language={UserService.getLanguage()}
-          />
-        </FormControl>
-        <FormControl fullWidth className="to">
-          <DateTimePicker
-            label={commonStrings.TO}
-            value={to}
-            minDate={minDate}
-            variant="standard"
-            required
-            onChange={(date) => {
-              if (date) {
-                const _maxDate = new Date(date)
-                _maxDate.setDate(_maxDate.getDate() - 1)
-                setTo(date)
-                setMaxDate(_maxDate)
-                setToError(false)
-              } else {
-                setTo(undefined)
-                setMaxDate(undefined)
-              }
-            }}
-            onError={(err: DateTimeValidationError) => {
-              if (err) {
-                setToError(true)
-              } else {
-                setToError(false)
-              }
-            }}
-            language={UserService.getLanguage()}
-          />
-        </FormControl>
-        <FormControl fullWidth className="search">
-          <Button type="submit" variant="contained" className="btn-search">
-            {commonStrings.SEARCH}
-          </Button>
-        </FormControl>
-        <FormControl fullWidth className="chk-same-location">
-          <input
-            id="chk-same-location"
-            type="checkbox"
-            checked={sameLocation}
-            onChange={handleSameLocationChange}
-          />
-          <label
-            htmlFor="chk-same-location"
-          >
-            {strings.DROP_OFF}
-          </label>
-        </FormControl>
-      </form>
-    </div>
+    <>
+      {accordion && (
+        <Accordion
+          title={commonStrings.LOCATION_TERM}
+          collapse={collapse}
+          offsetHeight={offsetHeight}
+          className={`${className ? `${className} ` : ''}car-filter`}
+        >
+          <form onSubmit={handleSubmit}>
+            <FormControl fullWidth className="pickup-location">
+              <LocationSelectList
+                label={commonStrings.PICK_UP_LOCATION}
+                hidePopupIcon
+                customOpen={env.isMobile()}
+                init={!env.isMobile()}
+                required
+                variant="standard"
+                value={pickupLocation as bookcarsTypes.Location}
+                onChange={handlePickupLocationChange}
+              />
+            </FormControl>
+            {!sameLocation && (
+              <FormControl fullWidth className="drop-off-location">
+                <LocationSelectList
+                  label={commonStrings.DROP_OFF_LOCATION}
+                  value={dropOffLocation as bookcarsTypes.Location}
+                  hidePopupIcon
+                  customOpen={env.isMobile()}
+                  init={!env.isMobile()}
+                  required
+                  variant="standard"
+                  onChange={handleDropOffLocationChange}
+                />
+              </FormControl>
+            )}
+            <FormControl fullWidth className="from">
+              <DateTimePicker
+                label={strings.PICK_UP_DATE}
+                value={from}
+                minDate={_minDate}
+                maxDate={maxDate}
+                variant="standard"
+                required
+                onChange={(date) => {
+                  if (date) {
+                    const __minDate = new Date(date)
+                    __minDate.setDate(date.getDate() + 1)
+                    setFrom(date)
+                    setMinDate(__minDate)
+                    setFromError(false)
+                  } else {
+                    setFrom(undefined)
+                    setMinDate(_minDate)
+                  }
+                }}
+                onError={(err: DateTimeValidationError) => {
+                  if (err) {
+                    setFromError(true)
+                  } else {
+                    setFromError(false)
+                  }
+                }}
+                language={UserService.getLanguage()}
+              />
+            </FormControl>
+            <FormControl fullWidth className="to">
+              <DateTimePicker
+                label={strings.DROP_OFF_DATE}
+                value={to}
+                minDate={minDate}
+                variant="standard"
+                required
+                onChange={(date) => {
+                  if (date) {
+                    const _maxDate = new Date(date)
+                    _maxDate.setDate(_maxDate.getDate() - 1)
+                    setTo(date)
+                    setMaxDate(_maxDate)
+                    setToError(false)
+                  } else {
+                    setTo(undefined)
+                    setMaxDate(undefined)
+                  }
+                }}
+                onError={(err: DateTimeValidationError) => {
+                  if (err) {
+                    setToError(true)
+                  } else {
+                    setToError(false)
+                  }
+                }}
+                language={UserService.getLanguage()}
+              />
+            </FormControl>
+            <FormControl fullWidth className="search">
+              <Button type="submit" variant="contained" className="btn-primary btn-search">
+                {commonStrings.SEARCH}
+              </Button>
+            </FormControl>
+            <FormControl fullWidth className="chk-same-location">
+              <FormControlLabel control={<Checkbox checked={sameLocation} onChange={handleSameLocationChange} />} label={strings.DROP_OFF} />
+            </FormControl>
+          </form>
+        </Accordion>
+      )}
+
+      {!accordion && (
+        <form
+          className={`${className ? `${className} ` : ''}car-filter`}
+          onSubmit={handleSubmit}
+        >
+          <div className="field">
+            {!edit && (
+              <>
+                <span className="location">{pickupLocation?.name}</span>
+                <span className="date">{from && format(from, 'dd.MM.yyyy HH:mm')}</span>
+              </>
+            )}
+            {
+              edit && (
+                <>
+                  <FormControl fullWidth className="control">
+                    <LocationSelectList
+                      label={commonStrings.PICK_UP_LOCATION}
+                      hidePopupIcon
+                      customOpen={env.isMobile()}
+                      init={!env.isMobile()}
+                      required
+                      variant="standard"
+                      value={pickupLocation as bookcarsTypes.Location}
+                      onChange={handlePickupLocationChange}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth className="control">
+                    <DateTimePicker
+                      label={strings.PICK_UP_DATE}
+                      value={from}
+                      minDate={_minDate}
+                      maxDate={maxDate}
+                      variant="standard"
+                      required
+                      onChange={(date) => {
+                        if (date) {
+                          const __minDate = new Date(date)
+                          __minDate.setDate(date.getDate() + 1)
+                          setFrom(date)
+                          setMinDate(__minDate)
+                          setFromError(false)
+                        } else {
+                          setFrom(undefined)
+                          setMinDate(_minDate)
+                        }
+                      }}
+                      onError={(err: DateTimeValidationError) => {
+                        if (err) {
+                          setFromError(true)
+                        } else {
+                          setFromError(false)
+                        }
+                      }}
+                      language={UserService.getLanguage()}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth className="chk-same-location">
+                    <FormControlLabel control={<Checkbox checked={sameLocation} onChange={handleSameLocationChange} />} label={strings.DROP_OFF} />
+                  </FormControl>
+                </>
+              )
+            }
+          </div>
+          <span className="separator" />
+          <div className="field">
+            {!edit && (
+              <>
+                <span className="location">{dropOffLocation?.name}</span>
+                <span className="date">{to && format(to, 'dd.MM.yyyy HH:mm')}</span>
+              </>
+            )}
+            {edit && (
+              <>
+                <FormControl fullWidth className="control">
+                  <LocationSelectList
+                    label={commonStrings.DROP_OFF_LOCATION}
+                    value={dropOffLocation as bookcarsTypes.Location}
+                    hidePopupIcon
+                    customOpen={env.isMobile()}
+                    init={!env.isMobile()}
+                    required
+                    readOnly={sameLocation}
+                    variant="standard"
+                    onChange={handleDropOffLocationChange}
+                  />
+                </FormControl>
+                <FormControl fullWidth className="control drop-off-date">
+                  <DateTimePicker
+                    label={strings.DROP_OFF_DATE}
+                    value={to}
+                    minDate={minDate}
+                    variant="standard"
+                    required
+                    onChange={(date) => {
+                      if (date) {
+                        const _maxDate = new Date(date)
+                        _maxDate.setDate(_maxDate.getDate() - 1)
+                        setTo(date)
+                        setMaxDate(_maxDate)
+                        setToError(false)
+                      } else {
+                        setTo(undefined)
+                        setMaxDate(undefined)
+                      }
+                    }}
+                    onError={(err: DateTimeValidationError) => {
+                      if (err) {
+                        setToError(true)
+                      } else {
+                        setToError(false)
+                      }
+                    }}
+                    language={UserService.getLanguage()}
+                  />
+                </FormControl>
+              </>
+            )}
+          </div>
+          <div className="form-buttons">
+            {!edit && (
+              <Button variant="contained" className="btn-primary btn-edit" onClick={() => setEdit(true)}>
+                {commonStrings.EDIT}
+              </Button>
+            )}
+            {edit && (
+              <>
+                <Button type="submit" variant="contained" className="btn-primary btn-search">
+                  {commonStrings.SEARCH}
+                </Button>
+                <Button type="submit" variant="outlined" className="btn-cancel" onClick={() => setEdit(false)}>
+                  {commonStrings.CANCEL}
+                </Button>
+              </>
+            )}
+          </div>
+        </form>
+      )}
+    </>
   )
 }
 

@@ -13,13 +13,15 @@ interface FuelPolicyFilterProps {
   onChange?: (value: bookcarsTypes.FuelPolicy[]) => void
 }
 
+const allTypes = [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike]
+
 const FuelPolicyFilter = ({
   className,
   collapse,
   onChange
 }: FuelPolicyFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.FuelPolicy[]>([])
 
   const automaticRef = useRef<HTMLInputElement>(null)
   const manualRef = useRef<HTMLInputElement>(null)
@@ -30,6 +32,12 @@ const FuelPolicyFilter = ({
       manualRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.FuelPolicy[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleCheckFreeTankChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -51,9 +59,7 @@ const FuelPolicyFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleFreeTankClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -84,9 +90,7 @@ const FuelPolicyFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleLikeForlikeClick = (e: React.MouseEvent<HTMLElement>) => {

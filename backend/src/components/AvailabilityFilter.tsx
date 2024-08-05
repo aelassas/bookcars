@@ -10,18 +10,17 @@ import '../assets/css/availability-filter.css'
 
 interface AvailabilityFilterProps {
   className?: string
-  onChange?: (values: string[]) => void
+  onChange?: (values: bookcarsTypes.Availablity[]) => void
 }
+
+const allTypes = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
 
 const AvailabilityFilter = ({
   className,
   onChange
 }: AvailabilityFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState<string[]>([
-    bookcarsTypes.Availablity.Available,
-    bookcarsTypes.Availablity.Unavailable
-  ])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.Availablity[]>([])
 
   const availableRef = useRef<HTMLInputElement>(null)
   const unavailableRef = useRef<HTMLInputElement>(null)
@@ -32,6 +31,12 @@ const AvailabilityFilter = ({
       unavailableRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.Availablity[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if (e.currentTarget instanceof HTMLInputElement) {
@@ -54,9 +59,7 @@ const AvailabilityFilter = ({
 
       setValues(values)
 
-      if (onChange) {
-        onChange(bookcarsHelper.clone(values))
-      }
+      handleOnChange(values)
     } else {
       helper.error()
     }
@@ -91,9 +94,7 @@ const AvailabilityFilter = ({
 
       setValues(values)
 
-      if (onChange) {
-        onChange(bookcarsHelper.clone(values))
-      }
+      handleOnChange(values)
     } else {
       helper.error()
     }

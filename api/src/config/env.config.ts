@@ -102,7 +102,7 @@ export const DB_DEBUG = helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'fa
  *
  * @type {string}
  */
-export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'BookCars')
+export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'bookcars')
 
 /**
  * Authentication cookie domain.
@@ -151,7 +151,7 @@ export const X_ACCESS_TOKEN = 'x-access-token'
  *
  * @type {string}
  */
-export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'BookCars')
+export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'bookcars')
 
 /**
  * JWT expiration in seconds. Default is 86400 seconds (1 day).
@@ -229,6 +229,20 @@ export const CDN_CARS = __env__('BC_CDN_CARS', true)
  * @type {string}
  */
 export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
+
+/**
+ * Locations' cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', true)
+
+/**
+ * Locations' temp cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', true)
 
 /**
  * Backend host.
@@ -441,6 +455,9 @@ export interface Car extends Document {
   collisionDamageWaiver: number
   fullInsurance: number
   additionalDriver: number
+  range: string
+  multimedia: string[]
+  rating: number
 }
 
 /**
@@ -504,19 +521,6 @@ export interface BookingInfo {
 }
 
 /**
- * Location Document.
- *
- * @export
- * @interface Location
- * @typedef {Location}
- * @extends {Document}
- */
-export interface Location extends Document {
-  values: Types.ObjectId[]
-  name?: string
-}
-
-/**
  * LocationValue Document.
  *
  * @export
@@ -530,6 +534,50 @@ export interface LocationValue extends Document {
 }
 
 /**
+ * Country Document.
+ *
+ * @export
+ * @interface Location
+ * @typedef {Location}
+ * @extends {Document}
+ */
+export interface Country extends Document {
+  values: Types.ObjectId[]
+  name?: string
+}
+
+/**
+ *CountryInfo.
+ *
+ * @export
+ * @interface CountryInfo
+ * @typedef {CountryInfo}
+ */
+export interface CountryInfo {
+  _id?: Types.ObjectId
+  name?: string
+  values: LocationValue[]
+}
+
+/**
+ * Location Document.
+ *
+ * @export
+ * @interface Location
+ * @typedef {Location}
+ * @extends {Document}
+ */
+export interface Location extends Document {
+  country: Types.ObjectId
+  longitude?: number
+  latitude?: number
+  values: Types.ObjectId[]
+  name?: string
+  image?: string | null
+  parkingSpots?: Types.ObjectId[]
+}
+
+/**
  *LocationInfo.
  *
  * @export
@@ -538,8 +586,25 @@ export interface LocationValue extends Document {
  */
 export interface LocationInfo {
   _id?: Types.ObjectId
+  longitude: number
+  latitude: number
   name?: string
   values: LocationValue[]
+}
+
+/**
+ * ParkingSpot Document.
+ *
+ * @export
+ * @interface ParkingSpot
+ * @typedef {ParkingSpot}
+ * @extends {Document}
+ */
+export interface ParkingSpot extends Document {
+  longitude: number
+  latitude: number
+  values: (Types.ObjectId | LocationValue)[]
+  name?: string
 }
 
 /**

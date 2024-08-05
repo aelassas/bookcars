@@ -1,0 +1,35 @@
+div.social-login div.separator {
+  display: flex;
+  flex-direction: row;
+  margin: 30px 0;
+}
+
+div.social-login div.separator hr {
+  border: 0;
+  border-bottom: #CFD8DC 1px solid;
+  width: 100%;
+  position: relative;
+  top: -3px;
+}
+
+div.social-login div.separator span {
+  margin: 0 20px;
+}
+
+div.social-login div.login-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+div.social-login div.social {
+  width: fit-content;
+  margin: 0 20px;
+}
+
+div.social-login img.social {
+  max-width: 40px;
+  max-height: 40px;
+  cursor: pointer;
+}

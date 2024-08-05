@@ -47,6 +47,7 @@ import Layout from '../components/Layout'
 import Error from '../components/Error'
 import DatePicker from '../components/DatePicker'
 import ReCaptchaProvider from '../components/ReCaptchaProvider'
+import SocialLogin from '../components/SocialLogin'
 import NoMatch from './NoMatch'
 import Info from './Info'
 
@@ -834,6 +835,8 @@ const Checkout = () => {
                             </tbody>
                           </table>
                         </div>
+
+                        <SocialLogin />
                       </div>
                     </div>
                   )}

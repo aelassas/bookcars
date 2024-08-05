@@ -1,0 +1,22 @@
+div.parking-spot-edit-list {
+  padding: 20px;
+  background-color: #f7f7f7;
+}
+
+div.parking-spot-edit-list span.title {
+  color: #919191;
+}
+
+div.parking-spot-edit-list div.rows div.row div.row-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+div.parking-spot-edit-list div.global-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+}

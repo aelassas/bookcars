@@ -1203,6 +1203,7 @@ describe('POST /api/delete-users', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     car = new Car({
@@ -1227,6 +1228,7 @@ describe('POST /api/delete-users', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     car = new Car({
@@ -1251,6 +1253,7 @@ describe('POST /api/delete-users', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     const additionalDriver = new AdditionalDriver({

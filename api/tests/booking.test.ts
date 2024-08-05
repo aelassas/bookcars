@@ -75,6 +75,9 @@ beforeAll(async () => {
     collisionDamageWaiver: 120,
     fullInsurance: 200,
     additionalDriver: 0,
+    range: bookcarsTypes.CarRange.Midi,
+    multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
+    rating: 4,
   }
 
   // car 1

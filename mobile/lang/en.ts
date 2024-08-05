@@ -190,7 +190,7 @@ export const en = {
   CAMERA_PERMISSION: 'Permission to access camera roll is required!',
   BOOKING_DELETED: 'This booking was deleted.',
   PAYMENT_OPTIONS: 'Payment options',
-  PAY_LATER: 'Paye later',
+  PAY_LATER: 'Pay later',
   PAY_LATER_INFO: 'Free amendments and cancellation',
   PAY_ONLINE: 'Pay online',
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',

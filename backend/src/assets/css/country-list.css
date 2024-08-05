@@ -1,0 +1,46 @@
+section.country-list {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+}
+
+section.country-list .empty-list {
+  margin-top: 15px;
+  text-align: center;
+  width: 250px;
+}
+
+@media only screen and (width <=960px) {
+  section.country-list .country-list-items {
+    width: 100%;
+  }
+}
+
+section.country-list .country-list-item {
+  position: relative;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #333;
+  font-size: 12px;
+  margin-bottom: 10px;
+  height: 75px;
+  word-break: break-word;
+}
+
+section.country-list .country-title {
+  margin-right: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (width >=960px) {
+  section.country-list .country-list-item {
+    width: 480px;
+  }
+}

@@ -9,6 +9,7 @@ import '../assets/css/car-type-filter.css'
 
 interface CarTypeProps {
   className?: string
+  collapse?: boolean
   onChange?: (values: bookcarsTypes.CarType[]) => void
 }
 
@@ -16,10 +17,11 @@ const allTypes = bookcarsHelper.getAllCarTypes()
 
 const CarType = ({
   className,
+  collapse,
   onChange
 }: CarTypeProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState(allTypes)
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.CarType[]>([])
 
   const dieselRef = useRef<HTMLInputElement>(null)
   const gasolineRef = useRef<HTMLInputElement>(null)
@@ -45,6 +47,12 @@ const CarType = ({
     }
   }, [allChecked])
 
+  const handleOnChange = (_values: bookcarsTypes.CarType[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
+
   const handleCheckDieselChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
       values.push(bookcarsTypes.CarType.Diesel)
@@ -65,9 +73,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleDieselClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -98,9 +104,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleGasolineClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -131,9 +135,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleElectricClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -164,9 +166,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleHybridClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -197,9 +197,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handlePlugInHybridClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -230,9 +228,7 @@ const CarType = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleUnknownClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -288,7 +284,7 @@ const CarType = ({
   }
 
   return (
-    <Accordion title={strings.ENGINE} className={`${className ? `${className} ` : ''}car-type-filter`}>
+    <Accordion title={strings.ENGINE} collapse={collapse} className={`${className ? `${className} ` : ''}car-type-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={dieselRef} type="checkbox" className="car-type-checkbox" onChange={handleCheckDieselChange} />

@@ -9,15 +9,19 @@ import '../assets/css/gearbox-filter.css'
 
 interface GearboxFilterProps {
   className?: string
+  collapse?: boolean
   onChange?: (value: bookcarsTypes.GearboxType[]) => void
 }
 
+const allTypes = [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic]
+
 const GearboxFilter = ({
   className,
+  collapse,
   onChange
 }: GearboxFilterProps) => {
-  const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
+  const [allChecked, setAllChecked] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.GearboxType[]>([])
 
   const automaticRef = useRef<HTMLInputElement>(null)
   const manualRef = useRef<HTMLInputElement>(null)
@@ -28,6 +32,12 @@ const GearboxFilter = ({
       manualRef.current.checked = true
     }
   }, [allChecked])
+
+  const handleOnChange = (_values: bookcarsTypes.GearboxType[]) => {
+    if (onChange) {
+      onChange(bookcarsHelper.clone(_values.length === 0 ? allTypes : _values))
+    }
+  }
 
   const handleCheckAutomaticChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -49,9 +59,7 @@ const GearboxFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleAutomaticClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -82,9 +90,7 @@ const GearboxFilter = ({
 
     setValues(values)
 
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleOnChange(values)
   }
 
   const handleManualClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -128,19 +134,36 @@ const GearboxFilter = ({
   }
 
   return (
-    <Accordion title={strings.GEARBOX} className={`${className ? `${className} ` : ''}gearbox-filter`}>
+    <Accordion title={strings.GEARBOX} collapse={collapse} className={`${className ? `${className} ` : ''}gearbox-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={automaticRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckAutomaticChange} />
-          <span role="button" tabIndex={0} onClick={handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</span>
+          <span
+            onClick={handleAutomaticClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.GEARBOX_AUTOMATIC}
+          </span>
         </div>
         <div className="filter-element">
           <input ref={manualRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckManualChange} />
-          <span role="button" tabIndex={0} onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</span>
+          <span
+            onClick={handleManualClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.GEARBOX_MANUAL}
+          </span>
         </div>
       </div>
       <div className="filter-actions">
-        <span role="button" tabIndex={0} onClick={handleUncheckAllChange} className="uncheckall">
+        <span
+          onClick={handleUncheckAllChange}
+          className="uncheckall"
+          role="button"
+          tabIndex={0}
+        >
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>

@@ -1,0 +1,27 @@
+div.seats-filter div.filter-elements {
+  padding: 7px 5px;
+}
+
+div.seats-filter div.filter-elements div.filter-element input[type='checkbox'].seats-checkbox {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+div.seats-filter div.filter-elements div.filter-element span {
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+div.seats-filter div.filter-actions {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+div.seats-filter div.filter-actions span.uncheckall {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0064c8;
+}

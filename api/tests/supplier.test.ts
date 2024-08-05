@@ -66,6 +66,7 @@ beforeAll(async () => {
     collisionDamageWaiver: 120,
     fullInsurance: 200,
     additionalDriver: 200,
+    range: bookcarsTypes.CarRange.Midi,
   })
   await car1.save()
   CAR1_ID = car1.id
@@ -92,6 +93,7 @@ beforeAll(async () => {
     collisionDamageWaiver: 120,
     fullInsurance: 200,
     additionalDriver: 200,
+    range: bookcarsTypes.CarRange.Midi,
   })
   await car2.save()
   CAR2_ID = car2.id
@@ -295,6 +297,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
     if (!await helper.exists(carImage)) {
@@ -386,6 +389,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     res = await request(app)
@@ -431,6 +435,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       collisionDamageWaiver: 120,
       fullInsurance: 200,
       additionalDriver: 200,
+      range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
     res = await request(app)
