@@ -93,6 +93,18 @@ describe('POST /api/create-location', () => {
       names: LOCATION_NAMES,
       latitude: 28.0268755,
       longitude: 1.6528399999999976,
+      parkingSpots: [
+        {
+          latitude: 28.1268755,
+          longitude: 1.752839999999997,
+          values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
+        },
+        {
+          latitude: 28.2268755,
+          longitude: 1.8528399999999976,
+          values: [{ language: 'en', value: 'Parking spot 2' }, { language: 'fr', value: 'Parking 2' }],
+        },
+      ],
     }
 
     let res = await request(app)
@@ -104,6 +116,7 @@ describe('POST /api/create-location', () => {
     expect(res.body?.values?.length).toBe(2)
     expect(res.body?.latitude).toBe(payload.latitude)
     expect(res.body?.longitude).toBe(payload.longitude)
+    expect(res.body?.parkingSpots?.length).toBe(2)
     LOCATION_ID = res.body?._id
 
     res = await request(app)
@@ -134,11 +147,40 @@ describe('PUT /api/update-location/:id', () => {
       },
     ]
 
+    const location = await Location
+      .findById(LOCATION_ID)
+      .populate<{ parkingSpots: env.ParkingSpot[] }>({
+        path: 'parkingSpots',
+        populate: {
+          path: 'values',
+          model: 'LocationValue',
+        },
+      })
+      .lean()
+    expect(location?.parkingSpots.length).toBe(2)
+
+    const parkingSpot2 = (location!.parkingSpots[1]) as bookcarsTypes.ParkingSpot
+    expect(parkingSpot2.values!.length).toBe(2)
+    parkingSpot2.values![0].value = 'Parking spot 2 updated'
+
     const payload: bookcarsTypes.UpsertLocationPayload = {
       country: testHelper.GetRandromObjectIdAsString(),
       names: LOCATION_NAMES,
       latitude: 29.0268755,
       longitude: 2.6528399999999976,
+      parkingSpots: [
+        parkingSpot2,
+        {
+          latitude: 28.1268755,
+          longitude: 1.752839999999997,
+          values: [{ language: 'en', value: 'Parking spot 3' }, { language: 'fr', value: 'Parking 3' }],
+        },
+        {
+          latitude: 28.2268755,
+          longitude: 1.8528399999999976,
+          values: [{ language: 'en', value: 'Parking spot 4' }, { language: 'fr', value: 'Parking 4' }],
+        },
+      ],
     }
 
     let res = await request(app)
@@ -150,6 +192,40 @@ describe('PUT /api/update-location/:id', () => {
     expect(res.body.values?.length).toBe(3)
     expect(res.body?.latitude).toBe(payload.latitude)
     expect(res.body?.longitude).toBe(payload.longitude)
+    expect(res.body?.parkingSpots.length).toBe(3)
+
+    payload.parkingSpots = undefined
+    res = await request(app)
+      .put(`/api/update-location/${LOCATION_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body?.country).toBe(payload.country)
+    expect(res.body.values?.length).toBe(3)
+    expect(res.body?.latitude).toBe(payload.latitude)
+    expect(res.body?.longitude).toBe(payload.longitude)
+    expect(res.body?.parkingSpots.length).toBe(0)
+
+    const loc = await Location.findById(LOCATION_ID)
+    loc!.parkingSpots = null
+    await loc?.save()
+    payload.parkingSpots = [
+      {
+        latitude: 28.1268755,
+        longitude: 1.752839999999997,
+        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
+      },
+    ]
+    res = await request(app)
+      .put(`/api/update-location/${LOCATION_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body?.country).toBe(payload.country)
+    expect(res.body.values?.length).toBe(3)
+    expect(res.body?.latitude).toBe(payload.latitude)
+    expect(res.body?.longitude).toBe(payload.longitude)
+    expect(res.body?.parkingSpots.length).toBe(1)
 
     res = await request(app)
       .put(`/api/update-location/${testHelper.GetRandromObjectIdAsString()}`)
