@@ -6,7 +6,7 @@ const countrySchema = new Schema<env.Country>(
     values: {
       type: [Schema.Types.ObjectId],
       ref: 'LocationValue',
-      validate: (value: any): boolean => Array.isArray(value) && value.length > 1,
+      validate: (value: any): boolean => Array.isArray(value) && value.length > 0,
     },
   },
   {
