@@ -193,9 +193,11 @@ const Map = ({
             getMarkers(markers)
           }
         </ZoomControlledLayer>
-        {
-          getMarkers(getLocationMarkers())
-        }
+        <ZoomControlledLayer zoom={zoom} minZoom={_initialZoom}>
+          {
+            getMarkers(getLocationMarkers())
+          }
+        </ZoomControlledLayer>
       </MapContainer>
     </>
   )
