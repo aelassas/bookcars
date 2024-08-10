@@ -23,7 +23,7 @@ import * as env from '../config/env.config'
 import SettingsScreen from '../screens/SettingsScreen'
 import ChangePasswordScreen from '../screens/ChangePasswordScreen'
 import DrawerContent from './DrawerContent'
-import CheckoutScreen from '../screens/Checkout'
+import CheckoutScreen from '../screens/CheckoutScreen'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
 const DrawerNavigator = () => {
