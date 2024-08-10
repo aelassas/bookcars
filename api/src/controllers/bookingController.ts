@@ -314,7 +314,7 @@ export const checkout = async (req: Request, res: Response) => {
 const notifyDriver = async (booking: env.Booking) => {
   const driver = await User.findById(booking.driver)
   if (!driver) {
-    logger.info(`Renter ${booking.driver} not found`)
+    logger.info(`Driver ${booking.driver} not found`)
     return
   }
 
