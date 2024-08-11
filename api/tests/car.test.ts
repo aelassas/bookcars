@@ -79,7 +79,7 @@ describe('POST /api/create-car', () => {
 
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
     if (!await helper.exists(tempImage)) {
-      fs.copyFile(IMAGE1_PATH, tempImage)
+      await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const payload: bookcarsTypes.CreateCarPayload = {
       name: 'BMW X1',
@@ -340,7 +340,7 @@ describe('POST /api/delete-temp-car-image/:image', () => {
 
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
     if (!await helper.exists(tempImage)) {
-      fs.copyFile(IMAGE1_PATH, tempImage)
+      await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     let res = await request(app)
       .post(`/api/delete-temp-car-image/${IMAGE1}`)
