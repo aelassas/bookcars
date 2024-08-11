@@ -67,7 +67,7 @@ describe('POST /api/sign-up', () => {
   it('should create a user', async () => {
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
-      fs.copyFile(AVATAR1_PATH, tempAvatar)
+      await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
 
     const payload: bookcarsTypes.SignUpPayload = {
@@ -155,7 +155,7 @@ describe('POST /api/create-user', () => {
 
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
-      fs.copyFile(AVATAR1_PATH, tempAvatar)
+      await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     let payload: bookcarsTypes.CreateUserPayload = {
       email: USER2_EMAIL,
@@ -984,7 +984,7 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
 
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
-      fs.copyFile(AVATAR1_PATH, tempAvatar)
+      await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     let res = await request(app)
       .post(`/api/delete-temp-avatar/${AVATAR1}`)
@@ -1179,7 +1179,7 @@ describe('POST /api/delete-users', () => {
     const imagePath = path.resolve(__dirname, `./img/${imageName}`)
     const image = path.join(env.CDN_CARS, imageName)
     if (!await helper.exists(image)) {
-      fs.copyFile(imagePath, image)
+      await fs.copyFile(imagePath, image)
     }
     let car = new Car({
       name: 'BMW X1',
