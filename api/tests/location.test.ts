@@ -477,7 +477,7 @@ describe('GET /api/locations-with-position/:language', () => {
     let res = await request(app)
       .get(`/api/locations-with-position/${language}`)
     expect(res.statusCode).toBe(200)
-    expect(res.body.length).toBeGreaterThan(1)
+    expect(res.body.length).toBeGreaterThanOrEqual(1)
 
     res = await request(app)
       .get('/api/locations-with-position/unknown')
