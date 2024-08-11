@@ -268,7 +268,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
     if (!await helper.exists(avatar)) {
-      fs.copyFile(avatarPath, avatar)
+      await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
     await supplier?.save()
@@ -301,7 +301,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
     if (!await helper.exists(carImage)) {
-      fs.copyFile(carImagePath, carImage)
+      await fs.copyFile(carImagePath, carImage)
     }
     await car.save()
     const additionalDriver = new AdditionalDriver({
@@ -408,7 +408,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
     if (!await helper.exists(avatar)) {
-      fs.copyFile(avatarPath, avatar)
+      await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
     await supplier?.save()
