@@ -272,6 +272,12 @@ export const checkout = async (req: Request, res: Response) => {
 
     await booking.save()
 
+    if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
+      if (!await confirm(user, booking, false)) {
+        return res.sendStatus(400)
+      }
+    }
+
     if (body.payLater) {
       // Send confirmation email
       if (!await confirm(user, booking, body.payLater)) {
