@@ -85,6 +85,15 @@ export const create = async (req: Request, res: Response) => {
   } = body
 
   try {
+    if (image) {
+      const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
+
+      if (!await helper.exists(_image)) {
+        logger.error(i18n.t('LOCATION_IMAGE_NOT_FOUND'), body)
+        return res.status(400).send(i18n.t('LOCATION_IMAGE_NOT_FOUND'))
+      }
+    }
+
     const parkingSpots: string[] = []
     if (_parkingSpots) {
       for (const parkingSpot of _parkingSpots) {
@@ -122,10 +131,6 @@ export const create = async (req: Request, res: Response) => {
         await fs.rename(_image, newPath)
         location.image = filename
         await location.save()
-      } else {
-        await Location.deleteOne({ _id: location._id })
-        logger.error(i18n.t('LOCATION_IMAGE_NOT_FOUND'), body)
-        return res.status(400).send(i18n.t('LOCATION_IMAGE_NOT_FOUND'))
       }
     }
 
@@ -179,6 +184,11 @@ export const update = async (req: Request, res: Response) => {
       // Parking spots
       //
       if (!parkingSpots) {
+        const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: location.parkingSpots?.map((ps) => ps.id) } })
+        for (const ps of parkingSpotsToDelete) {
+          await LocationValue.deleteMany({ _id: { $in: ps.values } })
+          await ps.deleteOne()
+        }
         location.parkingSpots = []
       } else {
         if (!location.parkingSpots) {
@@ -186,11 +196,11 @@ export const update = async (req: Request, res: Response) => {
         }
 
         // Remove all parking spots not in body.parkingSpots
-        const parkingSpotIds = parkingSpots?.filter((ps) => !!ps._id).map((ps) => ps._id)
-        const parkingSpotIdsToDelete = location.parkingSpots?.filter((_id) => !parkingSpotIds?.includes(_id.toString()))
+        const parkingSpotIds = parkingSpots.filter((ps) => !!ps._id).map((ps) => ps._id)
+        const parkingSpotIdsToDelete = location.parkingSpots.filter((_id) => !parkingSpotIds.includes(_id.toString()))
         if (parkingSpotIdsToDelete.length > 0) {
           for (const psId of parkingSpotIdsToDelete) {
-            location.parkingSpots?.splice(location.parkingSpots?.indexOf(psId), 1)
+            location.parkingSpots.splice(location.parkingSpots.indexOf(psId), 1)
           }
 
           const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: parkingSpotIdsToDelete } })

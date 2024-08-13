@@ -202,6 +202,8 @@ describe('GET /api/check-country/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    const location = await Location.findById(locationId)
+    await LocationValue.deleteMany({ _id: { $in: location?.values } })
     await Location.deleteOne({ _id: locationId })
     res = await request(app)
       .get(`/api/check-country/${COUNTRY_ID}`)
