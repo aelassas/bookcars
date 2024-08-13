@@ -63,7 +63,7 @@ jobs:
       env:
         NODE_ENV: ${{ vars.NODE_ENV }}
         BC_HTTPS: ${{ vars.BC_HTTPS }}
-        BC_DB_URI: ${{ secrets.BC_DB_URI }}
+        BC_DB_URI: ${{ secrets.BC_DEMO_DB_URI }}
         BC_DB_SSL: ${{ vars.BC_DB_SSL }}
         BC_DB_DEBUG: ${{ vars.BC_DB_DEBUG }}
         BC_COOKIE_SECRET: ${{ secrets.BC_COOKIE_SECRET }}
