@@ -254,9 +254,6 @@ describe('PUT /api/update-location/:id', () => {
     expect(res.body?.longitude).toBe(payload.longitude)
     expect(res.body?.parkingSpots.length).toBe(0)
 
-    const loc = await Location.findById(LOCATION_ID)
-    loc!.parkingSpots = null
-    await loc?.save()
     payload.parkingSpots = [
       {
         latitude: 28.1268755,
