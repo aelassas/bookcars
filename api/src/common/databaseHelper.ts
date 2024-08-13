@@ -97,14 +97,15 @@ const InitializeLocations = async () => {
 
     // Delete LocationValue nin env.LANGUAGES
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    const valuesIds = values.map((v) => v.id)
     for (const val of values) {
       const _locations = await Location.find({ values: val._id })
       for (const _loc of _locations) {
         _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
         await _loc.save()
+        await LocationValue.deleteMany({ $and: [{ _id: { $in: _loc.values } }, { _id: { $in: valuesIds } }] })
       }
     }
-    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
 
     logger.info('Locations initialized')
     return true
@@ -152,14 +153,15 @@ const InitializeCountries = async () => {
 
     // Delete LocationValue nin env.LANGUAGES
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    const valuesIds = values.map((v) => v.id)
     for (const val of values) {
       const _countries = await Country.find({ values: val._id })
-      for (const _loc of _countries) {
-        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
-        await _loc.save()
+      for (const _country of _countries) {
+        _country.values.splice(_country.values.findIndex((v) => v.equals(val.id)), 1)
+        await _country.save()
+        await LocationValue.deleteMany({ $and: [{ _id: { $in: _country.values } }, { _id: { $in: valuesIds } }] })
       }
     }
-    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
 
     logger.info('Countries initialized')
     return true
@@ -207,11 +209,13 @@ const InitializeParkingSpots = async () => {
 
     // Delete LocationValue nin env.LANGUAGES
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    const valuesIds = values.map((v) => v.id)
     for (const val of values) {
       const _parkingSpots = await ParkingSpot.find({ values: val._id })
-      for (const _loc of _parkingSpots) {
-        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
-        await _loc.save()
+      for (const _parkingSpot of _parkingSpots) {
+        _parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
+        await _parkingSpot.save()
+        await LocationValue.deleteMany({ $and: [{ _id: { $in: _parkingSpot.values } }, { _id: { $in: valuesIds } }] })
       }
     }
     await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
