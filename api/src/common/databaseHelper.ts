@@ -12,6 +12,7 @@ import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../models/Token'
 import User from '../models/User'
 import Country from '../models/Country'
 import ParkingSpot from '../models/ParkingSpot'
+import AdditionalDriver from '../models/AdditionalDriver'
 
 /**
  * Connect to database.
@@ -268,13 +269,16 @@ export const initialize = async (): Promise<boolean> => {
     if (mongoose.connection.readyState) {
       await createCollection<env.Booking>(Booking)
       await createCollection<env.Car>(Car)
-      await createCollection<env.Location>(Location)
       await createCollection<env.LocationValue>(LocationValue)
+      await createCollection<env.Country>(Country)
+      await createCollection<env.ParkingSpot>(ParkingSpot)
+      await createCollection<env.Location>(Location)
       await createCollection<env.Notification>(Notification)
       await createCollection<env.NotificationCounter>(NotificationCounter)
       await createCollection<env.PushToken>(PushToken)
       await createCollection<env.Token>(Token)
       await createCollection<env.User>(User)
+      await createCollection<env.AdditionalDriver>(AdditionalDriver)
     }
 
     //
