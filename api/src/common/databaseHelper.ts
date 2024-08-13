@@ -12,6 +12,7 @@ import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../models/Token'
 import User from '../models/User'
 import Country from '../models/Country'
 import ParkingSpot from '../models/ParkingSpot'
+import AdditionalDriver from '../models/AdditionalDriver'
 
 /**
  * Connect to database.
@@ -277,6 +278,7 @@ export const initialize = async (): Promise<boolean> => {
       await createCollection<env.PushToken>(PushToken)
       await createCollection<env.Token>(Token)
       await createCollection<env.User>(User)
+      await createCollection<env.AdditionalDriver>(AdditionalDriver)
     }
 
     //
