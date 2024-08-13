@@ -58,6 +58,7 @@ describe('Test database initialization', () => {
     const ps2 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv2.id] })
     await ps2.save()
 
+    await testHelper.delay(5 * 1000)
     res = await databaseHelper.initialize()
     expect(res).toBeTruthy()
 

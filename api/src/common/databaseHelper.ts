@@ -268,8 +268,10 @@ export const initialize = async (): Promise<boolean> => {
     if (mongoose.connection.readyState) {
       await createCollection<env.Booking>(Booking)
       await createCollection<env.Car>(Car)
-      await createCollection<env.Location>(Location)
       await createCollection<env.LocationValue>(LocationValue)
+      await createCollection<env.Country>(Country)
+      await createCollection<env.ParkingSpot>(ParkingSpot)
+      await createCollection<env.Location>(Location)
       await createCollection<env.Notification>(Notification)
       await createCollection<env.NotificationCounter>(NotificationCounter)
       await createCollection<env.PushToken>(PushToken)
