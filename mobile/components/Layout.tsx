@@ -148,7 +148,7 @@ const Layout = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fafafa',
+    backgroundColor: '#f5f5f5',
   },
   validate: {
     marginTop: 15,

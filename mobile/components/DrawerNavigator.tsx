@@ -147,6 +147,7 @@ const DrawerNavigator = () => {
         backBehavior="history"
         screenOptions={{
           drawerActiveTintColor: '#f37022',
+          unmountOnBlur: true,
         }}
         drawerContent={(props) => (
           <DrawerContent
