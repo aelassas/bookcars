@@ -65,7 +65,7 @@ const DateTimePicker = ({
       maxWidth: 480,
     },
     label: {
-      backgroundColor: backgroundColor ?? '#fafafa',
+      backgroundColor: backgroundColor ?? '#f5f5f5',
       color: 'rgba(0, 0, 0, 0.6)',
       fontSize: 12,
       fontWeight: '400',
@@ -83,7 +83,7 @@ const DateTimePicker = ({
       borderWidth: 1,
       borderRadius: 10,
       borderColor: error ? '#d32f2f' : 'rgba(0, 0, 0, 0.23)',
-      backgroundColor: backgroundColor ?? '#fafafa',
+      backgroundColor: backgroundColor ?? '#f5f5f5',
     },
     dateButton: {
       height: 55,

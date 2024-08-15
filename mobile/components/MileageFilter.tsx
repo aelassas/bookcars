@@ -19,10 +19,16 @@ const MileageFilter = ({
   style,
   onChange
 }: MileageFilterProps) => {
-  const [limited, setLimited] = useState(true)
-  const [unlimited, setUnlimited] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
-  const [allChecked, setAllChecked] = useState(true)
+  const [limited, setLimited] = useState(false)
+  const [unlimited, setUnlimited] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.Mileage[]>([])
+  const [allChecked, setAllChecked] = useState(false)
+
+  const handleChange = (_values: bookcarsTypes.Mileage[]) => {
+    if (onChange) {
+      onChange(_values.length === 0 ? [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited] : bookcarsHelper.clone(_values))
+    }
+  }
 
   const onValueChangeLimited = (checked: boolean) => {
     if (checked) {
@@ -44,9 +50,7 @@ const MileageFilter = ({
 
     setLimited(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangeUnlimited = (checked: boolean) => {
@@ -69,9 +73,7 @@ const MileageFilter = ({
 
     setUnlimited(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   return (

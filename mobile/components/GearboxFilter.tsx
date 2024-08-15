@@ -19,10 +19,16 @@ const GearboxFilter = ({
   style,
   onChange
 }: GearboxFilterProps) => {
-  const [automatic, setAutomatic] = useState(true)
-  const [manual, setManual] = useState(true)
-  const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
-  const [allChecked, setAllChecked] = useState(true)
+  const [automatic, setAutomatic] = useState(false)
+  const [manual, setManual] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.GearboxType[]>([])
+  const [allChecked, setAllChecked] = useState(false)
+
+  const handleChange = (_values: bookcarsTypes.GearboxType[]) => {
+    if (onChange) {
+      onChange(_values.length === 0 ? [bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual] : bookcarsHelper.clone(_values))
+    }
+  }
 
   const onValueChangeAutomatic = (checked: boolean) => {
     if (checked) {
@@ -44,9 +50,7 @@ const GearboxFilter = ({
 
     setAutomatic(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangeManual = (checked: boolean) => {
@@ -69,9 +73,7 @@ const GearboxFilter = ({
 
     setManual(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   return (

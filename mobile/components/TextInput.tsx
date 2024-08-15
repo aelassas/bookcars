@@ -56,7 +56,7 @@ props: TextInputProps,
       maxWidth: 480,
     },
     label: {
-      backgroundColor: props.backgroundColor ?? '#fafafa',
+      backgroundColor: props.backgroundColor ?? '#f5f5f5',
       color: 'rgba(0, 0, 0, 0.6)',
       fontSize: 12,
       fontWeight: '400',
