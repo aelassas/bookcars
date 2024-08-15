@@ -1133,7 +1133,7 @@ export const updateAvatar = async (req: Request, res: Response) => {
     const user = await User.findById(userId)
 
     if (user) {
-      if (user.avatar) {
+      if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
 
         if (await helper.exists(avatar)) {
