@@ -3,7 +3,7 @@ import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RouteProp } from '@react-navigation/native'
+import { CommonActions, DrawerActions, RouteProp } from '@react-navigation/native'
 
 import mime from 'mime'
 import i18n from '../lang/i18n'
@@ -18,6 +18,13 @@ import * as toastHelper from './toastHelper'
  * @returns {boolean}
  */
 export const android = () => Platform.OS === 'android'
+
+/**
+ * Indicate whether Platform OS is iOS or not.
+ *
+ * @returns {boolean}
+ */
+export const ios = () => Platform.OS === 'ios'
 
 /**
  * Toast message.
@@ -571,7 +578,8 @@ export const getBirthDateError = (minimumAge: number) =>
  */
 export const navigate = (
   route: RouteProp<StackParams, keyof StackParams>,
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
+  reload?: boolean,
 ): void => {
   switch (route.name) {
     case 'About':
@@ -584,43 +592,135 @@ export const navigate = (
     case 'Settings':
     case 'SignIn':
     case 'SignUp':
-    case 'ToS':
-      navigation.navigate(route.name, { d: new Date().getTime() })
+    case 'ToS': {
+      const params = { d: Date.now() }
+      if (reload) {
+        navigation.dispatch((state) => {
+          const { routes } = state
+          const index = routes.findIndex((r) => r.name === route.name)
+          routes.splice(index, 1)
+          const now = Date.now()
+          routes.push({
+            name: route.name,
+            key: `${route.name}-${now}`,
+            params,
+          })
+
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          })
+        })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      } else {
+        navigation.navigate(route.name, params)
+      }
       break
-    case 'Booking':
-      navigation.navigate(
-        route.name,
-        {
-          d: new Date().getTime(),
-          id: (route.params && 'id' in route.params && route.params.id as string) || '',
-        }
-      )
+    }
+    case 'Booking': {
+      const params = {
+        d: Date.now(),
+        id: (route.params && 'id' in route.params && route.params.id as string) || '',
+      }
+      if (reload) {
+        navigation.dispatch((state) => {
+          const { routes } = state
+          const index = routes.findIndex((r) => r.name === 'Booking')
+          routes.splice(index, 1)
+          const now = Date.now()
+          routes.push({
+            name: 'Booking',
+            key: `Booking-${now}`,
+            params,
+          })
+
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          })
+        })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      } else {
+        navigation.navigate(
+          route.name,
+          params
+        )
+      }
       break
-    case 'Cars':
-      navigation.navigate(
-        route.name,
-        {
-          d: new Date().getTime(),
-          pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
-          dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
-          from: (route.params && 'from' in route.params && route.params.from as number) || 0,
-          to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-        }
-      )
+    }
+    case 'Cars': {
+      const params = {
+        d: Date.now(),
+        pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
+        dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
+        from: (route.params && 'from' in route.params && route.params.from as number) || 0,
+        to: (route.params && 'to' in route.params && route.params.to as number) || 0,
+      }
+      if (reload) {
+        navigation.dispatch((state) => {
+          const { routes } = state
+          const index = routes.findIndex((r) => r.name === 'Cars')
+          routes.splice(index, 1)
+          const now = Date.now()
+          routes.push({
+            name: 'Cars',
+            key: `Cars-${now}`,
+            params,
+          })
+
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          })
+        })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      } else {
+        navigation.navigate(
+          route.name,
+          params,
+        )
+      }
       break
-    case 'Checkout':
-      navigation.navigate(
-        route.name,
-        {
-          d: new Date().getTime(),
-          car: (route.params && 'car' in route.params && route.params.car as string) || '',
-          pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
-          dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
-          from: (route.params && 'from' in route.params && route.params.from as number) || 0,
-          to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-        }
-      )
+    }
+    case 'Checkout': {
+      const params = {
+        d: Date.now(),
+        car: (route.params && 'car' in route.params && route.params.car as string) || '',
+        pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
+        dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
+        from: (route.params && 'from' in route.params && route.params.from as number) || 0,
+        to: (route.params && 'to' in route.params && route.params.to as number) || 0,
+      }
+      if (reload) {
+        navigation.dispatch((state) => {
+          const { routes } = state
+          const index = routes.findIndex((r) => r.name === 'Checkout')
+          routes.splice(index, 1)
+          const now = Date.now()
+          routes.push({
+            name: 'Checkout',
+            key: `Checkout-${now}`,
+            params,
+          })
+
+          return CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          })
+        })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      } else {
+        navigation.navigate(
+          route.name,
+          params
+        )
+      }
       break
+    }
     default:
       break
   }

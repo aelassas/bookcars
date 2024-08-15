@@ -26,7 +26,7 @@ const SupplierFilter = ({
 }: SupplierFilterProps) => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
-  const [allChecked, setAllChecked] = useState(true)
+  const [allChecked, setAllChecked] = useState(false)
 
   const init = async () => {
     try {
@@ -34,13 +34,12 @@ const SupplierFilter = ({
       if (allSuppliers) {
         const _suppliers = allSuppliers.map((supplier: bookcarsTypes.User) => ({
           ...supplier,
-          checked: true,
+          checked: false,
         }))
-        const _checkedSuppliers = bookcarsHelper.flattenSuppliers(_suppliers)
         setSuppliers(_suppliers)
-        setCheckedSuppliers(_checkedSuppliers)
+
         if (onLoad) {
-          onLoad(_checkedSuppliers)
+          onLoad(bookcarsHelper.flattenSuppliers(_suppliers))
         }
       } else {
         helper.error()
@@ -86,7 +85,7 @@ const SupplierFilter = ({
                       }
 
                       if (onChange) {
-                        onChange(bookcarsHelper.clone(checkedSuppliers))
+                        onChange(checkedSuppliers.length === 0 ? bookcarsHelper.flattenSuppliers(suppliers) : bookcarsHelper.clone(checkedSuppliers))
                       }
                     }}
                   >

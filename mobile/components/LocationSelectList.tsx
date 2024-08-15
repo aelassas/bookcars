@@ -87,7 +87,7 @@ const LocationSelectList = ({
       <Text
         style={{
           display: selectedItem ? 'flex' : 'none',
-          backgroundColor: backgroundColor ?? '#fafafa',
+          backgroundColor: backgroundColor ?? '#f5f5f5',
           color: 'rgba(0, 0, 0, 0.6)',
           fontSize: 12,
           fontWeight: '400',
@@ -143,7 +143,7 @@ const LocationSelectList = ({
           alignSelf: 'center',
         }}
         inputContainerStyle={{
-          backgroundColor: backgroundColor ?? '#fafafa',
+          backgroundColor: backgroundColor ?? '#f5f5f5',
           color: 'rgba(0, 0, 0, 0.87)',
           borderColor: 'rgba(0, 0, 0, 0.23)',
           borderWidth: 1,

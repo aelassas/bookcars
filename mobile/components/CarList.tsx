@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { CommonActions } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 
 import * as helper from '../common/helper'
@@ -25,6 +26,7 @@ interface CarListProps {
   cars?: bookcarsTypes.Car[]
   hidePrice?: boolean
   footerComponent?: React.ReactElement
+  route?: 'Cars' | 'Checkout',
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -43,6 +45,7 @@ const CarList = ({
   cars,
   hidePrice,
   footerComponent,
+  route,
   onLoad
 }: CarListProps) => {
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
@@ -51,6 +54,7 @@ const CarList = ({
   const [fetch, setFetch] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Car[]>([])
   const [page, setPage] = useState(1)
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     const init = async () => {
@@ -129,7 +133,9 @@ const CarList = ({
   }, [page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
 
   useEffect(() => {
-    setPage(1)
+    if (suppliers && pickupLocation && _carType && gearbox && mileage && deposit) {
+      setPage(1)
+    }
   }, [suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
 
   useEffect(() => {
@@ -170,7 +176,12 @@ const CarList = ({
             />
           )}
           keyExtractor={(item) => item._id}
-          onEndReached={() => setOnScrollEnd(true)}
+          onEndReachedThreshold={0.8}
+          onEndReached={() => {
+            if (fetch && !onScrollEnd) {
+              setOnScrollEnd(true)
+            }
+          }}
           onMomentumScrollEnd={() => {
             if (onScrollEnd && fetch) {
               setPage(page + 1)
@@ -192,6 +203,58 @@ const CarList = ({
               : <></>
           }
           refreshing={loading}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => {
+              setRefreshing(true)
+
+              if ((route && pickupLocation && dropOffLocation && from && to) && ((route === 'Checkout' && cars && cars.length > 0) || route === 'Cars')) {
+                navigation.dispatch((state) => {
+                  const { routes } = state
+                  if (route === 'Cars') {
+                    const index = routes.findIndex((r) => r.name === 'Cars')
+                    routes.splice(index, 1)
+                    const now = Date.now()
+                    routes.push({
+                      name: 'Cars',
+                      key: `Cars-${now}`,
+                      params: {
+                        pickupLocation: pickupLocation!,
+                        dropOffLocation: dropOffLocation!,
+                        from: from!.getTime(),
+                        to: to!.getTime(),
+                        d: now,
+                      },
+                    })
+                  } else {
+                    const index = routes.findIndex((r) => r.name === 'Checkout')
+                    routes.splice(index, 1)
+                    const now = Date.now()
+                    routes.push({
+                      name: 'Checkout',
+                      key: `Checkout-${now}`,
+                      params: {
+                        car: cars![0]._id,
+                        pickupLocation: pickupLocation!,
+                        dropOffLocation: dropOffLocation!,
+                        from: from!.getTime(),
+                        to: to!.getTime(),
+                        d: now,
+                      },
+                    })
+                  }
+
+                  return CommonActions.reset({
+                    ...state,
+                    routes,
+                    index: routes.length - 1,
+                  })
+                })
+              } else {
+                setRefreshing(false)
+              }
+            }}
+            />
+          }
         />
       )}
     </View>

@@ -403,7 +403,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 const styles = StyleSheet.create({
   master: {
     flex: 1,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#f5f5f5',
   },
   container: {
     justifyContent: 'center',

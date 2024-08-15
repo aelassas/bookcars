@@ -56,7 +56,7 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
             setEmailError(false)
             setEmailValid(true)
             return true
-        } catch (err) {
+        } catch {
           helper.toast(i18n.t('GENERIC_ERROR'))
           setEmailError(false)
           setEmailValid(true)
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexGrow: 1,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#f5f5f5',
   },
   contentContainer: {
     width: '100%',

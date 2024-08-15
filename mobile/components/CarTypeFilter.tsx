@@ -21,13 +21,19 @@ const CarTypeFilter = ({
   style,
   onChange
 }: CarTypeFilterProps) => {
-  const [diesel, setDiesel] = useState(true)
-  const [gasoline, setGasoline] = useState(true)
-  const [electric, setElectric] = useState(true)
-  const [hybrid, setHybrid] = useState(true)
-  const [plugInHybrid, setPlugInHybrid] = useState(true)
-  const [values, setValues] = useState(allTypes)
-  const [allChecked, setAllChecked] = useState(true)
+  const [diesel, setDiesel] = useState(false)
+  const [gasoline, setGasoline] = useState(false)
+  const [electric, setElectric] = useState(false)
+  const [hybrid, setHybrid] = useState(false)
+  const [plugInHybrid, setPlugInHybrid] = useState(false)
+  const [values, setValues] = useState<bookcarsTypes.CarType[]>([])
+  const [allChecked, setAllChecked] = useState(false)
+
+  const handleChange = (_values: bookcarsTypes.CarType[]) => {
+    if (onChange) {
+      onChange(_values.length === 0 ? allTypes : bookcarsHelper.clone(_values))
+    }
+  }
 
   const onValueChangeDiesel = (checked: boolean) => {
     if (checked) {
@@ -49,9 +55,7 @@ const CarTypeFilter = ({
 
     setDiesel(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangeGasoline = (checked: boolean) => {
@@ -74,9 +78,7 @@ const CarTypeFilter = ({
 
     setGasoline(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangeElectric = (checked: boolean) => {
@@ -99,9 +101,7 @@ const CarTypeFilter = ({
 
     setElectric(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangeHybrid = (checked: boolean) => {
@@ -124,9 +124,7 @@ const CarTypeFilter = ({
 
     setHybrid(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   const onValueChangePlugInHybrid = (checked: boolean) => {
@@ -149,9 +147,7 @@ const CarTypeFilter = ({
 
     setPlugInHybrid(checked)
     setValues(values)
-    if (onChange) {
-      onChange(bookcarsHelper.clone(values))
-    }
+    handleChange(values)
   }
 
   return (

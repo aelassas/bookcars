@@ -84,6 +84,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
           dropOffLocation={route.params.dropOffLocation}
           from={new Date(route.params.from)}
           to={new Date(route.params.to)}
+          route="Cars"
           header={(
             <View>
               <SupplierFilter style={styles.filter} visible onLoad={onLoadSuppliers} onChange={onChangeSuppliers} />
