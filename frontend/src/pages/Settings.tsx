@@ -184,8 +184,7 @@ const Settings = () => {
                 loggedUser={user}
                 user={user}
                 size="large"
-                // readonly={false}
-                readonly
+                readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"
@@ -232,7 +231,6 @@ const Settings = () => {
               </FormControl>
               <div className="buttons">
                 <Button
-                  type="submit"
                   variant="contained"
                   className="btn-primary btn-margin btn-margin-bottom"
                   size="small"
