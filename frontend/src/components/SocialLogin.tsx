@@ -41,7 +41,6 @@ const SocialLogin = ({
 
   const loginSuccess = async (socialSignInType: bookcarsTypes.SocialSignInType, accessToken: string, email: string, fullName: string, avatar?: string) => {
     const data = { socialSignInType, accessToken, email, fullName, avatar }
-    // console.log(data)
 
     const res = await UserService.socialSignin(data)
     if (res.status === 200) {
@@ -59,6 +58,7 @@ const SocialLogin = ({
   }
 
   const loginError = (err: any) => {
+    console.log(err)
     if (onError) {
       onError(err)
     }
@@ -84,7 +84,6 @@ const SocialLogin = ({
             appId={env.FB_APP_ID}
             redirect_uri={REDIRECT_URI}
             onResolve={({ data }: IResolveParams) => {
-              // console.log(data)
               loginSuccess(bookcarsTypes.SocialSignInType.Facebook, data?.signedRequest, data?.email, data?.name, data?.picture?.data?.url)
             }}
             onReject={(err: any) => {
@@ -102,7 +101,6 @@ const SocialLogin = ({
             scope="name email"
             redirect_uri={REDIRECT_URI}
             onResolve={({ data }: IResolveParams) => {
-              // console.log(data)
               const email = data?.user?.email || getEmail(String(data?.id_token))
               loginSuccess(bookcarsTypes.SocialSignInType.Apple, data?.id_token, email, data?.user ? `${data?.user?.firstName} ${data?.user?.lastName}` : email)
             }}
@@ -122,7 +120,6 @@ const SocialLogin = ({
             scope="openid profile email"
             discoveryDocs="claims_supported"
             onResolve={({ data }: IResolveParams) => {
-              // console.log(data)
               loginSuccess(bookcarsTypes.SocialSignInType.Google, data?.access_token, data?.email, data?.name || data?.email, data?.picture)
             }}
             onReject={(err: any) => {
