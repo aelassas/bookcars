@@ -231,7 +231,6 @@ const Settings = () => {
               </FormControl>
               <div className="buttons">
                 <Button
-                  type="submit"
                   variant="contained"
                   className="btn-primary btn-margin btn-margin-bottom"
                   size="small"
