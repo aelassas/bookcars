@@ -5,6 +5,9 @@ jobs:
   loc_job:
     runs-on: ubuntu-latest
     name: Run
+    env:
+      INPUT_BADGE_LABEL: lines of code
+      INPUT_BADGE_COLOR: cyan
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -12,9 +15,6 @@ jobs:
       - name: Create the badge
         uses: shadowmoose/GHA-LoC-Badge@1.0.0
         id: badge
-        env:
-          INPUT_BADGE_LABEL: lines of code
-          INPUT_BADGE_COLOR: cyan
         with:
           debug: true
           directory: ./
