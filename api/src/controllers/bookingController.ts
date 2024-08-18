@@ -273,6 +273,14 @@ export const checkout = async (req: Request, res: Response) => {
     await booking.save()
 
     if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
+      const car = await Car.findById(booking.car)
+      if (!car) {
+        logger.info(`Car ${booking.car} not found`)
+        return res.sendStatus(204)
+      }
+      car.trips += 1
+      await car.save()
+
       if (!await confirm(user, booking, false)) {
         return res.sendStatus(400)
       }
