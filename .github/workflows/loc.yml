@@ -12,11 +12,12 @@ jobs:
       - name: Create the badge
         uses: shadowmoose/GHA-LoC-Badge@1.0.0
         id: badge
+        env:
+          INPUT_BADGE_LABEL: lines of code
+          INPUT_BADGE_COLOR: cyan
         with:
           debug: true
           directory: ./
-          label: lines of code
-          color: cyan
           badge: ./output/badge.svg
           ignore: 'coverage|package-lock.json|README.md|LICENSE|.github|.vscode|__scripts|__services'
 
