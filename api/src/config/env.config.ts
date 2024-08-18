@@ -458,6 +458,7 @@ export interface Car extends Document {
   range: string
   multimedia: string[]
   rating: number
+  trips: number
 }
 
 /**

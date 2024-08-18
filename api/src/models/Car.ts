@@ -141,6 +141,10 @@ const carSchema = new Schema<env.Car>(
         message: '{VALUE} is not an integer',
       },
     },
+    trips: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
