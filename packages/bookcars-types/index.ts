@@ -392,9 +392,6 @@ export interface Car {
   locations: Location[]
   price: number
   deposit: number
-  range: string
-  multimedia: CarMultimedia[] | undefined
-  rating: number
   available: boolean
   type: CarType
   gearbox: GearboxType
@@ -410,6 +407,10 @@ export interface Car {
   collisionDamageWaiver: number
   fullInsurance: number
   additionalDriver: number
+  range: string
+  multimedia: CarMultimedia[] | undefined
+  rating: number
+  trips: number
   [propKey: string]: any
 }
 
