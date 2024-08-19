@@ -132,7 +132,7 @@ export const getGearboxTypeShort = (type: string) => {
  */
 export const getFuelPolicy = (type: string) => {
   switch (type) {
-    case bookcarsTypes.FuelPolicy.LikeForlike:
+    case bookcarsTypes.FuelPolicy.LikeForLike:
       return strings.FUEL_POLICY_LIKE_FOR_LIKE
 
     case bookcarsTypes.FuelPolicy.FreeTank:
@@ -214,7 +214,7 @@ export const getDoorsTooltip = (doors: number) => `${strings.DOORS_TOOLTIP_1}${d
  */
 export const getFuelPolicyTooltip = (fuelPolicy: string) => {
   switch (fuelPolicy) {
-    case bookcarsTypes.FuelPolicy.LikeForlike:
+    case bookcarsTypes.FuelPolicy.LikeForLike:
       return strings.FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP
 
     case bookcarsTypes.FuelPolicy.FreeTank:

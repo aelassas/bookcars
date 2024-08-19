@@ -82,7 +82,7 @@ const carSchema = new Schema<env.Car>(
     },
     fuelPolicy: {
       type: String,
-      enum: [bookcarsTypes.FuelPolicy.LikeForlike, bookcarsTypes.FuelPolicy.FreeTank],
+      enum: [bookcarsTypes.FuelPolicy.LikeForLike, bookcarsTypes.FuelPolicy.FreeTank],
       required: [true, "can't be blank"],
     },
     mileage: {

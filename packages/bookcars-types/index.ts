@@ -38,7 +38,7 @@ export enum GearboxType {
 }
 
 export enum FuelPolicy {
-  LikeForlike = 'likeForlike',
+  LikeForLike = 'likeForlike',
   FreeTank = 'freeTank'
 }
 

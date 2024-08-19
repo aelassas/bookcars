@@ -156,7 +156,7 @@ describe('PUT /api/update-car', () => {
       aircon: false,
       seats: 4,
       doors: 5,
-      fuelPolicy: bookcarsTypes.FuelPolicy.LikeForlike,
+      fuelPolicy: bookcarsTypes.FuelPolicy.LikeForLike,
       mileage: 30000,
       cancellation: 70,
       amendments: 30,
@@ -186,7 +186,7 @@ describe('PUT /api/update-car', () => {
     expect(car.aircon).toBe(false)
     expect(car.seats).toBe(4)
     expect(car.doors).toBe(5)
-    expect(car.fuelPolicy).toBe(bookcarsTypes.FuelPolicy.LikeForlike)
+    expect(car.fuelPolicy).toBe(bookcarsTypes.FuelPolicy.LikeForLike)
     expect(car.mileage).toBe(30000)
     expect(car.cancellation).toBe(70)
     expect(car.amendments).toBe(30)
@@ -504,7 +504,7 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       pickupLocation: LOCATION2_ID,
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       carSpecs: {},
-      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike],
+      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForLike],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       deposit: -1,

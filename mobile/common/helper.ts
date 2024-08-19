@@ -210,7 +210,7 @@ export const getMileage = (mileage: number, language: string) => {
  */
 export const getFuelPolicy = (type: string) => {
   switch (type) {
-    case bookcarsTypes.FuelPolicy.LikeForlike:
+    case bookcarsTypes.FuelPolicy.LikeForLike:
       return i18n.t('FUEL_POLICY_LIKE_FOR_LIKE')
 
     case bookcarsTypes.FuelPolicy.FreeTank:

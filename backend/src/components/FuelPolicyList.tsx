@@ -43,7 +43,7 @@ const FuelPolicyList = ({
     <div>
       <InputLabel className={required ? 'required' : ''}>{label}</InputLabel>
       <Select label={label} value={value} onChange={handleChange} variant={variant || 'standard'} required={required} fullWidth>
-        <MenuItem value={bookcarsTypes.FuelPolicy.LikeForlike}>{strings.FUEL_POLICY_LIKE_FOR_LIKE}</MenuItem>
+        <MenuItem value={bookcarsTypes.FuelPolicy.LikeForLike}>{strings.FUEL_POLICY_LIKE_FOR_LIKE}</MenuItem>
         <MenuItem value={bookcarsTypes.FuelPolicy.FreeTank}>{strings.FUEL_POLICY_FREE_TANK}</MenuItem>
       </Select>
     </div>
