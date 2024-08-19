@@ -13,7 +13,7 @@ interface FuelPolicyFilterProps {
   onChange?: (value: bookcarsTypes.FuelPolicy[]) => void
 }
 
-const allTypes = [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike]
+const allTypes = bookcarsHelper.getAllFuelPolicies()
 
 const FuelPolicyFilter = ({
   className,
@@ -70,16 +70,16 @@ const FuelPolicyFilter = ({
     handleCheckFreeTankChange(event)
   }
 
-  const handleCheckLikeForlikeChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+  const handleCheckLikeForLikeChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      values.push(bookcarsTypes.FuelPolicy.LikeForlike)
+      values.push(bookcarsTypes.FuelPolicy.LikeForLike)
 
       if (values.length === 2) {
         setAllChecked(true)
       }
     } else {
       values.splice(
-        values.findIndex((v) => v === bookcarsTypes.FuelPolicy.LikeForlike),
+        values.findIndex((v) => v === bookcarsTypes.FuelPolicy.LikeForLike),
         1,
       )
 
@@ -93,12 +93,12 @@ const FuelPolicyFilter = ({
     handleOnChange(values)
   }
 
-  const handleLikeForlikeClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleLikeForLikeClick = (e: React.MouseEvent<HTMLElement>) => {
     const checkbox = e.currentTarget.previousSibling as HTMLInputElement
     checkbox.checked = !checkbox.checked
     const event = e
     event.currentTarget = checkbox
-    handleCheckLikeForlikeChange(event)
+    handleCheckLikeForLikeChange(event)
   }
 
   const handleUncheckAllChange = () => {
@@ -122,7 +122,7 @@ const FuelPolicyFilter = ({
         manualRef.current.checked = true
       }
 
-      const _values = [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForlike]
+      const _values = allTypes
 
       setAllChecked(true)
       setValues(_values)
@@ -147,9 +147,9 @@ const FuelPolicyFilter = ({
           </span>
         </div>
         <div className="filter-element">
-          <input ref={manualRef} type="checkbox" className="fuel-policy-checkbox" onChange={handleCheckLikeForlikeChange} />
+          <input ref={manualRef} type="checkbox" className="fuel-policy-checkbox" onChange={handleCheckLikeForLikeChange} />
           <span
-            onClick={handleLikeForlikeClick}
+            onClick={handleLikeForLikeClick}
             role="button"
             tabIndex={0}
           >

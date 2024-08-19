@@ -13,12 +13,7 @@ interface CarMultimediaFilterProps {
   onChange?: (value: bookcarsTypes.CarMultimedia[]) => void
 }
 
-const allMultimedias = [
-  bookcarsTypes.CarMultimedia.Touchscreen,
-  bookcarsTypes.CarMultimedia.Bluetooth,
-  bookcarsTypes.CarMultimedia.AndroidAuto,
-  bookcarsTypes.CarMultimedia.AppleCarPlay,
-]
+const allMultimedias = bookcarsHelper.getAllMultimedias()
 
 const CarMultimediaFilter = ({
   className,
