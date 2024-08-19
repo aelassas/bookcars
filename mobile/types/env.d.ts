@@ -1,5 +1,4 @@
 declare module '@env' {
-  export const BC_APP_TYPE: string
   export const BC_API_HOST: string
   export const BC_DEFAULT_LANGUAGE: string
   export const BC_PAGE_SIZE: string
