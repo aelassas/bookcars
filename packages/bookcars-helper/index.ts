@@ -285,3 +285,25 @@ export const getAllRanges = () => [
  * @returns {number[]}
  */
 export const getAllRatings = () => [0, 1, 2, 3, 4, 5]
+
+/**
+ * Return all multimedia types.
+ *
+ * @returns {bookcarsTypes.CarMultimedia[]}
+ */
+export const getAllMultimedias = () => [
+  bookcarsTypes.CarMultimedia.Touchscreen,
+  bookcarsTypes.CarMultimedia.Bluetooth,
+  bookcarsTypes.CarMultimedia.AndroidAuto,
+  bookcarsTypes.CarMultimedia.AppleCarPlay,
+]
+
+/**
+ * Return all fuel policies.
+ *
+ * @returns {bookcarsTypes.FuelPolicy[]}
+ */
+export const getAllFuelPolicies = () => [
+  bookcarsTypes.FuelPolicy.FreeTank,
+  bookcarsTypes.FuelPolicy.LikeForLike
+]
