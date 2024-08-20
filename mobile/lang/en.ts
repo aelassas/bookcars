@@ -139,7 +139,7 @@ export const en = {
   PRICE_DAYS_PART_1: 'Price for',
   PRICE_DAYS_PART_2: 'day',
   PRICE_PER_DAY: 'Price per day:',
-  BOOK: 'Choose this car',
+  BOOK: 'Select this car',
   STAY_CONNECTED: 'Stay connected',
   CREATE_BOOKING: 'Book Now',
   BOOKING_OPTIONS: 'Your booking options',
@@ -200,4 +200,43 @@ export const en = {
   TO_DATE_EMPTY: 'Please enter a drop-off date.',
   TO_TIME_EMPTY: 'Please enter a drop-off time.',
   PAYMENT_FAILED: 'Payment failed.',
+  ERROR: 'Error',
+  LOGIN_ERROR: 'Authentication failed.',
+  OR: 'or',
+
+  CAR_RANGE: 'Range',
+  CAR_RANGE_MINI: 'MINI',
+  CAR_RANGE_MIDI: 'MIDI',
+  CAR_RANGE_MAXI: 'MAXI',
+  CAR_RANGE_SCOOTER: 'SCOOTER',
+
+  CAR_MULTIMEDIA: 'Multimedia',
+  CAR_MULTIMEDIA_TOUCHSCREEN: 'Touchscreen',
+  CAR_MULTIMEDIA_BLUETOOTH: 'Bluetooth',
+  CAR_MULTIMEDIA_ANDROID_AUTO: 'Android Auto',
+  CAR_MULTIMEDIA_APPLE_CAR_PLAY: 'Apple Car Play',
+
+  CAR_SEATS: 'Seats',
+  CAR_SEATS_TWO: '2 Seats',
+  CAR_SEATS_FOUR: '4 Seats',
+  CAR_SEATS_FIVE: '5 Seats',
+  CAR_SEATS_FIVE_PLUS: '5+ Seats',
+  ANY: 'Any',
+
+  BOOKCARS: 'BookCars',
+  SEARCH_TITLE_1: 'Auto ',
+  SEARCH_TITLE_2: ' for you',
+  CAR_AVAILABLE: 'car available',
+  CARS_AVAILABLE: 'cars available',
+
+  DEPOSIT_LESS_THAN_VALUE_1: `Less than ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+  DEPOSIT_LESS_THAN_VALUE_2: `Less than ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+  DEPOSIT_LESS_THAN_VALUE_3: `Less than ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+
+  CAR_SPECS: 'Car specs',
+  AIRCON: 'Air Conditioning',
+  MORE_THAN_FOOR_DOORS: '4+ doors',
+  MORE_THAN_FIVE_SEATS: '5+ seats',
+
+  LOCATION_TERM: 'Location / term',
 }

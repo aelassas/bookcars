@@ -15,6 +15,7 @@ interface LocationSelectListProps {
   label: string
   blur?: boolean
   close?: boolean
+  text?: string,
   onSelectItem?: (selectedItem: string) => void
   onFetch?: () => void
   onChangeText?: (text: string) => void
@@ -22,13 +23,14 @@ interface LocationSelectListProps {
 }
 
 const LocationSelectList = ({
-  selectedItem: listSelectedItem,
+  selectedItem: __selectedItem,
   size,
   style,
   backgroundColor,
   label,
   blur,
   close,
+  text: __text,
   onSelectItem,
   onFetch,
   onChangeText: listOnChangeText,
@@ -39,8 +41,19 @@ const LocationSelectList = ({
   const [selectedItem, setSelectedItem] = useState<string>()
 
   useEffect(() => {
-    setSelectedItem(listSelectedItem)
-  }, [listSelectedItem])
+    setSelectedItem(__selectedItem)
+  }, [__selectedItem])
+
+  useEffect(() => {
+    const fetch = async () => {
+      await fetchData(__text || '')
+      setSelectedItem(__selectedItem)
+    }
+    if (__text) {
+      fetch()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [__text])
 
   const _setSelectedItem = (_selectedItem?: string) => {
     setSelectedItem(_selectedItem)
@@ -50,14 +63,13 @@ const LocationSelectList = ({
     }
   }
 
-  const onChangeText = (text: string) => {
-    fetchData(text)
+  const onChangeText = async (text: string) => {
+    await fetchData(text)
   }
 
   const fetchData = async (text: string) => {
     try {
       setLoading(true)
-
       const data = await LocationService.getLocations(text, 1, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
@@ -87,7 +99,7 @@ const LocationSelectList = ({
       <Text
         style={{
           display: selectedItem ? 'flex' : 'none',
-          backgroundColor: backgroundColor ?? '#f5f5f5',
+          backgroundColor: backgroundColor ?? '#F5F5F5',
           color: 'rgba(0, 0, 0, 0.6)',
           fontSize: 12,
           fontWeight: '400',
@@ -143,7 +155,7 @@ const LocationSelectList = ({
           alignSelf: 'center',
         }}
         inputContainerStyle={{
-          backgroundColor: backgroundColor ?? '#f5f5f5',
+          backgroundColor: backgroundColor ?? '#F5F5F5',
           color: 'rgba(0, 0, 0, 0.87)',
           borderColor: 'rgba(0, 0, 0, 0.23)',
           borderWidth: 1,

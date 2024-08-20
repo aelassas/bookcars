@@ -76,7 +76,7 @@ export const AutocompleteDropdown: any = memo(
       if (dataSetItem) {
         setSelectedItem(dataSetItem)
       }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.initialValue, dataSet]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /** expose controller methods */
     useEffect(() => {

@@ -16,11 +16,16 @@ interface CarListProps {
   from?: Date
   to?: Date
   suppliers?: string[]
+  ranges?: bookcarsTypes.CarRange[]
+  multimedia?: bookcarsTypes.CarMultimedia[]
+  seats?: number,
+  carSpecs?: bookcarsTypes.CarSpecs,
   pickupLocation?: string
   dropOffLocation?: string
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
+  fuelPolicy?: string[]
   deposit?: number
   header?: React.ReactElement
   cars?: bookcarsTypes.Car[]
@@ -35,11 +40,16 @@ const CarList = ({
   from,
   to,
   suppliers,
+  ranges,
+  multimedia,
+  seats,
+  carSpecs,
   pickupLocation,
   dropOffLocation,
   carType: _carType,
   gearbox,
   mileage,
+  fuelPolicy,
   deposit,
   header,
   cars,
@@ -73,10 +83,15 @@ const CarList = ({
   const fetchData = async (
     _page: number,
     _suppliers?: string[],
+    _ranges?: bookcarsTypes.CarRange[],
+    _multimedia?: bookcarsTypes.CarMultimedia[],
+    _seats?: number,
+    _carSpecs?: bookcarsTypes.CarSpecs,
     _pickupLocation?: string,
     __carType?: string[],
     _gearbox?: string[],
     _mileage?: string[],
+    _fuelPolicy?: string[],
     _deposit?: number
   ) => {
     try {
@@ -86,10 +101,15 @@ const CarList = ({
 
         const payload: bookcarsTypes.GetCarsPayload = {
           suppliers: _suppliers,
+          ranges: _ranges,
+          multimedia: _multimedia,
+          seats: _seats,
+          carSpecs: _carSpecs,
           pickupLocation: _pickupLocation,
           carType: __carType,
           gearbox: _gearbox,
           mileage: _mileage,
+          fuelPolicy: _fuelPolicy,
           deposit: _deposit,
         }
 
@@ -120,8 +140,8 @@ const CarList = ({
 
   useEffect(() => {
     if (suppliers) {
-      if (suppliers.length > 0 && pickupLocation && _carType && gearbox && mileage && deposit) {
-        fetchData(page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit)
+      if (suppliers.length > 0 && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
+        fetchData(page, suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -130,13 +150,13 @@ const CarList = ({
         }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
+  }, [page, suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
 
   useEffect(() => {
-    if (suppliers && pickupLocation && _carType && gearbox && mileage && deposit) {
+    if (suppliers && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
       setPage(1)
     }
-  }, [suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
+  }, [suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
 
   useEffect(() => {
     if (cars) {

@@ -200,4 +200,43 @@ export const fr = {
   TO_DATE_EMPTY: 'Veuillez saisir la date de restitution.',
   TO_TIME_EMPTY: "Veuillez saisir l'heure de restitution.",
   PAYMENT_FAILED: 'Paiement échoué.',
+  ERROR: 'Erreur',
+  LOGIN_ERROR: "L'authentification a échoué.",
+  OR: 'ou',
+
+  CAR_RANGE: 'Gamme',
+  CAR_RANGE_MINI: 'MINI',
+  CAR_RANGE_MIDI: 'MIDI',
+  CAR_RANGE_MAXI: 'MAXI',
+  CAR_RANGE_SCOOTER: 'SCOOTER',
+
+  CAR_MULTIMEDIA: 'Multimédia',
+  CAR_MULTIMEDIA_TOUCHSCREEN: 'Écran tactile',
+  CAR_MULTIMEDIA_BLUETOOTH: 'Bluetooth',
+  CAR_MULTIMEDIA_ANDROID_AUTO: 'Android Auto',
+  CAR_MULTIMEDIA_APPLE_CAR_PLAY: 'Apple Car Play',
+
+  CAR_SEATS: 'Sièges',
+  CAR_SEATS_TWO: '2 Sièges',
+  CAR_SEATS_FOUR: '4 Sièges',
+  CAR_SEATS_FIVE: '5 Sièges',
+  CAR_SEATS_FIVE_PLUS: '5+ Sièges',
+  ANY: 'Quelconque',
+
+  BOOKCARS: 'BookCars',
+  SEARCH_TITLE_1: 'Auto ',
+  SEARCH_TITLE_2: ' pour vous',
+  CAR_AVAILABLE: 'voiture disponible',
+  CARS_AVAILABLE: 'voitures disponibles',
+
+  DEPOSIT_LESS_THAN_VALUE_1: `Moins de ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+  DEPOSIT_LESS_THAN_VALUE_2: `Moins de ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+  DEPOSIT_LESS_THAN_VALUE_3: `Moins de ${env.isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!env.isUS ? (` ${env.CURRENCY}`) : ''}`,
+
+  CAR_SPECS: 'Spécificités du véhicule',
+  AIRCON: 'Climatisation',
+  MORE_THAN_FOOR_DOORS: '4+ portes',
+  MORE_THAN_FIVE_SEATS: '5+ sièges',
+
+  LOCATION_TERM: 'Lieu / terme',
 }
