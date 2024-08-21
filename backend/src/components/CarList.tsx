@@ -60,7 +60,7 @@ interface CarListProps {
   language?: string
   range?: string[]
   multimedia?: string[]
-  rating?: number[]
+  rating?: number
   seats?: number
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
   onDelete?: (rowCount: number) => void
@@ -136,7 +136,7 @@ const CarList = ({
     availability?: string[],
     _range?: string[],
     _multimedia?: string[],
-    _rating?: number[],
+    _rating?: number,
     _seats?: number,
   ) => {
     try {
@@ -423,7 +423,7 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            : rows.map((car, _index) => {
+            : rows.map((car, index) => {
               const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
@@ -606,11 +606,11 @@ const CarList = ({
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        {/* <Tooltip title={commonStrings.DELETE}>
+                        <Tooltip title={commonStrings.DELETE}>
                           <IconButton data-id={car._id} data-index={index} onClick={handleDelete}>
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip> */}
+                        </Tooltip>
                       </>
                     )}
                   </div>

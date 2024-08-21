@@ -44,9 +44,9 @@ const Cars = () => {
   const [deposit, setDeposit] = useState(-1)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
-  const [range, setRange] = useState(bookcarsHelper.getAllRanges())
+  const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
-  const [rating, setRating] = useState(bookcarsHelper.getAllRatings())
+  const [rating, setRating] = useState(-1)
   const [seats, setSeats] = useState(-1)
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Cars = () => {
         fuelPolicy,
         deposit,
         availability,
-        ranges: range,
+        ranges,
         multimedia,
         rating,
         seats,
@@ -69,7 +69,7 @@ const Cars = () => {
     }
 
     updateSuppliers()
-  }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability, range, multimedia, rating, seats])
+  }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability, ranges, multimedia, rating, seats])
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
@@ -89,12 +89,12 @@ const Cars = () => {
     setSuppliers(newSuppliers)
   }
 
-  const handleRatingFilterChange = (value: number[]) => {
+  const handleRatingFilterChange = (value: number) => {
     setRating(value)
   }
 
   const handleRangeFilterChange = (value: bookcarsTypes.CarRange[]) => {
-    setRange(value)
+    setRanges(value)
   }
 
   const handleMultimediaFilterChange = (value: bookcarsTypes.CarMultimedia[]) => {
@@ -146,6 +146,10 @@ const Cars = () => {
       fuelPolicy,
       deposit,
       availability,
+      ranges,
+      multimedia,
+      rating,
+      seats,
     }
     const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
     const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
@@ -198,7 +202,7 @@ const Cars = () => {
               fuelPolicy={fuelPolicy}
               deposit={deposit}
               availability={availability}
-              range={range}
+              range={ranges}
               multimedia={multimedia}
               rating={rating}
               seats={seats}

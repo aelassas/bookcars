@@ -3,33 +3,31 @@ div.rating-filter div.filter-elements {
 }
 
 div.rating-filter div.filter-elements div.filter-element {
-  cursor: pointer;
   margin: 5px;
   width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-div.rating-filter div.filter-elements div.filter-element input[type='checkbox'].rating-checkbox {
+div.rating-filter div.filter-elements div.filter-element input[type='radio'].rating-checkbox {
   cursor: pointer;
   margin-left: 5px;
 }
 
 div.rating-filter div.filter-elements div.filter-element span.ratings {
+  cursor: pointer;
   display: inline-block;
   padding: 0 4px;
 }
 
-div.rating-filter div.filter-elements div.filter-element .rating{
+div.rating-filter div.filter-elements div.filter-element .rating {
   position: relative;
   bottom: -4px;
 }
 
-div.rating-filter div.filter-actions {
-  text-align: center;
-  padding-bottom: 10px;
-}
-
-div.rating-filter div.filter-actions span.uncheckall {
-  text-decoration: underline;
-  cursor: pointer;
-  color: #0064c8;
+div.rating-filter div.filter-elements div.filter-element span.rating-text {
+  font-size: 12px;
+  color: #a3a3a3;
+  margin-top: 4px;
 }

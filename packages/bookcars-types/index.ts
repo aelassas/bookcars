@@ -210,7 +210,7 @@ export interface GetCarsPayload {
   pickupLocation?: string
   ranges?: string[]
   multimedia?: string[]
-  rating?: number[]
+  rating?: number
   seats?: number
 }
 

@@ -288,6 +288,10 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       fuelPolicy,
       deposit,
       carSpecs,
+      ranges,
+      multimedia,
+      rating,
+      seats,
     } = body
 
     const $match: mongoose.FilterQuery<any> = {
@@ -323,6 +327,30 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
 
     if (deposit && deposit > -1) {
       $match.$and!.push({ deposit: { $lte: deposit } })
+    }
+
+    if (ranges) {
+      $match.$and!.push({ range: { $in: ranges } })
+    }
+
+    if (multimedia && multimedia.length > 0) {
+      for (const multimediaOption of multimedia) {
+        $match.$and!.push({ multimedia: multimediaOption })
+      }
+    }
+
+    if (rating && rating > -1) {
+      $match.$and!.push({ rating: { $gte: rating } })
+    }
+
+    if (seats) {
+      if (seats > -1) {
+        if (seats === 6) {
+          $match.$and!.push({ seats: { $gte: 5 } })
+        } else {
+          $match.$and!.push({ seats })
+        }
+      }
     }
 
     const data = await Car.aggregate(
@@ -381,6 +409,10 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       availability,
       fuelPolicy,
       carSpecs,
+      ranges,
+      multimedia,
+      rating,
+      seats,
     } = body
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -433,6 +465,30 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
         return res.json([])
+      }
+    }
+
+    if (ranges) {
+      $match.$and!.push({ range: { $in: ranges } })
+    }
+
+    if (multimedia && multimedia.length > 0) {
+      for (const multimediaOption of multimedia) {
+        $match.$and!.push({ multimedia: multimediaOption })
+      }
+    }
+
+    if (rating && rating > -1) {
+      $match.$and!.push({ rating: { $gte: rating } })
+    }
+
+    if (seats) {
+      if (seats > -1) {
+        if (seats === 6) {
+          $match.$and!.push({ seats: { $gte: 5 } })
+        } else {
+          $match.$and!.push({ seats })
+        }
       }
     }
 
