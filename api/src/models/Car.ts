@@ -134,16 +134,15 @@ const carSchema = new Schema<env.Car>(
     }],
     rating: {
       type: Number,
-      min: 0,
+      min: 1,
       max: 5,
-      validate: {
-        validator: Number.isInteger,
-        message: '{VALUE} is not an integer',
-      },
     },
     trips: {
       type: Number,
       default: 0,
+    },
+    co2: {
+      type: Number,
     },
   },
   {
