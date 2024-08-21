@@ -409,7 +409,7 @@ export interface Car {
   additionalDriver: number
   range: string
   multimedia: CarMultimedia[] | undefined
-  rating: number
+  rating?: number
   trips: number
   [propKey: string]: any
 }
