@@ -60,7 +60,7 @@ interface CarListProps {
   language?: string
   range?: string[]
   multimedia?: string[]
-  rating?: number[]
+  rating?: number
   seats?: number
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
   onDelete?: (rowCount: number) => void
@@ -136,7 +136,7 @@ const CarList = ({
     availability?: string[],
     _range?: string[],
     _multimedia?: string[],
-    _rating?: number[],
+    _rating?: number,
     _seats?: number,
   ) => {
     try {
