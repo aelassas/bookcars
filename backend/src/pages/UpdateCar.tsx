@@ -9,7 +9,6 @@ import {
   Switch,
   TextField,
   FormHelperText,
-  Rating
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
@@ -52,7 +51,8 @@ const UpdateCar = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
   const [range, setRange] = useState('')
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState('')
+  const [co2, setCo2] = useState('')
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
@@ -145,10 +145,12 @@ const UpdateCar = () => {
     setMultimedia(value)
   }
 
-  const handleRatingChange = (_: React.SyntheticEvent, value: number | null) => {
-    if (value) {
-      setRating(value)
-    }
+  const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRating(e.target.value)
+  }
+
+  const handleCo2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCo2(e.target.value)
   }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +236,7 @@ const UpdateCar = () => {
         return
       }
 
-      const data = {
+      const data: bookcarsTypes.UpdateCarPayload = {
         _id: car._id,
         name,
         supplier: supplier._id,
@@ -259,7 +261,8 @@ const UpdateCar = () => {
         additionalDriver: extraToNumber(additionalDriver),
         range,
         multimedia,
-        rating
+        rating: Number(rating) || undefined,
+        co2: Number(co2) || undefined,
       }
 
       const status = await CarService.update(data)
@@ -314,7 +317,12 @@ const UpdateCar = () => {
               setDeposit(_car.deposit.toString())
               setRange(_car.range)
               setMultimedia(_car?.multimedia || [])
-              setRating(_car.rating)
+              if (_car.rating) {
+                setRating(_car.rating.toString())
+              }
+              if (_car.co2) {
+                setCo2(_car.co2.toString())
+              }
               setAvailable(_car.available)
               setType(_car.type)
               setGearbox(_car.gearbox)
@@ -453,8 +461,30 @@ const UpdateCar = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <span className="form-label">{strings.RATING}</span>
-                <Rating value={rating} onChange={handleRatingChange} />
+                <TextField
+                  label={strings.RATING}
+                  inputProps={{
+                    type: 'number',
+                    min: 1,
+                    max: 5,
+                    step: 0.01,
+                  }}
+                  onChange={handleRatingChange}
+                  variant="standard"
+                  autoComplete="off"
+                  value={rating}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <TextField
+                  label={strings.CO2}
+                  inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                  onChange={handleCo2Change}
+                  variant="standard"
+                  autoComplete="off"
+                  value={co2}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">

@@ -459,6 +459,7 @@ export interface Car extends Document {
   multimedia: string[]
   rating?: number
   trips: number
+  co2?: number
 }
 
 /**

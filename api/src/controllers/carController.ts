@@ -99,6 +99,7 @@ export const update = async (req: Request, res: Response) => {
         range,
         multimedia,
         rating,
+        co2,
       } = body
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
@@ -123,7 +124,8 @@ export const update = async (req: Request, res: Response) => {
       car.additionalDriver = additionalDriver
       car.range = range
       car.multimedia = multimedia
-      car.rating = rating || 0
+      car.rating = rating
+      car.co2 = co2
 
       await car.save()
       return res.json(car)

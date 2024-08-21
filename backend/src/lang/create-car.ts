@@ -22,6 +22,7 @@ const strings = new LocalizedStrings({
     CAR_RANGE: 'Gamme',
     MULTIMEDIA: 'Multimédia',
     RATING: 'Notation',
+    CO2: 'C02 (g/km)',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -41,7 +42,8 @@ const strings = new LocalizedStrings({
     MINIMUM_AGE_NOT_VALID: `Minimum age must be greater than or equal to ${env.MINIMUM_AGE} years old.`,
     CAR_RANGE: 'Car Range',
     MULTIMEDIA: 'Multimedia',
-    RATING: 'Rating'
+    RATING: 'Rating',
+    CO2: 'C02 (g/km)',
   },
 })
 
