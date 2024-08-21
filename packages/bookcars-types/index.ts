@@ -186,6 +186,7 @@ export interface CreateCarPayload {
   range: string
   multimedia: string[]
   rating?: number
+  co2?: number
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
@@ -411,6 +412,7 @@ export interface Car {
   multimedia: CarMultimedia[] | undefined
   rating?: number
   trips: number
+  co2?: number
   [propKey: string]: any
 }
 
