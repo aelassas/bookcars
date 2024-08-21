@@ -280,13 +280,6 @@ export const getAllRanges = () => [
 ]
 
 /**
- * Return all ratings.
- *
- * @returns {number[]}
- */
-export const getAllRatings = () => [0, 1, 2, 3, 4, 5]
-
-/**
  * Return all multimedia types.
  *
  * @returns {bookcarsTypes.CarMultimedia[]}

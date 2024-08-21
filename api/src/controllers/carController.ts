@@ -486,8 +486,8 @@ export const getCars = async (req: Request, res: Response) => {
       }
     }
 
-    if (rating) {
-      $match.$and!.push({ rating: { $in: rating } })
+    if (rating && rating > -1) {
+      $match.$and!.push({ rating: { $gte: rating } })
     }
 
     if (seats) {
@@ -681,8 +681,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
-    if (rating) {
-      $match.$and!.push({ rating: { $in: rating } })
+    if (rating && rating > -1) {
+      $match.$and!.push({ rating: { $gte: rating } })
     }
 
     if (seats) {

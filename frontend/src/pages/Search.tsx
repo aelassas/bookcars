@@ -46,7 +46,7 @@ const Search = () => {
   const [deposit, setDeposit] = useState(-1)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
-  const [rating, setRating] = useState(bookcarsHelper.getAllRatings())
+  const [rating, setRating] = useState(-1)
   const [seats, setSeats] = useState(-1)
 
   useEffect(() => {
@@ -60,6 +60,10 @@ const Search = () => {
           mileage,
           fuelPolicy,
           deposit,
+          ranges,
+          multimedia,
+          rating,
+          seats,
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
@@ -67,7 +71,7 @@ const Search = () => {
     }
 
     updateSuppliers()
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit])
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats])
 
   const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
     if (suppliers.length < allSuppliers.length) {
@@ -85,7 +89,7 @@ const Search = () => {
     setSupplierIds(newSuppliers)
   }
 
-  const handleRatingFilterChange = (value: number[]) => {
+  const handleRatingFilterChange = (value: number) => {
     setRating(value)
   }
 
@@ -174,6 +178,10 @@ const Search = () => {
         mileage,
         fuelPolicy,
         deposit,
+        ranges,
+        multimedia,
+        rating,
+        seats,
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)

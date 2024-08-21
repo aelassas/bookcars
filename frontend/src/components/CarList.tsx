@@ -54,7 +54,7 @@ interface CarListProps {
   sizeAuto?: boolean
   ranges?: string[]
   multimedia?: string[]
-  rating?: number[]
+  rating?: number
   seats?: number
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
@@ -137,7 +137,7 @@ const CarList = ({
     _deposit?: number,
     _ranges?: string[],
     _multimedia?: string[],
-    _rating?: number[],
+    _rating?: number,
     _seats?: number,
   ) => {
     try {
