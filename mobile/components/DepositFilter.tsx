@@ -28,7 +28,7 @@ const DepositFilter = ({
     }
   }
 
-  const onValueChangeDeposit2500 = (checked: boolean) => {
+  const onValueChangeDepositValue1 = (checked: boolean) => {
     if (checked) {
       setDepositValue1(true)
       setDepositValue2(false)
@@ -39,7 +39,7 @@ const DepositFilter = ({
     }
   }
 
-  const onValueChangeDeposit5000 = (checked: boolean) => {
+  const onValueChangeDepositValue2 = (checked: boolean) => {
     if (checked) {
       setDepositValue1(false)
       setDepositValue2(true)
@@ -50,7 +50,7 @@ const DepositFilter = ({
     }
   }
 
-  const onValueChangeDeposit7500 = (checked: boolean) => {
+  const onValueChangeDepositValue3 = (checked: boolean) => {
     if (checked) {
       setDepositValue1(false)
       setDepositValue2(false)
@@ -80,9 +80,9 @@ const DepositFilter = ({
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('DEPOSIT')}>
           <View style={styles.contentContainer}>
-            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue1} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_1')} onValueChange={onValueChangeDeposit2500} />
-            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue2} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_2')} onValueChange={onValueChangeDeposit5000} />
-            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue3} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_3')} onValueChange={onValueChangeDeposit7500} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue1} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_1')} onValueChange={onValueChangeDepositValue1} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue2} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_2')} onValueChange={onValueChangeDepositValue2} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={depositValue3} label={i18n.t('DEPOSIT_LESS_THAN_VALUE_3')} onValueChange={onValueChangeDepositValue3} />
             <RadioButton style={styles.component} textStyle={styles.text} checked={depositall} label={i18n.t('ALL')} onValueChange={onValueChangeDepositall} />
           </View>
         </Accordion>
