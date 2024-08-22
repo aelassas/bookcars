@@ -437,10 +437,10 @@ export const getCars = async (req: Request, res: Response) => {
       if (typeof carSpecs.aircon !== 'undefined') {
         $match.$and!.push({ aircon: carSpecs.aircon })
       }
-      if (typeof carSpecs.moreThanFourDoors !== 'undefined') {
+      if (carSpecs.moreThanFourDoors) {
         $match.$and!.push({ doors: { $gt: 4 } })
       }
-      if (typeof carSpecs.moreThanFiveSeats !== 'undefined') {
+      if (carSpecs.moreThanFiveSeats) {
         $match.$and!.push({ seats: { $gt: 5 } })
       }
     }
@@ -651,10 +651,10 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       if (typeof carSpecs.aircon !== 'undefined') {
         $match.$and!.push({ aircon: carSpecs.aircon })
       }
-      if (typeof carSpecs.moreThanFourDoors !== 'undefined') {
+      if (carSpecs.moreThanFourDoors) {
         $match.$and!.push({ doors: { $gt: 4 } })
       }
-      if (typeof carSpecs.moreThanFiveSeats !== 'undefined') {
+      if (carSpecs.moreThanFiveSeats) {
         $match.$and!.push({ seats: { $gt: 5 } })
       }
     }

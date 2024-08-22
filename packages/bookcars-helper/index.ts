@@ -276,7 +276,7 @@ export const getAllRanges = () => [
   bookcarsTypes.CarRange.Mini,
   bookcarsTypes.CarRange.Midi,
   bookcarsTypes.CarRange.Maxi,
-  bookcarsTypes.CarRange.Scooter
+  bookcarsTypes.CarRange.Scooter,
 ]
 
 /**
@@ -298,5 +298,5 @@ export const getAllMultimedias = () => [
  */
 export const getAllFuelPolicies = () => [
   bookcarsTypes.FuelPolicy.FreeTank,
-  bookcarsTypes.FuelPolicy.LikeForLike
+  bookcarsTypes.FuelPolicy.LikeForLike,
 ]
