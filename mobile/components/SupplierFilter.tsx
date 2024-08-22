@@ -73,7 +73,7 @@ const SupplierFilter = ({
                           uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
                         }}
                       />
-                      <Text style={styles.text}>{`(${supplier.carCount})`}</Text>
+                      {supplier.carCount && <Text style={styles.text}>{`(${supplier.carCount})`}</Text>}
                     </View>
                   </Switch>
                 </View>

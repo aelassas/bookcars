@@ -65,7 +65,7 @@ const BookingList = ({
         }
         const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
         setRows(_rows)
-        setFetch(_data.resultData.length > 0)
+        setFetch(_data.resultData.length === env.BOOKINGS_PAGE_SIZE)
         setLoading(false)
       } else {
         setRows([])
