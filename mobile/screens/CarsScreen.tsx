@@ -8,6 +8,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import * as LocationService from '../services/LocationService'
+import * as SupplierService from '../services/SupplierService'
 import Layout from '../components/Layout'
 import CarList from '../components/CarList'
 import SupplierFilter from '../components/SupplierFilter'
@@ -21,13 +22,15 @@ import CarSeatsFilter from '../components/CarSeatsFilter'
 import FuelPolicyFilter from '../components/FuelPolicyFilter'
 import CarSpecsFilter from '../components/CarSpecsFilter'
 import SearchFormFilter from '../components/SearchFormFilter'
+import CarRatingFilter from '../components/CarRatingFilter'
 
 const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [suppliers, setSuppliers] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [supplierIds, setSupplierIds] = useState<string[]>([])
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
   const [seats, setSeats] = useState(-1)
@@ -40,18 +43,64 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [dropoffLocation, setDropoffLocation] = useState<bookcarsTypes.Location>()
   const [carCount, setCarCount] = useState(0)
   const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
+  const [rating, setRating] = useState(-1)
+
+  useEffect(() => {
+    const updateSuppliers = async () => {
+      if (pickupLocation) {
+        const payload: bookcarsTypes.GetCarsPayload = {
+          pickupLocation: pickupLocation._id,
+          carSpecs,
+          carType,
+          gearbox,
+          mileage,
+          fuelPolicy,
+          deposit,
+          ranges,
+          multimedia,
+          rating,
+          seats,
+        }
+        const _suppliers = await SupplierService.getFrontendSuppliers(payload)
+        setSuppliers(_suppliers)
+      }
+    }
+
+    updateSuppliers()
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats])
 
   const _init = async () => {
     const language = await UserService.getLanguage()
     i18n.locale = language
     const _pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
     setPickupLocation(_pickupLocation)
+
     if (route.params.pickupLocation === route.params.dropOffLocation) {
       setDropoffLocation(bookcarsHelper.clone(_pickupLocation))
     } else {
       const _dropoffLocation = await LocationService.getLocation(route.params.dropOffLocation)
       setDropoffLocation(_dropoffLocation)
     }
+
+    const payload: bookcarsTypes.GetCarsPayload = {
+      pickupLocation: _pickupLocation._id,
+      carSpecs,
+      carType,
+      gearbox,
+      mileage,
+      fuelPolicy,
+      deposit,
+      ranges,
+      multimedia,
+      rating,
+      seats,
+    }
+    const _suppliers = await SupplierService.getFrontendSuppliers(payload)
+    const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+    setSuppliers(_suppliers)
+    setSupplierIds(_supplierIds)
+
+    setLoaded(true)
     setVisible(true)
   }
 
@@ -69,13 +118,12 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setReload(false)
   }
 
-  const onLoadSuppliers = (_suppliers: string[]) => {
-    setSuppliers(_suppliers)
-    setLoaded(true)
+  const onChangeSuppliers = (_suppliers: string[]) => {
+    setSupplierIds(_suppliers)
   }
 
-  const onChangeSuppliers = (_suppliers: string[]) => {
-    setSuppliers(_suppliers)
+  const onChangeCarRating = (value: number) => {
+    setRating(value)
   }
 
   const onChangeCarRange = (_ranges: bookcarsTypes.CarRange[]) => {
@@ -119,7 +167,8 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
       {visible && pickupLocation && dropoffLocation && (
         <CarList
           navigation={navigation}
-          suppliers={suppliers}
+          suppliers={supplierIds}
+          rating={rating}
           ranges={ranges}
           multimedia={multimedia}
           seats={seats}
@@ -155,7 +204,8 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
                 toTime={new Date(route.params.to)}
               />
 
-              <SupplierFilter style={styles.filter} visible={loaded} onLoad={onLoadSuppliers} onChange={onChangeSuppliers} />
+              <SupplierFilter style={styles.filter} visible={loaded} suppliers={suppliers} onChange={onChangeSuppliers} />
+              <CarRatingFilter style={styles.filter} visible={loaded} onChange={onChangeCarRating} />
               <CarRangeFilter style={styles.filter} visible={loaded} onChange={onChangeCarRange} />
               <CarMultimediaFilter style={styles.filter} visible={loaded} onChange={onChangeCarMultimedia} />
               <CarSeatsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSeats} />
