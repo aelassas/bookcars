@@ -239,4 +239,10 @@ export const fr = {
   MORE_THAN_FIVE_SEATS: '5+ sièges',
 
   LOCATION_TERM: 'Lieu / terme',
+
+  RATING: 'Classement',
+  RATING_1: '1/5 et plus',
+  RATING_2: '2/5 et plus',
+  RATING_3: '3/5 et plus',
+  RATING_4: '4/5 et plus',
 }

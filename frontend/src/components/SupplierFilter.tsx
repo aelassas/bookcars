@@ -15,7 +15,7 @@ interface SupplierFilterProps {
 }
 
 const SupplierFilter = ({
-  suppliers: supliesFromProps,
+  suppliers: __suppliers,
   collapse,
   className,
   onChange
@@ -26,9 +26,9 @@ const SupplierFilter = ({
   const refs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    setSuppliers(supliesFromProps)
+    setSuppliers(__suppliers)
     // setCheckedSuppliers(bookcarsHelper.flattenSuppliers(supliesFromProps))
-  }, [supliesFromProps])
+  }, [__suppliers])
 
   // useEffect(() => {
   //   if (suppliers.length > 0) {
@@ -62,7 +62,7 @@ const SupplierFilter = ({
 
     if (onChange) {
       if (checkedSuppliers.length === 0) {
-        onChange(bookcarsHelper.clone(bookcarsHelper.flattenSuppliers(supliesFromProps)))
+        onChange(bookcarsHelper.clone(bookcarsHelper.flattenSuppliers(__suppliers)))
       } else {
         onChange(bookcarsHelper.clone(checkedSuppliers))
       }

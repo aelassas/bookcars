@@ -1,57 +1,34 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import * as helper from '../common/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
-import * as SupplierService from '../services/SupplierService'
 import Link from './Link'
 import Switch from './Switch'
 import Accordion from './Accordion'
 
 interface SupplierFilterProps {
+  suppliers: bookcarsTypes.User[]
   visible?: boolean
   style?: object
-  onLoad?: (checkedSuppliers: string[]) => void
   onChange?: (checkedSuppliers: string[]) => void
 }
 
 const SupplierFilter = ({
+  suppliers: __suppliers,
   visible,
   style,
-  onLoad,
   onChange
 }: SupplierFilterProps) => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
   const [allChecked, setAllChecked] = useState(false)
 
-  const init = async () => {
-    try {
-      const allSuppliers = await SupplierService.getAllSuppliers()
-      if (allSuppliers) {
-        const _suppliers = allSuppliers.map((supplier: bookcarsTypes.User) => ({
-          ...supplier,
-          checked: false,
-        }))
-        setSuppliers(_suppliers)
-
-        if (onLoad) {
-          onLoad(bookcarsHelper.flattenSuppliers(_suppliers))
-        }
-      } else {
-        helper.error()
-      }
-    } catch (err) {
-      helper.error(err)
-    }
-  }
-
   useEffect(() => {
-    init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    setSuppliers(__suppliers.map((supplier) => ({ ...supplier, checked: false })))
+  }, [__suppliers])
 
   return (
     visible && (suppliers.length > 1 && suppliers.length < 17) && (
@@ -89,12 +66,15 @@ const SupplierFilter = ({
                       }
                     }}
                   >
-                    <Image
-                      style={styles.image}
-                      source={{
-                        uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
-                      }}
-                    />
+                    <View style={styles.item}>
+                      <Image
+                        style={styles.image}
+                        source={{
+                          uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
+                        }}
+                      />
+                      <Text style={styles.text}>{`(${supplier.carCount})`}</Text>
+                    </View>
                   </Switch>
                 </View>
               )
@@ -154,11 +134,20 @@ const styles = StyleSheet.create({
     width: '50%',
     marginBottom: 7,
   },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 3,
+  },
   image: {
     width: env.SUPPLIER_IMAGE_WIDTH,
     height: env.SUPPLIER_IMAGE_HEIGHT,
-    flex: 1,
     resizeMode: 'contain',
+    marginRight: 5,
+  },
+  text: {
+    fontSize: 12,
+    color: '#a3a3a3',
   },
   link: {
     marginTop: 10,

@@ -16,6 +16,7 @@ interface CarListProps {
   from?: Date
   to?: Date
   suppliers?: string[]
+  rating?: number
   ranges?: bookcarsTypes.CarRange[]
   multimedia?: bookcarsTypes.CarMultimedia[]
   seats?: number,
@@ -40,6 +41,7 @@ const CarList = ({
   from,
   to,
   suppliers,
+  rating,
   ranges,
   multimedia,
   seats,
@@ -83,6 +85,7 @@ const CarList = ({
   const fetchData = async (
     _page: number,
     _suppliers?: string[],
+    _rating?: number,
     _ranges?: bookcarsTypes.CarRange[],
     _multimedia?: bookcarsTypes.CarMultimedia[],
     _seats?: number,
@@ -101,6 +104,7 @@ const CarList = ({
 
         const payload: bookcarsTypes.GetCarsPayload = {
           suppliers: _suppliers,
+          rating: _rating,
           ranges: _ranges,
           multimedia: _multimedia,
           seats: _seats,
@@ -140,8 +144,8 @@ const CarList = ({
 
   useEffect(() => {
     if (suppliers) {
-      if (suppliers.length > 0 && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
-        fetchData(page, suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit)
+      if (suppliers.length > 0 && rating && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
+        fetchData(page, suppliers, rating, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -150,13 +154,13 @@ const CarList = ({
         }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
+  }, [page, suppliers, rating, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
 
   useEffect(() => {
-    if (suppliers && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
+    if (suppliers && rating && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
       setPage(1)
     }
-  }, [suppliers, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
+  }, [suppliers, rating, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit])
 
   useEffect(() => {
     if (cars) {
