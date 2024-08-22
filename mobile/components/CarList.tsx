@@ -127,7 +127,7 @@ const CarList = ({
         const _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
         setRows(_rows)
-        setFetch(_data.resultData.length > 0)
+        setFetch(_data.resultData.length === env.CARS_PAGE_SIZE)
         if (onLoad) {
           onLoad({ rows: _data.resultData, rowCount: totalRecords })
         }
