@@ -154,7 +154,7 @@ describe('PUT /api/update-car', () => {
       type: bookcarsTypes.CarType.Gasoline,
       gearbox: bookcarsTypes.GearboxType.Manual,
       aircon: false,
-      seats: 4,
+      seats: 6,
       doors: 5,
       fuelPolicy: bookcarsTypes.FuelPolicy.LikeForLike,
       mileage: 30000,
@@ -184,7 +184,7 @@ describe('PUT /api/update-car', () => {
     expect(car.type).toBe(bookcarsTypes.CarType.Gasoline)
     expect(car.gearbox).toBe(bookcarsTypes.GearboxType.Manual)
     expect(car.aircon).toBe(false)
-    expect(car.seats).toBe(4)
+    expect(car.seats).toBe(6)
     expect(car.doors).toBe(5)
     expect(car.fuelPolicy).toBe(bookcarsTypes.FuelPolicy.LikeForLike)
     expect(car.mileage).toBe(30000)
@@ -386,6 +386,23 @@ describe('POST /api/cars/:page/:size', () => {
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       availability: [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable],
       deposit: -1,
+      ranges: [
+        bookcarsTypes.CarRange.Mini,
+        bookcarsTypes.CarRange.Midi,
+        bookcarsTypes.CarRange.Maxi,
+        bookcarsTypes.CarRange.Scooter,
+      ],
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+      rating: 4,
+      seats: 6,
+      carSpecs: {
+        aircon: false,
+        moreThanFiveSeats: true,
+        moreThanFourDoors: true,
+      },
+      fuelPolicy: [bookcarsTypes.FuelPolicy.LikeForLike],
     }
 
     let res = await request(app)
@@ -394,6 +411,15 @@ describe('POST /api/cars/:page/:size', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    payload.seats = 5
+    res = await request(app)
+      .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBe(0)
+    payload.seats = 6
 
     payload.carType = undefined
     payload.gearbox = undefined
@@ -503,17 +529,40 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       suppliers: [SUPPLIER2_ID],
       pickupLocation: LOCATION2_ID,
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
-      carSpecs: {},
-      fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForLike],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       deposit: -1,
+      ranges: [
+        bookcarsTypes.CarRange.Mini,
+        bookcarsTypes.CarRange.Midi,
+        bookcarsTypes.CarRange.Maxi,
+        bookcarsTypes.CarRange.Scooter,
+      ],
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+      rating: 4,
+      seats: 6,
+      carSpecs: {
+        aircon: false,
+        moreThanFiveSeats: true,
+        moreThanFourDoors: true,
+      },
+      fuelPolicy: [bookcarsTypes.FuelPolicy.LikeForLike],
     }
     let res = await request(app)
       .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    payload.seats = 5
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBe(0)
+    payload.seats = 6
 
     payload.mileage = undefined
     res = await request(app)
