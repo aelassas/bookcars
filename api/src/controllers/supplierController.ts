@@ -304,8 +304,8 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     }
 
     if (carSpecs) {
-      if (typeof carSpecs.aircon !== 'undefined') {
-        $match.$and!.push({ aircon: carSpecs.aircon })
+      if (carSpecs.aircon) {
+        $match.$and!.push({ aircon: true })
       }
       if (carSpecs.moreThanFourDoors) {
         $match.$and!.push({ doors: { $gt: 4 } })
@@ -425,8 +425,8 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     }
 
     if (carSpecs) {
-      if (typeof carSpecs.aircon !== 'undefined') {
-        $match.$and!.push({ aircon: carSpecs.aircon })
+      if (carSpecs.aircon) {
+        $match.$and!.push({ aircon: true })
       }
       if (carSpecs.moreThanFourDoors) {
         $match.$and!.push({ doors: { $gt: 4 } })
