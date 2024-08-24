@@ -33,7 +33,7 @@ interface TextInputProps {
 }
 
 const TextInputComponent = (
-props: TextInputProps,
+  props: TextInputProps,
   ref: React.ForwardedRef<ReactTextInput>
 ) => {
   const [value, setValue] = useState('')
@@ -56,7 +56,7 @@ props: TextInputProps,
       maxWidth: 480,
     },
     label: {
-      backgroundColor: props.backgroundColor ?? '#f5f5f5',
+      backgroundColor: props.backgroundColor ?? '#F5F5F5',
       color: 'rgba(0, 0, 0, 0.6)',
       fontSize: 12,
       fontWeight: '400',

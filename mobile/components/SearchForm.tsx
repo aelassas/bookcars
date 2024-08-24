@@ -235,6 +235,7 @@ const SearchForm = (
           blur={blur}
           text={pickupLocationText}
           backgroundColor={backgroundColor}
+          placeholderTextColor="#a3a3a3"
           size={size || undefined}
         />
 
@@ -344,6 +345,7 @@ const SearchForm = (
             close={closeDropOffLocation}
             blur={blur}
             backgroundColor={backgroundColor}
+            placeholderTextColor="#a3a3a3"
             size={size || undefined}
           />
         )}

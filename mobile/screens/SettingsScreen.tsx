@@ -63,7 +63,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setUser(_user)
       if (_user.avatar) {
-        setAvatar(bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
+        setAvatar(_user.avatar.startsWith('https://') ? _user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
       } else {
         setAvatar(null)
       }
@@ -235,7 +235,10 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
       {visible && language && (
         <>
-          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+          <ScrollView
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+          >
             <View style={styles.contentContainer}>
               <View style={styles.avatar}>
                 {

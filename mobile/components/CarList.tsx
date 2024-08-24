@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { CommonActions } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
@@ -144,7 +145,7 @@ const CarList = ({
 
   useEffect(() => {
     if (suppliers) {
-      if (suppliers.length > 0 && rating && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
+      if (suppliers && rating && ranges && multimedia && seats && carSpecs && pickupLocation && _carType && gearbox && mileage && fuelPolicy && deposit) {
         fetchData(page, suppliers, rating, ranges, multimedia, seats, carSpecs, pickupLocation, _carType, gearbox, mileage, fuelPolicy, deposit)
       } else {
         setRows([])
@@ -178,12 +179,17 @@ const CarList = ({
   return (
     <View style={styles.container}>
       {((from && to && pickupLocation && dropOffLocation) || hidePrice) && (
-        <FlatList
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAwareFlatList
+
+          automaticallyAdjustKeyboardInsets
+          keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+          extraHeight={60}
+          extraScrollHeight={60}
+          enableOnAndroid
+
           initialNumToRender={numToRender}
           maxToRenderPerBatch={numToRender}
           removeClippedSubviews
-          nestedScrollEnabled
           contentContainerStyle={styles.contentContainer}
           style={styles.flatList}
           data={rows}

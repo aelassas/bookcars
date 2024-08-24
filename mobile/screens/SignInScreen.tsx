@@ -193,7 +193,10 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     <View style={styles.master}>
       <Header title={i18n.t('SIGN_IN_TITLE')} hideTitle={false} loggedIn={false} />
 
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+      >
         <View style={styles.contentContainer}>
           <TextInput
             ref={emailRef}
