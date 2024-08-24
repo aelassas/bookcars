@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import Layout from '../components/Layout'
+import * as helper from '../common/helper'
 
 const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ToS'>) => {
   const isFocused = useIsFocused()
@@ -36,7 +37,10 @@ const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'T
   return (
     <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
       {visible && (
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+        >
           <Text style={{ fontSize: 16 }}>ToS!</Text>
         </ScrollView>
       )}

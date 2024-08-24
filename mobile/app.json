@@ -23,6 +23,7 @@
         "image": "./assets/splash.png"
       },
       "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.bookcars"
     },
     "ios": {

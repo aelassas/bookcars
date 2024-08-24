@@ -23,6 +23,7 @@ import FuelPolicyFilter from '../components/FuelPolicyFilter'
 import CarSpecsFilter from '../components/CarSpecsFilter'
 import SearchFormFilter from '../components/SearchFormFilter'
 import CarRatingFilter from '../components/CarRatingFilter'
+import Indicator from '../components/Indicator'
 
 const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
   const isFocused = useIsFocused()
@@ -164,6 +165,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
 
   return (
     <Layout style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
+      {!visible && <Indicator style={{ marginVertical: 10 }} />}
       {visible && pickupLocation && dropoffLocation && (
         <CarList
           navigation={navigation}

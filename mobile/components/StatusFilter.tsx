@@ -17,6 +17,8 @@ interface StatusFilterProps {
   onChange?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
 }
 
+const allStatuses = helper.getBookingStatuses().map((status) => status.value)
+
 const StatusFilter = ({
   visible,
   style,
@@ -24,18 +26,23 @@ const StatusFilter = ({
   onChange
 }: StatusFilterProps) => {
   const [statuses, setStatuses] = useState<bookcarsTypes.StatusFilterItem[]>(
-    helper.getBookingStatuses().map((status) => ({ ...status, checked: true }))
+    helper.getBookingStatuses().map((status) => ({ ...status, checked: false }))
   )
-  const [checkedStatuses, setCheckedStatuses] = useState(
-    helper.getBookingStatuses().map((status) => status.value)
-  )
-  const [allChecked, setAllChecked] = useState(true)
+  const [checkedStatuses, setCheckedStatuses] = useState<bookcarsTypes.BookingStatus[]>([])
+  const [allChecked, setAllChecked] = useState(false)
 
   useEffect(() => {
     if (onLoad) {
-      onLoad(checkedStatuses)
+      onLoad(allStatuses)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleChange = (_checkedStatuses: bookcarsTypes.BookingStatus[]) => {
+    if (onChange) {
+      onChange(_checkedStatuses.length === 0 ? allStatuses : bookcarsHelper.clone(_checkedStatuses))
+    }
+  }
 
   return (
     visible && (
@@ -68,9 +75,7 @@ const StatusFilter = ({
                         }
                       }
 
-                      if (onChange) {
-                        onChange(bookcarsHelper.clone(checkedStatuses))
-                      }
+                      handleChange(checkedStatuses)
                     }}
                   >
                     <BookingStatus style={styles.bookingStatus} status={status.value} />

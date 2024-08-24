@@ -12,6 +12,7 @@ interface LocationSelectListProps {
   size?: 'small'
   style?: object
   backgroundColor?: string
+  placeholderTextColor?: string
   label: string
   blur?: boolean
   close?: boolean
@@ -27,6 +28,7 @@ const LocationSelectList = ({
   size,
   style,
   backgroundColor,
+  placeholderTextColor = 'rgba(0, 0, 0, 0.6)',
   label,
   blur,
   close,
@@ -140,12 +142,12 @@ const LocationSelectList = ({
         }}
         textInputProps={{
           placeholder: label || '',
-          placeholderTextColor: 'rgba(0, 0, 0, 0.6)',
+          placeholderTextColor,
           autoCorrect: false,
           autoCapitalize: 'none',
           style: {
             borderRadius: 10,
-            paddingLeft: 15,
+            // paddingLeft: 15,
             fontSize: small ? 14 : 16,
           },
         }}

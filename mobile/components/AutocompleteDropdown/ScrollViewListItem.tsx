@@ -2,37 +2,37 @@ import React, { memo } from 'react'
 import { StyleSheet, Text, Pressable, View } from 'react-native'
 
 const ScrollViewListItemComponent = ({
-    titleHighlighted,
-    titleStart,
-    titleEnd,
-    style,
-    numberOfLines = 2,
-    onPress
-  }:
-    {
-      titleHighlighted?: string
-      titleStart?: string
-      titleEnd?: string
-      style?: object
-      numberOfLines?: number
-      onPress: () => void
-    }) => (
-    <Pressable onPress={onPress}>
-      <View style={styles.container}>
-        <Text numberOfLines={numberOfLines}>
-          <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
-            {titleStart}
-          </Text>
-          <Text numberOfLines={1} style={{ ...styles.text, ...style, fontWeight: 'bold' }}>
-            {titleHighlighted}
-          </Text>
-          <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
-            {titleEnd}
-          </Text>
+  titleHighlighted,
+  titleStart,
+  titleEnd,
+  style,
+  numberOfLines = 2,
+  onPress
+}:
+  {
+    titleHighlighted?: string
+    titleStart?: string
+    titleEnd?: string
+    style?: object
+    numberOfLines?: number
+    onPress: () => void
+  }) => (
+  <Pressable onPress={onPress}>
+    <View style={styles.container}>
+      <Text numberOfLines={numberOfLines}>
+        <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
+          {titleStart}
         </Text>
-      </View>
-    </Pressable>
-  )
+        <Text numberOfLines={1} style={{ ...styles.text, ...style, fontWeight: 'bold' }}>
+          {titleHighlighted}
+        </Text>
+        <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
+          {titleEnd}
+        </Text>
+      </Text>
+    </View>
+  </Pressable>
+)
 
 export const ScrollViewListItem = memo(ScrollViewListItemComponent)
 

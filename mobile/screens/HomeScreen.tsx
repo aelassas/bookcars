@@ -7,6 +7,7 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import Layout from '../components/Layout'
 import SearchForm from '../components/SearchForm'
+import * as helper from '../common/helper'
 
 const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
   const isFocused = useIsFocused()
@@ -39,7 +40,10 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   return (
     <Layout style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       {init && visible && (
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+        >
 
           <View style={styles.contentContainer}>
             <View style={styles.logo}>
