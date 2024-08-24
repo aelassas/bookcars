@@ -12,42 +12,57 @@ interface BookingStatusProps {
 const BookingStatus = ({
   style,
   status
-}: BookingStatusProps) => (
+}: BookingStatusProps) => {
+  const styles = StyleSheet.create({
+    container: {
+      height: 28,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 18,
+    },
+    text: {
+      color: status === bookcarsTypes.BookingStatus.Void
+        ? '#6E7C86'
+        : status === bookcarsTypes.BookingStatus.Pending
+          ? '#EF6C00'
+          : status === bookcarsTypes.BookingStatus.Deposit
+            ? '#3CB371'
+            : status === bookcarsTypes.BookingStatus.Paid
+              ? '#77BC23'
+              : status === bookcarsTypes.BookingStatus.Reserved
+                ? '#1E88E5'
+                : status === bookcarsTypes.BookingStatus.Cancelled
+                  ? '#E53935'
+                  : 'transparent',
+      fontSize: 13,
+      fontWeight: '400',
+    },
+  })
+
+  return (
     <View
       style={{
         ...styles.container,
         ...style,
         backgroundColor:
           status === bookcarsTypes.BookingStatus.Void
-            ? '#999'
+            ? '#D9D9D9'
             : status === bookcarsTypes.BookingStatus.Pending
-              ? '#e98003'
+              ? '#FBDCC2'
               : status === bookcarsTypes.BookingStatus.Deposit
-                ? '#22bba7'
+                ? '#CDECDA'
                 : status === bookcarsTypes.BookingStatus.Paid
-                  ? '#77bc23'
+                  ? '#D1F9D1'
                   : status === bookcarsTypes.BookingStatus.Reserved
-                    ? '#188ace'
+                    ? '#D9E7F4'
                     : status === bookcarsTypes.BookingStatus.Cancelled
-                      ? '#bc2143'
+                      ? '#FBDFDE'
                       : 'transparent',
       }}
     >
       <Text style={styles.text}>{helper.getBookingStatus(status)}</Text>
     </View>
   )
-
-const styles = StyleSheet.create({
-  container: {
-    height: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '400',
-  },
-})
+}
 
 export default BookingStatus
