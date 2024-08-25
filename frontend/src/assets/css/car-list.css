@@ -10,17 +10,24 @@ section.car-list .empty-list {
   width: 250px;
 }
 
-section.car-list article .btn-book {
-  border: 0;
-  border-radius: 5px;
-  color: #fff;
-  height: 42px;
-  margin: 0;
-  white-space: nowrap;
-  background: #232323;
-  font-size: 1.5em;
-  font-weight: 700;
-  padding: 0 2em;
+section.car-list div.title {
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+section.car-list div.title div.bookcars {
+  font-size: 22px;
+}
+
+section.car-list div.title div.bookcars span.title-bookcars {
+  color: #212121;
+  font-weight: 500;
+}
+
+section.car-list div.title div.car-count {
+  color: #717171;
+  font-size: 14px;
 }
 
 div.car-list-container {
@@ -63,11 +70,28 @@ section.car-list div.car-header div.distance img {
   margin-right: 5px;
 }
 
+section.car-list article .btn-book {
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  height: 42px;
+  margin: 0;
+  white-space: nowrap;
+  background: #232323;
+  font-size: 1.5em;
+  font-weight: 700;
+  padding: 0 2em;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
   div.car-list-container {
     width: 100%;
+    max-width: 600px;
+  }
+
+  section.car-list div.title {
     max-width: 600px;
   }
 
