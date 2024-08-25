@@ -196,7 +196,7 @@ const BookingList = ({
 
             navigation.dispatch((state) => {
               const { routes } = state
-              const index = routes.findIndex((r) => r.name === 'Cars')
+              const index = routes.findIndex((r) => r.name === 'Bookings')
               routes.splice(index, 1)
               const now = Date.now()
               routes.push({
