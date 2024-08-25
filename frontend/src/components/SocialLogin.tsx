@@ -40,7 +40,14 @@ const SocialLogin = ({
   const navigate = useNavigate()
 
   const loginSuccess = async (socialSignInType: bookcarsTypes.SocialSignInType, accessToken: string, email: string, fullName: string, avatar?: string) => {
-    const data = { socialSignInType, accessToken, email, fullName, avatar }
+    const data: bookcarsTypes.SignInPayload = {
+      socialSignInType,
+      accessToken,
+      email,
+      fullName,
+      avatar,
+      stayConnected: UserService.getStayConnected()
+    }
 
     const res = await UserService.socialSignin(data)
     if (res.status === 200) {
