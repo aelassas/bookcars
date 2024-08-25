@@ -112,6 +112,7 @@ const Checkout = () => {
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [bookingId, setBookingId] = useState<string>()
   const [sessionId, setSessionId] = useState<string>()
+  const [distance, setDistance] = useState('')
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -574,6 +575,14 @@ const Checkout = () => {
         return
       }
 
+      if (_pickupLocation.latitude && _pickupLocation.longitude) {
+        const l = await helper.getLocation()
+        if (l) {
+          const d = bookcarsHelper.distance(_pickupLocation.latitude, _pickupLocation.longitude, l[0], l[1], 'K')
+          setDistance(bookcarsHelper.formatDistance(d, UserService.getLanguage()))
+        }
+      }
+
       if (dropOffLocationId !== pickupLocationId) {
         _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
       } else {
@@ -622,6 +631,8 @@ const Checkout = () => {
 
                   <CarList
                     cars={[car]}
+                    pickupLocationName={pickupLocation.name}
+                    distance={distance}
                     hidePrice
                     sizeAuto
                   />

@@ -1,10 +1,10 @@
 .title {
   text-align: center;
-  font-weight: 500;
 }
 
 .map {
-  height: 540px;
+  min-height: 540px;
+  height: 100%;
   width: 100%;
 }
 

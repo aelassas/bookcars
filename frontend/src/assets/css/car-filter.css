@@ -12,7 +12,7 @@ div.car-filter .pickup-location,
 div.car-filter .drop-off-location,
 div.car-filter .from,
 div.car-filter .to,
-div.car-filter .search,
+div.car-filter .fc-search,
 div.car-filter .chk-same-location {
   padding: 5px;
 }
@@ -20,6 +20,7 @@ div.car-filter .chk-same-location {
 div.car-filter .btn-search {
   min-height: 32px;
   margin: 5px 0;
+  width: 100%;
 }
 
 div.car-filter .chk-same-location {

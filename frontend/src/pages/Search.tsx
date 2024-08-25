@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Close as CloseIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
+import env from '../config/env.config'
+import { strings } from '../lang/search'
 import * as helper from '../common/helper'
 import * as LocationService from '../services/LocationService'
 import * as SupplierService from '../services/SupplierService'
+import * as UserService from '../services/UserService'
 import Layout from '../components/Layout'
 import NoMatch from './NoMatch'
 import CarFilter from '../components/CarFilter'
@@ -20,8 +25,11 @@ import CarRatingFilter from '../components/CarRatingFilter'
 import CarRangeFilter from '../components/CarRangeFilter'
 import CarMultimediaFilter from '../components/CarMultimediaFilter'
 import CarSeatsFilter from '../components/CarSeatsFilter'
+import Map from '../components/Map'
 
-import '../assets/css/cars.css'
+import ViewOnMap from '../assets/img/view-on-map.png'
+
+import '../assets/css/search.css'
 
 const allSuppliers = await SupplierService.getAllSuppliers()
 const allSuppliersIds = bookcarsHelper.flattenSuppliers(allSuppliers)
@@ -48,6 +56,8 @@ const Search = () => {
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
   const [rating, setRating] = useState(-1)
   const [seats, setSeats] = useState(-1)
+  const [openMapDialog, setOpenMapDialog] = useState(false)
+  const [distance, setDistance] = useState('')
 
   useEffect(() => {
     const updateSuppliers = async () => {
@@ -186,17 +196,26 @@ const Search = () => {
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
 
-      const { ranges: _ranges } = state
-      if (_ranges) {
-        setRanges(_ranges)
-      }
-
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
       setSuppliers(_suppliers)
       setSupplierIds(_supplierIds)
+
+      const { ranges: _ranges } = state
+      if (_ranges) {
+        setRanges(_ranges)
+      }
+
+      if (_pickupLocation.latitude && _pickupLocation.longitude) {
+        const l = await helper.getLocation()
+        if (l) {
+          const d = bookcarsHelper.distance(_pickupLocation.latitude, _pickupLocation.longitude, l[0], l[1], 'K')
+          setDistance(bookcarsHelper.formatDistance(d, UserService.getLanguage()))
+        }
+      }
+
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)
@@ -209,10 +228,27 @@ const Search = () => {
   return (
     <Layout onLoad={onLoad} strict={false}>
       {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
-        <div className="cars">
+        <div className="search">
           <div className="col-1">
             {!loading && (
               <>
+                <Map
+                  position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
+                  initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                  parkingSpots={pickupLocation.parkingSpots}
+                  className="map"
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenMapDialog(true)
+                    }}
+                    className="view-on-map"
+                  >
+                    <img alt="View On Map" src={ViewOnMap} />
+                    <span>{strings.VIEW_ON_MAP}</span>
+                  </button>
+                </Map>
                 <CarFilter
                   className="filter"
                   pickupLocation={pickupLocation}
@@ -248,6 +284,7 @@ const Search = () => {
               deposit={deposit}
               pickupLocation={pickupLocation._id}
               dropOffLocation={dropOffLocation._id}
+              pickupLocationName={pickupLocation.name}
               loading={loading}
               from={from}
               to={to}
@@ -255,10 +292,62 @@ const Search = () => {
               multimedia={multimedia}
               rating={rating}
               seats={seats}
+              distance={distance}
             />
           </div>
         </div>
       )}
+
+      <Dialog
+        fullWidth={env.isMobile()}
+        maxWidth={false}
+        open={openMapDialog}
+        onClose={() => {
+          setOpenMapDialog(false)
+        }}
+        sx={{
+          '& .MuiDialog-container': {
+            '& .MuiPaper-root': {
+              width: '80%',
+              height: '800px',
+            },
+          },
+        }}
+      >
+        <DialogTitle>
+          <Box display="flex" justifyContent="flex-end">
+            <Box>
+              <IconButton
+                onClick={() => {
+                  setOpenMapDialog(false)
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </DialogTitle>
+        <DialogContent className="map-dialog-content">
+          {pickupLocation && (
+            <Map
+              position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
+              initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+              parkingSpots={pickupLocation.parkingSpots}
+              className="map"
+            >
+              <button
+                type="button"
+                onClick={() => { }}
+                className="view-on-map"
+              >
+                <img alt="View On Map" src={ViewOnMap} />
+                <span>{strings.VIEW_ON_MAP}</span>
+              </button>
+            </Map>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {noMatch && <NoMatch hideHeader />}
     </Layout>
   )

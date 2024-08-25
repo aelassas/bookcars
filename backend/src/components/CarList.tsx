@@ -36,6 +36,10 @@ import Pager from './Pager'
 import SimpleBackdrop from './SimpleBackdrop'
 
 import DoorsIcon from '../assets/img/car-door.png'
+import RatingIcon from '../assets/img/rating-icon.png'
+import CO2MinIcon from '../assets/img/co2-min-icon.png'
+import CO2MiddleIcon from '../assets/img/co2-middle-icon.png'
+import CO2MaxIcon from '../assets/img/co2-max-icon.png'
 
 import '../assets/css/car-list.css'
 
@@ -432,16 +436,44 @@ const CarList = ({
                   </div>
                   <div className="car">
                     <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-                    {!hideSupplier && (
-                      <div className="car-supplier" title={car.supplier.fullName}>
-                        <span className="car-supplier-logo">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
-                        </span>
-                        <a href={`/supplier?c=${car.supplier._id}`} className="car-supplier-info">
-                          {car.supplier.fullName}
-                        </a>
+                    <div className="car-footer">
+                      <div className="car-footer-row1">
+                        <div className="rating">
+                          {car.rating && car.rating >= 1 && (
+                            <>
+                              <span className="value">{car.rating.toFixed(2)}</span>
+                              <img alt="Rating" src={RatingIcon} />
+                            </>
+                          )}
+                          {car.trips >= 10 && <span className="trips">{`(${car.trips} ${strings.TRIPS})`}</span>}
+                        </div>
+                        {car.co2 && (
+                          <div className="co2">
+                            <img
+                              alt="CO2 Effect"
+                              src={
+                                car.co2 <= 90
+                                  ? CO2MinIcon
+                                  : car.co2 <= 110
+                                    ? CO2MiddleIcon
+                                    : CO2MaxIcon
+                              }
+                            />
+                            <span>{strings.CO2}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
+                      {!hideSupplier && (
+                        <div className="car-supplier" title={car.supplier.fullName}>
+                          <span className="car-supplier-logo">
+                            <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
+                          </span>
+                          <a href={`/supplier?c=${car.supplier._id}`} className="car-supplier-info">
+                            {car.supplier.fullName}
+                          </a>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="car-info">
                     <ul className="car-info-list">
