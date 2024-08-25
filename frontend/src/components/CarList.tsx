@@ -297,12 +297,11 @@ const CarList = ({
                   <span className="title-bookcars">{commonStrings.BOOKCARS}</span>
                   <span>{strings.TITLE_2}</span>
                 </div>
-                {totalRecords > 0 && (
-                  <div className="car-count">
-                    {`(${totalRecords} ${totalRecords === 1 ? strings.TITLE_CAR_AVAILABLE : strings.TITLE_CARS_AVAILABLE})`}
-                  </div>
-                )}
+                <div className="car-count">
+                  {`(${totalRecords} ${totalRecords === 1 ? strings.TITLE_CAR_AVAILABLE : strings.TITLE_CARS_AVAILABLE})`}
+                </div>
               </div>
+
               {rows.map((car) => (
                 <div key={car._id} className="car-list-container">
                   <div className="car-header">
