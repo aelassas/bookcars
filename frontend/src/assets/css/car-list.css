@@ -93,6 +93,7 @@ section.car-list article .btn-book {
 
   section.car-list div.title {
     max-width: 600px;
+    padding-left: 10px;
   }
 
   section.car-list div.car-header {
