@@ -291,16 +291,18 @@ const CarList = ({
           : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
           && (
             <>
-              <div className="title">
-                <div className="bookcars">
-                  <span>{strings.TITLE_1}</span>
-                  <span className="title-bookcars">{commonStrings.BOOKCARS}</span>
-                  <span>{strings.TITLE_2}</span>
+              {totalRecords > 0 && (
+                <div className="title">
+                  <div className="bookcars">
+                    <span>{strings.TITLE_1}</span>
+                    <span className="title-bookcars">{commonStrings.BOOKCARS}</span>
+                    <span>{strings.TITLE_2}</span>
+                  </div>
+                  <div className="car-count">
+                    {`(${totalRecords} ${totalRecords === 1 ? strings.TITLE_CAR_AVAILABLE : strings.TITLE_CARS_AVAILABLE})`}
+                  </div>
                 </div>
-                <div className="car-count">
-                  {`(${totalRecords} ${totalRecords === 1 ? strings.TITLE_CAR_AVAILABLE : strings.TITLE_CARS_AVAILABLE})`}
-                </div>
-              </div>
+              )}
 
               {rows.map((car) => (
                 <div key={car._id} className="car-list-container">
