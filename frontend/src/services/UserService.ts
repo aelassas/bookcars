@@ -3342,3 +3342,24 @@ export const hasPassword = (id: string): Promise<number> => axiosInstance
     { withCredentials: true }
   )
   .then((res) => res.status)
+
+/**
+* Persist stayConnected.
+*
+* @param {string} id
+* @returns {void}
+*/
+export const setStayConnected = (value: boolean) => {
+  localStorage.setItem('oj-stay-connected', JSON.stringify(value))
+}
+
+/**
+ * Get stayConnected.
+ *
+ * @param {string} id
+ * @returns {boolean}
+ */
+export const getStayConnected = () => {
+  const value = JSON.parse(localStorage.getItem('oj-stay-connected') ?? 'false')
+  return value as boolean
+}
