@@ -219,6 +219,60 @@ describe('GET /api/check-country/:id', () => {
   })
 })
 
+describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocations', () => {
+  it('should get a countries with location', async () => {
+    const language = 'en'
+
+    const locationValueEn = new LocationValue({ language, value: 'Location 1 en' })
+    await locationValueEn.save()
+    const locationValueFr = new LocationValue({ language: 'fr', value: 'Location 1 fr' })
+    await locationValueFr.save()
+
+    const location = new Location({ country: COUNTRY_ID, values: [locationValueEn.id, locationValueFr.id] })
+    await location.save()
+
+    let res = await request(app)
+      .get(`/api/countries-with-locations/${language}/false/1`)
+    expect(res.statusCode).toBe(200)
+    console.log(res.body)
+    expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeDefined()
+
+    res = await request(app)
+      .get(`/api/countries-with-locations/${language}/true/1`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeUndefined()
+
+    await locationValueEn.deleteOne()
+    await locationValueFr.deleteOne()
+    await location.deleteOne()
+
+    res = await request(app)
+      .get(`/api/countries-with-locations/${language}/false/1`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeUndefined()
+  })
+})
+
+describe('GET /api/country-id/:name/:language', () => {
+  it('should get a country id', async () => {
+    const token = await testHelper.signinAsAdmin()
+    const language = 'en'
+
+    let res = await request(app)
+      .get(`/api/country-id/${COUNTRY_NAMES.find((n) => n.language === language)?.name}/${language}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toBe(COUNTRY_ID)
+
+    res = await request(app)
+      .get(`/api/country-id/unknown/${language}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+
+    await testHelper.signout(token)
+  })
+})
+
 describe('DELETE /api/delete-country/:id', () => {
   it('should delete a country', async () => {
     const token = await testHelper.signinAsAdmin()
