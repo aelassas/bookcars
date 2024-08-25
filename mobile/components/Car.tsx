@@ -115,11 +115,14 @@ const Car = ({
       alignItems: 'flex-end',
       marginBottom: 10,
     },
+    detailsContainer: {
+      flexDirection: 'column',
+      flex: hidePrice ? 1 : 0.5,
+    },
     supplier: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      flex: hidePrice ? 1 : 0.5,
     },
     supplierImg: {
       width: env.SUPPLIER_IMAGE_WIDTH,
@@ -131,6 +134,49 @@ const Car = ({
       fontSize: 12,
       marginLeft: 5,
       width: hidePrice ? 200 : 120,
+    },
+    details: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      marginTop: 5,
+      paddingLeft: 2,
+    },
+    rating: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
+    ratingText: {
+      fontWeight: '600',
+    },
+    ratingImage: {
+      width: 16,
+      resizeMode: 'contain',
+      marginRight: 5,
+      marginLeft: 5,
+    },
+    tripsText: {
+      fontSize: 11,
+      color: '#A2A2A2',
+    },
+    co2: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
+    co2Text: {
+      fontSize: 11,
+      fontWeight: '600',
+    },
+    co2Image: {
+      width: 17,
+      resizeMode: 'contain',
+      marginRight: 5,
+      marginLeft: 5,
     },
     price: {
       flex: 0.5,
@@ -249,14 +295,42 @@ const Car = ({
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.supplier}>
-            <Image
-              style={styles.supplierImg}
-              source={{
-                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
-              }}
-            />
-            <Text style={styles.supplierText} numberOfLines={2} ellipsizeMode="tail">{car.supplier.fullName}</Text>
+          <View style={styles.detailsContainer}>
+            <View style={styles.supplier}>
+              <Image
+                style={styles.supplierImg}
+                source={{
+                  uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
+                }}
+              />
+              <Text style={styles.supplierText} numberOfLines={2} ellipsizeMode="tail">{car.supplier.fullName}</Text>
+            </View>
+            <View style={styles.details}>
+              <View style={styles.rating}>
+                {car.rating && car.rating >= 1 && (
+                  <>
+                    <Text style={styles.ratingText}>{car.rating.toFixed(2)}</Text>
+                    <Image source={require('../assets/rating-icon.png')} style={styles.ratingImage} />
+                  </>
+                )}
+                {car.trips >= 10 && <Text style={styles.tripsText}>{`(${car.trips} ${i18n.t('TRIPS')})`}</Text>}
+              </View>
+              {car.co2 && (
+                <View style={styles.co2}>
+                  <Image
+                    source={
+                      car.co2 <= 90
+                        ? require('../assets/co2-min-icon.png')
+                        : car.co2 <= 110
+                          ? require('../assets/co2-middle-icon.png')
+                          : require('../assets/co2-max-icon.png')
+                    }
+                    style={styles.co2Image}
+                  />
+                  <Text style={styles.co2Text}>{i18n.t('CO2')}</Text>
+                </View>
+              )}
+            </View>
           </View>
 
           {!hidePrice && from && to && (

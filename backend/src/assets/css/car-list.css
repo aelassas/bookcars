@@ -34,7 +34,7 @@ section.car-list .empty-list {
     color: #333;
     font-size: 12px;
     margin: 0 1px 10px;
-    min-height: 800px;
+    min-height: 820px;
     padding: 15px;
   }
 
@@ -78,12 +78,60 @@ section.car-list .empty-list {
     max-height: 75%;
   }
 
+section.car-list article div.car div.car-footer {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 70px;
+    left: 7px;
+  }
+
+  section.car-list article div.car div.car-footer .car-footer-row1 {
+    display: flex;
+    flex-direction: row;
+    padding-left: 2px;
+    margin-bottom: 4px;
+  }
+
+  section.car-list article div.car .car-footer div.rating,
+  section.car-list article div.car .car-footer div.co2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  section.car-list article div.car .car-footer div.rating img {
+    max-width: 16px;
+    max-height: 16px;
+    margin: 0 5px;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.value {
+    font-weight: bold;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.trips {
+    color: #A2A2A2;
+    font-size: 11px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 {
+    margin-left: 10px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 span {
+    font-weight: 600;
+  }
+
+  section.car-list article div.car .car-footer div.co2 img {
+    max-width: 19px;
+    max-height: 5px;
+    margin-right: 5px;
+  }
+
   section.car-list article div.car div.car-supplier {
     display: flex;
     align-items: center;
-    position: absolute;
-    bottom: 10px;
-    left: 5px;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo {
@@ -276,9 +324,57 @@ section.car-list .empty-list {
     max-height: 100%;
   }
 
-  section.car-list article div.car div.car-supplier {
+  section.car-list article div.car div.car-footer {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     bottom: 20px;
+  }
+
+  section.car-list article div.car div.car-footer .car-footer-row1 {
+    display: flex;
+    flex-direction: row;
+    padding-left: 2px;
+    margin-bottom: 2px;
+  }
+
+  section.car-list article div.car .car-footer div.rating,
+  section.car-list article div.car .car-footer div.co2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  section.car-list article div.car .car-footer div.rating img {
+    max-width: 16px;
+    max-height: 16px;
+    margin: 0 5px;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.value {
+    font-weight: bold;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.trips {
+    color: #A2A2A2;
+    font-size: 11px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 {
+    margin-left: 10px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 span {
+    font-weight: 600;
+  }
+
+  section.car-list article div.car .car-footer div.co2 img {
+    max-width: 19px;
+    max-height: 5px;
+    margin-right: 5px;
+  }
+
+  section.car-list article div.car div.car-supplier {
     display: flex;
     align-items: center;
     margin-top: 5px;

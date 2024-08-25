@@ -23,9 +23,58 @@ section.car-list article .btn-book {
   padding: 0 2em;
 }
 
+div.car-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+section.car-list div.car-header {
+  padding: 10px 0;
+  border-bottom: #d9d8d9 2px solid;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+section.car-list div.car-header div.location {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #232323;
+  font-size: 18px;
+}
+
+section.car-list div.car-header div.location span.location-name {
+  margin-left: 5px;
+}
+
+section.car-list div.car-header div.distance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+section.car-list div.car-header div.distance img {
+  max-width: 16px;
+  max-height: 16px;
+  margin-right: 5px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
+  div.car-list-container {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  section.car-list div.car-header {
+    width: calc(100% - 20px);
+  }
+
   section.car-list article {
     position: relative;
     background: #fff;
@@ -73,12 +122,60 @@ section.car-list article .btn-book {
     max-height: 75%;
   }
 
-  section.car-list article div.car div.car-supplier {
+  section.car-list article div.car div.car-footer {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     position: absolute;
     bottom: 70px;
     left: 7px;
+  }
+
+  section.car-list article div.car div.car-footer .car-footer-row1 {
+    display: flex;
+    flex-direction: row;
+    padding-left: 2px;
+    margin-bottom: 4px;
+  }
+
+  section.car-list article div.car .car-footer div.rating,
+  section.car-list article div.car .car-footer div.co2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  section.car-list article div.car .car-footer div.rating img {
+    max-width: 16px;
+    max-height: 16px;
+    margin: 0 5px;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.value {
+    font-weight: bold;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.trips {
+    color: #A2A2A2;
+    font-size: 11px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 {
+    margin-left: 10px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 span {
+    font-weight: 600;
+  }
+
+  section.car-list article div.car .car-footer div.co2 img {
+    max-width: 19px;
+    max-height: 5px;
+    margin-right: 5px;
+  }
+
+  section.car-list article div.car div.car-supplier {
+    display: flex;
+    align-items: center;
   }
 
   section.car-list article div.car div.car-supplier span.car-supplier-logo {
@@ -285,9 +382,62 @@ section.car-list article .btn-book {
     max-height: 100%;
   }
 
-  section.car-list article div.car div.car-supplier {
+  section.car-list article div.car div.car-footer {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     bottom: 20px;
+  }
+
+  section.car-list article div.car div.car-footer .car-footer-row1 {
+    display: flex;
+    flex-direction: row;
+    padding-left: 2px;
+    margin-bottom: 2px;
+  }
+
+  section.car-list article div.car .car-footer div.rating,
+  section.car-list article div.car .car-footer div.co2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  section.car-list article div.car .car-footer div.rating img {
+    max-width: 16px;
+    max-height: 16px;
+    margin: 0 5px;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.value {
+    font-weight: bold;
+  }
+
+  section.car-list article div.car .car-footer div.rating span.trips {
+    color: #A2A2A2;
+    font-size: 11px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 {
+    margin-left: 10px;
+  }
+
+  section.car-list article div.car .car-footer div.co2 span {
+    font-weight: 600;
+  }
+
+  section.car-list article div.car .car-footer div.co2 img {
+    max-width: 19px;
+    max-height: 5px;
+    margin-right: 5px;
+  }
+
+  section.car-list article div.car div.car-supplier {
+    display: flex;
+    align-items: center;
+  }
+
+  section.car-list article div.car div.car-supplier {
     display: flex;
     align-items: center;
     margin-top: 5px;

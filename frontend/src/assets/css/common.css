@@ -196,6 +196,7 @@ div.content {
   flex: 1 0 auto;
   margin: 0;
   padding: 0;
+  background-color: #FAFAFA;
 }
 
 @media only screen and (width <=960px) {

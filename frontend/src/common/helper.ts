@@ -608,3 +608,39 @@ export const getBirthDateError = (minimumAge: number) =>
  */
 export const carOptionAvailable = (car: bookcarsTypes.Car | undefined, option: string) =>
   car && option in car && (car[option] as number) > -1
+
+/**
+ * Return [latitude, longitude] of user.
+ *
+ * @async
+ * @returns {Promise<[number, number] | null>}
+ */
+export const getLocation = async (): Promise<[number, number] | null> => {
+  try {
+    if (navigator.geolocation) {
+      const position: GeolocationPosition = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
+      const { latitude, longitude } = position.coords
+      return [latitude, longitude]
+    }
+    console.log('Geolocation is not supported by this browser.')
+  } catch (err: any) {
+    switch (err.code) {
+      case err.PERMISSION_DENIED:
+        console.log('User denied the request for Geolocation:', err.message)
+        break
+      case err.POSITION_UNAVAILABLE:
+        console.log('Location information is unavailable:', err.message)
+        break
+      case err.TIMEOUT:
+        console.log('The request to get user location timed out:', err.message)
+        break
+      default:
+        console.log('An unknown geolocation error occurred:', err.message)
+        break
+    }
+  }
+
+  return null
+}
