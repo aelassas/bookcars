@@ -69,7 +69,9 @@ interface MapProps {
   position?: LatLngExpression
   initialZoom?: number,
   locations?: bookcarsTypes.Location[]
+  parkingSpots?: bookcarsTypes.ParkingSpot[],
   className?: string,
+  children?: ReactNode
   onSelelectPickUpLocation?: (locationId: string) => void
   // onSelelectDropOffLocation?: (locationId: string) => void
 }
@@ -79,7 +81,9 @@ const Map = ({
   position = new L.LatLng(31.792305849269, -7.080168000000015),
   initialZoom,
   locations,
+  parkingSpots,
   className,
+  children,
   onSelelectPickUpLocation,
   // onSelelectDropOffLocation,
 }: MapProps) => {
@@ -169,6 +173,15 @@ const Map = ({
       </Marker>
     ))
 
+  const getParkingSpots = () =>
+    parkingSpots && parkingSpots.map((parkingSpot) => (
+      <Marker key={parkingSpot._id} position={[Number(parkingSpot.latitude), Number(parkingSpot.longitude)]}>
+        <Popup className="marker">
+          <div className="name">{parkingSpot.name}</div>
+        </Popup>
+      </Marker>
+    ))
+
   return (
     <>
       {title && <h1 className="title">{title}</h1>}
@@ -179,7 +192,7 @@ const Map = ({
         ref={setMap}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={tileURL}
         />
         <ZoomTracker setZoom={setZoom} />
@@ -197,7 +210,11 @@ const Map = ({
           {
             getMarkers(getLocationMarkers())
           }
+          {
+            getParkingSpots()
+          }
         </ZoomControlledLayer>
+        {children}
       </MapContainer>
     </>
   )

@@ -300,3 +300,53 @@ export const getAllFuelPolicies = () => [
   bookcarsTypes.FuelPolicy.FreeTank,
   bookcarsTypes.FuelPolicy.LikeForLike,
 ]
+
+/**
+ * Calculate distance between two points on map.
+ *
+ * @param {number} lat1
+ * @param {number} lon1
+ * @param {number} lat2
+ * @param {number} lon2
+ * @param {('K' | 'M')} unit
+ * @returns {number}
+ */
+export const distance = (lat1: number, lon1: number, lat2: number, lon2: number, unit: 'K' | 'M') => {
+  const radlat1 = (Math.PI * lat1) / 180
+  const radlat2 = (Math.PI * lat2) / 180
+  const theta = lon1 - lon2
+  const radtheta = (Math.PI * theta) / 180
+  let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+  dist = Math.acos(dist)
+  dist = (dist * 180) / Math.PI
+  dist = dist * 60 * 1.1515
+  if (unit === 'K') {
+    dist *= 1.609344
+  } else if (unit === 'M') {
+    dist *= 0.8684
+  }
+  return dist
+}
+
+/**
+ * Format distance in Km/m.
+ *
+ * @param {number} d distance
+ * @param {string} language
+ * @returns {string}
+ */
+export const formatDistance = (d: number, language: string): string => {
+  if (d > 0) {
+    if (d < 1) {
+      d *= 1000
+    }
+    const parts: string[] = String(d % 1 !== 0 ? d.toFixed(2) : d).split('.')
+    const separator = language === 'en' ? ',' : ' '
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator)
+    if (parts.length > 1 && parts[1] === '00') {
+      parts.splice(1, 1)
+    }
+    return `${parts.join('.')} ${d < 1 ? 'm' : 'Km'}`
+  }
+  return ''
+}

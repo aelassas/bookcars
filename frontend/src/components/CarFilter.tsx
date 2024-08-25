@@ -217,7 +217,7 @@ const CarFilter = ({
                 language={UserService.getLanguage()}
               />
             </FormControl>
-            <FormControl fullWidth className="search">
+            <FormControl fullWidth className="fc-search">
               <Button type="submit" variant="contained" className="btn-primary btn-search">
                 {commonStrings.SEARCH}
               </Button>

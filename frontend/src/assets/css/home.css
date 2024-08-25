@@ -4,6 +4,7 @@ div.home {
   justify-content: space-between;
   align-items: center;
   overflow: hidden auto;
+  background-color: #fff;
 }
 
 div.home footer {
