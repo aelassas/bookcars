@@ -328,7 +328,7 @@ const CarList = ({
                     </div>
                     <div className="car">
                       <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-                      <div className="car-footer">
+                      <div className="car-footer" style={hidePrice ? { bottom: 10 } : undefined}>
                         <div className="car-footer-row1">
                           <div className="rating">
                             {car.rating && car.rating >= 1 && (
