@@ -25,7 +25,6 @@ const SignIn = () => {
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
   const [blacklisted, setBlacklisted] = useState(false)
-  const [stayConnected, setStayConnected] = useState(false)
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -39,7 +38,11 @@ const SignIn = () => {
     try {
       e.preventDefault()
 
-      const data = { email, password, stayConnected }
+      const data: bookcarsTypes.SignInPayload = {
+        email,
+        password,
+        stayConnected: UserService.getStayConnected()
+      }
 
       const res = await UserService.signin(data)
       if (res.status === 200) {
@@ -79,6 +82,8 @@ const SignIn = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
+    UserService.setStayConnected(false)
+
     if (user) {
       const params = new URLSearchParams(window.location.search)
       if (params.has('from')) {
@@ -117,7 +122,7 @@ const SignIn = () => {
                   id="stay-connected"
                   type="checkbox"
                   onChange={(e) => {
-                    setStayConnected(e.currentTarget.checked)
+                    UserService.setStayConnected(e.currentTarget.checked)
                   }}
                 />
                 <label
