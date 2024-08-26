@@ -31,13 +31,13 @@ const Accordion = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      // borderTopWidth: 1,
-      // borderRightWidth: 1,
-      // borderBottomWidth: open ? 1 : 0,
-      // borderLeftWidth: 1,
-      // borderColor: '#d9d8d9',
+      borderTopWidth: 1,
+      borderRightWidth: 1,
+      borderBottomWidth: open ? 1 : 0,
+      borderLeftWidth: 1,
+      borderColor: '#d9d8d9',
       // borderRadius: 5,
-      // backgroundColor: '#fff',
+      backgroundColor: '#fff',
     },
     title: {
       flex: 1,

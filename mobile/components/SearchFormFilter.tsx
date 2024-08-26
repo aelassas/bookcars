@@ -39,7 +39,7 @@ const SearchFormFilter = (
             fromTime={fromTime}
             toDate={toDate}
             toTime={toTime}
-            // backgroundColor="#fff"
+            backgroundColor="#fff"
             size="small"
           />
         </View>
