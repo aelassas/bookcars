@@ -306,22 +306,24 @@ const CarList = ({
 
               {rows.map((car) => (
                 <div key={car._id} className="car-list-container">
-                  <div className="car-header">
-                    {pickupLocationName && (
-                      <>
-                        <div className="location">
-                          <LocationIcon />
-                          <span className="location-name">{pickupLocationName}</span>
-                        </div>
-                        {distance && (
-                          <div className="distance">
-                            <img alt="Distance" src={DistanceIcon} />
-                            <Badge backgroundColor="#D8EDF9" color="#000" text={`${distance} ${strings.FROM_YOU}`} />
+                  {(pickupLocationName || distance) && (
+                    <div className="car-header">
+                      {pickupLocationName && (
+                        <>
+                          <div className="location">
+                            <LocationIcon />
+                            <span className="location-name">{pickupLocationName}</span>
                           </div>
-                        )}
-                      </>
-                    )}
-                  </div>
+                          {distance && (
+                            <div className="distance">
+                              <img alt="Distance" src={DistanceIcon} />
+                              <Badge backgroundColor="#D8EDF9" color="#000" text={`${distance} ${strings.FROM_YOU}`} />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
                   <article>
                     <div className="name">
                       <h2>{car.name}</h2>
