@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-
 import * as env from '../config/env.config'
-import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown/AutocompleteDropdown'
+// import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown/AutocompleteDropdown'
 import * as LocationService from '../services/LocationService'
 import * as helper from '../common/helper'
+import { AutocompleteDropdown, AutocompleteDropdownItem } from './AutocompleteDropdown-v4'
 
 interface LocationSelectListProps {
   selectedItem?: string
@@ -30,7 +30,7 @@ const LocationSelectList = ({
   backgroundColor,
   placeholderTextColor = 'rgba(0, 0, 0, 0.6)',
   label,
-  blur,
+  // blur,
   close,
   text: __text,
   onSelectItem,
@@ -39,7 +39,7 @@ const LocationSelectList = ({
   onFocus
 }: LocationSelectListProps) => {
   const [loading, setLoading] = useState(false)
-  const [rows, setRows] = useState<AutocompleteOption[]>([])
+  const [rows, setRows] = useState<AutocompleteDropdownItem[]>([])
   const [selectedItem, setSelectedItem] = useState<string>()
 
   useEffect(() => {
@@ -116,12 +116,12 @@ const LocationSelectList = ({
         {label}
       </Text>
       <AutocompleteDropdown
-        blur={blur}
+        // blur={blur}
         initialValue={selectedItem || ''}
         loading={loading}
         useFilter={false} // set false to prevent rerender twice
         dataSet={rows}
-        onSelectItem={(item: AutocompleteOption) => {
+        onSelectItem={(item) => {
           if (item) {
             _setSelectedItem(item.id)
           }
@@ -158,7 +158,7 @@ const LocationSelectList = ({
         }}
         inputContainerStyle={{
           backgroundColor: backgroundColor ?? '#F5F5F5',
-          color: 'rgba(0, 0, 0, 0.87)',
+          // color: 'rgba(0, 0, 0, 0.87)',
           borderColor: 'rgba(0, 0, 0, 0.23)',
           borderWidth: 1,
           borderRadius: 10,
@@ -166,7 +166,7 @@ const LocationSelectList = ({
         suggestionsListContainerStyle={{
           display: close ? 'none' : 'flex',
         }}
-        renderItem={(item: AutocompleteOption) => (
+        renderItem={(item) => (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialIcons name="location-on" size={23} style={{ marginLeft: 5 }} />
             <Text

@@ -8,6 +8,7 @@ import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import { StripeProvider } from '@stripe/stripe-react-native'
+import { AutocompleteDropdownContextProvider } from './components/AutocompleteDropdown-v4'
 import DrawerNavigator from './components/DrawerNavigator'
 import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
@@ -107,12 +108,14 @@ const App = () => {
       <SafeAreaProvider>
         <Provider>
           <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-            <RootSiblingParent>
-              <NavigationContainer ref={navigationRef} onReady={onReady}>
-                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-                <DrawerNavigator />
-              </NavigationContainer>
-            </RootSiblingParent>
+            <AutocompleteDropdownContextProvider>
+              <RootSiblingParent>
+                <NavigationContainer ref={navigationRef} onReady={onReady}>
+                  <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+                  <DrawerNavigator />
+                </NavigationContainer>
+              </RootSiblingParent>
+            </AutocompleteDropdownContextProvider>
           </StripeProvider>
         </Provider>
       </SafeAreaProvider>
