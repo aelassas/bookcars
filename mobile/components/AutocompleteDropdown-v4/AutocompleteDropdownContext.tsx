@@ -54,14 +54,16 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
 
     if (dropdownHeight && direction === 'up') {
       setContentStyles({
-        top: inputMeasurements.y - dropdownHeight - 5 - headerOffset,
+        // top: inputMeasurements.y - dropdownHeight - 5 - headerOffset,
+        top: inputMeasurements.y - dropdownHeight - 45 - headerOffset,
         left: inputMeasurements.x,
         width: inputMeasurements.width,
       })
       setOpacity(1)
     } else if (direction === 'down') {
       setContentStyles({
-        top: inputMeasurements.y + inputMeasurements.height + 5 + headerOffset,
+        // top: inputMeasurements.y + inputMeasurements.height + 10 + headerOffset,
+        top: inputMeasurements.y + inputMeasurements.height - 30 + headerOffset,
         left: inputMeasurements.x,
         width: inputMeasurements.width,
       })

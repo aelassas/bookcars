@@ -26,8 +26,8 @@ export const Dropdown = memo((props: DropdownProps) => {
   const styles = useMemo(() => getStyles(themeName || 'light'), [themeName])
 
   const defaultItemSeparator = useMemo(() => function () {
-  return <View style={styles.itemSeparator} />
-}, [styles.itemSeparator])
+    return <View style={styles.itemSeparator} />
+  }, [styles.itemSeparator])
 
   return (
     <Animatable.View
@@ -64,13 +64,13 @@ const getStyles = (themeName: 'light' | 'dark' = 'light') =>
       width: '100%',
       zIndex: 9,
       borderRadius: 5,
-      shadowColor: theme[themeName || 'light'].shadowColor,
-      shadowOffset: {
-        width: 0,
-        height: 12,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: 15.46,
+      // shadowColor: theme[themeName || 'light'].shadowColor,
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 12,
+      // },
+      // shadowOpacity: 0.3,
+      // shadowRadius: 15.46,
 
       elevation: 20,
     },
