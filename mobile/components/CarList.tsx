@@ -183,8 +183,9 @@ const CarList = ({
 
           automaticallyAdjustKeyboardInsets
           keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
-          extraHeight={60}
-          extraScrollHeight={60}
+
+          extraHeight={20}
+          extraScrollHeight={20}
           enableOnAndroid
 
           initialNumToRender={numToRender}
