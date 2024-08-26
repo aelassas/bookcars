@@ -1,6 +1,5 @@
 import React, { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Dimensions, Keyboard, Platform, Pressable, View, TextInput } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Dimensions, Keyboard, Platform, Pressable, View, TextInput, ScrollView } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import debounce from 'lodash.debounce'
 import PropTypes from 'prop-types'
@@ -29,7 +28,7 @@ export const AutocompleteDropdown: any = memo(
     const suggestionsListMaxHeight = props.suggestionsListMaxHeight ?? moderateScale(200, 0.2)
     const position = props.position ?? 'absolute'
     const bottomOffset = props.bottomOffset ?? 0
-    const ScrollViewComponent = props.ScrollViewComponent ?? KeyboardAwareScrollView
+    const ScrollViewComponent = props.ScrollViewComponent ?? ScrollView
     const InputComponent = props.InputComponent ?? TextInput
 
     const inputRef = useRef<typeof InputComponent>(null)
@@ -127,14 +126,14 @@ export const AutocompleteDropdown: any = memo(
      */
     useEffect(() => {
       if (props.blur) {
-        inputRef.current.blur()
+        inputRef.current?.blur()
       }
     }, [props.blur])
 
     const _onSelectItem = useCallback((item: any) => {
       setSelectedItem(item)
 
-      inputRef.current.blur()
+      inputRef.current?.blur()
       setIsOpened(false)
     }, [])
 
@@ -263,11 +262,11 @@ export const AutocompleteDropdown: any = memo(
       setSearchText('')
       setSelectedItem(null)
       // setIsOpened(false)
-      // inputRef.current.blur()
+      // inputRef.current?.blur()
       setIsOpened(false)
       setIsCleared(true)
       if (!isKeyboardVisible) {
-        inputRef.current.focus()
+        inputRef.current?.focus()
       }
       if (typeof props.onClear === 'function') {
         props.onClear()
@@ -334,7 +333,7 @@ export const AutocompleteDropdown: any = memo(
 
     const onSubmit = useCallback(
       (e: any) => {
-        inputRef.current.blur()
+        inputRef.current?.blur()
         if (props.closeOnSubmit) {
           close()
         }
@@ -347,7 +346,11 @@ export const AutocompleteDropdown: any = memo(
     )
 
     return (
-      <View style={[styles.container, props.containerStyle, Platform.select({ ios: { zIndex: 1 } })]}>
+      <View style={[
+        styles.container,
+        props.containerStyle,
+        Platform.select({ ios: { zIndex: 1 } }),
+      ]}>
         <View ref={containerRef} onLayout={() => { }} style={[styles.inputContainerStyle, props.inputContainerStyle]}>
           <InputComponent
             ref={inputRef}
@@ -381,28 +384,33 @@ export const AutocompleteDropdown: any = memo(
 
         {isOpened && searchText !== '' && Array.isArray(dataSet) && (
           <View
-            style={{
+            style={[{
               ...(styles.listContainer as object),
-              position,
-              ...(position === 'relative'
-                ? { marginTop: 5 }
-                : {
-                  [direction === 'down' ? 'top' : 'bottom']: inputHeight + 5,
-                }),
               ...props.suggestionsListContainerStyle,
               flex: 1,
-            }}
+            },
+            Platform.select({
+              android: {
+                position,
+                ...(position === 'relative'
+                  ? { marginTop: 5 }
+                  : {
+                    [direction === 'down' ? 'top' : 'bottom']: inputHeight + 5,
+                  }),
+              }
+            })
+            ]}
           >
             <ScrollViewComponent
               keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
               automaticallyAdjustKeyboardInsets
               nestedScrollEnabled
 
-              extraHeight={135}
-              extraScrollHeight={70}
-              scrollEnabled
-              enabledOnAndroid
-              automaticallyAdjustContentInsets
+              // extraHeight={135}
+              // extraScrollHeight={70}
+              // scrollEnabled
+              // enabledOnAndroid
+              // automaticallyAdjustContentInsets
 
               style={{
                 maxHeight: suggestionsListMaxHeight,
