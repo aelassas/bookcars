@@ -63,7 +63,8 @@
     "react-native-screens": "3.31.1",
     "react-native-size-matters": "^0.4.2",
     "react-native-vector-icons": "^10.1.0",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "expo-location": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
