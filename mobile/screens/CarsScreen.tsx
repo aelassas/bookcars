@@ -24,7 +24,6 @@ import CarSpecsFilter from '../components/CarSpecsFilter'
 import SearchFormFilter from '../components/SearchFormFilter'
 import CarRatingFilter from '../components/CarRatingFilter'
 import Indicator from '../components/Indicator'
-import { AutocompleteDropdownContextProvider } from '../components/AutocompleteDropdown-v4'
 
 const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
   const isFocused = useIsFocused()
@@ -168,74 +167,72 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     <Layout style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
       {!visible && <Indicator style={{ marginVertical: 10 }} />}
       {visible && pickupLocation && dropoffLocation && (
-        <AutocompleteDropdownContextProvider>
-          <CarList
-            navigation={navigation}
-            suppliers={supplierIds}
-            rating={rating}
-            ranges={ranges}
-            multimedia={multimedia}
-            seats={seats}
-            carSpecs={carSpecs}
-            carType={carType}
-            gearbox={gearbox}
-            mileage={mileage}
-            fuelPolicy={fuelPolicy}
-            deposit={deposit}
-            pickupLocation={route.params.pickupLocation}
-            dropOffLocation={route.params.dropOffLocation}
-            from={new Date(route.params.from)}
-            to={new Date(route.params.to)}
-            onLoad={(data) => {
-              if (data) {
-                setCarCount(data?.rowCount)
-              }
-            }}
-            route="Cars"
-            header={(
-              <View>
-                <SearchFormFilter
-                  navigation={navigation}
-                  style={styles.filter}
-                  visible={loaded}
-                  pickupLocation={pickupLocation._id}
-                  dropOffLocation={dropoffLocation._id}
-                  pickupLocationText={pickupLocation.name}
-                  dropOffLocationText={dropoffLocation.name}
-                  fromDate={new Date(route.params.from)}
-                  fromTime={new Date(route.params.from)}
-                  toDate={new Date(route.params.to)}
-                  toTime={new Date(route.params.to)}
-                />
+        <CarList
+          navigation={navigation}
+          suppliers={supplierIds}
+          rating={rating}
+          ranges={ranges}
+          multimedia={multimedia}
+          seats={seats}
+          carSpecs={carSpecs}
+          carType={carType}
+          gearbox={gearbox}
+          mileage={mileage}
+          fuelPolicy={fuelPolicy}
+          deposit={deposit}
+          pickupLocation={route.params.pickupLocation}
+          dropOffLocation={route.params.dropOffLocation}
+          from={new Date(route.params.from)}
+          to={new Date(route.params.to)}
+          onLoad={(data) => {
+            if (data) {
+              setCarCount(data?.rowCount)
+            }
+          }}
+          route="Cars"
+          header={(
+            <View>
+              <SearchFormFilter
+                navigation={navigation}
+                style={styles.filter}
+                visible={loaded}
+                pickupLocation={pickupLocation._id}
+                dropOffLocation={dropoffLocation._id}
+                pickupLocationText={pickupLocation.name}
+                dropOffLocationText={dropoffLocation.name}
+                fromDate={new Date(route.params.from)}
+                fromTime={new Date(route.params.from)}
+                toDate={new Date(route.params.to)}
+                toTime={new Date(route.params.to)}
+              />
 
-                <SupplierFilter style={styles.filter} visible={loaded} suppliers={suppliers} onChange={onChangeSuppliers} />
-                <CarRatingFilter style={styles.filter} visible={loaded} onChange={onChangeCarRating} />
-                <CarRangeFilter style={styles.filter} visible={loaded} onChange={onChangeCarRange} />
-                <CarMultimediaFilter style={styles.filter} visible={loaded} onChange={onChangeCarMultimedia} />
-                <CarSeatsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSeats} />
-                <CarSpecsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSpecs} />
-                <CarTypeFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
-                <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
-                <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
-                <FuelPolicyFilter style={styles.filter} visible={loaded} onChange={onChangeFuelPolicy} />
-                <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
+              <SupplierFilter style={styles.filter} visible={loaded} suppliers={suppliers} onChange={onChangeSuppliers} />
+              <CarRatingFilter style={styles.filter} visible={loaded} onChange={onChangeCarRating} />
+              <CarRangeFilter style={styles.filter} visible={loaded} onChange={onChangeCarRange} />
+              <CarMultimediaFilter style={styles.filter} visible={loaded} onChange={onChangeCarMultimedia} />
+              <CarSeatsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSeats} />
+              <CarSpecsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSpecs} />
+              <CarTypeFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
+              <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
+              <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
+              <FuelPolicyFilter style={styles.filter} visible={loaded} onChange={onChangeFuelPolicy} />
+              <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
 
-                {loaded && (
-                  <View style={styles.title}>
-                    <View style={styles.bookcars}>
-                      <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_1')}</Text>
-                      <Text style={styles.titleBookCars}>{i18n.t('BOOKCARS')}</Text>
-                      <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_2')}</Text>
-                    </View>
-                    {carCount > 0 && (
-                      <Text style={styles.carCount}>{`(${carCount} ${carCount === 1 ? i18n.t('CAR_AVAILABLE') : i18n.t('CARS_AVAILABLE')})`}</Text>
-                    )}
+              {loaded && (
+                <View style={styles.title}>
+                  <View style={styles.bookcars}>
+                    <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_1')}</Text>
+                    <Text style={styles.titleBookCars}>{i18n.t('BOOKCARS')}</Text>
+                    <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_2')}</Text>
                   </View>
-                )}
-              </View>
-            )}
-          />
-        </AutocompleteDropdownContextProvider>
+                  {carCount > 0 && (
+                    <Text style={styles.carCount}>{`(${carCount} ${carCount === 1 ? i18n.t('CAR_AVAILABLE') : i18n.t('CARS_AVAILABLE')})`}</Text>
+                  )}
+                </View>
+              )}
+            </View>
+          )}
+        />
       )}
     </Layout>
   )
