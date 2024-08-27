@@ -24,6 +24,8 @@ interface CarListProps {
   carSpecs?: bookcarsTypes.CarSpecs,
   pickupLocation?: string
   dropOffLocation?: string
+  pickupLocationName?: string
+  distance?: string
   carType?: string[]
   gearbox?: string[]
   mileage?: string[]
@@ -49,6 +51,8 @@ const CarList = ({
   carSpecs,
   pickupLocation,
   dropOffLocation,
+  pickupLocationName,
+  distance,
   carType: _carType,
   gearbox,
   mileage,
@@ -202,6 +206,8 @@ const CarList = ({
               to={to}
               pickupLocation={pickupLocation}
               dropOffLocation={dropOffLocation}
+              pickupLocationName={pickupLocationName}
+              distance={distance}
               navigation={navigation}
               hidePrice={hidePrice}
             />
