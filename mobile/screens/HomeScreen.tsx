@@ -8,7 +8,6 @@ import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import Layout from '../components/Layout'
 import SearchForm from '../components/SearchForm'
-import { AutocompleteDropdownContextProvider } from '../components/AutocompleteDropdown-v4'
 
 const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
   const isFocused = useIsFocused()
@@ -41,24 +40,22 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   return (
     <Layout style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       {init && visible && (
-        <AutocompleteDropdownContextProvider>
-          <ScrollView
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
-          >
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
+        >
 
-            <View style={styles.contentContainer}>
-              <View style={styles.logo}>
-                <Text style={styles.logoMain}>BookCars</Text>
-                <Text style={styles.logoRegistered}>®</Text>
-              </View>
-              <SearchForm
-                navigation={navigation}
-              />
+          <View style={styles.contentContainer}>
+            <View style={styles.logo}>
+              <Text style={styles.logoMain}>BookCars</Text>
+              <Text style={styles.logoRegistered}>®</Text>
             </View>
+            <SearchForm
+              navigation={navigation}
+            />
+          </View>
 
-          </ScrollView>
-        </AutocompleteDropdownContextProvider>
+        </ScrollView>
       )}
     </Layout>
   )

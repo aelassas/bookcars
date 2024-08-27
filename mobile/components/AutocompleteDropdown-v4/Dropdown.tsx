@@ -41,7 +41,8 @@ export const Dropdown = memo((props: DropdownProps) => {
         ...(rest.suggestionsListContainerStyle as object),
       }}>
       <FlatList
-        keyboardDismissMode="on-drag"
+        // keyboardDismissMode="on-drag"
+        keyboardDismissMode="none"
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled={true}
         data={dataSet}
