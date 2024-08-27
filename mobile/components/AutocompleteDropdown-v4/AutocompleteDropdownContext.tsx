@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import type { SetStateAction, Dispatch, FC, ReactElement, MutableRefObject } from 'react'
 import type { LayoutChangeEvent, ViewProps } from 'react-native'
-import { StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import type { IAutocompleteDropdownRef } from './types'
 
 export interface IAutocompleteDropdownContext {
@@ -55,7 +55,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
     if (dropdownHeight && direction === 'up') {
       setContentStyles({
         // top: inputMeasurements.y - dropdownHeight - 5 - headerOffset,
-        top: inputMeasurements.y - dropdownHeight - 45 - headerOffset,
+        top: inputMeasurements.y - dropdownHeight - Platform.select({ android: 45, ios: 70 })! - headerOffset,
         left: inputMeasurements.x,
         width: inputMeasurements.width,
       })
@@ -63,7 +63,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
     } else if (direction === 'down') {
       setContentStyles({
         // top: inputMeasurements.y + inputMeasurements.height + 10 + headerOffset,
-        top: inputMeasurements.y + inputMeasurements.height - 30 + headerOffset,
+        top: inputMeasurements.y + inputMeasurements.height - Platform.select({ android: 30, ios: 50 })! + headerOffset,
         left: inputMeasurements.x,
         width: inputMeasurements.width,
       })
@@ -105,7 +105,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
                 (JSON.stringify(prev) === JSON.stringify({ x, y, width, height }) ? prev : { x, y, width, height }),)
             })
         })
-      }, 16)
+      }, 1)
     } else {
       clearInterval(positionTrackingIntervalRef.current)
     }
