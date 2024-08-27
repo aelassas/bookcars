@@ -427,7 +427,8 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            : rows.map((car, index) => {
+            // : rows.map((car, index) => {
+            : rows.map((car) => {
               const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
@@ -638,11 +639,11 @@ const CarList = ({
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={commonStrings.DELETE}>
+                        {/* <Tooltip title={commonStrings.DELETE}>
                           <IconButton data-id={car._id} data-index={index} onClick={handleDelete}>
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                       </>
                     )}
                   </div>
