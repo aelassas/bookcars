@@ -320,6 +320,7 @@ export const AutocompleteDropdown = memo<
       if (!searchText?.length) {
         // setDataSet(initialDataSet)
         setDataSet(null)
+        setIsOpened(false)
         return
       }
 
