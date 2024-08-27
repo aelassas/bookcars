@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StyleSheet, Text, View, Image } from 'react-native'
+import Entypo from '@expo/vector-icons/Entypo'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
@@ -18,6 +19,8 @@ interface CarProps {
   to?: Date
   pickupLocation?: string
   dropOffLocation?: string
+  pickupLocationName?: string
+  distance?: string
   hidePrice?: boolean
 }
 
@@ -35,6 +38,8 @@ const Car = ({
   to,
   pickupLocation,
   dropOffLocation,
+  pickupLocationName,
+  distance,
   navigation,
   hidePrice
 }: CarProps) => {
@@ -48,6 +53,35 @@ const Car = ({
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'stretch',
+    },
+    location: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      marginTop: 5,
+      padding: 5,
+    },
+    locationImage: {
+      marginRight: 3,
+    },
+    locationText: {
+      fontSize: 18,
+      color: '#212121',
+    },
+    distance: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'flex-end',
+      margin: 5,
+    },
+    distanceImage: {
+      height: 16,
+      resizeMode: 'contain',
+    },
+    distanceText: {
+      fontSize: 11,
     },
     car: {
       width: '100%',
@@ -206,6 +240,21 @@ const Car = ({
 
   return (
     <View key={car._id} style={styles.carContainer}>
+      {pickupLocationName && (
+        <>
+          <View style={styles.location}>
+            <Entypo style={styles.locationImage} name="location-pin" size={24} color="#212121" />
+            <Text style={styles.locationText}>{pickupLocationName}</Text>
+          </View>
+          {distance && (
+            <View style={styles.distance}>
+              <Image style={styles.distanceImage} source={require('../assets/distance-icon.png')} />
+              <Text style={styles.distanceText}>{`${distance} ${i18n.t('FROM_YOU')}`}</Text>
+            </View>
+          )}
+        </>
+      )}
+
       <View style={styles.car}>
         <Text style={styles.name}>{car.name}</Text>
 
