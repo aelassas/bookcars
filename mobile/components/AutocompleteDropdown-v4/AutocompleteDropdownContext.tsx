@@ -105,7 +105,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
                 (JSON.stringify(prev) === JSON.stringify({ x, y, width, height }) ? prev : { x, y, width, height }),)
             })
         })
-      }, 1)
+      }, 16)
     } else {
       clearInterval(positionTrackingIntervalRef.current)
     }
