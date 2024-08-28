@@ -80,7 +80,7 @@ const strings = new LocalizedStrings({
     PRICE_DAYS_PART_2: 'jour',
     PRICE_PER_DAY: 'Prix par jour :',
     TRIPS: 'locations',
-    CO2: 'Effet C02',
+    CO2: 'Effet CO2',
   },
   en: {
     NEW_CAR: 'New car',
@@ -154,7 +154,7 @@ const strings = new LocalizedStrings({
     PRICE_DAYS_PART_2: 'day',
     PRICE_PER_DAY: 'Price per day:',
     TRIPS: 'trips',
-    CO2: 'C02 effect',
+    CO2: 'CO2 effect',
   },
 })
 
