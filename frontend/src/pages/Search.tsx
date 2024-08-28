@@ -232,23 +232,25 @@ const Search = () => {
           <div className="col-1">
             {!loading && (
               <>
-                <Map
-                  position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
-                  initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                  parkingSpots={pickupLocation.parkingSpots}
-                  className="map"
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpenMapDialog(true)
-                    }}
-                    className="view-on-map"
+                {pickupLocation.latitude && pickupLocation.longitude && (
+                  <Map
+                    position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
+                    initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                    parkingSpots={pickupLocation.parkingSpots}
+                    className="map"
                   >
-                    <img alt="View On Map" src={ViewOnMap} />
-                    <span>{strings.VIEW_ON_MAP}</span>
-                  </button>
-                </Map>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpenMapDialog(true)
+                      }}
+                      className="view-on-map"
+                    >
+                      <img alt="View On Map" src={ViewOnMap} />
+                      <span>{strings.VIEW_ON_MAP}</span>
+                    </button>
+                  </Map>
+                )}
                 <CarFilter
                   className="filter"
                   pickupLocation={pickupLocation}
