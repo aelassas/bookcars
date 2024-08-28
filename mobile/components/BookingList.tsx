@@ -13,7 +13,7 @@ import * as BookingService from '../services/BookingService'
 import Booking from './Booking'
 
 interface BookingListProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  navigation?: NativeStackNavigationProp<StackParams, keyof StackParams>
   suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter
@@ -192,28 +192,29 @@ const BookingList = ({
         }
         refreshing={loading}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => {
-            setRefreshing(true)
+          navigation && (
+            <RefreshControl refreshing={refreshing} onRefresh={() => {
+              setRefreshing(true)
 
-            navigation.dispatch((state) => {
-              const { routes } = state
-              const index = routes.findIndex((r) => r.name === 'Bookings')
-              routes.splice(index, 1)
-              const now = Date.now()
-              routes.push({
-                name: 'Bookings',
-                key: `Bookings-${now}`,
-                params: {},
-              })
+              navigation.dispatch((state) => {
+                const { routes } = state
+                const index = routes.findIndex((r) => r.name === 'Bookings')
+                routes.splice(index, 1)
+                const now = Date.now()
+                routes.push({
+                  name: 'Bookings',
+                  key: `Bookings-${now}`,
+                  params: {},
+                })
 
-              return CommonActions.reset({
-                ...state,
-                routes,
-                index: routes.length - 1,
+                return CommonActions.reset({
+                  ...state,
+                  routes,
+                  index: routes.length - 1,
+                })
               })
-            })
-          }}
-          />
+            }}
+            />)
         }
       />
 

@@ -59,7 +59,6 @@ const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams
       {visible
         && (
           <BookingList
-            navigation={navigation}
             user={user?._id as string}
             booking={route.params.id}
             language={language}
