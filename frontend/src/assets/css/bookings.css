@@ -80,9 +80,8 @@ div.bookings div.col-2 {
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
-    margin: 10px;
     background-color: #fff;
-    width: calc(100% - 20px);
+    width: calc(100% - 10px);
     max-width: 480px;
   }
 
