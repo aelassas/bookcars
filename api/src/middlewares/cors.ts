@@ -15,7 +15,7 @@ const whitelist = [
  */
 const CORS_CONFIG: cors.CorsOptions = {
   origin(origin, callback) {
-    if (!origin || whitelist.indexOf(origin) > -1) {
+    if (!origin || whitelist.indexOf(helper.trimEnd(origin, '/')) !== -1) {
       callback(null, true)
     } else {
       const message = `Not allowed by CORS: ${origin}`
