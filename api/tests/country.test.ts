@@ -234,7 +234,6 @@ describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocatio
     let res = await request(app)
       .get(`/api/countries-with-locations/${language}/false/1`)
     expect(res.statusCode).toBe(200)
-    console.log(res.body)
     expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeDefined()
 
     res = await request(app)
