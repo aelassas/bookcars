@@ -31,9 +31,6 @@ const CORS_CONFIG: cors.CorsOptions = {
  * CORS middleware.
  *
  * @export
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
  * @returns {*}
  */
 export default () => cors(CORS_CONFIG)
