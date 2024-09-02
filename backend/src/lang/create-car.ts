@@ -22,7 +22,7 @@ const strings = new LocalizedStrings({
     CAR_RANGE: 'Gamme',
     MULTIMEDIA: 'Multimédia',
     RATING: 'Notation',
-    CO2: 'C02 (g/km)',
+    CO2: 'CO2 (g/km)',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -43,7 +43,7 @@ const strings = new LocalizedStrings({
     CAR_RANGE: 'Car Range',
     MULTIMEDIA: 'Multimedia',
     RATING: 'Rating',
-    CO2: 'C02 (g/km)',
+    CO2: 'CO2 (g/km)',
   },
 })
 

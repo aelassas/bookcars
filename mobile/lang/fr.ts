@@ -238,6 +238,6 @@ export const fr = {
   RATING_3: '3/5 et plus',
   RATING_4: '4/5 et plus',
   TRIPS: 'locations',
-  CO2: 'Effet C02',
+  CO2: 'Effet CO2',
   FROM_YOU: 'de vous',
 }
