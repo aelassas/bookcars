@@ -60,6 +60,13 @@ describe('GET /api/user/:id', () => {
       .set('Cookie', cookie)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
+
+    // Not allowed by CORS
+    res = await request(app)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
+      .set('Origin', 'http://unknow/')
+      .send(payload)
+    expect(res.statusCode).toBe(500)
   })
 })
 
@@ -85,11 +92,23 @@ describe('GET /api/user/:id', () => {
     expect(res.statusCode).toBe(200)
 
     res = await request(app)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+
+    res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set('Origin', env.FRONTEND_HOST)
       .set('Cookie', cookie)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
+
+    // Not allowed by CORS
+    res = await request(app)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
+      .set('Origin', 'http://unknow/')
+      .send(payload)
+    expect(res.statusCode).toBe(500)
   })
 })
 
