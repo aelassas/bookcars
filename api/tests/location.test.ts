@@ -4,7 +4,7 @@ import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
 import { v1 as uuid } from 'uuid'
-import mongoose from 'mongoose'
+import mongoose, { FlattenMaps } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -206,7 +206,7 @@ describe('PUT /api/update-location/:id', () => {
       .lean()
     expect(location?.parkingSpots.length).toBe(2)
 
-    const parkingSpot2 = (location!.parkingSpots[1]) as bookcarsTypes.ParkingSpot
+    const parkingSpot2 = (location!.parkingSpots[1]) as FlattenMaps<bookcarsTypes.ParkingSpot>
     expect(parkingSpot2.values!.length).toBe(2)
     parkingSpot2.values![0].value = 'Parking spot 2 updated'
     parkingSpot2.values![2] = { language: 'es', value: 'Parking spot 2 es' }
