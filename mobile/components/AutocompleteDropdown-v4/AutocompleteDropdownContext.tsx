@@ -55,7 +55,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
     if (dropdownHeight && direction === 'up') {
       setContentStyles({
         // top: inputMeasurements.y - dropdownHeight - 5 - headerOffset,
-        top: inputMeasurements.y - dropdownHeight - Platform.select({ android: 45, ios: 70 })! - headerOffset,
+        top: inputMeasurements.y - dropdownHeight - Platform.select({ android: 40, ios: 70 })! - headerOffset,
         left: inputMeasurements.x,
         width: inputMeasurements.width,
       })
