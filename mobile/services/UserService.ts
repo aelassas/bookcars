@@ -503,7 +503,7 @@ export const loggedIn = async () => {
  * Check if password exists.
  *
  * @param {string} id
- * @returns {Promise<ohmjetTypes.User|null>}
+ * @returns {Promise<bookcarsTypes.User|null>}
  */
 export const hasPassword = async (id: string): Promise<number> => {
   const headers = await authHeader()
