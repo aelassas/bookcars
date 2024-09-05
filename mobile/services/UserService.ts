@@ -503,11 +503,15 @@ export const loggedIn = async () => {
  * Check if password exists.
  *
  * @param {string} id
- * @returns {Promise<bookcarsTypes.User|null>}
+ * @returns {Promise<ohmjetTypes.User|null>}
  */
-export const hasPassword = (id: string): Promise<number> => axiosInstance
-  .get(
-    `/api/has-password/${encodeURIComponent(id)}`,
-    { withCredentials: true }
-  )
-  .then((res) => res.status)
+export const hasPassword = async (id: string): Promise<number> => {
+  const headers = await authHeader()
+
+  return axiosInstance
+    .get(
+      `/api/has-password/${encodeURIComponent(id)}`,
+      { headers }
+    )
+    .then((res) => res.status)
+}
