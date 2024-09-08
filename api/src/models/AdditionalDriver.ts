@@ -1,6 +1,6 @@
 import validator from 'validator'
 import { Schema, model } from 'mongoose'
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 
 const additionalDriverSchema = new Schema<env.AdditionalDriver>(
   {

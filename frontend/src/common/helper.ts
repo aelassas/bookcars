@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings } from '../lang/cars'
-import { strings as commonStrings } from '../lang/common'
-import env from '../config/env.config'
+import { strings } from '@/lang/cars'
+import { strings as commonStrings } from '@/lang/common'
+import env from '@/config/env.config'
 
 /**
  * Get language.

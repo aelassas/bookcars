@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance'
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 import * as UserService from './UserService'
 import * as bookcarsTypes from ':bookcars-types'
 

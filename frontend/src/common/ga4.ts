@@ -1,5 +1,5 @@
 import ga4 from 'react-ga4'
-import env from '../config/env.config'
+import env from '@/config/env.config'
 
 const TRACKING_ID = env.GOOGLE_ANALYTICS_ID
 const { isProduction } = env

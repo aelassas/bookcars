@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import axiosRetry from 'axios-retry'
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 
 /**
  * Initialize axios-retry.

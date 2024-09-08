@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react'
 import { Link } from '@mui/material'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/unauthorized'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/unauthorized'
 
 interface UnauthorizedProps {
   style?: CSSProperties

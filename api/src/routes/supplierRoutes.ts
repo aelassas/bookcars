@@ -1,7 +1,7 @@
 import express from 'express'
-import routeNames from '../config/supplierRoutes.config'
-import authJwt from '../middlewares/authJwt'
-import * as supplierController from '../controllers/supplierController'
+import routeNames from '@/config/supplierRoutes.config'
+import authJwt from '@/middlewares/authJwt'
+import * as supplierController from '@/controllers/supplierController'
 
 const routes = express.Router()
 

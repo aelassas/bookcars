@@ -12,12 +12,12 @@ import {
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/contact-form'
-import * as UserService from '../services/UserService'
-import ReCaptchaProvider from '../components/ReCaptchaProvider'
-import * as helper from '../common/helper'
+import env from '@/config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/contact-form'
+import * as UserService from '@/services/UserService'
+import ReCaptchaProvider from '@/components/ReCaptchaProvider'
+import * as helper from '@/common/helper'
 
 import '../assets/css/contact-form.css'
 

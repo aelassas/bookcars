@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/car-range-filter'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/car-range-filter'
 import Accordion from './Accordion'
 
 import '../assets/css/car-range-filter.css'

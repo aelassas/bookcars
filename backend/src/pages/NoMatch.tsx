@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from '@mui/material'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/no-match'
-import Layout from '../components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/no-match'
+import Layout from '@/components/Layout'
 
 interface NoMatchProps {
   hideHeader?: boolean

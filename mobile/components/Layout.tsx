@@ -4,10 +4,10 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
-import * as UserService from '../services/UserService'
+import * as UserService from '@/services/UserService'
 import Button from './Button'
-import i18n from '../lang/i18n'
-import * as helper from '../common/helper'
+import i18n from '@/lang/i18n'
+import * as helper from '@/common/helper'
 import Header from './Header'
 import { AutocompleteDropdownContextProvider } from './AutocompleteDropdown-v4'
 

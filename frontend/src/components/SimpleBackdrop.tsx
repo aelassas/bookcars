@@ -4,7 +4,7 @@ import {
   CircularProgress,
   Typography
 } from '@mui/material'
-// import env from '../config/env.config'
+// import env from '@/config/env.config'
 
 interface SimpleBackdropProps {
   progress?: boolean

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { TextFieldVariants } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import * as SupplierService from '../services/SupplierService'
-import * as helper from '../common/helper'
+import env from '@/config/env.config'
+import * as SupplierService from '@/services/SupplierService'
+import * as helper from '@/common/helper'
 import MultipleSelect from './MultipleSelect'
 
 interface SupplierSelectListProps {

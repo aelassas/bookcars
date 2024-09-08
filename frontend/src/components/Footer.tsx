@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MailOutline } from '@mui/icons-material'
-import { strings } from '../lang/footer'
+import { strings } from '@/lang/footer'
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/footer.css'
