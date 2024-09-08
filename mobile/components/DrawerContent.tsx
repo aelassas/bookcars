@@ -15,10 +15,10 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { CommonActions, DrawerActions } from '@react-navigation/routers'
 import { useNavigation, RouteProp } from '@react-navigation/native'
 
-import i18n from '../lang/i18n'
-import * as env from '../config/env.config'
-import * as helper from '../common/helper'
-import * as UserService from '../services/UserService'
+import i18n from '@/lang/i18n'
+import * as env from '@/config/env.config'
+import * as helper from '@/common/helper'
+import * as UserService from '@/services/UserService'
 import * as bookcarsTypes from ':bookcars-types'
 
 interface DrawerContentProps {

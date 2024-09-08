@@ -4,7 +4,7 @@ import {
   ArrowBackIos as PreviousPageIcon,
   ArrowForwardIos as NextPageIcon
 } from '@mui/icons-material'
-import { strings as commonStrings } from '../lang/common'
+import { strings as commonStrings } from '@/lang/common'
 
 import '../assets/css/pager.css'
 

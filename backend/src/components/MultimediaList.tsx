@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Checkbox, FormControlLabel } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings } from '../lang/multimedia-list'
+import { strings } from '@/lang/multimedia-list'
 
 interface MultimediaListProps {
   required?: boolean

@@ -21,12 +21,12 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import * as helper from '../common/helper'
-import * as UserService from '../services/UserService'
-import * as CarService from '../services/CarService'
-import * as LocationService from '../services/LocationService'
+import env from '@/config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import * as helper from '@/common/helper'
+import * as UserService from '@/services/UserService'
+import * as CarService from '@/services/CarService'
+import * as LocationService from '@/services/LocationService'
 
 interface AvatarProps {
   avatar?: string

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import * as SupplierService from '../services/SupplierService'
+import env from '@/config/env.config'
+import * as SupplierService from '@/services/SupplierService'
 
 import '../assets/css/supplier-list.css'
 

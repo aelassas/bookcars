@@ -1,7 +1,7 @@
 import express from 'express'
-import routeNames from '../config/notificationRoutes.config'
-import authJwt from '../middlewares/authJwt'
-import * as notificationController from '../controllers/notificationController'
+import routeNames from '@/config/notificationRoutes.config'
+import authJwt from '@/middlewares/authJwt'
+import * as notificationController from '@/controllers/notificationController'
 
 const routes = express.Router()
 

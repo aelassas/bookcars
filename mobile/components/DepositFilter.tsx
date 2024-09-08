@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import * as env from '../config/env.config'
-import i18n from '../lang/i18n'
+import * as env from '@/config/env.config'
+import i18n from '@/lang/i18n'
 import Accordion from './Accordion'
 import RadioButton from './RadioButton'
 

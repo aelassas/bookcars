@@ -2,12 +2,12 @@ import 'dotenv/config'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import app from '../src/app'
-import * as databaseHelper from '../src/common/databaseHelper'
+import app from '@/app'
+import * as databaseHelper from '@/common/databaseHelper'
 import * as testHelper from './testHelper'
-import stripeAPI from '../src/stripe'
-import * as env from '../src/config/env.config'
-import Booking from '../src/models/Booking'
+import stripeAPI from '@/stripe'
+import * as env from '@/config/env.config'
+import Booking from '@/models/Booking'
 
 //
 // Connecting and initializing the database before running the test suite

@@ -7,15 +7,15 @@ import {
   Checkbox,
 } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import env from '../config/env.config'
+import env from '@/config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/search-form'
-import * as UserService from '../services/UserService'
-import * as LocationService from '../services/LocationService'
-import LocationSelectList from '../components/LocationSelectList'
-import DateTimePicker from '../components/DateTimePicker'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/search-form'
+import * as UserService from '@/services/UserService'
+import * as LocationService from '@/services/LocationService'
+import LocationSelectList from '@/components/LocationSelectList'
+import DateTimePicker from '@/components/DateTimePicker'
 
 import '../assets/css/search-form.css'
 

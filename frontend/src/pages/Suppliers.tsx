@@ -1,7 +1,7 @@
 import React from 'react'
-import Layout from '../components/Layout'
-import SupplierList from '../components/SupplierList'
-import Footer from '../components/Footer'
+import Layout from '@/components/Layout'
+import SupplierList from '@/components/SupplierList'
+import Footer from '@/components/Footer'
 
 import '../assets/css/suppliers.css'
 

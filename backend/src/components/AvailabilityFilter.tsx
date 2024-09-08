@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/cars'
 import Accordion from './Accordion'
-import * as helper from '../common/helper'
+import * as helper from '@/common/helper'
 
 import '../assets/css/availability-filter.css'
 

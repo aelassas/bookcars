@@ -1,11 +1,11 @@
 import 'dotenv/config'
-import * as env from '../src/config/env.config'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as env from '@/config/env.config'
+import * as databaseHelper from '@/common/databaseHelper'
 import * as testHelper from './testHelper'
-import LocationValue from '../src/models/LocationValue'
-import Location from '../src/models/Location'
-import Country from '../src/models/Country'
-import ParkingSpot from '../src/models/ParkingSpot'
+import LocationValue from '@/models/LocationValue'
+import Location from '@/models/Location'
+import Country from '@/models/Country'
+import ParkingSpot from '@/models/ParkingSpot'
 
 beforeAll(() => {
   testHelper.initializeLogger()

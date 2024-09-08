@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
-import env from '../config/env.config'
-import * as UserService from '../services/UserService'
+import env from '@/config/env.config'
+import * as UserService from '@/services/UserService'
 
 interface ReCaptchaProviderProps {
   children: ReactNode

@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
-import * as langHelper from '../common/langHelper'
-import env from '../config/env.config'
-import * as UserService from '../services/UserService'
+import * as langHelper from '@/common/langHelper'
+import env from '@/config/env.config'
+import * as UserService from '@/services/UserService'
 
 const language = UserService.getLanguage()
 const isUS = language === 'en' && env.CURRENCY === '$'

@@ -8,11 +8,11 @@ import {
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/booking-filter'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/booking-filter'
 import LocationSelectList from './LocationSelectList'
 import DatePicker from './DatePicker'
-import Accordion from '../components/Accordion'
+import Accordion from '@/components/Accordion'
 
 import '../assets/css/booking-filter.css'
 

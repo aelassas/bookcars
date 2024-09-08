@@ -7,7 +7,7 @@ import {
   TextFieldVariants
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import { strings } from '../lang/cars'
+import { strings } from '@/lang/cars'
 
 interface FuelPolicyListProps {
   value?: string
