@@ -27,7 +27,7 @@ import DatePicker from '@/components/DatePicker'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import SocialLogin from '@/components/SocialLogin'
 
-import '../assets/css/signup.css'
+import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()

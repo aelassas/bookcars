@@ -33,7 +33,7 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import CarRangeList from '@/components/CarRangeList'
 import MultimediaList from '@/components/MultimediaList'
 
-import '../assets/css/create-car.css'
+import '@/assets/css/create-car.css'
 
 const CreateCar = () => {
   const navigate = useNavigate()

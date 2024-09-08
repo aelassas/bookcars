@@ -28,7 +28,7 @@ import CarSelectList from '@/components/CarSelectList'
 import StatusList from '@/components/StatusList'
 import DateTimePicker from '@/components/DateTimePicker'
 
-import '../assets/css/booking.css'
+import '@/assets/css/booking.css'
 
 const Booking = () => {
   const [loading, setLoading] = useState(false)

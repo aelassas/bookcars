@@ -7,7 +7,7 @@ import Search from '@/components/Search'
 import LocationList from '@/components/LocationList'
 import InfoBox from '@/components/InfoBox'
 
-import '../assets/css/locations.css'
+import '@/assets/css/locations.css'
 
 const Locations = () => {
   const [keyword, setKeyword] = useState('')

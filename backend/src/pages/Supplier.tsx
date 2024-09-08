@@ -27,7 +27,7 @@ import InfoBox from '@/components/InfoBox'
 import Error from './Error'
 import NoMatch from './NoMatch'
 
-import '../assets/css/supplier.css'
+import '@/assets/css/supplier.css'
 
 const Supplier = () => {
   const navigate = useNavigate()

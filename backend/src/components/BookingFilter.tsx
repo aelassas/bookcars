@@ -14,7 +14,7 @@ import LocationSelectList from './LocationSelectList'
 import DatePicker from './DatePicker'
 import Accordion from '@/components/Accordion'
 
-import '../assets/css/booking-filter.css'
+import '@/assets/css/booking-filter.css'
 
 interface BookingFilterProps {
   collapse?: boolean

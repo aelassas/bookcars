@@ -21,7 +21,7 @@ import Avatar from '@/components/Avatar'
 import Backdrop from '@/components/SimpleBackdrop'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 
-import '../assets/css/create-location.css'
+import '@/assets/css/create-location.css'
 import PositionInput from '@/components/PositionInput'
 
 const CreateLocation = () => {

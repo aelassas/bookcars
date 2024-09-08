@@ -19,7 +19,7 @@ import * as UserService from '@/services/UserService'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import * as helper from '@/common/helper'
 
-import '../assets/css/contact-form.css'
+import '@/assets/css/contact-form.css'
 
 interface ContactFormProps {
   user?: bookcarsTypes.User

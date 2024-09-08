@@ -5,7 +5,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import Accordion from './Accordion'
 
-import '../assets/css/fuel-policy-filter.css'
+import '@/assets/css/fuel-policy-filter.css'
 
 interface FuelPolicyFilterProps {
   className?: string

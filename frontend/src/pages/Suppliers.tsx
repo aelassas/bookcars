@@ -3,7 +3,7 @@ import Layout from '@/components/Layout'
 import SupplierList from '@/components/SupplierList'
 import Footer from '@/components/Footer'
 
-import '../assets/css/suppliers.css'
+import '@/assets/css/suppliers.css'
 
 const Suppliers = () => {
   const onLoad = () => {

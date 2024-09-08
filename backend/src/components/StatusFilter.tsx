@@ -6,7 +6,7 @@ import * as helper from '@/common/helper'
 import Accordion from '@/components/Accordion'
 import BookingStatus from './BookingStatus'
 
-import '../assets/css/status-filter.css'
+import '@/assets/css/status-filter.css'
 
 interface StatusFilterProps {
   className?: string

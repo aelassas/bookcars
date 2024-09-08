@@ -20,7 +20,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 
-import '../assets/css/settings.css'
+import '@/assets/css/settings.css'
 
 const Settings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

@@ -28,7 +28,7 @@ import * as LocationService from '@/services/LocationService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
 
-import '../assets/css/location-list.css'
+import '@/assets/css/location-list.css'
 import Avatar from './Avatar'
 
 interface LocationListProps {

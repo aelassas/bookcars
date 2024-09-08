@@ -51,7 +51,7 @@ import SocialLogin from '@/components/SocialLogin'
 import NoMatch from './NoMatch'
 import Info from './Info'
 
-import '../assets/css/checkout.css'
+import '@/assets/css/checkout.css'
 
 //
 // Make sure to call `loadStripe` outside of a component’s render to avoid

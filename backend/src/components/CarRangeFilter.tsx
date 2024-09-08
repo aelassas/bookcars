@@ -5,7 +5,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/car-range-filter'
 import Accordion from './Accordion'
 
-import '../assets/css/car-range-filter.css'
+import '@/assets/css/car-range-filter.css'
 
 interface CarRangeFilterProps {
   className?: string

@@ -11,7 +11,7 @@ import * as helper from '@/common/helper'
 
 import 'leaflet-boundary-canvas'
 import 'leaflet/dist/leaflet.css'
-import '../assets/css/map.css'
+import '@/assets/css/map.css'
 
 const DefaultIcon = L.icon({
   iconUrl: icon,

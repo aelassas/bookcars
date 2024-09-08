@@ -1,7 +1,7 @@
 import React from 'react'
 import { Info as InfoIcon } from '@mui/icons-material'
 
-import '../assets/css/info-box.css'
+import '@/assets/css/info-box.css'
 
 interface InfoBoxProps {
   className?: string

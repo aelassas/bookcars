@@ -24,7 +24,7 @@ import DatePicker from '@/components/DatePicker'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 
-import '../assets/css/settings.css'
+import '@/assets/css/settings.css'
 
 const Settings = () => {
   const navigate = useNavigate()

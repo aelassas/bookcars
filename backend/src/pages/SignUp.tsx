@@ -18,7 +18,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import * as helper from '@/common/helper'
 
-import '../assets/css/signup.css'
+import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()

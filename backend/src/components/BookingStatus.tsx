@@ -8,7 +8,7 @@ import {
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '@/common/helper'
 
-import '../assets/css/booking-status.css'
+import '@/assets/css/booking-status.css'
 
 interface BookingStatusProps {
   value: bookcarsTypes.BookingStatus

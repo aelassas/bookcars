@@ -24,7 +24,7 @@ import Avatar from '@/components/Avatar'
 import PositionInput from '@/components/PositionInput'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 
-import '../assets/css/update-location.css'
+import '@/assets/css/update-location.css'
 
 const UpdateLocation = () => {
   const [visible, setVisible] = useState(false)

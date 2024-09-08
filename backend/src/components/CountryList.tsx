@@ -30,7 +30,7 @@ import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
 
-import '../assets/css/country-list.css'
+import '@/assets/css/country-list.css'
 
 interface CountryListProps {
   keyword?: string
