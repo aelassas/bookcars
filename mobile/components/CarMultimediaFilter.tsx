@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import i18n from '../lang/i18n'
+import i18n from '@/lang/i18n'
 import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'

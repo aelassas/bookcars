@@ -5,13 +5,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import validator from 'validator'
 
-import TextInput from '../components/TextInput'
-import Button from '../components/Button'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as helper from '../common/helper'
-import Link from '../components/Link'
-import Header from '../components/Header'
+import TextInput from '@/components/TextInput'
+import Button from '@/components/Button'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import * as helper from '@/common/helper'
+import Link from '@/components/Link'
+import Header from '@/components/Header'
 
 const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ForgotPassword'>) => {
   const isFocused = useIsFocused()

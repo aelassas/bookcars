@@ -24,11 +24,11 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/user-list'
-import * as helper from '../common/helper'
-import * as UserService from '../services/UserService'
+import env from '@/config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/user-list'
+import * as helper from '@/common/helper'
+import * as UserService from '@/services/UserService'
 
 import '../assets/css/user-list.css'
 

@@ -5,10 +5,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { enUS, fr } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import Layout from '../components/Layout'
-import NotificationList from '../components/NotificationList'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import Layout from '@/components/Layout'
+import NotificationList from '@/components/NotificationList'
 
 const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Notifications'>) => {
   const isFocused = useIsFocused()

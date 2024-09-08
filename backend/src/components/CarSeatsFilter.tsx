@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/car-seats-filter'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/car-seats-filter'
 import Accordion from './Accordion'
 
 import '../assets/css/car-seats-filter.css'

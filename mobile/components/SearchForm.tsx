@@ -3,14 +3,14 @@ import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import * as env from '../config/env.config'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as helper from '../common/helper'
-import Switch from '../components/Switch'
-import Button from '../components/Button'
-import LocationSelectList from '../components/LocationSelectList'
-import DateTimePicker from '../components/DateTimePicker'
+import * as env from '@/config/env.config'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import * as helper from '@/common/helper'
+import Switch from '@/components/Switch'
+import Button from '@/components/Button'
+import LocationSelectList from '@/components/LocationSelectList'
+import DateTimePicker from '@/components/DateTimePicker'
 
 export interface SearchFormProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,

@@ -1,4 +1,4 @@
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 
 export const en = {
   GENERIC_ERROR: 'An unhandled error occurred.',

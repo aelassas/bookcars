@@ -9,12 +9,12 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-in'
-import * as UserService from '../services/UserService'
-import Error from '../components/Error'
-import Layout from '../components/Layout'
-import SocialLogin from '../components/SocialLogin'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/sign-in'
+import * as UserService from '@/services/UserService'
+import Error from '@/components/Error'
+import Layout from '@/components/Layout'
+import SocialLogin from '@/components/SocialLogin'
 
 import '../assets/css/signin.css'
 

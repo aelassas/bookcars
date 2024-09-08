@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Layout from '../components/Layout'
-import { strings } from '../lang/suppliers'
-import Search from '../components/Search'
-import SupplierList from '../components/SupplierList'
-import InfoBox from '../components/InfoBox'
-import * as helper from '../common/helper'
+import Layout from '@/components/Layout'
+import { strings } from '@/lang/suppliers'
+import Search from '@/components/Search'
+import SupplierList from '@/components/SupplierList'
+import InfoBox from '@/components/InfoBox'
+import * as helper from '@/common/helper'
 
 import '../assets/css/suppliers.css'
 

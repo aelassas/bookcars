@@ -7,9 +7,9 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
 import Button from './Button'
-import * as helper from '../common/helper'
-import * as env from '../config/env.config'
-import i18n from '../lang/i18n'
+import * as helper from '@/common/helper'
+import * as env from '@/config/env.config'
+import i18n from '@/lang/i18n'
 
 interface CarProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>

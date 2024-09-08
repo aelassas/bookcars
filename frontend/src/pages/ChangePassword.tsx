@@ -9,13 +9,13 @@ import {
   Button
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/change-password'
-import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
-import Footer from '../components/Footer'
-import * as helper from '../common/helper'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/change-password'
+import * as UserService from '@/services/UserService'
+import Backdrop from '@/components/SimpleBackdrop'
+import Footer from '@/components/Footer'
+import * as helper from '@/common/helper'
 
 import '../assets/css/change-password.css'
 
