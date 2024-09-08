@@ -17,7 +17,7 @@ import * as LocationService from '@/services/LocationService'
 import LocationSelectList from '@/components/LocationSelectList'
 import DateTimePicker from '@/components/DateTimePicker'
 
-import '../assets/css/search-form.css'
+import '@/assets/css/search-form.css'
 
 interface SearchFormProps {
   pickupLocation?: string

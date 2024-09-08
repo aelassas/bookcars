@@ -17,7 +17,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Footer from '@/components/Footer'
 import * as helper from '@/common/helper'
 
-import '../assets/css/change-password.css'
+import '@/assets/css/change-password.css'
 
 const ChangePassword = () => {
   const navigate = useNavigate()

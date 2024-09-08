@@ -45,7 +45,7 @@ import StatusList from '@/components/StatusList'
 import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
 
-import '../assets/css/booking.css'
+import '@/assets/css/booking.css'
 
 const UpdateBooking = () => {
   const navigate = useNavigate()

@@ -18,11 +18,11 @@ import SearchForm from '@/components/SearchForm'
 import Map from '@/components/Map'
 import Footer from '@/components/Footer'
 
-import Mini from '../assets/img/mini.png'
-import Midi from '../assets/img/midi.png'
-import Maxi from '../assets/img/maxi.png'
+import Mini from '@/assets/img/mini.png'
+import Midi from '@/assets/img/midi.png'
+import Maxi from '@/assets/img/maxi.png'
 
-import '../assets/css/home.css'
+import '@/assets/css/home.css'
 
 const Home = () => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])

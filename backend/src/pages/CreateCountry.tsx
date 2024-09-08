@@ -16,7 +16,7 @@ import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 
-import '../assets/css/create-country.css'
+import '@/assets/css/create-country.css'
 
 const CreateCountry = () => {
   const [visible, setVisible] = useState(false)

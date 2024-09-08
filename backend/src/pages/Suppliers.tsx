@@ -8,7 +8,7 @@ import SupplierList from '@/components/SupplierList'
 import InfoBox from '@/components/InfoBox'
 import * as helper from '@/common/helper'
 
-import '../assets/css/suppliers.css'
+import '@/assets/css/suppliers.css'
 
 const Suppliers = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

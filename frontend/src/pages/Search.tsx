@@ -27,9 +27,9 @@ import CarMultimediaFilter from '@/components/CarMultimediaFilter'
 import CarSeatsFilter from '@/components/CarSeatsFilter'
 import Map from '@/components/Map'
 
-import ViewOnMap from '../assets/img/view-on-map.png'
+import ViewOnMap from '@/assets/img/view-on-map.png'
 
-import '../assets/css/search.css'
+import '@/assets/css/search.css'
 
 const allSuppliers = await SupplierService.getAllSuppliers()
 const allSuppliersIds = bookcarsHelper.flattenSuppliers(allSuppliers)

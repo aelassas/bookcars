@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '@/components/Layout'
 
-import '../assets/css/about.css'
+import '@/assets/css/about.css'
 
 const About = () => {
   const onLoad = () => { }

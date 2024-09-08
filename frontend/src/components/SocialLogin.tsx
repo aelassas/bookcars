@@ -11,11 +11,11 @@ import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'
 
-import FacebookIcon from '../assets/img/facebook-icon.png'
-import AppleIcon from '../assets/img/apple-icon.png'
-import GoogleIcon from '../assets/img/google-icon.png'
+import FacebookIcon from '@/assets/img/facebook-icon.png'
+import AppleIcon from '@/assets/img/apple-icon.png'
+import GoogleIcon from '@/assets/img/google-icon.png'
 
-import '../assets/css/social-login.css'
+import '@/assets/css/social-login.css'
 
 const REDIRECT_URI = window.location.href
 

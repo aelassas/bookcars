@@ -31,7 +31,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
 
-import '../assets/css/create-user.css'
+import '@/assets/css/create-user.css'
 
 const CreateUser = () => {
   const navigate = useNavigate()

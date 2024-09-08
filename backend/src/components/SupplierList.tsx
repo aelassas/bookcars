@@ -26,7 +26,7 @@ import * as SupplierService from '@/services/SupplierService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
 
-import '../assets/css/supplier-list.css'
+import '@/assets/css/supplier-list.css'
 
 interface SupplierListProps {
   user?: bookcarsTypes.User

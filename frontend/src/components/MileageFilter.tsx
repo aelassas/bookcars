@@ -5,7 +5,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import Accordion from './Accordion'
 
-import '../assets/css/mileage-filter.css'
+import '@/assets/css/mileage-filter.css'
 
 interface MileageFilterProps {
   className?: string

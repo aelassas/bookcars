@@ -34,7 +34,7 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import MultimediaList from '@/components/MultimediaList'
 import CarRangeList from '@/components/CarRangeList'
 
-import '../assets/css/create-car.css'
+import '@/assets/css/create-car.css'
 
 const UpdateCar = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

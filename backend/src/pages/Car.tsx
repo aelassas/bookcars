@@ -33,8 +33,8 @@ import Avatar from '@/components/Avatar'
 import BookingList from '@/components/BookingList'
 import * as helper from '@/common/helper'
 
-import DoorsIcon from '../assets/img/car-door.png'
-import '../assets/css/car.css'
+import DoorsIcon from '@/assets/img/car-door.png'
+import '@/assets/css/car.css'
 
 const Car = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

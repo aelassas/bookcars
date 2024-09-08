@@ -7,7 +7,7 @@ import { strings } from '@/lang/parking-spot-edit-list'
 import env from '@/config/env.config'
 import PositionInput from './PositionInput'
 
-import '../assets/css/parking-spot-edit-list.css'
+import '@/assets/css/parking-spot-edit-list.css'
 
 interface ParkingSpotEditListProps {
   title?: string
