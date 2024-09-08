@@ -30,7 +30,7 @@ import { strings } from '@/lang/user-list'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
 
-import '../assets/css/user-list.css'
+import '@/assets/css/user-list.css'
 
 interface UserListProps {
   types?: bookcarsTypes.UserType[]

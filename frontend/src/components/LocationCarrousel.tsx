@@ -15,7 +15,7 @@ import Badge from './Badge'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import '../assets/css/location-carrousel.css'
+import '@/assets/css/location-carrousel.css'
 
 interface LocationCarrouselProps {
   locations: bookcarsTypes.Location[]

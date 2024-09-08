@@ -25,7 +25,7 @@ import CarMultimediaFilter from '@/components/CarMultimediaFilter'
 import CarRatingFilter from '@/components/CarRatingFilter'
 import CarSeatsFilter from '@/components/CarSeatsFilter'
 
-import '../assets/css/cars.css'
+import '@/assets/css/cars.css'
 
 const Cars = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

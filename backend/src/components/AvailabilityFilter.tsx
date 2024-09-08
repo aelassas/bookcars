@@ -6,7 +6,7 @@ import { strings } from '@/lang/cars'
 import Accordion from './Accordion'
 import * as helper from '@/common/helper'
 
-import '../assets/css/availability-filter.css'
+import '@/assets/css/availability-filter.css'
 
 interface AvailabilityFilterProps {
   className?: string

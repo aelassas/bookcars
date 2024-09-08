@@ -23,7 +23,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 
-import '../assets/css/create-supplier.css'
+import '@/assets/css/create-supplier.css'
 
 const CreateSupplier = () => {
   const navigate = useNavigate()

@@ -33,7 +33,7 @@ import * as BookingService from '@/services/BookingService'
 import StatusList from './StatusList'
 import BookingStatus from './BookingStatus'
 
-import '../assets/css/booking-list.css'
+import '@/assets/css/booking-list.css'
 
 interface BookingListProps {
   suppliers?: string[]

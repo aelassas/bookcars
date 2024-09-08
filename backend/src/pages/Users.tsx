@@ -9,7 +9,7 @@ import UserTypeFilter from '@/components/UserTypeFilter'
 import Search from '@/components/Search'
 import UserList from '@/components/UserList'
 
-import '../assets/css/users.css'
+import '@/assets/css/users.css'
 
 const Users = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

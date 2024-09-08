@@ -18,7 +18,7 @@ import { strings } from '@/lang/reset-password'
 import SocialLogin from '@/components/SocialLogin'
 import NoMatch from './NoMatch'
 
-import '../assets/css/forgot-password.css'
+import '@/assets/css/forgot-password.css'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')

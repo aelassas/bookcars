@@ -6,7 +6,7 @@ import env from '@/config/env.config'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import '../assets/css/supplier-carrousel.css'
+import '@/assets/css/supplier-carrousel.css'
 
 interface SupplierCarrouselProps {
   suppliers: bookcarsTypes.User[]

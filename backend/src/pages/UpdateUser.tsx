@@ -33,7 +33,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
 
-import '../assets/css/update-user.css'
+import '@/assets/css/update-user.css'
 
 const UpdateUser = () => {
   const navigate = useNavigate()

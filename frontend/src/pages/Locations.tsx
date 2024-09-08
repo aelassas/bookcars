@@ -10,7 +10,7 @@ import Map from '@/components/Map'
 import SearchForm from '@/components/SearchForm'
 import Footer from '@/components/Footer'
 
-import '../assets/css/locations.css'
+import '@/assets/css/locations.css'
 
 const Locations = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])

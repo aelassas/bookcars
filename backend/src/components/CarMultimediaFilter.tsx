@@ -5,7 +5,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/car-multimedia-filter'
 import Accordion from './Accordion'
 
-import '../assets/css/car-multimedia-filter.css'
+import '@/assets/css/car-multimedia-filter.css'
 
 interface CarMultimediaFilterProps {
   className?: string

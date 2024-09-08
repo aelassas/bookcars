@@ -18,7 +18,7 @@ import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 
-import '../assets/css/forgot-password.css'
+import '@/assets/css/forgot-password.css'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')

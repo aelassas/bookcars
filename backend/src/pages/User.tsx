@@ -25,7 +25,7 @@ import BookingList from '@/components/BookingList'
 import NoMatch from './NoMatch'
 import * as SupplierService from '@/services/SupplierService'
 
-import '../assets/css/user.css'
+import '@/assets/css/user.css'
 
 const User = () => {
   const navigate = useNavigate()

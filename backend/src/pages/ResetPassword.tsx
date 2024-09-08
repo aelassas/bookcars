@@ -18,7 +18,7 @@ import Error from './Error'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
 
-import '../assets/css/reset-password.css'
+import '@/assets/css/reset-password.css'
 
 const ResetPassword = () => {
   const navigate = useNavigate()

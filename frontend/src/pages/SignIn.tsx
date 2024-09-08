@@ -16,7 +16,7 @@ import Error from '@/components/Error'
 import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
 
-import '../assets/css/signin.css'
+import '@/assets/css/signin.css'
 
 const SignIn = () => {
   const navigate = useNavigate()

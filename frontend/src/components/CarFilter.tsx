@@ -11,7 +11,7 @@ import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
 import Accordion from './Accordion'
 
-import '../assets/css/car-filter.css'
+import '@/assets/css/car-filter.css'
 
 interface CarFilterProps {
   from: Date

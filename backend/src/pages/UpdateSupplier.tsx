@@ -25,7 +25,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
 
-import '../assets/css/update-supplier.css'
+import '@/assets/css/update-supplier.css'
 
 const UpdateSupplier = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

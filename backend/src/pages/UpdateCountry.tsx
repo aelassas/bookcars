@@ -20,7 +20,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 
-import '../assets/css/update-country.css'
+import '@/assets/css/update-country.css'
 
 const UpdateCountry = () => {
   const [visible, setVisible] = useState(false)

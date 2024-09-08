@@ -20,7 +20,7 @@ import { strings } from '@/lang/activate'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
 
-import '../assets/css/activate.css'
+import '@/assets/css/activate.css'
 
 const Activate = () => {
   const navigate = useNavigate()
