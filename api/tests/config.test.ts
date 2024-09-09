@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import * as env from '../src/config/env.config'
+import * as env from '@/config/env.config'
 
 describe('Test configuration options', () => {
     it('should test configuration options', async () => {

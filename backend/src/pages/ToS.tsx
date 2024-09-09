@@ -1,7 +1,7 @@
 import React from 'react'
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 
-import '../assets/css/tos.css'
+import '@/assets/css/tos.css'
 
 const ToS = () => {
   const onLoad = () => { }

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
-import Layout from '../components/Layout'
-import ContactForm from '../components/ContactForm'
-import Footer from '../components/Footer'
+import Layout from '@/components/Layout'
+import ContactForm from '@/components/ContactForm'
+import Footer from '@/components/Footer'
 
-import '../assets/css/contact.css'
+import '@/assets/css/contact.css'
 
 const Contact = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

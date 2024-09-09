@@ -10,15 +10,15 @@ import {
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-up'
-import * as UserService from '../services/UserService'
-import Layout from '../components/Layout'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
-import * as helper from '../common/helper'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/sign-up'
+import * as UserService from '@/services/UserService'
+import Layout from '@/components/Layout'
+import Error from '@/components/Error'
+import Backdrop from '@/components/SimpleBackdrop'
+import * as helper from '@/common/helper'
 
-import '../assets/css/signup.css'
+import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()

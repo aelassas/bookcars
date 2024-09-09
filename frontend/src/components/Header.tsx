@@ -34,17 +34,17 @@ import {
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import env from '../config/env.config'
-import { strings } from '../lang/header'
-import { strings as commonStrings } from '../lang/common'
-import * as UserService from '../services/UserService'
-import * as NotificationService from '../services/NotificationService'
+import env from '@/config/env.config'
+import { strings } from '@/lang/header'
+import { strings as commonStrings } from '@/lang/common'
+import * as UserService from '@/services/UserService'
+import * as NotificationService from '@/services/NotificationService'
 import Avatar from './Avatar'
-import * as langHelper from '../common/langHelper'
-import * as helper from '../common/helper'
+import * as langHelper from '@/common/langHelper'
+import * as helper from '@/common/helper'
 import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 
-import '../assets/css/header.css'
+import '@/assets/css/header.css'
 
 interface HeaderProps {
   user?: bookcarsTypes.User

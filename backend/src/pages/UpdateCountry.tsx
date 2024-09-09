@@ -9,18 +9,18 @@ import {
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings as clStrings } from '../lang/create-country'
-import { strings } from '../lang/update-country'
-import * as CountryService from '../services/CountryService'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings as clStrings } from '@/lang/create-country'
+import { strings } from '@/lang/update-country'
+import * as CountryService from '@/services/CountryService'
 import NoMatch from './NoMatch'
 import Error from './Error'
-import Backdrop from '../components/SimpleBackdrop'
-import * as helper from '../common/helper'
-import env from '../config/env.config'
+import Backdrop from '@/components/SimpleBackdrop'
+import * as helper from '@/common/helper'
+import env from '@/config/env.config'
 
-import '../assets/css/update-country.css'
+import '@/assets/css/update-country.css'
 
 const UpdateCountry = () => {
   const [visible, setVisible] = useState(false)

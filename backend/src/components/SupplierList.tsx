@@ -18,15 +18,15 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import Const from '../config/const'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/supplier-list'
-import * as SupplierService from '../services/SupplierService'
-import * as helper from '../common/helper'
+import env from '@/config/env.config'
+import Const from '@/config/const'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/supplier-list'
+import * as SupplierService from '@/services/SupplierService'
+import * as helper from '@/common/helper'
 import Pager from './Pager'
 
-import '../assets/css/supplier-list.css'
+import '@/assets/css/supplier-list.css'
 
 interface SupplierListProps {
   user?: bookcarsTypes.User

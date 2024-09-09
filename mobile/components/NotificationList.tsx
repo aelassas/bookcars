@@ -7,12 +7,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as NotificationService from '../services/NotificationService'
-import * as env from '../config/env.config'
-import * as helper from '../common/helper'
-import Checkbox from '../components/Checkbox'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import * as NotificationService from '@/services/NotificationService'
+import * as env from '@/config/env.config'
+import * as helper from '@/common/helper'
+import Checkbox from '@/components/Checkbox'
 import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 
 interface NotificationListProps {

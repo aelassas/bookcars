@@ -12,15 +12,15 @@ import {
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/settings'
-import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
-import Avatar from '../components/Avatar'
-import * as helper from '../common/helper'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/settings'
+import * as UserService from '@/services/UserService'
+import Backdrop from '@/components/SimpleBackdrop'
+import Avatar from '@/components/Avatar'
+import * as helper from '@/common/helper'
 
-import '../assets/css/settings.css'
+import '@/assets/css/settings.css'
 
 const Settings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

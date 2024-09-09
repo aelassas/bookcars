@@ -7,10 +7,10 @@ import {
   TextFieldVariants
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import { strings as commonStrings } from '../lang/common'
-import * as helper from '../common/helper'
+import { strings as commonStrings } from '@/lang/common'
+import * as helper from '@/common/helper'
 
-import '../assets/css/status-list.css'
+import '@/assets/css/status-list.css'
 
 interface StatusListProps {
   value?: string

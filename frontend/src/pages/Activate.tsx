@@ -10,17 +10,17 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import * as UserService from '../services/UserService'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings as cpStrings } from '../lang/change-password'
-import { strings as rpStrings } from '../lang/reset-password'
-import { strings as mStrings } from '../lang/master'
-import { strings } from '../lang/activate'
+import * as UserService from '@/services/UserService'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings as cpStrings } from '@/lang/change-password'
+import { strings as rpStrings } from '@/lang/reset-password'
+import { strings as mStrings } from '@/lang/master'
+import { strings } from '@/lang/activate'
 import NoMatch from './NoMatch'
-import * as helper from '../common/helper'
+import * as helper from '@/common/helper'
 
-import '../assets/css/activate.css'
+import '@/assets/css/activate.css'
 
 const Activate = () => {
   const navigate = useNavigate()

@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { Dialog, DialogContent } from '@mui/material'
 import L from 'leaflet'
-import env from '../config/env.config'
+import env from '@/config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import * as LocationService from '../services/LocationService'
-import Layout from '../components/Layout'
-import Map from '../components/Map'
-import SearchForm from '../components/SearchForm'
-import Footer from '../components/Footer'
+import * as LocationService from '@/services/LocationService'
+import Layout from '@/components/Layout'
+import Map from '@/components/Map'
+import SearchForm from '@/components/SearchForm'
+import Footer from '@/components/Footer'
 
-import '../assets/css/locations.css'
+import '@/assets/css/locations.css'
 
 const Locations = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])

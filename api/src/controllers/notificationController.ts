@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
-import i18n from '../lang/i18n'
-import Notification from '../models/Notification'
-import NotificationCounter from '../models/NotificationCounter'
-import * as logger from '../common/logger'
+import i18n from '@/lang/i18n'
+import Notification from '@/models/Notification'
+import NotificationCounter from '@/models/NotificationCounter'
+import * as logger from '@/common/logger'
 
 /**
  * Get NotificationCounter by UserID.

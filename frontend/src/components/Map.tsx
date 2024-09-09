@@ -4,14 +4,14 @@ import L, { LatLngExpression } from 'leaflet'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import * as bookcarsTypes from ':bookcars-types'
-import * as UserService from '../services/UserService'
-import { strings } from '../lang/map'
-import * as LocationService from '../services/LocationService'
-import * as helper from '../common/helper'
+import * as UserService from '@/services/UserService'
+import { strings } from '@/lang/map'
+import * as LocationService from '@/services/LocationService'
+import * as helper from '@/common/helper'
 
 import 'leaflet-boundary-canvas'
 import 'leaflet/dist/leaflet.css'
-import '../assets/css/map.css'
+import '@/assets/css/map.css'
 
 const DefaultIcon = L.icon({
   iconUrl: icon,

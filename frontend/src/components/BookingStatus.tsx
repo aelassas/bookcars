@@ -6,9 +6,9 @@ import {
   Cancel as CancelledIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '../common/helper'
+import * as helper from '@/common/helper'
 
-import '../assets/css/booking-status.css'
+import '@/assets/css/booking-status.css'
 
 interface BookingStatusProps {
   value: bookcarsTypes.BookingStatus

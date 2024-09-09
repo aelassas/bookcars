@@ -24,16 +24,16 @@ import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/booking-list'
-import * as helper from '../common/helper'
-import * as BookingService from '../services/BookingService'
+import env from '@/config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings as csStrings } from '@/lang/cars'
+import { strings } from '@/lang/booking-list'
+import * as helper from '@/common/helper'
+import * as BookingService from '@/services/BookingService'
 import StatusList from './StatusList'
 import BookingStatus from './BookingStatus'
 
-import '../assets/css/booking-list.css'
+import '@/assets/css/booking-list.css'
 
 interface BookingListProps {
   suppliers?: string[]

@@ -1,5 +1,5 @@
 import Toast from 'react-native-root-toast'
-import i18n from '../lang/i18n'
+import i18n from '@/lang/i18n'
 
 /**
  * Toast a message.

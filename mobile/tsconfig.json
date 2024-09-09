@@ -8,6 +8,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
+      "@/*": ["./*"],
       ":bookcars-types": ["../packages/bookcars-types"],
       ":bookcars-helper": ["../packages/bookcars-helper"]
     }

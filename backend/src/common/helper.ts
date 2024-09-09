@@ -2,10 +2,10 @@ import { toast } from 'react-toastify'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as CarService from '../services/CarService'
-import env from '../config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/cars'
+import * as CarService from '@/services/CarService'
+import env from '@/config/env.config'
 
 /**
  * Get language.

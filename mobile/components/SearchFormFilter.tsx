@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import i18n from '../lang/i18n'
+import i18n from '@/lang/i18n'
 import Accordion from './Accordion'
 import SearchForm, { SearchFormProps } from './SearchForm'
 

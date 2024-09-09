@@ -1,6 +1,6 @@
 import * as bookcarsTypes from ':bookcars-types'
 import axiosInstance from './axiosInstance'
-import env from '../config/env.config'
+import env from '@/config/env.config'
 
 /**
  * Get NotificationCounter by UserID.

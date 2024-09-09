@@ -1,12 +1,12 @@
 import 'dotenv/config'
 import request from 'supertest'
 import mongoose from 'mongoose'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '@/common/databaseHelper'
 import * as testHelper from './testHelper'
-import Notification from '../src/models/Notification'
-import NotificationCounter from '../src/models/NotificationCounter'
-import app from '../src/app'
-import * as env from '../src/config/env.config'
+import Notification from '@/models/Notification'
+import NotificationCounter from '@/models/NotificationCounter'
+import app from '@/app'
+import * as env from '@/config/env.config'
 
 let ADMIN_USER_ID: string
 let SUPPLIER_ID: string

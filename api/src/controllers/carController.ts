@@ -5,12 +5,12 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
-import Booking from '../models/Booking'
-import Car from '../models/Car'
-import i18n from '../lang/i18n'
-import * as env from '../config/env.config'
-import * as helper from '../common/helper'
-import * as logger from '../common/logger'
+import Booking from '@/models/Booking'
+import Car from '@/models/Car'
+import i18n from '@/lang/i18n'
+import * as env from '@/config/env.config'
+import * as helper from '@/common/helper'
+import * as logger from '@/common/logger'
 
 /**
  * Create a Car.

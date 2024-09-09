@@ -16,10 +16,10 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
-import * as helper from '../common/helper'
-import { strings as commonStrings } from '../lang/common'
-import * as UserService from '../services/UserService'
+import env from '@/config/env.config'
+import * as helper from '@/common/helper'
+import { strings as commonStrings } from '@/lang/common'
+import * as UserService from '@/services/UserService'
 
 interface AvatarProps {
   loggedUser?: bookcarsTypes.User

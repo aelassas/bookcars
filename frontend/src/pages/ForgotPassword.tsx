@@ -10,15 +10,15 @@ import {
 } from '@mui/material'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
-import * as UserService from '../services/UserService'
-import * as helper from '../common/helper'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/reset-password'
-import SocialLogin from '../components/SocialLogin'
+import * as UserService from '@/services/UserService'
+import * as helper from '@/common/helper'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/reset-password'
+import SocialLogin from '@/components/SocialLogin'
 import NoMatch from './NoMatch'
 
-import '../assets/css/forgot-password.css'
+import '@/assets/css/forgot-password.css'
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('')

@@ -1,6 +1,6 @@
 import { LocalizedStrings } from 'react-localization'
-import env from '../config/env.config'
-import * as UserService from '../services/UserService'
+import env from '@/config/env.config'
+import * as UserService from '@/services/UserService'
 
 /**
  * Get current language.

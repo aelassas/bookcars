@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Layout from '../components/Layout'
-import env from '../config/env.config'
-import { strings } from '../lang/users'
-import * as helper from '../common/helper'
-import UserTypeFilter from '../components/UserTypeFilter'
-import Search from '../components/Search'
-import UserList from '../components/UserList'
+import Layout from '@/components/Layout'
+import env from '@/config/env.config'
+import { strings } from '@/lang/users'
+import * as helper from '@/common/helper'
+import UserTypeFilter from '@/components/UserTypeFilter'
+import Search from '@/components/Search'
+import UserList from '@/components/UserList'
 
-import '../assets/css/users.css'
+import '@/assets/css/users.css'
 
 const Users = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

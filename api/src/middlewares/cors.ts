@@ -1,7 +1,7 @@
 import cors from 'cors'
-import * as helper from '../common/helper'
-import * as env from '../config/env.config'
-import * as logger from '../common/logger'
+import * as helper from '@/common/helper'
+import * as env from '@/config/env.config'
+import * as logger from '@/common/logger'
 
 const whitelist = [
   helper.trimEnd(env.BACKEND_HOST, '/'),
