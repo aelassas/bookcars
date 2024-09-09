@@ -242,7 +242,7 @@ const Settings = () => {
                 >
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
                   {commonStrings.SAVE}
                 </Button>
                 <Button

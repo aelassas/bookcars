@@ -196,7 +196,7 @@ const Settings = () => {
                 <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href="/change-password">
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
