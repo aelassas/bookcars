@@ -13,7 +13,7 @@ import * as NotificationService from '@/services/NotificationService'
 import * as env from '@/config/env.config'
 import * as helper from '@/common/helper'
 import Checkbox from '@/components/Checkbox'
-import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
+import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 
 interface NotificationListProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
