@@ -14,12 +14,17 @@ import env from '@/config/env.config'
 import App from '@/App'
 
 import { strings as activateStrings } from '@/lang/activate'
+import { strings as bookingStrings } from '@/lang/booking'
 import { strings as bookingCarListStrings } from '@/lang/booking-car-list'
 import { strings as bookingFilterStrings } from '@/lang/booking-filter'
 import { strings as bookingListStrings } from '@/lang/booking-list'
-import { strings as bookingStrings } from '@/lang/booking'
 import { strings as bookingsStrings } from '@/lang/bookings'
+import { strings as carMultimediaFilterStrings } from '@/lang/car-multimedia-filter'
+import { strings as carRangeFilterStrings } from '@/lang/car-range-filter'
+import { strings as carRatingFilterStrings } from '@/lang/car-rating-filter'
 import { strings as carsStrings } from '@/lang/cars'
+import { strings as carSeatsFilterStrings } from '@/lang/car-seats-filter'
+import { strings as carSpecsStrings } from '@/lang/car-specs'
 import { strings as changePasswordStrings } from '@/lang/change-password'
 import { strings as checkoutStrings } from '@/lang/checkout'
 import { strings as commonStrings } from '@/lang/common'
@@ -27,16 +32,18 @@ import { strings as contactFormStrings } from '@/lang/contact-form'
 import { strings as footerStrings } from '@/lang/footer'
 import { strings as headerStrings } from '@/lang/header'
 import { strings as homeStrings } from '@/lang/home'
+import { strings as locationCarrouselStrings } from '@/lang/location-carrousel'
 import { strings as mapStrings } from '@/lang/map'
 import { strings as masterStrings } from '@/lang/master'
 import { strings as noMatchStrings } from '@/lang/no-match'
 import { strings as notificationsStrings } from '@/lang/notifications'
 import { strings as resetPasswordStrings } from '@/lang/reset-password'
-import { strings as settingstrings } from '@/lang/settings'
+import { strings as searchSrings } from '@/lang/search'
+import { strings as searchFormStrings } from '@/lang/search-form'
+import { strings as settingsStrings } from '@/lang/settings'
 import { strings as signInStrings } from '@/lang/sign-in'
 import { strings as signUpStrings } from '@/lang/sign-up'
 import { strings as tosStrings } from '@/lang/tos'
-import { strings as carSpecsStrings } from '@/lang/car-specs'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
@@ -106,12 +113,16 @@ if (lang) {
     UserService.setLanguage(_lang)
 
     activateStrings.setLanguage(_lang)
+    bookingStrings.setLanguage(_lang)
     bookingCarListStrings.setLanguage(_lang)
     bookingFilterStrings.setLanguage(_lang)
     bookingListStrings.setLanguage(_lang)
-    bookingStrings.setLanguage(_lang)
     bookingsStrings.setLanguage(_lang)
+    carMultimediaFilterStrings.setLanguage(_lang)
+    carRangeFilterStrings.setLanguage(_lang)
+    carRatingFilterStrings.setLanguage(_lang)
     carsStrings.setLanguage(_lang)
+    carSeatsFilterStrings.setLanguage(_lang)
     changePasswordStrings.setLanguage(_lang)
     checkoutStrings.setLanguage(_lang)
     commonStrings.setLanguage(_lang)
@@ -119,12 +130,15 @@ if (lang) {
     footerStrings.setLanguage(_lang)
     headerStrings.setLanguage(_lang)
     homeStrings.setLanguage(_lang)
+    locationCarrouselStrings.setLanguage(_lang)
     mapStrings.setLanguage(_lang)
     masterStrings.setLanguage(_lang)
     noMatchStrings.setLanguage(_lang)
     notificationsStrings.setLanguage(_lang)
     resetPasswordStrings.setLanguage(_lang)
-    settingstrings.setLanguage(_lang)
+    searchSrings.setLanguage(_lang)
+    searchFormStrings.setLanguage(_lang)
+    settingsStrings.setLanguage(_lang)
     signInStrings.setLanguage(_lang)
     signUpStrings.setLanguage(_lang)
     tosStrings.setLanguage(_lang)
