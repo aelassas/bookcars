@@ -6,7 +6,7 @@ import {
   LoginSocialGoogle,
 } from 'reactjs-social-login'
 import * as bookcarsTypes from ':bookcars-types'
-import { IResolveParams } from '../types'
+import { IResolveParams } from '@/types'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'

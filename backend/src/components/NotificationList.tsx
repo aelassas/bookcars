@@ -31,7 +31,7 @@ import * as NotificationService from '@/services/NotificationService'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 import Backdrop from '@/components/SimpleBackdrop'
-import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
+import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 
 import '@/assets/css/notification-list.css'
 
