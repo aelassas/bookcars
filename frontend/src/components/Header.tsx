@@ -42,7 +42,7 @@ import * as NotificationService from '@/services/NotificationService'
 import Avatar from './Avatar'
 import * as langHelper from '@/common/langHelper'
 import * as helper from '@/common/helper'
-import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
+import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 
 import '@/assets/css/header.css'
 

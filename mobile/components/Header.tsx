@@ -8,7 +8,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 
 import * as UserService from '@/services/UserService'
 import * as env from '@/config/env.config'
-import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
+import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 import * as NotificationService from '@/services/NotificationService'
 
 interface HeaderProps {

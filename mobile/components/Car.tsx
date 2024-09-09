@@ -248,7 +248,7 @@ const Car = ({
           </View>
           {distance && (
             <View style={styles.distance}>
-              <Image style={styles.distanceImage} source={require('../assets/distance-icon.png')} />
+              <Image style={styles.distanceImage} source={require('@/assets/distance-icon.png')} />
               <Text style={styles.distanceText}>{`${distance} ${i18n.t('FROM_YOU')}`}</Text>
             </View>
           )}
@@ -281,7 +281,7 @@ const Car = ({
           )}
           {car.doors > 0 && (
             <View style={styles.info}>
-              <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
+              <Image source={require('@/assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
               <Text style={styles.text}>{car.doors}</Text>
             </View>
           )}
@@ -359,7 +359,7 @@ const Car = ({
                 {car.rating && car.rating >= 1 && (
                   <>
                     <Text style={styles.ratingText}>{car.rating.toFixed(2)}</Text>
-                    <Image source={require('../assets/rating-icon.png')} style={styles.ratingImage} />
+                    <Image source={require('@/assets/rating-icon.png')} style={styles.ratingImage} />
                   </>
                 )}
                 {car.trips >= 10 && <Text style={styles.tripsText}>{`(${car.trips} ${i18n.t('TRIPS')})`}</Text>}
@@ -369,10 +369,10 @@ const Car = ({
                   <Image
                     source={
                       car.co2 <= 90
-                        ? require('../assets/co2-min-icon.png')
+                        ? require('@/assets/co2-min-icon.png')
                         : car.co2 <= 110
-                          ? require('../assets/co2-middle-icon.png')
-                          : require('../assets/co2-max-icon.png')
+                          ? require('@/assets/co2-middle-icon.png')
+                          : require('@/assets/co2-max-icon.png')
                     }
                     style={styles.co2Image}
                   />
