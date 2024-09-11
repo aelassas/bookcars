@@ -1,12 +1,12 @@
 import React, { useState, useEffect, CSSProperties, ReactNode } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import { strings } from '../lang/master'
+import { strings } from '@/lang/master'
 import Header from './Header'
-import * as UserService from '../services/UserService'
+import * as UserService from '@/services/UserService'
 import Unauthorized from './Unauthorized'
-import * as helper from '../common/helper'
-import { useInit } from '../common/customHooks'
+import * as helper from '@/common/helper'
+import { useInit } from '@/common/customHooks'
 
 interface LayoutProps {
   user?: bookcarsTypes.User

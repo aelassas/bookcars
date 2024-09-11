@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { Rating } from '@mui/material'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/car-rating-filter'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/car-rating-filter'
 import Accordion from './Accordion'
 
-import '../assets/css/car-rating-filter.css'
+import '@/assets/css/car-rating-filter.css'
 
 interface CarRatingFilterProps {
   className?: string

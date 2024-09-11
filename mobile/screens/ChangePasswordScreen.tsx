@@ -4,12 +4,12 @@ import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
 
-import Layout from '../components/Layout'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as helper from '../common/helper'
-import TextInput from '../components/TextInput'
-import Button from '../components/Button'
+import Layout from '@/components/Layout'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import * as helper from '@/common/helper'
+import TextInput from '@/components/TextInput'
+import Button from '@/components/Button'
 
 const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ChangePassword'>) => {
   const isFocused = useIsFocused()

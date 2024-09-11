@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/cars'
 import Accordion from './Accordion'
 
-import '../assets/css/fuel-policy-filter.css'
+import '@/assets/css/fuel-policy-filter.css'
 
 interface FuelPolicyFilterProps {
   className?: string

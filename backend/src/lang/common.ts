@@ -1,6 +1,6 @@
 import LocalizedStrings from 'react-localization'
-import env from '../config/env.config'
-import * as langHelper from '../common/langHelper'
+import env from '@/config/env.config'
+import * as langHelper from '@/common/langHelper'
 
 const strings = new LocalizedStrings({
   fr: {

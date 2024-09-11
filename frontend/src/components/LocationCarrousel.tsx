@@ -8,14 +8,14 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as bookcarsTypes from ':bookcars-types'
-import env from '../config/env.config'
-import { strings } from '../lang/location-carrousel'
-import { strings as commonStrings } from '../lang/common'
+import env from '@/config/env.config'
+import { strings } from '@/lang/location-carrousel'
+import { strings as commonStrings } from '@/lang/common'
 import Badge from './Badge'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import '../assets/css/location-carrousel.css'
+import '@/assets/css/location-carrousel.css'
 
 interface LocationCarrouselProps {
   locations: bookcarsTypes.Location[]

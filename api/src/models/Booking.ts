@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 
 export const BOOKING_EXPIRE_AT_INDEX_NAME = 'expireAt'
 

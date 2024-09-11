@@ -1,6 +1,6 @@
 import React from 'react'
 
-import '../assets/css/badge.css'
+import '@/assets/css/badge.css'
 
 interface BadgeProps {
   backgroundColor: string

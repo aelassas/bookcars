@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Button, FormControl, Input, InputLabel } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/parking-spot-edit-list'
-import env from '../config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/parking-spot-edit-list'
+import env from '@/config/env.config'
 import PositionInput from './PositionInput'
 
-import '../assets/css/parking-spot-edit-list.css'
+import '@/assets/css/parking-spot-edit-list.css'
 
 interface ParkingSpotEditListProps {
   title?: string

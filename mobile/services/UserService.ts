@@ -2,9 +2,9 @@ import { Platform } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as Localization from 'expo-localization'
 import axiosInstance from './axiosInstance'
-import * as env from '../config/env.config'
-import * as AsyncStorage from '../common/AsyncStorage'
-import * as toastHelper from '../common/toastHelper'
+import * as env from '@/config/env.config'
+import * as AsyncStorage from '@/common/AsyncStorage'
+import * as toastHelper from '@/common/toastHelper'
 import * as bookcarsTypes from ':bookcars-types'
 
 /**
@@ -505,9 +505,13 @@ export const loggedIn = async () => {
  * @param {string} id
  * @returns {Promise<bookcarsTypes.User|null>}
  */
-export const hasPassword = (id: string): Promise<number> => axiosInstance
-  .get(
-    `/api/has-password/${encodeURIComponent(id)}`,
-    { withCredentials: true }
-  )
-  .then((res) => res.status)
+export const hasPassword = async (id: string): Promise<number> => {
+  const headers = await authHeader()
+
+  return axiosInstance
+    .get(
+      `/api/has-password/${encodeURIComponent(id)}`,
+      { headers }
+    )
+    .then((res) => res.status)
+}

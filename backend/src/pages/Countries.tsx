@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Layout from '../components/Layout'
-import { strings } from '../lang/countries'
-import Search from '../components/Search'
-import CountryList from '../components/CountryList'
-import InfoBox from '../components/InfoBox'
+import Layout from '@/components/Layout'
+import { strings } from '@/lang/countries'
+import Search from '@/components/Search'
+import CountryList from '@/components/CountryList'
+import InfoBox from '@/components/InfoBox'
 
-import '../assets/css/countries.css'
+import '@/assets/css/countries.css'
 
 const Countries = () => {
   const [keyword, setKeyword] = useState('')

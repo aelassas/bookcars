@@ -3,15 +3,15 @@ import { FormControl, Button, FormControlLabel, Checkbox } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
 import { format } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
-import env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/search-form'
-import * as UserService from '../services/UserService'
+import env from '@/config/env.config'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/search-form'
+import * as UserService from '@/services/UserService'
 import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
 import Accordion from './Accordion'
 
-import '../assets/css/car-filter.css'
+import '@/assets/css/car-filter.css'
 
 interface CarFilterProps {
   from: Date

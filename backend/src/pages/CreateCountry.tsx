@@ -9,14 +9,14 @@ import {
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Layout from '../components/Layout'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/create-country'
-import * as CountryService from '../services/CountryService'
-import * as helper from '../common/helper'
-import env from '../config/env.config'
+import Layout from '@/components/Layout'
+import { strings as commonStrings } from '@/lang/common'
+import { strings } from '@/lang/create-country'
+import * as CountryService from '@/services/CountryService'
+import * as helper from '@/common/helper'
+import env from '@/config/env.config'
 
-import '../assets/css/create-country.css'
+import '@/assets/css/create-country.css'
 
 const CreateCountry = () => {
   const [visible, setVisible] = useState(false)

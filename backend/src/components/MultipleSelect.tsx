@@ -17,9 +17,9 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '../config/env.config'
+import env from '@/config/env.config'
 
-import '../assets/css/multiple-select.css'
+import '@/assets/css/multiple-select.css'
 
 interface MultipleSelectProps {
   label?: string

@@ -5,11 +5,11 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { CommonActions } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 
-import * as helper from '../common/helper'
-import * as env from '../config/env.config'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as CarService from '../services/CarService'
+import * as helper from '@/common/helper'
+import * as env from '@/config/env.config'
+import i18n from '@/lang/i18n'
+import * as UserService from '@/services/UserService'
+import * as CarService from '@/services/CarService'
 import Car from './Car'
 
 interface CarListProps {

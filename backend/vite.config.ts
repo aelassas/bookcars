@@ -11,6 +11,7 @@ export default ({ mode }: { mode: string }) => {
 
     resolve: {
       alias: {
+        '@': path.resolve(__dirname, './src'),
         ':bookcars-types': path.resolve(__dirname, '../packages/bookcars-types'),
         ':bookcars-helper': path.resolve(__dirname, '../packages/bookcars-helper'),
         ':disable-react-devtools': path.resolve(__dirname, '../packages/disable-react-devtools'),

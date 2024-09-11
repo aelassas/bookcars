@@ -1,9 +1,9 @@
 import React from 'react'
-import { strings } from '../lang/tos'
-import Layout from '../components/Layout'
-import Footer from '../components/Footer'
+import { strings } from '@/lang/tos'
+import Layout from '@/components/Layout'
+import Footer from '@/components/Footer'
 
-import '../assets/css/tos.css'
+import '@/assets/css/tos.css'
 
 const ToS = () => {
   const onLoad = () => { }

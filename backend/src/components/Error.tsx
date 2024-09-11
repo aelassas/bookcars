@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from '@mui/material'
-import { strings as commonStrings } from '../lang/common'
+import { strings as commonStrings } from '@/lang/common'
 
-import '../assets/css/error.css'
+import '@/assets/css/error.css'
 
 interface ErrorProps {
   message: string

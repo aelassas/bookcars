@@ -1,4 +1,4 @@
-import * as env from '../config/env.config'
+import * as env from '@/config/env.config'
 
 export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",

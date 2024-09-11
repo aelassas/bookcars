@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { IconButton, TextField } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
-import { strings as commonStrings } from '../lang/common'
+import { strings as commonStrings } from '@/lang/common'
 
-import '../assets/css/search.css'
+import '@/assets/css/search.css'
 
 interface SearchProps {
   className?: string

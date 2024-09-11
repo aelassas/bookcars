@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Layout from '../components/Layout'
-import env from '../config/env.config'
-import * as helper from '../common/helper'
-import BookingList from '../components/BookingList'
-import SupplierFilter from '../components/SupplierFilter'
-import StatusFilter from '../components/StatusFilter'
-import BookingFilter from '../components/BookingFilter'
-import * as SupplierService from '../services/SupplierService'
+import Layout from '@/components/Layout'
+import env from '@/config/env.config'
+import * as helper from '@/common/helper'
+import BookingList from '@/components/BookingList'
+import SupplierFilter from '@/components/SupplierFilter'
+import StatusFilter from '@/components/StatusFilter'
+import BookingFilter from '@/components/BookingFilter'
+import * as SupplierService from '@/services/SupplierService'
 
-import '../assets/css/bookings.css'
+import '@/assets/css/bookings.css'
 
 const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

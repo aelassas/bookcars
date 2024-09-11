@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 
-import '../assets/css/accordion.css'
+import '@/assets/css/accordion.css'
 
 interface AccordionProps {
   title?: string
