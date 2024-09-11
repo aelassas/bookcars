@@ -3,3 +3,5 @@
 /**/*.pem
 /**/*.pem-chain
 /**/*.ca.pem
+.vscode/
+
