@@ -80,8 +80,8 @@ const strings = new LocalizedStrings({
     FROM_YOU: ' de vous',
     TITLE_1: 'Auto ',
     TITLE_2: ' pour vous',
-    TITLE_CAR_AVAILABLE: 'voiture disponoble',
-    TITLE_CARS_AVAILABLE: 'voitures disponobles',
+    TITLE_CAR_AVAILABLE: 'voiture disponible',
+    TITLE_CARS_AVAILABLE: 'voitures disponibles',
   },
   en: {
     NEW_CAR: 'New car',
