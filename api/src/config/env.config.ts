@@ -591,6 +591,7 @@ export interface LocationInfo {
   longitude: number
   latitude: number
   name?: string
+  image?: string | null
   values: LocationValue[]
 }
 

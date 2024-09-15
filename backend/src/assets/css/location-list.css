@@ -52,5 +52,6 @@ section.location-list .location-image {
 @media only screen and (width >=960px) {
   section.location-list .location-list-item {
     min-width: 480px;
+    max-width: 600px;
   }
 }

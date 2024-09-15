@@ -52,14 +52,14 @@ export const create = async (req: Request, res: Response) => {
   const names = body
 
   try {
-    const values = []
+    const values: string[] = []
     for (const name of names) {
       const countryValue = new LocationValue({
         language: name.language,
         value: name.name,
       })
       await countryValue.save()
-      values.push(countryValue._id)
+      values.push(countryValue.id)
     }
 
     const country = new Country({ values })

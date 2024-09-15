@@ -39,6 +39,7 @@ const Home = () => {
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
+
   const onLoad = async () => {
     let _suppliers = await SupplierService.getAllSuppliers()
     _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
@@ -66,7 +67,7 @@ const Home = () => {
 
         </div>
 
-        <div className="suppliers">
+        <div className="home-suppliers">
           {suppliers.length > 0 && (
             <>
               <h1>{strings.SUPPLIERS_TITLE}</h1>
