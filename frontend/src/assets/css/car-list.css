@@ -155,11 +155,11 @@ section.car-list article .btn-book {
     left: 7px;
   }
 
-  section.car-list article div.car div.car-footer .car-footer-row1 {
+  section.car-list article div.car div.car-footer .car-footer-info {
     display: flex;
     flex-direction: row;
-    padding-left: 2px;
-    margin-bottom: 4px;
+    padding-left: 4px;
+    margin-top: 8px;
   }
 
   section.car-list article div.car .car-footer div.rating,
@@ -414,11 +414,11 @@ section.car-list article .btn-book {
     bottom: 20px;
   }
 
-  section.car-list article div.car div.car-footer .car-footer-row1 {
+  section.car-list article div.car div.car-footer .car-footer-info {
     display: flex;
     flex-direction: row;
-    padding-left: 2px;
-    margin-bottom: 2px;
+    padding-left: 4px;
+    margin-top: 8px;
   }
 
   section.car-list article div.car .car-footer div.rating,

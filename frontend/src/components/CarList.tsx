@@ -327,7 +327,15 @@ const CarList = ({
                     <div className="car">
                       <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                       <div className="car-footer" style={hidePrice ? { bottom: 10 } : undefined}>
-                        <div className="car-footer-row1">
+                        {!hideSupplier && (
+                          <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
+                            <span className="car-supplier-logo">
+                              <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
+                            </span>
+                            <span className="car-supplier-info">{car.supplier.fullName}</span>
+                          </div>
+                        )}
+                        <div className="car-footer-info">
                           <div className="rating">
                             {car.rating && car.rating >= 1 && (
                               <>
@@ -353,14 +361,6 @@ const CarList = ({
                             </div>
                           )}
                         </div>
-                        {!hideSupplier && (
-                          <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
-                            <span className="car-supplier-logo">
-                              <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
-                            </span>
-                            <span className="car-supplier-info">{car.supplier.fullName}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
                     <div className="car-info" style={hidePrice && !env.isMobile() ? { width: '57%' } : {}}>
