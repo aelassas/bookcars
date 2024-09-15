@@ -1,6 +1,6 @@
 import express from 'express'
-import routeNames from '@/config/stripeRoutes.config'
-import * as stripeController from '@/controllers/stripeController'
+import routeNames from '../config/stripeRoutes.config'
+import * as stripeController from '../controllers/stripeController'
 
 const routes = express.Router()
 

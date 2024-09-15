@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import * as helper from './helper'
-import * as env from '@/config/env.config'
+import * as env from '../config/env.config'
 
 /**
  * Check whether the request is from the backend or not.
