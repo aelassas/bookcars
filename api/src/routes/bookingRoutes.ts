@@ -1,7 +1,7 @@
 import express from 'express'
-import routeNames from '@/config/bookingRoutes.config'
-import authJwt from '@/middlewares/authJwt'
-import * as bookingController from '@/controllers/bookingController'
+import routeNames from '../config/bookingRoutes.config'
+import authJwt from '../middlewares/authJwt'
+import * as bookingController from '../controllers/bookingController'
 
 const routes = express.Router()
 

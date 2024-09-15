@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import * as env from '@/config/env.config'
+import * as env from '../config/env.config'
 
 export const TOKEN_EXPIRE_AT_INDEX_NAME = 'expireAt'
 

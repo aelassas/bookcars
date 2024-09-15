@@ -1,8 +1,8 @@
 import express from 'express'
 import multer from 'multer'
-import routeNames from '@/config/userRoutes.config'
-import authJwt from '@/middlewares/authJwt'
-import * as userController from '@/controllers/userController'
+import routeNames from '../config/userRoutes.config'
+import authJwt from '../middlewares/authJwt'
+import * as userController from '../controllers/userController'
 
 const routes = express.Router()
 
