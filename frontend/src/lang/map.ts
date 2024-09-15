@@ -10,10 +10,6 @@ const strings = new LocalizedStrings({
     SELECT_PICK_UP_LOCATION: 'Select Location',
     SELECT_DROP_OFF_LOCATION: 'Set as Drop-off Location',
   },
-  el: {
-    SELECT_PICK_UP_LOCATION: 'Επιλέξτε ως τοποθεσία παραλαβής',
-    SELECT_DROP_OFF_LOCATION: 'Επιλέξτε ως Θέση απόρριψης',
-  },
 })
 
 langHelper.setLanguage(strings)
