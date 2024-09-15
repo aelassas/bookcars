@@ -209,6 +209,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         {
           $match: {
             type: bookcarsTypes.UserType.Supplier,
+            avatar: { $ne: null },
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -251,7 +252,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
   try {
     let data = await User.aggregate(
       [
-        { $match: { type: bookcarsTypes.UserType.Supplier } },
+        { $match: { type: bookcarsTypes.UserType.Supplier, avatar: { $ne: null } } },
         { $sort: { fullName: 1, _id: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
