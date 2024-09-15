@@ -67,7 +67,7 @@ const LocationCarrousel = ({
   }
 
   return (
-    <div className="locations">
+    <div className="location-caroussel">
       <Slider ref={slider} {...sliderSettings}>
         {locations.map((location) => (
           <div key={location._id} className="box">

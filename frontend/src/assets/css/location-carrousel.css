@@ -1,24 +1,24 @@
-div.locations .slick-dots {
+div.location-caroussel .slick-dots {
   bottom: -60px;
 }
 
-div.locations .slick-dots li.slick-active button:before {
+div.location-caroussel .slick-dots li.slick-active button:before {
   color: #1976D2;
 }
 
-div.locations .btn-slider {
+div.location-caroussel .btn-slider {
   color: #000 !important;
 }
 
-div.locations .btn-slider-prev {
+div.location-caroussel .btn-slider-prev {
   margin-right: 60px;
 }
 
-div.locations .btn-slider-next {
+div.location-caroussel .btn-slider-next {
   margin-left: 60px;
 }
 
-div.locations div.box {
+div.location-caroussel div.box {
   width: 346px !important;
   height: 346px;
   background-color: #fff;
@@ -27,7 +27,7 @@ div.locations div.box {
   margin-right: 30px;
 }
 
-div.locations div.box div.location-image {
+div.location-caroussel div.box div.location-image {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,16 +36,16 @@ div.locations div.box div.location-image {
   height: 140px;
 }
 
-div.locations div.box div.location-image img {
+div.location-caroussel div.box div.location-image img {
   max-width: 100%;
   max-height: 100%;
 }
 
-div.locations div.box div.location-image .location-icon{
+div.location-caroussel div.box div.location-image .location-icon{
   color: #939393;
 }
 
-div.locations div.box div.title {
+div.location-caroussel div.box div.title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -53,7 +53,7 @@ div.locations div.box div.title {
   padding-right: 12px;
 }
 
-div.locations div.box h2 {
+div.location-caroussel div.box h2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -63,12 +63,12 @@ div.locations div.box h2 {
   text-align: left;
 }
 
-div.locations div.box h2,
-div.locations div.box p {
+div.location-caroussel div.box h2,
+div.location-caroussel div.box p {
   margin: 5px 13px;
 }
 
-div.locations div.box .btn-location {
+div.location-caroussel div.box .btn-location {
   align-self: flex-start;
   margin-top: auto;
   margin-bottom: 6px;
@@ -76,15 +76,15 @@ div.locations div.box .btn-location {
 }
 
 @media only screen and (width <=960px) {
-  div.locations .btn-slider-prev {
+  div.location-caroussel .btn-slider-prev {
     margin-right: 20px;
   }
 
-  div.locations .btn-slider-next {
+  div.location-caroussel .btn-slider-next {
     margin-left: 20px;
   }
 
-  div.locations div.box {
+  div.location-caroussel div.box {
     margin: 0 auto;
   }
 }
