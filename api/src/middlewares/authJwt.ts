@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import * as env from '@/config/env.config'
-import * as authHelper from '@/common/authHelper'
-import * as logger from '@/common/logger'
+import * as env from '../config/env.config'
+import * as authHelper from '../common/authHelper'
+import * as logger from '../common/logger'
 
 /**
  * Verify authentication token middleware.

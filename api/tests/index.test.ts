@@ -1,10 +1,10 @@
 import 'dotenv/config'
 import mongoose from 'mongoose'
-import * as databaseHelper from '@/common/databaseHelper'
+import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
-import * as env from '@/config/env.config'
-import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '@/models/Booking'
-import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '@/models/Token'
+import * as env from '../src/config/env.config'
+import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../src/models/Booking'
+import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../src/models/Token'
 
 //
 // Connecting and initializing the database before running the test suite

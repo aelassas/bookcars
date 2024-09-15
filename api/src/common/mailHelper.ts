@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
-import * as env from '@/config/env.config'
+import * as env from '../config/env.config'
 
 /**
  * Send an email.
