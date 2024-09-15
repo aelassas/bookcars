@@ -7,32 +7,6 @@ div.home {
   background-color: #fff;
 }
 
-div.home footer {
-  width: 100%;
-  height: 50px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f2f2f2;
-  color: #70757a;
-  border-top: 1px solid #ebebeb;
-  position: relative;
-  bottom: 0;
-}
-
-div.home footer div.copyright span.part1,
-div.home footer div.copyright span.part3 {
-  font-size: 12px;
-}
-
-div.home footer div.copyright span.part2 {
-  font-size: 10px;
-  position: relative;
-  top: -5px;
-}
-
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
@@ -50,7 +24,6 @@ div.home footer div.copyright span.part2 {
 
   div.home div.home-content div.home-search {
     width: calc(100% - 40px);
-    background-color: #fff;
     padding: 20px;
     margin: 10px 0;
   }
@@ -116,14 +89,15 @@ div.home div.home-content div.home-search {
   align-items: center;
   border-radius: 5px;
   z-index: 2;
+  background-color: #fff;
 }
 
-div.home div.suppliers {
+div.home div.home-suppliers {
   width: 80%;
   margin: 20px 0;
 }
 
-div.home div.suppliers h1 {
+div.home div.home-suppliers h1 {
   text-align: center;
   margin-bottom: 40px;
   font-weight: 500;
@@ -226,7 +200,6 @@ div.home div.home-map {
   }
 
   div.home div.home-content div.home-search {
-    background-color: #fff;
     padding: 20px;
     margin: 0 5%;
   }

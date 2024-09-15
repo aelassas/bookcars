@@ -68,7 +68,7 @@ export const close = async (force: boolean = false): Promise<void> => {
  * @async
  * @returns {*}
  */
-const InitializeLocations = async () => {
+const initializeLocations = async () => {
   try {
     logger.info('Initializing locations...')
     const locations = await Location.find({})
@@ -124,7 +124,7 @@ const InitializeLocations = async () => {
  * @async
  * @returns {*}
  */
-const InitializeCountries = async () => {
+const initializeCountries = async () => {
   try {
     logger.info('Initializing countries...')
     const countries = await Country.find({})
@@ -180,7 +180,7 @@ const InitializeCountries = async () => {
  * @async
  * @returns {*}
  */
-const InitializeParkingSpots = async () => {
+const initializeParkingSpots = async () => {
   try {
     logger.info('Initializing parkingSpots...')
     const parkingSpots = await ParkingSpot.find({})
@@ -316,7 +316,7 @@ export const initialize = async (): Promise<boolean> => {
     //
     // Initialize collections
     //
-    const res = await InitializeLocations() && await InitializeCountries() && await InitializeParkingSpots()
+    const res = await initializeLocations() && await initializeCountries() && await initializeParkingSpots()
 
     return res
   } catch (err) {
