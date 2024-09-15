@@ -10,7 +10,7 @@
     "start": "npm run build && node dist/src",
     "test": "rimraf coverage && tsc --build --verbose && cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "lint": "eslint --ext .ts .",
-    "ncu": "ncu -u -x eslint,typescript"
+    "ncu": "ncu -u -x typescript,eslint"
   },
   "keywords": [],
   "author": "",
@@ -58,7 +58,6 @@
     "rimraf": "^6.0.1",
     "stripe": "^16.9.0",
     "supertest": "^7.0.0",
-    "typescript": "^5.4.5",
     "uuid": "^10.0.0",
     "validator": "^13.12.0",
     "winston": "^3.14.2"
@@ -71,6 +70,7 @@
     "eslint-plugin-import": "^2.30.0",
     "nodemon": "^3.1.4",
     "npm-check-updates": "^17.1.1",
-    "tsx": "^4.19.0"
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.5"
   }
 }
