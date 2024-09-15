@@ -119,6 +119,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     language: LANGUAGE,
     password: passwordHash,
     type: bookcarsTypes.UserType.Supplier,
+    avatar: 'avatar.jpg',
   }
   const supplier = new User(body)
   await supplier.save()
