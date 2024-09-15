@@ -20,9 +20,9 @@ import CountrySelectList from '@/components/CountrySelectList'
 import Avatar from '@/components/Avatar'
 import Backdrop from '@/components/SimpleBackdrop'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
+import PositionInput from '@/components/PositionInput'
 
 import '@/assets/css/create-location.css'
-import PositionInput from '@/components/PositionInput'
 
 const CreateLocation = () => {
   const navigate = useNavigate()
