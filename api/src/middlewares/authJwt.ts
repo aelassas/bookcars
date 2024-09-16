@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express'
-import jwt from 'jsonwebtoken'
 import * as env from '../config/env.config'
 import * as authHelper from '../common/authHelper'
 import * as logger from '../common/logger'
@@ -11,7 +10,7 @@ import * as logger from '../common/logger'
  * @param {Response} res
  * @param {NextFunction} next
  */
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   let token: string
 
   if (authHelper.isBackend(req)) {
@@ -24,16 +23,15 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
   if (token) {
     // Check token
-    jwt.verify(token, env.JWT_SECRET, (err) => {
-      if (err) {
-        // Token not valid!
-        logger.info('Token not valid', err)
-        res.status(401).send({ message: 'Unauthorized!' })
-      } else {
-        // Token valid!
-        next()
-      }
-    })
+    try {
+      await authHelper.decryptJWT(token)
+      // Token valid!
+      next()
+    } catch (err) {
+      // Token not valid!
+      logger.info('Token not valid', err)
+      res.status(401).send({ message: 'Unauthorized!' })
+    }
   } else {
     // Token not found!
     res.status(403).send({ message: 'No token provided!' })

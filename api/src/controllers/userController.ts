@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import jwt from 'jsonwebtoken'
+import { JWTPayload } from 'jose'
 import bcrypt from 'bcrypt'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -448,9 +448,6 @@ export const signin = async (req: Request, res: Response) => {
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (passwordMatch) {
-      const payload = { id: user._id }
-
-      let options: { expiresIn?: number }
       //
       // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
       // These options prevent XSS, CSRF and MITM attacks.
@@ -460,10 +457,6 @@ export const signin = async (req: Request, res: Response) => {
 
       if (stayConnected) {
         //
-        // Empty JWT options object will result in no expiration.
-        //
-        options = {}
-        //
         // Cookies can no longer set an expiration date more than 400 days in the future.
         // The limit MUST NOT be greater than 400 days in duration.
         // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
@@ -472,16 +465,13 @@ export const signin = async (req: Request, res: Response) => {
         cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
       } else {
         //
-        // JWT expiration is set in seconds.
-        //
-        options = { expiresIn: env.JWT_EXPIRE_AT }
-        //
         // Cookie maxAge option is set in milliseconds.
         //
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
 
-      const token = jwt.sign(payload, env.JWT_SECRET, options)
+      const payload: JWTPayload = { id: user.id }
+      const token = await authHelper.encryptJWT(payload, stayConnected)
 
       const loggedUser: bookcarsTypes.User = {
         _id: user.id,
@@ -576,9 +566,6 @@ export const socialSignin = async (req: Request, res: Response) => {
       await user.save()
     }
 
-    const payload = { id: user._id }
-
-    let options: { expiresIn?: number }
     //
     // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
     // These options prevent XSS, CSRF and MITM attacks.
@@ -588,10 +575,6 @@ export const socialSignin = async (req: Request, res: Response) => {
 
     if (stayConnected) {
       //
-      // Empty JWT options object will result in no expiration.
-      //
-      options = {}
-      //
       // Cookies can no longer set an expiration date more than 400 days in the future.
       // The limit MUST NOT be greater than 400 days in duration.
       // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
@@ -600,16 +583,13 @@ export const socialSignin = async (req: Request, res: Response) => {
       cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
     } else {
       //
-      // JWT expiration is set in seconds.
-      //
-      options = { expiresIn: env.JWT_EXPIRE_AT }
-      //
       // Cookie maxAge option is set in milliseconds.
       //
       cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
     }
 
-    const token = jwt.sign(payload, env.JWT_SECRET, options)
+    const payload: JWTPayload = { id: user.id }
+    const token = await authHelper.encryptJWT(payload, stayConnected)
 
     const loggedUser: bookcarsTypes.User = {
       _id: user.id,
