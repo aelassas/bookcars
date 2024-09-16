@@ -1,6 +1,5 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { JWTPayload } from 'jose'
 import bcrypt from 'bcrypt'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -470,7 +469,7 @@ export const signin = async (req: Request, res: Response) => {
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
 
-      const payload: JWTPayload = { id: user.id }
+      const payload: authHelper.SessionData = { id: user.id }
       const token = await authHelper.encryptJWT(payload, stayConnected)
 
       const loggedUser: bookcarsTypes.User = {
@@ -588,7 +587,7 @@ export const socialSignin = async (req: Request, res: Response) => {
       cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
     }
 
-    const payload: JWTPayload = { id: user.id }
+    const payload: authHelper.SessionData = { id: user.id }
     const token = await authHelper.encryptJWT(payload, stayConnected)
 
     const loggedUser: bookcarsTypes.User = {

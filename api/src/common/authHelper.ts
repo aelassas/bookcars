@@ -1,20 +1,24 @@
 import { Request } from 'express'
-import { JWTPayload, jwtVerify, SignJWT } from 'jose'
+import { jwtVerify, SignJWT } from 'jose'
 import * as helper from './helper'
 import * as env from '../config/env.config'
 
 const jwtSecret = new TextEncoder().encode(env.JWT_SECRET)
 const jwtAlg = 'HS256'
 
+export type SessionData = {
+  id: string
+}
+
 /**
  * Sign and return the JWT.
  *
  * @async
- * @param {JWTPayload} payload
+ * @param {SessionData} payload
  * @param {?boolean} [stayConnected]
  * @returns {Promise<string>}
  */
-export const encryptJWT = async (payload: JWTPayload, stayConnected?: boolean) => {
+export const encryptJWT = async (payload: SessionData, stayConnected?: boolean) => {
   const jwt = await new SignJWT(payload)
     .setProtectedHeader({ alg: jwtAlg })
     .setIssuedAt()
@@ -31,13 +35,13 @@ export const encryptJWT = async (payload: JWTPayload, stayConnected?: boolean) =
  *
  * @async
  * @param {string} input
- * @returns {Promise<JWTPayload>}
+ * @returns {Promise<SessionData>}
  */
 export const decryptJWT = async (input: string) => {
   const { payload } = await jwtVerify(input, jwtSecret, {
     algorithms: [jwtAlg],
   })
-  return payload
+  return payload as SessionData
 }
 
 /**
