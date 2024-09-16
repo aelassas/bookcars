@@ -138,20 +138,22 @@ const BookingFilter = ({
             onKeyDown={handleSearchKeyDown}
             onChange={handleSearchChange}
             placeholder={commonStrings.SEARCH_PLACEHOLDER}
-            InputProps={{
-              endAdornment: keyword ? (
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    setKeyword('')
-                    inputRef.current?.focus()
-                  }}
-                >
-                  <ClearIcon className="d-adornment-icon" />
-                </IconButton>
-              ) : (
-                <SearchIcon className="d-adornment-icon" />
-              ),
+            slotProps={{
+              input: {
+                endAdornment: keyword ? (
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setKeyword('')
+                      inputRef.current?.focus()
+                    }}
+                  >
+                    <ClearIcon className="d-adornment-icon" />
+                  </IconButton>
+                ) : (
+                  <SearchIcon className="d-adornment-icon" />
+                ),
+              }
             }}
             className="bf-search"
           />

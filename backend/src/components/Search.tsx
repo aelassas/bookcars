@@ -46,20 +46,22 @@ const Search = ({
           onKeyDown={handleSearchKeyDown}
           onChange={handleSearchChange}
           placeholder={commonStrings.SEARCH_PLACEHOLDER}
-          InputProps={{
-            endAdornment: keyword ? (
-              <IconButton
-                size="small"
-                onClick={() => {
-                  setKeyword('')
-                  inputRef.current?.focus()
-                }}
-              >
-                <ClearIcon style={{ width: 20, height: 20 }} />
-              </IconButton>
-            ) : (
-              <></>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: keyword ? (
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    setKeyword('')
+                    inputRef.current?.focus()
+                  }}
+                >
+                  <ClearIcon style={{ width: 20, height: 20 }} />
+                </IconButton>
+              ) : (
+                <></>
+              ),
+            }
           }}
           className="sc-search"
           id="search"
