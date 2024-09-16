@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import * as helper from '@/common/helper'
+import * as helper from '../src/common/helper'
 
 describe('Test string to boolean', () => {
   it('should convert a string to boolean', () => {

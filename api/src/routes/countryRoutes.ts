@@ -1,7 +1,7 @@
 import express from 'express'
-import routeNames from '@/config/countryRoutes.config'
-import authJwt from '@/middlewares/authJwt'
-import * as countryController from '@/controllers/countryController'
+import routeNames from '../config/countryRoutes.config'
+import authJwt from '../middlewares/authJwt'
+import * as countryController from '../controllers/countryController'
 
 const routes = express.Router()
 

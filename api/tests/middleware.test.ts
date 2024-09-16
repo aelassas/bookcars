@@ -2,9 +2,9 @@ import 'dotenv/config'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import * as databaseHelper from '@/common/databaseHelper'
-import app from '@/app'
-import * as env from '@/config/env.config'
+import * as databaseHelper from '../src/common/databaseHelper'
+import app from '../src/app'
+import * as env from '../src/config/env.config'
 import * as testHelper from './testHelper'
 
 const { ADMIN_EMAIL } = testHelper
