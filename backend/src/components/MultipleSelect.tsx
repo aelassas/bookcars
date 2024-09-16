@@ -151,20 +151,22 @@ const MultipleSelect = ({
                 label={label}
                 variant={variant || 'outlined'}
                 required={required}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <>
-                      <InputAdornment position="start">
-                        {option.image ? (
-                          <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} className="avatar-small suo" />
-                        ) : (
-                          <AccountCircle className="avatar-small suo" color="disabled" />
-                        )}
-                      </InputAdornment>
-                      {params.InputProps.startAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          {option.image ? (
+                            <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} className="avatar-small suo" />
+                          ) : (
+                            <AccountCircle className="avatar-small suo" color="disabled" />
+                          )}
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )
@@ -179,18 +181,20 @@ const MultipleSelect = ({
                 label={label}
                 variant={variant || 'outlined'}
                 required={required}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <>
-                      <InputAdornment position="start">
-                        <div className="supplier-ia">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} alt={option.name} />
-                        </div>
-                      </InputAdornment>
-                      {params.InputProps.startAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          <div className="supplier-ia">
+                            <img src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} alt={option.name} />
+                          </div>
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )
@@ -203,16 +207,18 @@ const MultipleSelect = ({
                 label={label}
                 variant={variant || 'outlined'}
                 required={required}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <>
-                      <InputAdornment position="start">
-                        <LocationIcon />
-                      </InputAdornment>
-                      {params.InputProps.startAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          <LocationIcon />
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )
@@ -225,16 +231,18 @@ const MultipleSelect = ({
                 label={label}
                 variant={variant || 'outlined'}
                 required={required}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <>
-                      <InputAdornment position="start">
-                        <CountryIcon />
-                      </InputAdornment>
-                      {params.InputProps.startAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          <CountryIcon />
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )
@@ -249,22 +257,24 @@ const MultipleSelect = ({
                 label={label}
                 variant={variant || 'outlined'}
                 required={required}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <>
-                      <InputAdornment position="start">
-                        <img
-                          src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
-                          alt={option.name}
-                          style={{
-                            height: env.SELECTED_CAR_OPTION_IMAGE_HEIGHT,
-                          }}
-                        />
-                      </InputAdornment>
-                      {params.InputProps.startAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          <img
+                            src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
+                            alt={option.name}
+                            style={{
+                              height: env.SELECTED_CAR_OPTION_IMAGE_HEIGHT,
+                            }}
+                          />
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )
