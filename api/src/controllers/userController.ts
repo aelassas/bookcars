@@ -540,12 +540,14 @@ export const socialSignin = async (req: Request, res: Response) => {
       throw new Error('body.email is not valid')
     }
 
-    if (!accessToken) {
-      throw new Error('body.accessToken not found')
-    }
+    if (!mobile) {
+      if (!accessToken) {
+        throw new Error('body.accessToken not found')
+      }
 
-    if (!await helper.validateAccessToken(socialSignInType, accessToken, email)) {
-      throw new Error('body.accessToken is not valid')
+      if (!await helper.validateAccessToken(socialSignInType, accessToken, email)) {
+        throw new Error('body.accessToken is not valid')
+      }
     }
 
     let user = await User.findOne({ email })
