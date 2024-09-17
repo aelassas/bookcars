@@ -249,7 +249,7 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
     const imageRequired = helper.StringToBoolean(_imageRequired)
     const minLocations = Number(_minLocations)
 
-    let $locationMatch: mongoose.FilterQuery<any> = {}
+    let $locationMatch: mongoose.FilterQuery<bookcarsTypes.Location> = {}
     if (imageRequired) {
       $locationMatch = { image: { $ne: null } }
     }

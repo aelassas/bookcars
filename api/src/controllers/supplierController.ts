@@ -295,7 +295,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       seats,
     } = body
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { locations: pickupLocation },
         { available: true }, { type: { $in: carType } },
@@ -418,7 +418,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { name: { $regex: keyword, $options: options } },
         { fuelPolicy: { $in: fuelPolicy } },
