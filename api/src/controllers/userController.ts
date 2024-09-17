@@ -1317,7 +1317,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetUsersBody } = req
     const { types, user: userId } = body
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.User> = {
       $and: [
         {
           type: { $in: types },
