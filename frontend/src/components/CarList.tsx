@@ -292,7 +292,7 @@ const CarList = ({
           && (
             <>
               {totalRecords > 0 && (
-                <div className="title">
+                <div className="bc-title">
                   <div className="bookcars">
                     <span>{strings.TITLE_1}</span>
                     <span className="title-bookcars">{commonStrings.BOOKCARS}</span>
