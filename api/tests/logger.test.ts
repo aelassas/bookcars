@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import * as logger from '@/common/logger'
+import * as logger from '../src/common/logger'
 
 describe('Tes logging', () => {
   it('should test logging', () => {

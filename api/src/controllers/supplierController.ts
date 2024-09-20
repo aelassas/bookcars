@@ -4,16 +4,16 @@ import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import i18n from '@/lang/i18n'
-import * as env from '@/config/env.config'
-import User from '@/models/User'
-import NotificationCounter from '@/models/NotificationCounter'
-import Notification from '@/models/Notification'
-import AdditionalDriver from '@/models/AdditionalDriver'
-import Booking from '@/models/Booking'
-import Car from '@/models/Car'
-import * as helper from '@/common/helper'
-import * as logger from '@/common/logger'
+import i18n from '../lang/i18n'
+import * as env from '../config/env.config'
+import User from '../models/User'
+import NotificationCounter from '../models/NotificationCounter'
+import Notification from '../models/Notification'
+import AdditionalDriver from '../models/AdditionalDriver'
+import Booking from '../models/Booking'
+import Car from '../models/Car'
+import * as helper from '../common/helper'
+import * as logger from '../common/logger'
 
 /**
  * Validate Supplier by fullname.
@@ -209,6 +209,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         {
           $match: {
             type: bookcarsTypes.UserType.Supplier,
+            avatar: { $ne: null },
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -251,7 +252,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
   try {
     let data = await User.aggregate(
       [
-        { $match: { type: bookcarsTypes.UserType.Supplier } },
+        { $match: { type: bookcarsTypes.UserType.Supplier, avatar: { $ne: null } } },
         { $sort: { fullName: 1, _id: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
@@ -294,7 +295,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       seats,
     } = body
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { locations: pickupLocation },
         { available: true }, { type: { $in: carType } },
@@ -417,7 +418,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { name: { $regex: keyword, $options: options } },
         { fuelPolicy: { $in: fuelPolicy } },

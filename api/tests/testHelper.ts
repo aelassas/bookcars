@@ -4,14 +4,14 @@ import bcrypt from 'bcrypt'
 import { v1 as uuid } from 'uuid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import app from '@/app'
-import * as env from '@/config/env.config'
-import User from '@/models/User'
-import LocationValue from '@/models/LocationValue'
-import Location from '@/models/Location'
-import Notification from '@/models/Notification'
-import NotificationCounter from '@/models/NotificationCounter'
-import * as logger from '@/common/logger'
+import app from '../src/app'
+import * as env from '../src/config/env.config'
+import User from '../src/models/User'
+import LocationValue from '../src/models/LocationValue'
+import Location from '../src/models/Location'
+import Notification from '../src/models/Notification'
+import NotificationCounter from '../src/models/NotificationCounter'
+import * as logger from '../src/common/logger'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
@@ -119,6 +119,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     language: LANGUAGE,
     password: passwordHash,
     type: bookcarsTypes.UserType.Supplier,
+    avatar: 'avatar.jpg',
   }
   const supplier = new User(body)
   await supplier.save()

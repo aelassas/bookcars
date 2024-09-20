@@ -2,13 +2,13 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
-import * as env from '@/config/env.config'
-import i18n from '@/lang/i18n'
-import Country from '@/models/Country'
-import LocationValue from '@/models/LocationValue'
-import Location from '@/models/Location'
-import * as logger from '@/common/logger'
+import * as helper from '../common/helper'
+import * as env from '../config/env.config'
+import i18n from '../lang/i18n'
+import Country from '../models/Country'
+import LocationValue from '../models/LocationValue'
+import Location from '../models/Location'
+import * as logger from '../common/logger'
 
 /**
  * Validate a Country name with language code.
@@ -52,14 +52,14 @@ export const create = async (req: Request, res: Response) => {
   const names = body
 
   try {
-    const values = []
+    const values: string[] = []
     for (const name of names) {
       const countryValue = new LocationValue({
         language: name.language,
         value: name.name,
       })
       await countryValue.save()
-      values.push(countryValue._id)
+      values.push(countryValue.id)
     }
 
     const country = new Country({ values })
@@ -249,7 +249,7 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
     const imageRequired = helper.StringToBoolean(_imageRequired)
     const minLocations = Number(_minLocations)
 
-    let $locationMatch: mongoose.FilterQuery<any> = {}
+    let $locationMatch: mongoose.FilterQuery<bookcarsTypes.Location> = {}
     if (imageRequired) {
       $locationMatch = { image: { $ne: null } }
     }

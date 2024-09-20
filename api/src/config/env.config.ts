@@ -2,7 +2,7 @@ import process from 'node:process'
 import { Document, Types } from 'mongoose'
 import { CookieOptions } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
+import * as helper from '../common/helper'
 
 /**
  * Get environment variable value.
@@ -591,6 +591,7 @@ export interface LocationInfo {
   longitude: number
   latitude: number
   name?: string
+  image?: string | null
   values: LocationValue[]
 }
 

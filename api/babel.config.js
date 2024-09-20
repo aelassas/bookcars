@@ -6,7 +6,7 @@ const babel = (api) => {
       'module-resolver',
       {
         alias: {
-          '@': './dist/src',
+          // '@': './dist/src',
           ':bookcars-types': '../packages/bookcars-types',
         },
       },

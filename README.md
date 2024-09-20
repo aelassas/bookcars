@@ -95,8 +95,6 @@ You can also install the Android App by directly downloading the APK and install
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 14. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
-
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
-

@@ -521,7 +521,7 @@ const Avatar = ({
             <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
           )
             : type === bookcarsTypes.RecordType.Location ? (
-              <img style={locationImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+              <img style={locationImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Location).name} />
             )
               : type === bookcarsTypes.RecordType.Supplier ? (
                 <div className="supplier-avatar-readonly">
@@ -606,7 +606,7 @@ const Avatar = ({
             <CarIcon style={carImageStyle} color={color || 'inherit'} />
           )
             : type === bookcarsTypes.RecordType.Location ? (
-              <LocationIcon style={carImageStyle} color={color || 'inherit'} />
+              <LocationIcon style={locationImageStyle} color={color || 'inherit'} />
             )
               : type === bookcarsTypes.RecordType.Supplier ? (
                 <SupplierIcon style={supplierImageStyle} color={color || 'inherit'} />

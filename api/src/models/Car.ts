@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
-import * as env from '@/config/env.config'
+import * as env from '../config/env.config'
 
 const carSchema = new Schema<env.Car>(
   {

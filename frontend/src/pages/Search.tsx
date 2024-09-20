@@ -9,7 +9,7 @@ import { strings } from '@/lang/search'
 import * as helper from '@/common/helper'
 import * as LocationService from '@/services/LocationService'
 import * as SupplierService from '@/services/SupplierService'
-import * as UserService from '@/services/UserService'
+// import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import NoMatch from './NoMatch'
 import CarFilter from '@/components/CarFilter'
@@ -57,7 +57,7 @@ const Search = () => {
   const [rating, setRating] = useState(-1)
   const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
-  const [distance, setDistance] = useState('')
+  // const [distance, setDistance] = useState('')
 
   useEffect(() => {
     const updateSuppliers = async () => {
@@ -208,13 +208,13 @@ const Search = () => {
         setRanges(_ranges)
       }
 
-      if (_pickupLocation.latitude && _pickupLocation.longitude) {
-        const l = await helper.getLocation()
-        if (l) {
-          const d = bookcarsHelper.distance(_pickupLocation.latitude, _pickupLocation.longitude, l[0], l[1], 'K')
-          setDistance(bookcarsHelper.formatDistance(d, UserService.getLanguage()))
-        }
-      }
+      // if (_pickupLocation.latitude && _pickupLocation.longitude) {
+      //   const l = await helper.getLocation()
+      //   if (l) {
+      //     const d = bookcarsHelper.distance(_pickupLocation.latitude, _pickupLocation.longitude, l[0], l[1], 'K')
+      //     setDistance(bookcarsHelper.formatDistance(d, UserService.getLanguage()))
+      //   }
+      // }
 
       setLoading(false)
       if (!user || (user && user.verified)) {
@@ -286,7 +286,7 @@ const Search = () => {
               deposit={deposit}
               pickupLocation={pickupLocation._id}
               dropOffLocation={dropOffLocation._id}
-              pickupLocationName={pickupLocation.name}
+              // pickupLocationName={pickupLocation.name}
               loading={loading}
               from={from}
               to={to}
@@ -294,7 +294,7 @@ const Search = () => {
               multimedia={multimedia}
               rating={rating}
               seats={seats}
-              distance={distance}
+              // distance={distance}
             />
           </div>
         </div>

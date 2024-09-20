@@ -1,6 +1,5 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -9,20 +8,20 @@ import { CookieOptions, Request, Response } from 'express'
 import nodemailer from 'nodemailer'
 import axios from 'axios'
 import * as bookcarsTypes from ':bookcars-types'
-import i18n from '@/lang/i18n'
-import * as env from '@/config/env.config'
-import User from '@/models/User'
-import Booking from '@/models/Booking'
-import Token from '@/models/Token'
-import PushToken from '@/models/PushToken'
-import * as helper from '@/common/helper'
-import * as authHelper from '@/common/authHelper'
-import * as mailHelper from '@/common/mailHelper'
-import Notification from '@/models/Notification'
-import NotificationCounter from '@/models/NotificationCounter'
-import Car from '@/models/Car'
-import AdditionalDriver from '@/models/AdditionalDriver'
-import * as logger from '@/common/logger'
+import i18n from '../lang/i18n'
+import * as env from '../config/env.config'
+import User from '../models/User'
+import Booking from '../models/Booking'
+import Token from '../models/Token'
+import PushToken from '../models/PushToken'
+import * as helper from '../common/helper'
+import * as authHelper from '../common/authHelper'
+import * as mailHelper from '../common/mailHelper'
+import Notification from '../models/Notification'
+import NotificationCounter from '../models/NotificationCounter'
+import Car from '../models/Car'
+import AdditionalDriver from '../models/AdditionalDriver'
+import * as logger from '../common/logger'
 
 /**
  * Get status message as HTML.
@@ -448,9 +447,6 @@ export const signin = async (req: Request, res: Response) => {
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (passwordMatch) {
-      const payload = { id: user._id }
-
-      let options: { expiresIn?: number }
       //
       // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
       // These options prevent XSS, CSRF and MITM attacks.
@@ -460,10 +456,6 @@ export const signin = async (req: Request, res: Response) => {
 
       if (stayConnected) {
         //
-        // Empty JWT options object will result in no expiration.
-        //
-        options = {}
-        //
         // Cookies can no longer set an expiration date more than 400 days in the future.
         // The limit MUST NOT be greater than 400 days in duration.
         // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
@@ -472,16 +464,13 @@ export const signin = async (req: Request, res: Response) => {
         cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
       } else {
         //
-        // JWT expiration is set in seconds.
-        //
-        options = { expiresIn: env.JWT_EXPIRE_AT }
-        //
         // Cookie maxAge option is set in milliseconds.
         //
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
 
-      const token = jwt.sign(payload, env.JWT_SECRET, options)
+      const payload: authHelper.SessionData = { id: user.id }
+      const token = await authHelper.encryptJWT(payload, stayConnected)
 
       const loggedUser: bookcarsTypes.User = {
         _id: user.id,
@@ -551,12 +540,14 @@ export const socialSignin = async (req: Request, res: Response) => {
       throw new Error('body.email is not valid')
     }
 
-    if (!accessToken) {
-      throw new Error('body.accessToken not found')
-    }
+    if (!mobile) {
+      if (!accessToken) {
+        throw new Error('body.accessToken not found')
+      }
 
-    if (!await helper.validateAccessToken(socialSignInType, accessToken, email)) {
-      throw new Error('body.accessToken is not valid')
+      if (!await helper.validateAccessToken(socialSignInType, accessToken, email)) {
+        throw new Error('body.accessToken is not valid')
+      }
     }
 
     let user = await User.findOne({ email })
@@ -576,9 +567,6 @@ export const socialSignin = async (req: Request, res: Response) => {
       await user.save()
     }
 
-    const payload = { id: user._id }
-
-    let options: { expiresIn?: number }
     //
     // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
     // These options prevent XSS, CSRF and MITM attacks.
@@ -588,10 +576,6 @@ export const socialSignin = async (req: Request, res: Response) => {
 
     if (stayConnected) {
       //
-      // Empty JWT options object will result in no expiration.
-      //
-      options = {}
-      //
       // Cookies can no longer set an expiration date more than 400 days in the future.
       // The limit MUST NOT be greater than 400 days in duration.
       // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
@@ -600,16 +584,13 @@ export const socialSignin = async (req: Request, res: Response) => {
       cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
     } else {
       //
-      // JWT expiration is set in seconds.
-      //
-      options = { expiresIn: env.JWT_EXPIRE_AT }
-      //
       // Cookie maxAge option is set in milliseconds.
       //
       cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
     }
 
-    const token = jwt.sign(payload, env.JWT_SECRET, options)
+    const payload: authHelper.SessionData = { id: user.id }
+    const token = await authHelper.encryptJWT(payload, stayConnected)
 
     const loggedUser: bookcarsTypes.User = {
       _id: user.id,
@@ -1338,7 +1319,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetUsersBody } = req
     const { types, user: userId } = body
 
-    const $match: mongoose.FilterQuery<any> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.User> = {
       $and: [
         {
           type: { $in: types },
