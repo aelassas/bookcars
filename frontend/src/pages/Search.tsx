@@ -31,9 +31,6 @@ import ViewOnMap from '@/assets/img/view-on-map.png'
 
 import '@/assets/css/search.css'
 
-const allSuppliers = await SupplierService.getAllSuppliers()
-const allSuppliersIds = bookcarsHelper.flattenSuppliers(allSuppliers)
-
 const Search = () => {
   const location = useLocation()
 
@@ -58,6 +55,23 @@ const Search = () => {
   const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
+
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliersIds, setAllSuppliersIds] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const fetchedSuppliers = await SupplierService.getAllSuppliers()
+        setAllSuppliers(fetchedSuppliers)
+        setAllSuppliersIds(bookcarsHelper.flattenSuppliers(fetchedSuppliers))
+      } catch (error) {
+        console.error('Failed to fetch suppliers:', error)
+      }
+    }
+
+    fetchSuppliers()
+  }, [])
 
   useEffect(() => {
     const updateSuppliers = async () => {
