@@ -31,9 +31,6 @@ import ViewOnMap from '@/assets/img/view-on-map.png'
 
 import '@/assets/css/search.css'
 
-const allSuppliers = await SupplierService.getAllSuppliers()
-const allSuppliersIds = bookcarsHelper.flattenSuppliers(allSuppliers)
-
 const Search = () => {
   const location = useLocation()
 
@@ -43,6 +40,8 @@ const Search = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliersIds, setAllSuppliersIds] = useState<string[]>([])
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [supplierIds, setSupplierIds] = useState<string[]>()
   const [loading, setLoading] = useState(true)
@@ -58,6 +57,20 @@ const Search = () => {
   const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const fetchedSuppliers = await SupplierService.getAllSuppliers()
+        setAllSuppliers(fetchedSuppliers)
+        setAllSuppliersIds(bookcarsHelper.flattenSuppliers(fetchedSuppliers))
+      } catch (err) {
+        helper.error(err, 'Failed to fetch suppliers')
+      }
+    }
+
+    fetchSuppliers()
+  }, [])
 
   useEffect(() => {
     const updateSuppliers = async () => {
@@ -294,7 +307,7 @@ const Search = () => {
               multimedia={multimedia}
               rating={rating}
               seats={seats}
-              // distance={distance}
+            // distance={distance}
             />
           </div>
         </div>
