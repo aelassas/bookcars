@@ -29,7 +29,7 @@ div.accordion-container span.accordion-active {
 
 div.accordion-container span.accordion-active,
 div.accordion-container span.accordion:hover {
-  background: #fafafa;
+  background: #fff;
 }
 
 div.accordion-container span.accordion::after {
