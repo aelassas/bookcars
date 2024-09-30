@@ -14,14 +14,14 @@ Customers can sign up from the frontend or the mobile app, search for available 
 
 A key design decision was made to use TypeScript instead of JavaScript due to its numerous advantages. TypeScript offers strong typing, tooling, and integration, resulting in high-quality, scalable, more readable and maintainable code that is easy to debug and test.
 
-BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Docker) to walk you through on how to build BookCars Docker image and run it in a Docker container.
+BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)) to walk you through on how to build BookCars Docker image and run it in a Docker container.
 
 ## Features
 
 * Supplier management
 * Ready for one or multiple suppliers
 * Car fleet management
-* Location, country, parking spots and map features
+* Location, country, parking spots and map features
 * Booking management
 * Payment management
 * Customer management
@@ -75,12 +75,12 @@ You can also install the Android App by directly downloading the APK and install
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
-3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
-4. [Installing on VPS](https://github.com/aelassas/bookcars/wiki/Installing-on-VPS)
-5. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
-6. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
+3. [Installing (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
+4. [Installing (VPS)](https://github.com/aelassas/bookcars/wiki/Installing-(VPS))
+5. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Docker#docker-image)
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Docker#ssl)
+6. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 7. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
 8. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
@@ -98,4 +98,3 @@ You can also install the Android App by directly downloading the APK and install
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
-
