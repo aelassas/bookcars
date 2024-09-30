@@ -17,7 +17,7 @@ const Accordion = ({
   offsetHeight = 0,
   children
 }: AccordionProps) => {
-  const accordionRef = useRef<HTMLLabelElement>(null)
+  const accordionRef = useRef<HTMLSpanElement>(null)
 
   const handleAccordionClick = (e: React.MouseEvent<HTMLElement>) => {
     e.currentTarget.classList.toggle('accordion-active')
@@ -38,7 +38,7 @@ const Accordion = ({
 
   useEffect(() => {
     if (collapse && accordionRef.current) {
-      accordionRef.current.classList.toggle('accordion-active')
+      accordionRef.current.classList.add('accordion-active')
     }
   }, [collapse])
 
