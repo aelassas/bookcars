@@ -308,7 +308,7 @@ export const STRIPE_SESSION_EXPIRE_AT = stripeSessionExpireAt
 export const BOOKING_EXPIRE_AT = STRIPE_SESSION_EXPIRE_AT + (10 * 60)
 
 /**
- * Private SSL key filepath.
+ * Admin email.
  *
  * @type {string}
  */
@@ -539,8 +539,8 @@ export interface LocationValue extends Document {
  * Country Document.
  *
  * @export
- * @interface Location
- * @typedef {Location}
+ * @interface Country
+ * @typedef {Country}
  * @extends {Document}
  */
 export interface Country extends Document {

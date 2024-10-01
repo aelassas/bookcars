@@ -38,7 +38,7 @@ const Accordion = ({
 
   useEffect(() => {
     if (collapse && accordionRef.current) {
-      accordionRef.current.classList.toggle('accordion-active')
+      accordionRef.current.classList.add('accordion-active')
     }
   }, [collapse])
 
