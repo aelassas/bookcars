@@ -308,6 +308,15 @@ export const STRIPE_SESSION_EXPIRE_AT = stripeSessionExpireAt
 export const BOOKING_EXPIRE_AT = STRIPE_SESSION_EXPIRE_AT + (10 * 60)
 
 /**
+ * User expiration in seconds.
+ * Non verified and active users created from checkout with Stripe are temporary and are automatically deleted if the payment checkout session expires.
+ *
+ *
+ * @type {number}
+ */
+export const USER_EXPIRE_AT = BOOKING_EXPIRE_AT
+
+/**
  * Admin email.
  *
  * @type {string}
@@ -348,6 +357,7 @@ export interface User extends Document {
   blacklisted?: boolean
   payLater?: boolean
   customerId?: string
+  expireAt?: Date
 }
 
 /**
