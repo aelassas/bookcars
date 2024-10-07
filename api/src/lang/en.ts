@@ -43,4 +43,5 @@ export const en = {
   SUBJECT: 'Subject',
   FROM: 'From',
   MESSAGE: 'Message',
+  LOCATION_IMAGE_NOT_FOUND: 'Location image not found',
 }
