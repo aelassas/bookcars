@@ -9,7 +9,7 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import PushToken from '../models/PushToken'
 import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../models/Token'
-import User from '../models/User'
+import User, { USER_EXPIRE_AT_INDEX_NAME } from '../models/User'
 import Country from '../models/Country'
 import ParkingSpot from '../models/ParkingSpot'
 import AdditionalDriver from '../models/AdditionalDriver'
@@ -249,6 +249,16 @@ const createBookingIndex = async (): Promise<void> => {
   await Booking.collection.createIndex({ expireAt: 1 }, { name: BOOKING_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.BOOKING_EXPIRE_AT, background: true })
 }
 
+/**
+ * Create User TTL index.
+ *
+ * @async
+ * @returns {Promise<void>}
+ */
+const createUserIndex = async (): Promise<void> => {
+  await User.collection.createIndex({ expireAt: 1 }, { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true })
+}
+
 const createCollection = async<T>(model: Model<T>) => {
   try {
     await model.collection.indexes()
@@ -294,6 +304,22 @@ export const initialize = async (): Promise<boolean> => {
       } finally {
         await createBookingIndex()
         await Booking.createIndexes()
+      }
+    }
+
+    //
+    // Update User TTL index if configuration changes
+    //
+    const userIndexes = await User.collection.indexes()
+    const userIndex = userIndexes.find((index: any) => index.name === USER_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.USER_EXPIRE_AT)
+    if (userIndex) {
+      try {
+        await User.collection.dropIndex(userIndex.name!)
+      } catch (err) {
+        logger.error('Failed dropping User TTL index', err)
+      } finally {
+        await createUserIndex()
+        await User.createIndexes()
       }
     }
 
