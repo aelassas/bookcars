@@ -15,6 +15,8 @@ import PushToken from '../src/models/PushToken'
 import Token from '../src/models/Token'
 import stripeAPI from '../src/stripe'
 
+const DRIVER1_NAME = 'Driver 1'
+
 let SUPPLIER_ID: string
 let DRIVER1_ID: string
 let DRIVER2_ID: string
@@ -47,8 +49,15 @@ beforeAll(async () => {
   const supplierName = testHelper.getSupplierName()
   SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
 
-  // get user id
-  DRIVER1_ID = testHelper.getUserId()
+  // create driver 1
+  const driver1 = new User({
+    fullName: DRIVER1_NAME,
+    email: testHelper.GetRandomEmail(),
+    language: testHelper.LANGUAGE,
+    type: bookcarsTypes.UserType.User,
+  })
+  await driver1.save()
+  DRIVER1_ID = driver1.id
 
   // create a location
   LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
@@ -550,9 +559,9 @@ describe('POST /api/bookings/:page/:size/:language', () => {
         dropOffLocation: LOCATION_ID,
         from: new Date(2024, 2, 1),
         to: new Date(1990, 2, 4),
-        keyword: testHelper.USER_FULL_NAME,
+        keyword: DRIVER1_NAME,
       },
-      user: testHelper.getUserId(),
+      user: DRIVER1_ID,
       car: CAR2_ID,
     }
 
@@ -683,10 +692,19 @@ describe('DELETE /api/delete-temp-booking', () => {
     const expireAt = new Date()
     expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
 
+    const driver = new User({
+      fullName: 'Driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      expireAt,
+    })
+    await driver.save()
+
     const booking = new Booking({
       supplier: SUPPLIER_ID,
       car: CAR1_ID,
-      driver: DRIVER1_ID,
+      driver: driver.id,
       pickupLocation: LOCATION_ID,
       dropOffLocation: LOCATION_ID,
       from: new Date(2024, 2, 1),
@@ -709,6 +727,8 @@ describe('DELETE /api/delete-temp-booking', () => {
     expect(res.statusCode).toBe(200)
     const _booking = await Booking.findById(booking._id)
     expect(_booking).toBeNull()
+    const _driver = await User.findById(driver._id)
+    expect(_driver).toBeNull()
 
     //
     // Test failure
