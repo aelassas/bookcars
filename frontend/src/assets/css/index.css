@@ -7,3 +7,7 @@
 /* .grecaptcha-badge { 
   visibility: hidden !important;
 } */
+
+.github-fork-ribbon:before {
+  background-color: #272727;
+}
