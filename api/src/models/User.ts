@@ -3,6 +3,8 @@ import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 
+export const USER_EXPIRE_AT_INDEX_NAME = 'expireAt'
+
 const userSchema = new Schema<env.User>(
   {
     supplier: {
@@ -100,6 +102,14 @@ const userSchema = new Schema<env.User>(
     },
     customerId: {
       type: String,
+    },
+    expireAt: {
+      //
+      // Non verified and active users created from checkout with Stripe are temporary and
+      // are automatically deleted if the payment checkout session expires.
+      //
+      type: Date,
+      index: { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true },
     },
   },
   {

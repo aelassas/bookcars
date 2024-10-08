@@ -148,6 +148,9 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
         return res.sendStatus(204)
       }
 
+      user.expireAt = undefined
+      await user.save()
+
       if (!await bookingController.confirm(user, booking, false)) {
         return res.sendStatus(400)
       }
