@@ -21,7 +21,6 @@
 .env.production
 .env.production.local
 .env.docker
-.env.oraclecloud
 
 npm-debug.log*
 yarn-debug.log*
