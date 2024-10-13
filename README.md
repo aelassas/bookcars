@@ -4,6 +4,8 @@
 
 BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
+With the following solution, you can build a fully customizable car rental website optmized for multiple suppliers with an operational Stripe payment gateway at very low cost by hosting it on a Docker droplet with at least 1GB of RAM.
+
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier and can be used as a car rental aggregator.
 
 From the backend, admins can create and manage suppliers, cars, locations, customers and bookings.
