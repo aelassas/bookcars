@@ -28,6 +28,19 @@ const strings = new LocalizedStrings({
     SUPPLIERS: 'Suppliers',
     LOCATIONS: 'Locations',
   },
+  es: {
+    SIGN_IN: 'Iniciar sesión',
+    HOME: 'Inicio',
+    BOOKINGS: 'Reservas',
+    ABOUT: 'Acerca de',
+    TOS: 'Términos de Servicio',
+    CONTACT: 'Contacto',
+    LANGUAGE: 'Idioma',
+    SETTINGS: 'Configuración',
+    SIGN_OUT: 'Cerrar sesión',
+    SUPPLIERS: 'Proveedores',
+    LOCATIONS: 'Ubicaciones',
+  },
 })
 
 langHelper.setLanguage(strings)
