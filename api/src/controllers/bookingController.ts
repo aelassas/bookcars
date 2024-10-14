@@ -255,11 +255,13 @@ export const checkout = async (req: Request, res: Response) => {
         // Non verified and active users created from checkout with Stripe are temporary
         // and are automatically deleted if the payment checkout session expires.
         //
-        expireAt = new Date()
-        expireAt.setSeconds(expireAt.getSeconds() + env.USER_EXPIRE_AT)
+        if (!user.verified) {
+          expireAt = new Date()
+          expireAt.setSeconds(expireAt.getSeconds() + env.USER_EXPIRE_AT)
 
-        user.expireAt = expireAt
-        await user.save()
+          user.expireAt = expireAt
+          await user.save()
+        }
       }
     }
 
