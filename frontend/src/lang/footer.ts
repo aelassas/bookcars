@@ -7,7 +7,6 @@ const strings = new LocalizedStrings({
   fr: {
     COPYRIGHT_PART1,
     COPYRIGHT_PART2: '. Tous droits réservés.',
-
     CORPORATE: 'À Propos',
     ABOUT: 'À propos de Nous',
     TOS: "Conditions d'utilisation",
@@ -21,7 +20,6 @@ const strings = new LocalizedStrings({
   en: {
     COPYRIGHT_PART1,
     COPYRIGHT_PART2: '. All rights reserved.',
-
     CORPORATE: 'Corporate',
     ABOUT: 'About Us',
     TOS: 'Terms of Service',
@@ -35,7 +33,6 @@ const strings = new LocalizedStrings({
   es: {
     COPYRIGHT_PART1,
     COPYRIGHT_PART2: '. Todos los derechos reservados.',
-  
     CORPORATE: 'Corporativo',
     ABOUT: 'Sobre Nosotros',
     TOS: 'Términos de Servicio',
