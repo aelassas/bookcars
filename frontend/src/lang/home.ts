@@ -36,6 +36,23 @@ const strings = new LocalizedStrings({
     MAXI: 'MAXI',
     SEARCH_FOR_CAR: 'Search for a car',
   },
+  es: {
+    PICK_UP_DATE: 'Fecha de recogida',
+    DROP_OFF_DATE: 'Fecha de devolución',
+    DROP_OFF: 'Devolver en el mismo lugar',
+    COVER: 'Las mejores empresas de alquiler de coches',
+    SUPPLIERS_TITLE: 'Conectándote con las marcas más grandes',
+    MAP_TITLE: 'Mapa de ubicaciones de alquiler de coches',
+    MAP_PICK_UP_SELECTED: 'Ubicación de recogida seleccionada',
+    MAP_DROP_OFF_SELECTED: 'Ubicación de devolución seleccionada',
+    DESTINATIONS_TITLE: 'Buscar por destinos',
+    CAR_SIZE_TITLE: 'Descubre algunos de nuestros tamaños de coches',
+    CAR_SIZE_TEXT: 'Nuestros vehículos están disponibles en tres tamaños principales.',
+    MINI: 'MINI',
+    MIDI: 'MIDI',
+    MAXI: 'MAXI',
+    SEARCH_FOR_CAR: 'Buscar un coche',
+  },
 })
 
 langHelper.setLanguage(strings)
