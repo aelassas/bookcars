@@ -32,6 +32,7 @@ export const __env__ = (name: string, required?: boolean, defaultValue?: string)
 export const LANGUAGES = [
   'en',
   'fr',
+  'es',
 ]
 
 /**
@@ -259,7 +260,7 @@ export const BACKEND_HOST = __env__('BC_BACKEND_HOST', true)
 export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', true)
 
 /**
- * Default language. Default is en. Available options: en, fr.
+ * Default language. Default is en. Available options: en, fr, es.
  *
  * @type {string}
  */
