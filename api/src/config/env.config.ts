@@ -32,6 +32,7 @@ export const __env__ = (name: string, required?: boolean, defaultValue?: string)
 export const LANGUAGES = [
   'en',
   'fr',
+  'es',
 ]
 
 /**
