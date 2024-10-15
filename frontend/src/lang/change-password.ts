@@ -20,6 +20,15 @@ const strings = new LocalizedStrings({
     PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
     PASSWORD_UPDATE: 'Password changed successfully.',
   },
+  es: {
+    CHANGE_PASSWORD_HEADING: 'Cambio de contraseña',
+    CURRENT_PASSWORD: 'Contraseña actual',
+    CURRENT_PASSWORD_ERROR: 'Contraseña incorrecta',
+    NEW_PASSWORD: 'Nueva contraseña',
+    NEW_PASSWORD_ERROR: 'Por favor, elija una nueva contraseña',
+    PASSWORD_UPDATE_ERROR: 'Ocurrió un error al actualizar la contraseña.',
+    PASSWORD_UPDATE: 'Contraseña modificada con éxito.',
+  },
 })
 
 langHelper.setLanguage(strings)

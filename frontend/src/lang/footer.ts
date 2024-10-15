@@ -32,6 +32,20 @@ const strings = new LocalizedStrings({
     CONTACT: 'Contact',
     SECURE_PAYMENT: '100% secure payment with BookCars',
   },
+  es: {
+    COPYRIGHT_PART1,
+    COPYRIGHT_PART2: '. Todos los derechos reservados.',
+  
+    CORPORATE: 'Corporativo',
+    ABOUT: 'Sobre Nosotros',
+    TOS: 'Términos de Servicio',
+    RENT: 'Alquilar un Coche',
+    SUPPLIERS: 'Proveedores',
+    LOCATIONS: 'Ubicaciones',
+    SUPPORT: 'Soporte',
+    CONTACT: 'Contacto',
+    SECURE_PAYMENT: 'Pago 100% seguro con BookCars',
+  },
 })
 
 langHelper.setLanguage(strings)
