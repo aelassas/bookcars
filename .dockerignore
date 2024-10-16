@@ -14,5 +14,6 @@
 mobile/
 .github/
 .vscode/
+__config/
 __scripts/
 __services/

@@ -15,3 +15,4 @@ COPY --from=build /bookcars/frontend/build .
 COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 80
+EXPOSE 443
