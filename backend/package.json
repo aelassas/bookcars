@@ -4,7 +4,7 @@
   "version": "4.6.0",
   "type": "module",
   "scripts": {
-    "build": "tsc --build --verbose && vite build",
+    "build": "tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
@@ -28,6 +28,7 @@
     "@typescript-eslint/parser": "^8.8.1",
     "@vitejs/plugin-react": "^4.3.2",
     "axios": "^1.7.7",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
