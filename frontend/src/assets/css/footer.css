@@ -107,7 +107,7 @@ div.footer section.payment div.payment-text {
 
 div.footer section.copyright {
   width: 100%;
-  padding: 40px 0 15px 0;
+  padding: 40px 0 15px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
