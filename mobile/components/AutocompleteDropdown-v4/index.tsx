@@ -186,8 +186,11 @@ export const AutocompleteDropdown = memo<
     }, [calculateDirection, directionProp, setDirection])
 
     const toggle = useCallback(() => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      isOpened ? close() : open()
+      if (isOpened) {
+        close()
+      } else {
+        open()
+      }
     }, [close, isOpened, open])
 
     const clear = useCallback(() => {
