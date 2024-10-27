@@ -16,6 +16,8 @@ npm install --omit=dev
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
 
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
+
 finish_time=$(date +%s)
 elapsed_time=$((finish_time - start_time))
 ((sec=elapsed_time%60, elapsed_time/=60, min=elapsed_time%60))
