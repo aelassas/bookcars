@@ -7,6 +7,8 @@ cd /opt/bookcars
 git pull
 chmod +x -R /opt/bookcars/__scripts
 
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
+
 cd /opt/bookcars/api
 
 npm install --omit=dev

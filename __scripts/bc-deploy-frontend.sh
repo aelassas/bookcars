@@ -7,6 +7,8 @@ cd /opt/bookcars
 git pull
 sudo chmod +x -R /opt/bookcars/__scripts
 
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
+
 cd /opt/bookcars/frontend
 
 npm install
