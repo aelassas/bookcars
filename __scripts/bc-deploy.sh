@@ -14,5 +14,5 @@ elif [ "$1" == "backend" ]; then
 elif [ "$1" == "frontend" ]; then
   /bin/bash /opt/bookcars/__scripts/bc-deploy-frontend.sh
 else
-  echo "Usage: bc-deploy all|api|backend|frontend"
+  echo "Usage: bc-deploy all|ui|api|backend|frontend"
 fi
