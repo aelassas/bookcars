@@ -10,8 +10,8 @@
     "fix": "eslint --fix .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "ncu": "ncu -u -x typescript,date-fns,eslint,eslint-plugin-react-hooks,eslint-plugin-react-refresh",
-    "stylelint": "stylelint \"**/*.css\"",
-    "stylelint:fix": "stylelint \"**/*.css\" --fix"
+    "stylelint": "stylelint \"src/**/*.css\"",
+    "stylelint:fix": "stylelint \"src/**/*.css\" --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
