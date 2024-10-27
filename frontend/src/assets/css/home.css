@@ -5,6 +5,7 @@ div.home {
   align-items: center;
   overflow: hidden auto;
   background-color: #fff;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Device width is less than or equal to 960px */
@@ -19,7 +20,7 @@ div.home {
   div.home-cover {
     font-size: 40px;
     font-weight: 800;
-    padding: 20px 5px 10px 5px;
+    padding: 20px 5px 10px;
   }
 
   div.home div.home-content div.home-search {
@@ -46,10 +47,6 @@ div.home {
   }
 }
 
-div.home {
-  transform: translate3d(0, 0, 0);
-}
-
 div.home div.home-content {
   position: relative;
   display: flex;
@@ -69,7 +66,7 @@ div.home div.home-content::before {
   height: 100%;
   width: 100%;
   content: "";
-  background: rgba(51, 51, 51, .22);
+  background: rgb(51 51 51 / 22%);
   clear: both;
   z-index: 1;
 }
@@ -83,7 +80,7 @@ div.home div.home-cover {
 }
 
 div.home div.home-content div.home-search {
-  box-shadow: 0px 3px 5px -1px #00000033, 0px 1px 18px 0px #0000001F, 0px 6px 10px 0px #00000024;
+  box-shadow: 0 3px 5px -1px #0003, 0 1px 18px 0 #0000001F, 0 6px 10px 0 #00000024;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,7 +106,7 @@ div.home div.destinations {
   flex-direction: column;
   align-items: center;
   background-color: #f9f9f9;
-  padding: 50px 0 60px 0;
+  padding: 50px 0 60px;
 }
 
 div.home div.destinations h1 {
@@ -183,7 +180,7 @@ div.home div.car-size div.boxes div.box div.box-content span.unit {
 
 div.home div.home-map {
   width: 80%;
-  margin: 15px 0 30px 0;
+  margin: 15px 0 30px;
 }
 
 /* Device width is greater than or equal to 960px */

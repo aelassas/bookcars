@@ -2,7 +2,7 @@ div.location-caroussel .slick-dots {
   bottom: -60px;
 }
 
-div.location-caroussel .slick-dots li.slick-active button:before {
+div.location-caroussel .slick-dots li.slick-active button::before {
   color: #1976D2;
 }
 
