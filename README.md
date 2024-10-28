@@ -16,6 +16,8 @@ Customers can sign up from the frontend or the mobile app, search for available 
 
 A key design decision was made to use TypeScript instead of JavaScript due to its numerous advantages. TypeScript offers strong typing, tooling, and integration, resulting in high-quality, scalable, more readable and maintainable code that is easy to debug and test.
 
+I invested significant time and effort into building this open-source project to make it freely available to the community. If this open-source project has been helpful in your work, consider supporting its continued development and maintenance. You can contribute through GitHub Sponsorship (one-time or monthly), PayPal, or Buy Me a Coffee. Even a simple star on the GitHub repository helps spread the word and is greatly appreciated.
+
 ## Features
 
 * Supplier management
