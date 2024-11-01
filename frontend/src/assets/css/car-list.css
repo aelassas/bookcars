@@ -107,7 +107,7 @@ section.car-list article .btn-book {
     border-radius: 5px;
     color: #333;
     font-size: 12px;
-    margin: 0 5px 10px 5px;
+    margin: 0 5px 10px;
     min-height: 800px;
     padding: 15px;
     max-width: 480px;
@@ -455,11 +455,6 @@ section.car-list article .btn-book {
     max-width: 19px;
     max-height: 5px;
     margin-right: 5px;
-  }
-
-  section.car-list article div.car div.car-supplier {
-    display: flex;
-    align-items: center;
   }
 
   section.car-list article div.car div.car-supplier {

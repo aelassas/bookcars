@@ -7,12 +7,16 @@ cd /opt/bookcars
 git pull
 chmod +x -R /opt/bookcars/__scripts
 
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
+
 cd /opt/bookcars/api
 
 npm install --omit=dev
 
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
+
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
 
 finish_time=$(date +%s)
 elapsed_time=$((finish_time - start_time))

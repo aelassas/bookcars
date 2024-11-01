@@ -98,12 +98,12 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
     if (show && !!opacity) {
       positionTrackingIntervalRef.current = setInterval(() => {
         requestAnimationFrame(() => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          activeInputContainerRef?.current
-            && activeInputContainerRef?.current?.measure((_x, _y, width, height, x, y) => {
+          if (activeInputContainerRef?.current) {
+            activeInputContainerRef?.current?.measure((_x, _y, width, height, x, y) => {
               setInputMeasurements((prev) =>
                 (JSON.stringify(prev) === JSON.stringify({ x, y, width, height }) ? prev : { x, y, width, height }),)
             })
+          }
         })
       }, 16)
     } else {

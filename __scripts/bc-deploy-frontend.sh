@@ -7,6 +7,8 @@ cd /opt/bookcars
 git pull
 sudo chmod +x -R /opt/bookcars/__scripts
 
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
+
 cd /opt/bookcars/frontend
 
 npm install
@@ -19,6 +21,8 @@ sudo cp -rf build/* /var/www/bookcars/frontend
 sudo rm -rf /var/cache/nginx
 sudo systemctl restart nginx
 sudo systemctl status nginx --no-pager
+
+/bin/bash /opt/bookcars/__scripts/free-mem.sh
 
 finish_time=$(date +%s)
 elapsed_time=$((finish_time - start_time))
