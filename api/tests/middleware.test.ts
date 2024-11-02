@@ -5,6 +5,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
+import User from '../src/models/User'
 import * as testHelper from './testHelper'
 
 const { ADMIN_EMAIL } = testHelper
@@ -33,7 +34,7 @@ afterAll(async () => {
   }
 })
 
-describe('GET /api/user/:id', () => {
+describe('POST /api/sign-in/backend', () => {
   it('should authenticate through backend HttpOnly cookie', async () => {
     const payload: bookcarsTypes.SignInPayload = {
       email: ADMIN_EMAIL,
@@ -70,7 +71,7 @@ describe('GET /api/user/:id', () => {
   })
 })
 
-describe('GET /api/user/:id', () => {
+describe('POST /api/sign-in/frontend', () => {
   it('should authenticate through frontend HttpOnly cookie', async () => {
     const payload: bookcarsTypes.SignInPayload = {
       email: USER_EMAIL,
@@ -114,15 +115,45 @@ describe('GET /api/user/:id', () => {
 
 describe('GET /api/user/:id', () => {
   it('should authenticate through request header', async () => {
-    const token = await testHelper.signinAsAdmin()
+    let token = await testHelper.signinAsAdmin()
 
-    const res = await request(app)
+    let res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
-    await testHelper.signout(token)
+    token = await testHelper.signinAsUser()
+
+    res = await request(app)
+      .get(`/api/user/${USER_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.email).toBe(USER_EMAIL)
+
+    // Token not found
+    res = await request(app)
+      .get(`/api/user/${USER_ID}`)
+    expect(res.statusCode).toBe(403)
+
+    // Token not valid
+    res = await request(app)
+      .get(`/api/user/${USER_ID}`)
+      .set(env.X_ACCESS_TOKEN, 'unknown')
+    expect(res.statusCode).toBe(401)
+
+    // Token not valid: User not found
+    const user = await User.findById(USER_ID)
+    user!.blacklisted = true
+    await user?.save()
+
+    res = await request(app)
+      .get(`/api/user/${USER_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(401)
+
+    user!.blacklisted = false
+    await user?.save()
   })
 })
 
