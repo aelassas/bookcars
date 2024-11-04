@@ -1,0 +1,9 @@
+version: "1"
+rules:
+  - base: main
+    upstream: aelassas:main
+    mergeMethod: hardreset
+  - base: docs
+    upstream: aelassas:docs
+    mergeMethod: hardreset
+
