@@ -4,7 +4,7 @@
 
 BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
-This project emerged from a desire to build without boundaries – a fully customizable and operational car rental platform and mobile app where every aspect is within your control:
+This project emerged from a desire to build without boundaries – a fully customizable and operational car rental platform where every aspect is within your control:
 
 - **Own the UI/UX**: Design unique customer experiences without fighting against template limitations
 - **Control the Backend**: Implement custom business logic and data structures that perfectly match the requirements
