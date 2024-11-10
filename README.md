@@ -4,6 +4,8 @@
 
 BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
+BookCars is built with React for its powerful rendering capabilities, MongoDB for flexible data modeling, and Stripe for secure payment processing.
+
 This project emerged from a desire to build without boundaries – a fully customizable and operational car rental platform where every aspect is within your control:
 
 - **Own the UI/UX**: Design unique customer experiences without fighting against template limitations
