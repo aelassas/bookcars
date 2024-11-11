@@ -90,3 +90,8 @@ android/
 ios/
 
 %ProgramData%/
+
+# custom
+**/credentials.json
+**/*-firebase-*.json
+**/*.jks
