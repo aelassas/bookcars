@@ -499,6 +499,14 @@ describe('POST /api/sign-in/:type', () => {
     const token = testHelper.getToken(cookies[1])
     expect(token).toBeDefined()
 
+    // test failure (email not found)
+    payload.email = ''
+    res = await request(app)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.email = USER1_EMAIL
+
     payload.password = 'wrong-password'
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
@@ -528,6 +536,89 @@ describe('POST /api/sign-in/:type', () => {
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
+    expect(res.statusCode).toBe(400)
+  })
+})
+
+describe('POST /api/social-sign-in/:type', () => {
+  it('should sign in', async () => {
+    const payload: bookcarsTypes.SignInPayload = {
+      email: USER1_EMAIL,
+      socialSignInType: bookcarsTypes.SocialSignInType.Google,
+      accessToken: testHelper.GetRandromObjectIdAsString(),
+    }
+
+    let res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    payload.socialSignInType = bookcarsTypes.SocialSignInType.Facebook
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    payload.socialSignInType = bookcarsTypes.SocialSignInType.Apple
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    // test success (mobile)
+    payload.mobile = true
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+
+    // test success (mobile stay connected)
+    payload.mobile = true
+    payload.stayConnected = true
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+
+    // test success (mobile new user)
+    payload.email = testHelper.GetRandomEmail()
+    payload.fullName = 'Random user'
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    await User.deleteOne({ email: payload.email })
+    payload.mobile = false
+
+    payload.email = undefined
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    payload.email = 'not-valid-email'
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.email = USER1_EMAIL
+
+    payload.socialSignInType = undefined
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.socialSignInType = bookcarsTypes.SocialSignInType.Google
+
+    payload.accessToken = undefined
+    res = await request(app)
+      .post('/api/social-sign-in')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.accessToken = testHelper.GetRandromObjectIdAsString()
+
+    res = await request(app)
+      .post('/api/social-sign-in')
     expect(res.statusCode).toBe(400)
   })
 })
@@ -1141,6 +1232,29 @@ describe('POST /api/users/:page/:size', () => {
       .post(`/api/users/unknown/${testHelper.SIZE}`)
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('GET /api/has-password/:id', () => {
+  it('should get users', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    let res = await request(app)
+      .get(`/api/has-password/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    res = await request(app)
+      .get(`/api/has-password/${testHelper.GetRandromObjectIdAsString()}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+
+    res = await request(app)
+      .get('/api/has-password/wrong-id')
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)

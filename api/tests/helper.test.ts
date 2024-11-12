@@ -29,3 +29,10 @@ describe('Test trim', () => {
     expect(helper.trim('   xxxxxxxx   ', ' ')).toBe('xxxxxxxx')
   })
 })
+
+describe('Test getStripeLocale', () => {
+  it('should test getStripeLocale', () => {
+    expect(helper.getStripeLocale('en')).toBe('en')
+    expect(helper.getStripeLocale('')).toBe('auto')
+  })
+})

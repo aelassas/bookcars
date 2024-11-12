@@ -249,6 +249,14 @@ describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocatio
       .get(`/api/countries-with-locations/${language}/false/1`)
     expect(res.statusCode).toBe(200)
     expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeUndefined()
+
+    // test failure
+    await databaseHelper.close()
+    res = await request(app)
+      .get(`/api/countries-with-locations/${language}/false/1`)
+    expect(res.statusCode).toBe(400)
+    const connRes = await databaseHelper.connect(env.DB_URI, false, false)
+    expect(connRes).toBeTruthy()
   })
 })
 
@@ -267,6 +275,11 @@ describe('GET /api/country-id/:name/:language', () => {
       .get(`/api/country-id/unknown/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
+
+    res = await request(app)
+      .get('/api/country-id/unknown/english')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)
   })

@@ -91,7 +91,7 @@ describe('POST /api/create-car', () => {
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
-      aircon: true,
+      aircon: false,
       image: IMAGE1,
       seats: 5,
       doors: 4,
@@ -153,7 +153,7 @@ describe('PUT /api/update-car', () => {
       available: true,
       type: bookcarsTypes.CarType.Gasoline,
       gearbox: bookcarsTypes.GearboxType.Manual,
-      aircon: false,
+      aircon: true,
       seats: 6,
       doors: 5,
       fuelPolicy: bookcarsTypes.FuelPolicy.LikeForLike,
@@ -183,7 +183,7 @@ describe('PUT /api/update-car', () => {
     expect(car.available).toBeTruthy()
     expect(car.type).toBe(bookcarsTypes.CarType.Gasoline)
     expect(car.gearbox).toBe(bookcarsTypes.GearboxType.Manual)
-    expect(car.aircon).toBe(false)
+    expect(car.aircon).toBeTruthy()
     expect(car.seats).toBe(6)
     expect(car.doors).toBe(5)
     expect(car.fuelPolicy).toBe(bookcarsTypes.FuelPolicy.LikeForLike)
@@ -398,7 +398,7 @@ describe('POST /api/cars/:page/:size', () => {
       rating: 4,
       seats: 6,
       carSpecs: {
-        aircon: false,
+        aircon: true,
         moreThanFiveSeats: true,
         moreThanFourDoors: true,
       },
@@ -544,7 +544,7 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       rating: 4,
       seats: 6,
       carSpecs: {
-        aircon: false,
+        aircon: true,
         moreThanFiveSeats: true,
         moreThanFourDoors: true,
       },
