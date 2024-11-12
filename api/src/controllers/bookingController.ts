@@ -970,24 +970,19 @@ export const cancelBooking = async (req: Request, res: Response) => {
       await booking.save()
 
       // Notify supplier
-      await notify(booking.driver, booking._id.toString(), booking.supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
-
-      // Notify supplier
       const supplier = await User.findById(booking.supplier)
       if (!supplier) {
         logger.info(`Supplier ${booking.supplier} not found`)
         return res.sendStatus(204)
       }
       i18n.locale = supplier.language
-      let message = i18n.t('CANCEL_BOOKING_NOTIFICATION')
-      await notify(booking.driver, booking._id.toString(), supplier, message)
+      await notify(booking.driver, booking.id, supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
 
       // Notify admin
       const admin = !!env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
       if (admin) {
         i18n.locale = admin.language
-        message = i18n.t('CANCEL_BOOKING_NOTIFICATION')
-        await notify(booking.driver, booking._id.toString(), admin, message)
+        await notify(booking.driver, booking.id, admin, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
       }
 
       return res.sendStatus(200)

@@ -55,11 +55,11 @@ app.use('/', countryRoutes)
 
 i18n.locale = env.DEFAULT_LANGUAGE
 
-helper.mkdir(env.CDN_USERS)
-helper.mkdir(env.CDN_TEMP_USERS)
-helper.mkdir(env.CDN_CARS)
-helper.mkdir(env.CDN_TEMP_CARS)
-helper.mkdir(env.CDN_LOCATIONS)
-helper.mkdir(env.CDN_TEMP_LOCATIONS)
+await helper.mkdir(env.CDN_USERS)
+await helper.mkdir(env.CDN_TEMP_USERS)
+await helper.mkdir(env.CDN_CARS)
+await helper.mkdir(env.CDN_TEMP_CARS)
+await helper.mkdir(env.CDN_LOCATIONS)
+await helper.mkdir(env.CDN_TEMP_LOCATIONS)
 
 export default app

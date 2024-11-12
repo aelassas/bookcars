@@ -254,6 +254,9 @@ describe('PUT /api/update-location/:id', () => {
     expect(res.body?.longitude).toBe(payload.longitude)
     expect(res.body?.parkingSpots.length).toBe(0)
 
+    const loc = await Location.findById(LOCATION_ID)
+    loc!.parkingSpots = null
+    await loc!.save()
     payload.parkingSpots = [
       {
         latitude: 28.1268755,
@@ -300,6 +303,10 @@ describe('GET /api/location-id/:name/:language', () => {
     res = await request(app)
       .get(`/api/location-id/unknown/${language}`)
     expect(res.statusCode).toBe(204)
+
+    res = await request(app)
+      .get('/api/location-id/unknown/english')
+    expect(res.statusCode).toBe(400)
   })
 })
 
@@ -405,6 +412,11 @@ describe('POST /api/delete-location-image/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    res = await request(app)
+      .post('/api/delete-location-image/invalid-id')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
     await testHelper.signout(token)
   })
 })
@@ -477,9 +489,13 @@ describe('GET /api/locations-with-position/:language', () => {
     expect(res.body.length).toBeGreaterThanOrEqual(1)
 
     res = await request(app)
-      .get('/api/locations-with-position/unknown')
+      .get('/api/locations-with-position/pt')
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
+
+    res = await request(app)
+      .get('/api/locations-with-position/english')
+    expect(res.statusCode).toBe(400)
   })
 })
 

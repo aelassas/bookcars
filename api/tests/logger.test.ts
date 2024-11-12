@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import * as logger from '../src/common/logger'
 
-describe('Tes logging', () => {
+describe('Test logging', () => {
   it('should test logging', () => {
     let res = true
     try {
