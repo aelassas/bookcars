@@ -1517,6 +1517,9 @@ export const sendEmail = async (req: Request, res: Response) => {
 export const hasPassword = async (req: Request, res: Response) => {
   const { id } = req.params
   try {
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('User id not valid')
+    }
     const passwordExists = await User.exists({ _id: id, password: { $ne: null } })
 
     if (passwordExists) {

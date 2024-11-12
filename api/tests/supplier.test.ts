@@ -67,6 +67,10 @@ beforeAll(async () => {
     fullInsurance: 200,
     additionalDriver: 200,
     range: bookcarsTypes.CarRange.Midi,
+    rating: 4,
+    multimedia: [
+      bookcarsTypes.CarMultimedia.AndroidAuto,
+    ],
   })
   await car1.save()
   CAR1_ID = car1.id
@@ -83,8 +87,8 @@ beforeAll(async () => {
     gearbox: bookcarsTypes.GearboxType.Automatic,
     aircon: true,
     image: undefined,
-    seats: 5,
-    doors: 4,
+    seats: 6,
+    doors: 5,
     fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
     mileage: -1,
     cancellation: 0,
@@ -94,6 +98,10 @@ beforeAll(async () => {
     fullInsurance: 200,
     additionalDriver: 200,
     range: bookcarsTypes.CarRange.Midi,
+    rating: 4,
+    multimedia: [
+      bookcarsTypes.CarMultimedia.AndroidAuto,
+    ],
   })
   await car2.save()
   CAR2_ID = car2.id
@@ -459,6 +467,17 @@ describe('POST /api/frontend-suppliers', () => {
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.FreeTank],
       deposit: -1,
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+      rating: 4,
+      seats: 6,
+      carSpecs: {
+        aircon: true,
+        moreThanFiveSeats: true,
+        moreThanFourDoors: true,
+      },
+      ranges: [bookcarsTypes.CarRange.Midi],
     }
 
     let res = await request(app)
@@ -502,16 +521,12 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(2)
 
-    // carSpecs
-    payload.carSpecs = {}
-    payload.carSpecs.aircon = true
-    payload.carSpecs.moreThanFiveSeats = true
-    payload.carSpecs.moreThanFourDoors = true
+    payload.seats = 3
     res = await request(app)
       .post('/api/frontend-suppliers')
       .send(payload)
     expect(res.statusCode).toBe(200)
-    expect(res.body.length).toBe(1)
+    expect(res.body.length).toBe(0)
   })
 })
 
@@ -526,6 +541,17 @@ describe('POST /api/backend-suppliers', () => {
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       fuelPolicy: [bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.FreeTank],
       deposit: -1,
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+      rating: 4,
+      seats: 6,
+      carSpecs: {
+        aircon: true,
+        moreThanFiveSeats: true,
+        moreThanFourDoors: true,
+      },
+      ranges: [bookcarsTypes.CarRange.Midi],
     }
 
     let res = await request(app)
@@ -573,17 +599,14 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
-    // carSpecs
-    payload.carSpecs = {}
-    payload.carSpecs.aircon = true
-    payload.carSpecs.moreThanFiveSeats = true
-    payload.carSpecs.moreThanFourDoors = true
+    payload.seats = 3
     res = await request(app)
       .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
-    expect(res.body.length).toBeGreaterThan(0)
+    expect(res.body.length).toBe(0)
+    payload.seats = 6
 
     payload.availability = [bookcarsTypes.Availablity.Available]
     res = await request(app)

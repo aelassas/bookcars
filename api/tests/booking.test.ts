@@ -642,6 +642,19 @@ describe('POST /api/cancel-booking/:id', () => {
     booking = await Booking.findById(BOOKING_ID)
     expect(booking?.cancelRequest).toBeTruthy()
 
+    // test failure (supplier not found)
+    booking = await Booking.findById(BOOKING_ID)
+    booking!.cancelRequest = false
+    const supplierId = booking!.supplier
+    booking!.supplier = testHelper.GetRandromObjectId()
+    await booking!.save()
+    res = await request(app)
+      .post(`/api/cancel-booking/${BOOKING_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+    booking!.supplier = supplierId
+    await booking!.save()
+
     res = await request(app)
       .post(`/api/cancel-booking/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)

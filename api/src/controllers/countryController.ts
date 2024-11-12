@@ -381,6 +381,9 @@ export const getCountryId = async (req: Request, res: Response) => {
   const { name, language } = req.params
 
   try {
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
       const country = await Country.findOne({ values: lv.id })
