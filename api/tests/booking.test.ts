@@ -131,6 +131,7 @@ describe('POST /api/create-booking', () => {
   it('should create a booking', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (with additional driver)
     const payload: bookcarsTypes.UpsertBookingPayload = {
       booking: {
         supplier: SUPPLIER_ID,
@@ -161,6 +162,7 @@ describe('POST /api/create-booking', () => {
     expect(additionalDriver).not.toBeNull()
     ADDITIONAL_DRIVER_ID = additionalDriver?.id
 
+    // test success (without additional driver)
     payload.booking!.additionalDriver = false
     res = await request(app)
       .post('/api/create-booking')
@@ -169,6 +171,7 @@ describe('POST /api/create-booking', () => {
     expect(res.statusCode).toBe(200)
     payload.booking!.additionalDriver = true
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/create-booking')
       .set(env.X_ACCESS_TOKEN, token)
@@ -183,6 +186,7 @@ describe('POST /api/checkout', () => {
     let bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBe(2)
 
+    // test success
     const payload: bookcarsTypes.CheckoutPayload = {
       booking: {
         supplier: SUPPLIER_ID,
@@ -210,7 +214,7 @@ describe('POST /api/checkout', () => {
     bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBeGreaterThan(1)
 
-    // Test failed stripe payment
+    // test failure (stripe payment failed)
     payload.payLater = false
     const receiptEmail = testHelper.GetRandomEmail()
     const paymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
@@ -236,7 +240,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
-    // Test successful stripe payment
+    // test success (stripe payment succeeded)
     await stripeAPI.paymentIntents.confirm(paymentIntentId, {
       payment_method: 'pm_card_visa',
     })
@@ -259,7 +263,7 @@ describe('POST /api/checkout', () => {
       }
     }
 
-    // Test checkout session
+    // test success (checkout session)
     payload.paymentIntentId = undefined
     payload.sessionId = 'xxxxxxxxxxxxxx'
     res = await request(app)
@@ -273,6 +277,7 @@ describe('POST /api/checkout', () => {
     expect(booking?.sessionId).toBe(payload.sessionId)
     payload.payLater = true
 
+    // test success (checkout session with no additional driver)
     payload.booking!.additionalDriver = false
     res = await request(app)
       .post('/api/checkout')
