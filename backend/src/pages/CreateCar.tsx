@@ -683,8 +683,8 @@ const CreateCar = () => {
                 onClick={async () => {
                   if (image) {
                     await CarService.deleteTempImage(image)
-                    navigate('/cars')
                   }
+                  navigate('/cars')
                 }}
               >
                 {commonStrings.CANCEL}
