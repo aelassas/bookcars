@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import SuspenseRouter from '@/components/SuspenseRouter'
 import { GlobalProvider } from '@/context/GlobalContext'
 
 const SignIn = lazy(() => import('@/pages/SignIn'))
@@ -38,7 +39,7 @@ const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 
 const App = () => (
   <GlobalProvider>
-    <Router>
+    <SuspenseRouter window={window}>
       <div className="app">
         <Suspense fallback={<></>}>
           <Routes>
@@ -79,7 +80,7 @@ const App = () => (
           </Routes>
         </Suspense>
       </div>
-    </Router>
+    </SuspenseRouter>
   </GlobalProvider>
 )
 

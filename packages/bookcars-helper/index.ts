@@ -232,6 +232,111 @@ export const formatPrice = (price: number, currency: string, language: string) =
 }
 
 /**
+ * Calculate total price.
+ *
+ * @param {bookcarsTypes.Car} car
+ * @param {Date} from
+ * @param {Date} to
+ * @param {?bookcarsTypes.CarOptions} [options]
+ * @returns {number}
+ */
+export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
+  const _days = days(from, to)
+
+  let remainingDays = _days
+  let _price = 0
+
+  if (remainingDays >= 30) { // higher than one month
+    if (car.discountedMonthlyPrice || car.monthlyPrice) {
+      _price = (car.discountedMonthlyPrice || car.monthlyPrice)! * (Math.floor(_days / 30))
+      remainingDays = _days % 30
+    }
+
+    if (remainingDays >= 7) {
+      if (car.discountedWeeklyPrice || car.weeklyPrice) {
+        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        remainingDays = remainingDays % 7
+      }
+
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    } else {
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    }
+  } else { // lower than one month
+    if (remainingDays >= 7) {
+      if (car.discountedWeeklyPrice || car.weeklyPrice) {
+        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        remainingDays = remainingDays % 7
+      }
+
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    } else {
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    }
+  }
+
+  // add extra options
+  if (options) {
+    if (options.cancellation && car.cancellation > 0) {
+      _price += car.cancellation
+    }
+    if (options.amendments && car.amendments > 0) {
+      _price += car.amendments
+    }
+    if (options.theftProtection && car.theftProtection > 0) {
+      _price += car.theftProtection * _days
+    }
+    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
+      _price += car.collisionDamageWaiver * _days
+    }
+    if (options.fullInsurance && car.fullInsurance > 0) {
+      _price += car.fullInsurance * _days
+    }
+    if (options.additionalDriver && car.additionalDriver > 0) {
+      _price += car.additionalDriver * _days
+    }
+  }
+
+  return _price
+}
+
+/**
  * Check whether language is french
  *
  * @param {string} language

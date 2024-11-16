@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import request from 'supertest'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -68,8 +68,15 @@ beforeAll(async () => {
     supplier: SUPPLIER_ID,
     minimumAge: 21,
     locations: [LOCATION_ID],
-    price: 780,
-    deposit: 9500,
+    dailyPrice: 78,
+    discountedDailyPrice: null,
+    biWeeklyPrice: null,
+    discountedBiWeeklyPrice: null,
+    weeklyPrice: null,
+    discountedWeeklyPrice: null,
+    monthlyPrice: null,
+    discountedMonthlyPrice: null,
+    deposit: 950,
     available: false,
     type: bookcarsTypes.CarType.Diesel,
     gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -80,9 +87,9 @@ beforeAll(async () => {
     mileage: -1,
     cancellation: 0,
     amendments: 0,
-    theftProtection: 90,
-    collisionDamageWaiver: 120,
-    fullInsurance: 200,
+    theftProtection: 9,
+    collisionDamageWaiver: 12,
+    fullInsurance: 20,
     additionalDriver: 0,
     range: bookcarsTypes.CarRange.Midi,
     multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
@@ -95,7 +102,7 @@ beforeAll(async () => {
   CAR1_ID = car.id
 
   // car 2
-  car = new Car({ ...payload, name: 'BMW X5', price: 880 })
+  car = new Car({ ...payload, name: 'BMW X5', dailyPrice: 88 })
   await car.save()
   CAR2_ID = car.id
 })
@@ -131,6 +138,7 @@ describe('POST /api/create-booking', () => {
   it('should create a booking', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (with additional driver)
     const payload: bookcarsTypes.UpsertBookingPayload = {
       booking: {
         supplier: SUPPLIER_ID,
@@ -161,6 +169,7 @@ describe('POST /api/create-booking', () => {
     expect(additionalDriver).not.toBeNull()
     ADDITIONAL_DRIVER_ID = additionalDriver?.id
 
+    // test success (without additional driver)
     payload.booking!.additionalDriver = false
     res = await request(app)
       .post('/api/create-booking')
@@ -169,6 +178,7 @@ describe('POST /api/create-booking', () => {
     expect(res.statusCode).toBe(200)
     payload.booking!.additionalDriver = true
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/create-booking')
       .set(env.X_ACCESS_TOKEN, token)
@@ -183,6 +193,7 @@ describe('POST /api/checkout', () => {
     let bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBe(2)
 
+    // test success
     const payload: bookcarsTypes.CheckoutPayload = {
       booking: {
         supplier: SUPPLIER_ID,
@@ -210,7 +221,7 @@ describe('POST /api/checkout', () => {
     bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBeGreaterThan(1)
 
-    // Test failed stripe payment
+    // test failure (stripe payment failed)
     payload.payLater = false
     const receiptEmail = testHelper.GetRandomEmail()
     const paymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
@@ -236,7 +247,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
-    // Test successful stripe payment
+    // test success (stripe payment succeeded)
     await stripeAPI.paymentIntents.confirm(paymentIntentId, {
       payment_method: 'pm_card_visa',
     })
@@ -259,7 +270,7 @@ describe('POST /api/checkout', () => {
       }
     }
 
-    // Test checkout session
+    // test success (checkout session)
     payload.paymentIntentId = undefined
     payload.sessionId = 'xxxxxxxxxxxxxx'
     res = await request(app)
@@ -273,6 +284,7 @@ describe('POST /api/checkout', () => {
     expect(booking?.sessionId).toBe(payload.sessionId)
     payload.payLater = true
 
+    // test success (checkout session with no additional driver)
     payload.booking!.additionalDriver = false
     res = await request(app)
       .post('/api/checkout')
@@ -539,7 +551,7 @@ describe('GET /api/booking/:id/:language', () => {
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .get(`/api/booking/${uuid()}/${testHelper.LANGUAGE}`)
+      .get(`/api/booking/${nanoid()}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -620,7 +632,7 @@ describe('GET /api/has-bookings/:driver', () => {
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
 
     res = await request(app)
-      .get(`/api/has-bookings/${uuid()}`)
+      .get(`/api/has-bookings/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -661,7 +673,7 @@ describe('POST /api/cancel-booking/:id', () => {
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .post(`/api/cancel-booking/${uuid()}`)
+      .post(`/api/cancel-booking/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 

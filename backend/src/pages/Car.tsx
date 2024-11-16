@@ -197,7 +197,7 @@ const Car = () => {
                   <span className="car-supplier-info">{car.supplier.fullName}</span>
                 </div>
               </div>
-              <div className="price">{`${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`}</div>
+              <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`}</div>
               <div className="car-info">
                 <ul className="car-info-list">
                   <li className="car-type">

@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import request from 'supertest'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -16,11 +16,11 @@ let COUNTRY_ID: string
 let COUNTRY_NAMES: bookcarsTypes.CountryName[] = [
   {
     language: 'en',
-    name: uuid(),
+    name: nanoid(),
   },
   {
     language: 'fr',
-    name: uuid(),
+    name: nanoid(),
   },
 ]
 
@@ -54,7 +54,7 @@ describe('POST /api/validate-country', () => {
     const token = await testHelper.signinAsAdmin()
 
     const language = testHelper.LANGUAGE
-    const name = uuid()
+    const name = nanoid()
     const countryValue = new LocationValue({ language, value: name })
     await countryValue.save()
     const payload: bookcarsTypes.ValidateCountryPayload = {
@@ -67,7 +67,7 @@ describe('POST /api/validate-country', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
-    payload.name = uuid()
+    payload.name = nanoid()
     res = await request(app)
       .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
@@ -112,15 +112,15 @@ describe('PUT /api/update-country/:id', () => {
     COUNTRY_NAMES = [
       {
         language: 'en',
-        name: uuid(),
+        name: nanoid(),
       },
       {
         language: 'fr',
-        name: uuid(),
+        name: nanoid(),
       },
       {
         language: 'es',
-        name: uuid(),
+        name: nanoid(),
       },
     ]
 
@@ -211,7 +211,7 @@ describe('GET /api/check-country/:id', () => {
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .get(`/api/check-country/${uuid()}`)
+      .get(`/api/check-country/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 

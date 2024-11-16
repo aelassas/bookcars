@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { CommonActions } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 
 import * as helper from '@/common/helper'
@@ -245,47 +244,66 @@ const CarList = ({
               setRefreshing(true)
 
               if ((route && pickupLocation && dropOffLocation && from && to) && ((route === 'Checkout' && cars && cars.length > 0) || route === 'Cars')) {
-                navigation.dispatch((state) => {
-                  const { routes } = state
-                  if (route === 'Cars') {
-                    const index = routes.findIndex((r) => r.name === 'Cars')
-                    routes.splice(index, 1)
-                    const now = Date.now()
-                    routes.push({
-                      name: 'Cars',
-                      key: `Cars-${now}`,
-                      params: {
-                        pickupLocation: pickupLocation!,
-                        dropOffLocation: dropOffLocation!,
-                        from: from!.getTime(),
-                        to: to!.getTime(),
-                        d: now,
-                      },
-                    })
-                  } else {
-                    const index = routes.findIndex((r) => r.name === 'Checkout')
-                    routes.splice(index, 1)
-                    const now = Date.now()
-                    routes.push({
-                      name: 'Checkout',
-                      key: `Checkout-${now}`,
-                      params: {
-                        car: cars![0]._id,
-                        pickupLocation: pickupLocation!,
-                        dropOffLocation: dropOffLocation!,
-                        from: from!.getTime(),
-                        to: to!.getTime(),
-                        d: now,
-                      },
-                    })
-                  }
-
-                  return CommonActions.reset({
-                    ...state,
-                    routes,
-                    index: routes.length - 1,
+                if (route === 'Cars') {
+                  navigation.navigate(route, {
+                    pickupLocation: pickupLocation!,
+                    dropOffLocation: dropOffLocation!,
+                    from: from!.getTime(),
+                    to: to!.getTime(),
+                    d: Date.now(),
                   })
-                })
+                } else {
+                  navigation.navigate(route, {
+                    car: cars![0]._id,
+                    pickupLocation: pickupLocation!,
+                    dropOffLocation: dropOffLocation!,
+                    from: from!.getTime(),
+                    to: to!.getTime(),
+                    d: Date.now(),
+                  })
+                }
+
+                // navigation.dispatch((state) => {
+                //   const { routes } = state
+                //   if (route === 'Cars') {
+                //     const index = routes.findIndex((r) => r.name === 'Cars')
+                //     routes.splice(index, 1)
+                //     const now = Date.now()
+                //     routes.push({
+                //       name: 'Cars',
+                //       key: `Cars-${now}`,
+                //       params: {
+                //         pickupLocation: pickupLocation!,
+                //         dropOffLocation: dropOffLocation!,
+                //         from: from!.getTime(),
+                //         to: to!.getTime(),
+                //         d: now,
+                //       },
+                //     })
+                //   } else {
+                //     const index = routes.findIndex((r) => r.name === 'Checkout')
+                //     routes.splice(index, 1)
+                //     const now = Date.now()
+                //     routes.push({
+                //       name: 'Checkout',
+                //       key: `Checkout-${now}`,
+                //       params: {
+                //         car: cars![0]._id,
+                //         pickupLocation: pickupLocation!,
+                //         dropOffLocation: dropOffLocation!,
+                //         from: from!.getTime(),
+                //         to: to!.getTime(),
+                //         d: now,
+                //       },
+                //     })
+                //   }
+
+                //   return CommonActions.reset({
+                //     ...state,
+                //     routes,
+                //     index: routes.length - 1,
+                //   })
+                // })
               } else {
                 setRefreshing(false)
               }

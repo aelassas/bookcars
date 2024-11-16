@@ -166,7 +166,16 @@ export interface CreateCarPayload {
   supplier: string
   minimumAge: number
   locations: string[]
-  price: number
+
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
   deposit: number
   available: boolean
   type: string
@@ -391,7 +400,16 @@ export interface Car {
   supplier: User
   minimumAge: number
   locations: Location[]
-  price: number
+
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
   deposit: number
   available: boolean
   type: CarType
