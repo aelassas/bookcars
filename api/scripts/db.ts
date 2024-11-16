@@ -10,8 +10,8 @@ if (
   const cars = await Car.find({})
 
   for (const car of cars) {
-    if (car.price) {
-      car.dailyPrice = car.price
+    if (('price' in car) && car.price) {
+      car.dailyPrice = Number(car.price)
       car.discountedDailyPrice = null
       car.biWeeklyPrice = null
       car.discountedBiWeeklyPrice = null
