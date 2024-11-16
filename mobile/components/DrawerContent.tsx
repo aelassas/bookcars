@@ -66,7 +66,7 @@ const DrawerContent = ({
         await UserService.setLanguage(__language)
         setLanguage(__language)
         const route = props.state.routes[index]
-        helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation, true)
+        helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation, false)
       }
 
       const currentUser = await UserService.getCurrentUser()
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   signoutIcon: {
-    marginRight: 5,
+    marginRight: -15,
   },
   text: {
     color: 'rgba(0, 0, 0, 0.54)',

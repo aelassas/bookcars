@@ -449,7 +449,17 @@ export interface Car extends Document {
   supplier: Types.ObjectId
   minimumAge: number
   locations: Types.ObjectId[]
-  price: number
+
+  price?: number // TODO remove
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
   deposit: number
   available: boolean
   type: bookcarsTypes.CarType

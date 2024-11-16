@@ -3,7 +3,7 @@ import request from 'supertest'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -49,7 +49,7 @@ beforeAll(async () => {
     supplier: SUPPLIER1_ID,
     minimumAge: 21,
     locations: [LOCATION_ID],
-    price: 78,
+    dailyPrice: 78,
     deposit: 950,
     available: true,
     type: bookcarsTypes.CarType.Diesel,
@@ -62,10 +62,10 @@ beforeAll(async () => {
     mileage: 1000,
     cancellation: 0,
     amendments: 0,
-    theftProtection: 90,
-    collisionDamageWaiver: 120,
-    fullInsurance: 200,
-    additionalDriver: 200,
+    theftProtection: 9,
+    collisionDamageWaiver: 12,
+    fullInsurance: 20,
+    additionalDriver: 20,
     range: bookcarsTypes.CarRange.Midi,
     rating: 4,
     multimedia: [
@@ -80,7 +80,7 @@ beforeAll(async () => {
     supplier: SUPPLIER2_ID,
     minimumAge: 21,
     locations: [LOCATION_ID],
-    price: 42,
+    dailyPrice: 42,
     deposit: 750,
     available: true,
     type: bookcarsTypes.CarType.Diesel,
@@ -93,10 +93,10 @@ beforeAll(async () => {
     mileage: -1,
     cancellation: 0,
     amendments: 0,
-    theftProtection: 90,
-    collisionDamageWaiver: 120,
-    fullInsurance: 200,
-    additionalDriver: 200,
+    theftProtection: 9,
+    collisionDamageWaiver: 12,
+    fullInsurance: 20,
+    additionalDriver: 20,
     range: bookcarsTypes.CarRange.Midi,
     rating: 4,
     multimedia: [
@@ -240,7 +240,7 @@ describe('GET /api/suppliers/:page/:size', () => {
     expect(res.statusCode).toBe(400)
 
     res = await request(app)
-      .get(`/api/suppliers/${testHelper.PAGE}/${testHelper.SIZE}?s=${uuid()}`)
+      .get(`/api/suppliers/${testHelper.PAGE}/${testHelper.SIZE}?s=${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBe(0)
@@ -288,8 +288,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -301,10 +301,10 @@ describe('DELETE /api/delete-supplier/:id', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
@@ -372,7 +372,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     supplier = await User.findById(supplierId)
     expect(supplier).not.toBeNull()
-    supplier!.avatar = `${uuid()}.jpg`
+    supplier!.avatar = `${nanoid()}.jpg`
     await supplier?.save()
     locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
     car = new Car({
@@ -380,8 +380,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -393,10 +393,10 @@ describe('DELETE /api/delete-supplier/:id', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
@@ -426,23 +426,23 @@ describe('DELETE /api/delete-supplier/:id', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
       aircon: true,
-      image: `${uuid()}.jpg`,
+      image: `${nanoid()}.jpg`,
       seats: 5,
       doors: 4,
       fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()

@@ -464,7 +464,7 @@ export const price = async (
       const to = new Date(booking.to)
       const days = totalDays(from, to)
 
-      let _price = car.price * days
+      let _price = bookcarsHelper.calculateTotalPrice(car, from, to)
       if (booking.cancellation && car.cancellation > 0) {
         _price += car.cancellation
       }

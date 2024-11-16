@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
@@ -82,7 +82,14 @@ export const update = async (req: Request, res: Response) => {
         available,
         type,
         locations,
-        price,
+        dailyPrice,
+        discountedDailyPrice,
+        biWeeklyPrice,
+        discountedBiWeeklyPrice,
+        weeklyPrice,
+        discountedWeeklyPrice,
+        monthlyPrice,
+        discountedMonthlyPrice,
         deposit,
         seats,
         doors,
@@ -108,7 +115,14 @@ export const update = async (req: Request, res: Response) => {
       car.name = name
       car.available = available
       car.type = type as bookcarsTypes.CarType
-      car.price = price
+      car.dailyPrice = dailyPrice
+      car.discountedDailyPrice = discountedDailyPrice
+      car.biWeeklyPrice = biWeeklyPrice
+      car.discountedBiWeeklyPrice = discountedBiWeeklyPrice
+      car.weeklyPrice = weeklyPrice
+      car.discountedWeeklyPrice = discountedWeeklyPrice
+      car.monthlyPrice = monthlyPrice
+      car.discountedMonthlyPrice = discountedMonthlyPrice
       car.deposit = deposit
       car.seats = seats
       car.doors = doors
@@ -218,7 +232,7 @@ export const createImage = async (req: Request, res: Response) => {
       throw new Error('[car.createImage] req.file not found')
     }
 
-    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)

@@ -624,7 +624,7 @@ const CarList = ({
                       )}
                     </ul>
                   </div>
-                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
+                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
                   <div className="action">
                     {edit && (
                       <>

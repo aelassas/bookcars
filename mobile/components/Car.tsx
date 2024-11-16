@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StyleSheet, Text, View, Image } from 'react-native'
@@ -44,6 +44,16 @@ const Car = ({
   hidePrice
 }: CarProps) => {
   const fr = bookcarsHelper.isFrench(language)
+
+  const [days, setDays] = useState<number>()
+  const [totalPrice, setTotalPrice] = useState<number>()
+
+  useEffect(() => {
+    if (car && from && to) {
+      setDays(bookcarsHelper.days(from, to))
+      setTotalPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+    }
+  }, [car, from, to])
 
   const styles = StyleSheet.create({
     carContainer: {
@@ -238,7 +248,7 @@ const Car = ({
     },
   })
 
-  return (
+  return days && totalPrice && (
     <View key={car._id} style={styles.carContainer}>
       {pickupLocationName && (
         <>
@@ -384,9 +394,9 @@ const Car = ({
 
           {!hidePrice && from && to && (
             <View style={styles.price}>
-              <Text style={styles.priceSecondary}>{helper.getDays(bookcarsHelper.days(from, to))}</Text>
-              <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(helper.price(car, from, to), i18n.t('CURRENCY'), language)}`}</Text>
-              <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}`}</Text>
+              <Text style={styles.priceSecondary}>{helper.getDays(days)}</Text>
+              <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(totalPrice, i18n.t('CURRENCY'), language)}`}</Text>
+              <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(totalPrice / days, i18n.t('CURRENCY'), language)}`}</Text>
             </View>
           )}
         </View>

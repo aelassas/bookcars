@@ -185,8 +185,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const onPressSave = async () => {
     try {
-      if (!user || !user._id || !birthDate) {
-        helper.error()
+      if (!user || !user._id) {
         return
       }
 

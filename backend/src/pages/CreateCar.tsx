@@ -53,7 +53,14 @@ const CreateCar = () => {
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
-  const [price, setPrice] = useState('')
+  const [dailyPrice, setDailyPrice] = useState('')
+  const [discountedDailyPrice, setDiscountedDailyPrice] = useState('')
+  const [biWeeklyPrice, setBiWeeklyPrice] = useState('')
+  const [discountedBiWeeklyPrice, setDiscountedBiWeeklyPrice] = useState('')
+  const [weeklyPrice, setWeeklyPrice] = useState('')
+  const [discountedWeeklyPrice, setDiscountedWeeklyPrice] = useState('')
+  const [monthlyPrice, setMonthlyPrice] = useState('')
+  const [discountedMonthlyPrice, setDiscountedMonthlyPrice] = useState('')
   const [seats, setSeats] = useState('')
   const [doors, setDoors] = useState('')
   const [aircon, setAircon] = useState(false)
@@ -167,10 +174,6 @@ const CreateCar = () => {
     setAircon(e.target.checked)
   }
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(e.target.value)
-  }
-
   const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeposit(e.target.value)
   }
@@ -217,9 +220,13 @@ const CreateCar = () => {
 
   const extraToNumber = (extra: string) => (extra === '' ? -1 : Number(extra))
 
+  const getPrice = (price: string) => (price && Number(price)) || null
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault()
+
+      setLoading(true)
 
       const _minimumAgeValid = validateMinimumAge(minimumAge)
       if (!_minimumAgeValid) {
@@ -239,7 +246,14 @@ const CreateCar = () => {
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
-        price: Number(price),
+        dailyPrice: Number(dailyPrice),
+        discountedDailyPrice: getPrice(discountedDailyPrice),
+        biWeeklyPrice: getPrice(biWeeklyPrice),
+        discountedBiWeeklyPrice: getPrice(discountedBiWeeklyPrice),
+        weeklyPrice: getPrice(weeklyPrice),
+        discountedWeeklyPrice: getPrice(discountedWeeklyPrice),
+        monthlyPrice: getPrice(monthlyPrice),
+        discountedMonthlyPrice: getPrice(discountedMonthlyPrice),
         deposit: Number(deposit),
         available,
         type,
@@ -271,6 +285,8 @@ const CreateCar = () => {
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -349,20 +365,158 @@ const CreateCar = () => {
 
             <FormControl fullWidth margin="dense">
               <TextField
-                label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
-                onChange={handlePriceChange}
+                label={`${strings.DAILY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDailyPrice(e.target.value)
+                }}
                 required
                 variant="standard"
                 autoComplete="off"
-                value={price}
+                value={dailyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.DISCOUNTED_DAILY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDiscountedDailyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={discountedDailyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setBiWeeklyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={biWeeklyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.DISCOUNTED_BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDiscountedBiWeeklyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={discountedBiWeeklyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setWeeklyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={weeklyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.DISCOUNTED_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDiscountedWeeklyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={discountedWeeklyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.MONTHLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setMonthlyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={monthlyPrice}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <TextField
+                label={`${strings.DISCOUNTED_MONThLY_PRICE} (${commonStrings.CURRENCY})`}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDiscountedMonthlyPrice(e.target.value)
+                }}
+                variant="standard"
+                autoComplete="off"
+                value={discountedMonthlyPrice}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{
+                  htmlInput: {
+                    inputMode: 'numeric',
+                    pattern: '^\\d+(.\\d+)?$'
+                  }
+                }}
                 onChange={handleDepositChange}
                 required
                 variant="standard"
@@ -382,11 +536,13 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={strings.RATING}
-                inputProps={{
-                  type: 'number',
-                  min: 1,
-                  max: 5,
-                  step: 0.01,
+                slotProps={{
+                  htmlInput: {
+                    type: 'number',
+                    min: 1,
+                    max: 5,
+                    step: 0.01,
+                  }
                 }}
                 onChange={handleRatingChange}
                 variant="standard"
@@ -398,7 +554,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={strings.CO2}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleCo2Change}
                 variant="standard"
                 autoComplete="off"
@@ -442,7 +598,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleMileageChange}
                 variant="standard"
                 autoComplete="off"
@@ -453,7 +609,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleCancellationChange}
                 variant="standard"
                 autoComplete="off"
@@ -464,7 +620,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleAmendmentsChange}
                 variant="standard"
                 autoComplete="off"
@@ -475,7 +631,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleTheftProtectionChange}
                 variant="standard"
                 autoComplete="off"
@@ -486,7 +642,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleCollisionDamageWaiverChange}
                 variant="standard"
                 autoComplete="off"
@@ -497,7 +653,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleFullinsuranceChange}
                 variant="standard"
                 autoComplete="off"
@@ -508,7 +664,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
                 onChange={handleAdditionalDriverChange}
                 variant="standard"
                 autoComplete="off"
@@ -517,7 +673,7 @@ const CreateCar = () => {
             </FormControl>
 
             <div className="buttons">
-              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={loading}>
                 {commonStrings.CREATE}
               </Button>
               <Button

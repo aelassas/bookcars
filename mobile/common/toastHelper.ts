@@ -1,4 +1,4 @@
-import Toast from 'react-native-root-toast'
+import Toast from 'react-native-toast-message'
 import i18n from '@/lang/i18n'
 
 /**
@@ -7,10 +7,12 @@ import i18n from '@/lang/i18n'
  * @param {string} message
  */
 export const toast = (message: string) => {
-    Toast.show(message, {
-      duration: Toast.durations.LONG,
-    })
-  }
+  Toast.show({
+    type: 'info',
+    text1: message,
+    visibilityTime: 3000,
+  })
+}
 
 /**
  * Toast an error message.
@@ -19,10 +21,14 @@ export const toast = (message: string) => {
  * @param {boolean} [__toast__=true]
  */
 export const error = (err?: unknown, __toast__ = true) => {
-    if (err) {
-      console.log(err)
-    }
-    if (__toast__) {
-      toast(i18n.t('GENERIC_ERROR'))
-    }
+  if (err) {
+    console.log(err)
   }
+  if (__toast__) {
+    Toast.show({
+      type: 'error',
+      text1: i18n.t('GENERIC_ERROR'),
+      visibilityTime: 3000,
+    })
+  }
+}

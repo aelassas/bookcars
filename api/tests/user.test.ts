@@ -3,7 +3,7 @@ import request from 'supertest'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -98,7 +98,7 @@ describe('POST /api/sign-up', () => {
 
     const email = testHelper.GetRandomEmail()
     payload.email = email
-    payload.avatar = `${uuid()}.jpg`
+    payload.avatar = `${nanoid()}.jpg`
     res = await request(app)
       .post('/api/sign-up')
       .send(payload)
@@ -293,7 +293,7 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER1_ID}/${USER1_EMAIL}/${uuid()}`)
+      .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER1_ID}/${USER1_EMAIL}/${nanoid()}`)
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
@@ -367,11 +367,11 @@ describe('GET /api/confirm-email/:email/:token', () => {
     expect(res.statusCode).toBe(204)
 
     res = await request(app)
-      .get(`/api/confirm-email/${USER1_EMAIL}/${uuid()}`)
+      .get(`/api/confirm-email/${USER1_EMAIL}/${nanoid()}`)
     expect(res.statusCode).toBe(400)
 
     res = await request(app)
-      .get(`/api/confirm-email/unknown/${uuid()}`)
+      .get(`/api/confirm-email/unknown/${nanoid()}`)
     expect(res.statusCode).toBe(400)
   })
 })
@@ -627,7 +627,7 @@ describe('POST /api/sign-out', () => {
   it('should sign out', async () => {
     const res = await request(app)
       .post('/api/sign-out')
-      .set('Cookie', [`${env.X_ACCESS_TOKEN}=${uuid()};`])
+      .set('Cookie', [`${env.X_ACCESS_TOKEN}=${nanoid()};`])
 
     expect(res.statusCode).toBe(200)
     const cookies = res.headers['set-cookie'] as unknown as string[]
@@ -640,7 +640,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
   it('should create push token', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    let pushToken = uuid()
+    let pushToken = nanoid()
     let res = await request(app)
       .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -648,7 +648,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
     let pushNotifiation = await PushToken.findOne({ user: USER1_ID, token: pushToken })
     expect(pushNotifiation).not.toBeNull()
 
-    pushToken = uuid()
+    pushToken = nanoid()
     res = await request(app)
       .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -747,7 +747,7 @@ describe('POST /api/validate-access-token', () => {
 
     res = await request(app)
       .post('/api/validate-access-token')
-      .set(env.X_ACCESS_TOKEN, uuid())
+      .set(env.X_ACCESS_TOKEN, nanoid())
 
     expect(res.statusCode).toBe(401)
 
@@ -979,7 +979,7 @@ describe('POST /api/update-avatar/:userId', () => {
     expect(user?.avatar).toBeDefined()
     expect(user?.avatar).not.toBeNull()
 
-    user!.avatar = `${uuid()}.jpg`
+    user!.avatar = `${nanoid()}.jpg`
     await user?.save()
     res = await request(app)
       .post(`/api/update-avatar/${USER1_ID}`)
@@ -1041,7 +1041,7 @@ describe('POST /api/delete-avatar/:userId', () => {
     expect(user).not.toBeNull()
     expect(user?.avatar).toBeUndefined()
 
-    user!.avatar = `${uuid()}.jpg`
+    user!.avatar = `${nanoid()}.jpg`
     await user?.save()
     res = await request(app)
       .post(`/api/delete-avatar/${USER1_ID}`)
@@ -1267,7 +1267,7 @@ describe('POST /api/delete-users', () => {
 
     let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID]
     const user1 = await User.findById(USER1_ID)
-    user1!.avatar = `${uuid()}.jpg`
+    user1!.avatar = `${nanoid()}.jpg`
     await user1?.save()
     let users = await User.find({ _id: { $in: payload } })
     expect(users.length).toBe(3)
@@ -1300,8 +1300,8 @@ describe('POST /api/delete-users', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -1313,10 +1313,10 @@ describe('POST /api/delete-users', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
@@ -1325,8 +1325,8 @@ describe('POST /api/delete-users', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -1338,10 +1338,10 @@ describe('POST /api/delete-users', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
@@ -1350,23 +1350,23 @@ describe('POST /api/delete-users', () => {
       supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
       aircon: true,
-      image: `${uuid()}.jpg`,
+      image: `${nanoid()}.jpg`,
       seats: 5,
       doors: 4,
       fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()

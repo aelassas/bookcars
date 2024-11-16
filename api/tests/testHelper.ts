@@ -1,7 +1,7 @@
 import request from 'supertest'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -15,7 +15,7 @@ import * as logger from '../src/common/logger'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
-  return `${prefix}.${uuid()}`
+  return `${prefix}.${nanoid()}.${Date.now()}`.toLowerCase()
 }
 
 export const getSupplierName = () => getName('supplier')
@@ -152,7 +152,7 @@ export const deleteLocation = async (id: string) => {
   expect(res.deletedCount).toBe(1)
 }
 
-export const GetRandomEmail = () => `random.${uuid()}.${Date.now()}@test.bookcars.ma`
+export const GetRandomEmail = () => `${getName('random')}@test.bookcars.ma`
 
 export const GetRandromObjectId = () => new mongoose.Types.ObjectId()
 
