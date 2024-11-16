@@ -29,10 +29,6 @@ const carSchema = new Schema<env.Car>(
     },
 
     // --------- price fields ---------
-    // TODO remove price field after demo db
-    price: {
-      type: Number,
-    },
     dailyPrice: {
       type: Number,
       required: [true, "can't be blank"],

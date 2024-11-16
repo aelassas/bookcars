@@ -450,7 +450,6 @@ export interface Car extends Document {
   minimumAge: number
   locations: Types.ObjectId[]
 
-  price?: number // TODO remove
   dailyPrice: number
   discountedDailyPrice: number | null
   biWeeklyPrice: number | null
