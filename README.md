@@ -32,6 +32,7 @@ I invested significant time and effort into building this open-source project to
 * Supplier management
 * Ready for one or multiple suppliers
 * Car fleet management
+* [Dynamic Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * Location, country, parking spots and map features
 * Booking management
 * Payment management
