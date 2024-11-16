@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
@@ -596,7 +596,7 @@ export const createImage = async (req: Request, res: Response) => {
       throw new Error('[location.createImage] req.file not found')
     }
 
-    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_LOCATIONS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)

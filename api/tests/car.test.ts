@@ -3,7 +3,7 @@ import request from 'supertest'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -86,8 +86,15 @@ describe('POST /api/create-car', () => {
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
       locations: [LOCATION1_ID],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      discountedDailyPrice: 70,
+      biWeeklyPrice: 210,
+      discountedBiWeeklyPrice: 200,
+      weeklyPrice: 490,
+      discountedWeeklyPrice: 470,
+      monthlyPrice: 2100,
+      discountedMonthlyPrice: 2000,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -99,10 +106,10 @@ describe('POST /api/create-car', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Mini,
       multimedia: [bookcarsTypes.CarMultimedia.Bluetooth],
       rating: 3,
@@ -112,6 +119,37 @@ describe('POST /api/create-car', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
+    const car = res.body
+    expect(car.name).toBe(payload.name)
+    expect(car.supplier).toBe(payload.supplier)
+    expect(car.minimumAge).toBe(payload.minimumAge)
+    expect(car.locations).toStrictEqual(payload.locations)
+    expect(car.dailyPrice).toBe(payload.dailyPrice)
+    expect(car.discountedDailyPrice).toBe(payload.discountedDailyPrice)
+    expect(car.biWeeklyPrice).toBe(payload.biWeeklyPrice)
+    expect(car.discountedBiWeeklyPrice).toBe(payload.discountedBiWeeklyPrice)
+    expect(car.weeklyPrice).toBe(payload.weeklyPrice)
+    expect(car.discountedWeeklyPrice).toBe(payload.discountedWeeklyPrice)
+    expect(car.monthlyPrice).toBe(payload.monthlyPrice)
+    expect(car.discountedMonthlyPrice).toBe(payload.discountedMonthlyPrice)
+    expect(car.deposit).toBe(payload.deposit)
+    expect(car.available).toBe(payload.available)
+    expect(car.type).toBe(payload.type)
+    expect(car.gearbox).toBe(payload.gearbox)
+    expect(car.aircon).toBe(payload.aircon)
+    expect(car.seats).toBe(payload.seats)
+    expect(car.doors).toBe(payload.doors)
+    expect(car.fuelPolicy).toBe(payload.fuelPolicy)
+    expect(car.mileage).toBe(payload.mileage)
+    expect(car.cancellation).toBe(payload.cancellation)
+    expect(car.amendments).toBe(payload.amendments)
+    expect(car.theftProtection).toBe(payload.theftProtection)
+    expect(car.collisionDamageWaiver).toBe(payload.collisionDamageWaiver)
+    expect(car.fullInsurance).toBe(payload.fullInsurance)
+    expect(car.additionalDriver).toBe(payload.additionalDriver)
+    expect(car.range).toBe(payload.range)
+    expect(car.multimedia).toStrictEqual(payload.multimedia)
+    expect(car.rating).toBe(payload.rating)
     CAR_ID = res.body._id
 
     payload.image = undefined
@@ -148,8 +186,15 @@ describe('PUT /api/update-car', () => {
       supplier: SUPPLIER2_ID,
       minimumAge: 23,
       locations: [LOCATION2_ID],
-      price: 980,
-      deposit: 10500,
+      dailyPrice: 98,
+      discountedDailyPrice: 90,
+      biWeeklyPrice: 270,
+      discountedBiWeeklyPrice: 250,
+      weeklyPrice: 630,
+      discountedWeeklyPrice: 600,
+      monthlyPrice: 2700,
+      discountedMonthlyPrice: 2500,
+      deposit: 1050,
       available: true,
       type: bookcarsTypes.CarType.Gasoline,
       gearbox: bookcarsTypes.GearboxType.Manual,
@@ -158,12 +203,12 @@ describe('PUT /api/update-car', () => {
       doors: 5,
       fuelPolicy: bookcarsTypes.FuelPolicy.LikeForLike,
       mileage: 30000,
-      cancellation: 70,
-      amendments: 30,
-      theftProtection: 100,
-      collisionDamageWaiver: 130,
-      fullInsurance: 210,
-      additionalDriver: 220,
+      cancellation: 7,
+      amendments: 3,
+      theftProtection: 10,
+      collisionDamageWaiver: 13,
+      fullInsurance: 21,
+      additionalDriver: 22,
       range: bookcarsTypes.CarRange.Midi,
       multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
       rating: 4,
@@ -174,29 +219,36 @@ describe('PUT /api/update-car', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     const car = res.body
-    expect(car.name).toBe('BMW X5')
-    expect(car.supplier).toBe(SUPPLIER2_ID)
-    expect(car.minimumAge).toBe(23)
-    expect(car.locations).toStrictEqual([LOCATION2_ID])
-    expect(car.price).toBe(980)
-    expect(car.deposit).toBe(10500)
-    expect(car.available).toBeTruthy()
-    expect(car.type).toBe(bookcarsTypes.CarType.Gasoline)
-    expect(car.gearbox).toBe(bookcarsTypes.GearboxType.Manual)
-    expect(car.aircon).toBeTruthy()
-    expect(car.seats).toBe(6)
-    expect(car.doors).toBe(5)
-    expect(car.fuelPolicy).toBe(bookcarsTypes.FuelPolicy.LikeForLike)
-    expect(car.mileage).toBe(30000)
-    expect(car.cancellation).toBe(70)
-    expect(car.amendments).toBe(30)
-    expect(car.theftProtection).toBe(100)
-    expect(car.collisionDamageWaiver).toBe(130)
-    expect(car.fullInsurance).toBe(210)
-    expect(car.additionalDriver).toBe(220)
-    expect(car.range).toBe(bookcarsTypes.CarRange.Midi)
-    expect(car.multimedia).toStrictEqual([bookcarsTypes.CarMultimedia.AndroidAuto])
-    expect(car.rating).toBe(4)
+    expect(car.name).toBe(payload.name)
+    expect(car.supplier).toBe(payload.supplier)
+    expect(car.minimumAge).toBe(payload.minimumAge)
+    expect(car.locations).toStrictEqual(payload.locations)
+    expect(car.dailyPrice).toBe(payload.dailyPrice)
+    expect(car.discountedDailyPrice).toBe(payload.discountedDailyPrice)
+    expect(car.biWeeklyPrice).toBe(payload.biWeeklyPrice)
+    expect(car.discountedBiWeeklyPrice).toBe(payload.discountedBiWeeklyPrice)
+    expect(car.weeklyPrice).toBe(payload.weeklyPrice)
+    expect(car.discountedWeeklyPrice).toBe(payload.discountedWeeklyPrice)
+    expect(car.monthlyPrice).toBe(payload.monthlyPrice)
+    expect(car.discountedMonthlyPrice).toBe(payload.discountedMonthlyPrice)
+    expect(car.deposit).toBe(payload.deposit)
+    expect(car.available).toBe(payload.available)
+    expect(car.type).toBe(payload.type)
+    expect(car.gearbox).toBe(payload.gearbox)
+    expect(car.aircon).toBe(payload.aircon)
+    expect(car.seats).toBe(payload.seats)
+    expect(car.doors).toBe(payload.doors)
+    expect(car.fuelPolicy).toBe(payload.fuelPolicy)
+    expect(car.mileage).toBe(payload.mileage)
+    expect(car.cancellation).toBe(payload.cancellation)
+    expect(car.amendments).toBe(payload.amendments)
+    expect(car.theftProtection).toBe(payload.theftProtection)
+    expect(car.collisionDamageWaiver).toBe(payload.collisionDamageWaiver)
+    expect(car.fullInsurance).toBe(payload.fullInsurance)
+    expect(car.additionalDriver).toBe(payload.additionalDriver)
+    expect(car.range).toBe(payload.range)
+    expect(car.multimedia).toStrictEqual(payload.multimedia)
+    expect(car.rating).toBe(payload.rating)
 
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -236,7 +288,7 @@ describe('POST /api/delete-car-image/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
-    car!.image = `${uuid()}.jpg`
+    car!.image = `${nanoid()}.jpg`
     await car?.save()
     res = await request(app)
       .post(`/api/delete-car-image/${CAR_ID}`)
@@ -297,7 +349,7 @@ describe('POST /api/update-car-image/:id', () => {
     expect(car).not.toBeNull()
     expect(car?.image).toBe(filename)
 
-    car!.image = `${uuid()}.jpg`
+    car!.image = `${nanoid()}.jpg`
     await car?.save()
     res = await request(app)
       .post(`/api/update-car-image/${CAR_ID}`)
@@ -667,8 +719,8 @@ describe('DELETE /api/delete-car/:id', () => {
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
       locations: [testHelper.GetRandromObjectId()],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 95,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
@@ -680,10 +732,10 @@ describe('DELETE /api/delete-car/:id', () => {
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()
@@ -697,23 +749,23 @@ describe('DELETE /api/delete-car/:id', () => {
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
       locations: [testHelper.GetRandromObjectId()],
-      price: 780,
-      deposit: 9500,
+      dailyPrice: 78,
+      deposit: 950,
       available: false,
       type: bookcarsTypes.CarType.Diesel,
       gearbox: bookcarsTypes.GearboxType.Automatic,
       aircon: true,
-      image: `${uuid()}.jpg`,
+      image: `${nanoid()}.jpg`,
       seats: 5,
       doors: 4,
       fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
       mileage: -1,
       cancellation: 0,
       amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 200,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
     })
     await car.save()

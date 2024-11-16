@@ -405,7 +405,7 @@ const BookingList = ({
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.CAR}</span>
-                    <div className="booking-detail-value">{`${_bookingCar.name} (${bookcarsHelper.formatPrice(_bookingCar.price, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY})`}</div>
+                    <div className="booking-detail-value">{_bookingCar.name}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DAYS}</span>

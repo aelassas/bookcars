@@ -78,7 +78,7 @@ const Booking = () => {
         if (_car && from && to) {
           const _booking = bookcarsHelper.clone(booking)
           _booking.car = _car
-          const _price = helper.price(_car, from, to, _booking)
+          const _price = bookcarsHelper.calculateTotalPrice(_car, from, to, _booking)
 
           setBooking(_booking)
           setPrice(_price)
@@ -105,7 +105,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.cancellation = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -121,7 +121,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.amendments = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -137,7 +137,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.collisionDamageWaiver = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -153,7 +153,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.theftProtection = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -169,7 +169,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.fullInsurance = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -185,7 +185,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.additionalDriver = e.target.checked
 
-      const _price = helper.price(
+      const _price = bookcarsHelper.calculateTotalPrice(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -367,7 +367,7 @@ const Booking = () => {
                     if (_from) {
                       booking.from = _from
 
-                      const _price = helper.price(
+                      const _price = bookcarsHelper.calculateTotalPrice(
                         booking.car as bookcarsTypes.Car,
                         new Date(booking.from),
                         new Date(booking.to),
@@ -394,7 +394,7 @@ const Booking = () => {
                     if (_to) {
                       booking.to = _to
 
-                      const _price = helper.price(
+                      const _price = bookcarsHelper.calculateTotalPrice(
                         booking.car as bookcarsTypes.Car,
                         new Date(booking.from),
                         new Date(booking.to),

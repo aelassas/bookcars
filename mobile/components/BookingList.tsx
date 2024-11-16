@@ -4,7 +4,6 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { CommonActions } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
@@ -196,23 +195,25 @@ const BookingList = ({
             <RefreshControl refreshing={refreshing} onRefresh={() => {
               setRefreshing(true)
 
-              navigation.dispatch((state) => {
-                const { routes } = state
-                const index = routes.findIndex((r) => r.name === 'Bookings')
-                routes.splice(index, 1)
-                const now = Date.now()
-                routes.push({
-                  name: 'Bookings',
-                  key: `Bookings-${now}`,
-                  params: {},
-                })
+              navigation.navigate('Bookings', {})
 
-                return CommonActions.reset({
-                  ...state,
-                  routes,
-                  index: routes.length - 1,
-                })
-              })
+              // navigation.dispatch((state) => {
+              //   const { routes } = state
+              //   const index = routes.findIndex((r) => r.name === 'Bookings')
+              //   routes.splice(index, 1)
+              //   const now = Date.now()
+              //   routes.push({
+              //     name: 'Bookings',
+              //     key: `Bookings-${now}`,
+              //     params: {},
+              //   })
+
+              //   return CommonActions.reset({
+              //     ...state,
+              //     routes,
+              //     index: routes.length - 1,
+              //   })
+              // })
             }}
             />)
         }

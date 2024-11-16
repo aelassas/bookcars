@@ -136,7 +136,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setCancellation(_cancellation)
       setPrice(_price)
@@ -154,7 +154,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setAmendments(_amendments)
       setPrice(_price)
@@ -172,7 +172,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setTheftProtection(_theftProtection)
       setPrice(_price)
@@ -190,7 +190,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setCollisionDamageWaiver(_collisionDamageWaiver)
       setPrice(_price)
@@ -208,7 +208,7 @@ const Checkout = () => {
         fullInsurance: _fullInsurance,
         additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setFullInsurance(_fullInsurance)
       setPrice(_price)
@@ -226,7 +226,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver: _additionalDriver,
       }
-      const _price = helper.price(car, from, to, options)
+      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
 
       setAdditionalDriver(_additionalDriver)
       setPrice(_price)
@@ -594,7 +594,7 @@ const Checkout = () => {
         return
       }
 
-      const _price = helper.price(_car, _from, _to)
+      const _price = bookcarsHelper.calculateTotalPrice(_car, _from, _to)
 
       const included = (val: number) => val === 0
 
@@ -745,7 +745,7 @@ const Checkout = () => {
                       </div>
                       <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                         <span className="booking-detail-title">{strings.CAR}</span>
-                        <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
+                        <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
                       </div>
                       <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                         <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>

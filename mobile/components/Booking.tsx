@@ -68,7 +68,7 @@ const Booking = ({
         <Text style={styles.detailText}>{(booking.dropOffLocation as bookcarsTypes.Location).name}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-        <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)})`}</Text>
+        <Text style={styles.detailText}>{car.name}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
         <View style={styles.supplier}>
