@@ -92,7 +92,7 @@ const initializeLocations = async () => {
           }
         }
       } else {
-        console.log('English value not found for location:', location.id)
+        logger.info('English value not found for location:', location.id)
       }
     }
 
@@ -148,7 +148,7 @@ const initializeCountries = async () => {
           }
         }
       } else {
-        console.log('English value not found for country:', country.id)
+        logger.info('English value not found for country:', country.id)
       }
     }
 
@@ -204,7 +204,7 @@ const initializeParkingSpots = async () => {
           }
         }
       } else {
-        console.log('English value not found for parkingSpot:', parkingSpot.id)
+        logger.info('English value not found for parkingSpot:', parkingSpot.id)
       }
     }
 
