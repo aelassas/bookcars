@@ -118,7 +118,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         }
       }
 
-      if (supplier.contracts) {
+      if (supplier.contracts && supplier.contracts.length > 0) {
         for (const contract of supplier.contracts) {
           if (contract.file) {
             const file = path.join(env.CDN_CONTRACTS, contract.file)
@@ -559,6 +559,9 @@ export const createContract = async (req: Request, res: Response) => {
     if (!req.file) {
       throw new Error('req.file not found')
     }
+    if (!req.file.originalname.includes('.')) {
+      throw new Error('File extension not found')
+    }
     if (language.length !== 2) {
       throw new Error('Language not valid')
     }
@@ -590,6 +593,9 @@ export const updateContract = async (req: Request, res: Response) => {
   try {
     if (!file) {
       throw new Error('req.file not found')
+    }
+    if (!file.originalname.includes('.')) {
+      throw new Error('File extension not found')
     }
     if (!helper.isValidObjectId(id)) {
       throw new Error('Supplier Id not valid')
@@ -683,6 +689,9 @@ export const deleteTempContract = async (req: Request, res: Response) => {
   const { file } = req.params
 
   try {
+    if (!file.includes('.')) {
+      throw new Error('Filename not valid')
+    }
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, file)
     if (await helper.exists(contractFile)) {
       await fs.unlink(contractFile)
