@@ -561,6 +561,10 @@ describe('POST /api/frontend-suppliers', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(1)
+    payload.carSpecs!.aircon = true
+    payload.carSpecs!.moreThanFourDoors = true
+    payload.carSpecs!.moreThanFiveSeats = true
+    payload.seats = 6
 
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
@@ -639,6 +643,10 @@ describe('POST /api/backend-suppliers', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
+    payload.carSpecs!.aircon = true
+    payload.carSpecs!.moreThanFourDoors = true
+    payload.carSpecs!.moreThanFiveSeats = true
+    payload.seats = 6
 
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
@@ -684,7 +692,7 @@ describe('POST /api/backend-suppliers', () => {
 
     payload.availability = [bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backend-suppliers?s=bmw')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
