@@ -246,6 +246,20 @@ export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', true)
 export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', true)
 
 /**
+ * Contracts' cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', true)
+
+/**
+ * Contracts' temp cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', true)
+
+/**
  * Backend host.
  *
  * @type {string}
@@ -358,6 +372,7 @@ export interface User extends Document {
   blacklisted?: boolean
   payLater?: boolean
   customerId?: string
+  contracts?: bookcarsTypes.Contract[]
   expireAt?: Date
 }
 

@@ -3,6 +3,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
 import nodemailer from 'nodemailer'
+import path from 'node:path'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
@@ -106,7 +107,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
  * @param {boolean} payLater
  * @returns {unknown}
  */
-export const confirm = async (user: env.User, booking: env.Booking, payLater: boolean) => {
+export const confirm = async (user: env.User, supplier: env.User, booking: env.Booking, payLater: boolean = false) => {
   const { language } = user
   const locale = language === 'fr' ? 'fr-FR' : 'en-US'
   const options: Intl.DateTimeFormatOptions = {
@@ -138,6 +139,14 @@ export const confirm = async (user: env.User, booking: env.Booking, payLater: bo
   }
   const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
 
+  let contractFile: string | null = null
+  if (supplier.contracts) {
+    contractFile = supplier.contracts.find((c) => c.language === user.language)?.file || null
+    if (!contractFile) {
+      contractFile = supplier.contracts.find((c) => c.language === 'en')?.file || null
+    }
+  }
+
   const mailOptions: nodemailer.SendMailOptions = {
     from: env.SMTP_FROM,
     to: user.email,
@@ -156,6 +165,13 @@ export const confirm = async (user: env.User, booking: env.Booking, payLater: bo
       + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART13')}<br><br>${i18n.t('BOOKING_CONFIRMED_PART14')}${env.FRONTEND_HOST}<br><br>
         ${i18n.t('REGARDS')}<br>
         </p>`,
+  }
+
+  if (contractFile) {
+    const file = path.join(env.CDN_CONTRACTS, contractFile)
+    if (await helper.exists(file)) {
+      mailOptions.attachments = [{ path: file }]
+    }
   }
 
   await mailHelper.sendMail(mailOptions)
@@ -179,7 +195,7 @@ export const checkout = async (req: Request, res: Response) => {
     const { driver } = body
 
     if (!body.booking) {
-      throw new Error('Booking missing')
+      throw new Error('Booking not found')
     }
 
     if (driver) {
@@ -214,17 +230,14 @@ export const checkout = async (req: Request, res: Response) => {
     }
 
     if (!user) {
-      logger.info('Driver not found', body)
-      return res.sendStatus(204)
+      throw new Error('Driver not found')
     }
 
     if (!body.payLater) {
       const { paymentIntentId, sessionId } = body
 
       if (!paymentIntentId && !sessionId) {
-        const message = 'Payment intent and session missing'
-        logger.error(message, body)
-        return res.status(400).send(message)
+        throw new Error('paymentIntentId and sessionId not found')
       }
 
       body.booking.customerId = body.customerId
@@ -288,43 +301,38 @@ export const checkout = async (req: Request, res: Response) => {
     if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
       const car = await Car.findById(booking.car)
       if (!car) {
-        logger.info(`Car ${booking.car} not found`)
-        return res.sendStatus(204)
+        throw new Error(`Car ${booking.car} not found`)
       }
       car.trips += 1
       await car.save()
-
-      if (!await confirm(user, booking, false)) {
-        return res.sendStatus(400)
-      }
     }
 
-    if (body.payLater) {
-      // Send confirmation email
-      if (!await confirm(user, booking, body.payLater)) {
+    if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
+      const supplier = await User.findById(booking.supplier)
+      if (!supplier) {
+        throw new Error(`Supplier ${booking.supplier} not found`)
+      }
+
+      // Send confirmation email to customer
+      if (!await confirm(user, supplier, booking, body.payLater)) {
         return res.sendStatus(400)
       }
 
       // Notify supplier
-      const supplier = await User.findById(booking.supplier)
-      if (!supplier) {
-        logger.info(`Supplier ${booking.supplier} not found`)
-        return res.sendStatus(204)
-      }
       i18n.locale = supplier.language
       let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-      await notify(user, booking._id.toString(), supplier, message)
+      await notify(user, booking.id, supplier, message)
 
       // Notify admin
       const admin = !!env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
       if (admin) {
         i18n.locale = admin.language
         message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-        await notify(user, booking._id.toString(), admin, message)
+        await notify(user, booking.id, admin, message)
       }
     }
 
-    return res.status(200).send({ bookingId: booking._id })
+    return res.status(200).send({ bookingId: booking.id })
   } catch (err) {
     logger.error(`[booking.checkout] ${i18n.t('ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)

@@ -19,6 +19,11 @@ import AdditionalDriver from '../src/models/AdditionalDriver'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const CONTRACT1 = 'contract1.pdf'
+const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
+const CONTRACT2 = 'contract2.pdf'
+const CONTRACT2_PATH = path.join(__dirname, `./contracts/${CONTRACT2}`)
+
 const LOCATION_ID = testHelper.GetRandromObjectIdAsString()
 
 let SUPPLIER1_ID: string
@@ -273,16 +278,24 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let supplier = await User.findById(supplierId)
     expect(supplier).not.toBeNull()
     let avatarName = 'avatar1.jpg'
-    let avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+    let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
     if (!await helper.exists(avatar)) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
+
+    const contractFileName = `${nanoid()}.pdf`
+    const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
+    if (!await helper.exists(contractFile)) {
+      await fs.copyFile(CONTRACT1_PATH, contractFile)
+    }
+    supplier!.contracts = [{ language: 'en', file: contractFileName }]
+
     await supplier?.save()
     let locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
     const carImageName = 'bmw-x1.jpg'
-    const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
+    const carImagePath = path.join(__dirname, `./img/${carImageName}`)
     let car = new Car({
       name: 'BMW X1',
       supplier: supplierId,
@@ -344,6 +357,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(res.statusCode).toBe(200)
     supplier = await User.findById(supplierId)
     expect(supplier).toBeNull()
+    expect(await helper.exists(avatar)).toBeFalsy()
+    expect(await helper.exists(contractFile)).toBeFalsy()
     await testHelper.deleteLocation(locationId)
 
     res = await request(app)
@@ -413,7 +428,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     supplier = await User.findById(supplierId)
     expect(supplier).not.toBeNull()
     avatarName = 'avatar1.jpg'
-    avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+    avatarPath = path.join(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
     if (!await helper.exists(avatar)) {
       await fs.copyFile(avatarPath, avatar)
@@ -631,6 +646,187 @@ describe('POST /api/backend-suppliers', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/create-contract', () => {
+  it('should create a contract', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    // test success
+    let res = await request(app)
+      .post('/api/create-contract/en')
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(200)
+    const filename = res.body as string
+    const filePath = path.join(env.CDN_TEMP_CONTRACTS, filename)
+    const imageExists = await helper.exists(filePath)
+    expect(imageExists).toBeTruthy()
+    await fs.unlink(filePath)
+
+    // test failure (file not sent)
+    res = await request(app)
+      .post('/api/create-contract/en')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (language not valid)
+    res = await request(app)
+      .post('/api/create-contract/english')
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/update-contract/:id', () => {
+  it('should update a contract', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    // test success (no initial contract)
+    let supplier = await User.findById(SUPPLIER1_ID)
+    let res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(200)
+    let filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).toBeTruthy()
+    expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBe(filename)
+
+    // test success (initial contract)
+    res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT2_PATH)
+    expect(res.statusCode).toBe(200)
+    filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(filename).toBe(supplier?.contracts?.find((c) => c.language === 'en')?.file)
+
+    // test success (contract file does not exist)
+    supplier!.contracts!.find((c) => c.language === 'en')!.file = `${nanoid()}.pdf`
+    await supplier?.save()
+    res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(200)
+    filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(filename).toBe(supplier?.contracts?.find((c) => c.language === 'en')?.file)
+    supplier!.contracts!.find((c) => c.language === 'en')!.file = filename
+    await supplier?.save()
+
+    // test failure (file not sent)
+    res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (supplier not found)
+    res = await request(app)
+      .post(`/api/update-contract/${testHelper.GetRandromObjectIdAsString()}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(204)
+
+    // test failure (supplier id not valid)
+    res = await request(app)
+      .post('/api/update-contract/0/en')
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (language not valid)
+    res = await request(app)
+      .post(`/api/update-contract/${testHelper.GetRandromObjectIdAsString()}/english`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/delete-contract/:id', () => {
+  it('should delete a contract', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    let supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).toBeTruthy()
+    expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeTruthy()
+    const filename = supplier?.contracts?.find((c) => c.language === 'en')?.file as string
+    let imageExists = await helper.exists(path.join(env.CDN_CONTRACTS, filename))
+    expect(imageExists).toBeTruthy()
+
+    // test success
+    let res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    imageExists = await helper.exists(path.join(env.CDN_CONTRACTS, filename))
+    expect(imageExists).toBeFalsy()
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeFalsy()
+
+    // test failure (supplier not found)
+    res = await request(app)
+      .post(`/api/delete-contract/${testHelper.GetRandromObjectIdAsString()}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+
+    // test failure (supplier id not valid)
+    res = await request(app)
+      .post('/api/delete-contract/invalid-id/en')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (language id not valid)
+    res = await request(app)
+      .post(`/api/delete-contract/${testHelper.GetRandromObjectIdAsString()}/english`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/delete-temp-contract/:image', () => {
+  it('should delete a temporary contract', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    // init
+    const tempImage = path.join(env.CDN_TEMP_CONTRACTS, CONTRACT1)
+    if (!await helper.exists(tempImage)) {
+      await fs.copyFile(CONTRACT1_PATH, tempImage)
+    }
+
+    // test success (temp file exists)
+    let res = await request(app)
+      .post(`/api/delete-temp-contract/${CONTRACT1}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    const tempImageExists = await helper.exists(tempImage)
+    expect(tempImageExists).toBeFalsy()
+
+    // test success (temp file not found)
+    res = await request(app)
+      .post('/api/delete-temp-contract/unknown.pdf')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
 
     await testHelper.signout(token)
   })

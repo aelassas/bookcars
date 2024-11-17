@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
@@ -115,20 +116,31 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         if (await helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
+      }
 
-        await NotificationCounter.deleteMany({ user: id })
-        await Notification.deleteMany({ user: id })
-        const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
-        await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
-        await Booking.deleteMany({ supplier: id })
-        const cars = await Car.find({ supplier: id })
-        await Car.deleteMany({ supplier: id })
-        for (const car of cars) {
-          if (car.image) {
-            const image = path.join(env.CDN_CARS, car.image)
-            if (await helper.exists(image)) {
-              await fs.unlink(image)
+      if (supplier.contracts) {
+        for (const contract of supplier.contracts) {
+          if (contract.file) {
+            const file = path.join(env.CDN_CONTRACTS, contract.file)
+            if (await helper.exists(file)) {
+              await fs.unlink(file)
             }
+          }
+        }
+      }
+
+      await NotificationCounter.deleteMany({ user: id })
+      await Notification.deleteMany({ user: id })
+      const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+      await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
+      await Booking.deleteMany({ supplier: id })
+      const cars = await Car.find({ supplier: id })
+      await Car.deleteMany({ supplier: id })
+      for (const car of cars) {
+        if (car.image) {
+          const image = path.join(env.CDN_CARS, car.image)
+          if (await helper.exists(image)) {
+            await fs.unlink(image)
           }
         }
       }
@@ -528,5 +540,157 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[supplier.getBackendSuppliers] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Upload a contract to temp folder.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const createContract = async (req: Request, res: Response) => {
+  const { language } = req.params
+
+  try {
+    if (!req.file) {
+      throw new Error('req.file not found')
+    }
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
+
+    const filename = `${nanoid()}_${language}${path.extname(req.file.originalname)}`
+    const filepath = path.join(env.CDN_TEMP_CONTRACTS, filename)
+
+    await fs.writeFile(filepath, req.file.buffer)
+    return res.json(filename)
+  } catch (err) {
+    logger.error(`[supplier.createContract] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+ * Update a contract.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const updateContract = async (req: Request, res: Response) => {
+  const { id, language } = req.params
+  const { file } = req
+
+  try {
+    if (!file) {
+      throw new Error('req.file not found')
+    }
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('Supplier Id not valid')
+    }
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
+
+    const supplier = await User.findOne({ _id: id, type: bookcarsTypes.UserType.Supplier })
+
+    if (supplier) {
+      const contract = supplier.contracts?.find((c) => c.language === language)
+      if (contract?.file) {
+        const contractFile = path.join(env.CDN_CONTRACTS, contract.file)
+        if (await helper.exists(contractFile)) {
+          await fs.unlink(contractFile)
+        }
+      }
+
+      const filename = `${supplier._id}_${language}${path.extname(file.originalname)}`
+      const filepath = path.join(env.CDN_CONTRACTS, filename)
+
+      await fs.writeFile(filepath, file.buffer)
+      if (!contract) {
+        supplier.contracts?.push({ language, file: filename })
+      } else {
+        contract.file = filename
+      }
+      await supplier.save()
+      return res.json(filename)
+    }
+
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[supplier.updateContract] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Delete a contract.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const deleteContract = async (req: Request, res: Response) => {
+  const { id, language } = req.params
+
+  try {
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('Supplier Id not valid')
+    }
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
+    const supplier = await User.findOne({ _id: id, type: bookcarsTypes.UserType.Supplier })
+
+    if (supplier) {
+      const contract = supplier.contracts?.find((c) => c.language === language)
+      if (contract?.file) {
+        const contractFile = path.join(env.CDN_CONTRACTS, contract.file)
+        if (await helper.exists(contractFile)) {
+          await fs.unlink(contractFile)
+        }
+        contract.file = null
+      }
+
+      await supplier.save()
+      return res.sendStatus(200)
+    }
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[supplier.deleteContract] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Delete a temp contract.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {*}
+ */
+export const deleteTempContract = async (req: Request, res: Response) => {
+  const { file } = req.params
+
+  try {
+    const contractFile = path.join(env.CDN_TEMP_CONTRACTS, file)
+    if (await helper.exists(contractFile)) {
+      await fs.unlink(contractFile)
+    }
+
+    res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[supplier.deleteTempContract] ${i18n.t('DB_ERROR')} ${file}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }

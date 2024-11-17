@@ -238,6 +238,8 @@ export interface SignUpPayload {
   birthDate?: number | Date
 }
 
+export type Contract = { language: string, file: string | null }
+
 export interface CreateUserPayload {
   email?: string
   phone: string
@@ -253,6 +255,7 @@ export interface CreateUserPayload {
   blacklisted?: boolean
   payLater?: boolean
   supplier?: string
+  contracts?: Contract[]
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {

@@ -7,6 +7,10 @@ const routes = {
   getAllSuppliers: '/api/all-suppliers',
   getFrontendSuppliers: '/api/frontend-suppliers',
   getBackendSuppliers: '/api/backend-suppliers',
+  createContract: '/api/create-contract/:language',
+  updateContract: '/api/update-contract/:id/:language',
+  deleteContract: '/api/delete-contract/:id/:language',
+  deleteTempContract: '/api/delete-temp-contract/:file',
 }
 
 export default routes
