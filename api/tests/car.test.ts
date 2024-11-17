@@ -464,6 +464,43 @@ describe('POST /api/cars/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
+    payload.rating = undefined
+    payload.ranges = undefined
+    payload.multimedia = undefined
+    payload.fuelPolicy = undefined
+    payload.carSpecs!.aircon = undefined
+    payload.carSpecs!.moreThanFourDoors = undefined
+    payload.carSpecs!.moreThanFiveSeats = undefined
+    payload.seats = -1
+    res = await request(app)
+      .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.rating = 4
+    payload.ranges = [
+      bookcarsTypes.CarRange.Mini,
+      bookcarsTypes.CarRange.Midi,
+      bookcarsTypes.CarRange.Maxi,
+      bookcarsTypes.CarRange.Scooter,
+    ]
+    payload.multimedia = [bookcarsTypes.CarMultimedia.AndroidAuto]
+    payload.fuelPolicy = [bookcarsTypes.FuelPolicy.LikeForLike]
+
+    payload.seats = undefined
+    payload.carSpecs = undefined
+    res = await request(app)
+      .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.carSpecs = {}
+    payload.carSpecs!.aircon = true
+    payload.carSpecs!.moreThanFourDoors = true
+    payload.carSpecs!.moreThanFiveSeats = true
+
     payload.seats = 5
     res = await request(app)
       .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
@@ -607,6 +644,41 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    payload.rating = undefined
+    payload.ranges = undefined
+    payload.multimedia = undefined
+    payload.fuelPolicy = undefined
+    payload.carSpecs!.aircon = undefined
+    payload.carSpecs!.moreThanFourDoors = undefined
+    payload.carSpecs!.moreThanFiveSeats = undefined
+    payload.seats = -1
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.rating = 4
+    payload.ranges = [
+      bookcarsTypes.CarRange.Mini,
+      bookcarsTypes.CarRange.Midi,
+      bookcarsTypes.CarRange.Maxi,
+      bookcarsTypes.CarRange.Scooter,
+    ]
+    payload.multimedia = [bookcarsTypes.CarMultimedia.AndroidAuto]
+    payload.fuelPolicy = [bookcarsTypes.FuelPolicy.LikeForLike]
+
+    payload.seats = undefined
+    payload.carSpecs = undefined
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.carSpecs = {}
+    payload.carSpecs.aircon = true
+    payload.carSpecs.moreThanFourDoors = true
+    payload.carSpecs.moreThanFiveSeats = true
 
     payload.seats = 5
     res = await request(app)
