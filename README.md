@@ -112,3 +112,4 @@ You can also install the Android App by directly downloading the APK and install
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
+
