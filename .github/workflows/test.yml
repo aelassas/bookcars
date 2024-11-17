@@ -81,6 +81,8 @@ jobs:
         BC_CDN_TEMP_CARS: ${{ vars.BC_CDN_TEMP_CARS }}
         BC_CDN_LOCATIONS: ${{ vars.BC_CDN_LOCATIONS }}
         BC_CDN_TEMP_LOCATIONS: ${{ vars.BC_CDN_TEMP_LOCATIONS }}
+        BC_CDN_CONTRACTS: ${{ vars.BC_CDN_CONTRACTS }}
+        BC_CDN_TEMP_CONTRACTS: ${{ vars.BC_CDN_TEMP_CONTRACTS }}
         BC_BACKEND_HOST: ${{ vars.BC_BACKEND_HOST }}
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
