@@ -273,10 +273,54 @@ describe('DELETE /api/delete-supplier/:id', () => {
   it('should delete a supplier', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (no avatar no contracts)
     let supplierName = testHelper.getSupplierName()
     let supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     let supplier = await User.findById(supplierId)
-    expect(supplier).not.toBeNull()
+    expect(supplier).toBeTruthy()
+    supplier!.avatar = ''
+    supplier!.contracts = undefined
+    await supplier!.save()
+    let res = await request(app)
+      .delete(`/api/delete-supplier/${supplierId}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeNull()
+
+    // test success (no avatar no contract files)
+    supplierName = testHelper.getSupplierName()
+    supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeTruthy()
+    supplier!.contracts = [{ language: 'en', file: null }]
+    await supplier!.save()
+    res = await request(app)
+      .delete(`/api/delete-supplier/${supplierId}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeNull()
+
+    // test success (no avatar contract file not found)
+    supplierName = testHelper.getSupplierName()
+    supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeTruthy()
+    supplier!.contracts = [{ language: 'en', file: `${nanoid()}.pdf` }]
+    await supplier!.save()
+    res = await request(app)
+      .delete(`/api/delete-supplier/${supplierId}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeNull()
+
+    // test success (avatar and contracts)
+    supplierName = testHelper.getSupplierName()
+    supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    supplier = await User.findById(supplierId)
+    expect(supplier).toBeTruthy()
     let avatarName = 'avatar1.jpg'
     let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
@@ -351,7 +395,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       _additionalDriver: additionalDriver._id,
     })
     await booking.save()
-    let res = await request(app)
+    res = await request(app)
       .delete(`/api/delete-supplier/${supplierId}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
@@ -507,6 +551,10 @@ describe('POST /api/frontend-suppliers', () => {
       .post('/api/frontend-suppliers')
     expect(res.statusCode).toBe(400)
 
+    payload.carSpecs!.aircon = undefined
+    payload.carSpecs!.moreThanFourDoors = undefined
+    payload.carSpecs!.moreThanFiveSeats = undefined
+    payload.seats = -1
     payload.mileage = [bookcarsTypes.Mileage.Unlimited]
     res = await request(app)
       .post('/api/frontend-suppliers')
@@ -581,6 +629,10 @@ describe('POST /api/backend-suppliers', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    payload.carSpecs!.aircon = undefined
+    payload.carSpecs!.moreThanFourDoors = undefined
+    payload.carSpecs!.moreThanFiveSeats = undefined
+    payload.seats = -1
     payload.mileage = [bookcarsTypes.Mileage.Unlimited]
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -596,6 +648,15 @@ describe('POST /api/backend-suppliers', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
+
+    payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+    payload.availability = undefined
 
     payload.mileage = []
     res = await request(app)
@@ -663,8 +724,8 @@ describe('POST /api/create-contract', () => {
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const filePath = path.join(env.CDN_TEMP_CONTRACTS, filename)
-    const imageExists = await helper.exists(filePath)
-    expect(imageExists).toBeTruthy()
+    const contractExists = await helper.exists(filePath)
+    expect(contractExists).toBeTruthy()
     await fs.unlink(filePath)
 
     // test failure (file not sent)
@@ -672,6 +733,16 @@ describe('POST /api/create-contract', () => {
       .post('/api/create-contract/en')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
+
+    // test failure (filename not valid)
+    const invalidContract = path.join(env.CDN_TEMP_CONTRACTS, `${nanoid()}`)
+    await fs.copyFile(CONTRACT1_PATH, invalidContract)
+    res = await request(app)
+      .post('/api/create-contract/en')
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', invalidContract)
+    expect(res.statusCode).toBe(400)
+    await fs.unlink(invalidContract)
 
     // test failure (language not valid)
     res = await request(app)
@@ -736,6 +807,16 @@ describe('POST /api/update-contract/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test failure (filename not valid)
+    const invalidContract = path.join(env.CDN_TEMP_CONTRACTS, `${nanoid()}`)
+    await fs.copyFile(CONTRACT1_PATH, invalidContract)
+    res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', invalidContract)
+    expect(res.statusCode).toBe(400)
+    await fs.unlink(invalidContract)
+
     // test failure (supplier not found)
     res = await request(app)
       .post(`/api/update-contract/${testHelper.GetRandromObjectIdAsString()}/en`)
@@ -782,6 +863,36 @@ describe('POST /api/delete-contract/:id', () => {
     supplier = await User.findById(SUPPLIER1_ID)
     expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeFalsy()
 
+    // test success (no contract)
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).toBeTruthy()
+    supplier!.contracts = undefined
+    await supplier!.save()
+    res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (contract with no file)
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).toBeTruthy()
+    supplier!.contracts = [{ language: 'en', file: null }]
+    await supplier!.save()
+    res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (contract with file not found)
+    supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).toBeTruthy()
+    supplier!.contracts = [{ language: 'en', file: `${nanoid()}.pdf` }]
+    await supplier!.save()
+    res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
     // test failure (supplier not found)
     res = await request(app)
       .post(`/api/delete-contract/${testHelper.GetRandromObjectIdAsString()}/en`)
@@ -827,6 +938,12 @@ describe('POST /api/delete-temp-contract/:image', () => {
       .post('/api/delete-temp-contract/unknown.pdf')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
+
+    // test failure (temp file not valid)
+    res = await request(app)
+      .post('/api/delete-temp-contract/unknown')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)
   })
