@@ -598,7 +598,6 @@ describe('POST /api/backend-suppliers', () => {
     const token = await testHelper.signinAsAdmin()
 
     const payload: bookcarsTypes.GetCarsPayload = {
-      pickupLocation: LOCATION_ID,
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
@@ -649,15 +648,6 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
-    payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
-    res = await request(app)
-      .post('/api/backend-suppliers')
-      .set(env.X_ACCESS_TOKEN, token)
-      .send(payload)
-    expect(res.statusCode).toBe(200)
-    expect(res.body.length).toBeGreaterThan(0)
-    payload.availability = undefined
-
     payload.mileage = []
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -694,11 +684,20 @@ describe('POST /api/backend-suppliers', () => {
 
     payload.availability = [bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/backend-suppliers?s=bmw')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
+
+    payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
+    res = await request(app)
+      .post('/api/backend-suppliers')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBeGreaterThan(0)
+    payload.availability = undefined
 
     payload.availability = []
     res = await request(app)
