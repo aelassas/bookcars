@@ -103,6 +103,17 @@ const userSchema = new Schema<env.User>(
     customerId: {
       type: String,
     },
+    contracts: [{
+      language: {
+        type: String,
+        required: [true, "can't be blank"],
+        trim: true,
+        lowercase: true,
+        minLength: 2,
+        maxLength: 2,
+      },
+      file: String,
+    }],
     expireAt: {
       //
       // Non verified and active users created from checkout with Stripe are temporary and

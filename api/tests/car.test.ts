@@ -18,9 +18,9 @@ const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const IMAGE1 = 'bmw-x1.jpg'
-const IMAGE1_PATH = path.resolve(__dirname, `./img/${IMAGE1}`)
+const IMAGE1_PATH = path.join(__dirname, `./img/${IMAGE1}`)
 const IMAGE2 = 'bmw-x5.jpg'
-const IMAGE2_PATH = path.resolve(__dirname, `./img/${IMAGE2}`)
+const IMAGE2_PATH = path.join(__dirname, `./img/${IMAGE2}`)
 
 let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
@@ -319,7 +319,7 @@ describe('POST /api/create-car-image', () => {
       .attach('image', IMAGE1_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    const filePath = path.resolve(env.CDN_TEMP_CARS, filename)
+    const filePath = path.join(env.CDN_TEMP_CARS, filename)
     const imageExists = await helper.exists(filePath)
     expect(imageExists).toBeTruthy()
     await fs.unlink(filePath)
@@ -343,7 +343,7 @@ describe('POST /api/update-car-image/:id', () => {
       .attach('image', IMAGE2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    const imageExists = await helper.exists(path.resolve(env.CDN_CARS, filename))
+    const imageExists = await helper.exists(path.join(env.CDN_CARS, filename))
     expect(imageExists).toBeTruthy()
     const car = await Car.findById(CAR_ID)
     expect(car).not.toBeNull()
