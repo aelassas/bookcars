@@ -1434,7 +1434,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
           }
         }
 
-        if (user.contracts) {
+        if (user.contracts && user.contracts.length > 0) {
           for (const contract of user.contracts) {
             if (contract.file) {
               const file = path.join(env.CDN_CONTRACTS, contract.file)
