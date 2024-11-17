@@ -172,7 +172,11 @@ describe('POST /api/create-user', () => {
     if (!await helper.exists(contractFile)) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
-    const contracts = [{ language: 'en', file: contractFileName }]
+    const contracts = [
+      { language: 'en', file: contractFileName },
+      { language: 'fr', file: null },
+      { language: 'es', file: `${nanoid()}.pdf` },
+    ]
 
     let payload: bookcarsTypes.CreateUserPayload = {
       email: USER2_EMAIL,
