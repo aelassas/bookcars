@@ -49,6 +49,8 @@ jobs:
            echo BC_CDN_TEMP_CARS=$BC_CDN_TEMP_CARS >> .env
            echo BC_CDN_LOCATIONS=$BC_CDN_LOCATIONS >> .env
            echo BC_CDN_TEMP_LOCATIONS=$BC_CDN_TEMP_LOCATIONS >> .env
+           echo BC_CDN_CONTRACTS=$BC_CDN_CONTRACTS >> .env
+           echo BC_CDN_TEMP_CONTRACTS=$BC_CDN_TEMP_CONTRACTS >> .env
            echo BC_BACKEND_HOST=$BC_BACKEND_HOST >> .env
            echo BC_FRONTEND_HOST=$BC_FRONTEND_HOST >> .env
            echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
