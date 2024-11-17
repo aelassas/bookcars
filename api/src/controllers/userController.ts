@@ -168,8 +168,30 @@ export const create = async (req: Request, res: Response) => {
       body.password = passwordHash
     }
 
+    const { contracts } = body
+    body.contracts = undefined
+
     const user = new User(body)
     await user.save()
+
+    const finalContracts: bookcarsTypes.Contract[] = []
+    if (contracts) {
+      for (const contract of contracts) {
+        if (contract.language && contract.file) {
+          const tempFile = path.join(env.CDN_TEMP_CONTRACTS, contract.file)
+
+          if (await helper.exists(tempFile)) {
+            const filename = `${user.id}_${contract.language}${path.extname(tempFile)}`
+            const newPath = path.join(env.CDN_CONTRACTS, filename)
+
+            await fs.rename(tempFile, newPath)
+            finalContracts.push({ language: contract.language, file: filename })
+          }
+        }
+      }
+      user.contracts = finalContracts
+      await user.save()
+    }
 
     // avatar
     if (body.avatar) {
@@ -1409,6 +1431,17 @@ export const deleteUsers = async (req: Request, res: Response) => {
           const avatar = path.join(env.CDN_USERS, user.avatar)
           if (await helper.exists(avatar)) {
             await fs.unlink(avatar)
+          }
+        }
+
+        if (user.contracts) {
+          for (const contract of user.contracts) {
+            if (contract.file) {
+              const file = path.join(env.CDN_CONTRACTS, contract.file)
+              if (await helper.exists(file)) {
+                await fs.unlink(file)
+              }
+            }
           }
         }
 

@@ -1,11 +1,15 @@
 import 'dotenv/config'
 import request from 'supertest'
+import url from 'url'
+import path from 'path'
+import fs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
+import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
@@ -14,6 +18,12 @@ import * as env from '../src/config/env.config'
 import PushToken from '../src/models/PushToken'
 import Token from '../src/models/Token'
 import stripeAPI from '../src/stripe'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const CONTRACT1 = 'contract1.pdf'
+const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
 
 const DRIVER1_NAME = 'Driver 1'
 
@@ -48,6 +58,15 @@ beforeAll(async () => {
   // create a supplier
   const supplierName = testHelper.getSupplierName()
   SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+
+  const contractFileName = `${SUPPLIER_ID}_en.pdf`
+  const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
+  if (!await helper.exists(contractFile)) {
+    await fs.copyFile(CONTRACT1_PATH, contractFile)
+  }
+  const supplier = await User.findById(SUPPLIER_ID)
+  supplier!.contracts = [{ language: 'en', file: contractFileName }]
+  await supplier?.save()
 
   // create driver 1
   const driver1 = new User({
@@ -351,14 +370,14 @@ describe('POST /api/checkout', () => {
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(204)
+    expect(res.statusCode).toBe(400)
 
     payload.booking!.supplier = SUPPLIER_ID
     payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(204)
+    expect(res.statusCode).toBe(400)
 
     payload.booking = undefined
     res = await request(app)

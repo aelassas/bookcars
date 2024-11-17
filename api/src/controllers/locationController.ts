@@ -707,11 +707,9 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
-    if (!await helper.exists(imageFile)) {
-      throw new Error(`[location.deleteTempImage] temp image ${imageFile} not found`)
+    if (await helper.exists(imageFile)) {
+      await fs.unlink(imageFile)
     }
-
-    await fs.unlink(imageFile)
 
     res.sendStatus(200)
   } catch (err) {

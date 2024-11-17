@@ -61,5 +61,7 @@ await helper.mkdir(env.CDN_CARS)
 await helper.mkdir(env.CDN_TEMP_CARS)
 await helper.mkdir(env.CDN_LOCATIONS)
 await helper.mkdir(env.CDN_TEMP_LOCATIONS)
+await helper.mkdir(env.CDN_CONTRACTS)
+await helper.mkdir(env.CDN_TEMP_CONTRACTS)
 
 export default app

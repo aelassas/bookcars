@@ -9,6 +9,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
+import * as helper from '../src/common/helper'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
 import Token from '../src/models/Token'
@@ -16,15 +17,17 @@ import PushToken from '../src/models/PushToken'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
-import * as helper from '../src/common/helper'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const AVATAR1 = 'avatar1.jpg'
-const AVATAR1_PATH = path.resolve(__dirname, `./img/${AVATAR1}`)
+const AVATAR1_PATH = path.join(__dirname, `./img/${AVATAR1}`)
 const AVATAR2 = 'avatar2.png'
-const AVATAR2_PATH = path.resolve(__dirname, `./img/${AVATAR2}`)
+const AVATAR2_PATH = path.join(__dirname, `./img/${AVATAR2}`)
+
+const CONTRACT1 = 'contract1.pdf'
+const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
 
 let USER1_ID: string
 let USER2_ID: string
@@ -111,6 +114,12 @@ describe('POST /api/sign-up', () => {
     expect(token?.token.length).toBeGreaterThan(0)
     await token?.deleteOne()
 
+    payload.email = 'wrong-email'
+    res = await request(app)
+      .post('/api/sign-up')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     res = await request(app)
       .post('/api/sign-up')
     expect(res.statusCode).toBe(400)
@@ -157,6 +166,14 @@ describe('POST /api/create-user', () => {
     if (!await helper.exists(tempAvatar)) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
+
+    const contractFileName = `${nanoid()}.pdf`
+    const contractFile = path.join(env.CDN_TEMP_CONTRACTS, contractFileName)
+    if (!await helper.exists(contractFile)) {
+      await fs.copyFile(CONTRACT1_PATH, contractFile)
+    }
+    const contracts = [{ language: 'en', file: contractFileName }]
+
     let payload: bookcarsTypes.CreateUserPayload = {
       email: USER2_EMAIL,
       fullName: 'user2',
@@ -166,6 +183,7 @@ describe('POST /api/create-user', () => {
       location: 'location',
       bio: 'bio',
       avatar: AVATAR1,
+      contracts,
     }
     let res = await request(app)
       .post('/api/create-user')
@@ -183,6 +201,9 @@ describe('POST /api/create-user', () => {
     expect(user?.phone).toBe(payload.phone)
     expect(user?.location).toBe(payload.location)
     expect(user?.bio).toBe(payload.bio)
+    const contractFileResult = user?.contracts?.find((c) => c.language === 'en')?.file
+    expect(contractFileResult).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_CONTRACTS, contractFileResult!))).toBeTruthy()
     let userToken = await Token.findOne({ user: USER2_ID })
     expect(userToken).not.toBeNull()
     expect(userToken?.token.length).toBeGreaterThan(0)
@@ -948,7 +969,7 @@ describe('POST /api/create-avatar', () => {
       .attach('image', AVATAR1_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    const filePath = path.resolve(env.CDN_TEMP_USERS, filename)
+    const filePath = path.join(env.CDN_TEMP_USERS, filename)
     const avatarExists = await helper.exists(filePath)
     expect(avatarExists).toBeTruthy()
     await fs.unlink(filePath)
@@ -972,7 +993,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    let avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+    let avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
     const user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
@@ -986,7 +1007,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
-    avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+    avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
     user!.avatar = undefined
@@ -996,7 +1017,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
-    avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+    avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
     res = await request(app)
@@ -1290,7 +1311,7 @@ describe('POST /api/delete-users', () => {
     const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     const locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
     const imageName = 'bmw-x1.jpg'
-    const imagePath = path.resolve(__dirname, `./img/${imageName}`)
+    const imagePath = path.join(__dirname, `./img/${imageName}`)
     const image = path.join(env.CDN_CARS, imageName)
     if (!await helper.exists(image)) {
       await fs.copyFile(imagePath, image)
