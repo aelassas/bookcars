@@ -72,8 +72,8 @@ export const initialize = async () => {
       // This check is necessary to avoid getting an error creating the same env admin multiple times when
       // test suites are run in parallel.
       //
-      await delay(1000)
-      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
+      await delay(2000)
+      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
       if (!adminFromEnv) {
         await _admin.save()
         expect(_admin.id).toBeTruthy()
