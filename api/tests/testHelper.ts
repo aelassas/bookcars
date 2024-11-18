@@ -57,27 +57,6 @@ export const initialize = async () => {
   expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
 
-  // env admin
-  if (env.ADMIN_EMAIL) {
-    let adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
-    if (!adminFromEnv) {
-      // fix: creating the same admin user in parallel
-      await delay(Number(((new Date()).getMilliseconds() % 1000).toString().padEnd(3, '0')))
-      const _admin = new User({
-        fullName: 'admin',
-        email: env.ADMIN_EMAIL,
-        language: LANGUAGE,
-        password: passwordHash,
-        type: bookcarsTypes.UserType.Admin,
-      })
-      adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
-      if (!adminFromEnv) {
-        await _admin.save()
-      }
-      expect(_admin.id).toBeTruthy()
-    }
-  }
-
   // user
   const user = new User({
     fullName: USER_FULL_NAME,
