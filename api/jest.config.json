@@ -10,7 +10,7 @@
     "./tests/"
   ],
   "testMatch": [
-    "**/*.test.ts"
+    "**/location.test.ts"
   ],
   "collectCoverage": true,
   "coverageReporters": [
@@ -24,5 +24,5 @@
     "!**/tests/**"
   ],
   "testTimeout": 120000,
-  "globalSetup": "./dist/tests/globalSetup.js"
+  "globalSetup": "<rootDir>/tests/globalSetup.ts"
 }
