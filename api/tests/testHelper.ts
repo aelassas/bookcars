@@ -59,25 +59,17 @@ export const initialize = async () => {
 
   // env admin
   if (env.ADMIN_EMAIL) {
-    let adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
     if (!adminFromEnv) {
-      //
-      // This check is necessary to avoid getting an error creating the same env admin multiple times when
-      // test suites are run in parallel.
-      //
-      await delay(1000)
-      adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
-      if (!adminFromEnv) {
-        const _admin = new User({
-          fullName: 'admin',
-          email: env.ADMIN_EMAIL,
-          language: LANGUAGE,
-          password: passwordHash,
-          type: bookcarsTypes.UserType.Admin,
-        })
-        await _admin.save()
-        expect(_admin.id).toBeTruthy()
-      }
+      const _admin = new User({
+        fullName: 'admin',
+        email: env.ADMIN_EMAIL,
+        language: LANGUAGE,
+        password: passwordHash,
+        type: bookcarsTypes.UserType.Admin,
+      })
+      await _admin.save()
+      expect(_admin.id).toBeTruthy()
     }
   }
 
