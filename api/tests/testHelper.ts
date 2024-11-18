@@ -53,8 +53,8 @@ export const initialize = async () => {
   expect(admin.id).toBeDefined()
   ADMIN_USER_ID = admin.id
 
-  const adminFromEnv = env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL })
-  if (!adminFromEnv) {
+  const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
+  if (env.ADMIN_EMAIL && !adminFromEnv) {
     await (new User({
       fullName: 'admin',
       email: env.ADMIN_EMAIL,
@@ -82,7 +82,7 @@ export const getAdminUserId = () => ADMIN_USER_ID
 export const getUserId = () => USER_ID
 
 export const close = async () => {
-  const res = await User.deleteMany({ email: { $in: [ADMIN_EMAIL, USER_EMAIL] } })
+  const res = await User.deleteMany({ _id: { $in: [ADMIN_USER_ID, USER_ID] } })
   expect(res.deletedCount).toBe(2)
   await Notification.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
   await NotificationCounter.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
