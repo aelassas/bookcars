@@ -22,7 +22,7 @@ const babel = (api) => {
       [
         '@babel/preset-env',
         {
-          modules: false,
+          modules: isTest ? undefined : false,
           targets: {
             node: 'current',
           },

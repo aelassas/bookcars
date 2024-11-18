@@ -31,6 +31,10 @@ export const SIZE = 30
 let ADMIN_USER_ID: string
 let USER_ID: string
 
+export const delay = (milliseconds: number) => new Promise((resolve) => {
+  setTimeout(resolve, milliseconds)
+})
+
 export const initializeLogger = (disable = true) => {
   if (disable) {
     logger.disableLogging()
@@ -52,29 +56,6 @@ export const initialize = async () => {
   await admin.save()
   expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
-
-  // env admin
-  if (env.ADMIN_EMAIL) {
-    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
-    if (!adminFromEnv) {
-      const _admin = new User({
-        fullName: 'admin',
-        email: env.ADMIN_EMAIL,
-        language: LANGUAGE,
-        password: passwordHash,
-        type: bookcarsTypes.UserType.Admin,
-      })
-      //
-      // This check is necessary to avoid getting an error creating the same env admin multiple times when
-      // test suites are run in parallel.
-      //
-      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
-      if (!adminFromEnv) {
-        await _admin.save()
-        expect(_admin.id).toBeTruthy()
-      }
-    }
-  }
 
   // user
   const user = new User({
@@ -202,7 +183,3 @@ export const createLocation = async (nameEN: string, nameFR: string, country?: s
   expect(location.id).toBeDefined()
   return location.id as string
 }
-
-export const delay = (milliseconds: number) => new Promise((resolve) => {
-  setTimeout(resolve, milliseconds)
-})

@@ -23,5 +23,6 @@
     "!**/dist/**",
     "!**/tests/**"
   ],
-  "testTimeout": 120000
+  "testTimeout": 120000,
+  "globalSetup": "./dist/tests/globalSetup.js"
 }
