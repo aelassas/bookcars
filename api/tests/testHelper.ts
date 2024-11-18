@@ -55,7 +55,7 @@ export const initialize = async () => {
 
   // env admin
   if (env.ADMIN_EMAIL) {
-    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
     if (!adminFromEnv) {
       const _admin = new User({
         fullName: 'admin',
@@ -68,11 +68,11 @@ export const initialize = async () => {
       // This check is necessary to avoid getting an error creating the same env admin multiple times when
       // test suites are run in parallel.
       //
-      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
       if (!adminFromEnv) {
         await _admin.save()
+        expect(_admin.id).toBeTruthy()
       }
-      expect(_admin.id).toBeTruthy()
     }
   }
 
