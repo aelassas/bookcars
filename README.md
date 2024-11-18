@@ -82,7 +82,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can also install the Android App by directly downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.4.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
