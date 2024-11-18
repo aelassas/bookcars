@@ -354,6 +354,7 @@ export interface User {
   checked?: boolean
   customerId?: string
   carCount?: number
+  contracts?: Contract[]
 }
 
 export interface Option {
@@ -512,6 +513,10 @@ export interface SendEmailPayload {
   ip: string
 }
 
+export interface Response<T> {
+  status: number
+  data: T
+}
 
 // 
 // React types

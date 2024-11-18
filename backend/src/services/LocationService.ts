@@ -167,7 +167,7 @@ export const deleteImage = (id: string): Promise<number> =>
     .then((res) => res.status)
 
 /**
-* Delete a temporary Car image.
+* Delete a temporary Location image.
 *
 * @param {string} image
 * @returns {Promise<number>}

@@ -13,6 +13,7 @@ import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/create-supplier'
@@ -22,6 +23,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
+import ContractList from '@/components/ContractList'
 
 import '@/assets/css/create-supplier.css'
 
@@ -42,6 +44,7 @@ const CreateSupplier = () => {
   const [emailValid, setEmailValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -167,13 +170,16 @@ const CreateSupplier = () => {
   const handleCancel = async () => {
     try {
       if (avatar) {
-        setLoading(true)
-
         await UserService.deleteTempAvatar(avatar)
-        navigate('/suppliers')
-      } else {
-        navigate('/suppliers')
       }
+
+      for (const contract of contracts) {
+        if (contract.file) {
+          await SupplierService.deleteTempContract(contract.file)
+        }
+      }
+
+      navigate('/suppliers')
     } catch {
       navigate('/suppliers')
     }
@@ -220,6 +226,7 @@ const CreateSupplier = () => {
         type: bookcarsTypes.RecordType.Supplier,
         avatar,
         payLater,
+        contracts,
       }
 
       const status = await UserService.create(data)
@@ -326,6 +333,26 @@ const CreateSupplier = () => {
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.BIO}</InputLabel>
               <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <ContractList
+                onUpload={(language, filename) => {
+                  const _contracts = bookcarsHelper.cloneArray(contracts) as bookcarsTypes.Contract[]
+                  const contract = _contracts.find((c) => c.language === language)
+                  if (contract) {
+                    contract.file = filename
+                  } else {
+                    _contracts.push({ language, file: filename })
+                  }
+                  setContracts(_contracts)
+                }}
+                onDelete={(language) => {
+                  const _contracts = bookcarsHelper.cloneArray(contracts) as bookcarsTypes.Contract[]
+                  _contracts.find((c) => c.language === language)!.file = null
+                  setContracts(_contracts)
+                }}
+              />
             </FormControl>
 
             <div className="buttons">
