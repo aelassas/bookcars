@@ -9,6 +9,6 @@ if (
   await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)
 ) {
   await databaseHelper.close()
-  logger.info('MongoDB connection closed')
+  logger.info('Database connection closed')
   process.exit(0)
 }
