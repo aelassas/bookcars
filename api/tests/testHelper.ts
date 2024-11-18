@@ -15,7 +15,7 @@ import * as logger from '../src/common/logger'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
-  return `${prefix}.${nanoid()}.${Date.now()}`.toLowerCase()
+  return `${prefix}.${nanoid()}`.toLowerCase()
 }
 
 export const getSupplierName = () => getName('supplier')
@@ -50,18 +50,30 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.Admin,
   })
   await admin.save()
-  expect(admin.id).toBeDefined()
+  expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
 
-  const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
-  if (env.ADMIN_EMAIL && !adminFromEnv) {
-    await (new User({
-      fullName: 'admin',
-      email: env.ADMIN_EMAIL,
-      language: LANGUAGE,
-      password: passwordHash,
-      type: bookcarsTypes.UserType.Admin,
-    })).save()
+  // env admin
+  if (env.ADMIN_EMAIL) {
+    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    if (!adminFromEnv) {
+      const _admin = new User({
+        fullName: 'admin',
+        email: env.ADMIN_EMAIL,
+        language: LANGUAGE,
+        password: passwordHash,
+        type: bookcarsTypes.UserType.Admin,
+      })
+      //
+      // This check is necessary to avoid getting an error creating the same env admin multiple times when
+      // test suites are run in parallel.
+      //
+      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      if (!adminFromEnv) {
+        await _admin.save()
+      }
+      expect(_admin.id).toBeTruthy()
+    }
   }
 
   // user
@@ -73,7 +85,7 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.User,
   })
   await user.save()
-  expect(user.id).toBeDefined()
+  expect(user.id).toBeTruthy()
   USER_ID = user.id
 }
 
