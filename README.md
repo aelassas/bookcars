@@ -30,9 +30,10 @@ I invested significant time and effort into building this open-source project to
 ## Features
 
 * Supplier management
+* [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 * Ready for one or multiple suppliers
 * Car fleet management
-* [Dynamic Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * Location, country, parking spots and map features
 * Booking management
 * Payment management
