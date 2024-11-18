@@ -99,7 +99,7 @@ export interface CheckoutPayload {
   driver?: User
   booking?: Booking
   additionalDriver?: AdditionalDriver
-  payLater?: boolean
+  payLater: boolean
   sessionId?: string
   paymentIntentId?: string
   customerId?: string

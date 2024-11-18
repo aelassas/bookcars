@@ -240,6 +240,78 @@ describe('POST /api/checkout', () => {
     bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBeGreaterThan(1)
 
+    // test success (driver.enableEmailNotifications disabled)
+    let driver = await User.findById(DRIVER1_ID)
+    driver!.enableEmailNotifications = false
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    driver!.enableEmailNotifications = true
+    await driver!.save()
+
+    // test success (supplier.enableEmailNotifications disabled)
+    let supplier = await User.findById(SUPPLIER_ID)
+    supplier!.enableEmailNotifications = false
+    await supplier!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    supplier!.enableEmailNotifications = true
+    await supplier!.save()
+
+    // test success (without contract)
+    supplier = await User.findById(SUPPLIER_ID)
+    let { contracts } = (supplier!)
+    supplier!.contracts = undefined
+    await supplier!.save()
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    supplier!.contracts = contracts
+    await supplier!.save()
+
+    // test success (with contract file not found)
+    supplier = await User.findById(SUPPLIER_ID)
+    contracts = supplier!.contracts
+    supplier!.contracts = [{ language: 'en', file: `${nanoid()}.pdf` }]
+    await supplier!.save()
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    supplier!.contracts = contracts
+    await supplier!.save()
+
+    // test success (with contract file null)
+    supplier = await User.findById(SUPPLIER_ID)
+    contracts = supplier!.contracts
+    supplier!.contracts = [{ language: 'en', file: null }]
+    await supplier!.save()
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    supplier!.contracts = contracts
+    await supplier!.save()
+
+    // test success (with contract fr language)
+    driver = await User.findById(DRIVER1_ID)
+    driver!.language = 'fr'
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    driver!.language = 'en'
+    await driver!.save()
+
     // test failure (stripe payment failed)
     payload.payLater = false
     const receiptEmail = testHelper.GetRandomEmail()
@@ -270,7 +342,7 @@ describe('POST /api/checkout', () => {
     await stripeAPI.paymentIntents.confirm(paymentIntentId, {
       payment_method: 'pm_card_visa',
     })
-    const driver = await User.findOne({ _id: DRIVER1_ID })
+    driver = await User.findOne({ _id: DRIVER1_ID })
     driver!.language = 'fr'
     await driver?.save()
     res = await request(app)
@@ -280,6 +352,15 @@ describe('POST /api/checkout', () => {
       expect(res.statusCode).toBe(200)
       bookings = await Booking.find({ driver: DRIVER1_ID })
       expect(bookings.length).toBeGreaterThan(2)
+
+      // test failure (car not found)
+      const carId = payload.booking!.car
+      payload.booking!.car = testHelper.GetRandromObjectIdAsString()
+      res = await request(app)
+        .post('/api/checkout')
+        .send(payload)
+      expect(res.statusCode).toBe(400)
+      payload.booking!.car = carId
     } catch (err) {
       console.error(err)
     } finally {
@@ -301,7 +382,17 @@ describe('POST /api/checkout', () => {
     const booking = await Booking.findById(bookingId)
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Void)
     expect(booking?.sessionId).toBe(payload.sessionId)
-    payload.payLater = true
+
+    // test success (checkout session driver not verified)
+    driver = await User.findById(DRIVER1_ID)
+    driver!.verified = false
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    driver!.verified = true
+    await driver!.save()
 
     // test success (checkout session with no additional driver)
     payload.booking!.additionalDriver = false
@@ -313,6 +404,7 @@ describe('POST /api/checkout', () => {
     expect(bookings.length).toBeGreaterThan(3)
     payload.booking!.additionalDriver = true
 
+    payload.payLater = true
     payload.driver = {
       fullName: 'driver',
       email: testHelper.GetRandomEmail(),
@@ -429,6 +521,19 @@ describe('POST /api/update-booking', () => {
     let additionalDriver = await AdditionalDriver.findOne({ email: ADDITIONAL_DRIVER_EMAIL })
     expect(additionalDriver).not.toBeNull()
     expect(additionalDriver?.fullName).toBe(ADDITIONAL_DRIVER.fullName)
+
+    // test success (enableEmailNotifications disabled)
+    payload.booking.status = bookcarsTypes.BookingStatus.Reserved
+    const driver = await User.findById(DRIVER1_ID)
+    driver!.enableEmailNotifications = false
+    await driver!.save()
+    res = await request(app)
+      .put('/api/update-booking')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    driver!.enableEmailNotifications = true
+    await driver!.save()
 
     const booking = await Booking.findById(BOOKING_ID)
     expect(booking).not.toBeNull()
@@ -773,6 +878,11 @@ describe('DELETE /api/delete-temp-booking', () => {
     expect(_booking).toBeNull()
     const _driver = await User.findById(driver._id)
     expect(_driver).toBeNull()
+
+    // test booking not found
+    res = await request(app)
+      .delete(`/api/delete-temp-booking/${testHelper.GetRandromObjectIdAsString()}/${sessionId}`)
+    expect(res.statusCode).toBe(200)
 
     //
     // Test failure
