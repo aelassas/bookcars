@@ -28,6 +28,7 @@ export default async function globalSetup() {
       }
       if (mongoose.connection.readyState) {
         await databaseHelper.close()
+        logger.info('Database connection closed')
       }
     }
   } catch (err) {
