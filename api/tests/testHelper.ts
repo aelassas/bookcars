@@ -53,15 +53,17 @@ export const initialize = async () => {
   expect(admin.id).toBeDefined()
   ADMIN_USER_ID = admin.id
 
-  const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
-  if (env.ADMIN_EMAIL && !adminFromEnv) {
-    await (new User({
-      fullName: 'admin',
-      email: env.ADMIN_EMAIL,
-      language: LANGUAGE,
-      password: passwordHash,
-      type: bookcarsTypes.UserType.Admin,
-    })).save()
+  if (env.ADMIN_EMAIL) {
+    const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
+    if (!adminFromEnv) {
+      await (new User({
+        fullName: 'admin',
+        email: env.ADMIN_EMAIL,
+        language: LANGUAGE,
+        password: passwordHash,
+        type: bookcarsTypes.UserType.Admin,
+      })).save()
+    }
   }
 
   // user
