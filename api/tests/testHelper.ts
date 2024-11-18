@@ -15,7 +15,7 @@ import * as logger from '../src/common/logger'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
-  return `${prefix}.${nanoid()}.${Date.now()}`.toLowerCase()
+  return `${prefix}.${nanoid()}`.toLowerCase()
 }
 
 export const getSupplierName = () => getName('supplier')
@@ -53,8 +53,9 @@ export const initialize = async () => {
   expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
 
+  // env admin
   if (env.ADMIN_EMAIL) {
-    const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
+    const adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
     if (!adminFromEnv) {
       const _admin = new User({
         fullName: 'admin',
