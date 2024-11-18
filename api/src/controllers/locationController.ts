@@ -89,8 +89,7 @@ export const create = async (req: Request, res: Response) => {
       const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
       if (!await helper.exists(_image)) {
-        logger.error(i18n.t('LOCATION_IMAGE_NOT_FOUND'), body)
-        return res.status(400).send(i18n.t('LOCATION_IMAGE_NOT_FOUND'))
+        throw new Error(`Location image not found: ${_image}`)
       }
     }
 
@@ -124,14 +123,12 @@ export const create = async (req: Request, res: Response) => {
     if (image) {
       const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
-      if (await helper.exists(_image)) {
-        const filename = `${location._id}_${Date.now()}${path.extname(image)}`
-        const newPath = path.join(env.CDN_LOCATIONS, filename)
+      const filename = `${location._id}_${Date.now()}${path.extname(image)}`
+      const newPath = path.join(env.CDN_LOCATIONS, filename)
 
-        await fs.rename(_image, newPath)
-        location.image = filename
-        await location.save()
-      }
+      await fs.rename(_image, newPath)
+      location.image = filename
+      await location.save()
     }
 
     return res.send(location)
@@ -284,7 +281,7 @@ export const deleteLocation = async (req: Request, res: Response) => {
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     await Location.deleteOne({ _id: id })
 
-    if (location.parkingSpots) {
+    if (location.parkingSpots && location.parkingSpots.length > 0) {
       const values = location.parkingSpots.map((ps) => ps.values).flat()
       await LocationValue.deleteMany({ _id: { $in: values } })
       const parkingSpots = location.parkingSpots.map((ps) => ps._id)
@@ -342,7 +339,7 @@ export const getLocation = async (req: Request, res: Response) => {
         const countryName = ((location.country as env.CountryInfo).values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         location.country.name = countryName
       }
-      if (location.parkingSpots) {
+      if (location.parkingSpots && location.parkingSpots.length > 0) {
         for (const parkingSpot of location.parkingSpots) {
           parkingSpot.name = (parkingSpot.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         }
@@ -706,6 +703,9 @@ export const deleteTempImage = async (req: Request, res: Response) => {
   const { image } = req.params
 
   try {
+    if (!image.includes('.')) {
+      throw new Error('Filename not valid')
+    }
     const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
     if (await helper.exists(imageFile)) {
       await fs.unlink(imageFile)

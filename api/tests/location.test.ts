@@ -126,18 +126,6 @@ describe('POST /api/create-location', () => {
       latitude: 28.0268755,
       longitude: 1.6528399999999976,
       image: 'unknown.jpg',
-      parkingSpots: [
-        {
-          latitude: 28.1268755,
-          longitude: 1.752839999999997,
-          values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
-        },
-        {
-          latitude: 28.2268755,
-          longitude: 1.8528399999999976,
-          values: [{ language: 'en', value: 'Parking spot 2' }, { language: 'fr', value: 'Parking 2' }],
-        },
-      ],
     }
 
     // image not found
@@ -147,7 +135,33 @@ describe('POST /api/create-location', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
-    // image found
+    // no image
+    payload.image = undefined
+    res = await request(app)
+      .post('/api/create-location')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBeTruthy()
+    await Location.deleteOne({ _id: res.body._id })
+
+    // image found and parkingspots
+    payload.parkingSpots = [
+      {
+        latitude: 28.1268755,
+        longitude: 1.752839999999997,
+        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
+      },
+      {
+        latitude: 28.2268755,
+        longitude: 1.8528399999999976,
+        values: [{ language: 'en', value: 'Parking spot 2' }, { language: 'fr', value: 'Parking 2' }],
+      },
+      {
+        latitude: 27.2268755,
+        longitude: 12.852839999999997,
+      },
+    ]
     const tempImage = path.join(env.CDN_TEMP_LOCATIONS, IMAGE0)
     if (!await helper.exists(tempImage)) {
       await fs.copyFile(IMAGE0_PATH, tempImage)
@@ -162,7 +176,7 @@ describe('POST /api/create-location', () => {
     expect(res.body?.values?.length).toBe(2)
     expect(res.body?.latitude).toBe(payload.latitude)
     expect(res.body?.longitude).toBe(payload.longitude)
-    expect(res.body?.parkingSpots?.length).toBe(2)
+    expect(res.body?.parkingSpots?.length).toBe(3)
     LOCATION_ID = res.body?._id
 
     // no payload
@@ -204,7 +218,7 @@ describe('PUT /api/update-location/:id', () => {
         },
       })
       .lean()
-    expect(location?.parkingSpots.length).toBe(2)
+    expect(location?.parkingSpots.length).toBe(3)
 
     const parkingSpot2 = (location!.parkingSpots[1]) as unknown as FlattenMaps<bookcarsTypes.ParkingSpot>
     expect(parkingSpot2.values!.length).toBe(2)
@@ -344,11 +358,21 @@ describe('POST /api/update-location-image/:id', () => {
       .attach('image', IMAGE2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    const imageExists = await helper.exists(path.join(env.CDN_LOCATIONS, filename))
+    const imageFile = path.join(env.CDN_LOCATIONS, filename)
+    const imageExists = await helper.exists(imageFile)
     expect(imageExists).toBeTruthy()
     const location = await Location.findById(LOCATION_ID)
     expect(location).not.toBeNull()
     expect(location?.image).toBe(filename)
+
+    await fs.unlink(imageFile)
+    location!.image = undefined
+    await location?.save()
+    res = await request(app)
+      .post(`/api/update-location-image/${LOCATION_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('image', IMAGE2_PATH)
+    expect(res.statusCode).toBe(200)
 
     location!.image = `${nanoid()}.jpg`
     await location?.save()
@@ -408,6 +432,19 @@ describe('POST /api/delete-location-image/:id', () => {
     expect(location?.image).toBeNull()
 
     res = await request(app)
+      .post(`/api/delete-location-image/${LOCATION_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    location = await Location.findById(LOCATION_ID)
+    location!.image = `${nanoid()}.jpg`
+    await location!.save()
+    res = await request(app)
+      .post(`/api/delete-location-image/${LOCATION_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    res = await request(app)
       .post(`/api/delete-location-image/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
@@ -441,6 +478,11 @@ describe('POST /api/delete-temp-location-image/:image', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    res = await request(app)
+      .post('/api/delete-temp-location-image/unknown')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
     await testHelper.signout(token)
   })
 })
@@ -453,6 +495,13 @@ describe('GET /api/location/:id/:language', () => {
       .get(`/api/location/${LOCATION_ID}/${language}`)
     expect(res.statusCode).toBe(200)
     expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].name)
+
+    const locationId = await testHelper.createLocation('loc1-en', 'loc1-fr')
+    res = await request(app)
+      .get(`/api/location/${locationId}/${language}`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body?.name).toBe('loc1-en')
+    await Location.deleteOne({ _id: locationId })
 
     res = await request(app)
       .get(`/api/location/${testHelper.GetRandromObjectIdAsString()}/${language}`)
@@ -572,6 +621,21 @@ describe('DELETE /api/delete-location/:id', () => {
     expect(res.statusCode).toBe(200)
     location = await Location.findById(LOCATION_ID)
     expect(location).toBeNull()
+
+    let locationId = await testHelper.createLocation('loc1-en', 'loc1-fr')
+    res = await request(app)
+      .delete(`/api/delete-location/${locationId}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    locationId = await testHelper.createLocation('loc2-en', 'loc2-fr')
+    location = await Location.findById(locationId)
+    location!.image = `${nanoid()}.jpg`
+    await location!.save()
+    res = await request(app)
+      .delete(`/api/delete-location/${locationId}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
 
     res = await request(app)
       .delete(`/api/delete-location/${LOCATION_ID}`)

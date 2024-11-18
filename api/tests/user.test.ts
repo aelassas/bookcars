@@ -172,7 +172,11 @@ describe('POST /api/create-user', () => {
     if (!await helper.exists(contractFile)) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
-    const contracts = [{ language: 'en', file: contractFileName }]
+    const contracts = [
+      { language: 'en', file: contractFileName },
+      { language: 'fr', file: null },
+      { language: 'es', file: `${nanoid()}.pdf` },
+    ]
 
     let payload: bookcarsTypes.CreateUserPayload = {
       email: USER2_EMAIL,
@@ -1286,12 +1290,24 @@ describe('POST /api/delete-users', () => {
   it('should delete users', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID]
+    const supplierName1 = testHelper.getSupplierName()
+    const supplier1Id = await testHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
+
+    const supplierName2 = testHelper.getSupplierName()
+    const supplier2Id = await testHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName1)
+    const supplier2 = await User.findById(supplier2Id)
+    supplier2!.contracts = [
+      { language: 'en', file: null },
+      { language: 'fr', file: `${nanoid()}.pdf` },
+    ]
+    await supplier2?.save()
+
+    let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID, supplier1Id, supplier2Id]
     const user1 = await User.findById(USER1_ID)
     user1!.avatar = `${nanoid()}.jpg`
     await user1?.save()
     let users = await User.find({ _id: { $in: payload } })
-    expect(users.length).toBe(3)
+    expect(users.length).toBe(5)
     let res = await request(app)
       .post('/api/delete-users')
       .set(env.X_ACCESS_TOKEN, token)
