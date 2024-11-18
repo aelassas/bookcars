@@ -107,7 +107,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
  * @param {boolean} payLater
  * @returns {unknown}
  */
-export const confirm = async (user: env.User, supplier: env.User, booking: env.Booking, payLater: boolean = false) => {
+export const confirm = async (user: env.User, supplier: env.User, booking: env.Booking, payLater: boolean) => {
   const { language } = user
   const locale = language === 'fr' ? 'fr-FR' : 'en-US'
   const options: Intl.DateTimeFormatOptions = {
@@ -140,7 +140,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
   const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
 
   let contractFile: string | null = null
-  if (supplier.contracts) {
+  if (supplier.contracts && supplier.contracts.length > 0) {
     contractFile = supplier.contracts.find((c) => c.language === user.language)?.file || null
     if (!contractFile) {
       contractFile = supplier.contracts.find((c) => c.language === 'en')?.file || null
