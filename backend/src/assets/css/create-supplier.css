@@ -23,7 +23,6 @@ div.create-supplier {
 @media only screen and (width <=960px) {
   .supplier-form {
     width: 360px;
-    height: 900px;
     padding: 30px;
   }
 }
@@ -33,7 +32,6 @@ div.create-supplier {
 @media only screen and (width >=960px) {
   .supplier-form {
     width: 550px;
-    height: 900px;
     padding: 30px;
   }
 }

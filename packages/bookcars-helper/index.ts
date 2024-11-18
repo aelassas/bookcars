@@ -455,3 +455,49 @@ export const formatDistance = (d: number, language: string): string => {
   }
   return ''
 }
+
+/**
+ * Removes a start line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trimStart = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(0) === char) {
+    res = res.substring(1, res.length)
+  }
+  return res
+}
+
+/**
+ * Removes a leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trimEnd = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(res.length - 1) === char) {
+    res = res.substring(0, res.length - 1)
+  }
+  return res
+}
+
+/**
+ * Removes a stating, leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trim = (str: string, char: string): string => {
+  let res = trimStart(str, char)
+  res = trimEnd(res, char)
+  return res
+}

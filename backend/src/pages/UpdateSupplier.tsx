@@ -24,6 +24,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
+import ContractList from '@/components/ContractList'
 
 import '@/assets/css/update-supplier.css'
 
@@ -241,11 +242,10 @@ const UpdateSupplier = () => {
         payLater,
       }
 
-      const status = await SupplierService.update(data)
+      const res = await SupplierService.update(data)
 
-      if (status === 200) {
-        supplier.fullName = fullName
-        setSupplier(bookcarsHelper.clone(supplier))
+      if (res.status === 200) {
+        setSupplier(res.data)
         helper.info(commonStrings.UPDATED)
       } else {
         helper.error()
@@ -325,6 +325,10 @@ const UpdateSupplier = () => {
                 <InputLabel>{commonStrings.BIO}</InputLabel>
                 <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
+              <FormControl fullWidth margin="dense">
+                <ContractList supplier={supplier} />
+              </FormControl>
+
               {admin && (
                 <FormControl fullWidth margin="dense" className="resend-activation-link">
                   <Button

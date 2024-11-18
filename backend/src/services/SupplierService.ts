@@ -22,14 +22,14 @@ export const validate = (data: bookcarsTypes.ValidateSupplierPayload): Promise<n
  * @param {bookcarsTypes.UpdateSupplierPayload} data
  * @returns {Promise<number>}
  */
-export const update = (data: bookcarsTypes.UpdateSupplierPayload): Promise<number> =>
+export const update = (data: bookcarsTypes.UpdateSupplierPayload): Promise<bookcarsTypes.Response<bookcarsTypes.User>> =>
   axiosInstance
     .put(
       '/api/update-supplier',
       data,
       { withCredentials: true }
     )
-    .then((res) => res.status)
+    .then((res) => ({ status: res.status, data: res.data }))
 
 /**
  * Delete a Supplier.
@@ -101,3 +101,81 @@ export const getBackendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise
       data,
       { withCredentials: true }
     ).then((res) => res.data)
+
+/**
+* Create temporary contract.
+*
+* @param {string} language
+* @param {Blob} file
+* @returns {Promise<string>}
+*/
+export const createContract = (language: string, file: Blob): Promise<string> => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axiosInstance
+    .post(
+      `/api/create-contract/${language}`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+    )
+    .then((res) => res.data)
+}
+
+/**
+ * Update contract.
+ *
+ * @param {string} supplierId
+ * @param {string} language
+ * @param {Blob} file
+ * @returns {Promise<bookcarsTypes.Response<string>>}
+ */
+export const updateContract = (supplierId: string, language: string, file: Blob): Promise<bookcarsTypes.Response<string>> => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axiosInstance
+    .post(
+      `/api/update-contract/${supplierId}/${language}`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+    )
+    .then((res) => ({ status: res.status, data: res.data }))
+}
+
+/**
+ * Delete contract.
+ *
+ * @param {string} supplierId
+ * @param {string} language
+ * @returns {Promise<number>}
+ */
+export const deleteContract = (supplierId: string, language: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-contract/${supplierId}/${language}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+
+/**
+* Delete a temporary contract file.
+*
+* @param {string} file
+* @returns {Promise<number>}
+*/
+export const deleteTempContract = (file: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-temp-contract/${encodeURIComponent(file)}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)

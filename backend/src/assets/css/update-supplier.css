@@ -17,7 +17,6 @@ div.update-supplier .resend-activation-link {
 @media only screen and (width <=960px) {
   .supplier-form-update {
     width: 360px;
-    height: 920px;
     padding: 30px;
   }
 }
@@ -27,7 +26,6 @@ div.update-supplier .resend-activation-link {
 @media only screen and (width >=960px) {
   .supplier-form-update {
     width: 550px;
-    height: 850px;
     padding: 30px;
   }
 }
