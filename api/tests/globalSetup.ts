@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
+import * as logger from '../src/common/logger'
 import * as databaseHelper from '../src/common/databaseHelper'
 import User from '../src/models/User'
 
@@ -23,13 +24,13 @@ export default async function globalSetup() {
           type: bookcarsTypes.UserType.Admin,
         })
         await admin.save()
-        console.log('globalSetup: Admin user created:', admin.id)
+        logger.info('globalSetup: Admin user created:', admin.id)
       }
       if (mongoose.connection.readyState) {
         await databaseHelper.close()
       }
     }
   } catch (err) {
-    console.error('Error while running global setup', err)
+    logger.error('Error while running global setup', err)
   }
 }
