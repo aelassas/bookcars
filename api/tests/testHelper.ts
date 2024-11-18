@@ -55,7 +55,7 @@ export const initialize = async () => {
 
   // env admin
   if (env.ADMIN_EMAIL) {
-    const adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
     if (!adminFromEnv) {
       const _admin = new User({
         fullName: 'admin',
@@ -64,7 +64,10 @@ export const initialize = async () => {
         password: passwordHash,
         type: bookcarsTypes.UserType.Admin,
       })
-      await _admin.save()
+      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      if (!adminFromEnv) {
+        await _admin.save()
+      }
       expect(_admin.id).toBeTruthy()
     }
   }
