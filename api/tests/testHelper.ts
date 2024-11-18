@@ -31,6 +31,10 @@ export const SIZE = 30
 let ADMIN_USER_ID: string
 let USER_ID: string
 
+export const delay = (milliseconds: number) => new Promise((resolve) => {
+  setTimeout(resolve, milliseconds)
+})
+
 export const initializeLogger = (disable = true) => {
   if (disable) {
     logger.disableLogging()
@@ -68,6 +72,7 @@ export const initialize = async () => {
       // This check is necessary to avoid getting an error creating the same env admin multiple times when
       // test suites are run in parallel.
       //
+      await delay(1000)
       adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
       if (!adminFromEnv) {
         await _admin.save()
@@ -202,7 +207,3 @@ export const createLocation = async (nameEN: string, nameFR: string, country?: s
   expect(location.id).toBeDefined()
   return location.id as string
 }
-
-export const delay = (milliseconds: number) => new Promise((resolve) => {
-  setTimeout(resolve, milliseconds)
-})
