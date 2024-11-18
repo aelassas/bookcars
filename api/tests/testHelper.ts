@@ -50,19 +50,21 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.Admin,
   })
   await admin.save()
-  expect(admin.id).toBeDefined()
+  expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
 
   if (env.ADMIN_EMAIL) {
     const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
     if (!adminFromEnv) {
-      await (new User({
+      const _admin = new User({
         fullName: 'admin',
         email: env.ADMIN_EMAIL,
         language: LANGUAGE,
         password: passwordHash,
         type: bookcarsTypes.UserType.Admin,
-      })).save()
+      })
+      await _admin.save()
+      expect(_admin.id).toBeTruthy()
     }
   }
 
@@ -75,7 +77,7 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.User,
   })
   await user.save()
-  expect(user.id).toBeDefined()
+  expect(user.id).toBeTruthy()
   USER_ID = user.id
 }
 
