@@ -59,7 +59,7 @@ export const initialize = async () => {
 
   // env admin
   if (env.ADMIN_EMAIL) {
-    let adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL })
+    let adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
     if (!adminFromEnv) {
       const _admin = new User({
         fullName: 'admin',
@@ -73,7 +73,7 @@ export const initialize = async () => {
       // test suites are run in parallel.
       //
       await delay(2000)
-      adminFromEnv = await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
       if (!adminFromEnv) {
         await _admin.save()
         expect(_admin.id).toBeTruthy()
