@@ -84,6 +84,7 @@ export const update = async (req: Request, res: Response) => {
         location: supplier.location,
         bio: supplier.bio,
         payLater: supplier.payLater,
+        contracts: supplier.contracts,
       })
     }
     logger.error('[supplier.update] Supplier not found:', _id)
@@ -182,6 +183,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       location,
       bio,
       payLater,
+      contracts,
     } = user
 
     return res.json({
@@ -193,6 +195,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       location,
       bio,
       payLater,
+      contracts,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)

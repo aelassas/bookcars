@@ -1,0 +1,37 @@
+div.contracts {
+  display: flex;
+  flex-direction: column;
+}
+
+div.contracts div.title {
+  color: #666666;
+  margin: 10px 0;
+  padding: 5px 15px;
+  border-bottom: #949494 1px solid;
+}
+
+div.contracts div.contract {
+  display: flex;
+  flex-direction: row;
+  margin: 5px 0;
+}
+
+div.contracts div.contract span.label {
+  color: #666666;
+  margin-right: 5px;
+  min-width: 80px;
+}
+
+div.contracts div.contract span.filename {
+  min-width: 260px;
+}
+
+@media only screen and (width <=960px) {
+  div.contracts div.contract {
+    flex-direction: column;
+  }
+  div.contracts div.contract span.filename {
+    min-width: 0;
+    padding-left: 5px;
+  }
+}
