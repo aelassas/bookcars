@@ -9,20 +9,20 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "splash": {
-      "backgroundColor": "#f37022",
-      "image": "./assets/splash.png"
-    },
+    // "splash": {
+    //   "backgroundColor": "#f37022",
+    //   "image": "./assets/splash.png"
+    // },
     "android": {
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
       "icon": "./assets/icon.png",
-      "splash": {
-        "backgroundColor": "#f37022",
-        "image": "./assets/splash.png"
-      },
+      // "splash": {
+      //   "backgroundColor": "#f37022",
+      //   "image": "./assets/splash.png"
+      // },
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.bookcars"
@@ -31,24 +31,24 @@
       "buildNumber": "4.6.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
-      "splash": {
-        "backgroundColor": "#f37022",
-        "image": "./assets/splash.png",
-        "tabletImage": "./assets/splash-tablet.png"
-      },
+      // "splash": {
+      //   "backgroundColor": "#f37022",
+      //   "image": "./assets/splash.png",
+      //   "tabletImage": "./assets/splash-tablet.png"
+      // },
       "bundleIdentifier": "com.bookcars"
     },
     "plugins": [
       "expo-localization",
       "./plugins/usesCleartextTraffic",
-      // [
-      //   "expo-splash-screen",
-      //   {
-      //     "backgroundColor": "#f37022",
-      //     "image": "./assets/splash.png",
-      //     "imageWidth": 200
-      //   }
-      // ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f37022",
+          "image": "./assets/icon.png",
+          "imageWidth": 200
+        }
+      ],
       [
         "@stripe/stripe-react-native",
         {
