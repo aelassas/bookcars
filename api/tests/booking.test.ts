@@ -761,7 +761,7 @@ describe('POST /api/update-booking-status', () => {
   it('should update booking status', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    // test success  (change in status)
+    // test success (change in status)
     const payload: bookcarsTypes.UpdateStatusPayload = {
       ids: [BOOKING_ID],
       status: bookcarsTypes.BookingStatus.Reserved,
