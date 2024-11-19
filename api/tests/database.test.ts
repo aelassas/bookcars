@@ -13,6 +13,7 @@ beforeAll(() => {
 
 describe('Test database connection', () => {
   it('should connect to database', async () => {
+    // test success (connected)
     const res = await databaseHelper.connect(env.DB_URI, false, false)
     expect(res).toBeTruthy()
     await databaseHelper.close()
@@ -21,6 +22,7 @@ describe('Test database connection', () => {
 
 describe('Test database connection failure', () => {
   it('should fail connecting to database', async () => {
+    // test failure (wrong uri)
     const res = await databaseHelper.connect('wrong-uri', true, false)
     expect(res).toBeFalsy()
   })
@@ -58,6 +60,7 @@ describe('Test database initialization', () => {
     const ps2 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv2.id] })
     await ps2.save()
 
+    // test success (initialization)
     await testHelper.delay(5 * 1000)
     res = await databaseHelper.initialize()
     expect(res).toBeTruthy()
