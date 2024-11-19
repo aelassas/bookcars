@@ -493,6 +493,7 @@ describe('POST /api/checkout', () => {
     expect(bookings.length).toBeGreaterThan(3)
     payload.booking!.additionalDriver = true
 
+    // test success (payLater with new driver)
     payload.payLater = true
     payload.driver = {
       fullName: 'driver2',
@@ -521,6 +522,7 @@ describe('POST /api/checkout', () => {
       await notificationCounter!.save()
     }
 
+    // test success (payLater without new driver)
     payload.driver = undefined
     payload.additionalDriver = {
       email: testHelper.GetRandomEmail(),
@@ -545,6 +547,7 @@ describe('POST /api/checkout', () => {
       await notificationCounter!.save()
     }
 
+    // test success (payLater without additional driver)
     payload.additionalDriver = undefined
     payload.booking!.car = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -552,6 +555,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong pickupLocation)
     payload.booking!.car = CAR1_ID
     payload.booking!.pickupLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -559,6 +563,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong dropOffLocation)
     payload.booking!.pickupLocation = LOCATION_ID
     payload.booking!.dropOffLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -566,6 +571,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong supplier)
     payload.booking!.dropOffLocation = LOCATION_ID
     payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -573,6 +579,7 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong driver)
     payload.booking!.supplier = SUPPLIER_ID
     payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
@@ -580,12 +587,14 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (no booking)
     payload.booking = undefined
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/checkout')
       .send({ booking: { driver: DRIVER1_ID } })
@@ -597,6 +606,7 @@ describe('POST /api/update-booking', () => {
   it('should update a booking', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     ADDITIONAL_DRIVER.fullName = 'Additional Driver 2'
     const payload: bookcarsTypes.UpsertBookingPayload = {
       booking: {
@@ -644,6 +654,7 @@ describe('POST /api/update-booking', () => {
     driver!.enableEmailNotifications = true
     await driver!.save()
 
+    // test failure (wrong _additionalDriver)
     const booking = await Booking.findById(BOOKING_ID)
     expect(booking).not.toBeNull()
     booking!._additionalDriver = testHelper.GetRandromObjectId()
@@ -654,6 +665,7 @@ describe('POST /api/update-booking', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (with _additionalDriver)
     payload.booking.additionalDriver = false
     payload.additionalDriver = undefined
     booking!._additionalDriver = new mongoose.Types.ObjectId(ADDITIONAL_DRIVER_ID)
@@ -666,6 +678,7 @@ describe('POST /api/update-booking', () => {
     additionalDriver = await AdditionalDriver.findOne({ email: ADDITIONAL_DRIVER_EMAIL })
     expect(additionalDriver).toBeNull()
 
+    // test success (without _additionalDriver)
     payload.additionalDriver = ADDITIONAL_DRIVER
     booking!._additionalDriver = undefined
     await booking?.save()
@@ -677,6 +690,7 @@ describe('POST /api/update-booking', () => {
     const deleteRes = await AdditionalDriver.deleteOne({ email: ADDITIONAL_DRIVER_EMAIL })
     expect(deleteRes.deletedCount).toBe(1)
 
+    // test failure (wrong booking id)
     payload.booking._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .put('/api/update-booking')
@@ -684,7 +698,7 @@ describe('POST /api/update-booking', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
-    // notifyDriver
+    // test success (notifyDriver)
     payload.booking._id = BOOKING_ID
     payload.booking.status = bookcarsTypes.BookingStatus.Cancelled
     payload.additionalDriver = undefined
@@ -700,6 +714,7 @@ describe('POST /api/update-booking', () => {
     await _booking!.save()
     payload.booking.driver = DRIVER1_ID
 
+    // test success (PushToken)
     payload.booking.status = bookcarsTypes.BookingStatus.Void
     let pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[qQ8j_gFiDjl4MKuFxBYLW3]' })
     await pushToken.save()
@@ -710,6 +725,7 @@ describe('POST /api/update-booking', () => {
     expect(res.statusCode).toBe(200)
     await PushToken.deleteOne({ _id: pushToken._id })
 
+    // test success (PushToken)
     payload.booking.status = bookcarsTypes.BookingStatus.Deposit
     pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]' })
     await pushToken.save()
@@ -720,6 +736,7 @@ describe('POST /api/update-booking', () => {
     expect(res.statusCode).toBe(200)
     await PushToken.deleteOne({ _id: pushToken._id })
 
+    // test success (PushToken)
     payload.booking.status = bookcarsTypes.BookingStatus.Cancelled
     pushToken = new PushToken({ user: payload.booking.driver, token: '0' })
     await pushToken.save()
@@ -730,6 +747,7 @@ describe('POST /api/update-booking', () => {
     expect(res.statusCode).toBe(200)
     await PushToken.deleteOne({ _id: pushToken._id })
 
+    // test failure (no payload)
     res = await request(app)
       .put('/api/update-booking')
       .set(env.X_ACCESS_TOKEN, token)
@@ -743,6 +761,7 @@ describe('POST /api/update-booking-status', () => {
   it('should update booking status', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success  (change in status)
     const payload: bookcarsTypes.UpdateStatusPayload = {
       ids: [BOOKING_ID],
       status: bookcarsTypes.BookingStatus.Reserved,
@@ -755,6 +774,7 @@ describe('POST /api/update-booking-status', () => {
     let booking = await Booking.findById(BOOKING_ID)
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
 
+    // test success (no change in status)
     res = await request(app)
       .post('/api/update-booking-status')
       .set(env.X_ACCESS_TOKEN, token)
@@ -763,6 +783,7 @@ describe('POST /api/update-booking-status', () => {
     booking = await Booking.findById(BOOKING_ID)
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/update-booking-status')
       .set(env.X_ACCESS_TOKEN, token)
@@ -776,17 +797,20 @@ describe('GET /api/booking/:id/:language', () => {
   it('should get a booking', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.car._id).toBe(CAR2_ID)
 
+    // test success (booking not found)
     res = await request(app)
       .get(`/api/booking/${testHelper.GetRandromObjectIdAsString()}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong booking id)
     res = await request(app)
       .get(`/api/booking/${nanoid()}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -800,6 +824,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
   it('should get bookings', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (full filter)
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers: [SUPPLIER_ID],
       statuses: [bookcarsTypes.BookingStatus.Reserved],
@@ -821,6 +846,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBe(1)
 
+    // test success (empty filter)
     payload.user = undefined
     payload.car = undefined
     payload.filter!.from = undefined
@@ -835,6 +861,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBe(1)
 
+    // test success (keyword filter)
     payload.filter!.keyword = BOOKING_ID
     res = await request(app)
       .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
@@ -843,6 +870,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBe(1)
 
+    // test failure (no payload)
     res = await request(app)
       .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -856,11 +884,13 @@ describe('GET /api/has-bookings/:driver', () => {
   it("should check driver's bookings", async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (200)
     let res = await request(app)
       .get(`/api/has-bookings/${DRIVER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (204)
     res = await request(app)
       .get(`/api/has-bookings/${SUPPLIER_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -868,6 +898,7 @@ describe('GET /api/has-bookings/:driver', () => {
     const booking = await Booking.findById(BOOKING_ID)
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
 
+    // test failure (wrong user id)
     res = await request(app)
       .get(`/api/has-bookings/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -881,6 +912,7 @@ describe('POST /api/cancel-booking/:id', () => {
   it('should cancel a booking', async () => {
     const token = await testHelper.signinAsUser()
 
+    // test success
     let booking = await Booking.findById(BOOKING_ID)
     expect(booking?.cancelRequest).toBeFalsy()
 
@@ -914,11 +946,13 @@ describe('POST /api/cancel-booking/:id', () => {
     booking!.supplier = supplierId
     await booking!.save()
 
+    // test success (booking not found)
     res = await request(app)
       .post(`/api/cancel-booking/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong booking id)
     res = await request(app)
       .post(`/api/cancel-booking/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -932,6 +966,7 @@ describe('POST /api/delete-bookings', () => {
   it('should delete bookings', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const drivers = [DRIVER1_ID, DRIVER2_ID]
     let bookings = await Booking.find({ driver: { $in: drivers } })
     expect(bookings.length).toBeGreaterThan(0)
@@ -946,6 +981,7 @@ describe('POST /api/delete-bookings', () => {
     const additionalDriver = await AdditionalDriver.findOne({ email: ADDITIONAL_DRIVER_EMAIL })
     expect(additionalDriver).toBeNull()
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/delete-bookings')
       .set(env.X_ACCESS_TOKEN, token)
@@ -957,9 +993,6 @@ describe('POST /api/delete-bookings', () => {
 
 describe('DELETE /api/delete-temp-booking', () => {
   it('should delete temporary booking', async () => {
-    //
-    // Test successful delete
-    //
     const sessionId = testHelper.GetRandromObjectIdAsString()
     const expireAt = new Date()
     expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
@@ -994,6 +1027,7 @@ describe('DELETE /api/delete-temp-booking', () => {
     })
     await booking.save()
 
+    // test success
     let res = await request(app)
       .delete(`/api/delete-temp-booking/${booking._id.toString()}/${sessionId}`)
     expect(res.statusCode).toBe(200)
@@ -1002,14 +1036,12 @@ describe('DELETE /api/delete-temp-booking', () => {
     const _driver = await User.findById(driver._id)
     expect(_driver).toBeNull()
 
-    // test booking not found
+    // test success (booking not found)
     res = await request(app)
       .delete(`/api/delete-temp-booking/${testHelper.GetRandromObjectIdAsString()}/${sessionId}`)
     expect(res.statusCode).toBe(200)
 
-    //
-    // Test failure
-    //
+    // test failure (lost db connection)
     try {
       await databaseHelper.close()
       res = await request(app)
