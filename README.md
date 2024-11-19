@@ -82,7 +82,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can also install the Android App by directly downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.4.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
@@ -108,7 +108,9 @@ You can also install the Android App by directly downloading the APK and install
 11. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
 12. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
-14. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+14. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+15. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+16. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
 ## License
 
