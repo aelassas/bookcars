@@ -105,7 +105,7 @@ describe('POST /api/validate-location', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
-    await LocationValue.deleteOne({ _id: locationValue._id })
+    await locationValue.deleteOne()
 
     res = await request(app)
       .post('/api/validate-location')
@@ -143,7 +143,10 @@ describe('POST /api/create-location', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body._id).toBeTruthy()
-    await Location.deleteOne({ _id: res.body._id })
+    const location = await Location.findByIdAndDelete(res.body._id)
+    expect(location).toBeTruthy()
+    expect((await LocationValue.find({ _id: { $in: location!.values } })).length).toBe(2)
+    await LocationValue.deleteMany({ _id: { $in: location!.values } })
 
     // image found and parkingspots
     payload.parkingSpots = [
@@ -501,7 +504,9 @@ describe('GET /api/location/:id/:language', () => {
       .get(`/api/location/${locationId}/${language}`)
     expect(res.statusCode).toBe(200)
     expect(res.body?.name).toBe('loc1-en')
-    await Location.deleteOne({ _id: locationId })
+    const location = await Location.findByIdAndDelete(locationId)
+    expect(location).toBeTruthy()
+    await LocationValue.deleteMany({ _id: { $in: location!.values } })
 
     res = await request(app)
       .get(`/api/location/${testHelper.GetRandromObjectIdAsString()}/${language}`)
