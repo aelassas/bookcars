@@ -30,9 +30,7 @@ afterAll(async () => {
 
 describe('POST /api/create-checkout-session', () => {
   it('should create checkout session', async () => {
-    //
-    // Test create checkout session whith non existant user
-    //
+    // test success (create checkout session whith non existant user)
     const receiptEmail = testHelper.GetRandomEmail()
     const payload: bookcarsTypes.CreatePaymentPayload = {
       amount: 234,
@@ -50,9 +48,7 @@ describe('POST /api/create-checkout-session', () => {
     expect(res.body.sessionId).not.toBeNull()
     expect(res.body.customerId).not.toBeNull()
 
-    //
-    // Test create checkout session whith existant user
-    //
+    // test success (create checkout session whith existant user)
     try {
       res = await request(app)
         .post('/api/create-checkout-session')
@@ -71,9 +67,7 @@ describe('POST /api/create-checkout-session', () => {
       }
     }
 
-    //
-    // Test create checkout sessions failure
-    //
+    // test failure (create checkout sessions failure)
     payload.receiptEmail = 'xxxxxxxxxxxxxxx'
     res = await request(app)
       .post('/api/create-checkout-session')
@@ -85,16 +79,12 @@ describe('POST /api/create-checkout-session', () => {
 
 describe('POST /api/check-checkout-session/:sessionId', () => {
   it('should check checkout session', async () => {
-    //
-    // Checkout session does not exist
-    //
+    // test success (checkout session does not exist)
     let res = await request(app)
       .post('/api/check-checkout-session/xxxxxxxxxx')
     expect(res.statusCode).toBe(204)
 
-    //
-    // Checkout session exists but booking does not exist
-    //
+    // test success (checkout session exists but booking does not exist)
     const receiptEmail = testHelper.GetRandomEmail()
     const payload: bookcarsTypes.CreatePaymentPayload = {
       amount: 234,
@@ -116,9 +106,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       .post(`/api/check-checkout-session/${sessionId}`)
     expect(res.statusCode).toBe(204)
 
-    //
-    // Checkout session exists and booking exists and payment failed
-    //
+    // test failure (checkout session exists and booking exists and payment failed)
     const expireAt = new Date()
     expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
     const from = new Date()
@@ -157,9 +145,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       await booking.deleteOne()
     }
 
-    //
-    // Test database failure
-    //
+    // test failure (lost db connection)
     try {
       databaseHelper.close()
       res = await request(app)
