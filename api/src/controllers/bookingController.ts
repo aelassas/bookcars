@@ -578,11 +578,12 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     bulk.find({ _id: { $in: ids } }).update({ $set: { status } })
     await bulk.execute()
-    bookings.forEach(async (booking) => {
+
+    for (const booking of bookings) {
       if (booking.status !== status) {
         await notifyDriver(booking)
       }
-    })
+    }
 
     return res.sendStatus(200)
   } catch (err) {
