@@ -26,8 +26,7 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${JSON.stringify(body)}`)
-      return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
+      throw new Error('Image not found in payload')
     }
 
     const car = new Car(body)
@@ -44,8 +43,7 @@ export const create = async (req: Request, res: Response) => {
       await car.save()
     } else {
       await Car.deleteOne({ _id: car._id })
-      logger.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
-      return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
+      throw new Error(`Image ${body.image} not found`)
     }
 
     return res.json(car)
