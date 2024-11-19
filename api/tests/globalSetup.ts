@@ -9,7 +9,9 @@ import User from '../src/models/User'
 
 export default async function globalSetup() {
   try {
-    // env admin
+    //
+    // create admin from env if not found
+    //
     if (env.ADMIN_EMAIL) {
       await databaseHelper.connect(env.DB_URI, false, false)
       const adminFromEnv = await User.findOne({ email: env.ADMIN_EMAIL })
