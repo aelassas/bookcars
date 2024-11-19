@@ -58,6 +58,7 @@
 
 .msg p {
   color: #333;
+  margin-top: 0;
 }
 
 /* Avatar */
@@ -225,7 +226,7 @@ div.content {
 }
 
 .form-label {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgb(0 0 0 / 60%);
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 3px;
