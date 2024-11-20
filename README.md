@@ -50,7 +50,7 @@ I invested significant time and effort into building this open-source project to
 
 # Live Demo
 
-Some features are locked down on the demo links provided. To unlock all the features and have a full access to all the features contact me by email and I will give you links and credentials to unlock all the features. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
+Some features are locked down on the demo links provided. To unlock all the features and have a full access to all the features contact me by email and I will give you access to all the features unlocked. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
 
 ## Frontend
 * URL: https://bookcars.dynv6.net:3002/
