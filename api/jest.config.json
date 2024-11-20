@@ -7,7 +7,7 @@
     ".ts"
   ],
   "roots": [
-    "./tests/"
+    "./__tests__/"
   ],
   "testMatch": [
     "**/*.test.ts"
@@ -21,8 +21,8 @@
     "src/**/*.ts",
     "!**/node_modules/**",
     "!**/dist/**",
-    "!**/tests/**"
+    "!**/__tests__/**"
   ],
   "testTimeout": 120000,
-  "globalSetup": "./dist/tests/globalSetup.js"
+  "globalSetup": "./dist/__tests__/globalSetup.js"
 }
