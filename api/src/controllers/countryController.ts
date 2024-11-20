@@ -160,8 +160,8 @@ export const getCountry = async (req: Request, res: Response) => {
 
     if (country) {
       const name = (country.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
-      const l = { ...country, name }
-      return res.json(l)
+      const c = { ...country, name }
+      return res.json(c)
     }
     logger.error('[country.getCountry] Country not found:', id)
     return res.sendStatus(204)
