@@ -138,6 +138,7 @@ describe('POST /api/validate-supplier', () => {
   it('should validate a supplier', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (supplier not found)
     let payload: bookcarsTypes.ValidateSupplierPayload = { fullName: SUPPLIER1_NAME }
     let res = await request(app)
       .post('/api/validate-supplier')
@@ -145,6 +146,7 @@ describe('POST /api/validate-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (supplier found)
     payload = { fullName: testHelper.getSupplierName() }
     res = await request(app)
       .post('/api/validate-supplier')
@@ -152,6 +154,7 @@ describe('POST /api/validate-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
@@ -165,6 +168,7 @@ describe('PUT /api/update-supplier', () => {
   it('should update a supplier', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     SUPPLIER1_NAME = testHelper.getSupplierName()
     const bio = 'bio1'
     const location = 'location1'
@@ -189,6 +193,7 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.phone).toBe(phone)
     expect(res.body.payLater).toBeFalsy()
 
+    // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .put('/api/update-supplier')
@@ -196,6 +201,7 @@ describe('PUT /api/update-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (no payload)
     res = await request(app)
       .put('/api/update-supplier')
       .set(env.X_ACCESS_TOKEN, token)
@@ -209,17 +215,20 @@ describe('GET /api/supplier/:id', () => {
   it('should get a supplier', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (supplier found)
     let res = await request(app)
       .get(`/api/supplier/${SUPPLIER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.fullName).toBe(SUPPLIER1_NAME)
 
+    // test success (supplier not found)
     res = await request(app)
       .get(`/api/supplier/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong supplier id)
     res = await request(app)
       .get('/api/supplier/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -233,17 +242,20 @@ describe('GET /api/suppliers/:page/:size', () => {
   it('should get suppliers', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .get(`/api/suppliers/${testHelper.PAGE}/${testHelper.SIZE}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(1)
 
+    // test failure (wrong page number)
     res = await request(app)
       .get(`/api/suppliers/unknown/${testHelper.SIZE}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test success (expect no result)
     res = await request(app)
       .get(`/api/suppliers/${testHelper.PAGE}/${testHelper.SIZE}?s=${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -256,11 +268,13 @@ describe('GET /api/suppliers/:page/:size', () => {
 
 describe('GET /api/all-suppliers', () => {
   it('should get all suppliers', async () => {
+    // test success
     let res = await request(app)
       .get('/api/all-suppliers')
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(1)
 
+    // test failure (lost db connection)
     await databaseHelper.close()
     res = await request(app)
       .get('/api/all-suppliers')
@@ -405,16 +419,19 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(await helper.exists(contractFile)).toBeFalsy()
     await testHelper.deleteLocation(locationId)
 
+    // test success (supplier not found)
     res = await request(app)
       .delete(`/api/delete-supplier/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong supplier id)
     res = await request(app)
       .delete('/api/delete-supplier/0')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test success (no avatar)
     supplierName = testHelper.getSupplierName()
     supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     supplier = await User.findById(supplierId)
@@ -427,6 +444,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     supplier = await User.findById(supplierId)
     expect(supplier).toBeNull()
 
+    // test success (avatar not found)
     supplierName = testHelper.getSupplierName()
     supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     supplier = await User.findById(supplierId)
@@ -467,6 +485,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(supplier).toBeNull()
     await testHelper.deleteLocation(locationId)
 
+    // test success (avatar found)
     supplierName = testHelper.getSupplierName()
     supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     supplier = await User.findById(supplierId)
@@ -519,6 +538,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
 
 describe('POST /api/frontend-suppliers', () => {
   it('should return frontend suppliers', async () => {
+    // test success (full filter)
     const payload: bookcarsTypes.GetCarsPayload = {
       pickupLocation: LOCATION_ID,
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
@@ -538,7 +558,6 @@ describe('POST /api/frontend-suppliers', () => {
       },
       ranges: [bookcarsTypes.CarRange.Midi],
     }
-
     let res = await request(app)
       .post('/api/frontend-suppliers')
       .send(payload)
@@ -547,10 +566,12 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.body[0].carCount).toBe(1)
     expect(res.body[1].carCount).toBe(1)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/frontend-suppliers')
     expect(res.statusCode).toBe(400)
 
+    // test success (no carSpecs, no seats)
     payload.carSpecs!.aircon = undefined
     payload.carSpecs!.moreThanFourDoors = undefined
     payload.carSpecs!.moreThanFiveSeats = undefined
@@ -566,6 +587,7 @@ describe('POST /api/frontend-suppliers', () => {
     payload.carSpecs!.moreThanFiveSeats = true
     payload.seats = 6
 
+    // test success (carSpecs, seats)
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
       .post('/api/frontend-suppliers')
@@ -573,6 +595,7 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(1)
 
+    // test success (no mileage)
     payload.mileage = []
     res = await request(app)
       .post('/api/frontend-suppliers')
@@ -580,6 +603,7 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
 
+    // test success (mileage)
     payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
     payload.deposit = 1200
     res = await request(app)
@@ -588,6 +612,7 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(2)
 
+    // test success (seats)
     payload.seats = 3
     res = await request(app)
       .post('/api/frontend-suppliers')
@@ -601,6 +626,7 @@ describe('POST /api/backend-suppliers', () => {
   it('should return backend suppliers', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (full filter)
     const payload: bookcarsTypes.GetCarsPayload = {
       carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
@@ -619,7 +645,6 @@ describe('POST /api/backend-suppliers', () => {
       },
       ranges: [bookcarsTypes.CarRange.Midi],
     }
-
     let res = await request(app)
       .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
@@ -627,11 +652,13 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test success (no carSpecs, no seats)
     payload.carSpecs!.aircon = undefined
     payload.carSpecs!.moreThanFourDoors = undefined
     payload.carSpecs!.moreThanFiveSeats = undefined
@@ -648,6 +675,7 @@ describe('POST /api/backend-suppliers', () => {
     payload.carSpecs!.moreThanFiveSeats = true
     payload.seats = 6
 
+    // test success (carSpecs, seats)
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -656,6 +684,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
+    // test success (no mileage)
     payload.mileage = []
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -664,6 +693,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
 
+    // test success (no mileage)
     payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
     payload.deposit = 1200
     res = await request(app)
@@ -673,6 +703,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
+    // test success (seats)
     payload.seats = 3
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -682,6 +713,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.body.length).toBe(0)
     payload.seats = 6
 
+    // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available]
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -690,6 +722,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
 
+    // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -698,6 +731,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
 
+    // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -707,6 +741,7 @@ describe('POST /api/backend-suppliers', () => {
     expect(res.body.length).toBeGreaterThan(0)
     payload.availability = undefined
 
+    // test success (no availability)
     payload.availability = []
     res = await request(app)
       .post('/api/backend-suppliers')
@@ -853,14 +888,13 @@ describe('POST /api/delete-contract/:id', () => {
   it('should delete a contract', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let supplier = await User.findById(SUPPLIER1_ID)
     expect(supplier).toBeTruthy()
     expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeTruthy()
     const filename = supplier?.contracts?.find((c) => c.language === 'en')?.file as string
     let imageExists = await helper.exists(path.join(env.CDN_CONTRACTS, filename))
     expect(imageExists).toBeTruthy()
-
-    // test success
     let res = await request(app)
       .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
       .set(env.X_ACCESS_TOKEN, token)
