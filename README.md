@@ -38,6 +38,7 @@ I invested significant time and effort into building this open-source project to
 * Booking management
 * Payment management
 * Customer management
+* Multiple login options (Google, Facebook, Apple, Email)
 * Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay Later)
 * Operational Stripe Payment Gateway
 * Multiple language support (English, French, Spanish)
