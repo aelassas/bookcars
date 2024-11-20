@@ -53,6 +53,7 @@ describe('POST /api/validate-country', () => {
   it('should validate a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (country not found)
     const language = testHelper.LANGUAGE
     const name = nanoid()
     const countryValue = new LocationValue({ language, value: name })
@@ -67,6 +68,7 @@ describe('POST /api/validate-country', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (country found)
     payload.name = nanoid()
     res = await request(app)
       .post('/api/validate-country')
@@ -75,6 +77,7 @@ describe('POST /api/validate-country', () => {
     expect(res.statusCode).toBe(200)
     await LocationValue.deleteOne({ _id: countryValue._id })
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
@@ -88,6 +91,7 @@ describe('POST /api/create-country', () => {
   it('should create a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
@@ -96,6 +100,7 @@ describe('POST /api/create-country', () => {
     expect(res.body?.values?.length).toBe(2)
     COUNTRY_ID = res.body?._id
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
@@ -109,6 +114,7 @@ describe('PUT /api/update-country/:id', () => {
   it('should update a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     COUNTRY_NAMES = [
       {
         language: 'en',
@@ -123,7 +129,6 @@ describe('PUT /api/update-country/:id', () => {
         name: nanoid(),
       },
     ]
-
     let res = await request(app)
       .put(`/api/update-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -131,12 +136,14 @@ describe('PUT /api/update-country/:id', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.values?.length).toBe(3)
 
+    // test success (country not found)
     res = await request(app)
       .put(`/api/update-country/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
       .send(COUNTRY_NAMES)
     expect(res.statusCode).toBe(204)
 
+    // test failure (no payload)
     res = await request(app)
       .put(`/api/update-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -151,17 +158,20 @@ describe('GET /api/country/:id/:language', () => {
     const token = await testHelper.signinAsAdmin()
     const language = 'en'
 
+    // test success
     let res = await request(app)
       .get(`/api/country/${COUNTRY_ID}/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body?.name).toBe(COUNTRY_NAMES.filter((v) => v.language === language)[0].name)
 
+    // test success (contry not found)
     res = await request(app)
       .get(`/api/country/${testHelper.GetRandromObjectIdAsString()}/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong language)
     res = await request(app)
       .get(`/api/country/${COUNTRY_ID}/zh`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -176,12 +186,14 @@ describe('GET /api/countries/:page/:size/:language', () => {
     const token = await testHelper.signinAsAdmin()
     const language = 'en'
 
+    // test success
     let res = await request(app)
       .get(`/api/countries/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${COUNTRY_NAMES[0].name}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(1)
 
+    // test failure (wrong page)
     res = await request(app)
       .get(`/api/countries/unknown/${testHelper.SIZE}/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -195,13 +207,14 @@ describe('GET /api/check-country/:id', () => {
   it('should check a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (country related to a location)
     const locationId = await testHelper.createLocation('test-en', 'test-fr', COUNTRY_ID)
-
     let res = await request(app)
       .get(`/api/check-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (country notrelated to a location)
     const location = await Location.findById(locationId)
     await LocationValue.deleteMany({ _id: { $in: location?.values } })
     await Location.deleteOne({ _id: locationId })
@@ -210,6 +223,7 @@ describe('GET /api/check-country/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong country id)
     res = await request(app)
       .get(`/api/check-country/${nanoid()}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -231,11 +245,13 @@ describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocatio
     const location = new Location({ country: COUNTRY_ID, values: [locationValueEn.id, locationValueFr.id] })
     await location.save()
 
+    // test success (image not required)
     let res = await request(app)
       .get(`/api/countries-with-locations/${language}/false/1`)
     expect(res.statusCode).toBe(200)
     expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeDefined()
 
+    // test success (image required)
     res = await request(app)
       .get(`/api/countries-with-locations/${language}/true/1`)
     expect(res.statusCode).toBe(200)
@@ -245,12 +261,13 @@ describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocatio
     await locationValueFr.deleteOne()
     await location.deleteOne()
 
+    // test success (no related locations)
     res = await request(app)
       .get(`/api/countries-with-locations/${language}/false/1`)
     expect(res.statusCode).toBe(200)
     expect(res.body.find((country: bookcarsTypes.Country) => country._id === COUNTRY_ID)).toBeUndefined()
 
-    // test failure
+    // test failure (lost db connection)
     await databaseHelper.close()
     res = await request(app)
       .get(`/api/countries-with-locations/${language}/false/1`)
@@ -265,17 +282,20 @@ describe('GET /api/country-id/:name/:language', () => {
     const token = await testHelper.signinAsAdmin()
     const language = 'en'
 
+    // test success
     let res = await request(app)
       .get(`/api/country-id/${COUNTRY_NAMES.find((n) => n.language === language)?.name}/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body).toBe(COUNTRY_ID)
 
+    // test success (not found)
     res = await request(app)
       .get(`/api/country-id/unknown/${language}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong language)
     res = await request(app)
       .get('/api/country-id/unknown/english')
       .set(env.X_ACCESS_TOKEN, token)
@@ -289,6 +309,7 @@ describe('DELETE /api/delete-country/:id', () => {
   it('should delete a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let country = await Country.findById(COUNTRY_ID)
     expect(country).not.toBeNull()
     let res = await request(app)
@@ -298,11 +319,13 @@ describe('DELETE /api/delete-country/:id', () => {
     country = await Country.findById(COUNTRY_ID)
     expect(country).toBeNull()
 
+    // test success (country not found)
     res = await request(app)
       .delete(`/api/delete-country/${COUNTRY_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong country id)
     res = await request(app)
       .delete('/api/delete-country/0')
       .set(env.X_ACCESS_TOKEN, token)
