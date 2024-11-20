@@ -2,7 +2,7 @@
 
 # BookCars
 
-BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a car rental platform, supplier-oriented, with an admin dashboard for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is built with React for its powerful rendering capabilities, MongoDB for flexible data modeling, and Stripe for secure payment processing.
 
@@ -15,11 +15,11 @@ This project emerged from a desire to build without boundaries – a fully custo
 
 With this solution, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier and can be used as a car rental aggregator.
+BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the admin dashboard. BookCars can also work with only one supplier and can be used as a car rental aggregator.
 
-From the backend, admins can create and manage suppliers, cars, locations, customers and bookings.
+From the admin dashboard, admins can create and manage suppliers, cars, locations, customers and bookings.
 
-When new suppliers are created, they receive an email prompting them to create an account in order to access the backend and manage their car fleet and bookings.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleet and bookings.
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
@@ -42,7 +42,7 @@ I invested significant time and effort into building this open-source project to
 * Operational Stripe Payment Gateway
 * Multiple language support (English, French, Spanish)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
-* Responsive backend and frontend
+* Responsive admin dashboard and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
 * Secure against XSS, XST, CSRF and MITM
@@ -57,7 +57,7 @@ Some features are locked down on the demo links provided. To unlock all the feat
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-## Backend
+## Admin Dashboard
 * URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
