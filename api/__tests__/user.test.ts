@@ -68,11 +68,13 @@ afterAll(async () => {
 
 describe('POST /api/sign-up', () => {
   it('should create a user', async () => {
+    // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
 
+    // test success (with avatar)
     const payload: bookcarsTypes.SignUpPayload = {
       email: USER1_EMAIL,
       password: USER1_PASSWORD,
@@ -99,6 +101,7 @@ describe('POST /api/sign-up', () => {
     expect(token).not.toBeNull()
     expect(token?.token.length).toBeGreaterThan(0)
 
+    // test success (avatar not found)
     const email = testHelper.GetRandomEmail()
     payload.email = email
     payload.avatar = `${nanoid()}.jpg`
@@ -114,12 +117,14 @@ describe('POST /api/sign-up', () => {
     expect(token?.token.length).toBeGreaterThan(0)
     await token?.deleteOne()
 
+    // test failure (wrong email)
     payload.email = 'wrong-email'
     res = await request(app)
       .post('/api/sign-up')
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/sign-up')
     expect(res.statusCode).toBe(400)
@@ -128,6 +133,7 @@ describe('POST /api/sign-up', () => {
 
 describe('POST /api/admin-sign-up', () => {
   it('should create an admin user', async () => {
+    // test success
     const payload: bookcarsTypes.SignUpPayload = {
       email: ADMIN_EMAIL,
       password: testHelper.PASSWORD,
@@ -136,13 +142,10 @@ describe('POST /api/admin-sign-up', () => {
       birthDate: new Date(1992, 5, 25),
       phone: '09090909',
     }
-
     const res = await request(app)
       .post('/api/admin-sign-up')
       .send(payload)
-
     expect(res.statusCode).toBe(200)
-
     const user = await User.findOne({ email: ADMIN_EMAIL })
     expect(user).not.toBeNull()
     ADMIN_ID = user?.id
@@ -162,6 +165,7 @@ describe('POST /api/create-user', () => {
   it('should create a user', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
@@ -178,6 +182,7 @@ describe('POST /api/create-user', () => {
       { language: 'es', file: `${nanoid()}.pdf` },
     ]
 
+    // test success (user)
     let payload: bookcarsTypes.CreateUserPayload = {
       email: USER2_EMAIL,
       fullName: 'user2',
@@ -213,6 +218,7 @@ describe('POST /api/create-user', () => {
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
 
+    // test success (admin)
     payload = {
       email: testHelper.GetRandomEmail(),
       fullName: 'admin',
@@ -245,6 +251,7 @@ describe('POST /api/create-user', () => {
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
 
+    // test success (without avatar)
     let email = testHelper.GetRandomEmail()
     payload.email = email
     payload.avatar = undefined
@@ -261,6 +268,7 @@ describe('POST /api/create-user', () => {
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
 
+    // test success (avatar not found)
     payload.email = USER2_EMAIL
     payload.avatar = 'unknown.jpg'
     res = await request(app)
@@ -269,11 +277,13 @@ describe('POST /api/create-user', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/create-user')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test success (with avatar)
     payload.avatar = AVATAR1
     email = testHelper.GetRandomEmail()
     payload.email = email
@@ -292,6 +302,7 @@ describe('POST /api/create-user', () => {
 
 describe('GET /api/check-token/:type/:userId/:email/:token', () => {
   it("should check user's token", async () => {
+    // init
     const user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     user!.active = false
@@ -301,26 +312,32 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
     const token = userToken?.token
     expect(token?.length).toBeGreaterThan(1)
 
+    // test success (token valid)
     let res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER1_ID}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(200)
 
+    // test success (token not valid)
     res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Backend}/${USER1_ID}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(204)
 
+    // test success (token not found)
     res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER2_ID}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(204)
 
+    // test success (user not found)
     res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${testHelper.GetRandromObjectIdAsString()}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(204)
 
+    // test success (token not found)
     res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER1_ID}/${USER1_EMAIL}/${nanoid()}`)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/0/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(400)
@@ -329,11 +346,13 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
 
 describe('POST /api/activate', () => {
   it("should activate user's account", async () => {
+    // init
     const userToken = await Token.findOne({ user: USER1_ID })
     expect(userToken).not.toBeNull()
     const token = userToken?.token
     expect(token?.length).toBeGreaterThan(1)
 
+    // test success
     const payload: bookcarsTypes.ActivatePayload = {
       userId: USER1_ID,
       password: testHelper.PASSWORD,
@@ -348,18 +367,21 @@ describe('POST /api/activate', () => {
     expect(user?.active).toBeTruthy()
     expect(user?.verified).toBeTruthy()
 
+    // test success (token not found)
     payload.userId = USER2_ID
     res = await request(app)
       .post('/api/activate')
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (user not found)
     payload.userId = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/activate')
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/activate')
     expect(res.statusCode).toBe(400)
@@ -368,6 +390,7 @@ describe('POST /api/activate', () => {
 
 describe('GET /api/confirm-email/:email/:token', () => {
   it('should send confirmation email', async () => {
+    // test success (user not verified)
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     user!.verified = false
@@ -380,6 +403,7 @@ describe('GET /api/confirm-email/:email/:token', () => {
       .get(`/api/confirm-email/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(200)
 
+    // test success (user verified)
     user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     expect(user?.verified).toBeTruthy()
@@ -387,14 +411,17 @@ describe('GET /api/confirm-email/:email/:token', () => {
       .get(`/api/confirm-email/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(200)
 
+    // test success (user not found)
     res = await request(app)
       .get(`/api/confirm-email/${testHelper.GetRandomEmail()}/${token}`)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong token)
     res = await request(app)
       .get(`/api/confirm-email/${USER1_EMAIL}/${nanoid()}`)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong user id)
     res = await request(app)
       .get(`/api/confirm-email/unknown/${nanoid()}`)
     expect(res.statusCode).toBe(400)
@@ -403,6 +430,7 @@ describe('GET /api/confirm-email/:email/:token', () => {
 
 describe('POST /api/resend/:type/:email/:reset', () => {
   it('should resend validation email', async () => {
+    // test success (user active)
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     user!.active = true
@@ -415,6 +443,7 @@ describe('POST /api/resend/:type/:email/:reset', () => {
     expect(user).not.toBeNull()
     expect(user?.active).toBeFalsy()
 
+    // test success (reset)
     reset = false
     res = await request(app)
       .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${ADMIN_EMAIL}/${reset}`)
@@ -423,14 +452,17 @@ describe('POST /api/resend/:type/:email/:reset', () => {
     expect(user).not.toBeNull()
     expect(user?.active).toBeFalsy()
 
+    // test failure (forbiden)
     res = await request(app)
       .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${USER1_EMAIL}/${reset}`)
     expect(res.statusCode).toBe(403)
 
+    // test success (user not found)
     res = await request(app)
       .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${testHelper.GetRandomEmail()}/${reset}`)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/unknown/${reset}`)
     expect(res.statusCode).toBe(400)
@@ -441,26 +473,28 @@ describe('POST /api/resend-link', () => {
   it('should resend activation link', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const payload: bookcarsTypes.ResendLinkPayload = {
       email: USER1_EMAIL,
     }
-
     let res = await request(app)
       .post('/api/resend-link')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (already verified)
     const user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     user!.verified = true
-    await user?.save()
+    await user!.save()
     res = await request(app)
       .post('/api/resend-link')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test failure (user not found)
     payload.email = testHelper.GetRandomEmail()
     res = await request(app)
       .post('/api/resend-link')
@@ -468,6 +502,7 @@ describe('POST /api/resend-link', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test success (not verified)
     payload.email = USER1_EMAIL
     user!.verified = false
     await user?.save()
@@ -477,6 +512,7 @@ describe('POST /api/resend-link', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test failure (wrong email)
     payload.email = 'unknown'
     res = await request(app)
       .post('/api/resend-link')
@@ -490,6 +526,7 @@ describe('POST /api/resend-link', () => {
 
 describe('DELETE /api/delete-tokens/:userId', () => {
   it("should delete user's tokens", async () => {
+    // test success
     let userTokens = await Token.find({ user: USER1_ID })
     expect(userTokens.length).toBeGreaterThan(0)
     let res = await request(app)
@@ -498,10 +535,12 @@ describe('DELETE /api/delete-tokens/:userId', () => {
     userTokens = await Token.find({ user: USER1_ID })
     expect(userTokens.length).toBe(0)
 
+    // test failure (no token found)
     res = await request(app)
       .delete(`/api/delete-tokens/${USER1_ID}`)
     expect(res.statusCode).toBe(400)
 
+    // test failure (wrong user id)
     res = await request(app)
       .delete('/api/delete-tokens/0')
     expect(res.statusCode).toBe(400)
@@ -510,11 +549,11 @@ describe('DELETE /api/delete-tokens/:userId', () => {
 
 describe('POST /api/sign-in/:type', () => {
   it('should sign in', async () => {
+    // test success
     const payload: bookcarsTypes.SignInPayload = {
       email: USER1_EMAIL,
       password: USER1_PASSWORD,
     }
-
     let res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
@@ -532,24 +571,28 @@ describe('POST /api/sign-in/:type', () => {
     expect(res.statusCode).toBe(400)
     payload.email = USER1_EMAIL
 
+    // test success (wrong password)
     payload.password = 'wrong-password'
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (not authorized)
     payload.password = USER1_PASSWORD
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (stayConnected)
     payload.stayConnected = true
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (mobile)
     payload.stayConnected = false
     payload.mobile = true
     res = await request(app)
@@ -557,6 +600,7 @@ describe('POST /api/sign-in/:type', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test failure (wrong email)
     payload.email = 'unknown'
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
@@ -567,23 +611,25 @@ describe('POST /api/sign-in/:type', () => {
 
 describe('POST /api/social-sign-in/:type', () => {
   it('should sign in', async () => {
+    // test failure (google)
     const payload: bookcarsTypes.SignInPayload = {
       email: USER1_EMAIL,
       socialSignInType: bookcarsTypes.SocialSignInType.Google,
       accessToken: testHelper.GetRandromObjectIdAsString(),
     }
-
     let res = await request(app)
       .post('/api/social-sign-in')
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (facebook)
     payload.socialSignInType = bookcarsTypes.SocialSignInType.Facebook
     res = await request(app)
       .post('/api/social-sign-in')
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (apple)
     payload.socialSignInType = bookcarsTypes.SocialSignInType.Apple
     res = await request(app)
       .post('/api/social-sign-in')
@@ -615,12 +661,14 @@ describe('POST /api/social-sign-in/:type', () => {
     await User.deleteOne({ email: payload.email })
     payload.mobile = false
 
+    // test failure (no email)
     payload.email = undefined
     res = await request(app)
       .post('/api/social-sign-in')
       .send(payload)
     expect(res.statusCode).toBe(400)
 
+    // test failure (email not valid)
     payload.email = 'not-valid-email'
     res = await request(app)
       .post('/api/social-sign-in')
@@ -628,6 +676,7 @@ describe('POST /api/social-sign-in/:type', () => {
     expect(res.statusCode).toBe(400)
     payload.email = USER1_EMAIL
 
+    // test failure (no socialSignInType)
     payload.socialSignInType = undefined
     res = await request(app)
       .post('/api/social-sign-in')
@@ -635,6 +684,7 @@ describe('POST /api/social-sign-in/:type', () => {
     expect(res.statusCode).toBe(400)
     payload.socialSignInType = bookcarsTypes.SocialSignInType.Google
 
+    // test failure (no accessToken)
     payload.accessToken = undefined
     res = await request(app)
       .post('/api/social-sign-in')
@@ -642,6 +692,7 @@ describe('POST /api/social-sign-in/:type', () => {
     expect(res.statusCode).toBe(400)
     payload.accessToken = testHelper.GetRandromObjectIdAsString()
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/social-sign-in')
     expect(res.statusCode).toBe(400)
@@ -650,10 +701,10 @@ describe('POST /api/social-sign-in/:type', () => {
 
 describe('POST /api/sign-out', () => {
   it('should sign out', async () => {
+    // test success
     const res = await request(app)
       .post('/api/sign-out')
       .set('Cookie', [`${env.X_ACCESS_TOKEN}=${nanoid()};`])
-
     expect(res.statusCode).toBe(200)
     const cookies = res.headers['set-cookie'] as unknown as string[]
     expect(cookies.length).toBe(1)
@@ -665,6 +716,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
   it('should create push token', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let pushToken = nanoid()
     let res = await request(app)
       .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
@@ -673,6 +725,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
     let pushNotifiation = await PushToken.findOne({ user: USER1_ID, token: pushToken })
     expect(pushNotifiation).not.toBeNull()
 
+    // test failure (pushTken already exists)
     pushToken = nanoid()
     res = await request(app)
       .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
@@ -681,6 +734,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
     pushNotifiation = await PushToken.findOne({ user: USER1_ID, token: pushToken })
     expect(pushNotifiation).toBeNull()
 
+    // test failure (wrong user id)
     res = await request(app)
       .post(`/api/create-push-token/0/${pushToken}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -694,17 +748,20 @@ describe('GET /api/push-token/:userId', () => {
   it('should get push token', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .get(`/api/push-token/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(1)
 
+    // test success (user not found)
     res = await request(app)
       .get(`/api/push-token/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test success (wrong user id)
     res = await request(app)
       .get('/api/push-token/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -718,6 +775,7 @@ describe('POST /api/delete-push-token/:userId', () => {
   it('should delete push token', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let pushNotifiations = await PushToken.find({ user: USER1_ID })
     expect(pushNotifiations.length).toBeGreaterThan(0)
     let res = await request(app)
@@ -727,6 +785,7 @@ describe('POST /api/delete-push-token/:userId', () => {
     pushNotifiations = await PushToken.find({ user: USER1_ID })
     expect(pushNotifiations.length).toBe(0)
 
+    // test failure (wrong user id)
     res = await request(app)
       .post('/api/delete-push-token/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -738,6 +797,7 @@ describe('POST /api/delete-push-token/:userId', () => {
 
 describe('POST /api/validate-email', () => {
   it('should validate email', async () => {
+    // test success
     const payload: bookcarsTypes.ValidateEmailPayload = {
       email: USER1_EMAIL,
     }
@@ -746,12 +806,14 @@ describe('POST /api/validate-email', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (email not found)
     payload.email = testHelper.GetRandomEmail()
     res = await request(app)
       .post('/api/validate-email')
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test failure (wrong email)
     payload.email = 'unkown'
     res = await request(app)
       .post('/api/validate-email')
@@ -764,23 +826,23 @@ describe('POST /api/validate-access-token', () => {
   it('should validate access token', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .post('/api/validate-access-token')
       .set(env.X_ACCESS_TOKEN, token)
 
     expect(res.statusCode).toBe(200)
 
+    // test failure (unauthorized)
     res = await request(app)
       .post('/api/validate-access-token')
       .set(env.X_ACCESS_TOKEN, nanoid())
-
     expect(res.statusCode).toBe(401)
 
+    // test failure (forbidden)
     await testHelper.signout(token)
-
     res = await request(app)
       .post('/api/validate-access-token')
-
     expect(res.statusCode).toBe(403)
   })
 })
@@ -789,6 +851,7 @@ describe('POST /api/update-user', () => {
   it('should update user', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const payload: bookcarsTypes.UpdateUserPayload = {
       _id: USER1_ID,
       fullName: 'user1-1',
@@ -814,6 +877,7 @@ describe('POST /api/update-user', () => {
     expect(user?.bio).toBe(payload.bio)
     expect(user?.payLater).toBeFalsy()
 
+    // test success
     const { fullName, payLater } = (user!)
     payload!.fullName = ''
     payload!.birthDate = undefined
@@ -834,6 +898,7 @@ describe('POST /api/update-user', () => {
     expect(user?.bio).toBe(payload.bio)
     expect(user?.payLater).toBe(payLater)
 
+    // test success (user not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/update-user')
@@ -841,6 +906,7 @@ describe('POST /api/update-user', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (enableEmailNotifications)
     payload._id = USER1_ID
     payload.enableEmailNotifications = false
     res = await request(app)
@@ -852,6 +918,7 @@ describe('POST /api/update-user', () => {
     expect(user).not.toBeNull()
     expect(user?.enableEmailNotifications).toBeFalsy()
 
+    // test failure (wrong user id)
     payload._id = '0'
     res = await request(app)
       .post('/api/update-user')
@@ -867,6 +934,7 @@ describe('POST /api/update-email-notifications', () => {
   it('should update email notifications setting', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     expect(user?.enableEmailNotifications).toBeFalsy()
@@ -883,6 +951,7 @@ describe('POST /api/update-email-notifications', () => {
     expect(user).not.toBeNull()
     expect(user?.enableEmailNotifications).toBeTruthy()
 
+    // test success (user not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/update-email-notifications')
@@ -890,6 +959,7 @@ describe('POST /api/update-email-notifications', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     payload._id = '0'
     res = await request(app)
       .post('/api/update-email-notifications')
@@ -905,6 +975,7 @@ describe('POST /api/update-language', () => {
   it("should update user's language", async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     expect(user?.language).toBe(testHelper.LANGUAGE)
@@ -921,6 +992,7 @@ describe('POST /api/update-language', () => {
     expect(user).not.toBeNull()
     expect(user?.language).toBe(payload.language)
 
+    // test success (user not found)
     payload.id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/update-language')
@@ -928,6 +1000,7 @@ describe('POST /api/update-language', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     payload.id = '0'
     res = await request(app)
       .post('/api/update-language')
@@ -943,17 +1016,20 @@ describe('GET /api/user/:id', () => {
   it('should get a user', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .get(`/api/user/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER1_EMAIL)
 
+    // test success (user not found)
     res = await request(app)
       .get(`/api/user/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .get('/api/user/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -967,6 +1043,7 @@ describe('POST /api/create-avatar', () => {
   it("should create user's avatar", async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .post('/api/create-avatar')
       .set(env.X_ACCESS_TOKEN, token)
@@ -978,6 +1055,7 @@ describe('POST /api/create-avatar', () => {
     expect(avatarExists).toBeTruthy()
     await fs.unlink(filePath)
 
+    // test failure (image not attached)
     res = await request(app)
       .post('/api/create-avatar')
       .set(env.X_ACCESS_TOKEN, token)
@@ -991,6 +1069,7 @@ describe('POST /api/update-avatar/:userId', () => {
   it("should update user's avatar", async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .post(`/api/update-avatar/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -1004,6 +1083,7 @@ describe('POST /api/update-avatar/:userId', () => {
     expect(user?.avatar).toBeDefined()
     expect(user?.avatar).not.toBeNull()
 
+    // test success (avatar file not found)
     user!.avatar = `${nanoid()}.jpg`
     await user?.save()
     res = await request(app)
@@ -1014,6 +1094,7 @@ describe('POST /api/update-avatar/:userId', () => {
     avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
+    // test success (avatar not set)
     user!.avatar = undefined
     await user?.save()
     res = await request(app)
@@ -1024,17 +1105,20 @@ describe('POST /api/update-avatar/:userId', () => {
     avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
+    // test failure (avatar not attached)
     res = await request(app)
       .post(`/api/update-avatar/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
+    // test success (user not found)
     res = await request(app)
       .post(`/api/update-avatar/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .post('/api/update-avatar/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1049,6 +1133,7 @@ describe('POST /api/delete-avatar/:userId', () => {
   it("should delete user's avatar", async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     expect(user?.avatar).toBeDefined()
@@ -1066,6 +1151,7 @@ describe('POST /api/delete-avatar/:userId', () => {
     expect(user).not.toBeNull()
     expect(user?.avatar).toBeUndefined()
 
+    // test success (avatar file not found)
     user!.avatar = `${nanoid()}.jpg`
     await user?.save()
     res = await request(app)
@@ -1073,6 +1159,7 @@ describe('POST /api/delete-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (avatar not set)
     user!.avatar = undefined
     await user?.save()
     res = await request(app)
@@ -1080,11 +1167,13 @@ describe('POST /api/delete-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (user not found)
     res = await request(app)
       .post(`/api/delete-avatar/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .post('/api/delete-avatar/0')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1098,6 +1187,7 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
   it('should delete temporary avatar', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
     if (!await helper.exists(tempAvatar)) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
@@ -1109,6 +1199,7 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
     const tempImageExists = await helper.exists(tempAvatar)
     expect(tempImageExists).toBeFalsy()
 
+    // test failure (avatar file not found)
     res = await request(app)
       .post('/api/delete-temp-avatar/unknown.jpg')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1122,8 +1213,8 @@ describe('POST /api/change-password', () => {
   it('should change password', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (strict)
     const newPassword = `#${testHelper.PASSWORD}#`
-
     const payload: bookcarsTypes.ChangePasswordPayload = {
       _id: USER1_ID,
       password: USER1_PASSWORD,
@@ -1136,6 +1227,7 @@ describe('POST /api/change-password', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (not strict)
     payload.password = newPassword
     payload.newPassword = USER1_PASSWORD
     payload.strict = false
@@ -1145,6 +1237,7 @@ describe('POST /api/change-password', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (no password)
     payload.strict = true
     payload.password = ''
     res = await request(app)
@@ -1153,6 +1246,7 @@ describe('POST /api/change-password', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (wrong password)
     payload.password = 'wrong-password'
     res = await request(app)
       .post('/api/change-password')
@@ -1160,6 +1254,7 @@ describe('POST /api/change-password', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (user not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/change-password')
@@ -1167,6 +1262,7 @@ describe('POST /api/change-password', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test success (user's passowrd undefined)
     const user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
     const password = user?.password
@@ -1181,6 +1277,7 @@ describe('POST /api/change-password', () => {
     user!.password = password
     await user?.save()
 
+    // test failure (wrong user id)
     payload._id = '0'
     res = await request(app)
       .post('/api/change-password')
@@ -1196,31 +1293,31 @@ describe('GET /api/check-password/:id/:password', () => {
   it('should check password', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    // good password
+    // test success (good password)
     let res = await request(app)
       .get(`/api/check-password/${USER1_ID}/${encodeURIComponent(USER1_PASSWORD)}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
-    // wrong password
+    // test success (wrong password)
     res = await request(app)
       .get(`/api/check-password/${USER1_ID}/wrong-password`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
-    // user.password undefined
+    // test success (user's password undefined)
     res = await request(app)
       .get(`/api/check-password/${USER2_ID}/some-password`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
-    // user not found
+    // test success (user not found)
     res = await request(app)
       .get(`/api/check-password/${testHelper.GetRandromObjectIdAsString()}/some-password`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
-    // wrong user id
+    // test failure (wrong user id)
     res = await request(app)
       .get('/api/check-password/0/some-password')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1234,6 +1331,7 @@ describe('POST /api/users/:page/:size', () => {
   it('should get users', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success (admin)
     const payload: bookcarsTypes.GetUsersBody = {
       user: testHelper.getAdminUserId(),
       types: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier, bookcarsTypes.UserType.User],
@@ -1245,6 +1343,7 @@ describe('POST /api/users/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(3)
 
+    // test success (user not set)
     payload.user = ''
     res = await request(app)
       .post(`/api/users/${testHelper.PAGE}/${testHelper.SIZE}`)
@@ -1253,6 +1352,7 @@ describe('POST /api/users/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(3)
 
+    // test failure (wrong page number)
     res = await request(app)
       .post(`/api/users/unknown/${testHelper.SIZE}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -1267,16 +1367,19 @@ describe('GET /api/has-password/:id', () => {
   it('should get users', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     let res = await request(app)
       .get(`/api/has-password/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (user not found)
     res = await request(app)
       .get(`/api/has-password/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong user id)
     res = await request(app)
       .get('/api/has-password/wrong-id')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1290,9 +1393,9 @@ describe('POST /api/delete-users', () => {
   it('should delete users', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const supplierName1 = testHelper.getSupplierName()
     const supplier1Id = await testHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
-
     const supplierName2 = testHelper.getSupplierName()
     const supplier2Id = await testHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName1)
     const supplier2 = await User.findById(supplier2Id)
@@ -1301,7 +1404,6 @@ describe('POST /api/delete-users', () => {
       { language: 'fr', file: `${nanoid()}.pdf` },
     ]
     await supplier2?.save()
-
     let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID, supplier1Id, supplier2Id]
     const user1 = await User.findById(USER1_ID)
     user1!.avatar = `${nanoid()}.jpg`
@@ -1316,6 +1418,7 @@ describe('POST /api/delete-users', () => {
     users = await User.find({ _id: { $in: payload } })
     expect(users.length).toBe(0)
 
+    // test success (user not found)
     payload = [testHelper.GetRandromObjectIdAsString()]
     res = await request(app)
       .post('/api/delete-users')
@@ -1323,6 +1426,7 @@ describe('POST /api/delete-users', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (full data)
     const supplierName = testHelper.getSupplierName()
     const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
     const locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
@@ -1450,6 +1554,7 @@ describe('POST /api/delete-users', () => {
     expect(await helper.exists(image)).toBeFalsy()
     testHelper.deleteLocation(locationId)
 
+    // test failure (no payload)
     res = await request(app)
       .post('/api/delete-users')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1461,6 +1566,7 @@ describe('POST /api/delete-users', () => {
 
 describe('POST /api/verify-recaptcha/:token/:ip', () => {
   it('should verify reCAPTCHA', async () => {
+    // test success (not valid)
     const ip = '134.236.60.166'
     const recaptchaToken = 'XXXXXX'
     const res = await request(app)
@@ -1471,6 +1577,7 @@ describe('POST /api/verify-recaptcha/:token/:ip', () => {
 
 describe('POST /api/send-email', () => {
   it('should send an email', async () => {
+    // test failure (recaptcha not valid)
     const ip = '134.236.60.166'
     const recaptchaToken = 'XXXXXX'
     const payload = {
