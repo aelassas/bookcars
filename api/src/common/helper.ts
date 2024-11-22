@@ -3,7 +3,7 @@ import path from 'node:path'
 import mongoose from 'mongoose'
 import validator from 'validator'
 import Stripe from 'stripe'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import axios from 'axios'
 import * as bookcarsTypes from ':bookcars-types'
 
@@ -155,7 +155,7 @@ export const isValidEmail = (email?: string) => !!email && validator.isEmail(ema
  *
  * @returns {string}
  */
-export const generateToken = () => `${uuid()}-${Date.now()}`
+export const generateToken = () => `${nanoid()}-${Date.now()}`
 
 /**
  * The IETF language tag of the locale Checkout is displayed in.

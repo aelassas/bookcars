@@ -34,7 +34,7 @@ if (
     server.close(async () => {
       logger.info(`HTTP${env.HTTPS ? 'S' : ''} server closed`)
       await databaseHelper.close(true)
-      logger.info('MongoDB connection closed')
+      logger.info('Database connection closed')
       process.exit(0)
     })
   }

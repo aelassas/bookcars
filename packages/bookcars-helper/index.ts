@@ -232,6 +232,111 @@ export const formatPrice = (price: number, currency: string, language: string) =
 }
 
 /**
+ * Calculate total price.
+ *
+ * @param {bookcarsTypes.Car} car
+ * @param {Date} from
+ * @param {Date} to
+ * @param {?bookcarsTypes.CarOptions} [options]
+ * @returns {number}
+ */
+export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
+  const _days = days(from, to)
+
+  let remainingDays = _days
+  let _price = 0
+
+  if (remainingDays >= 30) { // higher than one month
+    if (car.discountedMonthlyPrice || car.monthlyPrice) {
+      _price = (car.discountedMonthlyPrice || car.monthlyPrice)! * (Math.floor(_days / 30))
+      remainingDays = _days % 30
+    }
+
+    if (remainingDays >= 7) {
+      if (car.discountedWeeklyPrice || car.weeklyPrice) {
+        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        remainingDays = remainingDays % 7
+      }
+
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    } else {
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    }
+  } else { // lower than one month
+    if (remainingDays >= 7) {
+      if (car.discountedWeeklyPrice || car.weeklyPrice) {
+        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        remainingDays = remainingDays % 7
+      }
+
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    } else {
+      if (remainingDays >= 3) {
+        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          remainingDays = remainingDays % 3
+        }
+
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      } else {
+        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+      }
+    }
+  }
+
+  // add extra options
+  if (options) {
+    if (options.cancellation && car.cancellation > 0) {
+      _price += car.cancellation
+    }
+    if (options.amendments && car.amendments > 0) {
+      _price += car.amendments
+    }
+    if (options.theftProtection && car.theftProtection > 0) {
+      _price += car.theftProtection * _days
+    }
+    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
+      _price += car.collisionDamageWaiver * _days
+    }
+    if (options.fullInsurance && car.fullInsurance > 0) {
+      _price += car.fullInsurance * _days
+    }
+    if (options.additionalDriver && car.additionalDriver > 0) {
+      _price += car.additionalDriver * _days
+    }
+  }
+
+  return _price
+}
+
+/**
  * Check whether language is french
  *
  * @param {string} language
@@ -349,4 +454,50 @@ export const formatDistance = (d: number, language: string): string => {
     return `${parts.join('.')} ${d < 1 ? 'm' : 'Km'}`
   }
   return ''
+}
+
+/**
+ * Removes a start line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trimStart = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(0) === char) {
+    res = res.substring(1, res.length)
+  }
+  return res
+}
+
+/**
+ * Removes a leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trimEnd = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(res.length - 1) === char) {
+    res = res.substring(0, res.length - 1)
+  }
+  return res
+}
+
+/**
+ * Removes a stating, leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trim = (str: string, char: string): string => {
+  let res = trimStart(str, char)
+  res = trimEnd(res, char)
+  return res
 }

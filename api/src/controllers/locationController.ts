@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
@@ -89,8 +89,7 @@ export const create = async (req: Request, res: Response) => {
       const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
       if (!await helper.exists(_image)) {
-        logger.error(i18n.t('LOCATION_IMAGE_NOT_FOUND'), body)
-        return res.status(400).send(i18n.t('LOCATION_IMAGE_NOT_FOUND'))
+        throw new Error(`Location image not found: ${_image}`)
       }
     }
 
@@ -124,14 +123,12 @@ export const create = async (req: Request, res: Response) => {
     if (image) {
       const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
-      if (await helper.exists(_image)) {
-        const filename = `${location._id}_${Date.now()}${path.extname(image)}`
-        const newPath = path.join(env.CDN_LOCATIONS, filename)
+      const filename = `${location._id}_${Date.now()}${path.extname(image)}`
+      const newPath = path.join(env.CDN_LOCATIONS, filename)
 
-        await fs.rename(_image, newPath)
-        location.image = filename
-        await location.save()
-      }
+      await fs.rename(_image, newPath)
+      location.image = filename
+      await location.save()
     }
 
     return res.send(location)
@@ -284,7 +281,7 @@ export const deleteLocation = async (req: Request, res: Response) => {
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     await Location.deleteOne({ _id: id })
 
-    if (location.parkingSpots) {
+    if (location.parkingSpots && location.parkingSpots.length > 0) {
       const values = location.parkingSpots.map((ps) => ps.values).flat()
       await LocationValue.deleteMany({ _id: { $in: values } })
       const parkingSpots = location.parkingSpots.map((ps) => ps._id)
@@ -342,7 +339,7 @@ export const getLocation = async (req: Request, res: Response) => {
         const countryName = ((location.country as env.CountryInfo).values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         location.country.name = countryName
       }
-      if (location.parkingSpots) {
+      if (location.parkingSpots && location.parkingSpots.length > 0) {
         for (const parkingSpot of location.parkingSpots) {
           parkingSpot.name = (parkingSpot.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         }
@@ -471,6 +468,9 @@ export const getLocations = async (req: Request, res: Response) => {
 export const getLocationsWithPosition = async (req: Request, res: Response) => {
   try {
     const { language } = req.params
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
@@ -563,6 +563,9 @@ export const getLocationId = async (req: Request, res: Response) => {
   const { name, language } = req.params
 
   try {
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
       const location = await Location.findOne({ values: lv.id })
@@ -590,7 +593,7 @@ export const createImage = async (req: Request, res: Response) => {
       throw new Error('[location.createImage] req.file not found')
     }
 
-    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_LOCATIONS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
@@ -662,6 +665,9 @@ export const deleteImage = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('Location Id not valid')
+    }
     const location = await Location.findById(id)
 
     if (location) {
@@ -697,12 +703,13 @@ export const deleteTempImage = async (req: Request, res: Response) => {
   const { image } = req.params
 
   try {
-    const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
-    if (!await helper.exists(imageFile)) {
-      throw new Error(`[location.deleteTempImage] temp image ${imageFile} not found`)
+    if (!image.includes('.')) {
+      throw new Error('Filename not valid')
     }
-
-    await fs.unlink(imageFile)
+    const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
+    if (await helper.exists(imageFile)) {
+      await fs.unlink(imageFile)
+    }
 
     res.sendStatus(200)
   } catch (err) {

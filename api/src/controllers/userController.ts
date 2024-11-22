@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import bcrypt from 'bcrypt'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { CookieOptions, Request, Response } from 'express'
@@ -168,8 +168,30 @@ export const create = async (req: Request, res: Response) => {
       body.password = passwordHash
     }
 
+    const { contracts } = body
+    body.contracts = undefined
+
     const user = new User(body)
     await user.save()
+
+    const finalContracts: bookcarsTypes.Contract[] = []
+    if (contracts) {
+      for (const contract of contracts) {
+        if (contract.language && contract.file) {
+          const tempFile = path.join(env.CDN_TEMP_CONTRACTS, contract.file)
+
+          if (await helper.exists(tempFile)) {
+            const filename = `${user.id}_${contract.language}${path.extname(tempFile)}`
+            const newPath = path.join(env.CDN_CONTRACTS, filename)
+
+            await fs.rename(tempFile, newPath)
+            finalContracts.push({ language: contract.language, file: filename })
+          }
+        }
+      }
+      user.contracts = finalContracts
+      await user.save()
+    }
 
     // avatar
     if (body.avatar) {
@@ -1082,7 +1104,7 @@ export const createAvatar = async (req: Request, res: Response) => {
       throw new Error('[user.createAvatar] req.file not found')
     }
 
-    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_USERS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
@@ -1412,6 +1434,17 @@ export const deleteUsers = async (req: Request, res: Response) => {
           }
         }
 
+        if (user.contracts && user.contracts.length > 0) {
+          for (const contract of user.contracts) {
+            if (contract.file) {
+              const file = path.join(env.CDN_CONTRACTS, contract.file)
+              if (await helper.exists(file)) {
+                await fs.unlink(file)
+              }
+            }
+          }
+        }
+
         if (user.type === bookcarsTypes.UserType.Supplier) {
           const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
@@ -1517,6 +1550,9 @@ export const sendEmail = async (req: Request, res: Response) => {
 export const hasPassword = async (req: Request, res: Response) => {
   const { id } = req.params
   try {
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('User id not valid')
+    }
     const passwordExists = await User.exists({ _id: id, password: { $ne: null } })
 
     if (passwordExists) {

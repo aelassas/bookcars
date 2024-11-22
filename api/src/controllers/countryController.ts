@@ -160,8 +160,8 @@ export const getCountry = async (req: Request, res: Response) => {
 
     if (country) {
       const name = (country.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
-      const l = { ...country, name }
-      return res.json(l)
+      const c = { ...country, name }
+      return res.json(c)
     }
     logger.error('[country.getCountry] Country not found:', id)
     return res.sendStatus(204)
@@ -381,6 +381,9 @@ export const getCountryId = async (req: Request, res: Response) => {
   const { name, language } = req.params
 
   try {
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
       const country = await Country.findOne({ values: lv.id })

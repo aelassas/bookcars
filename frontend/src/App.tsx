@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import SuspenseRouter from '@/components/SuspenseRouter'
 import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { init as initGA } from '@/common/ga4'
@@ -31,7 +32,7 @@ const Suppliers = lazy(() => import('@/pages/Suppliers'))
 
 const App = () => (
   <GlobalProvider>
-    <Router>
+    <SuspenseRouter window={window}>
       <div className="app">
         <Suspense fallback={<></>}>
           <Routes>
@@ -59,7 +60,7 @@ const App = () => (
           </Routes>
         </Suspense>
       </div>
-    </Router>
+    </SuspenseRouter>
   </GlobalProvider>
 )
 

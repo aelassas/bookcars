@@ -36,6 +36,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 
 describe('Test AdditionalDriver phone validation', () => {
   it('should test AdditionalDriver phone validation', async () => {
+    // test failure (phone not valid)
     let res = true
     try {
       const additionalDriver = new AdditionalDriver(ADDITIONAL_DRIVER)
@@ -49,6 +50,7 @@ describe('Test AdditionalDriver phone validation', () => {
 
 describe('Test User phone validation', () => {
   it('should test User phone validation', async () => {
+    // test failure (phone not valid)
     let res = true
     const USER: bookcarsTypes.User = {
       email: testHelper.GetRandomEmail(),
@@ -77,6 +79,7 @@ describe('Test User phone validation', () => {
 
 describe('Test email sending error', () => {
   it('should test email sending error', async () => {
+    // test failure (wrong email)
     let res = true
     try {
       await mailHelper.sendMail({

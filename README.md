@@ -1,8 +1,8 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) [![](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki) [![](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net:3002/) [![](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
 
-## BookCars
+# BookCars
 
-BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a car rental platform, supplier-oriented, with an admin dashboard for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is built with React for its powerful rendering capabilities, MongoDB for flexible data modeling, and Stripe for secure payment processing.
 
@@ -13,13 +13,13 @@ This project emerged from a desire to build without boundaries – a fully custo
 - **Master DevOps**: Deploy, scale, and monitor the application with preferred tools and workflows
 - **Extend Freely**: Add new features and integrations without platform constraints or additional fees
 
-With this solution, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5 monthly using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
+With this solution, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier and can be used as a car rental aggregator.
+BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the admin dashboard. BookCars can also work with only one supplier and can be used as a car rental aggregator.
 
-From the backend, admins can create and manage suppliers, cars, locations, customers and bookings.
+From the admin dashboard, admins can create and manage suppliers, cars, locations, customers and bookings.
 
-When new suppliers are created, they receive an email prompting them to create an account in order to access the backend and manage their car fleet and bookings.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleet and bookings.
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
@@ -27,64 +27,70 @@ A key design decision was made to use TypeScript instead of JavaScript due to it
 
 I invested significant time and effort into building this open-source project to make it freely available to the community. If this project has been helpful in your work, consider supporting its continued development and maintenance. You can contribute through [GitHub Sponsorship](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://buymeacoffee.com/aelassas). Even a simple star on the GitHub repository helps spread the word and is greatly appreciated.
 
-## Features
+# Features
 
 * Supplier management
+* [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 * Ready for one or multiple suppliers
 * Car fleet management
+* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * Location, country, parking spots and map features
 * Booking management
 * Payment management
 * Customer management
+* Multiple login options (Google, Facebook, Apple, Email)
 * Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay Later)
 * Operational Stripe Payment Gateway
 * Multiple language support (English, French, Spanish)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
-* Responsive backend and frontend
+* Responsive admin dashboard and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
 * Secure against XSS, XST, CSRF and MITM
 * Supported Platforms: iOS, Android, Web, Docker
 
-## Live Demo
+# Live Demo
 
-### Frontend
+Some features are locked down on the demo links provided. To unlock all the features and have a full access to all the features contact me by email and I will give you access to all the features unlocked. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
+
+## Frontend
 * URL: https://bookcars.dynv6.net:3002/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-### Backend
+## Admin Dashboard
 * URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
-### Mobile App
-
+## Mobile App
+<!--
 You can install the Android app on any Android device.
 
-#### Scan this code with a device
+### Scan this code with a device
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
 ![QR](https://bookcars.github.io/content/qr-code-4.5.png)
 
-#### How to install the Mobile App on Android
+### How to install the Mobile App on Android
 
 * On devices running Android 8.0 (API level 26) and higher, you must navigate to the Install unknown apps system settings screen to enable app installations from a particular location (i.e. the web browser you are downloading the app from).
 
 * On devices running Android 7.1.1 (API level 25) and lower, you should enable the Unknown sources system setting, found in Settings > Security on your device.
 
-#### Alternative Way
+### Alternative Way
+-->
+You can also install the Android App by downloading the APK and installing it on any Android device.
 
-You can also install the Android App by directly downloading the APK and installing it on any Android device.
-
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.4.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-## Resources
+# Resources
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
+2. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
 4. [Installing (VPS)](https://github.com/aelassas/bookcars/wiki/Installing-(VPS))
@@ -104,8 +110,9 @@ You can also install the Android App by directly downloading the APK and install
 11. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
 12. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
-14. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+14. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+15. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+16. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
-## License
-
+# License
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).

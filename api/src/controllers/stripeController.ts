@@ -127,6 +127,11 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (session.payment_status === 'paid') {
+      const supplier = await User.findById(booking.supplier)
+      if (!supplier) {
+        throw new Error(`Supplier ${booking.supplier} not found`)
+      }
+
       booking.expireAt = undefined
       booking.status = bookcarsTypes.BookingStatus.Paid
       await booking.save()
@@ -135,32 +140,25 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       // await Car.updateOne({ _id: booking.car }, { available: false })
       const car = await Car.findById(booking.car)
       if (!car) {
-        logger.info(`Car ${booking.car} not found`)
-        return res.sendStatus(204)
+        throw new Error(`Car ${booking.car} not found`)
       }
       car.trips += 1
       await car.save()
 
-      // Send confirmation email
+      // Send confirmation email to customer
       const user = await User.findById(booking.driver)
       if (!user) {
-        logger.info(`Driver ${booking.driver} not found`)
-        return res.sendStatus(204)
+        throw new Error(`Driver ${booking.driver} not found`)
       }
 
       user.expireAt = undefined
       await user.save()
 
-      if (!await bookingController.confirm(user, booking, false)) {
+      if (!await bookingController.confirm(user, supplier, booking, false)) {
         return res.sendStatus(400)
       }
 
       // Notify supplier
-      const supplier = await User.findById(booking.supplier)
-      if (!supplier) {
-        logger.info(`Supplier ${booking.supplier} not found`)
-        return res.sendStatus(204)
-      }
       i18n.locale = supplier.language
       let message = i18n.t('BOOKING_PAID_NOTIFICATION')
       await bookingController.notify(user, booking.id, supplier, message)

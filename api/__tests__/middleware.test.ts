@@ -36,11 +36,11 @@ afterAll(async () => {
 
 describe('POST /api/sign-in/backend', () => {
   it('should authenticate through backend HttpOnly cookie', async () => {
+    // test success (backend auth without origin)
     const payload: bookcarsTypes.SignInPayload = {
       email: ADMIN_EMAIL,
       password: testHelper.PASSWORD,
     }
-
     let res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .send(payload)
@@ -49,12 +49,14 @@ describe('POST /api/sign-in/backend', () => {
     expect(cookies.length).toBeGreaterThan(1)
     const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.BACKEND_AUTH_COOKIE_NAME)
 
+    // test success (backend auth with origin)
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .set('Origin', env.BACKEND_HOST)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (cookie)
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set('Origin', env.BACKEND_HOST)
@@ -62,7 +64,7 @@ describe('POST /api/sign-in/backend', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
-    // Not allowed by CORS
+    // test failure (not allowed by CORS)
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .set('Origin', 'http://unknow/')
@@ -73,11 +75,11 @@ describe('POST /api/sign-in/backend', () => {
 
 describe('POST /api/sign-in/frontend', () => {
   it('should authenticate through frontend HttpOnly cookie', async () => {
+    // test success (backend auth without origin)
     const payload: bookcarsTypes.SignInPayload = {
       email: USER_EMAIL,
       password: testHelper.PASSWORD,
     }
-
     let res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
@@ -86,17 +88,20 @@ describe('POST /api/sign-in/frontend', () => {
     expect(cookies.length).toBeGreaterThan(1)
     const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.FRONTEND_AUTH_COOKIE_NAME)
 
+    // test success (backend auth wit origin)
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .set('Origin', env.FRONTEND_HOST)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
+    // test success (cookie)
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set('Origin', env.FRONTEND_HOST)
@@ -104,7 +109,7 @@ describe('POST /api/sign-in/frontend', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
-    // Not allowed by CORS
+    // test failure (not allowed by CORS)
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .set('Origin', 'http://unknow/')
@@ -117,12 +122,14 @@ describe('GET /api/user/:id', () => {
   it('should authenticate through request header', async () => {
     let token = await testHelper.signinAsAdmin()
 
+    // test success (admin)
     let res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
+    // test success (user)
     token = await testHelper.signinAsUser()
 
     res = await request(app)
@@ -131,27 +138,25 @@ describe('GET /api/user/:id', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
-    // Token not found
+    // test failure (token not found)
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
     expect(res.statusCode).toBe(403)
 
-    // Token not valid
+    // test failure (token not valid)
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set(env.X_ACCESS_TOKEN, 'unknown')
     expect(res.statusCode).toBe(401)
 
-    // Token not valid: User not found
+    // test failure (user not found)
     const user = await User.findById(USER_ID)
     user!.blacklisted = true
     await user?.save()
-
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(401)
-
     user!.blacklisted = false
     await user?.save()
   })
@@ -161,6 +166,7 @@ describe('PATCH /api/user/:id', () => {
   it('should revoke access to PATCH method', async () => {
     const token = await testHelper.signinAsAdmin()
 
+    // test success
     const res = await request(app)
       .patch(`/api/user/${USER_ID}`)
       .set(env.X_ACCESS_TOKEN, token)

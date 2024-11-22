@@ -1,7 +1,7 @@
 import request from 'supertest'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -15,7 +15,7 @@ import * as logger from '../src/common/logger'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
-  return `${prefix}.${uuid()}`
+  return `${prefix}.${nanoid()}`.toLowerCase()
 }
 
 export const getSupplierName = () => getName('supplier')
@@ -30,6 +30,10 @@ export const SIZE = 30
 
 let ADMIN_USER_ID: string
 let USER_ID: string
+
+export const delay = (milliseconds: number) => new Promise((resolve) => {
+  setTimeout(resolve, milliseconds)
+})
 
 export const initializeLogger = (disable = true) => {
   if (disable) {
@@ -50,7 +54,7 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.Admin,
   })
   await admin.save()
-  expect(admin.id).toBeDefined()
+  expect(admin.id).toBeTruthy()
   ADMIN_USER_ID = admin.id
 
   // user
@@ -62,7 +66,7 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.User,
   })
   await user.save()
-  expect(user.id).toBeDefined()
+  expect(user.id).toBeTruthy()
   USER_ID = user.id
 }
 
@@ -71,7 +75,7 @@ export const getAdminUserId = () => ADMIN_USER_ID
 export const getUserId = () => USER_ID
 
 export const close = async () => {
-  const res = await User.deleteMany({ email: { $in: [ADMIN_EMAIL, USER_EMAIL] } })
+  const res = await User.deleteMany({ _id: { $in: [ADMIN_USER_ID, USER_ID] } })
   expect(res.deletedCount).toBe(2)
   await Notification.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
   await NotificationCounter.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
@@ -152,7 +156,7 @@ export const deleteLocation = async (id: string) => {
   expect(res.deletedCount).toBe(1)
 }
 
-export const GetRandomEmail = () => `random.${uuid()}.${Date.now()}@test.bookcars.ma`
+export const GetRandomEmail = () => `${getName('random')}@test.bookcars.ma`
 
 export const GetRandromObjectId = () => new mongoose.Types.ObjectId()
 
@@ -179,7 +183,3 @@ export const createLocation = async (nameEN: string, nameFR: string, country?: s
   expect(location.id).toBeDefined()
   return location.id as string
 }
-
-export const delay = (milliseconds: number) => new Promise((resolve) => {
-  setTimeout(resolve, milliseconds)
-})

@@ -13,6 +13,7 @@ beforeAll(() => {
 
 describe('Test database connection', () => {
   it('should connect to database', async () => {
+    // test success (connected)
     const res = await databaseHelper.connect(env.DB_URI, false, false)
     expect(res).toBeTruthy()
     await databaseHelper.close()
@@ -21,6 +22,7 @@ describe('Test database connection', () => {
 
 describe('Test database connection failure', () => {
   it('should fail connecting to database', async () => {
+    // test failure (wrong uri)
     const res = await databaseHelper.connect('wrong-uri', true, false)
     expect(res).toBeFalsy()
   })
@@ -33,7 +35,7 @@ describe('Test database initialization', () => {
 
     const lv1 = new LocationValue({ language: 'en', value: 'location' })
     await lv1.save()
-    const lv2 = new LocationValue({ language: 'es', value: 'localización' })
+    const lv2 = new LocationValue({ language: 'pt', value: 'localização' })
     await lv2.save()
     const l1 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv1.id, lv2.id] })
     await l1.save()
@@ -42,7 +44,7 @@ describe('Test database initialization', () => {
 
     const cv1 = new LocationValue({ language: 'en', value: 'country' })
     await cv1.save()
-    const cv2 = new LocationValue({ language: 'es', value: 'país' })
+    const cv2 = new LocationValue({ language: 'pt', value: 'país' })
     await cv2.save()
     const c1 = new Country({ values: [cv1.id, cv2.id] })
     await c1.save()
@@ -51,13 +53,14 @@ describe('Test database initialization', () => {
 
     const pv1 = new LocationValue({ language: 'en', value: 'parking' })
     await pv1.save()
-    const pv2 = new LocationValue({ language: 'es', value: 'aparcamiento' })
+    const pv2 = new LocationValue({ language: 'pt', value: 'estacionamento' })
     await pv2.save()
     const ps1 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv1.id, pv2.id] })
     await ps1.save()
     const ps2 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv2.id] })
     await ps2.save()
 
+    // test success (initialization)
     await testHelper.delay(5 * 1000)
     res = await databaseHelper.initialize()
     expect(res).toBeTruthy()

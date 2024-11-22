@@ -27,10 +27,35 @@ const carSchema = new Schema<env.Car>(
       ref: 'Location',
       validate: (value: any): boolean => Array.isArray(value) && value.length > 0,
     },
-    price: {
+
+    // --------- price fields ---------
+    dailyPrice: {
       type: Number,
       required: [true, "can't be blank"],
     },
+    discountedDailyPrice: {
+      type: Number,
+    },
+    biWeeklyPrice: {
+      type: Number,
+    },
+    discountedBiWeeklyPrice: {
+      type: Number,
+    },
+    weeklyPrice: {
+      type: Number,
+    },
+    discountedWeeklyPrice: {
+      type: Number,
+    },
+    monthlyPrice: {
+      type: Number,
+    },
+    discountedMonthlyPrice: {
+      type: Number,
+    },
+    // --------- end of price fields ---------
+
     deposit: {
       type: Number,
       required: [true, "can't be blank"],

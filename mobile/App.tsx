@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { RootSiblingParent } from 'react-native-root-siblings'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -8,6 +7,7 @@ import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import { StripeProvider } from '@stripe/stripe-react-native'
+import Toast from 'react-native-toast-message'
 import DrawerNavigator from './components/DrawerNavigator'
 import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
@@ -24,16 +24,14 @@ Notifications.setNotificationHandler({
 })
 
 //
-// Prevent native splash screen from autohiding before App component declaration
+// Keep the splash screen visible while we fetch resources
 //
 SplashScreen.preventAutoHideAsync()
-  .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
-  .catch(console.warn) // it's good to explicitly catch and inspect any error
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
 
-  const responseListener = useRef<Notifications.Subscription>()
+  const responseListener = useRef<Notifications.EventSubscription>()
   const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)
 
   useEffect(() => {
@@ -107,12 +105,11 @@ const App = () => {
       <SafeAreaProvider>
         <Provider>
           <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-            <RootSiblingParent>
-              <NavigationContainer ref={navigationRef} onReady={onReady}>
-                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-                <DrawerNavigator />
-              </NavigationContainer>
-            </RootSiblingParent>
+            <NavigationContainer ref={navigationRef} onReady={onReady}>
+              <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+              <DrawerNavigator />
+              <Toast />
+            </NavigationContainer>
           </StripeProvider>
         </Provider>
       </SafeAreaProvider>

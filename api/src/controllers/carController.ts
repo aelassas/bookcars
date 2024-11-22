@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { v1 as uuid } from 'uuid'
+import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
@@ -26,8 +26,7 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${JSON.stringify(body)}`)
-      return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
+      throw new Error('Image not found in payload')
     }
 
     const car = new Car(body)
@@ -44,8 +43,7 @@ export const create = async (req: Request, res: Response) => {
       await car.save()
     } else {
       await Car.deleteOne({ _id: car._id })
-      logger.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
-      return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
+      throw new Error(`Image ${body.image} not found`)
     }
 
     return res.json(car)
@@ -82,7 +80,14 @@ export const update = async (req: Request, res: Response) => {
         available,
         type,
         locations,
-        price,
+        dailyPrice,
+        discountedDailyPrice,
+        biWeeklyPrice,
+        discountedBiWeeklyPrice,
+        weeklyPrice,
+        discountedWeeklyPrice,
+        monthlyPrice,
+        discountedMonthlyPrice,
         deposit,
         seats,
         doors,
@@ -108,7 +113,14 @@ export const update = async (req: Request, res: Response) => {
       car.name = name
       car.available = available
       car.type = type as bookcarsTypes.CarType
-      car.price = price
+      car.dailyPrice = dailyPrice
+      car.discountedDailyPrice = discountedDailyPrice
+      car.biWeeklyPrice = biWeeklyPrice
+      car.discountedBiWeeklyPrice = discountedBiWeeklyPrice
+      car.weeklyPrice = weeklyPrice
+      car.discountedWeeklyPrice = discountedWeeklyPrice
+      car.monthlyPrice = monthlyPrice
+      car.discountedMonthlyPrice = discountedMonthlyPrice
       car.deposit = deposit
       car.seats = seats
       car.doors = doors
@@ -218,7 +230,7 @@ export const createImage = async (req: Request, res: Response) => {
       throw new Error('[car.createImage] req.file not found')
     }
 
-    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)

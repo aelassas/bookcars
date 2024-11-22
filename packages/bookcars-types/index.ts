@@ -99,7 +99,7 @@ export interface CheckoutPayload {
   driver?: User
   booking?: Booking
   additionalDriver?: AdditionalDriver
-  payLater?: boolean
+  payLater: boolean
   sessionId?: string
   paymentIntentId?: string
   customerId?: string
@@ -166,7 +166,16 @@ export interface CreateCarPayload {
   supplier: string
   minimumAge: number
   locations: string[]
-  price: number
+
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
   deposit: number
   available: boolean
   type: string
@@ -229,6 +238,8 @@ export interface SignUpPayload {
   birthDate?: number | Date
 }
 
+export type Contract = { language: string, file: string | null }
+
 export interface CreateUserPayload {
   email?: string
   phone: string
@@ -244,6 +255,7 @@ export interface CreateUserPayload {
   blacklisted?: boolean
   payLater?: boolean
   supplier?: string
+  contracts?: Contract[]
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -342,6 +354,7 @@ export interface User {
   checked?: boolean
   customerId?: string
   carCount?: number
+  contracts?: Contract[]
 }
 
 export interface Option {
@@ -391,7 +404,16 @@ export interface Car {
   supplier: User
   minimumAge: number
   locations: Location[]
-  price: number
+
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
   deposit: number
   available: boolean
   type: CarType
@@ -491,6 +513,10 @@ export interface SendEmailPayload {
   ip: string
 }
 
+export interface Response<T> {
+  status: number
+  data: T
+}
 
 // 
 // React types

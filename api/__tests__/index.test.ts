@@ -39,16 +39,12 @@ const delay = async () => {
 
 describe('Test database initialization', () => {
   it('should test database initialization', async () => {
-    //
-    // Test in case of no configuration change
-    //
+    // test success (no configuration change)
     let res = await databaseHelper.initialize()
     expect(res).toBeTruthy()
     await delay()
 
-    //
-    // Test in case of configuration change
-    //
+    // test success (configuration change)
     const tokenIndexes = await Token.collection.indexes()
     const tokenIndex = tokenIndexes.find((index) => index.name === TOKEN_EXPIRE_AT_INDEX_NAME)
     expect(tokenIndex).toBeDefined()
@@ -76,9 +72,7 @@ describe('Test database initialization', () => {
       expect(res).toBeTruthy()
     }
 
-    //
-    // Test failure
-    //
+    // test failure (loast db connection)
     try {
       await databaseHelper.close()
       res = await databaseHelper.initialize()
