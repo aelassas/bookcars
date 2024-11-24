@@ -5,8 +5,8 @@
   "scripts": {
     "start": "tsc --build --verbose && expo start --port 8082",
     "start:clean": "tsc --build --verbose && expo start -c --port 8082",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "tsc --build --verbose && expo run:android",
+    "ios": "tsc --build --verbose && expo run:ios",
     "build:android": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform android",
     "build:android:local": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform android --local",
     "build:android:preview": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile preview --platform android",
