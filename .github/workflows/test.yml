@@ -13,7 +13,7 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-    environment: TEST
+    environment: test
     
     strategy:
       matrix:
