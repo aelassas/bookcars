@@ -1,6 +1,6 @@
 {
   "name": "bookcars",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "tsc --build --verbose && expo start --port 8082",

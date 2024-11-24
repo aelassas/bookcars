@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "private": true,
-  "version": "4.6.0",
+  "version": "4.7.0",
   "type": "module",
   "scripts": {
     "build": "tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
