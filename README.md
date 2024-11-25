@@ -42,7 +42,7 @@ A key design decision was made to use TypeScript instead of JavaScript due to it
 
 # Live Demo
 
-Some features are locked down on the demo links provided. To unlock all the features and have a full access to all the features contact me by email and I will give you access to all the features unlocked. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
+Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
 
 ## Frontend
 * URL: https://bookcars.dynv6.net:3002/
