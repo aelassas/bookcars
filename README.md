@@ -7,6 +7,8 @@ BookCars is a car rental platform, supplier-oriented, with an admin dashboard fo
 
 BookCars is built with React for its powerful rendering capabilities, MongoDB for flexible data modeling, and Stripe for secure payment processing.
 
+BookCars is a highly customizable, scalable, and cost-efficient solution for car rental businesses. Its robust feature set and open-source nature make it a sustainable choice for long-term growth in the rental industry.
+
 With BookCars, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
