@@ -14,11 +14,11 @@ BookCars is a highly customizable, scalable, and cost-efficient solution for car
 
 With BookCars, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleet and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
+BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
 
 From the admin dashboard, admins can create and manage suppliers, cars, locations, customers and bookings.
 
-When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleet and bookings.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleets and bookings.
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
