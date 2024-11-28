@@ -6,7 +6,6 @@ const babel = (api) => {
       'module-resolver',
       {
         alias: {
-          // '@': './dist/src',
           ':bookcars-types': '../packages/bookcars-types',
         },
       },
@@ -22,7 +21,7 @@ const babel = (api) => {
       [
         '@babel/preset-env',
         {
-          modules: isTest ? undefined : false,
+          modules: false,
           targets: {
             node: 'current',
           },
