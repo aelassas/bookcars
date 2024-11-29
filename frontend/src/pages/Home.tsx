@@ -67,7 +67,7 @@ const Home = () => {
 
         </div>
 
-        <div className="home-suppliers">
+        <div className="home-suppliers" style={suppliers.length === 0 ? { margin: 0 } : undefined}>
           {suppliers.length > 0 && (
             <>
               <h1>{strings.SUPPLIERS_TITLE}</h1>
