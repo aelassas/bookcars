@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -25,7 +25,7 @@ import PositionInput from '@/components/PositionInput'
 import '@/assets/css/create-location.css'
 
 const CreateLocation = () => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const [visible, setVisible] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
@@ -215,7 +215,8 @@ const CreateLocation = () => {
                   if (image) {
                     await LocationService.deleteTempImage(image)
                   }
-                  navigate('/locations')
+                  // navigate('/locations')
+                  window.location.href = '/locations'
                 }}
               >
                 {commonStrings.CANCEL}
