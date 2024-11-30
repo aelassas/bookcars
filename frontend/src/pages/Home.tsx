@@ -67,8 +67,8 @@ const Home = () => {
 
         </div>
 
-        <div className="home-suppliers" style={suppliers.length === 0 ? { margin: 0 } : undefined}>
-          {suppliers.length > 0 && (
+        <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
+          {suppliers.length > 3 && (
             <>
               <h1>{strings.SUPPLIERS_TITLE}</h1>
               <SupplierCarrousel suppliers={suppliers} />
