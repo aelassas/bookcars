@@ -83,6 +83,7 @@ export const update = async (req: Request, res: Response) => {
         phone: supplier.phone,
         location: supplier.location,
         bio: supplier.bio,
+        avatar: supplier.avatar,
         payLater: supplier.payLater,
         contracts: supplier.contracts,
       })
