@@ -441,6 +441,12 @@ const UpdateBooking = () => {
               if (!helper.admin(_user) && (_booking.supplier as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
+                  return
+              }
+
+              if (!_booking.driver) {
+                setLoading(false)
+                setNoMatch(true)
                 return
               }
 
