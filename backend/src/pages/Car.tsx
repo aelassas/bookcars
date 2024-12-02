@@ -351,8 +351,8 @@ const Car = () => {
               car={car._id}
               hideSupplierColumn
               hideCarColumn
-              hideDates={env.isMobile()}
-              checkboxSelection={!env.isMobile()}
+              hideDates={env.isMobile}
+              checkboxSelection={!env.isMobile}
             />
           </div>
         </div>
