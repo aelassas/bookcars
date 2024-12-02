@@ -82,6 +82,7 @@ const strings = new LocalizedStrings({
     NAME: 'Nom',
     LONGITUDE: 'Longitude',
     LATITUDE: 'Latitude',
+    MIN_RENTAL_DAYS: 'Jours Minimum de location',
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -162,6 +163,7 @@ const strings = new LocalizedStrings({
     NAME: 'Name',
     LONGITUDE: 'Longitude',
     LATITUDE: 'Latitude',
+    MIN_RENTAL_DAYS: 'Minimum Rental Days',
   },
 })
 

@@ -166,6 +166,7 @@ const CarList = ({
         multimedia: _multimedia,
         rating: _rating,
         seats: _seats,
+        days: bookcarsHelper.days(from, to),
       }
 
       const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)
