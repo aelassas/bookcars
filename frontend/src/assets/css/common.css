@@ -57,6 +57,12 @@
 
 .msg p {
   color: #333;
+  margin-top: 0;
+}
+
+.msg .msg-link {
+  margin-top: 10px;
+  display: block;
 }
 
 /* Avatar */
