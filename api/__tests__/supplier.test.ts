@@ -559,6 +559,7 @@ describe('POST /api/frontend-suppliers', () => {
         moreThanFourDoors: true,
       },
       ranges: [bookcarsTypes.CarRange.Midi],
+      days: 3,
     }
     let res = await request(app)
       .post('/api/frontend-suppliers')
