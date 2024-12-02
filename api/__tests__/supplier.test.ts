@@ -569,6 +569,15 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.body[0].carCount).toBe(1)
     expect(res.body[1].carCount).toBe(1)
 
+    payload.days = undefined
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(2)
+    expect(res.body[0].carCount).toBe(1)
+    expect(res.body[1].carCount).toBe(1)
+
     // test failure (no payload)
     res = await request(app)
       .post('/api/frontend-suppliers')
