@@ -11,7 +11,7 @@ interface SimpleBackdropProps {
   text?: string
 }
 
-// const marginTop = env.isMobile() ? 56 : 64
+// const marginTop = env.isMobile ? 56 : 64
 
 const SimpleBackdrop = ({ progress, text }: SimpleBackdropProps) => (
   <div>

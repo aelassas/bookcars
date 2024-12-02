@@ -314,7 +314,7 @@ const Search = () => {
       )}
 
       <Dialog
-        fullWidth={env.isMobile()}
+        fullWidth={env.isMobile}
         maxWidth={false}
         open={openMapDialog}
         onClose={() => {

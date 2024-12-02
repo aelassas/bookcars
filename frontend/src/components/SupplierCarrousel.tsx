@@ -15,7 +15,7 @@ interface SupplierCarrouselProps {
 const settings = {
   infinite: true,
   speed: 3 * 1000,
-  slidesToShow: env.isMobile() ? 2 : 6,
+  slidesToShow: env.isMobile ? 2 : 6,
   autoplay: true,
   autoplaySpeed: 3 * 1000,
   centerMode: true,

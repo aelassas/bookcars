@@ -62,8 +62,8 @@ const Users = () => {
               user={user}
               types={types}
               keyword={keyword}
-              checkboxSelection={!env.isMobile() && admin}
-              hideDesktopColumns={env.isMobile()}
+              checkboxSelection={!env.isMobile && admin}
+              hideDesktopColumns={env.isMobile}
             />
           </div>
         </div>
