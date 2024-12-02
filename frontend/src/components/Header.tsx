@@ -294,7 +294,7 @@ const Header = ({
 
                 <Link href="/" className="logo">BookCars</Link>
 
-                {!env.isMobile() && headerTitle && <div className="header-title">{headerTitle}</div>}
+                {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
               </>
             )}
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
@@ -329,7 +329,7 @@ const Header = ({
                   <ListItemIcon><MailIcon /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
                 </ListItemLink>
-                {env.isMobile() && !hideSignin && !isSignedIn && isLoaded && !loading && (
+                {env.isMobile && !hideSignin && !isSignedIn && isLoaded && !loading && (
                   <ListItemLink href="/sign-in">
                     <ListItemIcon><LoginIcon /></ListItemIcon>
                     <ListItemText primary={strings.SIGN_IN} />
@@ -337,7 +337,7 @@ const Header = ({
                 )}
               </List>
             </Drawer>
-            {(env.isMobile() || !headerTitle) && <div style={classes.grow} />}
+            {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
               {isSignedIn && (
                 <IconButton aria-label="" onClick={handleNotificationsClick} className="btn">

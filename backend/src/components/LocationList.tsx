@@ -68,7 +68,7 @@ const LocationList = ({
       const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
       let _rows = []
-      if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) {
+      if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile) {
         _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
         _rows = _data.resultData
@@ -79,8 +79,8 @@ const LocationList = ({
       setTotalRecords(_totalRecords)
       setFetch(_data.resultData.length > 0)
 
-      if (((env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) && _page === 1)
-        || (env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile())) {
+      if (((env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile) && _page === 1)
+        || (env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile)) {
         window.scrollTo(0, 0)
       }
 
@@ -107,7 +107,7 @@ const LocationList = ({
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) {
+    if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile) {
       const element = document.querySelector('body')
 
       if (element) {
@@ -273,7 +273,7 @@ const LocationList = ({
           </DialogActions>
         </Dialog>
       </section>
-      {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile() && (
+      {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager
           page={page}
           pageSize={env.PAGE_SIZE}
