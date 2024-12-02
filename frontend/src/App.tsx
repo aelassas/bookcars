@@ -22,6 +22,7 @@ const Bookings = lazy(() => import('@/pages/Bookings'))
 const Booking = lazy(() => import('@/pages/Booking'))
 const Settings = lazy(() => import('@/pages/Settings'))
 const Notifications = lazy(() => import('@/pages/Notifications'))
+const Privacy = lazy(() => import('@/pages/Privacy'))
 const ToS = lazy(() => import('@/pages/ToS'))
 const About = lazy(() => import('@/pages/About'))
 const ChangePassword = lazy(() => import('@/pages/ChangePassword'))
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/tos" element={<ToS />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/locations" element={<Locations />} />
