@@ -45,7 +45,7 @@ import { strings as signInStrings } from '@/lang/sign-in'
 import { strings as signUpStrings } from '@/lang/sign-up'
 import { strings as tosStrings } from '@/lang/tos'
 
-// import 'github-fork-ribbon-css/gh-fork-ribbon.css'
+import 'github-fork-ribbon-css/gh-fork-ribbon.css'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
@@ -175,9 +175,6 @@ const theme = createTheme(
     // },
     typography: {
       fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        "'Segoe UI'",
         'Roboto',
         "'Helvetica Neue'",
         'Arial',
@@ -185,6 +182,9 @@ const theme = createTheme(
         "'Apple Color Emoji'",
         "'Segoe UI Emoji'",
         "'Segoe UI Symbol'",
+        '-apple-system',
+        'BlinkMacSystemFont',
+        "'Segoe UI'",
       ].join(','),
     },
     components: {
@@ -264,14 +264,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         pauseOnHover
         theme="dark"
       />
-      {/* <a
+      <a
         className="github-fork-ribbon fixed left-bottom"
         href="https://github.com/aelassas/bookcars"
         data-ribbon="Fork me on GitHub"
         title="Fork me on GitHub"
       >
         Fork me on GitHub
-      </a> */}
+      </a>
     </CssBaseline>
   </ThemeProvider>,
 )
