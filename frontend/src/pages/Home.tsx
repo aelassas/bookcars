@@ -1,5 +1,17 @@
 import React, { useState } from 'react'
-import { Button, Checkbox, Dialog, DialogContent, FormControlLabel, Tab, Tabs } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Dialog, DialogContent, FormControlLabel, Tab, Tabs } from '@mui/material'
+import {
+  RoomService,
+  VisibilityOff,
+  DirectionsCar,
+  Speed,
+  Navigation,
+  AttachMoney,
+  Public,
+  FlashOn,
+  ExpandMore,
+  CheckBox,
+} from '@mui/icons-material'
 import L from 'leaflet'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -49,6 +61,14 @@ const Home = () => {
     setCountries(_countries)
     const _locations = await LocationService.getLocationsWithPosition()
     setLocations(_locations)
+
+    const video = document.getElementById('cover') as HTMLVideoElement
+    if (video) {
+      video.muted = true
+      video.play()
+    } else {
+      console.error('Cover video tag not loaded')
+    }
   }
 
   const language = UserService.getLanguage()
@@ -59,12 +79,149 @@ const Home = () => {
       <div className="home">
         <div className="home-content">
 
-          <div className="home-cover">{strings.COVER}</div>
+          <div className="video">
+            <video
+              id="cover"
+              muted={!env.isSafari}
+              autoPlay={!env.isSafari}
+              loop
+              playsInline
+              disablePictureInPicture
+            >
+              <source src="cover.mp4" type="video/mp4" />
+              <track kind="captions" />
+            </video>
+          </div>
 
+          <div className="home-title">{strings.TITLE}</div>
+          <div className="home-cover">{strings.COVER}</div>
+          {/* <div className="home-subtitle">{strings.SUBTITLE}</div> */}
+
+        </div>
+
+        <div className="search">
           <div className="home-search">
             <SearchForm />
           </div>
+        </div>
 
+        <div className="why">
+
+          {/* <h1>{strings.WHY_TITLE}</h1> */}
+
+          <div className="why-boxes">
+
+            <div className="why-box">
+              <div className="why-icon-wrapper">
+                <RoomService className="why-icon" />
+              </div>
+              <div className="why-text-wrapper">
+                <span className="why-title">{strings.WHY_SERVICE_TITLE}</span>
+                <span className="why-text">{strings.WHY_SERVICE}</span>
+              </div>
+            </div>
+
+            <div className="why-box">
+              <div className="why-icon-wrapper">
+                <VisibilityOff className="why-icon" />
+              </div>
+              <div className="why-text-wrapper">
+                <span className="why-title">{strings.WHY_CHARGES_TITLE}</span>
+                <span className="why-text">{strings.WHY_CHARGES}</span>
+              </div>
+            </div>
+
+            <div className="why-box">
+              <div className="why-icon-wrapper">
+                <DirectionsCar className="why-icon" />
+              </div>
+              <div className="why-text-wrapper">
+                <span className="why-title">{strings.WHY_FLEET_TITLE}</span>
+                <span className="why-text">{strings.WHY_FLEET}</span>
+              </div>
+            </div>
+
+            <div className="why-box">
+              <div className="why-icon-wrapper">
+                <Speed className="why-icon" />
+              </div>
+              <div className="why-text-wrapper">
+                <span className="why-title">{strings.WHY_MILEAGE_TITLE}</span>
+                <span className="why-text">{strings.WHY_MILEAGE}</span>
+                <span className="why-text">{strings.WHY_MILEAGE_ASTERISK}</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div className="services">
+
+          <h1>{strings.SERVICES_TITLE}</h1>
+
+          <div className="services-boxes">
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <DirectionsCar className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICES_FLEET_TITLE}</span>
+                <span className="services-text">{strings.SERVICES_FLEET}</span>
+              </div>
+            </div>
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <Navigation className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICES_FLEXIBLE_TITLE}</span>
+                <span className="services-text">{strings.SERVICES_FLEXIBLE}</span>
+              </div>
+            </div>
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <AttachMoney className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICES_PRICES_TITLE}</span>
+                <span className="services-text">{strings.SERVICES_PRICES}</span>
+              </div>
+            </div>
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <Public className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICES_BOOKING_ONLINE_TITLE}</span>
+                <span className="services-text">{strings.SERVICES_BOOKING_ONLINE}</span>
+              </div>
+            </div>
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <FlashOn className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICE_INSTANT_BOOKING_TITLE}</span>
+                <span className="services-text">{strings.SERVICE_INSTANT_BOOKING}</span>
+              </div>
+            </div>
+
+            <div className="services-box">
+              <div className="services-icon-wrapper">
+                <RoomService className="services-icon" />
+              </div>
+              <div className="services-text-wrapper">
+                <span className="services-title">{strings.SERVICES_SUPPORT_TITLE}</span>
+                <span className="services-text">{strings.SERVICES_SUPPORT}</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
@@ -227,10 +384,40 @@ const Home = () => {
           </Button>
         </div>
 
+        <div className="faq">
+          <h2>{strings.FAQ_TITLE}</h2>
+          <div className="questions">
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_DOCUMENTS_TITLE}</AccordionSummary>
+              <AccordionDetails className="accordion-details">{strings.FAQ_DOCUMENTS_TEXT}</AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_SERVICES_TITLE}</AccordionSummary>
+              <AccordionDetails className="accordion-details">{strings.FAQ_SERVICES_TEXT}</AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_AGE_TITLE}</AccordionSummary>
+              <AccordionDetails className="accordion-details">{strings.FAQ_AGE_TEXT}</AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_CANCEL_TITLE}</AccordionSummary>
+              <AccordionDetails className="accordion-details">{strings.FAQ_CANCEL_TEXT}</AccordionDetails>
+            </Accordion>
+          </div>
+          <Button
+            variant="contained"
+            className="btn-primary btn-home"
+            href="/contact"
+          >
+            {strings.MORE_QUESTIONS}
+          </Button>
+        </div>
+
         <div className="home-map">
           <Map
             title={strings.MAP_TITLE}
-            position={new L.LatLng(34.0268755, 1.6528399999999976)}
+            position={new L.LatLng(36.191113, 44.009167)}
             initialZoom={5}
             locations={locations}
             onSelelectPickUpLocation={async (locationId) => {
@@ -248,6 +435,45 @@ const Home = () => {
           //   helper.info(strings.MAP_DROP_OFF_SELECTED)
           // }}
           />
+        </div>
+
+        <div className="customer-care">
+          <div className="customer-care-wrapper">
+            <div className="customer-care-text">
+              <h1>{strings.CUSTOMER_CARE_TITLE}</h1>
+              <h2>{strings.CUSTOMER_CARE_SUBTITLE}</h2>
+              <div className="customer-care-content">{strings.CUSTOMER_CARE_TEXT}</div>
+              <div className="customer-care-boxes">
+                <div className="customer-care-box">
+                  <CheckBox className="customer-care-icon" />
+                  <span>{strings.CUSTOMER_CARE_ASSISTANCE}</span>
+                </div>
+                <div className="customer-care-box">
+                  <CheckBox className="customer-care-icon" />
+                  <span>{strings.CUSTOMER_CARE_MODIFICATION}</span>
+                </div>
+                <div className="customer-care-box">
+                  <CheckBox className="customer-care-icon" />
+                  <span>{strings.CUSTOMER_CARE_GUIDANCE}</span>
+                </div>
+                <div className="customer-care-box">
+                  <CheckBox className="customer-care-icon" />
+                  <span>{strings.CUSTOMER_CARE_SUPPORT}</span>
+                </div>
+              </div>
+              <Button
+                variant="contained"
+                className="btn-primary btn-home"
+                href="/contact"
+              >
+                {strings.CONTACT_US}
+              </Button>
+            </div>
+
+            <div className="customer-care-img">
+              <img src="/customer-care.png" alt="" />
+            </div>
+          </div>
         </div>
       </div>
 

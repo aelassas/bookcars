@@ -23,6 +23,7 @@ const LANGUAGES = [
 const env = {
   isMobile: window.innerWidth <= 960,
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
+  isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
