@@ -861,6 +861,7 @@ describe('POST /api/update-user', () => {
       bio: 'bio1-1',
       type: bookcarsTypes.UserType.Supplier,
       payLater: false,
+      minimumRentalDays: 3,
     }
     let res = await request(app)
       .post('/api/update-user')
@@ -876,6 +877,7 @@ describe('POST /api/update-user', () => {
     expect(user?.location).toBe(payload.location)
     expect(user?.bio).toBe(payload.bio)
     expect(user?.payLater).toBeFalsy()
+    expect(user?.minimumRentalDays).toBe(3)
 
     // test success
     const { fullName, payLater } = (user!)

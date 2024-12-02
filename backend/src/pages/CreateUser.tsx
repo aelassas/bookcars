@@ -55,6 +55,7 @@ const CreateUser = () => {
   const [payLater, setPayLater] = useState(true)
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
+  const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -150,6 +151,10 @@ const CreateUser = () => {
 
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateEmail(e.target.value)
+  }
+
+  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinimumRentalDays(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,6 +292,7 @@ const CreateUser = () => {
         birthDate,
         language,
         supplier,
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -401,20 +407,28 @@ const CreateUser = () => {
               </FormControl>
 
               {supplier && (
-                <FormControl component="fieldset" style={{ marginTop: 15 }}>
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={payLater}
-                        onChange={(e) => {
-                          setPayLater(e.target.checked)
-                        }}
-                        color="primary"
-                      />
-                    )}
-                    label={commonStrings.PAY_LATER}
-                  />
-                </FormControl>
+                <>
+                  <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={payLater}
+                          onChange={(e) => {
+                            setPayLater(e.target.checked)
+                          }}
+                          color="primary"
+                          disabled
+                        />
+                      )}
+                      label={commonStrings.PAY_LATER}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
+                    <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+                  </FormControl>
+                </>
               )}
 
               <div className="buttons">

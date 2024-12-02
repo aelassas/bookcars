@@ -45,6 +45,7 @@ const CreateSupplier = () => {
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
+  const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -120,6 +121,10 @@ const CreateSupplier = () => {
 
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateEmail(e.target.value)
+  }
+
+  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinimumRentalDays(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,6 +232,7 @@ const CreateSupplier = () => {
         avatar,
         payLater,
         contracts,
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
 
       const status = await UserService.create(data)
@@ -299,7 +305,7 @@ const CreateSupplier = () => {
               </FormHelperText>
             </FormControl>
 
-            <FormControl component="fieldset" style={{ marginTop: 15 }}>
+            <FormControl fullWidth margin="dense">
               <FormControlLabel
                 control={(
                   <Switch
@@ -308,6 +314,7 @@ const CreateSupplier = () => {
                       setPayLater(e.target.checked)
                     }}
                     color="primary"
+                    disabled
                   />
                 )}
                 label={commonStrings.PAY_LATER}
@@ -320,19 +327,24 @@ const CreateSupplier = () => {
             </div>
 
             <FormControl fullWidth margin="dense">
+              <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
+              <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.PHONE}</InputLabel>
-              <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" error={!phoneValid} />
+              <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" error={!phoneValid} />
               <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" />
+              <Input type="text" onChange={handleLocationChange} autoComplete="off" />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.BIO}</InputLabel>
-              <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" />
+              <Input type="text" onChange={handleBioChange} autoComplete="off" />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

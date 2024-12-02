@@ -946,6 +946,7 @@ export const update = async (req: Request, res: Response) => {
       birthDate,
       enableEmailNotifications,
       payLater,
+      minimumRentalDays,
     } = body
 
     if (fullName) {
@@ -955,6 +956,7 @@ export const update = async (req: Request, res: Response) => {
     user.location = location
     user.bio = bio
     user.birthDate = birthDate ? new Date(birthDate) : undefined
+    user.minimumRentalDays = minimumRentalDays
     if (type) {
       user.type = type as bookcarsTypes.UserType
     }
@@ -1075,6 +1077,8 @@ export const getUser = async (req: Request, res: Response) => {
       birthDate: 1,
       payLater: 1,
       customerId: 1,
+      license: 1,
+      minimumRentalDays: 1,
     }).lean()
 
     if (!user) {
@@ -1434,7 +1438,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
           }
         }
 
-        if (user.contracts) {
+        if (user.contracts && user.contracts.length > 0) {
           for (const contract of user.contracts) {
             if (contract.file) {
               const file = path.join(env.CDN_CONTRACTS, contract.file)

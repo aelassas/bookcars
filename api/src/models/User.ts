@@ -114,6 +114,9 @@ const userSchema = new Schema<env.User>(
       },
       file: String,
     }],
+    minimumRentalDays: {
+      type: Number,
+    },
     expireAt: {
       //
       // Non verified and active users created from checkout with Stripe are temporary and
