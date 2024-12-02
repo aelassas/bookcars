@@ -57,6 +57,7 @@ const UpdateUser = () => {
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -110,6 +111,10 @@ const UpdateUser = () => {
     } else {
       setFullNameError(false)
     }
+  }
+
+  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinimumRentalDays(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,6 +228,7 @@ const UpdateUser = () => {
               setBio(_user.bio || '')
               setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
               setPayLater(_user.payLater || false)
+              setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -291,6 +297,7 @@ const UpdateUser = () => {
         type,
         avatar,
         birthDate,
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -393,20 +400,34 @@ const UpdateUser = () => {
               )}
 
               {supplier && (
-                <FormControl component="fieldset" style={{ marginTop: 15 }}>
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={payLater}
-                        onChange={(e) => {
-                          setPayLater(e.target.checked)
-                        }}
-                        color="primary"
-                      />
-                    )}
-                    label={commonStrings.PAY_LATER}
-                  />
-                </FormControl>
+                <>
+                  <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={payLater}
+                          onChange={(e) => {
+                            setPayLater(e.target.checked)
+                          }}
+                          color="primary"
+                          disabled
+                        />
+                      )}
+                      label={commonStrings.PAY_LATER}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
+                    <Input
+                      type="text"
+                      onChange={handleMinimumRentalDaysChange}
+                      autoComplete="off"
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                      value={minimumRentalDays}
+                    />
+                  </FormControl>
+                </>
               )}
 
               <div className="info">

@@ -45,6 +45,7 @@ const UpdateSupplier = () => {
   const [email, setEmail] = useState('')
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -88,6 +89,10 @@ const UpdateSupplier = () => {
 
   const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateFullName(e.target.value)
+  }
+
+  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinimumRentalDays(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,6 +190,7 @@ const UpdateSupplier = () => {
               setLocation(_supplier.location || '')
               setBio(_supplier.bio || '')
               setPayLater(_supplier.payLater || false)
+              setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -240,6 +246,7 @@ const UpdateSupplier = () => {
         location,
         bio,
         payLater,
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
 
       const res = await SupplierService.update(data)
@@ -292,7 +299,7 @@ const UpdateSupplier = () => {
                 <Input id="email" type="text" value={email} disabled />
               </FormControl>
 
-              <FormControl component="fieldset" style={{ marginTop: 15 }}>
+              <FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={(
                     <Switch
@@ -301,6 +308,7 @@ const UpdateSupplier = () => {
                         setPayLater(e.target.checked)
                       }}
                       color="primary"
+                      disabled
                     />
                   )}
                   label={commonStrings.PAY_LATER}
@@ -313,17 +321,27 @@ const UpdateSupplier = () => {
               </div>
 
               <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
+                <Input
+                  type="text"
+                  onChange={handleMinimumRentalDaysChange}
+                  autoComplete="off"
+                  slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                  value={minimumRentalDays}
+                />
+              </FormControl>
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
+                <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
                 <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <Input type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
+                <Input type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <ContractList supplier={supplier} />

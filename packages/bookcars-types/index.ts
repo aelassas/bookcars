@@ -159,6 +159,7 @@ export interface UpdateSupplierPayload {
   location: string
   bio: string
   payLater: boolean
+  minimumRentalDays?: number
 }
 
 export interface CreateCarPayload {
@@ -222,6 +223,7 @@ export interface GetCarsPayload {
   multimedia?: string[]
   rating?: number
   seats?: number
+  days?: number
 }
 
 export interface SignUpPayload {
@@ -256,6 +258,7 @@ export interface CreateUserPayload {
   payLater?: boolean
   supplier?: string
   contracts?: Contract[]
+  minimumRentalDays?: number
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -355,6 +358,7 @@ export interface User {
   customerId?: string
   carCount?: number
   contracts?: Contract[]
+  minimumRentalDays?: number
 }
 
 export interface Option {
