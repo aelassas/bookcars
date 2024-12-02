@@ -69,12 +69,14 @@ export const update = async (req: Request, res: Response) => {
         location,
         bio,
         payLater,
+        minimumRentalDays,
       } = body
       supplier.fullName = fullName
       supplier.phone = phone
       supplier.location = location
       supplier.bio = bio
       supplier.payLater = payLater
+      supplier.minimumRentalDays = minimumRentalDays
 
       await supplier.save()
       return res.json({
@@ -83,8 +85,10 @@ export const update = async (req: Request, res: Response) => {
         phone: supplier.phone,
         location: supplier.location,
         bio: supplier.bio,
+        avatar: supplier.avatar,
         payLater: supplier.payLater,
         contracts: supplier.contracts,
+        minimumRentalDays: supplier.minimumRentalDays,
       })
     }
     logger.error('[supplier.update] Supplier not found:', _id)
@@ -184,6 +188,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       bio,
       payLater,
       contracts,
+      minimumRentalDays,
     } = user
 
     return res.json({
@@ -196,13 +201,13 @@ export const getSupplier = async (req: Request, res: Response) => {
       bio,
       payLater,
       contracts,
+      minimumRentalDays,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
-
 /**
  * Get Suppliers.
  *
@@ -308,6 +313,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       multimedia,
       rating,
       seats,
+      days,
     } = body
 
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
@@ -369,6 +375,11 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       }
     }
 
+    let $supplierMatch: mongoose.FilterQuery<any> = {}
+    if (days) {
+      $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
+    }
+
     const data = await Car.aggregate(
       [
         { $match },
@@ -387,6 +398,9 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
           },
         },
         { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        {
+          $match: $supplierMatch,
+        },
         {
           $group: {
             _id: '$supplier._id',

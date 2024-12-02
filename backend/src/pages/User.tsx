@@ -214,8 +214,8 @@ const User = () => {
                 user={supplier ? undefined : user}
                 suppliers={_suppliers}
                 statuses={statuses}
-                hideDates={env.isMobile()}
-                checkboxSelection={!env.isMobile()}
+                hideDates={env.isMobile}
+                checkboxSelection={!env.isMobile}
                 hideSupplierColumn={supplier}
                 language={loggedUser.language}
               />

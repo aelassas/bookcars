@@ -70,7 +70,7 @@ const BookingList = ({
 }: BookingListProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : env.BOOKINGS_PAGE_SIZE)
+  const [pageSize, setPageSize] = useState(env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : env.BOOKINGS_PAGE_SIZE)
   const [columns, setColumns] = useState<GridColDef<bookcarsTypes.Booking>[]>([])
   const [rows, setRows] = useState<bookcarsTypes.Booking[]>([])
   const [rowCount, setRowCount] = useState(0)
@@ -91,7 +91,7 @@ const BookingList = ({
   const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
 
   useEffect(() => {
-    if (!env.isMobile()) {
+    if (!env.isMobile) {
       setPage(paginationModel.page)
       setPageSize(paginationModel.pageSize)
     }
@@ -99,7 +99,7 @@ const BookingList = ({
 
   const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
-      const _pageSize = env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+      const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
       if (suppliers && statuses) {
         setLoading(true)
@@ -124,7 +124,7 @@ const BookingList = ({
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-        if (env.isMobile()) {
+        if (env.isMobile) {
           const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
           setRows(_rows)
           setRowCount(totalRecords)
@@ -316,7 +316,7 @@ const BookingList = ({
   }, [suppliers, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (env.isMobile()) {
+    if (env.isMobile) {
       const element = document.querySelector('body')
 
       if (element) {
@@ -389,7 +389,7 @@ const BookingList = ({
               </CardContent>
             </Card>
           )
-        ) : env.isMobile() ? (
+        ) : env.isMobile ? (
           <>
             {rows.map((booking) => {
               const _bookingCar = booking.car as bookcarsTypes.Car

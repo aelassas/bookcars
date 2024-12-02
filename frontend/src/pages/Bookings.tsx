@@ -50,7 +50,7 @@ const Bookings = () => {
             <div>
               <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
               <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
-              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile()} />
+              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile} />
             </div>
           </div>
           <div className="col-2">
@@ -61,7 +61,7 @@ const Bookings = () => {
               statuses={statuses}
               filter={filter}
               loading={loadingSuppliers}
-              hideDates={env.isMobile()}
+              hideDates={env.isMobile}
               checkboxSelection={false}
             />
           </div>

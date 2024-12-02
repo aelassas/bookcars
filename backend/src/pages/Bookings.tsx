@@ -89,7 +89,7 @@ const Bookings = () => {
                   onSubmit={handleBookingFilterSubmit}
                   language={(user && user.language) || env.DEFAULT_LANGUAGE}
                   className="cl-booking-filter"
-                  collapse={!env.isMobile()}
+                  collapse={!env.isMobile}
                 />
               </>
             )}
@@ -104,8 +104,8 @@ const Bookings = () => {
               statuses={statuses}
               filter={filter}
               loading={loadingSuppliers}
-              hideDates={env.isMobile()}
-              checkboxSelection={!env.isMobile()}
+              hideDates={env.isMobile}
+              checkboxSelection={!env.isMobile}
             />
           </div>
         </div>

@@ -130,6 +130,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     password: passwordHash,
     type: bookcarsTypes.UserType.Supplier,
     avatar: 'avatar.jpg',
+    minimumRentalDays: 2,
   }
   const supplier = new User(body)
   await supplier.save()

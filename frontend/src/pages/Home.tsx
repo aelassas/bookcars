@@ -67,8 +67,8 @@ const Home = () => {
 
         </div>
 
-        <div className="home-suppliers">
-          {suppliers.length > 0 && (
+        <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
+          {suppliers.length > 3 && (
             <>
               <h1>{strings.SUPPLIERS_TITLE}</h1>
               <SupplierCarrousel suppliers={suppliers} />
@@ -84,7 +84,7 @@ const Home = () => {
                 value={tabValue}
                 onChange={handleTabChange}
                 aria-label="destinations"
-                TabIndicatorProps={{ sx: { display: env.isMobile() ? 'none' : null } }}
+                TabIndicatorProps={{ sx: { display: env.isMobile ? 'none' : null } }}
                 sx={{
                   '& .MuiTabs-flexContainer': {
                     flexWrap: 'wrap',
@@ -252,7 +252,7 @@ const Home = () => {
       </div>
 
       <Dialog
-        fullWidth={env.isMobile()}
+        fullWidth={env.isMobile}
         maxWidth={false}
         open={openLocationSearchFormDialog}
         onClose={() => {
@@ -271,7 +271,7 @@ const Home = () => {
       </Dialog>
 
       <Dialog
-        fullWidth={env.isMobile()}
+        fullWidth={env.isMobile}
         maxWidth={false}
         open={openRangeSearchFormDialog}
         onClose={() => {

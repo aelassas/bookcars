@@ -136,8 +136,8 @@ const CarFilter = ({
               <LocationSelectList
                 label={commonStrings.PICK_UP_LOCATION}
                 hidePopupIcon
-                customOpen={env.isMobile()}
-                init={!env.isMobile()}
+                customOpen={env.isMobile}
+                init={!env.isMobile}
                 required
                 variant="standard"
                 value={pickupLocation as bookcarsTypes.Location}
@@ -150,8 +150,8 @@ const CarFilter = ({
                   label={commonStrings.DROP_OFF_LOCATION}
                   value={dropOffLocation as bookcarsTypes.Location}
                   hidePopupIcon
-                  customOpen={env.isMobile()}
-                  init={!env.isMobile()}
+                  customOpen={env.isMobile}
+                  init={!env.isMobile}
                   required
                   variant="standard"
                   onChange={handleDropOffLocationChange}
@@ -248,8 +248,8 @@ const CarFilter = ({
                     <LocationSelectList
                       label={commonStrings.PICK_UP_LOCATION}
                       hidePopupIcon
-                      customOpen={env.isMobile()}
-                      init={!env.isMobile()}
+                      customOpen={env.isMobile}
+                      init={!env.isMobile}
                       required
                       variant="standard"
                       value={pickupLocation as bookcarsTypes.Location}
@@ -308,8 +308,8 @@ const CarFilter = ({
                     label={commonStrings.DROP_OFF_LOCATION}
                     value={dropOffLocation as bookcarsTypes.Location}
                     hidePopupIcon
-                    customOpen={env.isMobile()}
-                    init={!env.isMobile()}
+                    customOpen={env.isMobile}
+                    init={!env.isMobile}
                     required
                     readOnly={sameLocation}
                     variant="standard"

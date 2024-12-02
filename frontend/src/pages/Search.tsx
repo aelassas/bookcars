@@ -87,14 +87,17 @@ const Search = () => {
           multimedia,
           rating,
           seats,
+          days: bookcarsHelper.days(from, to),
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
       }
     }
 
-    updateSuppliers()
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats])
+    if (from && to) {
+      updateSuppliers()
+    }
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
 
   const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
     if (suppliers.length < allSuppliers.length) {
@@ -205,6 +208,7 @@ const Search = () => {
         multimedia,
         rating,
         seats,
+        days: bookcarsHelper.days(from, to),
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
@@ -314,7 +318,7 @@ const Search = () => {
       )}
 
       <Dialog
-        fullWidth={env.isMobile()}
+        fullWidth={env.isMobile}
         maxWidth={false}
         open={openMapDialog}
         onClose={() => {

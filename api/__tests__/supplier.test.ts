@@ -181,6 +181,7 @@ describe('PUT /api/update-supplier', () => {
       location,
       phone,
       payLater,
+      minimumRentalDays: 3,
     }
     let res = await request(app)
       .put('/api/update-supplier')
@@ -192,6 +193,7 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.location).toBe(location)
     expect(res.body.phone).toBe(phone)
     expect(res.body.payLater).toBeFalsy()
+    expect(res.body.minimumRentalDays).toBe(3)
 
     // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
@@ -557,8 +559,18 @@ describe('POST /api/frontend-suppliers', () => {
         moreThanFourDoors: true,
       },
       ranges: [bookcarsTypes.CarRange.Midi],
+      days: 3,
     }
     let res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.length).toBe(2)
+    expect(res.body[0].carCount).toBe(1)
+    expect(res.body[1].carCount).toBe(1)
+
+    payload.days = undefined
+    res = await request(app)
       .post('/api/frontend-suppliers')
       .send(payload)
     expect(res.statusCode).toBe(200)

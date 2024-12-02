@@ -8,45 +8,6 @@ div.home {
   transform: translate3d(0, 0, 0);
 }
 
-/* Device width is less than or equal to 960px */
-
-@media only screen and (width <=960px) {
-  div.home div.home-content {
-    padding: 60px 0;
-    justify-content: flex-start !important;
-    height: 800px;
-  }
-
-  div.home-cover {
-    font-size: 40px;
-    font-weight: 800;
-    padding: 20px 5px 10px;
-  }
-
-  div.home div.home-content div.home-search {
-    width: calc(100% - 40px);
-    padding: 20px;
-    margin: 10px 0;
-  }
-
-  div.home div.car-size div.boxes {
-    display: flex;
-    flex-direction: column;
-  }
-
-  div.home div.car-size div.boxes div.box {
-    margin-bottom: 30px;
-  }
-}
-
-/* Device width is between 500px and 960px */
-
-@media only screen and (width >=500px) and (width <=960px) {
-  div.home footer div.secure-payment {
-    bottom: 0;
-  }
-}
-
 div.home div.home-content {
   position: relative;
   display: flex;
@@ -183,7 +144,44 @@ div.home div.home-map {
   margin: 15px 0 30px;
 }
 
-/* Device width is greater than or equal to 960px */
+@media only screen and (width <=960px) {
+  div.home div.home-content {
+    padding: 60px 0;
+    justify-content: flex-start !important;
+    height: 800px;
+  }
+
+  div.home-cover {
+    font-size: 40px;
+    font-weight: 800;
+    padding: 20px 5px 10px;
+  }
+
+  div.home div.home-content div.home-search {
+    width: calc(100% - 40px);
+    padding: 20px;
+    margin: 10px 0;
+  }
+
+  div.home div.car-size div.boxes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.home div.car-size div.boxes div.box {
+    margin-bottom: 30px;
+  }
+
+  div.home div.home-map {
+    width: 100%;
+    padding: 5px;
+  }
+
+  div.home div.home-map .map {
+    min-height: 0;
+    height: 340px;
+  }
+}
 
 @media only screen and (width >=960px) {
   div.home div.home-content {

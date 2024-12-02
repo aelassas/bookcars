@@ -187,8 +187,8 @@ const SearchForm = ({
         <LocationSelectList
           label={commonStrings.PICK_UP_LOCATION}
           hidePopupIcon
-          customOpen={env.isMobile()}
-          init={!env.isMobile()}
+          customOpen={env.isMobile}
+          init={!env.isMobile}
           required
           variant="outlined"
           value={selectedPickupLocation}
@@ -274,8 +274,8 @@ const SearchForm = ({
           <LocationSelectList
             label={commonStrings.DROP_OFF_LOCATION}
             hidePopupIcon
-            customOpen={env.isMobile()}
-            init={!env.isMobile()}
+            customOpen={env.isMobile}
+            init={!env.isMobile}
             value={selectedDropOffLocation}
             required
             variant="outlined"

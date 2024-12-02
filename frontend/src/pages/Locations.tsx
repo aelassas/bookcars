@@ -37,7 +37,7 @@ const Locations = () => {
       </div>
 
       <Dialog
-        fullWidth={env.isMobile()}
+        fullWidth={env.isMobile}
         maxWidth={false}
         open={openSearchFormDialog}
         onClose={() => {

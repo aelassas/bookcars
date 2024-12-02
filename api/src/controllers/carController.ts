@@ -644,6 +644,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       multimedia,
       rating,
       seats,
+      days,
     } = body
 
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
@@ -709,6 +710,11 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
+    let $supplierMatch: mongoose.FilterQuery<any> = {}
+    if (days) {
+      $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
+    }
+
     const data = await Car.aggregate(
       [
         { $match },
@@ -727,6 +733,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
           },
         },
         { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        {
+          $match: $supplierMatch,
+        },
         // {
         //   $lookup: {
         //     from: 'Location',
