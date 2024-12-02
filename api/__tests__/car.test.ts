@@ -679,6 +679,13 @@ describe('POST /api/frontend-cars/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
+    payload.days = undefined
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
     // test success (filter)
     payload.rating = undefined
     payload.ranges = undefined
