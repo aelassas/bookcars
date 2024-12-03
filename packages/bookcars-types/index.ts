@@ -159,6 +159,7 @@ export interface UpdateSupplierPayload {
   location: string
   bio: string
   payLater: boolean
+  licenseRequired: boolean
   minimumRentalDays?: number
 }
 
@@ -258,13 +259,13 @@ export interface CreateUserPayload {
   payLater?: boolean
   supplier?: string
   contracts?: Contract[]
+  licenseRequired?: boolean
   minimumRentalDays?: number
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
   _id: string
   enableEmailNotifications?: boolean
-  payLater?: boolean
 }
 
 export interface ChangePasswordPayload {
@@ -358,6 +359,8 @@ export interface User {
   customerId?: string
   carCount?: number
   contracts?: Contract[]
+  licenseRequired?: boolean
+  license?: string | null
   minimumRentalDays?: number
 }
 

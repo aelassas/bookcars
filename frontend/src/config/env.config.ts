@@ -37,6 +37,8 @@ const env = {
   CDN_USERS: String(import.meta.env.VITE_BC_CDN_USERS),
   CDN_CARS: String(import.meta.env.VITE_BC_CDN_CARS),
   CDN_LOCATIONS: String(import.meta.env.VITE_BC_CDN_LOCATIONS),
+  CDN_LICENSES: String(import.meta.env.VITE_BC_CDN_LICENSES),
+  CDN_TEMP_LICENSES: String(import.meta.env.VITE_BC_CDN_TEMP_LICENSES),
   PAGE_OFFSET: 200,
   INFINITE_SCROLL_OFFSET: 40,
   SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,

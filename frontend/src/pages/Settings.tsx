@@ -25,6 +25,7 @@ import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 
 import '@/assets/css/settings.css'
+import DriverLicense from '@/components/DriverLicense'
 
 const Settings = () => {
   const navigate = useNavigate()
@@ -178,6 +179,7 @@ const Settings = () => {
     <Layout onLoad={onLoad} user={user} strict>
       {visible && user && (
         <div className="settings">
+
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
             <form onSubmit={handleSubmit}>
               <Avatar
@@ -258,16 +260,19 @@ const Settings = () => {
               </div>
             </form>
           </Paper>
+
+          <Paper className="settings-form settings-form-wrapper" elevation={10}>
+            <h1 className="settings-form-title">{commonStrings.DRIVER_LICENSE}</h1>
+            <DriverLicense user={user} />
+          </Paper>
+
           <Paper className="settings-net settings-net-wrapper" elevation={10}>
-            <h1 className="settings-form-title">
-              {' '}
-              {strings.NETWORK_SETTINGS}
-              {' '}
-            </h1>
+            <h1 className="settings-form-title">{strings.NETWORK_SETTINGS}</h1>
             <FormControl component="fieldset">
               <FormControlLabel control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />} label={strings.SETTINGS_EMAIL_NOTIFICATIONS} />
             </FormControl>
           </Paper>
+
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}

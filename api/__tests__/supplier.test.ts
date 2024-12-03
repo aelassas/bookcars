@@ -182,6 +182,7 @@ describe('PUT /api/update-supplier', () => {
       phone,
       payLater,
       minimumRentalDays: 3,
+      licenseRequired: true,
     }
     let res = await request(app)
       .put('/api/update-supplier')
@@ -194,6 +195,7 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.phone).toBe(phone)
     expect(res.body.payLater).toBeFalsy()
     expect(res.body.minimumRentalDays).toBe(3)
+    expect(res.body.licenseRequired).toBeTruthy()
 
     // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()

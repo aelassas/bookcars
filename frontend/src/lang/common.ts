@@ -86,6 +86,8 @@ const strings = new LocalizedStrings({
     LOCATION_TERM: 'Lieu / terme',
     EDIT: 'Modifier',
     OR: 'ou',
+    DRIVER_LICENSE: 'Permis de conduire',
+    UPLOAD_FILE: 'Charger un ficher...',
   },
   en: {
     BOOKCARS: 'BookCars',
@@ -170,6 +172,8 @@ const strings = new LocalizedStrings({
     LOCATION_TERM: 'Location / term',
     EDIT: 'Edit',
     OR: 'or',
+    DRIVER_LICENSE: "Driver's License",
+    UPLOAD_FILE: 'Upload file...',
   },
   es: {
     BOOKCARS: 'BookCars',
@@ -254,6 +258,8 @@ const strings = new LocalizedStrings({
     LOCATION_TERM: 'Ubicación / término',
     EDIT: 'Modificar',
     OR: 'o',
+    DRIVER_LICENSE: 'Licencia de conducir',
+    UPLOAD_FILE: 'Subir archivo...',
   },
 })
 
