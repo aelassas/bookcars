@@ -102,3 +102,11 @@ jobs:
           directory: ./api/coverage
           fail_ci_if_error: true
           verbose: true
+    - name: Coveralls
+      uses: coverallsapp/github-action@v2
+      with:
+        base-path: ./api/coverage
+        files: ./cobertura-coverage.xml
+        format: cobertura
+        fail-on-error: true
+        debug: true
