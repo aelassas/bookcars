@@ -110,5 +110,4 @@ jobs:
         file: ./api/coverage/cobertura-coverage.xml
         base-path: api
         fail-on-error: true
-        debug: true
         measure: true
