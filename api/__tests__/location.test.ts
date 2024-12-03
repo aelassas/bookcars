@@ -155,12 +155,12 @@ describe('POST /api/create-location', () => {
       {
         latitude: 28.1268755,
         longitude: 1.752839999999997,
-        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
+        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }, { language: 'es', value: 'Parking 1' }],
       },
       {
         latitude: 28.2268755,
         longitude: 1.8528399999999976,
-        values: [{ language: 'en', value: 'Parking spot 2' }, { language: 'fr', value: 'Parking 2' }],
+        values: [{ language: 'en', value: 'Parking spot 2' }, { language: 'fr', value: 'Parking 2' }, { language: 'es', value: 'Parking 1' }],
       },
       {
         latitude: 27.2268755,
@@ -226,9 +226,9 @@ describe('PUT /api/update-location/:id', () => {
     expect(location?.parkingSpots.length).toBe(3)
 
     const parkingSpot2 = (location!.parkingSpots[1]) as unknown as FlattenMaps<bookcarsTypes.ParkingSpot>
-    expect(parkingSpot2.values!.length).toBe(2)
+    expect(parkingSpot2.values!.length).toBe(3)
     parkingSpot2.values![0].value = 'Parking spot 2 updated'
-    parkingSpot2.values![2] = { language: 'es', value: 'Parking spot 2 es' }
+    parkingSpot2.values![3] = { language: 'pt', value: 'Parking spot 2 pt' }
 
     const payload: bookcarsTypes.UpsertLocationPayload = {
       country: countryId,
@@ -240,12 +240,12 @@ describe('PUT /api/update-location/:id', () => {
         {
           latitude: 28.1268755,
           longitude: 1.752839999999997,
-          values: [{ language: 'en', value: 'Parking spot 3' }, { language: 'fr', value: 'Parking 3' }],
+          values: [{ language: 'en', value: 'Parking spot 3' }, { language: 'fr', value: 'Parking 3' }, { language: 'es', value: 'Parking 3' }],
         },
         {
           latitude: 28.2268755,
           longitude: 1.8528399999999976,
-          values: [{ language: 'en', value: 'Parking spot 4' }, { language: 'fr', value: 'Parking 4' }],
+          values: [{ language: 'en', value: 'Parking spot 4' }, { language: 'fr', value: 'Parking 4' }, { language: 'es', value: 'Parking 3' }],
         },
       ],
     }
@@ -282,7 +282,7 @@ describe('PUT /api/update-location/:id', () => {
       {
         latitude: 28.1268755,
         longitude: 1.752839999999997,
-        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }],
+        values: [{ language: 'en', value: 'Parking spot 1' }, { language: 'fr', value: 'Parking 1' }, { language: 'es', value: 'Parking 1' }],
       },
     ]
     res = await request(app)
