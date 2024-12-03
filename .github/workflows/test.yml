@@ -109,6 +109,7 @@ jobs:
       with:
         github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
         file: ./api/coverage/cobertura-coverage.xml
+        base-path: api
         fail-on-error: true
         debug: true
         measure: true
