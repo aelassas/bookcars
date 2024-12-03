@@ -107,7 +107,6 @@ jobs:
     - name: Upload coverage reports to Coveralls
       uses: coverallsapp/github-action@v2
       with:
-        github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
         file: ./api/coverage/cobertura-coverage.xml
         base-path: api
         fail-on-error: true
