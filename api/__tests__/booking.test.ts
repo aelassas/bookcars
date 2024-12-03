@@ -27,6 +27,9 @@ const __dirname = path.dirname(__filename)
 const CONTRACT1 = 'contract1.pdf'
 const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
 
+const LICENSE = 'contract1.pdf'
+const LICENSE_PATH = path.join(__dirname, `./contracts/${LICENSE}`)
+
 const DRIVER1_NAME = 'driver1'
 
 let SUPPLIER_ID: string
@@ -457,6 +460,14 @@ describe('POST /api/checkout', () => {
     driver!.language = 'en'
     await driver?.save()
 
+    // test failure (paymentIntendId and sessionId not found)
+    payload.paymentIntentId = undefined
+    payload.sessionId = undefined
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test success (checkout session)
     payload.paymentIntentId = undefined
     payload.sessionId = 'xxxxxxxxxxxxxx'
@@ -466,7 +477,7 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     const { bookingId } = res.body
     expect(bookingId).toBeTruthy()
-    const booking = await Booking.findById(bookingId)
+    let booking = await Booking.findById(bookingId)
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Void)
     expect(booking?.sessionId).toBe(payload.sessionId)
 
@@ -493,7 +504,24 @@ describe('POST /api/checkout', () => {
     expect(bookings.length).toBeGreaterThan(3)
     payload.booking!.additionalDriver = true
 
-    // test success (payLater with new driver)
+    // test failure (supplier not found)
+    const supplierId = payload.booking!.supplier
+    payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.booking!.supplier = supplierId
+
+    // test failure (user not found)
+    payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.booking!.driver = undefined
+
+    // test success (payLater with new driver with no license)
     payload.payLater = true
     payload.driver = {
       fullName: 'driver2',
@@ -507,7 +535,7 @@ describe('POST /api/checkout', () => {
     const driver2 = await User.findOne({ email: payload.driver.email })
     expect(driver2).toBeTruthy()
     DRIVER2_ID = driver2!.id
-    const token = await Token.findOne({ user: DRIVER2_ID })
+    let token = await Token.findOne({ user: DRIVER2_ID })
     expect(token).not.toBeNull()
     expect(token?.token.length).toBeGreaterThan(0)
     await token?.deleteOne()
@@ -522,8 +550,59 @@ describe('POST /api/checkout', () => {
       await notificationCounter!.save()
     }
 
+    // test failure (license required)
+    supplier = await User.findById(payload.booking!.supplier)
+    supplier!.licenseRequired = true
+    await supplier?.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (license file not found)
+    payload.driver.license = LICENSE
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    // test success (license)
+    payload.driver.email = testHelper.GetRandomEmail()
+    let license = path.join(env.CDN_TEMP_LICENSES, LICENSE)
+    if (!await helper.exists(license)) {
+      await fs.copyFile(LICENSE_PATH, license)
+    }
+    payload.driver.license = LICENSE
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    const driver3 = await User.findOne({ email: payload.driver.email })
+    expect(driver3).toBeTruthy()
+    token = await Token.findOne({ user: driver3!.id })
+    expect(token).not.toBeNull()
+    expect(token?.token.length).toBeGreaterThan(0)
+    expect(res.body.bookingId).toBeTruthy()
+    booking = await Booking.findById(res.body.bookingId)
+    expect(booking).toBeTruthy()
+    if (admin) {
+      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
+      expect(notification).toBeTruthy()
+      await notification!.deleteOne()
+      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
+      expect(notificationCounter?.count).toBeTruthy()
+      notificationCounter!.count! -= 1
+      await notificationCounter!.save()
+    }
+    await booking?.deleteOne()
+    await token?.deleteOne()
+    await driver3!.deleteOne()
+    supplier!.licenseRequired = false
+    await supplier?.save()
+
     // test success (payLater without new driver)
     payload.driver = undefined
+    payload.booking!.driver = DRIVER1_ID
     payload.additionalDriver = {
       email: testHelper.GetRandomEmail(),
       fullName: 'Addtional Driver',
@@ -547,13 +626,45 @@ describe('POST /api/checkout', () => {
       await notificationCounter!.save()
     }
 
-    // test success (payLater without additional driver)
+    // test failure (car not found)
     payload.additionalDriver = undefined
     payload.booking!.car = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
     expect(res.statusCode).toBe(400)
+    payload.booking!.car = CAR1_ID
+
+    // test failure (license required)
+    supplier!.licenseRequired = true
+    await supplier?.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (license file not found)
+    driver = await User.findById(DRIVER1_ID)
+    driver!.license = `${nanoid()}.pdf`
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
+    // test success (license file found)
+    license = path.join(env.CDN_LICENSES, LICENSE)
+    if (!await helper.exists(license)) {
+      await fs.copyFile(LICENSE_PATH, license)
+    }
+    driver!.license = LICENSE
+    await driver!.save()
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    supplier!.licenseRequired = true
+    await supplier?.save()
 
     // test failure (wrong pickupLocation)
     payload.booking!.car = CAR1_ID
