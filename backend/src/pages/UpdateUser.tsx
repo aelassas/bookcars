@@ -56,7 +56,7 @@ const UpdateUser = () => {
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(true)
+  const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
