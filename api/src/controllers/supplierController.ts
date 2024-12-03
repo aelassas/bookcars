@@ -91,6 +91,7 @@ export const update = async (req: Request, res: Response) => {
         payLater: supplier.payLater,
         contracts: supplier.contracts,
         minimumRentalDays: supplier.minimumRentalDays,
+        licenseRequired: supplier.licenseRequired,
       })
     }
     logger.error('[supplier.update] Supplier not found:', _id)
