@@ -95,9 +95,10 @@ jobs:
         BC_STRIPE_SECRET_KEY: ${{ secrets.BC_STRIPE_SECRET_KEY }}
         BC_ADMIN_EMAIL: ${{ vars.BC_ADMIN_EMAIL }}
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: cobertura-coverage.xml
+          files: ./cobertura-coverage.xml
           directory: ./api/coverage
           fail_ci_if_error: true
+          verbose: true
