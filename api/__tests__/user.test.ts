@@ -29,6 +29,11 @@ const AVATAR2_PATH = path.join(__dirname, `./img/${AVATAR2}`)
 const CONTRACT1 = 'contract1.pdf'
 const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
 
+const LICENSE1 = 'contract1.pdf'
+const LICENSE1_PATH = path.join(__dirname, `./contracts/${LICENSE1}`)
+const LICENSE2 = 'contract2.pdf'
+const LICENSE2_PATH = path.join(__dirname, `./contracts/${LICENSE2}`)
+
 let USER1_ID: string
 let USER2_ID: string
 let ADMIN_ID: string
@@ -214,6 +219,41 @@ describe('POST /api/create-user', () => {
     expect(contractFileResult).toBeTruthy()
     expect(await helper.exists(path.join(env.CDN_CONTRACTS, contractFileResult!))).toBeTruthy()
     let userToken = await Token.findOne({ user: USER2_ID })
+    expect(userToken).not.toBeNull()
+    expect(userToken?.token.length).toBeGreaterThan(0)
+    await userToken?.deleteOne()
+
+    // test success (supplier)
+    payload = {
+      email: testHelper.GetRandomEmail(),
+      fullName: 'supplier',
+      language: testHelper.LANGUAGE,
+      birthDate: new Date(1992, 5, 25),
+      phone: '09090909',
+      location: 'location',
+      bio: 'bio',
+      avatar: AVATAR1,
+      type: bookcarsTypes.UserType.Supplier,
+      licenseRequired: true,
+    }
+    res = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    user = await User.findOne({ email: payload.email })
+    expect(user).not.toBeNull()
+    expect(user?.type).toBe(payload.type)
+    expect(user?.email).toBe(payload.email)
+    expect(user?.fullName).toBe(payload.fullName)
+    expect(user?.language).toBe(payload.language)
+    expect(user?.birthDate).toStrictEqual(payload.birthDate)
+    expect(user?.phone).toBe(payload.phone)
+    expect(user?.location).toBe(payload.location)
+    expect(user?.bio).toBe(payload.bio)
+    expect(user?.licenseRequired).toBeTruthy()
+    await user?.deleteOne()
+    userToken = await Token.findOne({ user: user?._id })
     expect(userToken).not.toBeNull()
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
@@ -862,6 +902,7 @@ describe('POST /api/update-user', () => {
       type: bookcarsTypes.UserType.Supplier,
       payLater: false,
       minimumRentalDays: 3,
+      licenseRequired: true,
     }
     let res = await request(app)
       .post('/api/update-user')
@@ -878,6 +919,7 @@ describe('POST /api/update-user', () => {
     expect(user?.bio).toBe(payload.bio)
     expect(user?.payLater).toBeFalsy()
     expect(user?.minimumRentalDays).toBe(3)
+    expect(user?.licenseRequired).toBeTruthy()
 
     // test success
     const { fullName, payLater } = (user!)
@@ -911,6 +953,7 @@ describe('POST /api/update-user', () => {
     // test success (enableEmailNotifications)
     payload._id = USER1_ID
     payload.enableEmailNotifications = false
+    payload.type = bookcarsTypes.UserType.User
     res = await request(app)
       .post('/api/update-user')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1391,6 +1434,208 @@ describe('GET /api/has-password/:id', () => {
   })
 })
 
+describe('POST /api/create-license', () => {
+  it('should create a license', async () => {
+    // test success
+    let res = await request(app)
+      .post('/api/create-license')
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(200)
+    const filename = res.body as string
+    const filePath = path.join(env.CDN_TEMP_LICENSES, filename)
+    const licenseExists = await helper.exists(filePath)
+    expect(licenseExists).toBeTruthy()
+    await fs.unlink(filePath)
+
+    // test failure (file not sent)
+    res = await request(app)
+      .post('/api/create-license')
+    expect(res.statusCode).toBe(400)
+
+    // test failure (filename not valid)
+    const invalidContract = path.join(env.CDN_TEMP_LICENSES, `${nanoid()}`)
+    await fs.copyFile(LICENSE1_PATH, invalidContract)
+    res = await request(app)
+      .post('/api/create-license')
+      .attach('file', invalidContract)
+    expect(res.statusCode).toBe(400)
+    await fs.unlink(invalidContract)
+  })
+})
+
+describe('POST /api/update-license/:id', () => {
+  it('should update a license', async () => {
+    const token = await testHelper.signinAsUser()
+
+    // test success (no initial license)
+    let user = await User.findById(USER1_ID)
+    let res = await request(app)
+      .post(`/api/update-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(200)
+    let filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    user = await User.findById(USER1_ID)
+    expect(user).toBeTruthy()
+    expect(user?.license).toBe(filename)
+
+    // test success (initial license)
+    res = await request(app)
+      .post(`/api/update-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', LICENSE2_PATH)
+    expect(res.statusCode).toBe(200)
+    filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    user = await User.findById(USER1_ID)
+    expect(filename).toBe(user?.license)
+
+    // test success (license file does not exist)
+    user!.license = `${nanoid()}.pdf`
+    await user?.save()
+    res = await request(app)
+      .post(`/api/update-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(200)
+    filename = res.body as string
+    expect(filename).toBeTruthy()
+    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    user = await User.findById(USER1_ID)
+    expect(filename).toBe(user?.license)
+    user!.license = filename
+    await user?.save()
+
+    // test failure (file not sent)
+    res = await request(app)
+      .post(`/api/update-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    // test failure (filename not valid)
+    const invalidContract = path.join(env.CDN_TEMP_LICENSES, `${nanoid()}`)
+    await fs.copyFile(LICENSE1_PATH, invalidContract)
+    res = await request(app)
+      .post(`/api/update-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', invalidContract)
+    expect(res.statusCode).toBe(400)
+    await fs.unlink(invalidContract)
+
+    // test failure (user not found)
+    res = await request(app)
+      .post(`/api/update-license/${testHelper.GetRandromObjectIdAsString()}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(204)
+
+    // test failure (user id not valid)
+    res = await request(app)
+      .post('/api/update-license/0')
+      .set(env.X_ACCESS_TOKEN, token)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/delete-license/:id', () => {
+  it('should delete a license', async () => {
+    const token = await testHelper.signinAsUser()
+
+    // test success
+    let user = await User.findById(USER1_ID)
+    expect(user).toBeTruthy()
+    expect(user?.license).toBeTruthy()
+    const filename = user?.license as string
+    let imageExists = await helper.exists(path.join(env.CDN_LICENSES, filename))
+    expect(imageExists).toBeTruthy()
+    let res = await request(app)
+      .post(`/api/delete-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    imageExists = await helper.exists(path.join(env.CDN_LICENSES, filename))
+    expect(imageExists).toBeFalsy()
+    user = await User.findById(USER1_ID)
+    expect(user?.license).toBeFalsy()
+
+    // test success (no license)
+    user = await User.findById(USER1_ID)
+    expect(user).toBeTruthy()
+    user!.license = undefined
+    await user!.save()
+    res = await request(app)
+      .post(`/api/delete-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (license with no file)
+    user = await User.findById(USER1_ID)
+    expect(user).toBeTruthy()
+    user!.license = null
+    await user!.save()
+    res = await request(app)
+      .post(`/api/delete-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (license with file not found)
+    user = await User.findById(USER1_ID)
+    expect(user).toBeTruthy()
+    user!.license = `${nanoid()}.pdf`
+    await user!.save()
+    res = await request(app)
+      .post(`/api/delete-license/${USER1_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test failure (user not found)
+    res = await request(app)
+      .post(`/api/delete-license/${testHelper.GetRandromObjectIdAsString()}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+
+    // test failure (user id not valid)
+    res = await request(app)
+      .post('/api/delete-license/invalid-id')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/delete-temp-license/:image', () => {
+  it('should delete a temporary license', async () => {
+    // init
+    const tempImage = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
+    if (!await helper.exists(tempImage)) {
+      await fs.copyFile(LICENSE1_PATH, tempImage)
+    }
+
+    // test success (temp file exists)
+    let res = await request(app)
+      .post(`/api/delete-temp-license/${LICENSE1}`)
+    expect(res.statusCode).toBe(200)
+    const tempImageExists = await helper.exists(tempImage)
+    expect(tempImageExists).toBeFalsy()
+
+    // test success (temp file not found)
+    res = await request(app)
+      .post('/api/delete-temp-license/unknown.pdf')
+    expect(res.statusCode).toBe(200)
+
+    // test failure (temp file not valid)
+    res = await request(app)
+      .post('/api/delete-temp-license/unknown')
+    expect(res.statusCode).toBe(400)
+  })
+})
+
 describe('POST /api/delete-users', () => {
   it('should delete users', async () => {
     const token = await testHelper.signinAsAdmin()
@@ -1409,7 +1654,17 @@ describe('POST /api/delete-users', () => {
     let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID, supplier1Id, supplier2Id]
     const user1 = await User.findById(USER1_ID)
     user1!.avatar = `${nanoid()}.jpg`
+    user1!.license = `${nanoid()}.pdf`
     await user1?.save()
+    const user2 = await User.findById(USER2_ID)
+    const licenseFilename = `${user2!.id}.pdf`
+    const license = path.join(env.CDN_LICENSES, licenseFilename)
+    if (!await helper.exists(license)) {
+      await fs.copyFile(LICENSE1_PATH, license)
+    }
+    user2!.license = licenseFilename
+    await user2?.save()
+
     let users = await User.find({ _id: { $in: payload } })
     expect(users.length).toBe(5)
     let res = await request(app)
