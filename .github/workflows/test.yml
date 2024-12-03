@@ -6,8 +6,8 @@ name: test
 on:
   push:
     branches: [ demo ]
-  pull_request:
-    branches: [ demo ]
+  # pull_request:
+  #   branches: [ demo ]
 
 jobs:
   test:
