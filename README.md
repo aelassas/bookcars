@@ -113,4 +113,5 @@ You can also install the Android App by downloading the APK and installing it on
 16. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
 # License
+
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
