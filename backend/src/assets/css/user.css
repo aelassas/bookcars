@@ -18,6 +18,16 @@ div.user div.col-1 .user-info {
   color: #676767;
 }
 
+div.user div.col-1 div.license{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+div.user div.col-1 div.license span{
+  color: #676767;
+}
+
 div.user div.col-1 .user-actions {
   text-align: center;
 }

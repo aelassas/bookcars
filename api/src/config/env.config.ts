@@ -260,6 +260,20 @@ export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', true)
 export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', true)
 
 /**
+ * Licenses' cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
+
+/**
+ * Licenses' temp cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
+
+/**
  * Backend host.
  *
  * @type {string}
@@ -373,6 +387,8 @@ export interface User extends Document {
   payLater?: boolean
   customerId?: string
   contracts?: bookcarsTypes.Contract[]
+  licenseRequired?: boolean
+  license?: string | null
   minimumRentalDays?: number
   expireAt?: Date
 }
@@ -403,6 +419,8 @@ export interface UserInfo {
   type?: string
   blacklisted?: boolean
   payLater?: boolean
+  licenseRequired?: boolean,
+  license?: string
 }
 
 /**

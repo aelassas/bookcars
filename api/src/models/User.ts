@@ -114,6 +114,13 @@ const userSchema = new Schema<env.User>(
       },
       file: String,
     }],
+    licenseRequired: {
+      type: Boolean,
+      default: false,
+    },
+    license: {
+      type: String,
+    },
     minimumRentalDays: {
       type: Number,
     },

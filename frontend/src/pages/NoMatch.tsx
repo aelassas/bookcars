@@ -12,9 +12,7 @@ const NoMatch = ({ hideHeader }: NoMatchProps) => {
   const noMatch = () => (
     <div className="msg">
       <h2>{strings.NO_MATCH}</h2>
-      <p>
-        <Link href="/">{commonStrings.GO_TO_HOME}</Link>
-      </p>
+      <Link href="/" className="msg-link">{commonStrings.GO_TO_HOME}</Link>
     </div>
   )
 

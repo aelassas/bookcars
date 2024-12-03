@@ -82,6 +82,8 @@ const strings = new LocalizedStrings({
     NAME: 'Nom',
     LONGITUDE: 'Longitude',
     LATITUDE: 'Latitude',
+    LICENSE_REQUIRED: 'Permis de Conduire Requis',
+    LICENSE: 'Permis de Conduire',
     MIN_RENTAL_DAYS: 'Jours Minimum de location',
   },
   en: {
@@ -163,6 +165,8 @@ const strings = new LocalizedStrings({
     NAME: 'Name',
     LONGITUDE: 'Longitude',
     LATITUDE: 'Latitude',
+    LICENSE_REQUIRED: "Driver's License Required",
+    LICENSE: "Driver's License",
     MIN_RENTAL_DAYS: 'Minimum Rental Days',
   },
 })

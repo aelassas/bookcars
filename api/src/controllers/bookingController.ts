@@ -4,6 +4,7 @@ import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
 import nodemailer from 'nodemailer'
 import path from 'node:path'
+import fs from 'node:fs/promises'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
@@ -202,9 +203,23 @@ export const checkout = async (req: Request, res: Response) => {
       driver.verified = false
       driver.blacklisted = false
       driver.type = bookcarsTypes.UserType.User
+      const { license } = driver
+      driver.license = null
 
       user = new User(driver)
       await user.save()
+
+      // create license
+      if (license) {
+        const tempLicense = path.join(env.CDN_TEMP_LICENSES, license)
+        if (await helper.exists(tempLicense)) {
+          const filename = `${user.id}${path.extname(tempLicense)}`
+          const filepath = path.join(env.CDN_LICENSES, filename)
+          await fs.rename(tempLicense, filepath)
+          user.license = filename
+          await user.save()
+        }
+      }
 
       const token = new Token({ user: user._id, token: helper.generateToken() })
       await token.save()

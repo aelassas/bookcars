@@ -44,7 +44,8 @@ const UpdateSupplier = () => {
   const [avatarError, setAvatarError] = useState(false)
   const [email, setEmail] = useState('')
   const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(true)
+  const [payLater, setPayLater] = useState(false)
+  const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,6 +191,7 @@ const UpdateSupplier = () => {
               setLocation(_supplier.location || '')
               setBio(_supplier.bio || '')
               setPayLater(_supplier.payLater || false)
+              setLicenseRequired(_supplier.licenseRequired || false)
               setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
               setVisible(true)
               setLoading(false)
@@ -246,6 +248,7 @@ const UpdateSupplier = () => {
         location,
         bio,
         payLater,
+        licenseRequired,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
 
@@ -308,10 +311,24 @@ const UpdateSupplier = () => {
                         setPayLater(e.target.checked)
                       }}
                       color="primary"
-                      disabled
                     />
                   )}
                   label={commonStrings.PAY_LATER}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={licenseRequired}
+                      onChange={(e) => {
+                        setLicenseRequired(e.target.checked)
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  label={commonStrings.LICENSE_REQUIRED}
                 />
               </FormControl>
 

@@ -12,6 +12,11 @@ const strings = new LocalizedStrings({
     DROP_OFF_DATE: 'Drop-off Date',
     DROP_OFF: 'Return to same location',
   },
+  es: {
+    PICK_UP_DATE: 'Fecha de recogida',
+    DROP_OFF_DATE: 'Fecha de entrega',
+    DROP_OFF: 'Devolución al mismo lugar',
+  },
 })
 
 langHelper.setLanguage(strings)

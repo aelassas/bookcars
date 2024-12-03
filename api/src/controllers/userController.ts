@@ -946,6 +946,7 @@ export const update = async (req: Request, res: Response) => {
       birthDate,
       enableEmailNotifications,
       payLater,
+      licenseRequired,
       minimumRentalDays,
     } = body
 
@@ -965,6 +966,9 @@ export const update = async (req: Request, res: Response) => {
     }
     if (typeof payLater !== 'undefined') {
       user.payLater = payLater
+    }
+    if (typeof licenseRequired !== 'undefined') {
+      user.licenseRequired = licenseRequired
     }
 
     await user.save()
@@ -1077,6 +1081,7 @@ export const getUser = async (req: Request, res: Response) => {
       birthDate: 1,
       payLater: 1,
       customerId: 1,
+      licenseRequired: 1,
       license: 1,
       minimumRentalDays: 1,
     }).lean()
@@ -1449,6 +1454,13 @@ export const deleteUsers = async (req: Request, res: Response) => {
           }
         }
 
+        if (user.license) {
+          const file = path.join(env.CDN_LICENSES, user.license)
+          if (await helper.exists(file)) {
+            await fs.unlink(file)
+          }
+        }
+
         if (user.type === bookcarsTypes.UserType.Supplier) {
           const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
@@ -1567,5 +1579,151 @@ export const hasPassword = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[user.hasPassword] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+ * Upload a license to temp folder.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const createLicense = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      throw new Error('req.file not found')
+    }
+    if (!req.file.originalname.includes('.')) {
+      throw new Error('File extension not found')
+    }
+
+    const filename = `${nanoid()}${path.extname(req.file.originalname)}`
+    const filepath = path.join(env.CDN_TEMP_LICENSES, filename)
+
+    await fs.writeFile(filepath, req.file.buffer)
+    return res.json(filename)
+  } catch (err) {
+    logger.error(`[user.createLicense] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+* Update a license.
+*
+* @export
+* @async
+* @param {Request} req
+* @param {Response} res
+* @returns {unknown}
+*/
+export const updateLicense = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { file } = req
+
+  try {
+    if (!file) {
+      throw new Error('req.file not found')
+    }
+    if (!file.originalname.includes('.')) {
+      throw new Error('File extension not found')
+    }
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('User Id not valid')
+    }
+
+    const user = await User.findOne({ _id: id, type: bookcarsTypes.UserType.User })
+
+    if (user) {
+      if (user.license) {
+        const licenseFile = path.join(env.CDN_LICENSES, user.license)
+        if (await helper.exists(licenseFile)) {
+          await fs.unlink(licenseFile)
+        }
+      }
+
+      const filename = `${user.id}${path.extname(file.originalname)}`
+      const filepath = path.join(env.CDN_LICENSES, filename)
+
+      await fs.writeFile(filepath, file.buffer)
+
+      user.license = filename
+      await user.save()
+      return res.json(filename)
+    }
+
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[user.updateLicense] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+* Delete a license.
+*
+* @export
+* @async
+* @param {Request} req
+* @param {Response} res
+* @returns {unknown}
+*/
+export const deleteLicense = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    if (!helper.isValidObjectId(id)) {
+      throw new Error('User Id not valid')
+    }
+
+    const user = await User.findOne({ _id: id, type: bookcarsTypes.UserType.User })
+
+    if (user) {
+      if (user.license) {
+        const licenseFile = path.join(env.CDN_LICENSES, user.license)
+        if (await helper.exists(licenseFile)) {
+          await fs.unlink(licenseFile)
+        }
+        user.license = null
+      }
+
+      await user.save()
+      return res.sendStatus(200)
+    }
+    return res.sendStatus(204)
+  } catch (err) {
+    logger.error(`[user.deleteLicense] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
+* Delete a temp license.
+*
+* @export
+* @async
+* @param {Request} req
+* @param {Response} res
+* @returns {*}
+*/
+export const deleteTempLicense = async (req: Request, res: Response) => {
+  const { file } = req.params
+
+  try {
+    if (!file.includes('.')) {
+      throw new Error('Filename not valid')
+    }
+    const licenseFile = path.join(env.CDN_TEMP_LICENSES, file)
+    if (await helper.exists(licenseFile)) {
+      await fs.unlink(licenseFile)
+    }
+
+    res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[user.deleteTempLicense] ${i18n.t('DB_ERROR')} ${file}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }

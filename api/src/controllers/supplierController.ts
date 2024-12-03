@@ -69,6 +69,7 @@ export const update = async (req: Request, res: Response) => {
         location,
         bio,
         payLater,
+        licenseRequired,
         minimumRentalDays,
       } = body
       supplier.fullName = fullName
@@ -76,6 +77,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.location = location
       supplier.bio = bio
       supplier.payLater = payLater
+      supplier.licenseRequired = licenseRequired
       supplier.minimumRentalDays = minimumRentalDays
 
       await supplier.save()
@@ -89,6 +91,7 @@ export const update = async (req: Request, res: Response) => {
         payLater: supplier.payLater,
         contracts: supplier.contracts,
         minimumRentalDays: supplier.minimumRentalDays,
+        licenseRequired: supplier.licenseRequired,
       })
     }
     logger.error('[supplier.update] Supplier not found:', _id)
@@ -188,6 +191,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       bio,
       payLater,
       contracts,
+      licenseRequired,
       minimumRentalDays,
     } = user
 
@@ -201,6 +205,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       bio,
       payLater,
       contracts,
+      licenseRequired,
       minimumRentalDays,
     })
   } catch (err) {
@@ -208,6 +213,7 @@ export const getSupplier = async (req: Request, res: Response) => {
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
+
 /**
  * Get Suppliers.
  *

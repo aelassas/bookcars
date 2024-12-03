@@ -3363,3 +3363,80 @@ export const getStayConnected = () => {
   const value = JSON.parse(localStorage.getItem('bc-stay-connected') ?? 'false')
   return value as boolean
 }
+
+/**
+* Create temporary license.
+*
+* @param {Blob} file
+* @returns {Promise<string>}
+*/
+export const createLicense = (file: Blob): Promise<string> => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axiosInstance
+    .post(
+      '/api/create-license',
+      formData,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+    )
+    .then((res) => res.data)
+}
+
+/**
+ * Update license.
+ *
+ * @param {string} userId
+
+ * @param {Blob} file
+ * @returns {Promise<bookcarsTypes.Response<string>>}
+ */
+export const updateLicense = (userId: string, file: Blob): Promise<bookcarsTypes.Response<string>> => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axiosInstance
+    .post(
+      `/api/update-license/${userId}`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+    )
+    .then((res) => ({ status: res.status, data: res.data }))
+}
+
+/**
+ * Delete license.
+ *
+ * @param {string} userId
+ * @param {string} language
+ * @returns {Promise<number>}
+ */
+export const deleteLicense = (userId: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-license/${userId}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+
+/**
+* Delete a temporary license file.
+*
+* @param {string} file
+* @returns {Promise<number>}
+*/
+export const deleteTempLicense = (file: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-temp-license/${encodeURIComponent(file)}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
