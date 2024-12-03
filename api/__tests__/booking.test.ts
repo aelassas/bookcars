@@ -158,6 +158,7 @@ afterAll(async () => {
           await fs.unlink(license)
         }
       }
+      await driver.deleteOne()
     }
     await Notification.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
     await NotificationCounter.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
@@ -604,6 +605,10 @@ describe('POST /api/checkout', () => {
       notificationCounter!.count! -= 1
       await notificationCounter!.save()
     }
+    expect(driver3?.license).toBeTruthy()
+    license = path.join(env.CDN_LICENSES, driver3!.license!)
+    expect(await helper.exists(license)).toBeTruthy()
+    await fs.unlink(license)
     await booking?.deleteOne()
     await token?.deleteOne()
     await driver3!.deleteOne()
@@ -673,6 +678,15 @@ describe('POST /api/checkout', () => {
       .post('/api/checkout')
       .send(payload)
     expect(res.statusCode).toBe(200)
+    if (admin) {
+      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
+      expect(notification).toBeTruthy()
+      await notification!.deleteOne()
+      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
+      expect(notificationCounter?.count).toBeTruthy()
+      notificationCounter!.count! -= 1
+      await notificationCounter!.save()
+    }
     supplier!.licenseRequired = true
     await supplier?.save()
 
