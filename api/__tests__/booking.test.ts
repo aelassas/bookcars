@@ -148,7 +148,17 @@ afterAll(async () => {
     await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
 
     // delete drivers
-    await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+    // await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+    const drivers = await User.find({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+    expect(drivers.length).toBe(2)
+    for (const driver of drivers) {
+      if (driver.license) {
+        const license = path.join(env.CDN_LICENSES, driver.license)
+        if (await helper.exists(license)) {
+          await fs.unlink(license)
+        }
+      }
+    }
     await Notification.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
     await NotificationCounter.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
 
