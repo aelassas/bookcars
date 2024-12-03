@@ -42,7 +42,7 @@ export const info = (message: string, obj?: any) => {
 export const error = (message: string, obj?: unknown) => {
   if (ENABLE_LOGGING && ENABLE_ERROR_LOGGING) {
     if (obj instanceof Error) {
-      logger.error(`${message} ${obj.message}`) // ${err.stack}
+      logger.error(`${message} ${obj.message} ${obj.stack}`) // ${obj.stack}
     } else if (obj) {
       logger.error(`${message} ${JSON.stringify(obj)}`)
     } else {
