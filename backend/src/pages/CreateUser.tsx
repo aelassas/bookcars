@@ -53,7 +53,7 @@ const CreateUser = () => {
   const [emailValid, setEmailValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
-  const [licenseRequired, setLicenseRequired] = useState(true)
+  const [licenseRequired, setLicenseRequired] = useState(false)
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')

@@ -44,7 +44,7 @@ const CreateSupplier = () => {
   const [emailValid, setEmailValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
-  const [licenseRequired, setLicenseRequired] = useState(true)
+  const [licenseRequired, setLicenseRequired] = useState(false)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
