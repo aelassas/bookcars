@@ -32,6 +32,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
+import DriverLicense from '@/components/DriverLicense'
 
 import '@/assets/css/update-user.css'
 
@@ -299,7 +300,7 @@ const UpdateUser = () => {
         type,
         avatar,
         birthDate,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -383,23 +384,27 @@ const UpdateUser = () => {
               </FormControl>
 
               {driver && (
-                <FormControl fullWidth margin="dense">
-                  <DatePicker
-                    label={cuStrings.BIRTH_DATE}
-                    value={birthDate}
-                    required
-                    onChange={(_birthDate) => {
-                      if (_birthDate) {
-                        const _birthDateValid = validateBirthDate(_birthDate)
+                <>
+                  <FormControl fullWidth margin="dense">
+                    <DatePicker
+                      label={cuStrings.BIRTH_DATE}
+                      value={birthDate}
+                      required
+                      onChange={(_birthDate) => {
+                        if (_birthDate) {
+                          const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(_birthDate)
-                        setBirthDateValid(_birthDateValid)
-                      }
-                    }}
-                    language={(user && user.language) || env.DEFAULT_LANGUAGE}
-                  />
-                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
-                </FormControl>
+                          setBirthDate(_birthDate)
+                          setBirthDateValid(_birthDateValid)
+                        }
+                      }}
+                      language={(user && user.language) || env.DEFAULT_LANGUAGE}
+                    />
+                    <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
+                  </FormControl>
+
+                  <DriverLicense user={user} className="driver-license-field" />
+                </>
               )}
 
               {supplier && (

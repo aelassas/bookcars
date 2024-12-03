@@ -30,6 +30,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
+import DriverLicense from '@/components/DriverLicense'
 
 import '@/assets/css/create-user.css'
 
@@ -57,6 +58,7 @@ const CreateUser = () => {
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [license, setLicense] = useState<string | undefined>()
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -220,10 +222,13 @@ const CreateUser = () => {
     try {
       if (avatar) {
         await UserService.deleteTempAvatar(avatar)
-        navigate('/users')
-      } else {
-        navigate('/users')
       }
+
+      if (license) {
+        await UserService.deleteTempLicense(license)
+      }
+
+      navigate('/users')
     } catch {
       navigate('/users')
     }
@@ -293,7 +298,8 @@ const CreateUser = () => {
         birthDate,
         language,
         supplier,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        license,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -373,23 +379,32 @@ const CreateUser = () => {
               </FormControl>
 
               {driver && (
-                <FormControl fullWidth margin="dense">
-                  <DatePicker
-                    label={strings.BIRTH_DATE}
-                    value={birthDate}
-                    required
-                    onChange={(_birthDate) => {
-                      if (_birthDate) {
-                        const _birthDateValid = validateBirthDate(_birthDate)
+                <>
+                  <FormControl fullWidth margin="dense">
+                    <DatePicker
+                      label={strings.BIRTH_DATE}
+                      value={birthDate}
+                      required
+                      onChange={(_birthDate) => {
+                        if (_birthDate) {
+                          const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(_birthDate)
-                        setBirthDateValid(_birthDateValid)
-                      }
+                          setBirthDate(_birthDate)
+                          setBirthDateValid(_birthDateValid)
+                        }
+                      }}
+                      language={(user && user.language) || env.DEFAULT_LANGUAGE}
+                    />
+                    <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
+                  </FormControl>
+
+                  <DriverLicense
+                    className="driver-license-field"
+                    onUpload={(filename: string) => {
+                      setLicense(filename)
                     }}
-                    language={(user && user.language) || env.DEFAULT_LANGUAGE}
                   />
-                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
-                </FormControl>
+                </>
               )}
 
               <FormControl fullWidth margin="dense">
