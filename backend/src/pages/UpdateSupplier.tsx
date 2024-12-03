@@ -44,7 +44,7 @@ const UpdateSupplier = () => {
   const [avatarError, setAvatarError] = useState(false)
   const [email, setEmail] = useState('')
   const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(true)
+  const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
