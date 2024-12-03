@@ -261,6 +261,7 @@ export interface CreateUserPayload {
   contracts?: Contract[]
   licenseRequired?: boolean
   minimumRentalDays?: number
+  license?: string
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {

@@ -17,12 +17,15 @@ div.create-user {
   color: #121212;
 }
 
+div.create-user .driver-license-field {
+  margin-top: 15px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
   .user-form {
     width: 360px;
-    height: 950px;
     padding: 30px;
   }
 }
@@ -32,7 +35,6 @@ div.create-user {
 @media only screen and (width >=960px) {
   .user-form {
     width: 550px;
-    height: 840px;
     padding: 30px;
   }
 }

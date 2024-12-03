@@ -23,6 +23,10 @@ div.update-user .resend-activation-link {
   margin: 20px 0 10px;
 }
 
+div.update-user .driver-license-field {
+  margin-top: 15px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {

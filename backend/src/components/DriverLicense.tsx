@@ -83,14 +83,14 @@ const DriverLicense = ({
     <div className={`driver-license ${className || ''}`}>
       {variant === 'standard' ? (
         <Input
-          value={license || commonStrings.UPLOAD_FILE}
+          value={license || commonStrings.UPLOAD_DRIVER_LICENSE}
           readOnly
           onClick={handleClick}
           className="filename"
         />
       ) : (
         <OutlinedInput
-          value={license || commonStrings.UPLOAD_FILE}
+          value={license || commonStrings.UPLOAD_DRIVER_LICENSE}
           readOnly
           onClick={handleClick}
           className="filename"
