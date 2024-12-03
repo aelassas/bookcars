@@ -11,6 +11,11 @@ div.booking {
   div.booking {
     flex: 0 1 auto;
   }
+
+  div.booking .map {
+    min-height: 0;
+    height: 340px;
+  }
 }
 
 div.booking .booking-form-title {

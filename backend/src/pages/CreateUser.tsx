@@ -53,6 +53,7 @@ const CreateUser = () => {
   const [emailValid, setEmailValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [licenseRequired, setLicenseRequired] = useState(true)
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
@@ -297,6 +298,7 @@ const CreateUser = () => {
 
       if (type === bookcarsTypes.RecordType.Supplier) {
         data.payLater = payLater
+        data.licenseRequired = licenseRequired
       }
 
       const status = await UserService.create(data)
@@ -421,6 +423,21 @@ const CreateUser = () => {
                         />
                       )}
                       label={commonStrings.PAY_LATER}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={licenseRequired}
+                          onChange={(e) => {
+                            setLicenseRequired(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.LICENSE_REQUIRED}
                     />
                   </FormControl>
 

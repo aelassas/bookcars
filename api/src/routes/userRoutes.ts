@@ -38,5 +38,9 @@ routes.route(routeNames.delete).post(authJwt.verifyToken, userController.deleteU
 routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)
 routes.route(routeNames.sendEmail).post(userController.sendEmail)
 routes.route(routeNames.hasPassword).get(authJwt.verifyToken, userController.hasPassword)
+routes.route(routeNames.createLicense).post([multer({ storage: multer.memoryStorage() }).single('file')], userController.createLicense)
+routes.route(routeNames.updateLicense).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('file')], userController.updateLicense)
+routes.route(routeNames.deleteLicense).post(authJwt.verifyToken, userController.deleteLicense)
+routes.route(routeNames.deleteTempLicense).post(userController.deleteTempLicense)
 
 export default routes

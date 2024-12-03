@@ -31,6 +31,10 @@ const routes = {
   verifyRecaptcha: '/api/verify-recaptcha/:token/:ip',
   sendEmail: '/api/send-email',
   hasPassword: '/api/has-password/:id',
+  createLicense: '/api/create-license',
+  updateLicense: '/api/update-license/:id',
+  deleteLicense: '/api/delete-license/:id',
+  deleteTempLicense: '/api/delete-temp-license/:file',
 }
 
 export default routes

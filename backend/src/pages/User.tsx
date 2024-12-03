@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Tooltip
+  Tooltip,
+  Link,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
@@ -187,6 +188,14 @@ const User = () => {
               <Typography variant="h6" className="user-info">
                 {user.phone}
               </Typography>
+            )}
+            {user.license && (
+              <div className="license">
+                <span>{commonStrings.LICENSE}</span>
+                <Link href={bookcarsHelper.joinURL(env.CDN_LICENSES, user.license)} target="_blank">
+                  {user.license}
+                </Link>
+              </div>
             )}
             <div className="user-actions">
               {edit && (

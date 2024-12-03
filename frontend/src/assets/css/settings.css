@@ -28,7 +28,6 @@ div.settings .settings-net-wrapper {
 @media only screen and (width <=960px) {
   div.settings .settings-form {
     width: 360px;
-    height: 780px;
     padding: 30px;
   }
 
@@ -48,7 +47,6 @@ div.settings .settings-net-wrapper {
 @media only screen and (width >=960px) {
   div.settings .settings-form {
     width: 550px;
-    height: 700px;
     padding: 30px;
   }
 

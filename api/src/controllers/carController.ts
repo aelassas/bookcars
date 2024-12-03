@@ -381,12 +381,14 @@ export const getCar = async (req: Request, res: Response) => {
         fullName,
         avatar,
         payLater,
+        licenseRequired,
       } = car.supplier
       car.supplier = {
         _id,
         fullName,
         avatar,
         payLater,
+        licenseRequired,
       }
 
       for (const location of car.locations) {

@@ -51,6 +51,8 @@ jobs:
            echo BC_CDN_TEMP_LOCATIONS=$BC_CDN_TEMP_LOCATIONS >> .env
            echo BC_CDN_CONTRACTS=$BC_CDN_CONTRACTS >> .env
            echo BC_CDN_TEMP_CONTRACTS=$BC_CDN_TEMP_CONTRACTS >> .env
+           echo BC_CDN_LICENSES=$BC_CDN_LICENSES >> .env
+           echo BC_CDN_TEMP_LICENSES=$BC_CDN_TEMP_LICENSES >> .env           
            echo BC_BACKEND_HOST=$BC_BACKEND_HOST >> .env
            echo BC_FRONTEND_HOST=$BC_FRONTEND_HOST >> .env
            echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
@@ -84,6 +86,8 @@ jobs:
         BC_CDN_TEMP_LOCATIONS: ${{ vars.BC_CDN_TEMP_LOCATIONS }}
         BC_CDN_CONTRACTS: ${{ vars.BC_CDN_CONTRACTS }}
         BC_CDN_TEMP_CONTRACTS: ${{ vars.BC_CDN_TEMP_CONTRACTS }}
+        BC_CDN_LICENSES: ${{ vars.BC_CDN_LICENSES }}
+        BC_CDN_TEMP_LICENSES: ${{ vars.BC_CDN_TEMP_LICENSES }}      
         BC_BACKEND_HOST: ${{ vars.BC_BACKEND_HOST }}
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
