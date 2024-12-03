@@ -419,7 +419,6 @@ const CreateUser = () => {
                             setPayLater(e.target.checked)
                           }}
                           color="primary"
-                          disabled
                         />
                       )}
                       label={commonStrings.PAY_LATER}
