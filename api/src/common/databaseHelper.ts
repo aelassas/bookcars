@@ -87,8 +87,10 @@ const initializeLocations = async () => {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
             const loc = await Location.findById(location.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            if (loc) {
+              loc.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await loc.save()
+            }
           }
         }
       } else {
@@ -142,9 +144,11 @@ const initializeCountries = async () => {
           if (!country.values.some((val) => val.language === lang)) {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
-            const loc = await Country.findById(country.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            const cnt = await Country.findById(country.id)
+            if (cnt) {
+              cnt.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await cnt.save()
+            }
           }
         }
       } else {
@@ -198,9 +202,11 @@ const initializeParkingSpots = async () => {
           if (!parkingSpot.values.some((val) => val.language === lang)) {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
-            const loc = await ParkingSpot.findById(parkingSpot.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            const ps = await ParkingSpot.findById(parkingSpot.id)
+            if (ps) {
+              ps.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await ps.save()
+            }
           }
         }
       } else {
