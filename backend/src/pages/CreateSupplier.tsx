@@ -44,6 +44,7 @@ const CreateSupplier = () => {
   const [emailValid, setEmailValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [licenseRequired, setLicenseRequired] = useState(true)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
@@ -231,6 +232,7 @@ const CreateSupplier = () => {
         type: bookcarsTypes.RecordType.Supplier,
         avatar,
         payLater,
+        licenseRequired,
         contracts,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
       }
@@ -318,6 +320,21 @@ const CreateSupplier = () => {
                   />
                 )}
                 label={commonStrings.PAY_LATER}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={licenseRequired}
+                    onChange={(e) => {
+                      setLicenseRequired(e.target.checked)
+                    }}
+                    color="primary"
+                  />
+                )}
+                label={commonStrings.LICENSE_REQUIRED}
               />
             </FormControl>
 

@@ -14,13 +14,14 @@ import {
   Switch,
   RadioGroup,
   Radio,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material'
 import {
   DirectionsCar as CarIcon,
   Person as DriverIcon,
   EventSeat as BookingIcon,
-  Settings as PaymentOptionsIcon
+  Settings as PaymentOptionsIcon,
+  Payment as LicenseIcon,
 } from '@mui/icons-material'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
@@ -48,6 +49,8 @@ import Error from '@/components/Error'
 import DatePicker from '@/components/DatePicker'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import SocialLogin from '@/components/SocialLogin'
+import Map from '@/components/Map'
+import DriverLicense from '@/components/DriverLicense'
 import NoMatch from './NoMatch'
 import Info from './Info'
 
@@ -113,6 +116,8 @@ const Checkout = () => {
   const [bookingId, setBookingId] = useState<string>()
   const [sessionId, setSessionId] = useState<string>()
   // const [distance, setDistance] = useState('')
+  const [licenseRequired, setLicenseRequired] = useState(false)
+  const [license, setLicense] = useState<string | null>(null)
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -440,6 +445,11 @@ const Checkout = () => {
         }
       }
 
+      if (car.supplier.licenseRequired && !license) {
+        setLicenseRequired(true)
+        return
+      }
+
       setLoading(true)
       setPaymentFailed(false)
 
@@ -453,6 +463,7 @@ const Checkout = () => {
           fullName,
           birthDate,
           language: UserService.getLanguage(),
+          license: license || undefined,
         }
       }
 
@@ -609,6 +620,7 @@ const Checkout = () => {
       setTheftProtection(included(_car.theftProtection))
       setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
       setFullInsurance(included(_car.fullInsurance))
+      setLicense(_user?.license || null)
       setVisible(true)
     } catch (err) {
       helper.error(err)
@@ -628,6 +640,14 @@ const Checkout = () => {
               </h1>
               <form onSubmit={handleSubmit}>
                 <div>
+
+                  <Map
+                    position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
+                    initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                    parkingSpots={pickupLocation.parkingSpots}
+                    locations={[pickupLocation]}
+                    className="map"
+                  />
 
                   <CarList
                     cars={[car]}
@@ -852,6 +872,33 @@ const Checkout = () => {
                     </div>
                   )}
 
+                  {car.supplier.licenseRequired && (
+                    <div className="driver-details">
+                      <div className="booking-info">
+                        <LicenseIcon />
+                        <span>{commonStrings.DRIVER_LICENSE}</span>
+                      </div>
+                      <div className="driver-details-form">
+                        <DriverLicense
+                          user={user}
+                          variant="outlined"
+                          onUpload={(filename) => {
+                            if (filename) {
+                              setLicenseRequired(false)
+                            } else {
+                              setLicenseRequired(true)
+                            }
+                            setLicense(filename)
+                          }}
+                          onDelete={() => {
+                            setLicenseRequired(false)
+                            setLicense(null)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   {(adManuallyChecked && additionalDriver) && (
                     <div className="driver-details">
                       <div className="booking-info">
@@ -1010,6 +1057,9 @@ const Checkout = () => {
                             //
                             await BookingService.deleteTempBooking(bookingId, sessionId)
                           }
+                          if (!authenticated && license) {
+                            await UserService.deleteTempLicense(license)
+                          }
                         } catch (err) {
                           helper.error(err)
                         } finally {
@@ -1026,6 +1076,7 @@ const Checkout = () => {
                   {error && <Error message={commonStrings.GENERIC_ERROR} />}
                   {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
                   {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                  {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
                 </div>
               </form>
             </Paper>

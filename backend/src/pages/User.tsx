@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Tooltip
+  Tooltip,
+  Link,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
@@ -188,6 +189,14 @@ const User = () => {
                 {user.phone}
               </Typography>
             )}
+            {user.license && (
+              <div className="license">
+                <span>{commonStrings.LICENSE}</span>
+                <Link href={bookcarsHelper.joinURL(env.CDN_LICENSES, user.license)} target="_blank">
+                  {user.license}
+                </Link>
+              </div>
+            )}
             <div className="user-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
@@ -196,13 +205,13 @@ const User = () => {
                   </IconButton>
                 </Tooltip>
               )}
-              {/* {edit && (
+              {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={user._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )} */}
+              )}
             </div>
           </div>
           <div className="col-2">

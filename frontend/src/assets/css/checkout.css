@@ -11,6 +11,11 @@ div.booking {
   div.booking {
     flex: 0 1 auto;
   }
+
+  div.booking .map {
+    min-height: 0;
+    height: 340px;
+  }
 }
 
 div.booking .booking-form-title {
@@ -205,7 +210,6 @@ div.booking .btn-cancel {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
-
   div.booking .booking-form {
     width: 860px;
     padding: 30px;

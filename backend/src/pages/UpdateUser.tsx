@@ -57,6 +57,7 @@ const UpdateUser = () => {
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
+  const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
 
   const validateFullName = async (_fullName: string, strict = true) => {
@@ -228,6 +229,7 @@ const UpdateUser = () => {
               setBio(_user.bio || '')
               setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
               setPayLater(_user.payLater || false)
+              setLicenseRequired(_user.licenseRequired || false)
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
               setVisible(true)
               setLoading(false)
@@ -302,6 +304,7 @@ const UpdateUser = () => {
 
       if (type === bookcarsTypes.RecordType.Supplier) {
         data.payLater = payLater
+        data.licenseRequired = licenseRequired
       }
 
       const status = await UserService.updateUser(data)
@@ -414,6 +417,21 @@ const UpdateUser = () => {
                         />
                       )}
                       label={commonStrings.PAY_LATER}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={licenseRequired}
+                          onChange={(e) => {
+                            setLicenseRequired(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.LICENSE_REQUIRED}
                     />
                   </FormControl>
 

@@ -30,6 +30,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
     PAYMENT_FAILED: 'Paiement échoué.',
     CHECKING: 'Vérification en cours...',
+    LICENSE_REQUIRED: 'Permis de conduire requis',
   },
   en: {
     BOOKING_HEADING: 'Book now',
@@ -59,6 +60,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
     PAYMENT_FAILED: 'Payment failed.',
     CHECKING: 'Checking in progress...',
+    LICENSE_REQUIRED: "Driver's license required"
   },
   es: {
     BOOKING_HEADING: 'Reservar ahora',
@@ -88,6 +90,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE_INFO: 'Modificaciones y cancelación bajo condiciones',
     PAYMENT_FAILED: 'El pago falló.',
     CHECKING: 'Verificación en curso...',
+    LICENSE_REQUIRED: 'Se requiere licencia de conducir',
   },
 })
 
