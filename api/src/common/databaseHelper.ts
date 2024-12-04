@@ -102,7 +102,7 @@ const initializeLocations = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _locations = await Location.find({ values: val._id }).lean()
+      const _locations = await Location.find({ values: val.id })
       for (const _loc of _locations) {
         const loc = await Location.findById(_loc.id)
         if (loc) {
@@ -163,7 +163,7 @@ const initializeCountries = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _countries = await Country.find({ values: val._id }).lean()
+      const _countries = await Country.find({ values: val.id })
       for (const _country of _countries) {
         const country = await Country.findById(_country.id)
         if (country) {
@@ -224,7 +224,7 @@ const initializeParkingSpots = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _parkingSpots = await ParkingSpot.find({ values: val._id }).lean()
+      const _parkingSpots = await ParkingSpot.find({ values: val.id })
       for (const _parkingSpot of _parkingSpots) {
         const parkingSpot = await ParkingSpot.findById(_parkingSpot.id)
         if (parkingSpot) {
