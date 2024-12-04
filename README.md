@@ -52,16 +52,19 @@ Customers can sign up from the frontend or the mobile app, search for available 
 Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
 
 ## Frontend
+
 * URL: https://bookcars.dynv6.net:3002/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
 ## Admin Dashboard
+
 * URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
 ## Mobile App
+
 <!--
 You can install the Android app on any Android device.
 
