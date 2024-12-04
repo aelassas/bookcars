@@ -5,7 +5,7 @@ export const en = {
   ACCOUNT_ACTIVATION_SUBJECT: 'Account Activation',
   HELLO: 'Hello ',
   ACCOUNT_ACTIVATION_LINK: 'Please activate your account by clicking the link:',
-  REGARDS: 'Kind regards,<br>ErbilCarRent team',
+  REGARDS: 'Kind regards,<br>BookCars team',
   ACCOUNT_ACTIVATION_TECHNICAL_ISSUE: 'Technical Issue! Please click on resend to validate your email.',
   ACCOUNT_ACTIVATION_LINK_EXPIRED: 'Your validation link may have expired. Please click on resend to validate your email.',
   ACCOUNT_ACTIVATION_LINK_ERROR: 'We were unable to find a user for this verification. Please Sign up.',
