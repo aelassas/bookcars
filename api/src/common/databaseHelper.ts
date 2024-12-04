@@ -104,10 +104,10 @@ const initializeLocations = async () => {
     for (const val of values) {
       const _locations = await Location.find({ values: val.id }).lean()
       for (const _loc of _locations) {
-        const loc = await Location.findById(_loc._id)
-        if (loc) {
-          loc.values.splice(loc.values.findIndex((v) => v.equals(val.id)), 1)
-          await loc.save()
+        const location = await Location.findById(_loc._id)
+        if (location) {
+          location.values.splice(location.values.findIndex((v) => v.equals(val.id)), 1)
+          await location.save()
         }
         await LocationValue.deleteMany({ $and: [{ _id: { $in: _loc.values } }, { _id: { $in: valuesIds } }] })
       }
@@ -228,8 +228,8 @@ const initializeParkingSpots = async () => {
       for (const _parkingSpot of _parkingSpots) {
         const parkingSpot = await ParkingSpot.findById(_parkingSpot._id)
         if (parkingSpot) {
-          _parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
-          await _parkingSpot.save()
+          parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
+          await parkingSpot.save()
         }
         await LocationValue.deleteMany({ $and: [{ _id: { $in: _parkingSpot.values } }, { _id: { $in: valuesIds } }] })
       }
