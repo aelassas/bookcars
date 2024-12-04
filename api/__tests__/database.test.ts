@@ -89,6 +89,8 @@ describe('Test database initialization', () => {
 
 describe('Test database initialization failures', () => {
   it('should check database initialization failures', async () => {
+    // test failure (lost db connection)
+    await databaseHelper.close()
     expect(await databaseHelper.initializeLocations()).toBeFalsy()
     expect(await databaseHelper.initializeCountries()).toBeFalsy()
     expect(await databaseHelper.initializeParkingSpots()).toBeFalsy()
