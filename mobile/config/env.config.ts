@@ -6,6 +6,8 @@ import {
   BC_BOOKINGS_PAGE_SIZE,
   BC_CDN_USERS,
   BC_CDN_CARS,
+  BC_CDN_LICENSES,
+  BC_CDN_TEMP_LICENSES,
   BC_SUPPLIER_IMAGE_WIDTH,
   BC_SUPPLIER_IMAGE_HEIGHT,
   BC_CAR_IMAGE_WIDTH,
@@ -118,6 +120,20 @@ export const CDN_USERS: string = BC_CDN_USERS
  * @type {string}
  */
 export const CDN_CARS: string = BC_CDN_CARS
+
+/**
+ * Driver licenses CDN.
+ *
+ * @type {string}
+ */
+export const CDN_LICENSES: string = BC_CDN_LICENSES
+
+/**
+ * Temp driver licenses CDN.
+ *
+ * @type {string}
+ */
+export const CDN_TEMP_LICENSES: string = BC_CDN_TEMP_LICENSES
 
 /**
  * Page offset.
