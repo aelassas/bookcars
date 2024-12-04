@@ -226,9 +226,13 @@ const CarList = ({
           }}
           ListHeaderComponent={header}
           ListFooterComponent={
-            footerComponent || (fetch
-              ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-              : <></>)
+            <View style={styles.container}>
+              {
+                footerComponent || (fetch
+                  ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
+                  : <></>)
+              }
+            </View>
           }
           ListEmptyComponent={
             !loading ? (

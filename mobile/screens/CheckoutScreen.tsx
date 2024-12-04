@@ -29,6 +29,7 @@ import * as StripeService from '@/services/StripeService'
 import * as env from '@/config/env.config'
 import Backdrop from '@/components/Backdrop'
 import Indicator from '@/components/Indicator'
+import DriverLicense from '@/components/DriverLicense'
 
 const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) => {
   const isFocused = useIsFocused()
@@ -85,6 +86,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
+  const [licenseRequired, setLicenseRequired] = useState(false)
+  const [license, setLicense] = useState<string | null>(null)
   const adRequired = true
 
   const { presentPaymentSheet } = useStripe()
@@ -240,6 +243,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
       setTheftProtection(included(_car.theftProtection))
       setFullInsurance(included(_car.fullInsurance))
+      setLicenseRequired(false)
+      setLicense(_user?.license || null)
 
       setVisible(true)
       setFormVisible(true)
@@ -578,6 +583,11 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         }
       }
 
+      if (car.supplier.licenseRequired && !license) {
+        setLicenseRequired(true)
+        return
+      }
+
       if (adManuallyChecked && additionalDriver) {
         const fullNameValid = _validateFullName()
         if (!fullNameValid) {
@@ -612,6 +622,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           fullName,
           birthDate,
           language: await UserService.getLanguage(),
+          license: license || undefined,
         }
       }
 
@@ -933,6 +944,32 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     </View>
                   )}
 
+                  {car.supplier.licenseRequired && (
+                    <View style={styles.section}>
+                      <View style={styles.sectionHeader}>
+                        <MaterialIcons name="payment" size={iconSize} color={iconColor} />
+                        <Text style={styles.sectionHeaderText}>{i18n.t('DRIVER_LICENSE')}</Text>
+                      </View>
+
+                      <DriverLicense
+                        user={user || undefined}
+                        hideLabel
+                        onUpload={(filename) => {
+                          if (filename) {
+                            setLicenseRequired(false)
+                          } else {
+                            setLicenseRequired(true)
+                          }
+                          setLicense(filename)
+                        }}
+                        onDelete={() => {
+                          setLicenseRequired(false)
+                          setLicense(null)
+                        }}
+                      />
+                    </View>
+                  )}
+
                   {(adManuallyChecked && additionalDriver) && (
                     <View style={styles.section}>
                       <View style={styles.sectionHeader}>
@@ -1039,6 +1076,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <View style={styles.error}>
                       {error && <Error message={i18n.t('FIX_ERRORS')} />}
                       {tosError && <Error message={i18n.t('TOS_ERROR')} />}
+                      {licenseRequired && <Error message={i18n.t('LICENSE_REQUIRED')} />}
                     </View>
                   </View>
                 </View>

@@ -436,7 +436,6 @@ export const changePassword = async (data: bookcarsTypes.ChangePasswordPayload):
  * @returns {Promise<number | undefined>}
  */
 export const updateAvatar = async (userId: string, file: BlobInfo): Promise<number> => {
-  const user = await AsyncStorage.getObject<bookcarsTypes.User>('bc-user')
   const uri = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '')
   const formData = new FormData()
   formData.append('image', {
@@ -444,18 +443,17 @@ export const updateAvatar = async (userId: string, file: BlobInfo): Promise<numb
     name: file.name,
     type: file.type,
   } as any)
+  const headers = await authHeader()
   return axiosInstance
     .post(
       `/api/update-avatar/${encodeURIComponent(userId)}`,
       formData,
-      user && user.accessToken
-        ? {
-          headers: {
-            'x-access-token': user.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        : { headers: { 'Content-Type': 'multipart/form-data' } },
+      {
+        headers: {
+          ...headers,
+          'Content-Type': 'multipart/form-data'
+        },
+      }
     )
     .then((res) => res.status)
 }
@@ -515,3 +513,92 @@ export const hasPassword = async (id: string): Promise<number> => {
     )
     .then((res) => res.status)
 }
+
+/**
+* Create temporary license.
+*
+* @param {BlobInfo} file
+* @returns {Promise<string>}
+*/
+export const createLicense = (file: BlobInfo): Promise<string> => {
+  const uri = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '')
+  const formData = new FormData()
+  formData.append('file', {
+    uri,
+    name: file.name,
+    type: file.type,
+  } as any)
+
+  return axiosInstance
+    .post(
+      '/api/create-license',
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    )
+    .then((res) => res.data)
+}
+
+/**
+ * Update license.
+ *
+ * @param {string} userId
+
+ * @param {BlobInfo} file
+ * @returns {Promise<bookcarsTypes.Response<string>>}
+ */
+export const updateLicense = async (userId: string, file: BlobInfo): Promise<bookcarsTypes.Response<string>> => {
+  const uri = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '')
+  const formData = new FormData()
+  formData.append('file', {
+    uri,
+    name: file.name,
+    type: file.type,
+  } as any)
+
+  const headers = await authHeader()
+
+  return axiosInstance
+    .post(
+      `/api/update-license/${userId}`,
+      formData,
+      {
+        headers: {
+          ...headers,
+          'Content-Type': 'multipart/form-data'
+        },
+      },
+    )
+    .then((res) => ({ status: res.status, data: res.data }))
+}
+
+/**
+ * Delete license.
+ *
+ * @param {string} userId
+ * @param {string} language
+ * @returns {Promise<number>}
+ */
+export const deleteLicense = async (userId: string): Promise<number> => {
+  const headers = await authHeader()
+  return axiosInstance
+    .post(
+      `/api/delete-license/${userId}`,
+      null,
+      { headers }
+    )
+    .then((res) => res.status)
+}
+
+/**
+* Delete a temporary license file.
+*
+* @param {string} file
+* @returns {Promise<number>}
+*/
+export const deleteTempLicense = (file: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-temp-license/${encodeURIComponent(file)}`,
+      null,
+    )
+    .then((res) => res.status)

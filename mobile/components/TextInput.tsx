@@ -41,7 +41,7 @@ const TextInputComponent = (
   const small = props.size === 'small'
 
   useEffect(() => {
-    setValue(props.value ?? '')
+    setValue(props.value || '')
   }, [props.value])
 
   const onChangeText = (text: string) => {
@@ -60,9 +60,10 @@ const TextInputComponent = (
       color: 'rgba(0, 0, 0, 0.6)',
       fontSize: 12,
       fontWeight: '400',
-      paddingRight: 5,
-      paddingLeft: 5,
-      marginLeft: 15,
+      paddingRight: props.label ? 5 : 0,
+      paddingLeft: props.label ? 5 : 0,
+      marginLeft: props.label ? 15 : 0,
+      width: props.label ? 'auto' : 0,
       position: 'absolute',
       top: -9,
       zIndex: 1,
@@ -97,7 +98,7 @@ const TextInputComponent = (
   })
 
   return (
-    <View style={{ ...props.style, ...styles.container }}>
+    <View style={{ ...styles.container, ...props.style }}>
       {value !== '' && !props.hideLabel && <Text style={styles.label}>{props.label}</Text>}
       <View style={styles.inputContainer}>
         <ReactTextInput

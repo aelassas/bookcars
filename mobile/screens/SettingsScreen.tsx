@@ -19,6 +19,7 @@ import Switch from '@/components/Switch'
 import Button from '@/components/Button'
 import * as helper from '@/common/helper'
 import * as env from '@/config/env.config'
+import DriverLicense from '@/components/DriverLicense'
 
 const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
   const isFocused = useIsFocused()
@@ -346,6 +347,8 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               <TextInput style={styles.component} label={i18n.t('LOCATION')} value={location} onChangeText={onChangeLocation} />
 
               <TextInput style={styles.component} label={i18n.t('BIO')} value={bio} onChangeText={onChangeBio} />
+
+              <DriverLicense user={user} />
 
               <Switch
                 style={styles.component}
