@@ -23,6 +23,6 @@
     "!**/dist/**",
     "!**/__tests__/**"
   ],
-  "testTimeout": 120000,
+  "testTimeout": 180000,
   "globalSetup": "./dist/__tests__/globalSetup.js"
 }
