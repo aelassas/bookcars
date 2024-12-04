@@ -175,6 +175,10 @@ describe('POST /api/create-user', () => {
     if (!await helper.exists(tempAvatar)) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
+    const tempLicense = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
+    if (!await helper.exists(tempLicense)) {
+      await fs.copyFile(LICENSE1_PATH, tempLicense)
+    }
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, contractFileName)
@@ -197,6 +201,7 @@ describe('POST /api/create-user', () => {
       location: 'location',
       bio: 'bio',
       avatar: AVATAR1,
+      license: LICENSE1,
       contracts,
     }
     let res = await request(app)
@@ -291,10 +296,12 @@ describe('POST /api/create-user', () => {
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
 
-    // test success (without avatar)
+    // test success (without avatar and license)
     let email = testHelper.GetRandomEmail()
     payload.email = email
+    payload.type = bookcarsTypes.UserType.User
     payload.avatar = undefined
+    payload.license = undefined
     res = await request(app)
       .post('/api/create-user')
       .set(env.X_ACCESS_TOKEN, token)
@@ -308,9 +315,28 @@ describe('POST /api/create-user', () => {
     expect(userToken?.token.length).toBeGreaterThan(0)
     await userToken?.deleteOne()
 
-    // test success (avatar not found)
+    // test success (avatar and license not found)
+    email = testHelper.GetRandomEmail()
+    payload.email = email
+    payload.avatar = `${nanoid()}.jpg`
+    payload.license = `${nanoid()}.pdf`
+    res = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    user = await User.findOne({ email })
+    expect(user).not.toBeNull()
+    await user?.deleteOne()
+    userToken = await Token.findOne({ user: user?._id })
+    expect(userToken).not.toBeNull()
+    expect(userToken?.token.length).toBeGreaterThan(0)
+    await userToken?.deleteOne()
+
+    // test failure (user already exists)
     payload.email = USER2_EMAIL
-    payload.avatar = 'unknown.jpg'
+    // payload.avatar = `${nanoid()}.jpg`
+    // payload.license = `${nanoid()}.pdf`
     res = await request(app)
       .post('/api/create-user')
       .set(env.X_ACCESS_TOKEN, token)

@@ -206,6 +206,19 @@ export const create = async (req: Request, res: Response) => {
       }
     }
 
+    // license
+    if (body.license && user.type === bookcarsTypes.UserType.User) {
+      const license = path.join(env.CDN_TEMP_LICENSES, body.license)
+      if (await helper.exists(license)) {
+        const filename = `${user._id}${path.extname(body.license)}`
+        const newPath = path.join(env.CDN_LICENSES, filename)
+
+        await fs.rename(license, newPath)
+        user.license = filename
+        await user.save()
+      }
+    }
+
     if (body.password) {
       return res.sendStatus(200)
     }

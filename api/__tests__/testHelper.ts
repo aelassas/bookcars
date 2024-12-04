@@ -1,6 +1,8 @@
 import request from 'supertest'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
+import path from 'path'
+import fs from 'fs/promises'
 import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
@@ -12,6 +14,7 @@ import Location from '../src/models/Location'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
 import * as logger from '../src/common/logger'
+import * as helper from '../src/common/helper'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
@@ -139,8 +142,18 @@ export const createSupplier = async (email: string, fullName: string) => {
 }
 
 export const deleteSupplier = async (id: string) => {
-  const res = await User.deleteOne({ _id: id })
-  expect(res.deletedCount).toBe(1)
+  const supplier = await User.findByIdAndDelete({ _id: id })
+  expect(supplier).toBeTruthy()
+  if (supplier!.contracts) {
+    for (const contract of supplier!.contracts) {
+      if (contract.file) {
+        const filename = path.join(env.CDN_CONTRACTS, contract.file)
+        if (await helper.exists(filename)) {
+          await fs.unlink(filename)
+        }
+      }
+    }
+  }
 
   await Notification.deleteMany({ user: id })
   await NotificationCounter.deleteMany({ user: id })

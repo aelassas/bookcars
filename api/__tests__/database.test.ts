@@ -8,7 +8,7 @@ import Country from '../src/models/Country'
 import ParkingSpot from '../src/models/ParkingSpot'
 
 beforeAll(() => {
-  testHelper.initializeLogger()
+  // testHelper.initializeLogger()
 })
 
 describe('Test database connection', () => {
@@ -84,5 +84,15 @@ describe('Test database initialization', () => {
     await parkingSpot2?.deleteOne()
 
     await databaseHelper.close()
+  })
+})
+
+describe('Test database initialization failures', () => {
+  it('should check database initialization failures', async () => {
+    // test failure (lost db connection)
+    await databaseHelper.close()
+    expect(await databaseHelper.initializeLocations()).toBeFalsy()
+    expect(await databaseHelper.initializeCountries()).toBeFalsy()
+    expect(await databaseHelper.initializeParkingSpots()).toBeFalsy()
   })
 })

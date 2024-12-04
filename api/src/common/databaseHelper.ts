@@ -57,7 +57,9 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
  * @returns {Promise<void>}
  */
 export const close = async (force: boolean = false): Promise<void> => {
-  await mongoose.connection.close(force)
+  if (mongoose.connection.readyState) {
+    await mongoose.connection.close(force)
+  }
 }
 
 /**
@@ -68,7 +70,7 @@ export const close = async (force: boolean = false): Promise<void> => {
  * @async
  * @returns {*}
  */
-const initializeLocations = async () => {
+export const initializeLocations = async () => {
   try {
     logger.info('Initializing locations...')
     const locations = await Location.find({})
@@ -87,8 +89,10 @@ const initializeLocations = async () => {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
             const loc = await Location.findById(location.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            if (loc) {
+              loc.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await loc.save()
+            }
           }
         }
       } else {
@@ -100,11 +104,11 @@ const initializeLocations = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _locations = await Location.find({ values: val._id })
-      for (const _loc of _locations) {
-        _loc.values.splice(_loc.values.findIndex((v) => v.equals(val.id)), 1)
-        await _loc.save()
-        await LocationValue.deleteMany({ $and: [{ _id: { $in: _loc.values } }, { _id: { $in: valuesIds } }] })
+      const _locations = await Location.find({ values: val.id })
+      for (const _location of _locations) {
+        _location.values.splice(_location.values.findIndex((v) => v.equals(val.id)), 1)
+        await _location.save()
+        await LocationValue.deleteMany({ $and: [{ _id: { $in: _location.values } }, { _id: { $in: valuesIds } }] })
       }
     }
 
@@ -124,7 +128,7 @@ const initializeLocations = async () => {
  * @async
  * @returns {*}
  */
-const initializeCountries = async () => {
+export const initializeCountries = async () => {
   try {
     logger.info('Initializing countries...')
     const countries = await Country.find({})
@@ -142,9 +146,11 @@ const initializeCountries = async () => {
           if (!country.values.some((val) => val.language === lang)) {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
-            const loc = await Country.findById(country.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            const cnt = await Country.findById(country.id)
+            if (cnt) {
+              cnt.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await cnt.save()
+            }
           }
         }
       } else {
@@ -156,7 +162,7 @@ const initializeCountries = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _countries = await Country.find({ values: val._id })
+      const _countries = await Country.find({ values: val.id })
       for (const _country of _countries) {
         _country.values.splice(_country.values.findIndex((v) => v.equals(val.id)), 1)
         await _country.save()
@@ -180,7 +186,7 @@ const initializeCountries = async () => {
  * @async
  * @returns {*}
  */
-const initializeParkingSpots = async () => {
+export const initializeParkingSpots = async () => {
   try {
     logger.info('Initializing parkingSpots...')
     const parkingSpots = await ParkingSpot.find({})
@@ -198,9 +204,11 @@ const initializeParkingSpots = async () => {
           if (!parkingSpot.values.some((val) => val.language === lang)) {
             const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
             await langLocationValue.save()
-            const loc = await ParkingSpot.findById(parkingSpot.id)
-            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-            await loc?.save()
+            const ps = await ParkingSpot.findById(parkingSpot.id)
+            if (ps) {
+              ps.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+              await ps.save()
+            }
           }
         }
       } else {
@@ -212,7 +220,7 @@ const initializeParkingSpots = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _parkingSpots = await ParkingSpot.find({ values: val._id })
+      const _parkingSpots = await ParkingSpot.find({ values: val.id })
       for (const _parkingSpot of _parkingSpots) {
         _parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
         await _parkingSpot.save()
