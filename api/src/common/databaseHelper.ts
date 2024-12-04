@@ -104,14 +104,11 @@ export const initializeLocations = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _locations = await Location.find({ values: val.id }).lean()
-      for (const _loc of _locations) {
-        const location = await Location.findById(_loc._id)
-        if (location) {
-          location.values.splice(location.values.findIndex((v) => v.equals(val.id)), 1)
-          await location.save()
-        }
-        await LocationValue.deleteMany({ $and: [{ _id: { $in: _loc.values } }, { _id: { $in: valuesIds } }] })
+      const _locations = await Location.find({ values: val.id })
+      for (const _location of _locations) {
+        _location.values.splice(_location.values.findIndex((v) => v.equals(val.id)), 1)
+        await _location.save()
+        await LocationValue.deleteMany({ $and: [{ _id: { $in: _location.values } }, { _id: { $in: valuesIds } }] })
       }
     }
 
@@ -165,13 +162,10 @@ export const initializeCountries = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _countries = await Country.find({ values: val.id }).lean()
+      const _countries = await Country.find({ values: val.id })
       for (const _country of _countries) {
-        const country = await Country.findById(_country._id)
-        if (country) {
-          country.values.splice(country.values.findIndex((v) => v.equals(val.id)), 1)
-          await country.save()
-        }
+        _country.values.splice(_country.values.findIndex((v) => v.equals(val.id)), 1)
+        await _country.save()
         await LocationValue.deleteMany({ $and: [{ _id: { $in: _country.values } }, { _id: { $in: valuesIds } }] })
       }
     }
@@ -226,13 +220,10 @@ export const initializeParkingSpots = async () => {
     const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const valuesIds = values.map((v) => v.id)
     for (const val of values) {
-      const _parkingSpots = await ParkingSpot.find({ values: val.id }).lean()
+      const _parkingSpots = await ParkingSpot.find({ values: val.id })
       for (const _parkingSpot of _parkingSpots) {
-        const parkingSpot = await ParkingSpot.findById(_parkingSpot._id)
-        if (parkingSpot) {
-          parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
-          await parkingSpot.save()
-        }
+        _parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
+        await _parkingSpot.save()
         await LocationValue.deleteMany({ $and: [{ _id: { $in: _parkingSpot.values } }, { _id: { $in: valuesIds } }] })
       }
     }
