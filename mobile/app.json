@@ -55,6 +55,12 @@
           "merchantIdentifier": "MERCHANT_IDENTIFIER",
           "enableGooglePay": true
         }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
       ]
     ],
     "owner": "aelassas",

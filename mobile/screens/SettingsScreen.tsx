@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
-// import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
@@ -19,6 +19,7 @@ import Switch from '@/components/Switch'
 import Button from '@/components/Button'
 import * as helper from '@/common/helper'
 import * as env from '@/config/env.config'
+import DriverLicense from '@/components/DriverLicense'
 
 const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
   const isFocused = useIsFocused()
@@ -94,7 +95,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setBirthDateValid(true)
 
       setVisible(true)
-    } catch (err) {
+    } catch {
       await UserService.signout(navigation, false, true)
     }
   }
@@ -250,9 +251,10 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <Pressable
                       style={styles.deleteAvatar}
                       hitSlop={15}
-                    // onPress={() => {
-                    //   setOpenDeleteDialog(true)
-                    // }}
+                      disabled
+                      onPress={() => {
+                        setOpenDeleteDialog(true)
+                      }}
                     >
                       {/* <Badge style={styles.badge} size={36}> */}
                       <View style={styles.badge}>
@@ -264,44 +266,45 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Pressable
                     style={styles.updateAvatar}
                     hitSlop={15}
-                  // onPress={async () => {
-                  //   try {
-                  //     if (!user || !user._id) {
-                  //       helper.error()
-                  //       return
-                  //     }
+                    disabled
+                    onPress={async () => {
+                      try {
+                        if (!user || !user._id) {
+                          helper.error()
+                          return
+                        }
 
-                  //     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+                        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
-                  //     if (permissionResult.granted === false) {
-                  //       alert(i18n.t('CAMERA_PERMISSION'))
-                  //       return
-                  //     }
+                        if (permissionResult.granted === false) {
+                          alert(i18n.t('CAMERA_PERMISSION'))
+                          return
+                        }
 
-                  //     const pickerResult = await ImagePicker.launchImageLibraryAsync()
+                        const pickerResult = await ImagePicker.launchImageLibraryAsync()
 
-                  //     if (pickerResult.canceled === true) {
-                  //       return
-                  //     }
+                        if (pickerResult.canceled === true) {
+                          return
+                        }
 
-                  //     const { uri } = pickerResult.assets[0]
-                  //     const name = helper.getFileName(uri)
-                  //     const type = helper.getMimeType(name)
-                  //     const image: BlobInfo = { uri, name, type }
-                  //     const status = await UserService.updateAvatar(user._id, image)
+                        const { uri } = pickerResult.assets[0]
+                        const name = helper.getFileName(uri)
+                        const type = helper.getMimeType(name)
+                        const image: BlobInfo = { uri, name, type }
+                        const status = await UserService.updateAvatar(user._id, image)
 
-                  //     if (status === 200) {
-                  //       const _user = await UserService.getUser(user._id)
-                  //       setUser(_user)
-                  //       const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
-                  //       setAvatar(_avatar)
-                  //     } else {
-                  //       helper.error()
-                  //     }
-                  //   } catch (err) {
-                  //     helper.error(err)
-                  //   }
-                  // }}
+                        if (status === 200) {
+                          const _user = await UserService.getUser(user._id)
+                          setUser(_user)
+                          const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
+                          setAvatar(_avatar)
+                        } else {
+                          helper.error()
+                        }
+                      } catch (err) {
+                        helper.error(err)
+                      }
+                    }}
                   >
                     {/* <Badge style={styles.badge} size={36}> */}
                     <View style={styles.badge}>
@@ -347,6 +350,8 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
               <TextInput style={styles.component} label={i18n.t('BIO')} value={bio} onChangeText={onChangeBio} />
 
+              <DriverLicense user={user} />
+
               <Switch
                 style={styles.component}
                 textStyle={styles.enableEmailNotificationsText}
@@ -358,14 +363,14 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               <Button
                 style={styles.component}
                 label={i18n.t('SAVE')}
-              // onPress={onPressSave}
+                // onPress={onPressSave}
               />
 
               <Button
                 style={styles.component}
                 color="secondary"
                 label={i18n.t('CHANGE_PASSWORD')}
-              // onPress={onPressChangePassword}
+                // onPress={onPressChangePassword}
               />
             </View>
           </ScrollView>
