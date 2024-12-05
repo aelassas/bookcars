@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import Slider from 'react-slick'
+import ReactSlick from 'react-slick'
 import { Button } from '@mui/material'
 import {
   ArrowRight,
@@ -11,10 +11,9 @@ import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
 import { strings } from '@/lang/location-carrousel'
 import { strings as commonStrings } from '@/lang/common'
-import Badge from './Badge'
+import Badge from '@/components/Badge'
+import Slick from '@/components/Slick'
 
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 import '@/assets/css/location-carrousel.css'
 
 interface LocationCarrouselProps {
@@ -26,7 +25,7 @@ const LocationCarrousel = ({
   locations,
   onSelect,
 }: LocationCarrouselProps) => {
-  const slider = useRef<Slider>(null)
+  const slider = useRef<ReactSlick>(null)
 
   const sliderSettings = {
     arrows: false,
@@ -68,7 +67,7 @@ const LocationCarrousel = ({
 
   return (
     <div className="location-caroussel">
-      <Slider ref={slider} {...sliderSettings}>
+      <Slick ref={slider} {...sliderSettings}>
         {locations.map((location) => (
           <div key={location._id} className="box">
             <div className="location-image">
@@ -100,7 +99,7 @@ const LocationCarrousel = ({
             </Button>
           </div>
         ))}
-      </Slider>
+      </Slick>
     </div>
   )
 }
