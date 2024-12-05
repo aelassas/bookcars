@@ -19,4 +19,8 @@
 .supplier-carrousel div.supplier-container img {
   max-width: 72px;
   max-height: 52px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
