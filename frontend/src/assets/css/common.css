@@ -1,3 +1,9 @@
+:root {
+  --toastify-color-progress-info: #fff !important;
+  --toastify-color-progress-bgo: .6 !important;
+  --toastify-icon-color-info: #fff !important;
+}
+
 .buttons button {
   margin-right: 15px;
   margin-left: 0 !important;
