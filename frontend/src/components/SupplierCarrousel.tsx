@@ -1,11 +1,9 @@
 import React from 'react'
-import Slider from 'react-slick'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
+import Slick from '@/components/Slick'
 
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 import '@/assets/css/supplier-carrousel.css'
 
 interface SupplierCarrouselProps {
@@ -23,10 +21,11 @@ const settings = {
   dots: false,
   touchMove: false,
   centerPadding: '64px',
+  pauseOnHover: false,
 }
 
 const SupplierCarrousel = ({ suppliers }: SupplierCarrouselProps) => (
-  <Slider {...settings} className="supplier-carrousel">
+  <Slick {...settings} className="supplier-carrousel">
     {
       suppliers.map((supplier) => (
         <div key={supplier._id}>
@@ -36,7 +35,7 @@ const SupplierCarrousel = ({ suppliers }: SupplierCarrouselProps) => (
         </div>
       ))
     }
-  </Slider>
+  </Slick>
 )
 
 export default SupplierCarrousel

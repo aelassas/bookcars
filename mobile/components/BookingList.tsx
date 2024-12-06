@@ -177,9 +177,13 @@ const BookingList = ({
         }}
         ListHeaderComponent={header}
         ListFooterComponent={
-          fetch && !openCancelDialog
-            ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-            : <></>
+          <View style={styles.container}>
+            {
+              fetch && !openCancelDialog
+                ? <ActivityIndicator size="large" color="#3CB371" style={styles.indicator} />
+                : <></>
+            }
+          </View>
         }
         ListEmptyComponent={
           !loading ? (

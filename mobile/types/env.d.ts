@@ -6,6 +6,8 @@ declare module '@env' {
   export const BC_BOOKINGS_PAGE_SIZE: string
   export const BC_CDN_USERS: string
   export const BC_CDN_CARS: string
+  export const BC_CDN_LICENSES: string
+  export const BC_CDN_TEMP_LICENSES: string
   export const BC_SUPPLIER_IMAGE_WIDTH: string
   export const BC_SUPPLIER_IMAGE_HEIGHT: string
   export const BC_CAR_IMAGE_WIDTH: string

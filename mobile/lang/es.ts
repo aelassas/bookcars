@@ -240,4 +240,7 @@ export const es = {
   TRIPS: 'alquileres',
   CO2: 'Efecto CO2',
   FROM_YOU: 'de ti',
+  DRIVER_LICENSE: 'Licencia de conducir',
+  LICENSE_REQUIRED: 'Se requiere licencia de conducir',
+  UPLOAD_FILE: 'Subir archivo...',
 }
