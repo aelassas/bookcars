@@ -47,6 +47,7 @@ const Home = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])
   const [ranges, setRanges] = useState([bookcarsTypes.CarRange.Mini, bookcarsTypes.CarRange.Midi])
   const [openRangeSearchFormDialog, setOpenRangeSearchFormDialog] = useState(false)
+  const [videoLoaded, setVideoLoaded] = useState(false)
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
@@ -87,10 +88,14 @@ const Home = () => {
               loop
               playsInline
               disablePictureInPicture
+              onLoadedData={() => {
+                setVideoLoaded(true)
+              }}
             >
               <source src="cover.mp4" type="video/mp4" />
               <track kind="captions" />
             </video>
+            {!videoLoaded && <div className="video-background" />}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>
