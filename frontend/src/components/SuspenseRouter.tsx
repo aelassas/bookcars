@@ -9,7 +9,7 @@ export interface BrowserRouterProps {
 }
 
 export const SuspenseRouter = ({ basename, children, window }: BrowserRouterProps) => {
-  const historyRef = useRef<BrowserHistory>()
+  const historyRef = useRef<BrowserHistory>(null)
   const [isPending, startTransition] = useTransition()
 
   if (historyRef.current == null) {
