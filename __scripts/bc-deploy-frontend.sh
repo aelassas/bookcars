@@ -11,7 +11,7 @@ sudo chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/frontend
 
-npm install
+npm install --force
 npm run build
 
 sudo rm -rf /var/www/bookcars/frontend
