@@ -35,13 +35,13 @@ jobs:
     - name: Build Backend
       run: |
            cd ./backend
-           npm install
+           npm install --force
            npm run lint
            npm run build
     - name: Build Frontend
       run: |
            cd ./frontend
-           npm install
+           npm install --force
            npm run lint
            npm run build
     - name: Build Mobile App
