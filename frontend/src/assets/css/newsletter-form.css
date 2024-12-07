@@ -6,6 +6,7 @@ form.newsletter-form div.form {
 
 form.newsletter-form div.form .input {
   margin-right: 15px;
+  max-width: 240px;
 }
 
 form.newsletter-form div.form .btn {
