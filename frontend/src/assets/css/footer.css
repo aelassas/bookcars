@@ -80,6 +80,10 @@ div.footer div.contact .social-icon {
   margin-right: 12px;
 }
 
+div.footer div.newsletter {
+  margin-top: 80px;
+}
+
 div.footer section.payment {
   width: 100%;
   display: flex;
@@ -99,6 +103,14 @@ div.footer section.payment div.payment-text {
 }
 
 @media only screen and (width <=960px) {
+  div.footer section.main {
+    flex-direction: column;
+  }
+
+  div.footer div.main-section {
+    margin: 10px;
+  }
+
   div.footer section.payment {
     display: flex;
     flex-direction: column;
