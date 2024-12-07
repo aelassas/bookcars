@@ -128,7 +128,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
   }
   const pickupLocation = await Location.findById(booking.pickupLocation).populate<{ values: env.LocationValue[] }>('values')
   if (!pickupLocation) {
-    logger.info(`Pickup location ${booking.pickupLocation} not found`)
+    logger.info(`Pick-up location ${booking.pickupLocation} not found`)
     return false
   }
 

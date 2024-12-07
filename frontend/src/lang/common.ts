@@ -150,7 +150,7 @@ const strings = new LocalizedStrings({
     RESEND_ACTIVATION_LINK: 'Resend account activation link',
     ACTIVATION_EMAIL_SENT: 'Activation email sent.',
     EMAIL_NOT_VALID: 'Invalid email address',
-    PICK_UP_LOCATION: 'Pickup location',
+    PICK_UP_LOCATION: 'Pick-up location',
     DROP_OFF_LOCATION: 'Drop-off location',
     PHONE_NOT_VALID: 'Invalid phone number',
     ALL: 'All',

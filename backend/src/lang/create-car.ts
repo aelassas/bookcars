@@ -37,7 +37,7 @@ const strings = new LocalizedStrings({
     CAR_IMAGE_SIZE_ERROR: `The image must be in the format ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Supplier',
-    LOCATIONS: 'Pickup locations',
+    LOCATIONS: 'Pick-up locations',
     AVAILABLE: 'Available for rental',
     CAR_TYPE: 'Engine',
     DAILY_PRICE: 'Daily Price',
