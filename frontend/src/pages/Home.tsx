@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Dialog, DialogContent, FormControlLabel, Tab, Tabs } from '@mui/material'
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  FormControlLabel,
+  Tab,
+  Tabs
+} from '@mui/material'
 import {
   RoomService,
   VisibilityOff,
@@ -9,7 +17,6 @@ import {
   AttachMoney,
   Public,
   FlashOn,
-  ExpandMore,
   CheckBox,
 } from '@mui/icons-material'
 import L from 'leaflet'
@@ -29,6 +36,7 @@ import LocationCarrousel from '@/components/LocationCarrousel'
 import SearchForm from '@/components/SearchForm'
 import Map from '@/components/Map'
 import Footer from '@/components/Footer'
+import FaqList from '@/components/FaqList'
 
 import Mini from '@/assets/img/mini.png'
 import Midi from '@/assets/img/midi.png'
@@ -389,35 +397,7 @@ const Home = () => {
           </Button>
         </div>
 
-        <div className="faq">
-          <h2>{strings.FAQ_TITLE}</h2>
-          <div className="questions">
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_DOCUMENTS_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_DOCUMENTS_TEXT}</AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_SERVICES_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_SERVICES_TEXT}</AccordionDetails>
-            </Accordion>
-
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_AGE_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_AGE_TEXT}</AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_CANCEL_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_CANCEL_TEXT}</AccordionDetails>
-            </Accordion>
-          </div>
-          <Button
-            variant="contained"
-            className="btn-primary btn-home"
-            href="/contact"
-          >
-            {strings.MORE_QUESTIONS}
-          </Button>
-        </div>
+        <FaqList />
 
         <div className="home-map">
           <Map

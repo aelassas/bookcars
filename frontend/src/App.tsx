@@ -30,6 +30,7 @@ const Contact = lazy(() => import('@/pages/Contact'))
 const NoMatch = lazy(() => import('@/pages/NoMatch'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
+const Faq = lazy(() => import('@/pages/Faq'))
 
 const App = () => (
   <GlobalProvider>
@@ -57,6 +58,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/locations" element={<Locations />} />
             <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/faq" element={<Faq />} />
 
             <Route path="*" element={<NoMatch />} />
           </Routes>

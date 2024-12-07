@@ -32,6 +32,7 @@ import {
   CarRental as SupplierIcon,
   LocationOn as LocationIcon,
   PrivacyTip as PrivacyIcon,
+  QuestionAnswer as FaqIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -329,6 +330,10 @@ const Header = ({
                 <ListItemLink href="/tos">
                   <ListItemIcon><TosIcon /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
+                </ListItemLink>
+                <ListItemLink href="/faq">
+                  <ListItemIcon><FaqIcon /></ListItemIcon>
+                  <ListItemText primary={strings.FAQ} />
                 </ListItemLink>
                 <ListItemLink href="/contact">
                   <ListItemIcon><MailIcon /></ListItemIcon>
