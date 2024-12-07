@@ -32,6 +32,7 @@ const Footer = () => {
           <div className="title">{strings.SUPPORT}</div>
           <ul className="links">
             <li onClick={() => navigate('/contact')}>{strings.CONTACT}</li>
+            <li onClick={() => navigate('/faq')}>{strings.FAQ}</li>
           </ul>
           <div className="contact">
             <MailOutline className="icon" />

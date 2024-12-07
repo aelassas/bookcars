@@ -17,6 +17,7 @@ const strings = new LocalizedStrings({
     CONTACT: 'Contact',
     SECURE_PAYMENT: 'Paiement 100% sécurisé avec BookCars',
     PRIVACY_POLICY: 'Politique de Confidentialité',
+    FAQ: 'FAQ',
   },
   en: {
     COPYRIGHT_PART1,
@@ -31,6 +32,7 @@ const strings = new LocalizedStrings({
     CONTACT: 'Contact',
     SECURE_PAYMENT: '100% secure payment with BookCars',
     PRIVACY_POLICY: 'Privacy Policy',
+    FAQ: 'FAQ',
   },
   es: {
     COPYRIGHT_PART1,
@@ -45,6 +47,7 @@ const strings = new LocalizedStrings({
     CONTACT: 'Contacto',
     SECURE_PAYMENT: 'Pago 100% seguro con BookCars',
     PRIVACY_POLICY: 'Política de Privacidad',
+    FAQ: 'Preguntas frecuentes',
   },
 })
 

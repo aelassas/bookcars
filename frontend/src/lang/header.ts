@@ -15,6 +15,7 @@ const strings = new LocalizedStrings({
     SUPPLIERS: 'Fournisseurs',
     LOCATIONS: 'Lieux',
     PRIVACY_POLICY: 'Politique de Confidentialité',
+    FAQ: 'FAQ',
   },
   en: {
     SIGN_IN: 'Sign in',
@@ -29,6 +30,7 @@ const strings = new LocalizedStrings({
     SUPPLIERS: 'Suppliers',
     LOCATIONS: 'Locations',
     PRIVACY_POLICY: 'Privacy Policy',
+    FAQ: 'FAQ',
   },
   es: {
     SIGN_IN: 'Iniciar sesión',
@@ -43,6 +45,7 @@ const strings = new LocalizedStrings({
     SUPPLIERS: 'Proveedores',
     LOCATIONS: 'Ubicaciones',
     PRIVACY_POLICY: 'Política de Privacidad',
+    FAQ: 'Preguntas frecuentes',
   },
 })
 
