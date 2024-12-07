@@ -57,6 +57,7 @@ div.footer div.contact {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 10px 0;
 }
 
 div.footer div.contact .icon {
@@ -70,6 +71,11 @@ div.footer div.contact a {
 
 div.footer div.contact a:hover {
   opacity: 0.85;
+}
+
+div.footer div.contact .social-icon {
+  color: #525252;
+  margin-right: 12px;
 }
 
 div.footer section.payment {
