@@ -8,6 +8,9 @@ const strings = new LocalizedStrings({
   en: {
     VIEW_ON_MAP: 'View on map',
   },
+  es: {
+    VIEW_ON_MAP: 'Ver en el mapa',
+  },
 })
 
 langHelper.setLanguage(strings)
