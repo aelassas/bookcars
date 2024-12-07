@@ -519,6 +519,7 @@ export interface SendEmailPayload {
   message: string
   recaptchaToken: string
   ip: string
+  isContactForm: boolean
 }
 
 export interface Response<T> {
