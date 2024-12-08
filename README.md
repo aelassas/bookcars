@@ -83,7 +83,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 ### Alternative Way
 -->
 
-You can also install the Android App by downloading the APK and installing it on any Android device.
+You can install the Android App by downloading the APK and installing it on any Android device.
 
 * [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk)
 * Login: jdoe@bookcars.ma
