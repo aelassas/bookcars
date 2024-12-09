@@ -401,7 +401,9 @@ const Home = () => {
           </Button>
         </div>
 
-        <FaqList />
+        <div className="faq">
+          <FaqList />
+        </div>
 
         <div className="home-map">
           <Map
