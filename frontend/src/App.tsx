@@ -5,6 +5,7 @@ import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { init as initGA } from '@/common/ga4'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
+import ScrollToTop from '@/components/ScrollToTop'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
@@ -23,10 +24,10 @@ const Bookings = lazy(() => import('@/pages/Bookings'))
 const Booking = lazy(() => import('@/pages/Booking'))
 const Settings = lazy(() => import('@/pages/Settings'))
 const Notifications = lazy(() => import('@/pages/Notifications'))
-const Privacy = lazy(() => import('@/pages/Privacy'))
 const ToS = lazy(() => import('@/pages/ToS'))
+const Privacy = lazy(() => import('@/pages/Privacy'))
 const About = lazy(() => import('@/pages/About'))
-// const ChangePassword = lazy(() => import('@/pages/ChangePassword'))
+const ChangePassword = lazy(() => import('@/pages/ChangePassword'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const NoMatch = lazy(() => import('@/pages/NoMatch'))
 const Locations = lazy(() => import('@/pages/Locations'))
@@ -37,6 +38,8 @@ const App = () => (
   <GlobalProvider>
     <ReCaptchaProvider>
       <SuspenseRouter window={window}>
+        <ScrollToTop />
+
         <div className="app">
           <Suspense fallback={<></>}>
             <Routes>
@@ -53,10 +56,10 @@ const App = () => (
               <Route path="/booking" element={<Booking />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/notifications" element={<Notifications />} />
-              {/* <Route path="/change-password" element={<ChangePassword />} /> */}
+              <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/about" element={<About />} />
-              <Route path="/privacy" element={<Privacy />} />
               <Route path="/tos" element={<ToS />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/locations" element={<Locations />} />
               <Route path="/suppliers" element={<Suppliers />} />

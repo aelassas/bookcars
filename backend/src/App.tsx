@@ -1,7 +1,8 @@
 import React, { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import SuspenseRouter from '@/components/SuspenseRouter'
 import { GlobalProvider } from '@/context/GlobalContext'
+import SuspenseRouter from '@/components/SuspenseRouter'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const SignIn = lazy(() => import('@/pages/SignIn'))
 const Activate = lazy(() => import('@/pages/Activate'))
@@ -40,6 +41,8 @@ const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 const App = () => (
   <GlobalProvider>
     <SuspenseRouter window={window}>
+      <ScrollToTop />
+
       <div className="app">
         <Suspense fallback={<></>}>
           <Routes>
@@ -47,34 +50,34 @@ const App = () => (
             <Route path="/activate" element={<Activate />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            {/* <Route path="/sign-up" element={<SignUp />} /> */}
+            <Route path="/sign-up" element={<SignUp />} />
             <Route path="/" element={<Bookings />} />
             <Route path="/suppliers" element={<Suppliers />} />
             <Route path="/supplier" element={<Supplier />} />
-            {/* <Route path="/create-supplier" element={<CreateSupplier />} /> */}
-            {/* <Route path="/update-supplier" element={<UpdateSupplier />} /> */}
+            <Route path="/create-supplier" element={<CreateSupplier />} />
+            <Route path="/update-supplier" element={<UpdateSupplier />} />
             <Route path="/locations" element={<Locations />} />
-            {/* <Route path="/create-location" element={<CreateLocation />} /> */}
-            {/* <Route path="/update-location" element={<UpdateLocation />} /> */}
+            <Route path="/create-location" element={<CreateLocation />} />
+            <Route path="/update-location" element={<UpdateLocation />} />
             <Route path="/cars" element={<Cars />} />
             <Route path="/car" element={<Car />} />
-            {/* <Route path="/create-car" element={<CreateCar />} /> */}
-            {/* <Route path="/update-car" element={<UpdateCar />} /> */}
+            <Route path="/create-car" element={<CreateCar />} />
+            <Route path="/update-car" element={<UpdateCar />} />
             <Route path="/update-booking" element={<UpdateBooking />} />
             <Route path="/create-booking" element={<CreateBooking />} />
             <Route path="/users" element={<Users />} />
             <Route path="/user" element={<User />} />
-            {/* <Route path="/create-user" element={<CreateUser />} /> */}
-            {/* <Route path="/update-user" element={<UpdateUser />} /> */}
+            <Route path="/create-user" element={<CreateUser />} />
+            <Route path="/update-user" element={<UpdateUser />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
-            {/* <Route path="/change-password" element={<ChangePassword />} /> */}
+            <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/about" element={<About />} />
             <Route path="/tos" element={<ToS />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/countries" element={<Countries />} />
-            {/* <Route path="/create-country" element={<CreateCountry />} /> */}
-            {/* <Route path="/update-country" element={<UpdateCountry />} /> */}
+            <Route path="/create-country" element={<CreateCountry />} />
+            <Route path="/update-country" element={<UpdateCountry />} />
 
             <Route path="*" element={<NoMatch />} />
           </Routes>

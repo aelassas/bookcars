@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import {
   OutlinedInput,
@@ -65,6 +65,7 @@ const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY)
 
 const Checkout = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -1091,7 +1092,7 @@ const Checkout = () => {
                         } catch (err) {
                           helper.error(err)
                         } finally {
-                          window.location.href = '/'
+                          navigate('/')
                         }
                       }}
                     >
