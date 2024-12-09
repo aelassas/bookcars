@@ -16,7 +16,7 @@ const strings = new LocalizedStrings({
     SUCCESS_PAY_LATER: 'Your booking was successfully done. We sent you a confirmation email.',
     ERROR: 'Something went wrong! Try again later',
     STATUS_TITLE: 'BookCars Booking Confirmation',
-    STATUS_MESSAGE: 'Check your mailbox and follow the steps decribed in the booking confirmation email to book your car.',
+    STATUS_MESSAGE: 'Check your mailbox and follow the steps described in the booking confirmation email to book your car.',
   },
   es: {
     CONGRATULATIONS: '¡Felicitaciones!',
