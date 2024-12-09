@@ -50,6 +50,7 @@ import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
 import Map from '@/components/Map'
 import DriverLicense from '@/components/DriverLicense'
+import Progress from '@/components/Progress'
 import NoMatch from './NoMatch'
 import Info from './Info'
 
@@ -97,6 +98,7 @@ const Checkout = () => {
   const [additionalDriver, setAdditionalDriver] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingPage, setLoadingPage] = useState(true)
   const [addiontalDriverFullName, setAddiontalDriverFullName] = useState('')
   const [addiontalDriverEmail, setAddiontalDriverEmail] = useState('')
   const [addiontalDriverPhone, setAddiontalDriverPhone] = useState('')
@@ -627,462 +629,467 @@ const Checkout = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} strict={false}>
-      {visible && car && from && to && pickupLocation && dropOffLocation && (
-        <div className="booking">
-          <Paper className="booking-form" elevation={10}>
-            <h1 className="booking-form-title">
-              {' '}
-              {strings.BOOKING_HEADING}
-              {' '}
-            </h1>
-            <form onSubmit={handleSubmit}>
-              <div>
+    <>
+      <Layout onLoad={onLoad} strict={false}>
+        {visible && car && from && to && pickupLocation && dropOffLocation && (
+          <div className="booking">
+            <Paper className="booking-form" elevation={10}>
+              <h1 className="booking-form-title">
+                {' '}
+                {strings.BOOKING_HEADING}
+                {' '}
+              </h1>
+              <form onSubmit={handleSubmit}>
+                <div>
 
-                <Map
-                  position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
-                  initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                  parkingSpots={pickupLocation.parkingSpots}
-                  locations={[pickupLocation]}
-                  className="map"
-                />
+                  <Map
+                    position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
+                    initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                    parkingSpots={pickupLocation.parkingSpots}
+                    locations={[pickupLocation]}
+                    className="map"
+                  />
 
-                <CarList
-                  cars={[car]}
-                  // pickupLocationName={pickupLocation.name}
-                  // distance={distance}
-                  hidePrice
-                  sizeAuto
-                />
+                  <CarList
+                    cars={[car]}
+                    // pickupLocationName={pickupLocation.name}
+                    // distance={distance}
+                    hidePrice
+                    sizeAuto
+                    onLoad={() => setLoadingPage(false)}
+                  />
 
-                <div className="booking-options-container">
-                  <div className="booking-info">
-                    <BookingIcon />
-                    <span>{strings.BOOKING_OPTIONS}</span>
-                  </div>
-                  <div className="booking-options">
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret}
-                        control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.CANCELLATION}</span>
-                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret}
-                        control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
-                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret}
-                        control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret}
-                        control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret}
-                        control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
-                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-
-                    <FormControl fullWidth margin="dense">
-                      <FormControlLabel
-                        disabled={car.additionalDriver === -1 || !!clientSecret}
-                        control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
-                        label={(
-                          <span>
-                            <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</span>
-                          </span>
-                        )}
-                      />
-                    </FormControl>
-                  </div>
-                </div>
-
-                <div className="booking-details-container">
-                  <div className="booking-info">
-                    <CarIcon />
-                    <span>{strings.BOOKING_DETAILS}</span>
-                  </div>
-                  <div className="booking-details">
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{strings.DAYS}</span>
-                      <div className="booking-detail-value">
-                        {daysLabel}
-                      </div>
-                    </div>
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
-                      <div className="booking-detail-value">{pickupLocation.name}</div>
-                    </div>
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
-                      <div className="booking-detail-value">{dropOffLocation.name}</div>
-                    </div>
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{strings.CAR}</span>
-                      <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
-                    </div>
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
-                      <div className="booking-detail-value">
-                        <div className="car-supplier">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
-                          <span className="car-supplier-name">{car.supplier.fullName}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{strings.COST}</span>
-                      <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
-                    </div>
-                  </div>
-                </div>
-
-                {!authenticated && (
-                  <div className="driver-details">
+                  <div className="booking-options-container">
                     <div className="booking-info">
-                      <DriverIcon />
-                      <span>{strings.DRIVER_DETAILS}</span>
+                      <BookingIcon />
+                      <span>{strings.BOOKING_OPTIONS}</span>
                     </div>
-                    <div className="driver-details-form">
+                    <div className="booking-options">
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                        <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleFullNameChange} autoComplete="off" />
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.EMAIL}
-                          error={!emailValid || emailRegitered}
-                          onBlur={handleEmailBlur}
-                          onChange={handleEmailChange}
-                          required
-                          autoComplete="off"
-                        />
-                        <FormHelperText error={!emailValid || emailRegitered}>
-                          {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                          {(emailRegitered && (
+                        <FormControlLabel
+                          disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret}
+                          control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
+                          label={(
                             <span>
-                              <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
-                              <span> </span>
-                              <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
+                              <span className="booking-option-label">{csStrings.CANCELLATION}</span>
+                              <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, language)}</span>
                             </span>
-                          ))
-                            || ''}
-                          {(emailInfo && strings.EMAIL_INFO) || ''}
-                        </FormHelperText>
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                        <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
-                        <FormHelperText error={!phoneValid}>
-                          {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                          {(phoneInfo && strings.PHONE_INFO) || ''}
-                        </FormHelperText>
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <DatePicker
-                          label={commonStrings.BIRTH_DATE}
-                          variant="outlined"
-                          required
-                          onChange={(_birthDate) => {
-                            if (_birthDate) {
-                              const _birthDateValid = validateBirthDate(_birthDate)
-
-                              setBirthDate(_birthDate)
-                              setBirthDateValid(_birthDateValid)
-                            }
-                          }}
-                          language={language}
+                          )}
                         />
-                        <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
 
-                      {env.RECAPTCHA_ENABLED && (
-                        <div className="recaptcha">
-                          <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
+                      <FormControl fullWidth margin="dense">
+                        <FormControlLabel
+                          disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret}
+                          control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
+                          label={(
+                            <span>
+                              <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
+                              <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, language)}</span>
+                            </span>
+                          )}
+                        />
+                      </FormControl>
+
+                      <FormControl fullWidth margin="dense">
+                        <FormControlLabel
+                          disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret}
+                          control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
+                          label={(
+                            <span>
+                              <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
+                              <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</span>
+                            </span>
+                          )}
+                        />
+                      </FormControl>
+
+                      <FormControl fullWidth margin="dense">
+                        <FormControlLabel
+                          disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret}
+                          control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
+                          label={(
+                            <span>
+                              <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
+                              <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, language)}</span>
+                            </span>
+                          )}
+                        />
+                      </FormControl>
+
+                      <FormControl fullWidth margin="dense">
+                        <FormControlLabel
+                          disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret}
+                          control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
+                          label={(
+                            <span>
+                              <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
+                              <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</span>
+                            </span>
+                          )}
+                        />
+                      </FormControl>
+
+                      <FormControl fullWidth margin="dense">
+                        <FormControlLabel
+                          disabled={car.additionalDriver === -1 || !!clientSecret}
+                          control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
+                          label={(
+                            <span>
+                              <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
+                              <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</span>
+                            </span>
+                          )}
+                        />
+                      </FormControl>
+                    </div>
+                  </div>
+
+                  <div className="booking-details-container">
+                    <div className="booking-info">
+                      <CarIcon />
+                      <span>{strings.BOOKING_DETAILS}</span>
+                    </div>
+                    <div className="booking-details">
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.DAYS}</span>
+                        <div className="booking-detail-value">
+                          {daysLabel}
                         </div>
-                      )}
-
-                      <div className="booking-tos">
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td aria-label="tos">
-                                <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
-                              </td>
-                              <td>
-                                <Link href="/tos" target="_blank" rel="noreferrer">
-                                  {commonStrings.TOS}
-                                </Link>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
-
-                      <SocialLogin />
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
+                        <div className="booking-detail-value">{pickupLocation.name}</div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
+                        <div className="booking-detail-value">{dropOffLocation.name}</div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.CAR}</span>
+                        <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
+                        <div className="booking-detail-value">
+                          <div className="car-supplier">
+                            <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                            <span className="car-supplier-name">{car.supplier.fullName}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.COST}</span>
+                        <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {car.supplier.licenseRequired && (
-                  <div className="driver-details">
-                    <div className="booking-info">
-                      <LicenseIcon />
-                      <span>{commonStrings.DRIVER_LICENSE}</span>
-                    </div>
-                    <div className="driver-details-form">
-                      <DriverLicense
-                        user={user}
-                        variant="outlined"
-                        onUpload={(filename) => {
-                          if (filename) {
-                            setLicenseRequired(false)
-                          } else {
-                            setLicenseRequired(true)
-                          }
-                          setLicense(filename)
-                        }}
-                        onDelete={() => {
-                          setLicenseRequired(false)
-                          setLicense(null)
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {(adManuallyChecked && additionalDriver) && (
-                  <div className="driver-details">
-                    <div className="booking-info">
-                      <DriverIcon />
-                      <span>{csStrings.ADDITIONAL_DRIVER}</span>
-                    </div>
-                    <div className="driver-details-form">
-                      <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.FULL_NAME}
-                          required={adRequired}
-                          onChange={(e) => {
-                            setAddiontalDriverFullName(e.target.value)
-                          }}
-                          autoComplete="off"
-                        />
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.EMAIL}
-                          error={!addiontalDriverEmailValid}
-                          onBlur={(e) => {
-                            _validateEmail(e.target.value)
-                          }}
-                          onChange={(e) => {
-                            setAddiontalDriverEmail(e.target.value)
-
-                            if (!e.target.value) {
-                              setAddiontalDriverEmailValid(true)
-                            }
-                          }}
-                          required={adRequired}
-                          autoComplete="off"
-                        />
-                        <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.PHONE}
-                          error={!addiontalDriverPhoneValid}
-                          onBlur={(e) => {
-                            _validatePhone(e.target.value)
-                          }}
-                          onChange={(e) => {
-                            setAddiontalDriverPhone(e.target.value)
-
-                            if (!e.target.value) {
-                              setAddiontalDriverPhoneValid(true)
-                            }
-                          }}
-                          required={adRequired}
-                          autoComplete="off"
-                        />
-                        <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
-                      </FormControl>
-                      <FormControl fullWidth margin="dense">
-                        <DatePicker
-                          label={commonStrings.BIRTH_DATE}
-                          variant="outlined"
-                          required={adRequired}
-                          onChange={(_birthDate) => {
-                            if (_birthDate) {
-                              const _birthDateValid = _validateBirthDate(_birthDate)
-
-                              setAddiontalDriverBirthDate(_birthDate)
-                              setAddiontalDriverBirthDateValid(_birthDateValid)
-                            }
-                          }}
-                          language={language}
-                        />
-                        <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
-                      </FormControl>
-                    </div>
-                  </div>
-                )}
-
-                {car.supplier.payLater && (
-                  <div className="payment-options-container">
-                    <div className="booking-info">
-                      <PaymentOptionsIcon />
-                      <span>{strings.PAYMENT_OPTIONS}</span>
-                    </div>
-                    <div className="payment-options">
-                      <FormControl>
-                        <RadioGroup
-                          defaultValue="payOnline"
-                          onChange={(event) => {
-                            setPayLater(event.target.value === 'payLater')
-                          }}
-                        >
-                          <FormControlLabel
-                            value="payLater"
-                            control={<Radio />}
-                            label={(
-                              <span className="payment-button">
-                                <span>{strings.PAY_LATER}</span>
-                                <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
-                              </span>
-                            )}
+                  {!authenticated && (
+                    <div className="driver-details">
+                      <div className="booking-info">
+                        <DriverIcon />
+                        <span>{strings.DRIVER_DETAILS}</span>
+                      </div>
+                      <div className="driver-details-form">
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                          <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleFullNameChange} autoComplete="off" />
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                          <OutlinedInput
+                            type="text"
+                            label={commonStrings.EMAIL}
+                            error={!emailValid || emailRegitered}
+                            onBlur={handleEmailBlur}
+                            onChange={handleEmailChange}
+                            required
+                            autoComplete="off"
                           />
-                          <FormControlLabel
-                            value="payOnline"
-                            control={<Radio />}
-                            label={(
-                              <span className="payment-button">
-                                <span>{strings.PAY_ONLINE}</span>
-                                <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
+                          <FormHelperText error={!emailValid || emailRegitered}>
+                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                            {(emailRegitered && (
+                              <span>
+                                <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
+                                <span> </span>
+                                <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                               </span>
-                            )}
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </div>
-                )}
+                            ))
+                              || ''}
+                            {(emailInfo && strings.EMAIL_INFO) || ''}
+                          </FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                          <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
+                          <FormHelperText error={!phoneValid}>
+                            {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                            {(phoneInfo && strings.PHONE_INFO) || ''}
+                          </FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <DatePicker
+                            label={commonStrings.BIRTH_DATE}
+                            variant="outlined"
+                            required
+                            onChange={(_birthDate) => {
+                              if (_birthDate) {
+                                const _birthDateValid = validateBirthDate(_birthDate)
 
-                {(!car.supplier.payLater || !payLater) && (
-                  clientSecret && (
-                    <div className="payment-options-container">
-                      <EmbeddedCheckoutProvider
-                        stripe={stripePromise}
-                        options={{ clientSecret }}
-                      >
-                        <EmbeddedCheckout />
-                      </EmbeddedCheckoutProvider>
+                                setBirthDate(_birthDate)
+                                setBirthDateValid(_birthDateValid)
+                              }
+                            }}
+                            language={language}
+                          />
+                          <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                        </FormControl>
+
+                        {env.RECAPTCHA_ENABLED && (
+                          <div className="recaptcha">
+                            <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
+                          </div>
+                        )}
+
+                        <div className="booking-tos">
+                          <table>
+                            <tbody>
+                              <tr>
+                                <td aria-label="tos">
+                                  <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
+                                </td>
+                                <td>
+                                  <Link href="/tos" target="_blank" rel="noreferrer">
+                                    {commonStrings.TOS}
+                                  </Link>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <SocialLogin />
+                      </div>
                     </div>
-                  )
-                )}
-                <div className="booking-buttons">
-                  {(!clientSecret || payLater) && (
-                    <Button type="submit" variant="contained" className="btn-checkout btn-margin-bottom" size="small" disabled={loading}>
-                      {
-                        loading
-                          ? <CircularProgress color="inherit" size={24} />
-                          : strings.BOOK
-                      }
-                    </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    className="btn-cancel btn-margin-bottom"
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        if (bookingId && sessionId) {
-                          //
-                          // Delete temporary booking on cancel.
-                          // Otherwise, temporary bookings are
-                          // automatically deleted through a TTL index.
-                          //
-                          await BookingService.deleteTempBooking(bookingId, sessionId)
+
+                  {car.supplier.licenseRequired && (
+                    <div className="driver-details">
+                      <div className="booking-info">
+                        <LicenseIcon />
+                        <span>{commonStrings.DRIVER_LICENSE}</span>
+                      </div>
+                      <div className="driver-details-form">
+                        <DriverLicense
+                          user={user}
+                          variant="outlined"
+                          onUpload={(filename) => {
+                            if (filename) {
+                              setLicenseRequired(false)
+                            } else {
+                              setLicenseRequired(true)
+                            }
+                            setLicense(filename)
+                          }}
+                          onDelete={() => {
+                            setLicenseRequired(false)
+                            setLicense(null)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {(adManuallyChecked && additionalDriver) && (
+                    <div className="driver-details">
+                      <div className="booking-info">
+                        <DriverIcon />
+                        <span>{csStrings.ADDITIONAL_DRIVER}</span>
+                      </div>
+                      <div className="driver-details-form">
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                          <OutlinedInput
+                            type="text"
+                            label={commonStrings.FULL_NAME}
+                            required={adRequired}
+                            onChange={(e) => {
+                              setAddiontalDriverFullName(e.target.value)
+                            }}
+                            autoComplete="off"
+                          />
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                          <OutlinedInput
+                            type="text"
+                            label={commonStrings.EMAIL}
+                            error={!addiontalDriverEmailValid}
+                            onBlur={(e) => {
+                              _validateEmail(e.target.value)
+                            }}
+                            onChange={(e) => {
+                              setAddiontalDriverEmail(e.target.value)
+
+                              if (!e.target.value) {
+                                setAddiontalDriverEmailValid(true)
+                              }
+                            }}
+                            required={adRequired}
+                            autoComplete="off"
+                          />
+                          <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                          <OutlinedInput
+                            type="text"
+                            label={commonStrings.PHONE}
+                            error={!addiontalDriverPhoneValid}
+                            onBlur={(e) => {
+                              _validatePhone(e.target.value)
+                            }}
+                            onChange={(e) => {
+                              setAddiontalDriverPhone(e.target.value)
+
+                              if (!e.target.value) {
+                                setAddiontalDriverPhoneValid(true)
+                              }
+                            }}
+                            required={adRequired}
+                            autoComplete="off"
+                          />
+                          <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth margin="dense">
+                          <DatePicker
+                            label={commonStrings.BIRTH_DATE}
+                            variant="outlined"
+                            required={adRequired}
+                            onChange={(_birthDate) => {
+                              if (_birthDate) {
+                                const _birthDateValid = _validateBirthDate(_birthDate)
+
+                                setAddiontalDriverBirthDate(_birthDate)
+                                setAddiontalDriverBirthDateValid(_birthDateValid)
+                              }
+                            }}
+                            language={language}
+                          />
+                          <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                        </FormControl>
+                      </div>
+                    </div>
+                  )}
+
+                  {car.supplier.payLater && (
+                    <div className="payment-options-container">
+                      <div className="booking-info">
+                        <PaymentOptionsIcon />
+                        <span>{strings.PAYMENT_OPTIONS}</span>
+                      </div>
+                      <div className="payment-options">
+                        <FormControl>
+                          <RadioGroup
+                            defaultValue="payOnline"
+                            onChange={(event) => {
+                              setPayLater(event.target.value === 'payLater')
+                            }}
+                          >
+                            <FormControlLabel
+                              value="payLater"
+                              control={<Radio />}
+                              label={(
+                                <span className="payment-button">
+                                  <span>{strings.PAY_LATER}</span>
+                                  <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
+                                </span>
+                              )}
+                            />
+                            <FormControlLabel
+                              value="payOnline"
+                              control={<Radio />}
+                              label={(
+                                <span className="payment-button">
+                                  <span>{strings.PAY_ONLINE}</span>
+                                  <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
+                                </span>
+                              )}
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </div>
+                    </div>
+                  )}
+
+                  {(!car.supplier.payLater || !payLater) && (
+                    clientSecret && (
+                      <div className="payment-options-container">
+                        <EmbeddedCheckoutProvider
+                          stripe={stripePromise}
+                          options={{ clientSecret }}
+                        >
+                          <EmbeddedCheckout />
+                        </EmbeddedCheckoutProvider>
+                      </div>
+                    )
+                  )}
+                  <div className="booking-buttons">
+                    {(!clientSecret || payLater) && (
+                      <Button type="submit" variant="contained" className="btn-checkout btn-margin-bottom" size="small" disabled={loading}>
+                        {
+                          loading
+                            ? <CircularProgress color="inherit" size={24} />
+                            : strings.BOOK
                         }
-                        if (!authenticated && license) {
-                          await UserService.deleteTempLicense(license)
+                      </Button>
+                    )}
+                    <Button
+                      variant="contained"
+                      className="btn-cancel btn-margin-bottom"
+                      size="small"
+                      onClick={async () => {
+                        try {
+                          if (bookingId && sessionId) {
+                            //
+                            // Delete temporary booking on cancel.
+                            // Otherwise, temporary bookings are
+                            // automatically deleted through a TTL index.
+                            //
+                            await BookingService.deleteTempBooking(bookingId, sessionId)
+                          }
+                          if (!authenticated && license) {
+                            await UserService.deleteTempLicense(license)
+                          }
+                        } catch (err) {
+                          helper.error(err)
+                        } finally {
+                          navigate('/')
                         }
-                      } catch (err) {
-                        helper.error(err)
-                      } finally {
-                        navigate('/')
-                      }
-                    }}
-                  >
-                    {commonStrings.CANCEL}
-                  </Button>
+                      }}
+                    >
+                      {commonStrings.CANCEL}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="form-error">
-                {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
-                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
-              </div>
-            </form>
-          </Paper>
-        </div>
-      )}
-      {noMatch && <NoMatch hideHeader />}
-      {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
-    </Layout>
+                <div className="form-error">
+                  {tosError && <Error message={commonStrings.TOS_ERROR} />}
+                  {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                  {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
+                  {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                  {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
+                </div>
+              </form>
+            </Paper>
+          </div>
+        )}
+        {noMatch && <NoMatch hideHeader />}
+        {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
+      </Layout>
+
+      {loadingPage && <Progress />}
+    </>
   )
 }
 
