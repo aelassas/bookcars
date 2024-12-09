@@ -51,8 +51,8 @@ import SocialLogin from '@/components/SocialLogin'
 import Map from '@/components/Map'
 import DriverLicense from '@/components/DriverLicense'
 import Progress from '@/components/Progress'
+import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
-import Info from './Info'
 
 import '@/assets/css/checkout.css'
 
@@ -1023,6 +1023,11 @@ const Checkout = () => {
                     </div>
                   )}
 
+                  <div className="payment-info">
+                    <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
+                    <div className="payment-info-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                  </div>
+
                   {(!car.supplier.payLater || !payLater) && (
                     clientSecret && (
                       <div className="payment-options-container">
@@ -1085,7 +1090,15 @@ const Checkout = () => {
           </div>
         )}
         {noMatch && <NoMatch hideHeader />}
-        {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
+
+        {success && bookingId && (
+          <CheckoutStatus
+            bookingId={bookingId}
+            language={language}
+            status="success"
+            className="status"
+          />
+        )}
       </Layout>
 
       {loadingPage && <Progress />}

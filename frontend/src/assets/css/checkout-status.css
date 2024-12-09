@@ -1,0 +1,84 @@
+div.checkout-status {
+  display: flex;
+  flex-direction: column;
+}
+
+div.checkout-status div.details {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+div.checkout-status div.details div.status-details-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+div.checkout-status div.details div.status-info {
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+div.checkout-status div.details div.status-info span {
+  color: #444;
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+div.checkout-status div.details div.status-details {
+  display: table;
+  color: #333;
+  font-size: 15px;
+  padding: 0 40px 20px 0;
+}
+
+div.checkout-status div.details div.status-details div.status-detail span.status-detail-title,
+div.checkout-status div.details div.status-details div.status-detail-value {
+  display: table-cell;
+}
+
+div.checkout-status div.details div.status-details div.status-detail div.status-detail-value {
+  color: rgb(0 0 0 / 55%);
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+div.checkout-status div.details div.status-details div.status-detail span.status-detail-title {
+  font-weight: 700;
+  width: 200px;
+}
+
+div.checkout-status div.details div.status-details div.status-detail div.status-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: #333;
+}
+
+div.checkout-status div.details div.side-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #003D99; */
+  background-color: #006CE4;
+  color: #fff;
+  padding: 40px;
+}
+
+
+@media only screen and (width <=960px) {
+  div.checkout-status div.details {
+    flex-direction: column;
+  }
+
+  div.checkout-status div.details div.mobile-app div.wrapper {
+    flex-direction: column;
+    padding: 60px 10px;
+  }
+}
