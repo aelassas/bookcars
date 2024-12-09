@@ -88,3 +88,17 @@ export const deleteTempBooking = (bookingId: string, sessionId: string): Promise
     .delete(
       `/api/delete-temp-booking/${bookingId}/${sessionId}`,
     ).then((res) => res.status)
+
+/**
+* Get a Booking by sessionId.
+*
+* @param {string} id
+* @returns {Promise<ohmjetTypes.Booking>}
+*/
+export const getBookingId = (sessionId: string): Promise<string> =>
+  axiosInstance
+    .get(
+      `/api/booking-id/${encodeURIComponent(sessionId)}`,
+      { withCredentials: true }
+    )
+    .then((res) => res.data)

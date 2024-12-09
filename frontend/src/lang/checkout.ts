@@ -31,6 +31,8 @@ const strings = new LocalizedStrings({
     PAYMENT_FAILED: 'Paiement échoué.',
     CHECKING: 'Vérification en cours...',
     LICENSE_REQUIRED: 'Permis de conduire requis',
+    PRICE_FOR: 'Pix pour',
+    DAY: 'jour',
   },
   en: {
     BOOKING_HEADING: 'Book now',
@@ -60,7 +62,9 @@ const strings = new LocalizedStrings({
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
     PAYMENT_FAILED: 'Payment failed.',
     CHECKING: 'Checking in progress...',
-    LICENSE_REQUIRED: "Driver's license required"
+    LICENSE_REQUIRED: "Driver's license required",
+    PRICE_FOR: 'Price for',
+    DAY: 'day',
   },
   es: {
     BOOKING_HEADING: 'Reservar ahora',
@@ -91,6 +95,8 @@ const strings = new LocalizedStrings({
     PAYMENT_FAILED: 'El pago falló.',
     CHECKING: 'Verificación en curso...',
     LICENSE_REQUIRED: 'Se requiere licencia de conducir',
+    PRICE_FOR: 'Precio por',
+    DAY: 'día',
   },
 })
 
