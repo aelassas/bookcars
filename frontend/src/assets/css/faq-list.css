@@ -1,6 +1,5 @@
 div.faq-list {
   width: 100%;
-  background-color: #f9f9f9;
   padding: 50px 30px;
   display: flex;
   flex-direction: column;
@@ -13,6 +12,7 @@ div.faq-list h2 {
 
 div.faq-list div.questions {
   margin: 20px 120px 70px 120px;
+  max-width: 1068px;
 }
 
 div.faq-list div.questions .accordion-title {
@@ -21,7 +21,7 @@ div.faq-list div.questions .accordion-title {
 
 
 div.faq-list div.questions .accordion-details {
-  color: #3a3a3a;
+  color: #1a1a1a;
 }
 
 @media only screen and (width <=960px) {

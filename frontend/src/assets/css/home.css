@@ -308,6 +308,14 @@ div.home div.home-map {
   margin: 15px 0 30px;
 }
 
+div.home div.faq {
+  width: 100%;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 div.home div.customer-care {
   background-color: #f9f9f9;
   width: 100%;

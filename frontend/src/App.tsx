@@ -5,6 +5,7 @@ import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { init as initGA } from '@/common/ga4'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
+import ScrollToTop from '@/components/ScrollToTop'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
@@ -37,6 +38,8 @@ const App = () => (
   <GlobalProvider>
     <ReCaptchaProvider>
       <SuspenseRouter window={window}>
+        <ScrollToTop />
+
         <div className="app">
           <Suspense fallback={<></>}>
             <Routes>
