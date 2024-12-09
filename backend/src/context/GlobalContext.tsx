@@ -1,8 +1,8 @@
-import React, { ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import React, { ReactNode, createContext, use, useMemo, useState } from 'react'
 
 // Create context
 export interface GlobalContextType {
-  notificationCount: number
+  notificationCount: number,
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -24,4 +24,4 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 
 // Create a custom hook to access context
 // eslint-disable-next-line react-refresh/only-export-components
-export const useGlobalContext = () => useContext(GlobalContext)
+export const useGlobalContext = () => use(GlobalContext)
