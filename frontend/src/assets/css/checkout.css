@@ -135,6 +135,11 @@ div.booking div.booking-details div.booking-detail div.booking-price {
   color: #333;
 }
 
+div.booking div.booking-details div.booking-detail .checklist-content {
+  color: #272727 !important;
+  padding-bottom: 20px;
+}
+
 div.booking div.driver-details {
   background: #fbfbfb;
   border: 1px solid #d9d8d9;
@@ -178,7 +183,7 @@ div.booking div.payment-info div.payment-info-title {
 
 div.booking div.payment-info div.payment-info-price {
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 div.booking .btn-checkout,
