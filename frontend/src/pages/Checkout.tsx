@@ -22,6 +22,7 @@ import {
   EventSeat as BookingIcon,
   Settings as PaymentOptionsIcon,
   Payment as LicenseIcon,
+  AssignmentTurnedIn as ChecklistIcon,
 } from '@mui/icons-material'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
@@ -1022,6 +1023,27 @@ const Checkout = () => {
                       </div>
                     </div>
                   )}
+
+                  <div className="booking-details-container">
+                    <div className="booking-info">
+                      <ChecklistIcon />
+                      <span>{strings.PICK_UP_CHECKLIST_TITLE}</span>
+                    </div>
+                    <div className="booking-details">
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_TITLE}</span>
+                        <div className="booking-detail-value checklist-content">
+                          {strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT}
+                        </div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_DOCUMENTS_TITLE}</span>
+                        <div className="booking-detail-value checklist-content">
+                          {strings.PICK_UP_CHECKLIST_DOCUMENTS_CONTENT}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="payment-info">
                     <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
