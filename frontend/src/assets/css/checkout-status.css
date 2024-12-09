@@ -65,7 +65,7 @@ div.checkout-status div.details div.side-panel {
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* background-color: #003D99; */
+  /* background-color: #1a1a1a; */
   background-color: #006CE4;
   color: #fff;
   padding: 40px;
