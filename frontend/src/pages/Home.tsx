@@ -103,7 +103,11 @@ const Home = () => {
               <source src="cover.mp4" type="video/mp4" />
               <track kind="captions" />
             </video>
-            {!videoLoaded && <div className="video-background" />}
+            {!videoLoaded && (
+              <div className="video-background">
+                <img src="cover.png" alt="" />
+              </div>
+            )}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>

@@ -8,6 +8,7 @@ import BookingList from '@/components/BookingList'
 import SupplierFilter from '@/components/SupplierFilter'
 import StatusFilter from '@/components/StatusFilter'
 import BookingFilter from '@/components/BookingFilter'
+import Progress from '@/components/Progress'
 import * as SupplierService from '@/services/SupplierService'
 
 import '@/assets/css/bookings.css'
@@ -19,6 +20,8 @@ const Bookings = () => {
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingSuppliers, setLoadingSuppliers] = useState(true)
+  const [loadingPage, setLoadingPage] = useState(true)
+
   const handleSupplierFilterChange = (_suppliers: string[]) => {
     setSuppliers(_suppliers)
   }
@@ -43,31 +46,36 @@ const Bookings = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} strict>
-      {user && (
-        <div className="bookings">
-          <div className="col-1">
-            <div>
-              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
-              <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
-              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile} />
+    <>
+      <Layout onLoad={onLoad} strict>
+        {user && (
+          <div className="bookings">
+            <div className="col-1">
+              <div>
+                <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
+                <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
+                <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile} />
+              </div>
+            </div>
+            <div className="col-2">
+              <BookingList
+                user={user}
+                language={user.language}
+                suppliers={suppliers}
+                statuses={statuses}
+                filter={filter}
+                loading={loadingSuppliers}
+                hideDates={env.isMobile}
+                checkboxSelection={false}
+                onLoad={() => setLoadingPage(false)}
+              />
             </div>
           </div>
-          <div className="col-2">
-            <BookingList
-              user={user}
-              language={user.language}
-              suppliers={suppliers}
-              statuses={statuses}
-              filter={filter}
-              loading={loadingSuppliers}
-              hideDates={env.isMobile}
-              checkboxSelection={false}
-            />
-          </div>
-        </div>
-      )}
-    </Layout>
+        )}
+      </Layout>
+
+      {loadingPage && <Progress />}
+    </>
   )
 }
 
