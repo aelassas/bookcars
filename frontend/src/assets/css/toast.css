@@ -1,0 +1,39 @@
+div.toast {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  max-width: 460px;
+  align-items: center;
+  padding: 15px 30px;
+  border-radius: 6px;
+}
+
+div.toast .icon {
+  color: #fff;
+}
+
+div.toast div.toast-content {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  align-items: flex-start;
+  padding-right: 60px;
+  margin-left: 20px;
+  color: #fff;
+}
+
+div.toast div.toast-content span.title {
+  margin-bottom: 15px;
+}
+
+.success {
+  background-color: #43A047;
+}
+
+.error {
+  background-color: #B00020;
+}
+
+div.toast div.close {
+  cursor: pointer;
+}

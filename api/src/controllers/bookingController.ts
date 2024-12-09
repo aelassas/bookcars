@@ -744,6 +744,32 @@ export const getBooking = async (req: Request, res: Response) => {
 }
 
 /**
+ * Get Booking by sessionId.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const getBookingId = async (req: Request, res: Response) => {
+  const { sessionId } = req.params
+
+  try {
+    const booking = await Booking.findOne({ sessionId })
+
+    if (!booking) {
+      logger.error('[booking.getBookingId] Booking not found (sessionId):', sessionId)
+      return res.sendStatus(204)
+    }
+    return res.json(booking?.id)
+  } catch (err) {
+    logger.error(`[booking.getBookingId] (sessionId) ${i18n.t('DB_ERROR')} ${sessionId}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
  * Get Bookings.
  *
  * @export
