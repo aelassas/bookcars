@@ -43,6 +43,10 @@ const CURRENCIES: Currency[] = [
   {
     code: 'EUR',
     symbol: '€',
+  },
+  {
+    code: 'IQD',
+    symbol: 'IQD',
   }
 ]
 
@@ -58,6 +62,11 @@ const env = {
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
   CURRENCIES: CURRENCIES.map((c) => c.code),
   _CURRENCIES: CURRENCIES,
+  /**
+ * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
+ * Must be a supported currency: https://docs.stripe.com/currencies
+ * */
+  STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
   BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
@@ -90,12 +99,6 @@ const env = {
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
   STRIPE_PUBLISHABLE_KEY: String(import.meta.env.VITE_BC_STRIPE_PUBLISHABLE_KEY),
-  /**
-   * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
-   * Must be a supported currency: https://docs.stripe.com/currencies
-   * */
-  STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
-  CURRENCY: import.meta.env.VITE_BC_CURRENCY || '$',
   SET_LANGUAGE_FROM_IP: (import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP && import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP.toLowerCase()) === 'true',
   GOOGLE_ANALYTICS_ENABLED: (import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED && import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED.toLowerCase()) === 'true',
   GOOGLE_ANALYTICS_ID: String(import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ID),

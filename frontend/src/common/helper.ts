@@ -4,6 +4,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/cars'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
+import * as StripeService from '@/services/StripeService'
 
 /**
  * Get language.
@@ -627,9 +628,20 @@ export const downloadURI = (uri: string, name: string = '') => {
 }
 
 /**
- * Return currency symbol.
+ * Convert a price to a given currency.
  *
- * @param {string} code
- * @returns {string|undefined}
+ * @async
+ * @param {number} amount
+ * @param {string} to
+ * @returns {Promise<number>}
  */
-export const getCurrencySymbol = (code: string) => env._CURRENCIES.find((c) => c.code === code)?.symbol
+export const convertPrice = async (amount: number) => {
+  const to = StripeService.getCurrency()
+
+  if (to !== env.BASE_CURRENCY) {
+    const res = await bookcarsHelper.convertPrice(amount, env.BASE_CURRENCY, to)
+    return res
+  }
+
+  return amount
+}

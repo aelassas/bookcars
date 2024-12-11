@@ -1,6 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import env from '@/config/env.config'
 import * as langHelper from '@/common/langHelper'
+import * as StripeService from '@/services/StripeService'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -31,7 +32,7 @@ const strings = new LocalizedStrings({
     SAVE: 'Sauvegarder',
     CANCEL: 'Annuler',
     RESET_PASSWORD: 'Changer le mot de passe',
-    CURRENCY: env.CURRENCY,
+    CURRENCY: StripeService.getCurrencySymbol(),
     DAILY: '/jour',
     DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo ?',
     DELETE_IMAGE: "Supprimer l'image",
@@ -117,7 +118,7 @@ const strings = new LocalizedStrings({
     SAVE: 'Save',
     CANCEL: 'Cancel',
     RESET_PASSWORD: 'Change Password',
-    CURRENCY: env.CURRENCY,
+    CURRENCY: StripeService.getCurrencySymbol(),
     DAILY: '/day',
     DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the picture?',
     UPLOAD_IMAGE: 'Upload image',
@@ -203,7 +204,7 @@ const strings = new LocalizedStrings({
     SAVE: 'Guardar',
     CANCEL: 'Cancelar',
     RESET_PASSWORD: 'Cambiar contraseña',
-    CURRENCY: env.CURRENCY,
+    CURRENCY: StripeService.getCurrencySymbol(),
     DAILY: '/día',
     DELETE_AVATAR_CONFIRM: '¿Está seguro de que desea eliminar la foto?',
     DELETE_IMAGE: 'Eliminar imagen',

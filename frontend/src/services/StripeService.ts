@@ -68,3 +68,11 @@ export const getCurrency = () => {
   }
   return env.BASE_CURRENCY
 }
+
+/**
+ * Return currency symbol.
+ *
+ * @param {string} code
+ * @returns {string|undefined}
+ */
+export const getCurrencySymbol = () => env._CURRENCIES.find((c) => c.code === getCurrency())?.symbol || '$'

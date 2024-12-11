@@ -1,5 +1,5 @@
 import * as bookcarsTypes from ':bookcars-types'
-import CurrencyConverter, { CurrencyCode, currencies } from ':currency-converter'
+import CurrencyConverter, { currencies } from ':currency-converter'
 
 /**
  * Format a number.
@@ -342,11 +342,17 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
  *
  * @async
  * @param {number} amount
- * @param {CurrencyCode} from
- * @param {CurrencyCode} to
+ * @param {string} from
+ * @param {string} to
  * @returns {Promise<number>}
  */
-export const convertPrice = async (amount: number, from: CurrencyCode, to: CurrencyCode): Promise<number> => {
+export const convertPrice = async (amount: number, from: string, to: string): Promise<number> => {
+  if (!checkCurrency(from)) {
+    throw new Error(`Currency ${from} not supported`)
+  }
+  if (!checkCurrency(to)) {
+    throw new Error(`Currency ${to} not supported`)
+  }
   const cc = new CurrencyConverter({ from, to, amount })
   const res = await cc.convert()
   return res
