@@ -1,4 +1,5 @@
 import * as bookcarsTypes from ':bookcars-types'
+import CurrencyConverter, { CurrencyCode } from ':currency-converter'
 
 /**
  * Format a number.
@@ -334,6 +335,21 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
   }
 
   return _price
+}
+
+/**
+ * Convert price from a given currency to another.
+ *
+ * @async
+ * @param {number} amount
+ * @param {CurrencyCode} from
+ * @param {CurrencyCode} to
+ * @returns {Promise<number>}
+ */
+export const convertPrice = async (amount: number, from: CurrencyCode, to: CurrencyCode): Promise<number> => {
+  const cc = new CurrencyConverter({ from, to, amount })
+  const res = await cc.convert()
+  return res
 }
 
 /**
