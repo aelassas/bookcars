@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
+    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../../frontend",
+    "build": "npm run install:dependencies && tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
