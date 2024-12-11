@@ -62,9 +62,6 @@ const Home = () => {
   }
 
   const onLoad = async () => {
-    const amount = 100
-    const res = await bookcarsHelper.convertPrice(amount, 'USD', 'EUR')
-    console.log(`${amount} USD = ${res} EUR`)
     let _suppliers = await SupplierService.getAllSuppliers()
     _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
     bookcarsHelper.shuffle(_suppliers)
