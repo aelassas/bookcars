@@ -625,3 +625,11 @@ export const downloadURI = (uri: string, name: string = '') => {
   link.click()
   link.remove()
 }
+
+/**
+ * Return currency symbol.
+ *
+ * @param {string} code
+ * @returns {string|undefined}
+ */
+export const getCurrencySymbol = (code: string) => env._CURRENCIES.find((c) => c.code === code)?.symbol

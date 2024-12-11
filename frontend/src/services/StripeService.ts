@@ -1,5 +1,7 @@
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import axiosInstance from './axiosInstance'
+import env from '@/config/env.config'
 
 /**
  * Create Checkout Session.
@@ -42,3 +44,25 @@ export const createPaymentIntent = (payload: bookcarsTypes.CreatePaymentPayload)
       payload
     )
     .then((res) => res.data)
+
+/**
+* Set currency.
+*
+* @param {string} currency
+*/
+export const setCurrency = (currency: string) => {
+  localStorage.setItem('bc-fe-currency', currency)
+}
+
+/**
+ * Get currency.
+ *
+ * @returns {string}
+ */
+export const getCurrency = () => {
+  const currency = localStorage.getItem('bc-fe-currency')
+  if (currency && bookcarsHelper.checkCurrency(currency)) {
+    return currency
+  }
+  return env.BASE_CURRENCY
+}
