@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
+    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../../frontend",
+    "build": "npm run install:dependencies && tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "ncu": "ncu -u -x typescript,date-fns,eslint,eslint-plugin-react-hooks,eslint-plugin-react-refresh",
-    "stylelint": "stylelint \"**/*.css\"",
-    "stylelint:fix": "stylelint \"**/*.css\" --fix"
+    "stylelint": "stylelint \"src/**/*.css\"",
+    "stylelint:fix": "stylelint \"src/**/*.css\" --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
