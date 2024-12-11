@@ -1,5 +1,5 @@
 import * as bookcarsTypes from ':bookcars-types'
-import CurrencyConverter, { CurrencyCode } from ':currency-converter'
+import CurrencyConverter, { CurrencyCode, currencies } from ':currency-converter'
 
 /**
  * Format a number.
@@ -351,6 +351,14 @@ export const convertPrice = async (amount: number, from: CurrencyCode, to: Curre
   const res = await cc.convert()
   return res
 }
+
+/**
+ * Check if currency is supported.
+ *
+ * @param {string} currency
+ * @returns {boolean}
+ */
+export const checkCurrency = (currency: string) => currencies.findIndex((c) => c === currency) > -1
 
 /**
  * Check whether language is french

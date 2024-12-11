@@ -1,161 +1,279 @@
 import { Convert } from 'easy-currencies'
 
 export type CurrencyCode =
+  | 'USD'
+  | 'AED'
   | 'AFN'
   | 'ALL'
-  | 'DZD'
+  | 'AMD'
+  | 'ANG'
   | 'AOA'
   | 'ARS'
-  | 'AMD'
-  | 'AWG'
   | 'AUD'
+  | 'AWG'
   | 'AZN'
-  | 'BSD'
-  | 'BHD'
+  | 'BAM'
   | 'BBD'
   | 'BDT'
-  | 'BYN'
-  | 'BZD'
-  | 'BMD'
-  | 'BTN'
-  | 'XBT'
-  | 'BOB'
-  | 'BAM'
-  | 'BWP'
-  | 'BRL'
-  | 'BND'
   | 'BGN'
   | 'BIF'
-  | 'XPF'
-  | 'KHR'
+  | 'BMD'
+  | 'BND'
+  | 'BOB'
+  | 'BRL'
+  | 'BSD'
+  | 'BWP'
+  | 'BYN'
+  | 'BZD'
   | 'CAD'
-  | 'CVE'
-  | 'KYD'
-  | 'FCFA'
+  | 'CDF'
+  | 'CHF'
   | 'CLP'
-  | 'CLF'
-  | 'CNY'
   | 'CNY'
   | 'COP'
-  | 'KMF'
-  | 'CF'
-  | 'CDF'
   | 'CRC'
-  | 'HRK'
-  | 'CUC'
+  | 'CVE'
   | 'CZK'
-  | 'DKK'
   | 'DJF'
+  | 'DKK'
   | 'DOP'
-  | 'XCD'
+  | 'DZD'
   | 'EGP'
   | 'ETB'
+  | 'EUR'
   | 'FJD'
-  | 'GMD'
+  | 'FKP'
   | 'GBP'
   | 'GEL'
-  | 'GHS'
-  | 'GTQ'
+  | 'GIP'
+  | 'GMD'
   | 'GNF'
+  | 'GTQ'
   | 'GYD'
-  | 'HTG'
-  | 'HNL'
   | 'HKD'
+  | 'HNL'
+  | 'HTG'
   | 'HUF'
-  | 'ISK'
-  | 'INR'
   | 'IDR'
-  | 'IRR'
-  | 'IQD'
   | 'ILS'
+  | 'INR'
+  | 'ISK'
   | 'JMD'
   | 'JPY'
-  | 'JOD'
-  | 'KZT'
   | 'KES'
-  | 'KWD'
   | 'KGS'
+  | 'KHR'
+  | 'KMF'
+  | 'KRW'
+  | 'KYD'
+  | 'KZT'
   | 'LAK'
   | 'LBP'
-  | 'LSL'
+  | 'LKR'
   | 'LRD'
-  | 'LYD'
-  | 'MOP'
-  | 'MKD'
-  | 'MGA'
-  | 'MWK'
-  | 'MYR'
-  | 'MVR'
-  | 'MRO'
-  | 'MUR'
-  | 'MXN'
-  | 'MDL'
+  | 'LSL'
   | 'MAD'
-  | 'MZN'
+  | 'MDL'
+  | 'MGA'
+  | 'MKD'
   | 'MMK'
+  | 'MNT'
+  | 'MOP'
+  | 'MUR'
+  | 'MVR'
+  | 'MWK'
+  | 'MXN'
+  | 'MYR'
+  | 'MZN'
   | 'NAD'
-  | 'NPR'
-  | 'ANG'
-  | 'NZD'
-  | 'NIO'
   | 'NGN'
+  | 'NIO'
   | 'NOK'
-  | 'OMR'
-  | 'PKR'
+  | 'NPR'
+  | 'NZD'
   | 'PAB'
+  | 'PEN'
   | 'PGK'
-  | 'PYG'
   | 'PHP'
+  | 'PKR'
   | 'PLN'
+  | 'PYG'
   | 'QAR'
   | 'RON'
+  | 'RSD'
   | 'RUB'
   | 'RWF'
-  | 'SVC'
   | 'SAR'
-  | 'RSD'
-  | 'SCR'
-  | 'SLL'
-  | 'SGD'
   | 'SBD'
-  | 'SOS'
-  | 'ZAR'
-  | 'KRW'
-  | 'VES'
-  | 'LKR'
-  | 'SDG'
-  | 'SRD'
-  | 'SZL'
+  | 'SCR'
   | 'SEK'
-  | 'CHF'
-  | 'TJS'
-  | 'TZS'
+  | 'SGD'
+  | 'SHP'
+  | 'SLE'
+  | 'SOS'
+  | 'SRD'
+  | 'STD'
+  | 'SZL'
   | 'THB'
+  | 'TJS'
   | 'TOP'
-  | 'TTD'
-  | 'TND'
   | 'TRY'
-  | 'TMT'
-  | 'UGX'
+  | 'TTD'
+  | 'TWD'
+  | 'TZS'
   | 'UAH'
-  | 'AED'
-  | 'USD'
+  | 'UGX'
   | 'UYU'
   | 'UZS'
   | 'VND'
+  | 'VUV'
+  | 'WST'
   | 'XAF'
+  | 'XCD'
   | 'XOF'
+  | 'XPF'
   | 'YER'
+  | 'ZAR'
   | 'ZMW'
-  | 'ETH'
-  | 'EUR'
-  | 'LTC'
-  | 'TWD'
-  | 'PEN'
 
 type CurrencyPair = { expiryDate: Date, rate: number }
 
-export const currencies: CurrencyCode[] = ['AFN', 'ALL', 'DZD', 'AOA', 'ARS', 'AMD', 'AWG', 'AUD', 'AZN', 'BSD', 'BHD', 'BBD', 'BDT', 'BYN', 'BZD', 'BMD', 'BTN', 'XBT', 'BOB', 'BAM', 'BWP', 'BRL', 'BND', 'BGN', 'BIF', 'XPF', 'KHR', 'CAD', 'CVE', 'KYD', 'FCFA', 'CLP', 'CLF', 'CNY', 'CNY', 'COP', 'CF', 'CHF', 'CDF', 'CRC', 'HRK', 'CUC', 'CZK', 'DKK', 'DJF', 'DOP', 'XCD', 'EGP', 'ETB', 'FJD', 'GMD', 'GBP', 'GEL', 'GHS', 'GTQ', 'GNF', 'GYD', 'HTG', 'HNL', 'HKD', 'HUF', 'ISK', 'INR', 'IDR', 'IRR', 'IQD', 'ILS', 'JMD', 'JPY', 'JOD', 'KMF', 'KZT', 'KES', 'KWD', 'KGS', 'LAK', 'LBP', 'LSL', 'LRD', 'LYD', 'MOP', 'MKD', 'MGA', 'MWK', 'MYR', 'MVR', 'MRO', 'MUR', 'MXN', 'MDL', 'MAD', 'MZN', 'MMK', 'NAD', 'NPR', 'ANG', 'NZD', 'NIO', 'NGN', 'NOK', 'OMR', 'PKR', 'PAB', 'PGK', 'PYG', 'PHP', 'PLN', 'QAR', 'RON', 'RUB', 'RWF', 'SVC', 'SAR', 'RSD', 'SCR', 'SLL', 'SGD', 'SBD', 'SOS', 'ZAR', 'KRW', 'VES', 'LKR', 'SDG', 'SRD', 'SZL', 'SEK', 'CHF', 'TJS', 'TZS', 'THB', 'TOP', 'TTD', 'TND', 'TRY', 'TMT', 'UGX', 'UAH', 'AED', 'USD', 'UYU', 'UZS', 'VND', 'XAF', 'XOF', 'YER', 'ZMW', 'ETH', 'EUR', 'LTC', 'TWD', 'PEN']
+export const currencies: CurrencyCode[] = [
+  'USD',
+  'AED',
+  'AFN',
+  'ALL',
+  'AMD',
+  'ANG',
+  'AOA',
+  'ARS',
+  'AUD',
+  'AWG',
+  'AZN',
+  'BAM',
+  'BBD',
+  'BDT',
+  'BGN',
+  'BIF',
+  'BMD',
+  'BND',
+  'BOB',
+  'BRL',
+  'BSD',
+  'BWP',
+  'BYN',
+  'BZD',
+  'CAD',
+  'CDF',
+  'CHF',
+  'CLP',
+  'CNY',
+  'COP',
+  'CRC',
+  'CVE',
+  'CZK',
+  'DJF',
+  'DKK',
+  'DOP',
+  'DZD',
+  'EGP',
+  'ETB',
+  'EUR',
+  'FJD',
+  'FKP',
+  'GBP',
+  'GEL',
+  'GIP',
+  'GMD',
+  'GNF',
+  'GTQ',
+  'GYD',
+  'HKD',
+  'HNL',
+  'HTG',
+  'HUF',
+  'IDR',
+  'ILS',
+  'INR',
+  'ISK',
+  'JMD',
+  'JPY',
+  'KES',
+  'KGS',
+  'KHR',
+  'KMF',
+  'KRW',
+  'KYD',
+  'KZT',
+  'LAK',
+  'LBP',
+  'LKR',
+  'LRD',
+  'LSL',
+  'MAD',
+  'MDL',
+  'MGA',
+  'MKD',
+  'MMK',
+  'MNT',
+  'MOP',
+  'MUR',
+  'MVR',
+  'MWK',
+  'MXN',
+  'MYR',
+  'MZN',
+  'NAD',
+  'NGN',
+  'NIO',
+  'NOK',
+  'NPR',
+  'NZD',
+  'PAB',
+  'PEN',
+  'PGK',
+  'PHP',
+  'PKR',
+  'PLN',
+  'PYG',
+  'QAR',
+  'RON',
+  'RSD',
+  'RUB',
+  'RWF',
+  'SAR',
+  'SBD',
+  'SCR',
+  'SEK',
+  'SGD',
+  'SHP',
+  'SLE',
+  'SOS',
+  'SRD',
+  'STD',
+  'SZL',
+  'THB',
+  'TJS',
+  'TOP',
+  'TRY',
+  'TTD',
+  'TWD',
+  'TZS',
+  'UAH',
+  'UGX',
+  'UYU',
+  'UZS',
+  'VND',
+  'VUV',
+  'WST',
+  'XAF',
+  'XCD',
+  'XOF',
+  'XPF',
+  'YER',
+  'ZAR',
+  'ZMW',
+]
 
 class CurrencyConverter {
   currencyFrom: string
@@ -177,13 +295,11 @@ class CurrencyConverter {
     'AUD': 'Australian Dollar',
     'AZN': 'Azerbaijani M anat',
     'BSD': 'Bahamian Dollar',
-    'BHD': 'Bahraini Dinar',
     'BBD': 'Bajan Dollar',
     'BDT': 'Bangladeshi Taka',
     'BYN': 'Belarusian Ruble',
     'BZD': 'Belize Dollar',
     'BMD': 'Bermudan Dollar',
-    'BTN': 'Bhutan currency',
     'BOB': 'Bolivian Boliviano',
     'BAM': 'Bosnia-Herzegovina Convertible Mark',
     'BWP': 'Botswanan Pula',
@@ -196,16 +312,12 @@ class CurrencyConverter {
     'CAD': 'Canadian Dollar',
     'CVE': 'Cape Verdean Escudo',
     'KYD': 'Cayman Islands Dollar',
-    'FCFA': 'Central African CFA Franc',
     'CLP': 'Chilean Peso',
-    'CLF': 'Chilean Unit of Account (UF)',
     'CNY': 'Chinese Yuan',
     'COP': 'Colombian Peso',
     'KMF': 'Comorian Franc',
     'CDF': 'Congolese Franc',
     'CRC': 'Costa Rican Colón',
-    'HRK': 'Croatian Kuna',
-    'CUC': 'Cuban Peso',
     'CZK': 'Czech Koruna',
     'DKK': 'Danish Krone',
     'DJF': 'Djiboutian Franc',
@@ -216,45 +328,41 @@ class CurrencyConverter {
     'FJD': 'Fijian Dollar',
     'GMD': 'Gambian dalasi',
     'GEL': 'Georgian Lari',
-    'GHS': 'Ghanaian Cedi',
+    'GIP': 'Gibraltar pound',
     'GTQ': 'Guatemalan Quetzal',
     'GNF': 'Guinean Franc',
     'GYD': 'Guyanaese Dollar',
     'HTG': 'Haitian Gourde',
+    'FKP': 'Falkland Islands pound',
     'HNL': 'Honduran Lempira',
     'HKD': 'Hong Kong Dollar',
     'HUF': 'Hungarian Forint',
     'ISK': 'Icelandic Króna',
     'INR': 'Indian Rupee',
     'IDR': 'Indonesian Rupiah',
-    'IRR': 'Iranian Rial',
-    'IQD': 'Iraqi Dinar',
     'ILS': 'Israeli New Shekel',
     'JMD': 'Jamaican Dollar',
     'JPY': 'Japanese Yen',
-    'JOD': 'Jordanian Dinar',
     'KZT': 'Kazakhstani Tenge',
     'KES': 'Kenyan Shilling',
-    'KWD': 'Kuwaiti Dinar',
     'KGS': 'Kyrgystani Som',
     'LAK': 'Laotian Kip',
     'LBP': 'Lebanese pound',
     'LSL': 'Lesotho Loti',
     'LRD': 'Liberian Dollar',
-    'LYD': 'Libyan Dinar',
     'MOP': 'Macanese Pataca',
     'MKD': 'Macedonian Denar',
     'MGA': 'Malagasy Ariary',
     'MWK': 'Malawian Kwacha',
     'MYR': 'Malaysian Ringgit',
     'MVR': 'Maldivian Rufiyaa',
-    'MRO': 'Mauritanian Ouguiya',
     'MUR': 'Mauritian Rupee',
     'MXN': 'Mexican Peso',
     'MDL': 'Moldovan Leu',
     'MAD': 'Moroccan Dirham',
     'MZN': 'Mozambican metical',
     'MMK': 'Myanmar Kyat',
+    'MNT': 'Mongolia',
     'NAD': 'Namibian dol lar',
     'NPR': 'Nepalese Rupee',
     'ANG': 'Netherlands Antillean Guilder',
@@ -262,7 +370,6 @@ class CurrencyConverter {
     'NIO': 'Nicaraguan Córdoba',
     'NGN': 'Nigerian Naira',
     'NOK': 'Norwegian Krone',
-    'OMR': 'Omani Rial',
     'PKR': 'Pakistani Rupee',
     'PAB': 'Panamanian Balboa',
     'PGK': 'Papua New Guinean Kina',
@@ -274,47 +381,42 @@ class CurrencyConverter {
     'RON': 'Romania n Leu',
     'RUB': 'Russian Ruble',
     'RWF': 'Rwandan franc',
-    'SVC': 'Salvadoran Colón',
     'SAR': 'Saudi Riyal',
     'RSD': 'Serbian Dinar',
     'SCR': 'Seychellois Rupee',
-    'SLL': 'Sierra Leonean Leone',
     'SGD': 'Singapore Dollar',
     'SBD': 'Solomon Islands Dollar',
     'SOS': 'Somali Shilling',
     'ZAR': 'South African Rand',
     'KRW': 'South Korean won',
-    'VES': 'Sovereign Bolivar',
     'LKR': 'Sri Lankan Rupee',
-    'SDG': 'Sudanese pound',
+    'SHP': 'Saint Helena pound',
+    'SLE': 'Sierra Leonean leone',
     'SRD': 'Surinamese Dollar',
+    'STD': 'São Tomé and Príncipe',
     'SZL': 'Swazi Lilangeni',
     'SEK': 'Swedish Krona',
-    'CF': 'Swiss Franc',
     'CHF': 'Swiss Franc',
     'TJS': 'Tajikistani Somoni',
     'TZS': 'Tanzanian Shilling',
     'THB': 'Thai Baht',
     'TOP': 'Tongan Pa\'anga',
     'TTD': 'Trinidad and Tobago Dollar',
-    'TND': 'Tunisian Dinar',
     'TRY': 'Turkish lira',
-    'TMT': 'Turkmenistan manat',
     'UGX': 'Ugandan Shilling',
     'UAH': 'Ukrainian hryvnia',
     'AED': 'United Arab Emirates Dirham',
     'USD': 'United States Dollar',
     'UYU': 'Uruguayan Peso',
     'UZS': 'Uzbekistani Som',
+    'VUV': 'Vanuatu Vatu',
     'VND': 'Vietnamese dong',
+    'WST': 'Samoa',
     'XAF': 'Central African CFA franc',
     'XOF': 'West African CFA franc',
     'YER': 'Yemeni Rial',
     'ZMW': 'Zambian Kwacha',
-    'XBT': 'Bitcoin',
-    'ETH': 'Ether',
     'EUR': 'Euro',
-    'LTC': 'Litecoin',
     'TWD': 'NT$',
     'PEN': 'Peruvian Sol'
   }
