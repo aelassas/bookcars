@@ -1,11 +1,15 @@
 import * as bookcarsTypes from ':bookcars-types'
 import Const from './const'
 
-//
-// ISO 639-1 language codes and their labels
-// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-//
-const LANGUAGES = [
+type Language = { code: string, label: string }
+
+/**
+ * ISO 639-1 language codes and their labels
+ * https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+ *
+ * @type {Language[]}
+ */
+const LANGUAGES: Language[] = [
   {
     code: 'en',
     label: 'English',
@@ -20,6 +24,25 @@ const LANGUAGES = [
   },
 ]
 
+type Currency = { code: string, symbol: string }
+
+/**
+ * ISO 4217 currency codes and their symbols
+ * https://docs.stripe.com/currencies
+ *
+ * @type {Currency[]}
+ */
+const CURRENCIES: Currency[] = [
+  {
+    code: 'USD',
+    symbol: '$',
+  },
+  {
+    code: 'EUR',
+    symbol: '€',
+  }
+]
+
 const env = {
   isMobile: window.innerWidth <= 960,
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
@@ -30,6 +53,9 @@ const env = {
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
+  CURRENCIES: CURRENCIES.map((c) => c.code),
+  _CURRENCIES: CURRENCIES,
+  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
   BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
