@@ -1,7 +1,7 @@
 import * as bookcarsTypes from ':bookcars-types'
 import Const from './const'
 
-type Language = { code: string, label: string }
+type Language = { code: string, countryCode: string, label: string }
 
 /**
  * ISO 639-1 language codes and their labels
@@ -12,14 +12,17 @@ type Language = { code: string, label: string }
 const LANGUAGES: Language[] = [
   {
     code: 'en',
+    countryCode: 'us',
     label: 'English',
   },
   {
     code: 'fr',
+    countryCode: 'fr',
     label: 'Français',
   },
   {
     code: 'es',
+    countryCode: 'es',
     label: 'Español',
   },
 ]

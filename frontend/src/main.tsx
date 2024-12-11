@@ -44,8 +44,10 @@ import { strings as settingsStrings } from '@/lang/settings'
 import { strings as signInStrings } from '@/lang/sign-in'
 import { strings as signUpStrings } from '@/lang/sign-up'
 import { strings as tosStrings } from '@/lang/tos'
-
-// import 'github-fork-ribbon-css/gh-fork-ribbon.css'
+import { strings as newsletterFormStrings } from '@/lang/newsletter-form'
+import { strings as privacyStrings } from '@/lang/privacy'
+import { strings as faqListStrings } from '@/lang/faq-list'
+import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
@@ -145,6 +147,10 @@ if (lang) {
     signUpStrings.setLanguage(_lang)
     tosStrings.setLanguage(_lang)
     carSpecsStrings.setLanguage(_lang)
+    newsletterFormStrings.setLanguage(_lang)
+    privacyStrings.setLanguage(_lang)
+    faqListStrings.setLanguage(_lang)
+    checkoutStatusStrings.setLanguage(_lang)
   }
 
   if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
@@ -166,25 +172,30 @@ const isEs = language === 'es'
 
 const theme = createTheme(
   {
-    // palette: {
-    //   primary: {
-    //     main: '#1976D2',
-    //     contrastText: '#121212',
-    //     dark: '#1976D2',
-    //   },
-    // },
+    palette: {
+      primary: {
+        main: '#003B95',
+        // main: '#006CE4',
+
+        // contrastText: '#003B95',
+        // dark: '#003B95',
+      },
+      // text: {
+      //   primary: '#003B95',
+      // }
+    },
     typography: {
       fontFamily: [
-        'Roboto',
-        "'Helvetica Neue'",
-        'Arial',
-        'sans-serif',
-        "'Apple Color Emoji'",
-        "'Segoe UI Emoji'",
-        "'Segoe UI Symbol'",
         '-apple-system',
         'BlinkMacSystemFont',
-        "'Segoe UI'",
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
       ].join(','),
     },
     components: {
@@ -264,14 +275,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         pauseOnHover
         theme="dark"
       />
-      {/* <a
-        className="github-fork-ribbon fixed left-bottom"
-        href="https://github.com/aelassas/bookcars"
-        data-ribbon="Fork me on GitHub"
-        title="Fork me on GitHub"
-      >
-        Fork me on GitHub
-      </a> */}
     </CssBaseline>
   </ThemeProvider>,
 )
