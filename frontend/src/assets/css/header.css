@@ -11,6 +11,18 @@
   z-index: 1401 !important;
 }
 
+.menu div.language,
+.btn div.language {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.menu div.language .flag {
+  width: 24px;
+  margin-right: 10px;
+}
+
 .header-action {
   margin-right: 20px;
 }
