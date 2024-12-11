@@ -20,7 +20,8 @@ module.exports = function (api) {
           "root": ['./'],
           "alias": {
             ":bookcars-types": "../packages/bookcars-types",
-            ":bookcars-helper": "../packages/bookcars-helper"
+            ":bookcars-helper": "../packages/bookcars-helper",
+            ":currency-converter": "../packages/currency-converter"
           }
         }
       ],
