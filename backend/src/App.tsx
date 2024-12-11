@@ -71,7 +71,7 @@ const App = () => (
             <Route path="/update-user" element={<UpdateUser />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
-            <Route path="/change-password" element={<ChangePassword />} />
+            {/* <Route path="/change-password" element={<ChangePassword />} /> */}
             <Route path="/about" element={<About />} />
             <Route path="/tos" element={<ToS />} />
             <Route path="/contact" element={<Contact />} />
