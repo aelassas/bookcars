@@ -102,7 +102,7 @@ div.home-subtitle {
 
 div.home div.search {
   z-index: 2;
-  background-color: #F9F9F9;
+  background-color: #fff;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -121,7 +121,7 @@ div.home div.search div.home-search {
 }
 
 div.home div.why {
-  background-color: #F9F9F9;
+  background-color: #fff;
   width: 100%;
   padding: 40px 0;
   display: flex;

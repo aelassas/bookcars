@@ -51,7 +51,9 @@ export const createPaymentIntent = (payload: bookcarsTypes.CreatePaymentPayload)
 * @param {string} currency
 */
 export const setCurrency = (currency: string) => {
-  localStorage.setItem('bc-fe-currency', currency)
+  if (currency && bookcarsHelper.checkCurrency(currency.toUpperCase())) {
+    localStorage.setItem('bc-fe-currency', currency.toUpperCase())
+  }
 }
 
 /**
@@ -61,8 +63,8 @@ export const setCurrency = (currency: string) => {
  */
 export const getCurrency = () => {
   const currency = localStorage.getItem('bc-fe-currency')
-  if (currency && bookcarsHelper.checkCurrency(currency)) {
-    return currency
+  if (currency && bookcarsHelper.checkCurrency(currency.toUpperCase())) {
+    return currency.toUpperCase()
   }
   return env.BASE_CURRENCY
 }
