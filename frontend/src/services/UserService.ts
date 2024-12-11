@@ -102,7 +102,7 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
       { withCredentials: true }
     )
     .then((res) => {
-      localStorage.setItem('bc-user', JSON.stringify(res.data))
+      localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
       return { status: res.status, data: res.data }
     })
 
@@ -120,7 +120,7 @@ export const socialSignin = (data: bookcarsTypes.SignInPayload): Promise<{ statu
       { withCredentials: true }
     )
     .then((res) => {
-      localStorage.setItem('bc-user', JSON.stringify(res.data))
+      localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
       return { status: res.status, data: res.data }
     })
 
@@ -142,7 +142,7 @@ export const signout = async (redirect = true, redirectSignin = false) => {
   }
 
   sessionStorage.clear()
-  localStorage.removeItem('bc-user')
+  localStorage.removeItem('bc-fe-user')
   deleteAllCookies()
 
   await axiosInstance
@@ -210,12 +210,12 @@ export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<numbe
  * @returns {string}
  */
 export const getLanguage = () => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+  const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')
 
   if (user && user.language) {
     return user.language
   }
-  const lang = localStorage.getItem('bc-language')
+  const lang = localStorage.getItem('bc-fe-language')
   if (lang && lang.length === 2) {
     return lang
   }
@@ -250,9 +250,9 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
     )
     .then((res) => {
       if (res.status === 200) {
-        const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+        const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')
         user.language = data.language
-        localStorage.setItem('bc-user', JSON.stringify(user))
+        localStorage.setItem('bc-fe-user', JSON.stringify(user))
       }
       return res.status
     })
@@ -263,7 +263,7 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
  * @param {string} lang
  */
 export const setLanguage = (lang: string) => {
-  localStorage.setItem('bc-language', lang)
+  localStorage.setItem('bc-fe-language', lang)
 }
 
 /**
@@ -272,7 +272,7 @@ export const setLanguage = (lang: string) => {
  * @returns {bookcarsTypes.User | null}
  */
 export const getCurrentUser = (): bookcarsTypes.User | null => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null') as bookcarsTypes.User | null
+  const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null') as bookcarsTypes.User | null
   return user
 }
 
@@ -329,7 +329,7 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
         const user = getCurrentUser()
         if (user) {
           user.enableEmailNotifications = data.enableEmailNotifications
-          localStorage.setItem('bc-user', JSON.stringify(user))
+          localStorage.setItem('bc-fe-user', JSON.stringify(user))
         }
       }
       return res.status
@@ -3350,7 +3350,7 @@ export const hasPassword = (id: string): Promise<number> => axiosInstance
 * @returns {void}
 */
 export const setStayConnected = (value: boolean) => {
-  localStorage.setItem('bc-stay-connected', JSON.stringify(value))
+  localStorage.setItem('bc-fe-stay-connected', JSON.stringify(value))
 }
 
 /**
@@ -3360,7 +3360,7 @@ export const setStayConnected = (value: boolean) => {
  * @returns {boolean}
  */
 export const getStayConnected = () => {
-  const value = JSON.parse(localStorage.getItem('bc-stay-connected') ?? 'false')
+  const value = JSON.parse(localStorage.getItem('bc-fe-stay-connected') ?? 'false')
   return value as boolean
 }
 

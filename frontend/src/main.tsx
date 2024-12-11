@@ -56,12 +56,12 @@ if (env.isProduction) {
 }
 
 let language = env.DEFAULT_LANGUAGE
-const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')
 let lang = UserService.getQueryLanguage()
 
 if (lang) {
   if (!env.LANGUAGES.includes(lang)) {
-    lang = localStorage.getItem('bc-language')
+    lang = localStorage.getItem('bc-fe-language')
 
     if (lang && !env.LANGUAGES.includes(lang)) {
       lang = env.DEFAULT_LANGUAGE
@@ -105,7 +105,7 @@ if (lang) {
   if (user && user.language) {
     storedLang = user.language
   } else {
-    const slang = localStorage.getItem('bc-language')
+    const slang = localStorage.getItem('bc-fe-language')
     if (slang && slang.length === 2) {
       storedLang = slang
     }

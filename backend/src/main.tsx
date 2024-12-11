@@ -23,12 +23,12 @@ if (import.meta.env.VITE_NODE_ENV === 'production') {
 }
 
 let language = env.DEFAULT_LANGUAGE
-const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+const user = JSON.parse(localStorage.getItem('bc-be-user') ?? 'null')
 let lang = UserService.getQueryLanguage()
 
 if (lang) {
   if (!env.LANGUAGES.includes(lang)) {
-    lang = localStorage.getItem('bc-language')
+    lang = localStorage.getItem('bc-be-language')
 
     if (lang && !env.LANGUAGES.includes(lang)) {
       lang = env.DEFAULT_LANGUAGE
