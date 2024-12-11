@@ -955,6 +955,33 @@ describe('GET /api/booking/:id/:language', () => {
   })
 })
 
+describe('GET /api/booking-id/:sessionId', () => {
+  it('should get a booking id from session id', async () => {
+    // test success
+    const booking = await Booking.findById(BOOKING_ID)
+    const sessionId = nanoid()
+    booking!.sessionId = sessionId
+    await booking!.save()
+    let res = await request(app)
+      .get(`/api/booking-id/${sessionId}`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toBe(booking!.id)
+
+    // test success (booking not found)
+    res = await request(app)
+      .get(`/api/booking-id/${nanoid()}`)
+    expect(res.statusCode).toBe(204)
+
+    // test failure (lost db connection)
+    await databaseHelper.close()
+    res = await request(app)
+      .get(`/api/booking-id/${nanoid()}`)
+    expect(res.statusCode).toBe(400)
+    const connRes = await databaseHelper.connect(env.DB_URI, false, false)
+    expect(connRes).toBeTruthy()
+  })
+})
+
 describe('POST /api/bookings/:page/:size/:language', () => {
   it('should get bookings', async () => {
     const token = await testHelper.signinAsAdmin()
