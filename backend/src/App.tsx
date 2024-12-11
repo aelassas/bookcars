@@ -54,21 +54,21 @@ const App = () => (
             <Route path="/" element={<Bookings />} />
             <Route path="/suppliers" element={<Suppliers />} />
             <Route path="/supplier" element={<Supplier />} />
-            <Route path="/create-supplier" element={<CreateSupplier />} />
-            <Route path="/update-supplier" element={<UpdateSupplier />} />
+            {/* <Route path="/create-supplier" element={<CreateSupplier />} /> */}
+            {/* <Route path="/update-supplier" element={<UpdateSupplier />} /> */}
             <Route path="/locations" element={<Locations />} />
             <Route path="/create-location" element={<CreateLocation />} />
-            <Route path="/update-location" element={<UpdateLocation />} />
+            {/* <Route path="/update-location" element={<UpdateLocation />} /> */}
             <Route path="/cars" element={<Cars />} />
             <Route path="/car" element={<Car />} />
             <Route path="/create-car" element={<CreateCar />} />
-            <Route path="/update-car" element={<UpdateCar />} />
+            {/* <Route path="/update-car" element={<UpdateCar />} /> */}
             <Route path="/update-booking" element={<UpdateBooking />} />
             <Route path="/create-booking" element={<CreateBooking />} />
             <Route path="/users" element={<Users />} />
             <Route path="/user" element={<User />} />
-            <Route path="/create-user" element={<CreateUser />} />
-            <Route path="/update-user" element={<UpdateUser />} />
+            {/* <Route path="/create-user" element={<CreateUser />} /> */}
+            {/* <Route path="/update-user" element={<UpdateUser />} /> */}
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<Notifications />} />
             {/* <Route path="/change-password" element={<ChangePassword />} /> */}
@@ -77,7 +77,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/countries" element={<Countries />} />
             <Route path="/create-country" element={<CreateCountry />} />
-            <Route path="/update-country" element={<UpdateCountry />} />
+            {/* <Route path="/update-country" element={<UpdateCountry />} /> */}
 
             <Route path="*" element={<NoMatch />} />
           </Routes>
