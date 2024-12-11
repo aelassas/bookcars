@@ -11,7 +11,7 @@
   "author": "Akram El Assas",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0"
+    "easy-currencies": "^1.8.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

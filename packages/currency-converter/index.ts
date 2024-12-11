@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio'
+import { Convert } from 'easy-currencies'
 
 export type CurrencyCode =
   | 'AFN'
@@ -155,16 +155,17 @@ export type CurrencyCode =
 
 type CurrencyPair = { expiryDate: Date, rate: number }
 
+export const currencies: CurrencyCode[] = ['AFN', 'ALL', 'DZD', 'AOA', 'ARS', 'AMD', 'AWG', 'AUD', 'AZN', 'BSD', 'BHD', 'BBD', 'BDT', 'BYN', 'BZD', 'BMD', 'BTN', 'XBT', 'BOB', 'BAM', 'BWP', 'BRL', 'BND', 'BGN', 'BIF', 'XPF', 'KHR', 'CAD', 'CVE', 'KYD', 'FCFA', 'CLP', 'CLF', 'CNY', 'CNY', 'COP', 'CF', 'CHF', 'CDF', 'CRC', 'HRK', 'CUC', 'CZK', 'DKK', 'DJF', 'DOP', 'XCD', 'EGP', 'ETB', 'FJD', 'GMD', 'GBP', 'GEL', 'GHS', 'GTQ', 'GNF', 'GYD', 'HTG', 'HNL', 'HKD', 'HUF', 'ISK', 'INR', 'IDR', 'IRR', 'IQD', 'ILS', 'JMD', 'JPY', 'JOD', 'KMF', 'KZT', 'KES', 'KWD', 'KGS', 'LAK', 'LBP', 'LSL', 'LRD', 'LYD', 'MOP', 'MKD', 'MGA', 'MWK', 'MYR', 'MVR', 'MRO', 'MUR', 'MXN', 'MDL', 'MAD', 'MZN', 'MMK', 'NAD', 'NPR', 'ANG', 'NZD', 'NIO', 'NGN', 'NOK', 'OMR', 'PKR', 'PAB', 'PGK', 'PYG', 'PHP', 'PLN', 'QAR', 'RON', 'RUB', 'RWF', 'SVC', 'SAR', 'RSD', 'SCR', 'SLL', 'SGD', 'SBD', 'SOS', 'ZAR', 'KRW', 'VES', 'LKR', 'SDG', 'SRD', 'SZL', 'SEK', 'CHF', 'TJS', 'TZS', 'THB', 'TOP', 'TTD', 'TND', 'TRY', 'TMT', 'UGX', 'UAH', 'AED', 'USD', 'UYU', 'UZS', 'VND', 'XAF', 'XOF', 'YER', 'ZMW', 'ETH', 'EUR', 'LTC', 'TWD', 'PEN']
+
 class CurrencyConverter {
   currencyFrom: string
   currencyTo: string
   currencyAmount: number
   convertedValue: number
-  isDecimalComma: boolean
   isRatesCaching: boolean
   ratesCacheDuration: number
   ratesCache: Record<string, CurrencyPair>
-  currencyCode: CurrencyCode[] = ['AFN', 'ALL', 'DZD', 'AOA', 'ARS', 'AMD', 'AWG', 'AUD', 'AZN', 'BSD', 'BHD', 'BBD', 'BDT', 'BYN', 'BZD', 'BMD', 'BTN', 'XBT', 'BOB', 'BAM', 'BWP', 'BRL', 'BND', 'BGN', 'BIF', 'XPF', 'KHR', 'CAD', 'CVE', 'KYD', 'FCFA', 'CLP', 'CLF', 'CNY', 'CNY', 'COP', 'CF', 'CHF', 'CDF', 'CRC', 'HRK', 'CUC', 'CZK', 'DKK', 'DJF', 'DOP', 'XCD', 'EGP', 'ETB', 'FJD', 'GMD', 'GBP', 'GEL', 'GHS', 'GTQ', 'GNF', 'GYD', 'HTG', 'HNL', 'HKD', 'HUF', 'ISK', 'INR', 'IDR', 'IRR', 'IQD', 'ILS', 'JMD', 'JPY', 'JOD', 'KMF', 'KZT', 'KES', 'KWD', 'KGS', 'LAK', 'LBP', 'LSL', 'LRD', 'LYD', 'MOP', 'MKD', 'MGA', 'MWK', 'MYR', 'MVR', 'MRO', 'MUR', 'MXN', 'MDL', 'MAD', 'MZN', 'MMK', 'NAD', 'NPR', 'ANG', 'NZD', 'NIO', 'NGN', 'NOK', 'OMR', 'PKR', 'PAB', 'PGK', 'PYG', 'PHP', 'PLN', 'QAR', 'RON', 'RUB', 'RWF', 'SVC', 'SAR', 'RSD', 'SCR', 'SLL', 'SGD', 'SBD', 'SOS', 'ZAR', 'KRW', 'VES', 'LKR', 'SDG', 'SRD', 'SZL', 'SEK', 'CHF', 'TJS', 'TZS', 'THB', 'TOP', 'TTD', 'TND', 'TRY', 'TMT', 'UGX', 'UAH', 'AED', 'USD', 'UYU', 'UZS', 'VND', 'XAF', 'XOF', 'YER', 'ZMW', 'ETH', 'EUR', 'LTC', 'TWD', 'PEN']
+  currencyCode: CurrencyCode[] = currencies
   currencies: Record<CurrencyCode, string> = {
     'AFN': 'Afghan Afghani',
     'ALL': 'Albanian Lek',
@@ -323,13 +324,11 @@ class CurrencyConverter {
       from: string,
       to: string,
       amount: number,
-      isDecimalComma?: boolean
     }) {
     this.currencyFrom = ''
     this.currencyTo = ''
     this.currencyAmount = 1
     this.convertedValue = 0
-    this.isDecimalComma = false
     this.isRatesCaching = false
     this.ratesCacheDuration = 0
     this.ratesCache = {}
@@ -343,9 +342,6 @@ class CurrencyConverter {
 
       if (params['amount'] !== undefined)
         this.amount(params['amount'])
-
-      if (params['isDecimalComma'] !== undefined)
-        this.setDecimalComma(params['isDecimalComma'])
     }
   }
 
@@ -377,14 +373,6 @@ class CurrencyConverter {
       throw new Error('amount should be a positive number')
 
     this.currencyAmount = currencyAmount
-    return this
-  }
-
-  setDecimalComma(isDecimalComma: boolean) {
-    if (typeof isDecimalComma !== 'boolean')
-      throw new TypeError('isDecimalComma should be a boolean')
-
-    this.isDecimalComma = isDecimalComma
     return this
   }
 
@@ -440,29 +428,12 @@ class CurrencyConverter {
         })
       } else {
         return new Promise((resolve, reject) => {
-          const url = `https://www.google.com/search?q=${this.currencyAmount}+${this.currencyFrom}+to+${this.currencyTo}+&hl=en`
-          // console.log('URL:', url)
-          fetch(url)
-            .then((res) => res.text())
-            .then((html) => resolve(html))
+          Convert(this.currencyAmount).from(this.currencyFrom).to(this.currencyTo)
+            .then((res) => resolve(res))
             .catch((err) => reject(err))
-        }).then((body) => {
-          return cheerio.load(body as string)
         })
-          .then(($) => {
-            return $('.iBp4i').text().split(' ')[0]
-          })
-          .then((rates: string) => {
-            if (this.isDecimalComma) {
-              if (rates.includes('.'))
-                rates = this.replaceAll(rates, '.', '')
-              if (rates.includes(','))
-                rates = this.replaceAll(rates, ',', '.')
-            } else {
-              if (rates.includes(','))
-                rates = this.replaceAll(rates, ',', '')
-            }
-            const ratesNum = parseFloat(rates) / this.currencyAmount
+          .then((rates: unknown) => {
+            const ratesNum = rates as number / this.currencyAmount
             if (this.isRatesCaching) {
               this.addRateToRatesCache(currencyPair, ratesNum)
             }
