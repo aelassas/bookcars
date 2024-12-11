@@ -1,0 +1,21 @@
+{
+  "name": "currency-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rimraf ./tsconfig.tsbuildinfo ./index.js ./index.d.ts ./check.js ./check.d.ts && tsc --build --verbose",
+    "check": "npm run build && node check.js"
+  },
+  "author": "Akram El Assas",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2"
+  }
+}
