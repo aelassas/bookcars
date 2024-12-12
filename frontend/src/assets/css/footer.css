@@ -46,10 +46,11 @@ div.footer ul.links li {
   list-style: none;
   cursor: pointer;
   margin: 10px 0;
+  width: fit-content;
 }
 
 div.footer ul.links li:hover {
-  opacity: 0.85;
+  /* opacity: 0.85; */
   text-decoration: underline;
 }
 
@@ -71,13 +72,18 @@ div.footer div.contact a {
 }
 
 div.footer div.contact a:hover {
-  opacity: 0.85;
+  /* opacity: 0.85; */
   text-decoration: underline;
+  
 }
 
 div.footer div.contact .social-icon {
   color: #525252;
   margin-right: 12px;
+}
+
+div.footer div.contact .social-icon:hover{
+  color: #1a1a1a;
 }
 
 div.footer div.newsletter {
