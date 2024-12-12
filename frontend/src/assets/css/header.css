@@ -40,6 +40,10 @@
   color: #121212 !important;
 }
 
+.header .btn:hover {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+}
+
 .header .logo {
   text-decoration: none;
   font-size: 18px;
