@@ -323,7 +323,7 @@ const Header = ({
       className="menu"
     >
       {
-        env._CURRENCIES.map((_currency) => (
+        env.CURRENCIES.map((_currency) => (
           <MenuItem onClick={handleCurrencyMenuClose} data-code={_currency.code} key={_currency.code}>
             {_currency.code}
           </MenuItem>
