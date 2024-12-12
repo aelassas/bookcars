@@ -174,15 +174,10 @@ const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#003B95',
-        // main: '#006CE4',
-
+        main: '#1a1a1a',
         // contrastText: '#003B95',
         // dark: '#003B95',
       },
-      // text: {
-      //   primary: '#003B95',
-      // }
     },
     typography: {
       fontFamily: [
@@ -215,19 +210,19 @@ const theme = createTheme(
           },
         },
       },
-      MuiSwitch: {
-        styleOverrides: {
-          root: {
-            '& .Mui-checked': {
-              color: '#1976D2 !important',
-            },
-            '& .Mui-checked+.MuiSwitch-track': {
-              opacity: 0.7,
-              backgroundColor: '#1976D2 !important',
-            },
-          },
-        },
-      },
+      // MuiSwitch: {
+      //   styleOverrides: {
+      //     root: {
+      //       '& .Mui-checked': {
+      //         color: '#1976D2 !important',
+      //       },
+      //       '& .Mui-checked+.MuiSwitch-track': {
+      //         opacity: 0.7,
+      //         backgroundColor: '#1976D2 !important',
+      //       },
+      //     },
+      //   },
+      // },
       MuiAutocomplete: {
         styleOverrides: {
           root: {
