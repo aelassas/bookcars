@@ -18,6 +18,7 @@ import Layout from '@/components/Layout'
 import * as UserService from '@/services/UserService'
 import * as BookingService from '@/services/BookingService'
 import * as CarService from '@/services/CarService'
+import * as StripeService from '@/services/StripeService'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
@@ -249,7 +250,7 @@ const Booking = () => {
           const _booking = await BookingService.getBooking(id)
           if (_booking) {
             setBooking(_booking)
-            setPrice(_booking.price)
+            setPrice(await StripeService.convertPrice(_booking.price!))
             setLoading(false)
             setVisible(true)
             const cmp = _booking.supplier as bookcarsTypes.User
@@ -476,7 +477,7 @@ const Booking = () => {
               <div>
                 {edit && (
                   <div className="booking-buttons">
-                    <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit">
+                    <Button variant="contained" className="btn-primary btn-margin-bottom" type="submit">
                       {commonStrings.SAVE}
                     </Button>
                   </div>
@@ -489,7 +490,7 @@ const Booking = () => {
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
                 <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(Math.floor((price as number) / days), commonStrings.CURRENCY, language)}`}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList
