@@ -30,6 +30,7 @@ import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as BookingService from '@/services/BookingService'
+import * as StripeService from '@/services/StripeService'
 import * as helper from '@/common/helper'
 import { strings } from '@/lang/booking-list'
 import { strings as csStrings } from '@/lang/cars'
@@ -123,6 +124,10 @@ const BookingList = ({
           return
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+
+        for (const booking of _data.resultData) {
+          booking.price = await StripeService.convertPrice(booking.price!)
+        }
 
         if (env.isMobile) {
           const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
