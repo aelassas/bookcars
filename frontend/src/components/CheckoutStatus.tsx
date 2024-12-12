@@ -6,6 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/common/helper'
 import * as BookingService from '@/services/BookingService'
+import * as StripeService from '@/services/StripeService'
 import { strings } from '@/lang/checkout-status'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as checkoutStrings } from '@/lang/checkout'
@@ -31,17 +32,25 @@ const CheckoutStatus = (
   }: CheckoutStatusProps
 ) => {
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
+  const [price, setPrice] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const init = async () => {
       const _booking = await BookingService.getBooking(bookingId)
       setBooking(_booking)
+      setPrice(await StripeService.convertPrice(_booking.price!))
+      setLoading(false)
     }
 
     if (bookingId) {
       init()
     }
   }, [bookingId])
+
+  if (loading) {
+    return null
+  }
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -96,7 +105,7 @@ const CheckoutStatus = (
                 </div>
                 <div className="status-detail">
                   <span className="status-detail-title">{checkoutStrings.COST}</span>
-                  <div className="status-detail-value status-price">{bookcarsHelper.formatPrice(booking.price!, commonStrings.CURRENCY, language)}</div>
+                  <div className="status-detail-value status-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
                 </div>
               </div>
             </div>

@@ -11,7 +11,6 @@ import {
   Checkbox,
   Link,
   FormControlLabel,
-  Switch,
   RadioGroup,
   Radio,
   CircularProgress,
@@ -19,7 +18,6 @@ import {
 import {
   DirectionsCar as CarIcon,
   Person as DriverIcon,
-  EventSeat as BookingIcon,
   Settings as PaymentOptionsIcon,
   Payment as LicenseIcon,
   AssignmentTurnedIn as ChecklistIcon,
@@ -54,6 +52,7 @@ import DriverLicense from '@/components/DriverLicense'
 import Progress from '@/components/Progress'
 import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
+import CheckoutOptions from '@/components/CheckoutOptions'
 
 import '@/assets/css/checkout.css'
 
@@ -91,12 +90,14 @@ const Checkout = () => {
   const [price, setPrice] = useState(0)
   const [emailInfo, setEmailInfo] = useState(true)
   const [phoneInfo, setPhoneInfo] = useState(true)
+
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
   const [theftProtection, setTheftProtection] = useState(false)
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
+
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loadingPage, setLoadingPage] = useState(true)
@@ -131,115 +132,6 @@ const Checkout = () => {
     format(from, _format, { locale: _locale }),
   )} 
   - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
-
-  const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _cancellation = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation: _cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setCancellation(_cancellation)
-      setPrice(_price)
-    }
-  }
-
-  const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _amendments = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments: _amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setAmendments(_amendments)
-      setPrice(_price)
-    }
-  }
-
-  const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _theftProtection = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection: _theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setTheftProtection(_theftProtection)
-      setPrice(_price)
-    }
-  }
-
-  const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _collisionDamageWaiver = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver: _collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setCollisionDamageWaiver(_collisionDamageWaiver)
-      setPrice(_price)
-    }
-  }
-
-  const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _fullInsurance = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance: _fullInsurance,
-        additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setFullInsurance(_fullInsurance)
-      setPrice(_price)
-    }
-  }
-
-  const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (car && from && to) {
-      const _additionalDriver = e.target.checked
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver: _additionalDriver,
-      }
-      const _price = bookcarsHelper.calculateTotalPrice(car, from, to, options)
-
-      setAdditionalDriver(_additionalDriver)
-      setPrice(_price)
-      setAdManuallyChecked(_additionalDriver)
-    }
-  }
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -469,6 +361,8 @@ const Checkout = () => {
         }
       }
 
+      const basePrice = await bookcarsHelper.convertPrice(price, StripeService.getCurrency(), env.BASE_CURRENCY)
+
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
         car: car._id,
@@ -484,7 +378,7 @@ const Checkout = () => {
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
-        price,
+        price: basePrice,
       }
 
       if (adRequired && additionalDriver && addiontalDriverBirthDate) {
@@ -504,7 +398,7 @@ const Checkout = () => {
       if (!payLater) {
         const payload: bookcarsTypes.CreatePaymentPayload = {
           amount: price,
-          currency: env.STRIPE_CURRENCY_CODE,
+          currency: StripeService.getCurrency(),
           locale: language,
           receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
           name: `${car.name} 
@@ -607,7 +501,7 @@ const Checkout = () => {
         return
       }
 
-      const _price = bookcarsHelper.calculateTotalPrice(_car, _from, _to)
+      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
 
       const included = (val: number) => val === 0
 
@@ -660,91 +554,21 @@ const Checkout = () => {
                     onLoad={() => setLoadingPage(false)}
                   />
 
-                  <div className="booking-options-container">
-                    <div className="booking-info">
-                      <BookingIcon />
-                      <span>{strings.BOOKING_OPTIONS}</span>
-                    </div>
-                    <div className="booking-options">
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret}
-                          control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.CANCELLATION}</span>
-                              <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret}
-                          control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
-                              <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret}
-                          control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                              <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret}
-                          control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
-                              <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret}
-                          control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
-                              <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl fullWidth margin="dense">
-                        <FormControlLabel
-                          disabled={car.additionalDriver === -1 || !!clientSecret}
-                          control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
-                          label={(
-                            <span>
-                              <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                              <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</span>
-                            </span>
-                          )}
-                        />
-                      </FormControl>
-                    </div>
-                  </div>
+                  <CheckoutOptions
+                    car={car}
+                    from={from}
+                    to={to}
+                    language={language}
+                    clientSecret={clientSecret}
+                    onPriceChange={(value) => setPrice(value)}
+                    onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
+                    onCancellationChange={(value) => setCancellation(value)}
+                    onAmendmentsChange={(value) => setAmendments(value)}
+                    onTheftProtectionChange={(value) => setTheftProtection(value)}
+                    onCollisionDamageWaiverChange={(value) => setCollisionDamageWaiver(value)}
+                    onFullInsuranceChange={(value) => setFullInsurance(value)}
+                    onAdditionalDriverChange={(value) => setAdditionalDriver(value)}
+                  />
 
                   <div className="booking-details-container">
                     <div className="booking-info">

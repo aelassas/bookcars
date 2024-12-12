@@ -1,0 +1,62 @@
+div.checkout-options-container {
+  background: #fbfbfb;
+  border: 1px solid #d9d8d9;
+  border-radius: 5px;
+  padding: 25px;
+  margin-bottom: 15px;
+}
+
+div.checkout-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+div.checkout-info span {
+  color: #1a1a1a;
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+div.checkout-options,
+div.payment-options {
+  color: #333;
+  user-select: none;
+}
+
+div.checkout-options span.checkout-option-label {
+  font-weight: 700;
+}
+
+div.checkout-options span.checkout-option-label::after {
+  content: ' ';
+}
+
+div.checkout-options span.checkout-option-value {
+  color: rgb(0 0 0 / 55%);
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (width <=960px) {
+
+  div.checkout-options span.checkout-option-value {
+    display: table-row;
+  }
+
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (width >=960px) {
+
+  div.checkout-options-container {
+    width: 800px;
+  }
+
+}
