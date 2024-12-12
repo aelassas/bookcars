@@ -23,8 +23,8 @@ import {
   More as MoreIcon,
   Settings as SettingsIcon,
   Home as HomeIcon,
-  InfoTwoTone as AboutIcon,
-  DescriptionTwoTone as TosIcon,
+  InfoOutlined as AboutIcon,
+  Feed as TosIcon,
   ExitToApp as SignoutIcon,
   Login as LoginIcon,
   EventSeat as BookingsIcon,
@@ -351,46 +351,46 @@ const Header = ({
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
               <List sx={classes.list}>
                 <ListItemLink href="/">
-                  <ListItemIcon><HomeIcon /></ListItemIcon>
+                  <ListItemIcon><HomeIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.HOME} />
                 </ListItemLink>
                 {isSignedIn && (
                   <ListItemLink href="/bookings">
-                    <ListItemIcon><BookingsIcon /></ListItemIcon>
+                    <ListItemIcon><BookingsIcon className="menu-lnk" /></ListItemIcon>
                     <ListItemText primary={strings.BOOKINGS} />
                   </ListItemLink>
                 )}
                 <ListItemLink href="/suppliers">
-                  <ListItemIcon><SupplierIcon /></ListItemIcon>
+                  <ListItemIcon><SupplierIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.SUPPLIERS} />
                 </ListItemLink>
                 <ListItemLink href="/locations">
-                  <ListItemIcon><LocationIcon /></ListItemIcon>
+                  <ListItemIcon><LocationIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
                 </ListItemLink>
                 <ListItemLink href="/about">
-                  <ListItemIcon><AboutIcon /></ListItemIcon>
+                  <ListItemIcon><AboutIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
                 </ListItemLink>
                 <ListItemLink href="/privacy">
-                  <ListItemIcon><PrivacyIcon /></ListItemIcon>
+                  <ListItemIcon><PrivacyIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.PRIVACY_POLICY} />
                 </ListItemLink>
                 <ListItemLink href="/tos">
-                  <ListItemIcon><TosIcon /></ListItemIcon>
+                  <ListItemIcon><TosIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
                 </ListItemLink>
                 <ListItemLink href="/faq">
-                  <ListItemIcon><FaqIcon /></ListItemIcon>
+                  <ListItemIcon><FaqIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.FAQ} />
                 </ListItemLink>
                 <ListItemLink href="/contact">
-                  <ListItemIcon><MailIcon /></ListItemIcon>
+                  <ListItemIcon><MailIcon className="menu-lnk" /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
                 </ListItemLink>
                 {env.isMobile && !hideSignin && !isSignedIn && isLoaded && !loading && (
                   <ListItemLink href="/sign-in">
-                    <ListItemIcon><LoginIcon /></ListItemIcon>
+                    <ListItemIcon><LoginIcon className="menu-lnk" /></ListItemIcon>
                     <ListItemText primary={strings.SIGN_IN} />
                   </ListItemLink>
                 )}
