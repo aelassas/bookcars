@@ -12,15 +12,16 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - ./bookcars.key:/etc/ssl/bookcars.key
+      - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   mongo:
     image: mongo:latest
-    command: mongod --quiet --logpath /dev/null
     restart: always
     environment:
       # Provide your credentials here
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: PASSWORD
+      MONGO_INITDB_ROOT_PASSWORD: Vlvd378488
     ports:
       - 27017:27017
 
@@ -32,6 +33,9 @@ services:
       - api
     ports:
       - 3001:3001
+    volumes:
+      - ./bookcars.key:/etc/ssl/bookcars.key
+      - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   frontend:
     build: 
@@ -44,6 +48,8 @@ services:
       - 443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - ./bookcars.key:/etc/ssl/bookcars.key
+      - ./bookcars.crt:/etc/ssl/bookcars.crt
 
 volumes:
   cdn:
