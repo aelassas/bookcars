@@ -215,6 +215,16 @@ export const days = (from?: Date, to?: Date) =>
   (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
 
 /**
+ * Check if currency is written from right to left.
+ *
+ * @returns {*}
+ */
+export const currencyRTL = (currencySymbol: string) => {
+  const isRTL = ['$', '£'].includes(currencySymbol)
+  return isRTL
+}
+
+/**
  * Format price
  *
  * @param {number} price
@@ -225,8 +235,8 @@ export const days = (from?: Date, to?: Date) =>
 export const formatPrice = (price: number, currency: string, language: string) => {
   const formatedPrice = formatNumber(price, language)
 
-  if (currency === '$') {
-    return `$${formatedPrice}`
+  if (currencyRTL(currency)) {
+    return `${currency}${formatedPrice}`
   }
 
   return `${formatedPrice} ${currency}`
@@ -352,6 +362,9 @@ export const convertPrice = async (amount: number, from: string, to: string): Pr
   }
   if (!checkCurrency(to)) {
     throw new Error(`Currency ${to} not supported`)
+  }
+  if (from === to) {
+    return amount
   }
   const cc = new CurrencyConverter({ from, to, amount })
   const res = await cc.convert()
