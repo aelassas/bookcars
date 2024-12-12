@@ -1,11 +1,13 @@
 import LocalizedStrings from 'react-localization'
 import * as langHelper from '@/common/langHelper'
 import env from '@/config/env.config'
-import * as UserService from '@/services/UserService'
-import { strings as commonStrings } from '@/lang/common'
+import * as StripeService from '@/services/StripeService'
 
-const language = UserService.getLanguage()
-const isUS = language === 'en' && commonStrings.CURRENCY === '$'
+const currency = StripeService.getCurrencySymbol()
+
+const depositFilterValue1 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_1)
+const depositFilterValue2 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_2)
+const depositFilterValue3 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_3)
 
 const strings = new LocalizedStrings({
   fr: {
@@ -73,9 +75,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Transmission',
     ENGINE: 'Moteur',
     DEPOSIT: 'Dépôt de garantie',
-    LESS_THAN_VALUE_1: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_2: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'locations',
     CO2: 'Effet CO2',
     FROM_YOU: ' de vous',
@@ -150,9 +152,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Gearbox',
     ENGINE: 'Engine',
     DEPOSIT: 'Deposit at pick-up',
-    LESS_THAN_VALUE_1: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_2: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'trips',
     CO2: 'CO2 effect',
     FROM_YOU: ' from you',
@@ -227,9 +229,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Caja de cambios',
     ENGINE: 'Motor',
     DEPOSIT: 'Depósito al recoger',
-    LESS_THAN_VALUE_1: `Menos de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_2: `Menos de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `Menos de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'viajes',
     CO2: 'Efecto CO2',
     FROM_YOU: ' de ti',

@@ -76,3 +76,33 @@ export const getCurrency = () => {
  * @returns {string|undefined}
  */
 export const getCurrencySymbol = () => env.CURRENCIES.find((c) => c.code === getCurrency())?.symbol || '$'
+
+/**
+ * Convert a price to a given currency.
+ *
+ * @async
+ * @param {number} amount
+ * @param {string} to
+ * @returns {Promise<number>}
+ */
+export const convertPrice = async (amount: number) => {
+  const to = getCurrency()
+
+  if (to !== env.BASE_CURRENCY) {
+    const res = await bookcarsHelper.convertPrice(amount, env.BASE_CURRENCY, to)
+    return res
+  }
+
+  return amount
+}
+
+/**
+ * Check if currency is written from right to left.
+ *
+ * @returns {*}
+ */
+export const currencyRTL = () => {
+  const currencySymbol = getCurrencySymbol()
+  const isRTL = bookcarsHelper.currencyRTL(currencySymbol)
+  return isRTL
+}
