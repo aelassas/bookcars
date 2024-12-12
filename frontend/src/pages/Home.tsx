@@ -29,6 +29,7 @@ import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'
 import * as CountryService from '@/services/CountryService'
 import * as LocationService from '@/services/LocationService'
+import * as StripeService from '@/services/StripeService'
 import Layout from '@/components/Layout'
 import SupplierCarrousel from '@/components/SupplierCarrousel'
 import TabPanel, { a11yProps } from '@/components/TabPanel'
@@ -37,7 +38,6 @@ import SearchForm from '@/components/SearchForm'
 import Map from '@/components/Map'
 import Footer from '@/components/Footer'
 import FaqList from '@/components/FaqList'
-import * as helper from '@/common/helper'
 
 import Mini from '@/assets/img/mini.png'
 import Midi from '@/assets/img/midi.png'
@@ -66,17 +66,17 @@ const Home = () => {
 
   useEffect(() => {
     const init = async () => {
-      const _miniPricePhr = await helper.convertPrice(miniPricePhr)
+      const _miniPricePhr = await StripeService.convertPrice(miniPricePhr)
       setMiniPricePhr(_miniPricePhr)
-      const _miniPricePday = await helper.convertPrice(miniPricePday)
+      const _miniPricePday = await StripeService.convertPrice(miniPricePday)
       setMiniPricePday(_miniPricePday)
-      const _midiPricePhr = await helper.convertPrice(midiPricePhr)
+      const _midiPricePhr = await StripeService.convertPrice(midiPricePhr)
       setMidiPricePhr(_midiPricePhr)
-      const _midiPricePday = await helper.convertPrice(midiPricePday)
+      const _midiPricePday = await StripeService.convertPrice(midiPricePday)
       setMidiPricePday(_midiPricePday)
-      const _maxiPricePhr = await helper.convertPrice(maxiPricePhr)
+      const _maxiPricePhr = await StripeService.convertPrice(maxiPricePhr)
       setMaxiPricePhr(_maxiPricePhr)
-      const _maxiPricePday = await helper.convertPrice(maxiPricePday)
+      const _maxiPricePday = await StripeService.convertPrice(maxiPricePday)
       setMaxiPricePday(_maxiPricePday)
     }
 

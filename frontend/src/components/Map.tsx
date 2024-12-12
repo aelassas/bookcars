@@ -1,10 +1,10 @@
-import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react'
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 import L, { LatLngExpression } from 'leaflet'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import * as bookcarsTypes from ':bookcars-types'
-import * as UserService from '@/services/UserService'
+// import * as UserService from '@/services/UserService'
 import { strings } from '@/lang/map'
 import * as LocationService from '@/services/LocationService'
 import * as helper from '@/common/helper'
@@ -89,24 +89,24 @@ const Map = ({
 }: MapProps) => {
   const _initialZoom = initialZoom || 5.5
   const [zoom, setZoom] = useState(_initialZoom)
-  const [map, setMap] = useState<L.Map | null>(null)
+  const map = useRef<L.Map>(null)
 
-  if (map) {
-    map.attributionControl.setPrefix('')
-  }
+  useEffect(() => {
+    if (map.current) {
+      map.current.attributionControl.setPrefix('')
+      map.current.invalidateSize()
+    }
+  }, [map])
 
   //
   // Tile server
   //
-  const language = UserService.getLanguage()
 
-  let tileURL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  const tileURL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  // const language = UserService.getLanguage()
   // if (language === 'fr') {
   //   tileURL = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
   // }
-  if (language === 'el') {
-    tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-  }
 
   const getLocationMarkers = (): Marker[] => (
     (locations
@@ -189,10 +189,11 @@ const Map = ({
         center={position}
         zoom={_initialZoom}
         className={`${className ? `${className} ` : ''}map`}
-        ref={setMap}
+        ref={map}
       >
         <TileLayer
           // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution=""
           url={tileURL}
         />
         <ZoomTracker setZoom={setZoom} />

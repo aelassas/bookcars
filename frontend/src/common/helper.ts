@@ -263,7 +263,7 @@ export const getMileageTooltip = (mileage: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getAdditionalDriver = (additionalDriver: number, language: string) => {
+export const getAdditionalDriver = async (additionalDriver: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (additionalDriver === -1) {
@@ -271,7 +271,8 @@ export const getAdditionalDriver = (additionalDriver: number, language: string) 
   } if (additionalDriver === 0) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
   }
-  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
@@ -281,7 +282,7 @@ export const getAdditionalDriver = (additionalDriver: number, language: string) 
  * @param {string} language
  * @returns {string}
  */
-export const getFullInsurance = (fullInsurance: number, language: string) => {
+export const getFullInsurance = async (fullInsurance: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -289,7 +290,8 @@ export const getFullInsurance = (fullInsurance: number, language: string) => {
   } if (fullInsurance === 0) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
@@ -299,7 +301,7 @@ export const getFullInsurance = (fullInsurance: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language: string) => {
+export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -307,7 +309,8 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language
   } if (collisionDamageWaiver === 0) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
@@ -317,7 +320,7 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language
  * @param {string} language
  * @returns {string}
  */
-export const getTheftProtection = (theftProtection: number, language: string) => {
+export const getTheftProtection = async (theftProtection: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -325,7 +328,8 @@ export const getTheftProtection = (theftProtection: number, language: string) =>
   } if (theftProtection === 0) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
@@ -335,7 +339,7 @@ export const getTheftProtection = (theftProtection: number, language: string) =>
  * @param {string} language
  * @returns {string}
  */
-export const getAmendments = (amendments: number, language: string) => {
+export const getAmendments = async (amendments: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -343,7 +347,8 @@ export const getAmendments = (amendments: number, language: string) => {
   } if (amendments === 0) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
   }
-  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
+  const _amendments = await StripeService.convertPrice(amendments)
+  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_amendments, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -353,7 +358,7 @@ export const getAmendments = (amendments: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getCancellation = (cancellation: number, language: string) => {
+export const getCancellation = async (cancellation: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -361,7 +366,8 @@ export const getCancellation = (cancellation: number, language: string) => {
   } if (cancellation === 0) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
+  const _cancellation = await StripeService.convertPrice(cancellation)
+  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_cancellation, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -451,7 +457,7 @@ export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART
  * @param {string} language
  * @returns {string}
  */
-export const getCancellationOption = (cancellation: number, language: string) => {
+export const getCancellationOption = async (cancellation: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -459,7 +465,8 @@ export const getCancellationOption = (cancellation: number, language: string) =>
   } if (cancellation === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
+  const _cancellation = await StripeService.convertPrice(cancellation)
+  return `+ ${bookcarsHelper.formatPrice(_cancellation, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -469,7 +476,7 @@ export const getCancellationOption = (cancellation: number, language: string) =>
  * @param {string} language
  * @returns {string}
  */
-export const getAmendmentsOption = (amendments: number, language: string) => {
+export const getAmendmentsOption = async (amendments: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -477,7 +484,8 @@ export const getAmendmentsOption = (amendments: number, language: string) => {
   } if (amendments === 0) {
     return `${strings.INCLUDED}${fr ? 'es' : ''}`
   }
-  return `+ ${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
+  const _amendments = await StripeService.convertPrice(amendments)
+  return `+ ${bookcarsHelper.formatPrice(_amendments, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -488,7 +496,7 @@ export const getAmendmentsOption = (amendments: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getTheftProtectionOption = (theftProtection: number, days: number, language: string) => {
+export const getTheftProtectionOption = async (theftProtection: number, days: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -496,7 +504,8 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
   } if (theftProtection === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatPrice(theftProtection * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
+  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  return `+ ${bookcarsHelper.formatPrice(_theftProtection * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -507,7 +516,7 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
  * @param {string} language
  * @returns {string}
  */
-export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, language: string) => {
+export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: number, days: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -515,7 +524,8 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
   } if (collisionDamageWaiver === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatPrice(collisionDamageWaiver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
+  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  return `+ ${bookcarsHelper.formatPrice(_collisionDamageWaiver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -526,7 +536,7 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
  * @param {string} language
  * @returns {string}
  */
-export const getFullInsuranceOption = (fullInsurance: number, days: number, language: string) => {
+export const getFullInsuranceOption = async (fullInsurance: number, days: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -534,7 +544,8 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, lang
   } if (fullInsurance === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatPrice(fullInsurance * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
+  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  return `+ ${bookcarsHelper.formatPrice(_fullInsurance * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -545,13 +556,14 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, lang
  * @param {string} language
  * @returns {string}
  */
-export const getAdditionalDriverOption = (additionalDriver: number, days: number, language: string) => {
+export const getAdditionalDriverOption = async (additionalDriver: number, days: number, language: string) => {
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
   } if (additionalDriver === 0) {
     return strings.INCLUDED
   }
-  return `+ ${bookcarsHelper.formatPrice(additionalDriver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
+  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  return `+ ${bookcarsHelper.formatPrice(_additionalDriver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -625,23 +637,4 @@ export const downloadURI = (uri: string, name: string = '') => {
   document.body.appendChild(link)
   link.click()
   link.remove()
-}
-
-/**
- * Convert a price to a given currency.
- *
- * @async
- * @param {number} amount
- * @param {string} to
- * @returns {Promise<number>}
- */
-export const convertPrice = async (amount: number) => {
-  const to = StripeService.getCurrency()
-
-  if (to !== env.BASE_CURRENCY) {
-    const res = await bookcarsHelper.convertPrice(amount, env.BASE_CURRENCY, to)
-    return res
-  }
-
-  return amount
 }
