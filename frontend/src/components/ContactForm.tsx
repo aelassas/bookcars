@@ -16,7 +16,6 @@ import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/contact-form'
 import * as UserService from '@/services/UserService'
-import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import * as helper from '@/common/helper'
 
 import '@/assets/css/contact-form.css'
@@ -97,7 +96,8 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
         subject,
         message,
         recaptchaToken,
-        ip
+        ip,
+        isContactForm: true,
       }
       const status = await UserService.sendEmail(payload)
 
@@ -124,83 +124,81 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
   }
 
   return (
-    <ReCaptchaProvider>
-      <Paper className={`${className ? `${className} ` : ''}contact-form`} elevation={10}>
-        <h1 className="contact-form-title">
-          {' '}
-          {strings.CONTACT_HEADING}
-          {' '}
-        </h1>
-        <form onSubmit={handleSubmit}>
-          {!isAuthenticated && (
-            <FormControl fullWidth margin="dense">
-              <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-              <OutlinedInput
-                type="text"
-                label={commonStrings.EMAIL}
-                error={!emailValid}
-                value={email}
-                onBlur={handleEmailBlur}
-                onChange={handleEmailChange}
-                required
-                autoComplete="off"
-              />
-              <FormHelperText error={!emailValid}>
-                {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-              </FormHelperText>
-            </FormControl>
-          )}
-
+    <Paper className={`${className ? `${className} ` : ''}contact-form`} elevation={10}>
+      <h1 className="contact-form-title">
+        {' '}
+        {strings.CONTACT_HEADING}
+        {' '}
+      </h1>
+      <form onSubmit={handleSubmit}>
+        {!isAuthenticated && (
           <FormControl fullWidth margin="dense">
-            <InputLabel className="required">{strings.SUBJECT}</InputLabel>
-            <OutlinedInput type="text" label={strings.SUBJECT} value={subject} required onChange={handleSubjectChange} autoComplete="off" />
-          </FormControl>
-
-          <FormControl fullWidth margin="dense">
-            <InputLabel className="required">{strings.MESSAGE}</InputLabel>
+            <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
             <OutlinedInput
               type="text"
-              label={strings.MESSAGE}
-              onChange={handleMessageChange}
-              autoComplete="off"
-              value={message}
+              label={commonStrings.EMAIL}
+              error={!emailValid}
+              value={email}
+              onBlur={handleEmailBlur}
+              onChange={handleEmailChange}
               required
-              multiline
-              minRows={7}
-              maxRows={7}
+              autoComplete="off"
             />
+            <FormHelperText error={!emailValid}>
+              {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+            </FormHelperText>
           </FormControl>
+        )}
 
-          <div className="recaptcha">
-            <GoogleReCaptcha
-              refreshReCaptcha={refreshReCaptcha}
-              onVerify={handleRecaptchaVerify}
-            />
-          </div>
+        <FormControl fullWidth margin="dense">
+          <InputLabel className="required">{strings.SUBJECT}</InputLabel>
+          <OutlinedInput type="text" label={strings.SUBJECT} value={subject} required onChange={handleSubjectChange} autoComplete="off" />
+        </FormControl>
 
-          <div className="buttons">
-            <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom btn" size="small" disabled={sending}>
-              {
-                sending
-                  ? <CircularProgress color="inherit" size={24} />
-                  : strings.SEND
-              }
-            </Button>
-            <Button
-              variant="contained"
-              className="btn-secondary btn-margin-bottom btn"
-              size="small"
-              onClick={() => {
-                navigate('/')
-              }}
-            >
-              {' '}
-              {commonStrings.CANCEL}
-            </Button>
-          </div>
-        </form>
-      </Paper>
-    </ReCaptchaProvider>
+        <FormControl fullWidth margin="dense">
+          <InputLabel className="required">{strings.MESSAGE}</InputLabel>
+          <OutlinedInput
+            type="text"
+            label={strings.MESSAGE}
+            onChange={handleMessageChange}
+            autoComplete="off"
+            value={message}
+            required
+            multiline
+            minRows={7}
+            maxRows={7}
+          />
+        </FormControl>
+
+        <div className="recaptcha">
+          <GoogleReCaptcha
+            refreshReCaptcha={refreshReCaptcha}
+            onVerify={handleRecaptchaVerify}
+          />
+        </div>
+
+        <div className="buttons">
+          <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom btn" size="small" disabled={sending}>
+            {
+              sending
+                ? <CircularProgress color="inherit" size={24} />
+                : strings.SEND
+            }
+          </Button>
+          <Button
+            variant="contained"
+            className="btn-secondary btn-margin-bottom btn"
+            size="small"
+            onClick={() => {
+              navigate('/')
+            }}
+          >
+            {' '}
+            {commonStrings.CANCEL}
+          </Button>
+        </div>
+      </form>
+    </Paper>
   )
 }
 

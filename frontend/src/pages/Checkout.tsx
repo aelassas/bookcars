@@ -22,6 +22,7 @@ import {
   EventSeat as BookingIcon,
   Settings as PaymentOptionsIcon,
   Payment as LicenseIcon,
+  AssignmentTurnedIn as ChecklistIcon,
 } from '@mui/icons-material'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
@@ -47,12 +48,12 @@ import * as StripeService from '@/services/StripeService'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import DatePicker from '@/components/DatePicker'
-import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import SocialLogin from '@/components/SocialLogin'
 import Map from '@/components/Map'
 import DriverLicense from '@/components/DriverLicense'
+import Progress from '@/components/Progress'
+import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
-import Info from './Info'
 
 import '@/assets/css/checkout.css'
 
@@ -98,6 +99,7 @@ const Checkout = () => {
   const [additionalDriver, setAdditionalDriver] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingPage, setLoadingPage] = useState(true)
   const [addiontalDriverFullName, setAddiontalDriverFullName] = useState('')
   const [addiontalDriverEmail, setAddiontalDriverEmail] = useState('')
   const [addiontalDriverPhone, setAddiontalDriverPhone] = useState('')
@@ -628,7 +630,7 @@ const Checkout = () => {
   }
 
   return (
-    <ReCaptchaProvider>
+    <>
       <Layout onLoad={onLoad} strict={false}>
         {visible && car && from && to && pickupLocation && dropOffLocation && (
           <div className="booking">
@@ -655,6 +657,7 @@ const Checkout = () => {
                     // distance={distance}
                     hidePrice
                     sizeAuto
+                    onLoad={() => setLoadingPage(false)}
                   />
 
                   <div className="booking-options-container">
@@ -1021,6 +1024,32 @@ const Checkout = () => {
                     </div>
                   )}
 
+                  <div className="booking-details-container">
+                    <div className="booking-info">
+                      <ChecklistIcon />
+                      <span>{strings.PICK_UP_CHECKLIST_TITLE}</span>
+                    </div>
+                    <div className="booking-details">
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_TITLE}</span>
+                        <div className="booking-detail-value checklist-content">
+                          {strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT}
+                        </div>
+                      </div>
+                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_DOCUMENTS_TITLE}</span>
+                        <div className="booking-detail-value checklist-content">
+                          {strings.PICK_UP_CHECKLIST_DOCUMENTS_CONTENT}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="payment-info">
+                    <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
+                    <div className="payment-info-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                  </div>
+
                   {(!car.supplier.payLater || !payLater) && (
                     clientSecret && (
                       <div className="payment-options-container">
@@ -1083,9 +1112,19 @@ const Checkout = () => {
           </div>
         )}
         {noMatch && <NoMatch hideHeader />}
-        {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
+
+        {success && bookingId && (
+          <CheckoutStatus
+            bookingId={bookingId}
+            language={language}
+            status="success"
+            className="status"
+          />
+        )}
       </Layout>
-    </ReCaptchaProvider>
+
+      {loadingPage && <Progress />}
+    </>
   )
 }
 

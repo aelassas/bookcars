@@ -36,6 +36,24 @@ div.home div.home-content video {
   object-fit: cover;
 }
 
+div.home div.home-content div.video-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  /* background-image: url('/cover.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%; */
+}
+
+div.home div.home-content div.video-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* div.home div.home-content::before {
   position: absolute;
   top: 0;
@@ -64,6 +82,8 @@ div.home-title {
   color: #F7B644;
   font-size: 28px;
   font-weight: 500;
+  text-align: center;
+  padding: 0 20px;
 }
 
 div.home div.home-cover {
@@ -72,6 +92,7 @@ div.home div.home-cover {
   text-align: center;
   -webkit-font-smoothing: antialiased;
   letter-spacing: .065rem;
+  padding: 0 20px;
 }
 
 div.home-subtitle {
@@ -81,7 +102,7 @@ div.home-subtitle {
 
 div.home div.search {
   z-index: 2;
-  background-color: #F9F9F9;
+  background-color: #fff;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -100,7 +121,7 @@ div.home div.search div.home-search {
 }
 
 div.home div.why {
-  background-color: #F9F9F9;
+  background-color: #fff;
   width: 100%;
   padding: 40px 0;
   display: flex;
@@ -282,35 +303,17 @@ div.home div.car-size div.boxes div.box div.box-content span.unit {
   color: #A9A9A9;
 }
 
-div.home div.faq {
-  width: 100%;
-  background-color: #f9f9f9;
-  padding: 50px 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-div.home div.faq h2 {
-  width: fit-content;
-}
-
-div.home div.faq div.questions {
-  margin: 20px 120px 70px 120px;
-}
-
-div.home div.faq div.questions .accordion-title {
-  font-weight: 500;
-}
-
-
-div.home div.faq div.questions .accordion-details {
-  color: #676767;
-}
-
 div.home div.home-map {
   width: 80%;
   margin: 15px 0 30px;
+}
+
+div.home div.faq {
+  width: 100%;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 div.home div.customer-care {
@@ -379,6 +382,7 @@ div.home div.customer-care div.customer-care-img img {
   div.home-title {
     font-size: 22px;
     font-weight: 500;
+    margin-bottom: 20px;
   }
 
   div.home-cover {
@@ -406,10 +410,6 @@ div.home div.customer-care div.customer-care-img img {
 
   div.home div.car-size div.boxes div.box {
     margin-bottom: 30px;
-  }
-
-  div.home div.faq div.questions {
-    margin: 20px 0 70px 0;
   }
 
   div.home div.home-map {

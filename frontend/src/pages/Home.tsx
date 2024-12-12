@@ -1,5 +1,13 @@
-import React, { useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Dialog, DialogContent, FormControlLabel, Tab, Tabs } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  FormControlLabel,
+  Tab,
+  Tabs
+} from '@mui/material'
 import {
   RoomService,
   VisibilityOff,
@@ -9,7 +17,6 @@ import {
   AttachMoney,
   Public,
   FlashOn,
-  ExpandMore,
   CheckBox,
 } from '@mui/icons-material'
 import L from 'leaflet'
@@ -29,6 +36,8 @@ import LocationCarrousel from '@/components/LocationCarrousel'
 import SearchForm from '@/components/SearchForm'
 import Map from '@/components/Map'
 import Footer from '@/components/Footer'
+import FaqList from '@/components/FaqList'
+import * as helper from '@/common/helper'
 
 import Mini from '@/assets/img/mini.png'
 import Midi from '@/assets/img/midi.png'
@@ -47,6 +56,33 @@ const Home = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])
   const [ranges, setRanges] = useState([bookcarsTypes.CarRange.Mini, bookcarsTypes.CarRange.Midi])
   const [openRangeSearchFormDialog, setOpenRangeSearchFormDialog] = useState(false)
+  const [videoLoaded, setVideoLoaded] = useState(false)
+  const [miniPricePhr, setMiniPricePhr] = useState(2.5)
+  const [miniPricePday, setMiniPricePday] = useState(40)
+  const [midiPricePhr, setMidiPricePhr] = useState(3.5)
+  const [midiPricePday, setMidiPricePday] = useState(50)
+  const [maxiPricePhr, setMaxiPricePhr] = useState(3.5)
+  const [maxiPricePday, setMaxiPricePday] = useState(50)
+
+  useEffect(() => {
+    const init = async () => {
+      const _miniPricePhr = await helper.convertPrice(miniPricePhr)
+      setMiniPricePhr(_miniPricePhr)
+      const _miniPricePday = await helper.convertPrice(miniPricePday)
+      setMiniPricePday(_miniPricePday)
+      const _midiPricePhr = await helper.convertPrice(midiPricePhr)
+      setMidiPricePhr(_midiPricePhr)
+      const _midiPricePday = await helper.convertPrice(midiPricePday)
+      setMidiPricePday(_midiPricePday)
+      const _maxiPricePhr = await helper.convertPrice(maxiPricePhr)
+      setMaxiPricePhr(_maxiPricePhr)
+      const _maxiPricePday = await helper.convertPrice(maxiPricePday)
+      setMaxiPricePday(_maxiPricePday)
+    }
+
+    init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
@@ -87,10 +123,18 @@ const Home = () => {
               loop
               playsInline
               disablePictureInPicture
+              onLoadedData={() => {
+                setVideoLoaded(true)
+              }}
             >
               <source src="cover.mp4" type="video/mp4" />
               <track kind="captions" />
             </video>
+            {!videoLoaded && (
+              <div className="video-background">
+                <img src="cover.png" alt="" />
+              </div>
+            )}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>
@@ -298,11 +342,11 @@ const Home = () => {
                 />
                 <ul>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(2.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · phr</span>
                   </li>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(40, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(miniPricePday, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · pday</span>
                   </li>
                 </ul>
@@ -330,11 +374,11 @@ const Home = () => {
                 />
                 <ul>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(3.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · phr</span>
                   </li>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(50, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(midiPricePday, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · pday</span>
                   </li>
                 </ul>
@@ -361,11 +405,11 @@ const Home = () => {
                 />
                 <ul>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(4.5, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · phr</span>
                   </li>
                   <li>
-                    <span className="price">{bookcarsHelper.formatPrice(70, commonStrings.CURRENCY, language)}</span>
+                    <span className="price">{bookcarsHelper.formatPrice(maxiPricePday, commonStrings.CURRENCY, language)}</span>
                     <span className="unit"> · pday</span>
                   </li>
                 </ul>
@@ -385,33 +429,7 @@ const Home = () => {
         </div>
 
         <div className="faq">
-          <h2>{strings.FAQ_TITLE}</h2>
-          <div className="questions">
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_DOCUMENTS_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_DOCUMENTS_TEXT}</AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_SERVICES_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_SERVICES_TEXT}</AccordionDetails>
-            </Accordion>
-
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_AGE_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_AGE_TEXT}</AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_CANCEL_TITLE}</AccordionSummary>
-              <AccordionDetails className="accordion-details">{strings.FAQ_CANCEL_TEXT}</AccordionDetails>
-            </Accordion>
-          </div>
-          <Button
-            variant="contained"
-            className="btn-primary btn-home"
-            href="/contact"
-          >
-            {strings.MORE_QUESTIONS}
-          </Button>
+          <FaqList />
         </div>
 
         <div className="home-map">

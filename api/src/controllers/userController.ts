@@ -1540,7 +1540,7 @@ export const verifyRecaptcha = async (req: Request, res: Response) => {
 export const sendEmail = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.SendEmailPayload } = req
-    const { from, to, subject, message, recaptchaToken: token, ip } = body
+    const { from, to, subject, message, recaptchaToken: token, ip, isContactForm } = body
     const result = await axios.get(`https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${ip}`)
     const { success } = result.data
 
@@ -1551,12 +1551,12 @@ export const sendEmail = async (req: Request, res: Response) => {
     const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to,
-      subject: i18n.t('CONTACT_SUBJECT'),
+      subject: isContactForm ? i18n.t('CONTACT_SUBJECT') : subject,
       html:
         `<p>
               ${i18n.t('FROM')}: ${from}<br>
-              ${i18n.t('SUBJECT')}: ${subject}<br>
-              ${i18n.t('MESSAGE')}:<br>${message.replace(/(?:\r\n|\r|\n)/g, '<br>')}<br>
+              ${(isContactForm && `${i18n.t('SUBJECT')}: ${subject}<br>`) || ''}
+              ${(message && `${i18n.t('MESSAGE')}:<br>${message.replace(/(?:\r\n|\r|\n)/g, '<br>')}<br>`) || ''}
          </p>`,
     }
     await mailHelper.sendMail(mailOptions)

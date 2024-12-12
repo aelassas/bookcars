@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -21,7 +21,6 @@ import {
   Mail as MailIcon,
   Notifications as NotificationsIcon,
   More as MoreIcon,
-  Language as LanguageIcon,
   Settings as SettingsIcon,
   Home as HomeIcon,
   InfoTwoTone as AboutIcon,
@@ -32,8 +31,10 @@ import {
   CarRental as SupplierIcon,
   LocationOn as LocationIcon,
   PrivacyTip as PrivacyIcon,
+  QuestionAnswer as FaqIcon,
 } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { CircleFlag } from 'react-circle-flags'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
 import { strings } from '@/lang/header'
@@ -44,8 +45,11 @@ import Avatar from './Avatar'
 import * as langHelper from '@/common/langHelper'
 import * as helper from '@/common/helper'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
+import * as StripeService from '@/services/StripeService'
 
 import '@/assets/css/header.css'
+
+const flagHeight = 28
 
 interface HeaderProps {
   user?: bookcarsTypes.User
@@ -68,6 +72,7 @@ const Header = ({
   const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
+  const [currencyAnchorEl, setCurrencyAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
@@ -77,6 +82,7 @@ const Header = ({
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
   const isLangMenuOpen = Boolean(langAnchorEl)
+  const isCurrencyMenuOpen = Boolean(currencyAnchorEl)
   const isSideMenuOpen = Boolean(sideAnchorEl)
 
   const classes = {
@@ -109,6 +115,10 @@ const Header = ({
 
   const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setLangAnchorEl(event.currentTarget)
+  }
+
+  const handleCurrencyMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setCurrencyAnchorEl(event.currentTarget)
   }
 
   const refreshPage = () => {
@@ -151,6 +161,21 @@ const Header = ({
           // Refresh page
           refreshPage()
         }
+      }
+    }
+  }
+
+  const handleCurrencyMenuClose = async (event: React.MouseEvent<HTMLElement>) => {
+    setCurrencyAnchorEl(null)
+
+    const { code } = event.currentTarget.dataset
+    if (code) {
+      const currentCurrency = StripeService.getCurrency()
+
+      if (code && code !== currentCurrency) {
+        StripeService.setCurrency(code)
+        // Refresh page
+        refreshPage()
       }
     }
   }
@@ -245,12 +270,12 @@ const Header = ({
         <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>
-      <MenuItem onClick={handleLangMenuOpen}>
+      {/* <MenuItem onClick={handleLangMenuOpen}>
         <IconButton aria-label="language of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
           <LanguageIcon />
         </IconButton>
         <p>{strings.LANGUAGE}</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem onClick={handleSignout}>
         <IconButton color="inherit">
           <SignoutIcon />
@@ -275,7 +300,32 @@ const Header = ({
       {
         env._LANGUAGES.map((language) => (
           <MenuItem onClick={handleLangMenuClose} data-code={language.code} key={language.code}>
-            {language.label}
+            <div className="language">
+              <CircleFlag countryCode={language.countryCode as string} height={flagHeight} className="flag" title={language.label} />
+              <span>{language.label}</span>
+            </div>
+          </MenuItem>
+        ))
+      }
+    </Menu>
+  )
+
+  const currencyMenuId = 'currency-menu'
+  const renderCurrencyMenu = (
+    <Menu
+      anchorEl={currencyAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={currencyMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isCurrencyMenuOpen}
+      onClose={handleCurrencyMenuClose}
+      className="menu"
+    >
+      {
+        env.CURRENCIES.map((_currency) => (
+          <MenuItem onClick={handleCurrencyMenuClose} data-code={_currency.code} key={_currency.code}>
+            {_currency.code}
           </MenuItem>
         ))
       }
@@ -330,6 +380,10 @@ const Header = ({
                   <ListItemIcon><TosIcon /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
                 </ListItemLink>
+                <ListItemLink href="/faq">
+                  <ListItemIcon><FaqIcon /></ListItemIcon>
+                  <ListItemText primary={strings.FAQ} />
+                </ListItemLink>
                 <ListItemLink href="/contact">
                   <ListItemIcon><MailIcon /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
@@ -344,22 +398,29 @@ const Header = ({
             </Drawer>
             {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
+              {!hideSignin && !isSignedIn && isLoaded && !loading && (
+                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn" style={{ minWidth: '170px' }}>
+                  {strings.SIGN_IN}
+                </Button>
+              )}
+              {isLoaded && !loading && (
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn">
+                  {StripeService.getCurrency()}
+                </Button>
+              )}
+              {isLoaded && !loading && (
+                <Button variant="contained" onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
+                  <div className="language">
+                    <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />
+                  </div>
+                </Button>
+              )}
               {isSignedIn && (
                 <IconButton aria-label="" onClick={handleNotificationsClick} className="btn">
                   <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
-              )}
-              {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn" style={{ minWidth: '180px' }}>
-                  {strings.SIGN_IN}
-                </Button>
-              )}
-              {isLoaded && !loading && (
-                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
-                  {lang?.label}
-                </Button>
               )}
               {isSignedIn && (
                 <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} className="btn">
@@ -368,9 +429,17 @@ const Header = ({
               )}
             </div>
             <div className="header-mobile">
-              {!isSignedIn && !loading && (
-                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
-                  {lang?.label}
+              {!loading && (
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn">
+                  {StripeService.getCurrency()}
+                </Button>
+              )}
+              {!loading && (
+                <Button variant="contained" onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
+                  <div className="language">
+                    <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />
+                    {/* <span>{lang?.label}</span> */}
+                  </div>
                 </Button>
               )}
               {isSignedIn && (
@@ -392,6 +461,7 @@ const Header = ({
         {renderMobileMenu}
         {renderMenu}
         {renderLanguageMenu}
+        {renderCurrencyMenu}
       </div>
     )) || <></>
   )

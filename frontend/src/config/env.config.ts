@@ -1,22 +1,48 @@
 import * as bookcarsTypes from ':bookcars-types'
 import Const from './const'
 
-//
-// ISO 639-1 language codes and their labels
-// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-//
-const LANGUAGES = [
+type Language = { code: string, countryCode: string, label: string }
+
+/**
+ * ISO 639-1 language codes and their labels
+ * https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+ *
+ * @type {Language[]}
+ */
+const LANGUAGES: Language[] = [
   {
     code: 'en',
+    countryCode: 'us',
     label: 'English',
   },
   {
     code: 'fr',
+    countryCode: 'fr',
     label: 'Français',
   },
   {
     code: 'es',
+    countryCode: 'es',
     label: 'Español',
+  },
+]
+
+type Currency = { code: string, symbol: string }
+
+/**
+ * ISO 4217 currency codes and their symbols
+ * https://docs.stripe.com/currencies
+ *
+ * @type {Currency[]}
+ */
+const CURRENCIES: Currency[] = [
+  {
+    code: 'USD',
+    symbol: '$',
+  },
+  {
+    code: 'EUR',
+    symbol: '€',
   },
 ]
 
@@ -30,6 +56,13 @@ const env = {
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
+  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
+  CURRENCIES,
+  /**
+ * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
+ * Must be a supported currency: https://docs.stripe.com/currencies
+ * */
+  STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
   BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
@@ -61,12 +94,6 @@ const env = {
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
   STRIPE_PUBLISHABLE_KEY: String(import.meta.env.VITE_BC_STRIPE_PUBLISHABLE_KEY),
-  /**
-   * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
-   * Must be a supported currency: https://docs.stripe.com/currencies
-   * */
-  STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
-  CURRENCY: import.meta.env.VITE_BC_CURRENCY || '$',
   SET_LANGUAGE_FROM_IP: (import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP && import.meta.env.VITE_BC_SET_LANGUAGE_FROM_IP.toLowerCase()) === 'true',
   GOOGLE_ANALYTICS_ENABLED: (import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED && import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ENABLED.toLowerCase()) === 'true',
   GOOGLE_ANALYTICS_ID: String(import.meta.env.VITE_BC_GOOGLE_ANALYTICS_ID),

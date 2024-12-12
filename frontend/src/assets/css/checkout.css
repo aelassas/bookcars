@@ -135,6 +135,11 @@ div.booking div.booking-details div.booking-detail div.booking-price {
   color: #333;
 }
 
+div.booking div.booking-details div.booking-detail .checklist-content {
+  color: #272727 !important;
+  padding-bottom: 20px;
+}
+
 div.booking div.driver-details {
   background: #fbfbfb;
   border: 1px solid #d9d8d9;
@@ -159,6 +164,28 @@ div.booking div.booking-buttons a {
   float: right;
 }
 
+div.booking div.payment-info {
+  border: 1px solid #d9d8d9;
+  background: #fbfbfb;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #1a1a1a;
+}
+
+div.booking div.payment-info div.payment-info-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+div.booking div.payment-info div.payment-info-price {
+  font-size: 18px;
+  font-weight: 500;
+}
+
 div.booking .btn-checkout,
 div.booking .btn-cancel {
   font-size: 18px;
@@ -181,6 +208,16 @@ div.booking .btn-checkout {
 
 div.booking .btn-cancel {
   background: #999;
+}
+
+.status {
+  margin: 40px 0 0 30px;
+}
+
+@media only screen and (width <=960px) {
+  .status {
+    margin: 40px 10px 0 10px;
+  }
 }
 
 /* Device width is less than or equal to 960px */
