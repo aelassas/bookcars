@@ -30,7 +30,7 @@ const LANGUAGES: Language[] = [
 type Currency = { code: string, symbol: string }
 
 /**
- * The three-letter ISO 4217 alphabetic currency codes, e.g. "USD" or "EUR" and their symbols. Default is "USD".
+ * The three-letter ISO 4217 alphabetic currency codes, e.g. "USD" or "EUR" and their symbols.
  * https://docs.stripe.com/currencies
  *
  * @type {Currency[]}
