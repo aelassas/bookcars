@@ -30,7 +30,7 @@ const LANGUAGES: Language[] = [
 type Currency = { code: string, symbol: string }
 
 /**
- * ISO 4217 currency codes and their symbols
+ * The three-letter ISO 4217 alphabetic currency codes, e.g. "USD" or "EUR" and their symbols. Default is "USD".
  * https://docs.stripe.com/currencies
  *
  * @type {Currency[]}
@@ -48,6 +48,10 @@ const CURRENCIES: Currency[] = [
     code: 'GBP',
     symbol: '£',
   }
+  // {
+  //   code: 'IQD',
+  //   symbol: 'IQD',
+  // }
 ]
 
 const env = {
@@ -62,11 +66,6 @@ const env = {
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
   BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
   CURRENCIES,
-  /**
-* The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
-* Must be a supported currency: https://docs.stripe.com/currencies
-* */
-  STRIPE_CURRENCY_CODE: String(import.meta.env.VITE_BC_STRIPE_CURRENCY_CODE || 'USD'),
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
   BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
