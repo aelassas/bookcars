@@ -54,35 +54,34 @@ div.footer ul.links li:hover {
   text-decoration: underline;
 }
 
-div.footer div.contact {
+div.footer div.footer-contact {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 10px 0;
 }
 
-div.footer div.contact .icon {
+div.footer div.footer-contact .icon {
   color: #525252;
   margin-right: 5px;
 }
 
-div.footer div.contact a {
+div.footer div.footer-contact a {
   text-decoration: none;
   color: #1a1a1a;
 }
 
-div.footer div.contact a:hover {
+div.footer div.footer-contact a:hover {
   /* opacity: 0.85; */
   text-decoration: underline;
-  
 }
 
-div.footer div.contact .social-icon {
+div.footer div.footer-contact .social-icon {
   color: #525252;
   margin-right: 12px;
 }
 
-div.footer div.contact .social-icon:hover{
+div.footer div.footer-contact .social-icon:hover{
   color: #1a1a1a;
 }
 
