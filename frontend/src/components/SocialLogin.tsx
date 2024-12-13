@@ -23,6 +23,7 @@ interface SocialLoginProps {
   facebook?: boolean
   apple?: boolean
   google?: boolean
+  redirectToHomepage?: boolean
   className?: string
   onError?: (error: any) => void
   onSignInError?: () => void
@@ -33,6 +34,7 @@ const SocialLogin = ({
   facebook,
   apple,
   google = true,
+  redirectToHomepage,
   className,
   onError,
   onSignInError,
@@ -56,6 +58,8 @@ const SocialLogin = ({
         if (onBlackListed) {
           onBlackListed()
         }
+      } else if (redirectToHomepage) {
+        navigate('/')
       } else {
         navigate(0)
       }

@@ -20,6 +20,7 @@ import '@/assets/css/signin.css'
 
 const SignIn = () => {
   const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
@@ -45,6 +46,7 @@ const SignIn = () => {
       }
 
       const res = await UserService.signin(data)
+
       if (res.status === 200) {
         if (res.data.blacklisted) {
           await UserService.signout(false)
@@ -59,10 +61,12 @@ const SignIn = () => {
             if (from === 'checkout') {
               navigate(`/checkout${window.location.search}`)
             } else {
-              navigate(0)
+              // navigate(0)
+              navigate('/')
             }
           } else {
-            navigate(0)
+            // navigate(0)
+            navigate('/')
           }
         }
       } else {
@@ -136,13 +140,13 @@ const SignIn = () => {
                 <Link href="/forgot-password">{strings.RESET_PASSWORD}</Link>
               </div>
 
-              <SocialLogin />
+              <SocialLogin redirectToHomepage />
 
               <div className="signin-buttons">
-                <Button variant="contained" size="small" href="/sign-up" className="btn-secondary btn-margin btn-margin-bottom">
+                <Button variant="outlined" color="primary" href="/sign-up" className="btn-margin btn-margin-bottom">
                   {strings.SIGN_UP}
                 </Button>
-                <Button type="submit" variant="contained" size="small" className="btn-primary btn-margin btn-margin-bottom">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom">
                   {strings.SIGN_IN}
                 </Button>
               </div>
