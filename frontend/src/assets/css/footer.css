@@ -96,7 +96,6 @@ div.footer section.payment {
   flex-direction: row;
   justify-content: flex-end;
   border-top: 1px solid #dbdbdb;
-  border-bottom: 1px solid #dbdbdb;
   padding: 10px 0;
 }
 
