@@ -186,7 +186,8 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
             }
           </Button>
           <Button
-            variant="contained"
+            variant="outlined"
+            color="primary"
             className="btn-secondary btn-margin-bottom btn"
             size="small"
             onClick={() => {

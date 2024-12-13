@@ -394,10 +394,10 @@ const SignUp = () => {
                 <SocialLogin />
 
                 <div className="buttons">
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
                     {strings.SIGN_UP}
                   </Button>
-                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
+                  <Button variant="outlined" color="primary" className="btn-margin-bottom" href="/">
                     {' '}
                     {commonStrings.CANCEL}
                   </Button>
