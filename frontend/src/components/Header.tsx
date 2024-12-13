@@ -32,13 +32,15 @@ import {
   LocationOn as LocationIcon,
   PrivacyTip as PrivacyIcon,
   QuestionAnswer as FaqIcon,
+  PersonOutline as SignUpIcon,
 } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { CircleFlag } from 'react-circle-flags'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
-import { strings } from '@/lang/header'
 import { strings as commonStrings } from '@/lang/common'
+import { strings as suStrings } from '@/lang/sign-up'
+import { strings } from '@/lang/header'
 import * as UserService from '@/services/UserService'
 import * as NotificationService from '@/services/NotificationService'
 import Avatar from './Avatar'
@@ -398,21 +400,26 @@ const Header = ({
             </Drawer>
             {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
-              {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn" style={{ minWidth: '170px' }}>
-                  {strings.SIGN_IN}
-                </Button>
-              )}
               {isLoaded && !loading && (
-                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn">
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn bold">
                   {StripeService.getCurrency()}
                 </Button>
               )}
               {isLoaded && !loading && (
-                <Button variant="contained" onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
+                <Button variant="contained" onClick={handleLangMenuOpen} disableElevation className="btn">
                   <div className="language">
                     <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />
                   </div>
+                </Button>
+              )}
+              {!hideSignin && !isSignedIn && isLoaded && !loading && (
+                <Button variant="contained" size="small" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn">
+                  {suStrings.SIGN_UP}
+                </Button>
+              )}
+              {!hideSignin && !isSignedIn && isLoaded && !loading && (
+                <Button variant="contained" size="small" startIcon={<LoginIcon />} href="/sign-in" disableElevation className="btn">
+                  {strings.SIGN_IN}
                 </Button>
               )}
               {isSignedIn && (
@@ -430,7 +437,7 @@ const Header = ({
             </div>
             <div className="header-mobile">
               {!loading && (
-                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn">
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn bold">
                   {StripeService.getCurrency()}
                 </Button>
               )}
