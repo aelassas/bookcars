@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { Close as CloseIcon } from '@mui/icons-material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Close as CloseIcon, Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -58,6 +58,7 @@ const Search = () => {
   const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
   const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
@@ -254,8 +255,9 @@ const Search = () => {
                 <>
                   {pickupLocation.latitude && pickupLocation.longitude && (
                     <Map
-                      position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
+                      position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
                       initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                      locations={[pickupLocation]}
                       parkingSpots={pickupLocation.parkingSpots}
                       className="map"
                     >
@@ -271,6 +273,7 @@ const Search = () => {
                       </button>
                     </Map>
                   )}
+
                   <CarFilter
                     className="filter"
                     pickupLocation={pickupLocation}
@@ -281,17 +284,35 @@ const Search = () => {
                     collapse
                     onSubmit={handleCarFilterSubmit}
                   />
-                  <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
-                  <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
-                  <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
-                  <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
-                  <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
-                  <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
-                  <CarType className="filter" onChange={handleCarTypeFilterChange} />
-                  <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
-                  <MileageFilter className="filter" onChange={handleMileageFilterChange} />
-                  <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
-                  <DepositFilter className="filter" onChange={handleDepositFilterChange} />
+
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<FiltersIcon />}
+                    disableElevation
+                    fullWidth
+                    onClick={() => setShowFilters((prev) => !prev)}
+                  >
+                    {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
+                  </Button>
+
+                  {
+                    showFilters && (
+                      <>
+                        <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
+                        <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
+                        <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
+                        <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
+                        <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
+                        <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
+                        <CarType className="filter" onChange={handleCarTypeFilterChange} />
+                        <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
+                        <MileageFilter className="filter" onChange={handleMileageFilterChange} />
+                        <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
+                        <DepositFilter className="filter" onChange={handleDepositFilterChange} />
+                      </>
+                    )
+                  }
                 </>
               )}
             </div>
@@ -353,8 +374,9 @@ const Search = () => {
           <DialogContent className="map-dialog-content">
             {pickupLocation && (
               <Map
-                position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
+                position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
                 initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                locations={[pickupLocation]}
                 parkingSpots={pickupLocation.parkingSpots}
                 className="map"
               >
