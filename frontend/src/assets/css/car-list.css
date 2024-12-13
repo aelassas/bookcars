@@ -2,6 +2,7 @@ section.car-list {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 80px;
 }
 
 section.car-list .empty-list {
