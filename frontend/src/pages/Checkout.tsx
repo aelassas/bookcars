@@ -890,7 +890,13 @@ const Checkout = () => {
                     )}
                     <div className="checkout-buttons">
                       {(!clientSecret || payLater) && (
-                        <Button type="submit" variant="contained" className="btn-checkout btn-margin-bottom" size="small" disabled={loading}>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          className="btn-checkout btn-margin-bottom"
+                          aria-label="Checkout"
+                          disabled={loading}
+                        >
                           {
                             loading
                               ? <CircularProgress color="inherit" size={24} />
@@ -899,9 +905,10 @@ const Checkout = () => {
                         </Button>
                       )}
                       <Button
-                        variant="contained"
+                        variant="outlined"
+                        color="primary"
                         className="btn-cancel btn-margin-bottom"
-                        size="small"
+                        aria-label="Cancel"
                         onClick={async () => {
                           try {
                             if (bookingId && sessionId) {
