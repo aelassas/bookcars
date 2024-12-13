@@ -15,6 +15,7 @@ export default ({ mode }: { mode: string }) => {
         ':bookcars-types': path.resolve(__dirname, '../packages/bookcars-types'),
         ':bookcars-helper': path.resolve(__dirname, '../packages/bookcars-helper'),
         ':disable-react-devtools': path.resolve(__dirname, '../packages/disable-react-devtools'),
+        ':currency-converter': path.resolve(__dirname, '../packages/currency-converter'),
       },
     },
 

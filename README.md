@@ -38,9 +38,10 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Customer management
 * Multiple login options (Google, Facebook, Apple, Email)
 * Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay Later)
-* Operational Stripe Payment Gateway
 * Multiple language support (English, French, Spanish)
+* [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
+* Operational Stripe Payment Gateway
 * Responsive admin dashboard and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
@@ -83,7 +84,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 ### Alternative Way
 -->
 
-You can also install the Android App by downloading the APK and installing it on any Android device.
+You can install the Android App by downloading the APK and installing it on any Android device.
 
 * [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk)
 * Login: jdoe@bookcars.ma
@@ -109,8 +110,8 @@ You can also install the Android App by downloading the APK and installing it on
     1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
-11. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
-12. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 14. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 15. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)

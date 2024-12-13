@@ -1,0 +1,16 @@
+form.newsletter-form div.form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+form.newsletter-form div.form .input {
+  margin-right: 15px;
+  max-width: 240px;
+}
+
+form.newsletter-form div.form .btn {
+  height: 40px;
+  padding: 0 30px;
+  min-width: 120px;
+}

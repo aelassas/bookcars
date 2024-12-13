@@ -31,6 +31,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './backend/package-lock.json'
-    - run: npm install
+    - run: npm install --force
     - run: npm run lint
     - run: npm run build

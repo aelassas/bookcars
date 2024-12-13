@@ -7,7 +7,7 @@ const strings = new LocalizedStrings({
     DROP_OFF_LOCATION: 'Lieu de restitution',
   },
   en: {
-    PICK_UP_LOCATION: 'Pickup location',
+    PICK_UP_LOCATION: 'Pick-up location',
     DROP_OFF_LOCATION: 'Drop-off location',
   },
   es: {

@@ -11,6 +11,23 @@
   z-index: 1401 !important;
 }
 
+.menu div.language,
+.btn div.language {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.menu div.language .flag {
+  width: 24px;
+  margin-right: 10px;
+}
+
+.menu .menu-lnk {
+  color: #1a1a1a;
+}
+
+
 .header-action {
   margin-right: 20px;
 }
@@ -26,6 +43,10 @@
 .header .btn {
   background-color: transparent !important;
   color: #121212 !important;
+}
+
+.header .btn:hover {
+  background-color: rgba(0, 0, 0, 0.07) !important;
 }
 
 .header .logo {

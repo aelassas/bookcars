@@ -12,7 +12,7 @@ sudo chmod +x -R /opt/bookcars/__scripts
 cd /opt/bookcars/backend
 sudo rm -rf build
 
-npm install
+npm install --force
 npm run build
 
 sudo rm -rf /var/www/bookcars/backend

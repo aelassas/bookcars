@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { Close as CloseIcon } from '@mui/icons-material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Close as CloseIcon, Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -26,6 +26,7 @@ import CarRangeFilter from '@/components/CarRangeFilter'
 import CarMultimediaFilter from '@/components/CarMultimediaFilter'
 import CarSeatsFilter from '@/components/CarSeatsFilter'
 import Map from '@/components/Map'
+import Progress from '@/components/Progress'
 
 import ViewOnMap from '@/assets/img/view-on-map.png'
 
@@ -57,6 +58,8 @@ const Search = () => {
   const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
+  const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -243,132 +246,158 @@ const Search = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} strict={false}>
-      {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
-        <div className="search">
-          <div className="col-1">
-            {!loading && (
-              <>
-                {pickupLocation.latitude && pickupLocation.longitude && (
-                  <Map
-                    position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
-                    initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                    parkingSpots={pickupLocation.parkingSpots}
-                    className="map"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOpenMapDialog(true)
-                      }}
-                      className="view-on-map"
+    <>
+      <Layout onLoad={onLoad} strict={false}>
+        {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
+          <div className="search">
+            <div className="col-1">
+              {!loading && (
+                <>
+                  {pickupLocation.latitude && pickupLocation.longitude && (
+                    <Map
+                      position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
+                      initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                      locations={[pickupLocation]}
+                      parkingSpots={pickupLocation.parkingSpots}
+                      className="map"
                     >
-                      <img alt="View On Map" src={ViewOnMap} />
-                      <span>{strings.VIEW_ON_MAP}</span>
-                    </button>
-                  </Map>
-                )}
-                <CarFilter
-                  className="filter"
-                  pickupLocation={pickupLocation}
-                  dropOffLocation={dropOffLocation}
-                  from={from}
-                  to={to}
-                  accordion
-                  collapse
-                  onSubmit={handleCarFilterSubmit}
-                />
-                <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
-                <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
-                <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
-                <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
-                <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
-                <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
-                <CarType className="filter" onChange={handleCarTypeFilterChange} />
-                <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
-                <MileageFilter className="filter" onChange={handleMileageFilterChange} />
-                <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
-                <DepositFilter className="filter" onChange={handleDepositFilterChange} />
-              </>
-            )}
-          </div>
-          <div className="col-2">
-            <CarList
-              carSpecs={carSpecs}
-              suppliers={supplierIds}
-              carType={carType}
-              gearbox={gearbox}
-              mileage={mileage}
-              fuelPolicy={fuelPolicy}
-              deposit={deposit}
-              pickupLocation={pickupLocation._id}
-              dropOffLocation={dropOffLocation._id}
-              // pickupLocationName={pickupLocation.name}
-              loading={loading}
-              from={from}
-              to={to}
-              ranges={ranges}
-              multimedia={multimedia}
-              rating={rating}
-              seats={seats}
-            // distance={distance}
-            />
-          </div>
-        </div>
-      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenMapDialog(true)
+                        }}
+                        className="view-on-map"
+                      >
+                        <img alt="View On Map" src={ViewOnMap} />
+                        <span>{strings.VIEW_ON_MAP}</span>
+                      </button>
+                    </Map>
+                  )}
 
-      <Dialog
-        fullWidth={env.isMobile}
-        maxWidth={false}
-        open={openMapDialog}
-        onClose={() => {
-          setOpenMapDialog(false)
-        }}
-        sx={{
-          '& .MuiDialog-container': {
-            '& .MuiPaper-root': {
-              width: '80%',
-              height: '800px',
+                  <CarFilter
+                    className="filter"
+                    pickupLocation={pickupLocation}
+                    dropOffLocation={dropOffLocation}
+                    from={from}
+                    to={to}
+                    accordion
+                    collapse
+                    onSubmit={handleCarFilterSubmit}
+                  />
+
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<FiltersIcon />}
+                    disableElevation
+                    fullWidth
+                    onClick={() => setShowFilters((prev) => !prev)}
+                  >
+                    {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
+                  </Button>
+
+                  {
+                    showFilters && (
+                      <>
+                        <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
+                        <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
+                        <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
+                        <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
+                        <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
+                        <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
+                        <CarType className="filter" onChange={handleCarTypeFilterChange} />
+                        <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
+                        <MileageFilter className="filter" onChange={handleMileageFilterChange} />
+                        <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
+                        <DepositFilter className="filter" onChange={handleDepositFilterChange} />
+                      </>
+                    )
+                  }
+                </>
+              )}
+            </div>
+            <div className="col-2">
+              <CarList
+                carSpecs={carSpecs}
+                suppliers={supplierIds}
+                carType={carType}
+                gearbox={gearbox}
+                mileage={mileage}
+                fuelPolicy={fuelPolicy}
+                deposit={deposit}
+                pickupLocation={pickupLocation._id}
+                dropOffLocation={dropOffLocation._id}
+                // pickupLocationName={pickupLocation.name}
+                loading={loading}
+                from={from}
+                to={to}
+                ranges={ranges}
+                multimedia={multimedia}
+                rating={rating}
+                seats={seats}
+                // distance={distance}
+                onLoad={() => setLoadingPage(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        <Dialog
+          fullWidth={env.isMobile}
+          maxWidth={false}
+          open={openMapDialog}
+          onClose={() => {
+            setOpenMapDialog(false)
+          }}
+          sx={{
+            '& .MuiDialog-container': {
+              '& .MuiPaper-root': {
+                width: '80%',
+                height: '800px',
+              },
             },
-          },
-        }}
-      >
-        <DialogTitle>
-          <Box display="flex" justifyContent="flex-end">
-            <Box>
-              <IconButton
-                onClick={() => {
-                  setOpenMapDialog(false)
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
+          }}
+        >
+          <DialogTitle>
+            <Box display="flex" justifyContent="flex-end">
+              <Box>
+                <IconButton
+                  onClick={() => {
+                    setOpenMapDialog(false)
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        </DialogTitle>
-        <DialogContent className="map-dialog-content">
-          {pickupLocation && (
-            <Map
-              position={[pickupLocation.latitude || 36.966428, pickupLocation.longitude || -95.844032]}
-              initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-              parkingSpots={pickupLocation.parkingSpots}
-              className="map"
-            >
-              <button
-                type="button"
-                onClick={() => { }}
-                className="view-on-map"
+          </DialogTitle>
+          <DialogContent className="map-dialog-content">
+            {pickupLocation && (
+              <Map
+                position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
+                initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                locations={[pickupLocation]}
+                parkingSpots={pickupLocation.parkingSpots}
+                className="map"
               >
-                <img alt="View On Map" src={ViewOnMap} />
-                <span>{strings.VIEW_ON_MAP}</span>
-              </button>
-            </Map>
-          )}
-        </DialogContent>
-      </Dialog>
+                <button
+                  type="button"
+                  onClick={() => { }}
+                  className="view-on-map"
+                >
+                  <img alt="View On Map" src={ViewOnMap} />
+                  <span>{strings.VIEW_ON_MAP}</span>
+                </button>
+              </Map>
+            )}
+          </DialogContent>
+        </Dialog>
 
-      {noMatch && <NoMatch hideHeader />}
-    </Layout>
+        {noMatch && <NoMatch hideHeader />}
+      </Layout>
+
+      {loadingPage && <Progress />}
+    </>
   )
 }
 

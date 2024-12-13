@@ -44,8 +44,10 @@ import { strings as settingsStrings } from '@/lang/settings'
 import { strings as signInStrings } from '@/lang/sign-in'
 import { strings as signUpStrings } from '@/lang/sign-up'
 import { strings as tosStrings } from '@/lang/tos'
-
-// import 'github-fork-ribbon-css/gh-fork-ribbon.css'
+import { strings as newsletterFormStrings } from '@/lang/newsletter-form'
+import { strings as privacyStrings } from '@/lang/privacy'
+import { strings as faqListStrings } from '@/lang/faq-list'
+import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
@@ -56,12 +58,12 @@ if (env.isProduction) {
 }
 
 let language = env.DEFAULT_LANGUAGE
-const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')
 let lang = UserService.getQueryLanguage()
 
 if (lang) {
   if (!env.LANGUAGES.includes(lang)) {
-    lang = localStorage.getItem('bc-language')
+    lang = localStorage.getItem('bc-fe-language')
 
     if (lang && !env.LANGUAGES.includes(lang)) {
       lang = env.DEFAULT_LANGUAGE
@@ -105,7 +107,7 @@ if (lang) {
   if (user && user.language) {
     storedLang = user.language
   } else {
-    const slang = localStorage.getItem('bc-language')
+    const slang = localStorage.getItem('bc-fe-language')
     if (slang && slang.length === 2) {
       storedLang = slang
     }
@@ -145,6 +147,10 @@ if (lang) {
     signUpStrings.setLanguage(_lang)
     tosStrings.setLanguage(_lang)
     carSpecsStrings.setLanguage(_lang)
+    newsletterFormStrings.setLanguage(_lang)
+    privacyStrings.setLanguage(_lang)
+    faqListStrings.setLanguage(_lang)
+    checkoutStatusStrings.setLanguage(_lang)
   }
 
   if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
@@ -166,25 +172,25 @@ const isEs = language === 'es'
 
 const theme = createTheme(
   {
-    // palette: {
-    //   primary: {
-    //     main: '#1976D2',
-    //     contrastText: '#121212',
-    //     dark: '#1976D2',
-    //   },
-    // },
+    palette: {
+      primary: {
+        main: '#1a1a1a',
+        // contrastText: '#003B95',
+        // dark: '#003B95',
+      },
+    },
     typography: {
       fontFamily: [
-        'Roboto',
-        "'Helvetica Neue'",
-        'Arial',
-        'sans-serif',
-        "'Apple Color Emoji'",
-        "'Segoe UI Emoji'",
-        "'Segoe UI Symbol'",
         '-apple-system',
         'BlinkMacSystemFont',
-        "'Segoe UI'",
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
       ].join(','),
     },
     components: {
@@ -204,19 +210,19 @@ const theme = createTheme(
           },
         },
       },
-      MuiSwitch: {
-        styleOverrides: {
-          root: {
-            '& .Mui-checked': {
-              color: '#1976D2 !important',
-            },
-            '& .Mui-checked+.MuiSwitch-track': {
-              opacity: 0.7,
-              backgroundColor: '#1976D2 !important',
-            },
-          },
-        },
-      },
+      // MuiSwitch: {
+      //   styleOverrides: {
+      //     root: {
+      //       '& .Mui-checked': {
+      //         color: '#1976D2 !important',
+      //       },
+      //       '& .Mui-checked+.MuiSwitch-track': {
+      //         opacity: 0.7,
+      //         backgroundColor: '#1976D2 !important',
+      //       },
+      //     },
+      //   },
+      // },
       MuiAutocomplete: {
         styleOverrides: {
           root: {
@@ -264,14 +270,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         pauseOnHover
         theme="dark"
       />
-      {/* <a
-        className="github-fork-ribbon fixed left-bottom"
-        href="https://github.com/aelassas/bookcars"
-        data-ribbon="Fork me on GitHub"
-        title="Fork me on GitHub"
-      >
-        Fork me on GitHub
-      </a> */}
     </CssBaseline>
   </ThemeProvider>,
 )

@@ -1,0 +1,31 @@
+div.faq-list {
+  width: 100%;
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+div.faq-list h2 {
+  width: fit-content;
+}
+
+div.faq-list div.questions {
+  margin: 20px 120px 70px 120px;
+  max-width: 1068px;
+}
+
+div.faq-list div.questions .accordion-title {
+  font-weight: 500;
+}
+
+
+div.faq-list div.questions .accordion-details {
+  color: #1a1a1a;
+}
+
+@media only screen and (width <=960px) {
+  div.faq-list div.questions {
+    margin: 20px 0 70px 0;
+  }
+}

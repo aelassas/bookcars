@@ -1,0 +1,15 @@
+div.faq {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+  padding: 50px 10%;
+  min-height: 100vh;
+}
+
+@media only screen and (width <=960px) {
+  div.faq {
+    padding: 50px 0;
+  }
+}

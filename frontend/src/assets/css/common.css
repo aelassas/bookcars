@@ -4,6 +4,14 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 .buttons button {
   margin-right: 15px;
   margin-left: 0 !important;

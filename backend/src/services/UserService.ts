@@ -117,7 +117,7 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
       { withCredentials: true }
     )
     .then((res) => {
-      localStorage.setItem('bc-user', JSON.stringify(res.data))
+      localStorage.setItem('bc-be-user', JSON.stringify(res.data))
       return { status: res.status, data: res.data }
     })
 
@@ -138,7 +138,7 @@ export const signout = async (redirect = true) => {
   }
 
   sessionStorage.clear()
-  localStorage.removeItem('bc-user')
+  localStorage.removeItem('bc-be-user')
   deleteAllCookies()
 
   await axiosInstance
@@ -203,12 +203,12 @@ export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<numbe
  * @returns {string}
  */
 export const getLanguage = (): string => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+  const user = JSON.parse(localStorage.getItem('bc-be-user') ?? 'null')
 
   if (user && user.language) {
     return user.language as string
   }
-  const lang = localStorage.getItem('bc-language')
+  const lang = localStorage.getItem('bc-be-language')
   if (lang && lang.length === 2) {
     return lang
   }
@@ -243,9 +243,9 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
     )
     .then((res) => {
       if (res.status === 200) {
-        const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+        const user = JSON.parse(localStorage.getItem('bc-be-user') ?? 'null')
         user.language = data.language
-        localStorage.setItem('bc-user', JSON.stringify(user))
+        localStorage.setItem('bc-be-user', JSON.stringify(user))
       }
       return res.status
     })
@@ -256,7 +256,7 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
  * @param {string} lang
  */
 export const setLanguage = (lang: string) => {
-  localStorage.setItem('bc-language', lang)
+  localStorage.setItem('bc-be-language', lang)
 }
 
 /**
@@ -265,7 +265,7 @@ export const setLanguage = (lang: string) => {
  * @returns {bookcarsTypes.User|null}
  */
 export const getCurrentUser = (): bookcarsTypes.User | null => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+  const user = JSON.parse(localStorage.getItem('bc-be-user') ?? 'null')
   return user
 }
 
@@ -362,7 +362,7 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
         const user = getCurrentUser()
         if (user) {
           user.enableEmailNotifications = data.enableEmailNotifications
-          localStorage.setItem('bc-user', JSON.stringify(user))
+          localStorage.setItem('bc-be-user', JSON.stringify(user))
         }
       }
       return res.status
