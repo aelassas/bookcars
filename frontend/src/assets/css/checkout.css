@@ -1,31 +1,32 @@
-div.booking {
+div.checkout {
   display: flex;
   flex: 1 0 auto;
   flex-direction: row;
   justify-content: center;
-  margin: 45px 0;
+  margin: 80px 0 200px 0;
   transform: translate3d(0, 0, 0);
+  min-height: 100vh;
 }
 
 @media only screen and (width <=960px) {
-  div.booking {
+  div.checkout {
     flex: 0 1 auto;
   }
 
-  div.booking .map {
+  div.checkout .map {
     min-height: 0;
     height: 340px;
   }
 }
 
-div.booking .booking-form-title {
+div.checkout .checkout-form-title {
   text-align: center;
   text-transform: capitalize;
   color: #232323;
   margin-bottom: 30px;
 }
 
-div.booking div.booking-info {
+div.checkout div.checkout-info {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +35,7 @@ div.booking div.booking-info {
   margin-bottom: 20px;
 }
 
-div.booking div.booking-info span {
+div.checkout div.checkout-info span {
   color: #1a1a1a;
   display: inline-block;
   font-size: 17px;
@@ -42,9 +43,8 @@ div.booking div.booking-info span {
   margin-left: 5px;
 }
 
-div.booking div.booking-options-container,
-div.booking div.booking-details-container,
-div.booking div.payment-options-container {
+div.checkout div.checkout-details-container,
+div.checkout div.payment-options-container {
   background: #fbfbfb;
   border: 1px solid #d9d8d9;
   border-radius: 5px;
@@ -52,72 +52,59 @@ div.booking div.payment-options-container {
   margin-bottom: 15px;
 }
 
-div.booking div.booking-options,
-div.booking div.payment-options {
+div.checkout div.payment-options {
   color: #333;
   user-select: none;
 }
 
-div.booking div.payment-options span.payment-info {
+div.checkout div.payment-options span.payment-info {
   margin-left: 10px;
   color: rgb(0 0 0 / 55%);
   font-size: 13px;
 }
 
 @media only screen and (width <=960px) {
-  div.booking div.payment-options span.payment-button {
+  div.checkout div.payment-options span.payment-button {
     display: flex;
     flex-direction: column;
   }
 
-  div.booking div.payment-options span.payment-info {
+  div.checkout div.payment-options span.payment-info {
     margin-left: 0;
   }
 }
 
-div.booking div.booking-options span.booking-option-label {
-  font-weight: 700;
-}
-
-div.booking div.booking-options span.booking-option-label::after {
-  content: ' ';
-}
-
-div.booking div.booking-options span.booking-option-value {
-  color: rgb(0 0 0 / 55%);
-}
-
-div.booking div.booking-details {
+div.checkout div.checkout-details {
   display: table;
   color: #333;
   font-size: 15px;
 }
 
-div.booking div.booking-details div.booking-detail {
+div.checkout div.checkout-details div.checkout-detail {
   display: table-row;
 }
 
-div.booking div.booking-details div.booking-detail span.booking-detail-title,
-div.booking div.booking-details div.booking-detail div.booking-detail-value {
+div.checkout div.checkout-details div.checkout-detail span.checkout-detail-title,
+div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value {
   display: table-cell;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value {
+div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value {
   color: rgb(0 0 0 / 55%);
   word-break: break-word;
 }
 
-div.booking div.booking-details div.booking-detail span.booking-detail-title {
+div.checkout div.checkout-details div.checkout-detail span.checkout-detail-title {
   font-weight: 700;
   width: 250px;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
+div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value div.car-supplier {
   display: flex;
   align-items: center;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
+div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value span.car-supplier-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;
@@ -129,18 +116,18 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value span
   width: 200px;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-price {
+div.checkout div.checkout-details div.checkout-detail div.checkout-price {
   font-size: 17px;
   font-weight: 700;
   color: #333;
 }
 
-div.booking div.booking-details div.booking-detail .checklist-content {
+div.checkout div.checkout-details div.checkout-detail .checklist-content {
   color: #272727 !important;
   padding-bottom: 20px;
 }
 
-div.booking div.driver-details {
+div.checkout div.driver-details {
   background: #fbfbfb;
   border: 1px solid #d9d8d9;
   padding: 25px;
@@ -150,21 +137,21 @@ div.booking div.driver-details {
   align-items: center;
 }
 
-div.booking div.booking-tos {
+div.checkout div.checkout-tos {
   margin-top: 10px;
 }
 
-div.booking div.booking-buttons {
+div.checkout div.checkout-buttons {
   display: inline-block;
   width: 100%;
 }
 
-div.booking div.booking-buttons button,
-div.booking div.booking-buttons a {
+div.checkout div.checkout-buttons button,
+div.checkout div.checkout-buttons a {
   float: right;
 }
 
-div.booking div.payment-info {
+div.checkout div.payment-info {
   border: 1px solid #d9d8d9;
   background: #fbfbfb;
   padding: 20px;
@@ -176,18 +163,18 @@ div.booking div.payment-info {
   color: #1a1a1a;
 }
 
-div.booking div.payment-info div.payment-info-title {
+div.checkout div.payment-info div.payment-info-title {
   font-size: 20px;
   font-weight: 500;
 }
 
-div.booking div.payment-info div.payment-info-price {
+div.checkout div.payment-info div.payment-info-price {
   font-size: 18px;
   font-weight: 500;
 }
 
-div.booking .btn-checkout,
-div.booking .btn-cancel {
+div.checkout .btn-checkout,
+div.checkout .btn-cancel {
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
@@ -202,11 +189,11 @@ div.booking .btn-cancel {
   margin-left: 7px;
 }
 
-div.booking .btn-checkout {
+div.checkout .btn-checkout {
   background: #232323;
 }
 
-div.booking .btn-cancel {
+div.checkout .btn-cancel {
   background: #999;
 }
 
@@ -223,23 +210,22 @@ div.booking .btn-cancel {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
-  div.booking .booking-form {
+  div.checkout .checkout-form {
     padding: 5px;
     margin: 10px;
   }
 
-  div.booking .btn-checkout,
-  div.booking .btn-cancel {
+  div.checkout .btn-checkout,
+  div.checkout .btn-cancel {
     width: 100%;
   }
 
-  div.booking div.booking-options span.booking-option-value,
-  div.booking div.booking-details div.booking-detail span.booking-detail-title,
-  div.booking div.booking-details div.booking-detail div.booking-detail-value {
+  div.checkout div.checkout-details div.checkout-detail span.checkout-detail-title,
+  div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value {
     display: table-row;
   }
 
-  div.booking div.booking-details div.booking-detail div.booking-detail-value {
+  div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value {
     line-height: 25px;
   }
 }
@@ -247,19 +233,18 @@ div.booking .btn-cancel {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
-  div.booking .booking-form {
+  div.checkout .checkout-form {
     width: 860px;
     padding: 30px;
   }
 
-  div.booking form,
-  div.booking div.booking-options-container,
-  div.booking div.booking-details-container,
-  div.booking div.payment-options-container {
+  div.checkout form,
+  div.checkout div.checkout-details-container,
+  div.checkout div.payment-options-container {
     width: 800px;
   }
 
-  div.booking div.driver-details-form {
+  div.checkout div.driver-details-form {
     width: 390px;
   }
 }
