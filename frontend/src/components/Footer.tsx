@@ -42,11 +42,11 @@ const Footer = () => {
             <li onClick={() => navigate('/contact')}>{strings.CONTACT}</li>
             <li onClick={() => navigate('/faq')}>{strings.FAQ}</li>
           </ul>
-          <div className="contact">
+          <div className="footer-contact">
             <MailOutline className="icon" />
             <a href="mailto:info@bookcars.ma">info@bookcars.ma</a>
           </div>
-          <div className="contact">
+          <div className="footer-contact">
             <Link href="https://www.facebook.com/" target="_blank"><FacebookIcon className="social-icon" /></Link>
             <Link href="https://x.com/" target="_blank"><X className="social-icon" /></Link>
             <Link href="https://www.linkedin.com/" target="_blank"><LinkedIn className="social-icon" /></Link>
