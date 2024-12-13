@@ -247,7 +247,8 @@ const Settings = () => {
                   {commonStrings.SAVE}
                 </Button>
                 <Button
-                  variant="contained"
+                  variant="outlined"
+                  color="primary"
                   className="btn-secondary btn-margin-bottom"
                   size="small"
                   onClick={(e) => {

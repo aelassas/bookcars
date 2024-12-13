@@ -369,7 +369,8 @@ const NotificationList = ({ user }: NotificationListProps) => {
                   onClick={() => {
                     setOpenDeleteDialog(false)
                   }}
-                  variant="contained"
+                  variant="outlined"
+                  color="primary"
                   className="btn-secondary"
                 >
                   {commonStrings.CANCEL}
