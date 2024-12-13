@@ -206,13 +206,16 @@ div.car-container article span.price-days,
 div.car-container article span.price-day {
   font-size: 13px;
   color: #C1C1C1;
-  display: table-row;
-  text-align: right;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 div.car-container article span.price-day span.price-day-value {
   color: #575757;
   font-weight: 500;
+  margin-left: 5px;
 }
 
 div.car-container article div.car-info ul.car-info-list {
