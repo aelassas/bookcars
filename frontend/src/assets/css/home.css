@@ -410,6 +410,8 @@ div.home div.customer-care div.customer-care-img img {
   div.home div.search div.home-search {
     padding: 20px 10px;
     margin: -187px 20px 0 20px;
+    width: calc(100% - 20px);
+    max-width: 480px;
   }
 
   div.home div.why div.why-boxes,
