@@ -216,6 +216,7 @@ div.checkout .btn-cancel {
   div.checkout .checkout-form {
     padding: 5px;
     margin: 10px;
+    max-width: 720px;
   }
 
   div.checkout .btn-checkout,
