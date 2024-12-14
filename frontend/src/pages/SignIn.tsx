@@ -10,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
+import { strings as suStrings } from '@/lang/sign-up'
 import { strings } from '@/lang/sign-in'
 import * as UserService from '@/services/UserService'
 import Error from '@/components/Error'
@@ -144,7 +145,7 @@ const SignIn = () => {
 
               <div className="signin-buttons">
                 <Button variant="outlined" color="primary" href="/sign-up" className="btn-margin btn-margin-bottom">
-                  {strings.SIGN_UP}
+                  {suStrings.SIGN_UP}
                 </Button>
                 <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom">
                   {strings.SIGN_IN}
