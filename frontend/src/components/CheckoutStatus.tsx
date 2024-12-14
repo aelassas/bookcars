@@ -63,7 +63,9 @@ const CheckoutStatus = (
       <Toast
         title={strings.CONGRATULATIONS}
         text={success
-          ? payLater ? strings.SUCCESS_PAY_LATER : strings.SUCCESS
+          ? payLater
+            ? strings.SUCCESS_PAY_LATER
+            : strings.SUCCESS
           : strings.ERROR}
         status={status}
       />

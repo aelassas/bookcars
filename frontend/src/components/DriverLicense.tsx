@@ -27,7 +27,8 @@ const DriverLicense = ({
 }: DriverLicenseProps) => {
   const [license, setLicense] = useState(user?.license || null)
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault()
     const upload = document.getElementById('upload-license') as HTMLInputElement
     upload.value = ''
     setTimeout(() => {
@@ -98,7 +99,6 @@ const DriverLicense = ({
       )}
       <div className="actions">
         <IconButton
-          size="small"
           onClick={handleClick}
         >
           <UploadIcon className="icon" />
@@ -107,7 +107,6 @@ const DriverLicense = ({
         {license && (
           <>
             <IconButton
-              size="small"
               onClick={() => {
                 const url = `${bookcarsHelper.trimEnd(user ? env.CDN_LICENSES : env.CDN_TEMP_LICENSES, '/')}/${license}`
                 helper.downloadURI(url)
@@ -116,7 +115,6 @@ const DriverLicense = ({
               <ViewIcon className="icon" />
             </IconButton>
             <IconButton
-              size="small"
               onClick={async () => {
                 try {
                   let status = 0

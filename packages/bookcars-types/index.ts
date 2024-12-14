@@ -517,8 +517,6 @@ export interface SendEmailPayload {
   to: string
   subject: string
   message: string
-  recaptchaToken: string
-  ip: string
   isContactForm: boolean
 }
 
