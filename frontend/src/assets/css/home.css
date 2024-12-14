@@ -73,8 +73,9 @@ div.home div.home-content::after {
   width: 100%;
   top: 0;
   left: 0;
-  background: #321807;
-  opacity: 0.5;
+  /* background: #321807;
+  opacity: 0.5; */
+  background: #003B95;
   z-index: -1;
 }
 
@@ -91,18 +92,27 @@ div.home div.home-cover {
   color: #fff;
   text-align: center;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: .065rem;
+  letter-spacing: .095rem;
   padding: 0 20px;
 }
 
 div.home-subtitle {
   color: #fff;
-  font-size: 26px;
+  font-size: 28px;
+  padding-top: 10px;
+  font-weight: 400;
+  padding: 10px;
+  text-align: center;
+}
+
+div.home div.home-cover,
+div.home-subtitle {
+  font-family: "Blue Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
 }
 
 div.home div.search {
   z-index: 2;
-  background-color: #fff;
+  background-color: #FFF;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -120,8 +130,51 @@ div.home div.search div.home-search {
   width: fit-content;
 }
 
+div.home div.search div.search-header {
+  height: 52px;
+  /* width: calc(100% + 28px); */
+  width: calc(100% + 18px);
+  background-color: #003B95;
+  /* background-color: #006CE4; */
+  /* margin: -17px 0 20px 0; */
+  margin: -19px 0 20px 0;
+  border-radius: 5px;
+  content: '';
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+div.home div.search div.search-header .search-icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #FFF;
+  margin: 0 5px;
+  width: 38px;
+}
+
+div.home div.search div.search-header .search-icon {
+  font-size: 28px;
+}
+
+div.home div.search div.search-header .search-icon-btn:hover>*,
+div.home div.search div.search-header .search-icon-selected {
+  color: #FFB700;
+}
+
+div.home div.search div.search-header .search-icon-btn:hover>svg {
+  font-size: 32px;
+}
+
+div.home div.search div.search-header .search-icon-btn span {
+  font-size: 11px;
+  font-weight: 300;
+}
+
 div.home div.why {
-  background-color: #fff;
+  background-color: #FFF;
   width: 100%;
   padding: 40px 0;
   display: flex;
@@ -153,6 +206,7 @@ div.home div.why div.why-boxes div.why-box div.why-icon-wrapper {
 
 div.home div.why div.why-boxes div.why-box div.why-icon-wrapper .why-icon {
   font-size: 48px;
+  /* color: #003B95; */
 }
 
 div.home div.why div.why-boxes div.why-box div.why-text-wrapper {
@@ -163,6 +217,7 @@ div.home div.why div.why-boxes div.why-box div.why-text-wrapper {
 div.home div.why div.why-boxes div.why-box div.why-text-wrapper span.why-title {
   font-weight: bold;
   margin-bottom: 5px;
+  /* color: #003B95; */
 }
 
 div.home div.services {
@@ -212,6 +267,12 @@ div.home div.services div.services-boxes div.services-box div.services-text-wrap
 div.home div.services div.services-boxes div.services-box div.services-text-wrapper span.services-title {
   font-weight: bold;
   margin-bottom: 15px;
+}
+
+div.home div.home-suppliers-static {
+  width: 100%;
+  max-width: 840px;
+  margin: 20px 0;
 }
 
 div.home div.home-suppliers {
@@ -319,9 +380,55 @@ div.home div.car-size div.boxes div.box div.car-size-action .btn-car-size {
   width: 100%;
 }
 
-div.home div.home-map {
-  width: 80%;
-  margin: 15px 0 30px;
+div.home div.blog {
+  padding: 50px 0 100px 0;
+}
+
+div.home div.blog h1 {
+  font-weight: 500;
+  padding: 0 10px;
+  text-align: center;
+}
+
+div.home div.blog div.blog-posts {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+div.home div.blog div.blog-posts div.blog-post {
+  display: flex;
+  flex-direction: column;
+  width: 326px;
+  margin: 10px 30px 10px 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+div.home div.blog div.blog-posts div.blog-post img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+div.home div.blog div.blog-posts div.blog-post h1 {
+  min-height: 108px;
+  font-size: 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div.home div.blog div.blog-posts div.blog-post p {
+  min-height: 144px;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 div.home div.faq {
@@ -330,6 +437,11 @@ div.home div.faq {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+div.home div.home-map {
+  width: 80%;
+  margin: 15px 0 30px;
 }
 
 div.home div.customer-care {
@@ -371,6 +483,8 @@ div.home div.customer-care div.customer-care-text div.customer-care-boxes div.cu
 }
 
 div.home div.customer-care div.customer-care-text div.customer-care-boxes .customer-care-icon {
+  /* color: #006CE4; */
+  color: #003B95;
   margin-right: 10px;
 }
 
@@ -401,6 +515,10 @@ div.home div.customer-care div.customer-care-img img {
     margin-bottom: 20px;
   }
 
+  div.home-subtitle {
+    font-size: 22px;
+  }
+
   div.home-cover {
     font-size: 40px;
     font-weight: 800;
@@ -408,9 +526,12 @@ div.home div.customer-care div.customer-care-img img {
   }
 
   div.home div.search div.home-search {
-    width: calc(100% - 40px) !important;
-    padding: 20px;
-    margin-top: -187px;
+    padding: 20px 10px;
+    margin: -187px 20px 0 20px;
+  }
+
+  div.home div.home-suppliers-static {
+    width: calc(100% - 40px)
   }
 
   div.home div.why div.why-boxes,
@@ -426,6 +547,15 @@ div.home div.customer-care div.customer-care-img img {
 
   div.home div.car-size div.boxes div.box {
     margin-bottom: 30px;
+  }
+
+  div.home div.blog div.blog-posts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.home div.blog div.blog-posts div.blog-post {
+    margin-bottom: 40px;
   }
 
   div.home div.home-map {
@@ -461,13 +591,13 @@ div.home div.customer-care div.customer-care-img img {
   }
 
   div.home div.home-cover {
-    font-size: 47px;
-    font-weight: 700;
+    font-size: 68px;
+    font-weight: 800;
     margin-bottom: 5px;
   }
 
   div.home div.search div.home-search {
-    padding: 20px;
+    padding: 20px 10px;
     margin-top: -75px;
   }
 

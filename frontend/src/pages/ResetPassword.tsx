@@ -36,10 +36,12 @@ const ResetPassword = () => {
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
@@ -164,10 +166,10 @@ const ResetPassword = () => {
                 </FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
+                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
                   {commonStrings.UPDATE}
                 </Button>
-                <Button className="btn-secondary btn-margin-bottom" size="small" variant="outlined" color="primary" href="/">
+                <Button variant="outlined" color="primary" className="btn-margin-bottom" href="/">
                   {commonStrings.CANCEL}
                 </Button>
               </div>

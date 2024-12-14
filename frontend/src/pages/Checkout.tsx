@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import {
   OutlinedInput,
   InputLabel,
@@ -54,6 +53,7 @@ import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
 import Footer from '@/components/Footer'
+import useReCaptcha from '@/hooks/useRecaptcha'
 
 import '@/assets/css/checkout.css'
 
@@ -66,6 +66,7 @@ const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY)
 const Checkout = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -276,18 +277,6 @@ const Checkout = () => {
     }
   }
 
-  const handleRecaptchaVerify = useCallback(async (token: string) => {
-    try {
-      const ip = await UserService.getIP()
-      const status = await UserService.verifyRecaptcha(token, ip)
-      const valid = status === 200
-      setRecaptchaError(!valid)
-    } catch (err) {
-      helper.error(err)
-      setRecaptchaError(true)
-    }
-  }, [])
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault()
@@ -313,7 +302,16 @@ const Checkout = () => {
           return
         }
 
-        if (env.RECAPTCHA_ENABLED && recaptchaError) {
+        let recaptchaToken = ''
+        if (reCaptchaLoaded) {
+          recaptchaToken = await generateReCaptchaToken()
+          if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+            recaptchaToken = ''
+          }
+        }
+
+        if (reCaptchaLoaded && !recaptchaToken) {
+          setRecaptchaError(true)
           return
         }
 
@@ -644,7 +642,7 @@ const Checkout = () => {
                                 </span>
                               ))
                                 || ''}
-                              {(emailInfo && strings.EMAIL_INFO) || ''}
+                              {(emailInfo && emailValid && strings.EMAIL_INFO) || ''}
                             </FormHelperText>
                           </FormControl>
                           <FormControl fullWidth margin="dense">
@@ -672,12 +670,6 @@ const Checkout = () => {
                             />
                             <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                           </FormControl>
-
-                          {env.RECAPTCHA_ENABLED && (
-                            <div className="recaptcha">
-                              <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
-                            </div>
-                          )}
 
                           <div className="checkout-tos">
                             <table>
@@ -953,6 +945,7 @@ const Checkout = () => {
           <CheckoutStatus
             bookingId={bookingId}
             language={language}
+            payLater={payLater}
             status="success"
             className="status"
           />

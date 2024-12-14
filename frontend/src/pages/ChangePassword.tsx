@@ -36,10 +36,12 @@ const ChangePassword = () => {
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,9 +189,8 @@ const ChangePassword = () => {
               </Button>
               <Button
                 className="btn-margin-bottom btn-cp"
-                size="small"
                 variant="outlined"
-                color="inherit"
+                color="primary"
                 onClick={() => {
                   navigate('/')
                 }}

@@ -39,10 +39,12 @@ const Activate = () => {
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value)
+    setConfirmPasswordError(false)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
@@ -160,7 +162,7 @@ const Activate = () => {
             <h1>{strings.ACTIVATE_HEADING}</h1>
             <div className="resend-form-content">
               <span>{strings.TOKEN_EXPIRED}</span>
-              <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>
+              <Button type="button" variant="contained" className="btn-primary btn-resend" onClick={handleResend}>
                 {mStrings.RESEND}
               </Button>
               <p className="go-to-home">
@@ -204,10 +206,10 @@ const Activate = () => {
                 </FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
+                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
-                <Button className="btn-secondary btn-margin-bottom" size="small" variant="outlined" color="primary" href="/">
+                <Button variant="outlined" color="primary" className="btn-margin-bottom" href="/">
                   {commonStrings.CANCEL}
                 </Button>
               </div>
