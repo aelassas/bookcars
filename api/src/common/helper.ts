@@ -226,9 +226,9 @@ export const parseJwt = (token: string) => JSON.parse(Buffer.from(token.split('.
  * Validate JWT token structure.
  *
  * @param {string} token
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-export const validateAccessToken = async (socialSignInType: bookcarsTypes.SocialSignInType, token: string, email: string) => {
+export const validateAccessToken = async (socialSignInType: bookcarsTypes.SocialSignInType, token: string, email: string): Promise<boolean> => {
   if (socialSignInType === bookcarsTypes.SocialSignInType.Facebook) {
     try {
       parseJwt(token)
