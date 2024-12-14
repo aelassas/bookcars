@@ -26,11 +26,11 @@ div.toast div.toast-content span.title {
   margin-bottom: 15px;
 }
 
-.success {
+.toast-success {
   background-color: #43A047;
 }
 
-.error {
+.toast-error {
   background-color: #B00020;
 }
 
