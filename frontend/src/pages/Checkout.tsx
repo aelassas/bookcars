@@ -959,7 +959,7 @@ const Checkout = () => {
         )}
       </Layout>
 
-      {loadingPage && <Progress />}
+      {loadingPage && !noMatch && <Progress />}
     </>
   )
 }

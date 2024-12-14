@@ -396,7 +396,7 @@ const Search = () => {
         {noMatch && <NoMatch hideHeader />}
       </Layout>
 
-      {loadingPage && <Progress />}
+      {loadingPage && !noMatch && <Progress />}
     </>
   )
 }
