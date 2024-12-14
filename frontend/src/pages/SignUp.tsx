@@ -24,13 +24,13 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
-import useReCaptcha from '@/hooks/useRecaptcha'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 
 import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()
-  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')

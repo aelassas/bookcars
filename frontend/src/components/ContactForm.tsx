@@ -15,7 +15,7 @@ import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/contact-form'
 import * as UserService from '@/services/UserService'
-import useReCaptcha from '@/hooks/useRecaptcha'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 
 import * as helper from '@/common/helper'
 
@@ -28,7 +28,7 @@ interface ContactFormProps {
 
 const ContactForm = ({ user, className }: ContactFormProps) => {
   const navigate = useNavigate()
-  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [email, setEmail] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
