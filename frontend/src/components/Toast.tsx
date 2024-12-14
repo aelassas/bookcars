@@ -17,7 +17,7 @@ const Toast = ({ title, text, status }: ToastProps) => {
   const [close, setClose] = useState(false)
   return (
     !close && (
-      <div className={`toast ${status}`}>
+      <div className={`toast toast-${status}`}>
         {status === 'success' ? <CheckIcon className="icon" /> : <ErrorIcon className="icon" />}
         <div className="toast-content">
           {title && <span className="title">{title}</span>}
