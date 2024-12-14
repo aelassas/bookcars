@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   Dialog,
   DialogContent,
-  FormControlLabel,
+  // FormControlLabel,
   Tab,
   Tabs
 } from '@mui/material'
@@ -321,9 +321,11 @@ const Home = () => {
           <p>{strings.CAR_SIZE_TEXT}</p>
           <div className="boxes">
             <div className="box">
-              <img alt="Mini" src={Mini} />
+              <div className="box-img">
+                <img alt="Mini" src={Mini} />
+              </div>
               <div className="box-content">
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={(
                     <Checkbox
                       defaultChecked
@@ -339,7 +341,8 @@ const Home = () => {
                     />
                   )}
                   label={strings.MINI}
-                />
+                /> */}
+                <span>{strings.MINI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -351,11 +354,27 @@ const Home = () => {
                   </li>
                 </ul>
               </div>
+              <div className="car-size-action">
+                <Button
+                  variant="contained"
+                  className="btn-primary btn-car-size"
+                  aria-label="Search for a car"
+                  disabled={ranges.length === 0}
+                  onClick={() => {
+                    setRanges([bookcarsTypes.CarRange.Mini])
+                    setOpenRangeSearchFormDialog(true)
+                  }}
+                >
+                  {strings.SEARCH_FOR_CAR}
+                </Button>
+              </div>
             </div>
             <div className="box">
-              <img alt="Midi" src={Midi} />
+              <div className="box-img">
+                <img alt="Midi" src={Midi} />
+              </div>
               <div className="box-content">
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={(
                     <Checkbox
                       defaultChecked
@@ -371,7 +390,8 @@ const Home = () => {
                     />
                   )}
                   label={strings.MIDI}
-                />
+                /> */}
+                <span>{strings.MIDI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -383,11 +403,27 @@ const Home = () => {
                   </li>
                 </ul>
               </div>
+              <div className="car-size-action">
+                <Button
+                  variant="contained"
+                  className="btn-primary btn-car-size"
+                  aria-label="Search for a car"
+                  disabled={ranges.length === 0}
+                  onClick={() => {
+                    setRanges([bookcarsTypes.CarRange.Midi])
+                    setOpenRangeSearchFormDialog(true)
+                  }}
+                >
+                  {strings.SEARCH_FOR_CAR}
+                </Button>
+              </div>
             </div>
             <div className="box">
-              <img alt="Maxi" src={Maxi} />
+              <div className="box-img">
+                <img alt="Maxi" src={Maxi} />
+              </div>
               <div className="box-content">
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={(
                     <Checkbox
                       onChange={(e) => {
@@ -402,7 +438,8 @@ const Home = () => {
                     />
                   )}
                   label={strings.MAXI}
-                />
+                /> */}
+                <span>{strings.MAXI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -414,9 +451,23 @@ const Home = () => {
                   </li>
                 </ul>
               </div>
+              <div className="car-size-action">
+                <Button
+                  variant="contained"
+                  className="btn-primary btn-car-size"
+                  aria-label="Search for a car"
+                  disabled={ranges.length === 0}
+                  onClick={() => {
+                    setRanges([bookcarsTypes.CarRange.Maxi])
+                    setOpenRangeSearchFormDialog(true)
+                  }}
+                >
+                  {strings.SEARCH_FOR_CAR}
+                </Button>
+              </div>
             </div>
           </div>
-          <Button
+          {/* <Button
             variant="contained"
             className="btn-primary btn-home"
             disabled={ranges.length === 0}
@@ -425,9 +476,8 @@ const Home = () => {
             }}
           >
             {strings.SEARCH_FOR_CAR}
-          </Button>
+          </Button> */}
         </div>
-
         <div className="faq">
           <FaqList />
         </div>
@@ -525,9 +575,9 @@ const Home = () => {
         <DialogContent className="search-dialog-content">
           <SearchForm
             ranges={ranges}
-            onCancel={() => {
-              setOpenRangeSearchFormDialog(false)
-            }}
+          // onCancel={() => {
+          //   setOpenRangeSearchFormDialog(false)
+          // }}
           />
         </DialogContent>
       </Dialog>
