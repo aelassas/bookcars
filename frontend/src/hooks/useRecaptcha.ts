@@ -3,8 +3,13 @@ import env from '@/config/env.config'
 
 declare global {
   interface Window {
-    grecaptcha: any;
+    grecaptcha: any
   }
+}
+
+interface RecaptchaType {
+  reCaptchaLoaded: boolean
+  generateReCaptchaToken: (action?: string) => Promise<string>
 }
 
 const { RECAPTCHA_SITE_KEY } = env
@@ -28,7 +33,7 @@ const hideBadge = () => {
   })
 }
 
-const useReCaptcha = (): { reCaptchaLoaded: boolean; generateReCaptchaToken: (action?: string) => Promise<string> } => {
+const useReCaptcha = (): RecaptchaType => {
   const [reCaptchaLoaded, setReCaptchaLoaded] = useState(false)
 
   // Load ReCaptcha script

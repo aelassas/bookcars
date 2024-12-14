@@ -42,6 +42,7 @@ import * as UserService from '@/services/UserService'
 import * as CarService from '@/services/CarService'
 import * as LocationService from '@/services/LocationService'
 import * as StripeService from '@/services/StripeService'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import DatePicker from '@/components/DatePicker'
@@ -53,7 +54,6 @@ import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
 import Footer from '@/components/Footer'
-import useReCaptcha from '@/hooks/useRecaptcha'
 
 import '@/assets/css/checkout.css'
 
@@ -66,7 +66,7 @@ const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY)
 const Checkout = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -286,6 +286,19 @@ const Checkout = () => {
         return
       }
 
+      let recaptchaToken = ''
+      if (reCaptchaLoaded) {
+        recaptchaToken = await generateReCaptchaToken()
+        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+          recaptchaToken = ''
+        }
+      }
+
+      if (reCaptchaLoaded && !recaptchaToken) {
+        setRecaptchaError(true)
+        return
+      }
+
       if (!authenticated) {
         const _emailValid = await validateEmail(email)
         if (!_emailValid) {
@@ -299,19 +312,6 @@ const Checkout = () => {
 
         const _birthDateValid = validateBirthDate(birthDate)
         if (!_birthDateValid) {
-          return
-        }
-
-        let recaptchaToken = ''
-        if (reCaptchaLoaded) {
-          recaptchaToken = await generateReCaptchaToken()
-          if (!(await helper.verifyReCaptcha(recaptchaToken))) {
-            recaptchaToken = ''
-          }
-        }
-
-        if (reCaptchaLoaded && !recaptchaToken) {
-          setRecaptchaError(true)
           return
         }
 

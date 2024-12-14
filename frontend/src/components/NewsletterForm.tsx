@@ -14,12 +14,12 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/newsletter-form'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
-import useReCaptcha from '@/hooks/useRecaptcha'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 
 import '@/assets/css/newsletter-form.css'
 
 const NewsletterForm = () => {
-  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [email, setEmail] = useState('')
   const [emailValid, setEmailValid] = useState(true)
