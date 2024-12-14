@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import SuspenseRouter from '@/components/SuspenseRouter'
 import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
+import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { init as initGA } from '@/common/ga4'
 import ScrollToTop from '@/components/ScrollToTop'
 
@@ -35,39 +36,41 @@ const Faq = lazy(() => import('@/pages/Faq'))
 
 const App = () => (
   <GlobalProvider>
-    <SuspenseRouter window={window}>
-      <ScrollToTop />
+    <RecaptchaProvider>
+      <SuspenseRouter window={window}>
+        <ScrollToTop />
 
-      <div className="app">
-        <Suspense fallback={<></>}>
-          <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/activate" element={<Activate />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/checkout-session/:sessionId" element={<CheckoutSession />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/tos" element={<ToS />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/locations" element={<Locations />} />
-            <Route path="/suppliers" element={<Suppliers />} />
-            <Route path="/faq" element={<Faq />} />
+        <div className="app">
+          <Suspense fallback={<></>}>
+            <Routes>
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/activate" element={<Activate />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout-session/:sessionId" element={<CheckoutSession />} />
+              <Route path="/bookings" element={<Bookings />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/tos" element={<ToS />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/suppliers" element={<Suppliers />} />
+              <Route path="/faq" element={<Faq />} />
 
-            <Route path="*" element={<NoMatch />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </SuspenseRouter>
+              <Route path="*" element={<NoMatch />} />
+            </Routes>
+          </Suspense>
+        </div>
+      </SuspenseRouter>
+    </RecaptchaProvider>
   </GlobalProvider>
 )
 
