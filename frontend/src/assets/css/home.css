@@ -408,9 +408,8 @@ div.home div.customer-care div.customer-care-img img {
   }
 
   div.home div.search div.home-search {
-    width: calc(100% - 40px) !important;
-    padding: 20px;
-    margin-top: -187px;
+    padding: 20px 10px;
+    margin: -187px 20px 0 20px;
   }
 
   div.home div.why div.why-boxes,

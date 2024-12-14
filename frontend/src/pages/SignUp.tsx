@@ -1,5 +1,4 @@
-import React, { useCallback, useState } from 'react'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
+import React, { useState } from 'react'
 import {
   OutlinedInput,
   InputLabel,
@@ -25,11 +24,14 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
+import useReCaptcha from '@/hooks/useRecaptcha'
 
 import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useReCaptcha()
+
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -138,23 +140,13 @@ const SignUp = () => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
+    setPasswordsDontMatch(false)
   }
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value)
+    setPasswordsDontMatch(false)
   }
-
-  const handleRecaptchaVerify = useCallback(async (token: string) => {
-    try {
-      const ip = await UserService.getIP()
-      const status = await UserService.verifyRecaptcha(token, ip)
-      const valid = status === 200
-      setRecaptchaError(!valid)
-    } catch (err) {
-      helper.error(err)
-      setRecaptchaError(true)
-    }
-  }, [])
 
   const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTosChecked(e.target.checked)
@@ -201,7 +193,16 @@ const SignUp = () => {
         return
       }
 
-      if (env.RECAPTCHA_ENABLED && recaptchaError) {
+      let recaptchaToken = ''
+      if (reCaptchaLoaded) {
+        recaptchaToken = await generateReCaptchaToken()
+        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+          recaptchaToken = ''
+        }
+      }
+
+      if (reCaptchaLoaded && !recaptchaToken) {
+        setRecaptchaError(true)
         return
       }
 
@@ -367,12 +368,6 @@ const SignUp = () => {
                     }}
                   />
                 </FormControl>
-
-                {env.RECAPTCHA_ENABLED && (
-                  <div className="recaptcha">
-                    <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
-                  </div>
-                )}
 
                 <div className="signup-tos">
                   <table>

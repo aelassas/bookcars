@@ -291,6 +291,7 @@ const Search = () => {
                     startIcon={<FiltersIcon />}
                     disableElevation
                     fullWidth
+                    className="btn btn-filters"
                     onClick={() => setShowFilters((prev) => !prev)}
                   >
                     {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
