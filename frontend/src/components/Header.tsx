@@ -413,7 +413,7 @@ const Header = ({
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" size="small" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn">
+                <Button variant="contained" size="small" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn btn-margin">
                   {suStrings.SIGN_UP}
                 </Button>
               )}
