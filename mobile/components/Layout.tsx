@@ -133,7 +133,7 @@ const Layout = ({
 
   return (
     <View style={{ ...styles.container, ...style }}>
-      <Header title={title} hideTitle={hideTitle} loggedIn={loggedIn} reload={reload} _avatar={avatar} />
+      <Header route={route} title={title} hideTitle={hideTitle} loggedIn={loggedIn} reload={reload} _avatar={avatar} />
       {(!loading
         && ((!user && !strict) || (user && user.verified) ? (
           <AutocompleteDropdownContextProvider>{children}</AutocompleteDropdownContextProvider>

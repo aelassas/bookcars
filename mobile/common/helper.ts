@@ -3,14 +3,16 @@ import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { CommonActions, DrawerActions, RouteProp } from '@react-navigation/native'
-
+import { CommonActions, DrawerActions, NavigationRoute, RouteProp } from '@react-navigation/native'
 import mime from 'mime'
+
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
+import * as StripeService from '@/services/StripeService'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import * as toastHelper from './toastHelper'
+import * as toastHelper from '@/common/toastHelper'
+import * as env from '@/config/env.config'
 
 /**
  * Indicate whether Platform OS is Android or not.
@@ -240,7 +242,7 @@ export const getFuelPolicy = (type: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getCancellation = (cancellation: number, language: string) => {
+export const getCancellation = async (cancellation: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -248,7 +250,8 @@ export const getCancellation = (cancellation: number, language: string) => {
   } if (cancellation === 0) {
     return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(cancellation, i18n.t('CURRENCY'), language)}`
+  const _cancellation = await StripeService.convertPrice(cancellation)
+  return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_cancellation, (await StripeService.getCurrencySymbol()), language)}`
 }
 
 /**
@@ -258,7 +261,7 @@ export const getCancellation = (cancellation: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getAmendments = (amendments: number, language: string) => {
+export const getAmendments = async (amendments: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -266,7 +269,8 @@ export const getAmendments = (amendments: number, language: string) => {
   } if (amendments === 0) {
     return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   }
-  return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(amendments, i18n.t('CURRENCY'), language)}`
+  const _amendments = await StripeService.convertPrice(amendments)
+  return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_amendments, (await StripeService.getCurrencySymbol()), language)}`
 }
 
 /**
@@ -276,7 +280,7 @@ export const getAmendments = (amendments: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getTheftProtection = (theftProtection: number, language: string) => {
+export const getTheftProtection = async (theftProtection: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -284,7 +288,8 @@ export const getTheftProtection = (theftProtection: number, language: string) =>
   } if (theftProtection === 0) {
     return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(theftProtection, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')}`
+  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_theftProtection, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
 /**
@@ -294,7 +299,7 @@ export const getTheftProtection = (theftProtection: number, language: string) =>
  * @param {string} language
  * @returns {string}
  */
-export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language: string) => {
+export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -302,7 +307,8 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language
   } if (collisionDamageWaiver === 0) {
     return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(collisionDamageWaiver, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')}`
+  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_collisionDamageWaiver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
 /**
@@ -312,7 +318,7 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language
  * @param {string} language
  * @returns {string}
  */
-export const getFullInsurance = (fullInsurance: number, language: string) => {
+export const getFullInsurance = async (fullInsurance: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -320,7 +326,8 @@ export const getFullInsurance = (fullInsurance: number, language: string) => {
   } if (fullInsurance === 0) {
     return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(fullInsurance, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')}`
+  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_fullInsurance, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
 /**
@@ -330,7 +337,7 @@ export const getFullInsurance = (fullInsurance: number, language: string) => {
  * @param {string} language
  * @returns {string}
  */
-export const getAdditionalDriver = (additionalDriver: number, language: string) => {
+export const getAdditionalDriver = async (additionalDriver: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (additionalDriver === -1) {
@@ -338,7 +345,8 @@ export const getAdditionalDriver = (additionalDriver: number, language: string) 
   } if (additionalDriver === 0) {
     return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}`
   }
-  return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(additionalDriver, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')}`
+  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_additionalDriver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
 /**
@@ -365,7 +373,7 @@ export const getDaysShort = (days: number) => `${days} ${i18n.t('PRICE_DAYS_PART
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getCancellationOption = (cancellation: number, language: string, hidePlus?: boolean) => {
+export const getCancellationOption = async (cancellation: number, language: string, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -373,7 +381,8 @@ export const getCancellationOption = (cancellation: number, language: string, hi
   } if (cancellation === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(cancellation, i18n.t('CURRENCY'), language)}`
+  const _cancellation = await StripeService.convertPrice(cancellation)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_cancellation, (await StripeService.getCurrencySymbol()), language)}`
 }
 
 /**
@@ -384,7 +393,7 @@ export const getCancellationOption = (cancellation: number, language: string, hi
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getAmendmentsOption = (amendments: number, language: string, hidePlus?: boolean) => {
+export const getAmendmentsOption = async (amendments: number, language: string, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -392,7 +401,8 @@ export const getAmendmentsOption = (amendments: number, language: string, hidePl
   } if (amendments === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(amendments, i18n.t('CURRENCY'), language)}`
+  const _amendments = await StripeService.convertPrice(amendments)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_amendments, (await StripeService.getCurrencySymbol()), language)}`
 }
 
 /**
@@ -404,7 +414,7 @@ export const getAmendmentsOption = (amendments: number, language: string, hidePl
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, language: string, hidePlus?: boolean) => {
+export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: number, days: number, language: string, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -412,7 +422,8 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
   } if (collisionDamageWaiver === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(collisionDamageWaiver * days, i18n.t('CURRENCY'), language)} (${bookcarsHelper.formatPrice(collisionDamageWaiver, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`
+  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_collisionDamageWaiver * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_collisionDamageWaiver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
 /**
@@ -424,7 +435,7 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getTheftProtectionOption = (theftProtection: number, days: number, language: string, hidePlus?: boolean) => {
+export const getTheftProtectionOption = async (theftProtection: number, days: number, language: string, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -432,7 +443,8 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
   } if (theftProtection === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(theftProtection * days, i18n.t('CURRENCY'), language)} (${bookcarsHelper.formatPrice(theftProtection, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`
+  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_theftProtection * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_theftProtection, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
 /**
@@ -444,7 +456,7 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getFullInsuranceOption = (fullInsurance: number, days: number, language: string, hidePlus?: boolean) => {
+export const getFullInsuranceOption = async (fullInsurance: number, days: number, language: string, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -452,7 +464,8 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, lang
   } if (fullInsurance === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(fullInsurance * days, i18n.t('CURRENCY'), language)} (${bookcarsHelper.formatPrice(fullInsurance, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`
+  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_fullInsurance * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_fullInsurance, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
 /**
@@ -464,13 +477,14 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, lang
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getAdditionalDriverOption = (additionalDriver: number, days: number, language: string, hidePlus?: boolean) => {
+export const getAdditionalDriverOption = async (additionalDriver: number, days: number, language: string, hidePlus?: boolean) => {
   if (additionalDriver === -1) {
     return i18n.t('UNAVAILABLE')
   } if (additionalDriver === 0) {
     return i18n.t('INCLUDED')
   }
-  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(additionalDriver * days, i18n.t('CURRENCY'), language)} (${bookcarsHelper.formatPrice(additionalDriver, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`
+  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_additionalDriver * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_additionalDriver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
 /**
@@ -573,18 +587,25 @@ export const navigate = (
         navigation.dispatch((state) => {
           const { routes } = state
           const index = routes.findIndex((r) => r.name === route.name)
-          routes.splice(index, 1)
+          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
+          // _routes.splice(index, 1)
           const now = Date.now()
-          routes.push({
+          _routes[index] = {
             name: route.name,
             key: `${route.name}-${now}`,
             params,
-          })
+          }
+          // _routes.push({
+          //   name: route.name,
+          //   key: `${route.name}-${now}`,
+          //   params,
+          // })
 
           return CommonActions.reset({
             ...state,
-            routes,
-            index: routes.length - 1,
+            routes: _routes,
+            // index: routes.length - 1,
+            index,
           })
         })
         navigation.dispatch(DrawerActions.closeDrawer())
@@ -602,18 +623,26 @@ export const navigate = (
         navigation.dispatch((state) => {
           const { routes } = state
           const index = routes.findIndex((r) => r.name === 'Booking')
-          routes.splice(index, 1)
+          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
+          // _routes.splice(index, 1)
+          // const now = Date.now()
+          // _routes.push({
+          //   name: 'Booking',
+          //   key: `Booking-${now}`,
+          //   params,
+          // })
           const now = Date.now()
-          routes.push({
-            name: 'Booking',
-            key: `Booking-${now}`,
+          _routes[index] = {
+            name: route.name,
+            key: `${route.name}-${now}`,
             params,
-          })
+          }
 
           return CommonActions.reset({
             ...state,
-            routes,
-            index: routes.length - 1,
+            routes: _routes,
+            // index: routes.length - 1,
+            index,
           })
         })
         navigation.dispatch(DrawerActions.closeDrawer())
@@ -637,26 +666,31 @@ export const navigate = (
         navigation.dispatch((state) => {
           const { routes } = state
           const index = routes.findIndex((r) => r.name === 'Cars')
-          routes.splice(index, 1)
+          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
+          // _routes.splice(index, 1)
+          // const now = Date.now()
+          // _routes.push({
+          //   name: 'Cars',
+          //   key: `Cars-${now}`,
+          //   params,
+          // })
           const now = Date.now()
-          routes.push({
-            name: 'Cars',
-            key: `Cars-${now}`,
+          _routes[index] = {
+            name: route.name,
+            key: `${route.name}-${now}`,
             params,
-          })
+          }
 
           return CommonActions.reset({
             ...state,
-            routes,
-            index: routes.length - 1,
+            routes: _routes,
+            // index: routes.length - 1,
+            index,
           })
         })
         navigation.dispatch(DrawerActions.closeDrawer())
       } else {
-        navigation.navigate(
-          route.name,
-          params,
-        )
+        navigation.navigate(route.name, params)
       }
       break
     }
@@ -673,18 +707,26 @@ export const navigate = (
         navigation.dispatch((state) => {
           const { routes } = state
           const index = routes.findIndex((r) => r.name === 'Checkout')
-          routes.splice(index, 1)
+          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
+          // _routes.splice(index, 1)
+          // const now = Date.now()
+          // _routes.push({
+          //   name: 'Checkout',
+          //   key: `Checkout-${now}`,
+          //   params,
+          // })
           const now = Date.now()
-          routes.push({
-            name: 'Checkout',
-            key: `Checkout-${now}`,
+          _routes[index] = {
+            name: route.name,
+            key: `${route.name}-${now}`,
             params,
-          })
+          }
 
           return CommonActions.reset({
             ...state,
-            routes,
-            index: routes.length - 1,
+            routes: _routes,
+            // index: routes.length - 1,
+            index,
           })
         })
         navigation.dispatch(DrawerActions.closeDrawer())
@@ -698,5 +740,32 @@ export const navigate = (
     }
     default:
       break
+  }
+}
+
+type DepositFilterValue = 'value1' | 'value2' | 'value3'
+
+export const getDepositFilterValue = async (language: string, value: DepositFilterValue): Promise<string> => {
+  const currency = await StripeService.getCurrencySymbol()
+  const isCurrencyRTL = await StripeService.currencyRTL()
+
+  let depositFilterValue = 0
+
+  if (value === 'value1') {
+    depositFilterValue = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_1)
+  } else if (value === 'value2') {
+    depositFilterValue = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_2)
+  } else if (value === 'value3') {
+    depositFilterValue = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_3)
+  }
+
+  switch (language) {
+    case 'fr':
+      return `Moins de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'es':
+      return `Menos de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'en':
+    default:
+      return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
   }
 }

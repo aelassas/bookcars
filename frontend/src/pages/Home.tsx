@@ -546,7 +546,7 @@ const Home = () => {
       </div>
 
       <Dialog
-        fullWidth={env.isMobile}
+        // fullWidth={env.isMobile}
         maxWidth={false}
         open={openLocationSearchFormDialog}
         onClose={() => {
@@ -557,15 +557,15 @@ const Home = () => {
           <SearchForm
             ranges={bookcarsHelper.getAllRanges()}
             pickupLocation={pickupLocation}
-            onCancel={() => {
-              setOpenLocationSearchFormDialog(false)
-            }}
+          // onCancel={() => {
+          //   setOpenLocationSearchFormDialog(false)
+          // }}
           />
         </DialogContent>
       </Dialog>
 
       <Dialog
-        fullWidth={env.isMobile}
+        // fullWidth={env.isMobile}
         maxWidth={false}
         open={openRangeSearchFormDialog}
         onClose={() => {
