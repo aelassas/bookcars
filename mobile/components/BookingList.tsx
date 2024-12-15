@@ -180,7 +180,7 @@ const BookingList = ({
           <View style={styles.container}>
             {
               fetch && !openCancelDialog
-                ? <ActivityIndicator size="large" color="#3CB371" style={styles.indicator} />
+                ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
                 : <></>
             }
           </View>
