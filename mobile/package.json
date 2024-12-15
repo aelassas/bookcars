@@ -4,7 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../mobile",
-    "eas-build-pre-install": "npm run install:dependencies ",
+    "eas-build-pre-install": "npm run install:dependencies",
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "ts:check": "npm run ts:build",
     "start": "npm run ts:build && expo start --port 8082",
