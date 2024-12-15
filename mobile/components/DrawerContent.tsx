@@ -66,7 +66,7 @@ const DrawerContent = ({
         await UserService.setLanguage(__language)
         setLanguage(__language)
         const route = props.state.routes[index]
-        helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation, false)
+        helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation, true)
       }
 
       const currentUser = await UserService.getCurrentUser()

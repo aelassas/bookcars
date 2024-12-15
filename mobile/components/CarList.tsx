@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RouteProp } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 
 import * as helper from '@/common/helper'
@@ -34,7 +35,8 @@ interface CarListProps {
   cars?: bookcarsTypes.Car[]
   hidePrice?: boolean
   footerComponent?: React.ReactElement
-  route?: 'Cars' | 'Checkout',
+  routeName?: 'Cars' | 'Checkout',
+  route: RouteProp<StackParams, keyof StackParams>
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -61,6 +63,7 @@ const CarList = ({
   cars,
   hidePrice,
   footerComponent,
+  routeName,
   route,
   onLoad
 }: CarListProps) => {
@@ -247,25 +250,27 @@ const CarList = ({
             <RefreshControl refreshing={refreshing} onRefresh={() => {
               setRefreshing(true)
 
-              if ((route && pickupLocation && dropOffLocation && from && to) && ((route === 'Checkout' && cars && cars.length > 0) || route === 'Cars')) {
-                if (route === 'Cars') {
-                  navigation.navigate(route, {
-                    pickupLocation: pickupLocation!,
-                    dropOffLocation: dropOffLocation!,
-                    from: from!.getTime(),
-                    to: to!.getTime(),
-                    d: Date.now(),
-                  })
-                } else {
-                  navigation.navigate(route, {
-                    car: cars![0]._id,
-                    pickupLocation: pickupLocation!,
-                    dropOffLocation: dropOffLocation!,
-                    from: from!.getTime(),
-                    to: to!.getTime(),
-                    d: Date.now(),
-                  })
-                }
+              if ((routeName && pickupLocation && dropOffLocation && from && to) && ((routeName === 'Checkout' && cars && cars.length > 0) || routeName === 'Cars')) {
+                helper.navigate(route, navigation, true)
+
+                // if (route === 'Cars') {
+                //   navigation.navigate(route, {
+                //     pickupLocation: pickupLocation!,
+                //     dropOffLocation: dropOffLocation!,
+                //     from: from!.getTime(),
+                //     to: to!.getTime(),
+                //     d: Date.now(),
+                //   })
+                // } else {
+                //   navigation.navigate(route, {
+                //     car: cars![0]._id,
+                //     pickupLocation: pickupLocation!,
+                //     dropOffLocation: dropOffLocation!,
+                //     from: from!.getTime(),
+                //     to: to!.getTime(),
+                //     d: Date.now(),
+                //   })
+                // }
 
                 // navigation.dispatch((state) => {
                 //   const { routes } = state

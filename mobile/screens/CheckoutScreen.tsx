@@ -85,6 +85,14 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [additionalDriverBirthDateRequired, setAdditionalDriverBirthDateRequired] = useState(false)
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
+  const [currencySymbol, setCurrencySymbol] = useState('')
+  const [cancellationText, setCancellationText] = useState('')
+  const [amendmentsText, setAmendmentsText] = useState('')
+  const [collisionDamageWaiverText, setCollisionDamageWaiverText] = useState('')
+  const [theftProtectionText, setTheftProtectionText] = useState('')
+  const [fullInsuranceText, setFullInsuranceText] = useState('')
+  const [additionalDriverText, setAdditionalDriverText] = useState('')
+
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [license, setLicense] = useState<string | null>(null)
@@ -233,7 +241,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const _to = new Date(route.params.to)
       setTo(_to)
 
-      const _price = bookcarsHelper.calculateTotalPrice(_car, _from, _to)
+      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
       setPrice(_price)
 
       const included = (val: number) => val === 0
@@ -245,6 +253,16 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setFullInsurance(included(_car.fullInsurance))
       setLicenseRequired(false)
       setLicense(_user?.license || null)
+
+      setCurrencySymbol(await StripeService.getCurrencySymbol())
+
+      const days = bookcarsHelper.days(_from, _to)
+      setCancellationText(await helper.getCancellationOption(_car.cancellation, language))
+      setAmendmentsText(await helper.getAmendmentsOption(_car.amendments, language))
+      setCollisionDamageWaiverText(await helper.getCollisionDamageWaiverOption(_car.collisionDamageWaiver, days, language))
+      setTheftProtectionText(await helper.getTheftProtectionOption(_car.theftProtection, days, language))
+      setFullInsuranceText(await helper.getFullInsuranceOption(_car.fullInsurance, days, language))
+      setAdditionalDriverText(await helper.getAdditionalDriverOption(_car.additionalDriver, days, language))
 
       setVisible(true)
       setFormVisible(true)
@@ -455,7 +473,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     }
   }
 
-  const onCancellationChange = (checked: boolean) => {
+  const onCancellationChange = async (checked: boolean) => {
     const options = {
       cancellation: checked,
       amendments,
@@ -464,12 +482,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setCancellation(checked)
     setPrice(_price)
   }
 
-  const onAmendmentsChange = (checked: boolean) => {
+  const onAmendmentsChange = async (checked: boolean) => {
     const options = {
       cancellation,
       amendments: checked,
@@ -478,12 +496,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setAmendments(checked)
     setPrice(_price)
   }
 
-  const onCollisionDamageWaiverChange = (checked: boolean) => {
+  const onCollisionDamageWaiverChange = async (checked: boolean) => {
     const options = {
       cancellation,
       amendments,
@@ -492,12 +510,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setCollisionDamageWaiver(checked)
     setPrice(_price)
   }
 
-  const onTheftProtectionChange = (checked: boolean) => {
+  const onTheftProtectionChange = async (checked: boolean) => {
     const options = {
       cancellation,
       amendments,
@@ -506,12 +524,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setTheftProtection(checked)
     setPrice(_price)
   }
 
-  const onFullInsuranceChange = (checked: boolean) => {
+  const onFullInsuranceChange = async (checked: boolean) => {
     const options = {
       cancellation,
       amendments,
@@ -520,12 +538,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance: checked,
       additionalDriver,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setFullInsurance(checked)
     setPrice(_price)
   }
 
-  const onAdditionalDriverChange = (checked: boolean) => {
+  const onAdditionalDriverChange = async (checked: boolean) => {
     const options = {
       cancellation,
       amendments,
@@ -534,7 +552,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver: checked,
     }
-    const _price = bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
     setAdditionalDriver(checked)
     setPrice(_price)
     setAdManuallyChecked(checked)
@@ -626,6 +644,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         }
       }
 
+      const currency = await StripeService.getCurrency()
       let paid = payLater
       let canceled = false
       let paymentIntentId: string | undefined
@@ -634,7 +653,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         if (!payLater) {
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
             amount: price,
-            currency: env.STRIPE_CURRENCY_CODE,
+            currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
             name: '',
@@ -659,7 +678,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               googlePay: {
                 merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
                 testEnv: env.STRIPE_PUBLISHABLE_KEY.includes('_test_'),
-                currencyCode: env.STRIPE_CURRENCY_CODE.toUpperCase(),
+                currencyCode: currency,
               },
               applePay: {
                 merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
@@ -698,6 +717,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         return
       }
 
+      const basePrice = await bookcarsHelper.convertPrice(price, currency, env.BASE_CURRENCY)
+
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
         car: car._id as string,
@@ -713,7 +734,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
-        price,
+        price: basePrice,
       }
 
       if (adRequired && additionalDriver && addtionalDriverBirthDate) {
@@ -761,6 +782,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         <>
           {formVisible && (
             <CarList
+              route={route}
               navigation={navigation}
               pickupLocation={pickupLocation._id}
               dropOffLocation={dropOffLocation._id}
@@ -768,7 +790,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               from={from}
               to={to}
               hidePrice
-              route="Checkout"
+              routeName="Checkout"
               // header={<Text style={styles.header}>{i18n.t('CREATE_BOOKING')}</Text>}
               footerComponent={
                 <View style={styles.contentContainer}>
@@ -786,7 +808,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         value={cancellation}
                         onValueChange={onCancellationChange}
                       />
-                      <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, language)}</Text>
+                      <Text style={styles.extraText}>{cancellationText}</Text>
                     </View>
 
                     <View style={styles.extra}>
@@ -797,18 +819,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         value={amendments}
                         onValueChange={onAmendmentsChange}
                       />
-                      <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, language)}</Text>
-                    </View>
-
-                    <View style={styles.extra}>
-                      <Switch
-                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
-                        textStyle={styles.extraSwitch}
-                        label={i18n.t('COLLISION_DAMAGE_WAVER')}
-                        value={collisionDamageWaiver}
-                        onValueChange={onCollisionDamageWaiverChange}
-                      />
-                      <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</Text>
+                      <Text style={styles.extraText}>{amendmentsText}</Text>
                     </View>
 
                     <View style={styles.extra}>
@@ -819,7 +830,18 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         value={theftProtection}
                         onValueChange={onTheftProtectionChange}
                       />
-                      <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, language)}</Text>
+                      <Text style={styles.extraText}>{theftProtectionText}</Text>
+                    </View>
+
+                    <View style={styles.extra}>
+                      <Switch
+                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
+                        textStyle={styles.extraSwitch}
+                        label={i18n.t('COLLISION_DAMAGE_WAVER')}
+                        value={collisionDamageWaiver}
+                        onValueChange={onCollisionDamageWaiverChange}
+                      />
+                      <Text style={styles.extraText}>{collisionDamageWaiverText}</Text>
                     </View>
 
                     <View style={styles.extra}>
@@ -830,7 +852,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         value={fullInsurance}
                         onValueChange={onFullInsuranceChange}
                       />
-                      <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</Text>
+                      <Text style={styles.extraText}>{fullInsuranceText}</Text>
                     </View>
 
                     <View style={styles.extra}>
@@ -841,7 +863,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         value={additionalDriver}
                         onValueChange={onAdditionalDriverChange}
                       />
-                      <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</Text>
+                      <Text style={styles.extraText}>{additionalDriverText}</Text>
                     </View>
                   </View>
 
@@ -865,7 +887,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <Text style={styles.detailText}>{dropOffLocation.name}</Text>
 
                     <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                    <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatPrice(price / days, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`}</Text>
+                    <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatPrice(price / days, currencySymbol, language)}${i18n.t('DAILY')})`}</Text>
 
                     <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                     <View style={styles.supplier}>
@@ -879,7 +901,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     </View>
 
                     <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                    <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(price, i18n.t('CURRENCY'), language)}`}</Text>
+                    <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(price, currencySymbol, language)}`}</Text>
                   </View>
 
                   {!authenticated && (

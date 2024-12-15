@@ -48,10 +48,6 @@ const CURRENCIES: Currency[] = [
     code: 'GBP',
     symbol: '£',
   }
-  // {
-  //   code: 'IQD',
-  //   symbol: 'IQD',
-  // }
 ]
 
 const env = {

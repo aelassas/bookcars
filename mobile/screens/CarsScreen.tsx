@@ -28,6 +28,8 @@ import Indicator from '@/components/Indicator'
 
 const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
   const isFocused = useIsFocused()
+
+  const [language, setLanguage] = useState('')
   const [reload, setReload] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -73,8 +75,9 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats])
 
   const _init = async () => {
-    const language = await UserService.getLanguage()
-    i18n.locale = language
+    const _language = await UserService.getLanguage()
+    i18n.locale = _language
+    setLanguage(_language)
     const _pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
     setPickupLocation(_pickupLocation)
 
@@ -173,11 +176,12 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setDeposit(_deposit)
   }
 
-  return (
+  return language && (
     <Layout style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
       {!visible && <Indicator style={{ marginVertical: 10 }} />}
       {visible && pickupLocation && dropoffLocation && (
         <CarList
+          route={route}
           navigation={navigation}
           suppliers={supplierIds}
           rating={rating}
@@ -201,7 +205,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               setCarCount(data?.rowCount)
             }
           }}
-          route="Cars"
+          routeName="Cars"
           header={(
             <View>
               <SearchFormFilter
@@ -228,7 +232,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
               <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
               <FuelPolicyFilter style={styles.filter} visible={loaded} onChange={onChangeFuelPolicy} />
-              <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
+              <DepositFilter language={language} style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
 
               {loaded && (
                 <View style={styles.title}>
