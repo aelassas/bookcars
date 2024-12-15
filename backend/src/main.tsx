@@ -100,20 +100,22 @@ const theme = createTheme(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline>
-      <App />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-      />
-    </CssBaseline>
-  </ThemeProvider>,
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline>
+        <App />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover
+          theme="dark"
+        />
+      </CssBaseline>
+    </ThemeProvider>
+  </React.StrictMode>,
 )
