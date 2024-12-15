@@ -318,7 +318,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 
   return (
     <View style={styles.master}>
-      <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
+      <Header route={route} title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
 
       {language && (
         <ScrollView
