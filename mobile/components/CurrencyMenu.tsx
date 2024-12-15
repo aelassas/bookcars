@@ -44,8 +44,8 @@ const CurrencyMenu = ({
     },
     menu: {
       position: 'absolute',
-      top: 42,
-      left: -14,
+      top: 39,
+      left: -24,
     },
     menuItem: {
       width: 70,
