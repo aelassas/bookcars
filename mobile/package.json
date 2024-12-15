@@ -23,6 +23,7 @@
     "prebuild:clean": "expo prebuild --clean"
   },
   "dependencies": {
+    "@babel/runtime": "^7.26.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-navigation/drawer": "^7.0.18",
@@ -43,6 +44,7 @@
     "expo-asset": "~11.0.1",
     "expo-constants": "~17.0.3",
     "expo-device": "~7.0.1",
+    "expo-document-picker": "~13.0.1",
     "expo-image-picker": "~16.0.3",
     "expo-linking": "^7.0.3",
     "expo-localization": "~16.0.0",
@@ -69,8 +71,7 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
-    "validator": "^13.12.0",
-    "expo-document-picker": "~13.0.1"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

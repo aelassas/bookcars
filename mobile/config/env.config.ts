@@ -16,8 +16,7 @@ import {
   BC_STRIPE_PUBLISHABLE_KEY,
   BC_STRIPE_MERCHANT_IDENTIFIER,
   BC_STRIPE_COUNTRY_CODE,
-  BC_STRIPE_CURRENCY_CODE,
-  BC_CURRENCY,
+  BC_BASE_CURRENCY,
   BC_DEPOSIT_FILTER_VALUE_1,
   BC_DEPOSIT_FILTER_VALUE_2,
   BC_DEPOSIT_FILTER_VALUE_3,
@@ -42,6 +41,29 @@ export const LANGUAGES = [
     code: 'es',
     label: 'Español',
   },
+]
+
+type Currency = { code: string, symbol: string }
+
+/**
+ * The three-letter ISO 4217 alphabetic currency codes, e.g. "USD" or "EUR" and their symbols.
+ * https://docs.stripe.com/currencies
+ *
+ * @type {Currency[]}
+ */
+export const CURRENCIES: Currency[] = [
+  {
+    code: 'USD',
+    symbol: '$',
+  },
+  {
+    code: 'EUR',
+    symbol: '€',
+  },
+  {
+    code: 'GBP',
+    symbol: '£',
+  }
 ]
 
 /**
@@ -199,19 +221,11 @@ export const STRIPE_MERCHANT_IDENTIFIER: string = BC_STRIPE_MERCHANT_IDENTIFIER
 export const STRIPE_COUNTRY_CODE: string = BC_STRIPE_COUNTRY_CODE
 
 /**
- * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments.
- * Must be a supported currency: https://docs.stripe.com/currencies
+ * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR" base currency. Default is USD.
  *
  * @type {string}
  */
-export const STRIPE_CURRENCY_CODE: string = BC_STRIPE_CURRENCY_CODE
-
-/**
- * Currency. Default is $.
- *
- * @type {string}
- */
-export const CURRENCY: string = BC_CURRENCY
+export const BASE_CURRENCY: string = BC_BASE_CURRENCY || 'USD'
 
 /**
  * Deposit filter first value.
@@ -233,10 +247,3 @@ export const DEPOSIT_FILTER_VALUE_2: number = Number(BC_DEPOSIT_FILTER_VALUE_2)
  * @type {number}
  */
 export const DEPOSIT_FILTER_VALUE_3: number = Number(BC_DEPOSIT_FILTER_VALUE_3)
-
-/**
- * Check if locale is US.
- *
- * @type {boolean}
- */
-export const isUS = CURRENCY === '$'

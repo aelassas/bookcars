@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Locale, format } from 'date-fns'
@@ -10,6 +10,7 @@ import Button from './Button'
 import * as helper from '@/common/helper'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
+import * as StripeService from '@/services/StripeService'
 
 interface BookingProps {
   booking: bookcarsTypes.Booking
@@ -44,7 +45,35 @@ const Booking = ({
   const _fr = bookcarsHelper.isFrench(language)
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
 
-  return (
+  const [loading, setLoading] = useState(true)
+  const [currencySymbol, setCurrencySymbol] = useState('')
+  const [price, setPrice] = useState(0)
+  const [cancellation, setCancellation] = useState('')
+  const [amendments, setAmendments] = useState('')
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
+  const [theftProtection, setTheftProtection] = useState('')
+  const [fullInsurance, setFullInsurance] = useState('')
+  const [additionalDriver, setAdditionalDriver] = useState('')
+
+  useEffect(() => {
+    const init = async () => {
+      if (booking && car && language && days) {
+        setCurrencySymbol(await StripeService.getCurrencySymbol())
+        setPrice(await StripeService.convertPrice(booking.price!))
+        setCancellation(await helper.getCancellationOption(car.cancellation, language, true))
+        setAmendments(await helper.getAmendmentsOption(car.amendments, language, true))
+        setCollisionDamageWaiver(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, true))
+        setTheftProtection(await helper.getTheftProtectionOption(car.theftProtection, days, language, true))
+        setFullInsurance(await helper.getFullInsuranceOption(car.fullInsurance, days, language, true))
+        setAdditionalDriver(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, true))
+        setLoading(false)
+      }
+    }
+
+    init()
+  }, [booking, car.additionalDriver, car.amendments, car.cancellation, car.collisionDamageWaiver, car.fullInsurance, car.theftProtection, days, language])
+
+  return !loading && price && (
     <View key={booking._id} style={styles.bookingContainer}>
       <View style={styles.booking}>
         <View style={styles.header}>
@@ -89,7 +118,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('CANCELLATION')}</Text>
-                  <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, language, true)}</Text>
+                  <Text style={styles.extraText}>{cancellation}</Text>
                 </View>
               )}
 
@@ -97,7 +126,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('AMENDMENTS')}</Text>
-                  <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, language, true)}</Text>
+                  <Text style={styles.extraText}>{amendments}</Text>
                 </View>
               )}
 
@@ -105,7 +134,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('COLLISION_DAMAGE_WAVER')}</Text>
-                  <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, true)}</Text>
+                  <Text style={styles.extraText}>{collisionDamageWaiver}</Text>
                 </View>
               )}
 
@@ -113,7 +142,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('THEFT_PROTECTION')}</Text>
-                  <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, language, true)}</Text>
+                  <Text style={styles.extraText}>{theftProtection}</Text>
                 </View>
               )}
 
@@ -121,7 +150,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('FULL_INSURANCE')}</Text>
-                  <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, language, true)}</Text>
+                  <Text style={styles.extraText}>{fullInsurance}</Text>
                 </View>
               )}
 
@@ -129,7 +158,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
-                  <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, language, true)}</Text>
+                  <Text style={styles.extraText}>{additionalDriver}</Text>
                 </View>
               )}
             </View>
@@ -137,7 +166,7 @@ const Booking = ({
         )}
 
         <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-        <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(booking.price as number, i18n.t('CURRENCY'), language)}`}</Text>
+        <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(price, currencySymbol, language)}`}</Text>
 
         {booking.cancellation
           && !booking.cancelRequest
