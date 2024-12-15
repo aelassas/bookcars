@@ -12,5 +12,8 @@
   "devDependencies": {
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.26.0"
   }
 }

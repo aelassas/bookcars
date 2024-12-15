@@ -10,6 +10,7 @@ import Button from './Button'
 import * as helper from '@/common/helper'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
+import * as StripeService from '@/services/StripeService'
 
 interface CarProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
@@ -46,14 +47,34 @@ const Car = ({
   const fr = bookcarsHelper.isFrench(language)
 
   const [days, setDays] = useState<number>()
+  const [loading, setLoading] = useState(true)
+  const [currencySymbol, setCurrencySymbol] = useState('')
   const [totalPrice, setTotalPrice] = useState<number>()
+  const [cancellation, setCancellation] = useState('')
+  const [amendments, setAmendments] = useState('')
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
+  const [theftProtection, setTheftProtection] = useState('')
+  const [fullInsurance, setFullInsurance] = useState('')
+  const [additionalDriver, setAdditionalDriver] = useState('')
 
   useEffect(() => {
-    if (car && from && to) {
-      setDays(bookcarsHelper.days(from, to))
-      setTotalPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+    const init = async () => {
+      if (car && from && to && language) {
+        setCurrencySymbol(await StripeService.getCurrencySymbol())
+        setDays(bookcarsHelper.days(from, to))
+        setTotalPrice(await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date)))
+        setCancellation(await helper.getCancellation(car.cancellation, language))
+        setAmendments(await helper.getAmendments(car.amendments, language))
+        setCollisionDamageWaiver(await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language))
+        setTheftProtection(await helper.getTheftProtection(car.theftProtection, language))
+        setFullInsurance(await helper.getFullInsurance(car.fullInsurance, language))
+        setAdditionalDriver(await helper.getAdditionalDriver(car.additionalDriver, language))
+        setLoading(false)
+      }
     }
-  }, [car, from, to])
+
+    init()
+  }, [car, from, language, to])
 
   const styles = StyleSheet.create({
     carContainer: {
@@ -248,7 +269,7 @@ const Car = ({
     },
   })
 
-  return days && totalPrice && (
+  return !loading && days && totalPrice && (
     <View key={car._id} style={styles.carContainer}>
       {pickupLocationName && (
         <>
@@ -318,37 +339,37 @@ const Car = ({
           {car.cancellation > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getCancellation(car.cancellation, language)}</Text>
+              <Text style={styles.text}>{cancellation}</Text>
             </View>
           )}
           {car.amendments > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getAmendments(car.amendments, language)}</Text>
+              <Text style={styles.text}>{amendments}</Text>
             </View>
           )}
           {car.theftProtection > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, language)}</Text>
+              <Text style={styles.text}>{theftProtection}</Text>
             </View>
           )}
           {car.collisionDamageWaiver > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</Text>
+              <Text style={styles.text}>{collisionDamageWaiver}</Text>
             </View>
           )}
           {car.fullInsurance > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, language)}</Text>
+              <Text style={styles.text}>{fullInsurance}</Text>
             </View>
           )}
           {car.additionalDriver > -1 && (
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
-              <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, language)}</Text>
+              <Text style={styles.text}>{additionalDriver}</Text>
             </View>
           )}
         </View>
@@ -395,8 +416,8 @@ const Car = ({
           {!hidePrice && from && to && (
             <View style={styles.price}>
               <Text style={styles.priceSecondary}>{helper.getDays(days)}</Text>
-              <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(totalPrice, i18n.t('CURRENCY'), language)}`}</Text>
-              <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(totalPrice / days, i18n.t('CURRENCY'), language)}`}</Text>
+              <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(totalPrice, currencySymbol, language)}`}</Text>
+              <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(totalPrice / days, currencySymbol, language)}`}</Text>
             </View>
           )}
         </View>

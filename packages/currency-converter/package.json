@@ -11,6 +11,7 @@
   "author": "Akram El Assas",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.26.0",
     "easy-currencies": "^1.8.1"
   },
   "devDependencies": {
