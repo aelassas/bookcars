@@ -226,7 +226,7 @@ div.content {
 
 @media only screen and (width <=550px) {
   .search-dialog-content {
-    width: calc(100%- 20px);
+    width: calc(100% - 20px);
     max-width: 480px;
   }
 }
