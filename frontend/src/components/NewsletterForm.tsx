@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   FormControl,
@@ -8,26 +8,22 @@ import {
   CircularProgress,
 } from '@mui/material'
 import validator from 'validator'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/newsletter-form'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 
 import '@/assets/css/newsletter-form.css'
 
 const NewsletterForm = () => {
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
+
   const [email, setEmail] = useState('')
   const [emailValid, setEmailValid] = useState(true)
-  const [recaptchaToken, setRecaptchaToken] = useState('')
-  const [refreshReCaptcha, setRefreshReCaptcha] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-
-  const handleRecaptchaVerify = useCallback(async (token: string) => {
-    setRecaptchaToken(token)
-  }, [])
 
   const validateEmail = (_email: string) => {
     if (_email) {
@@ -53,15 +49,23 @@ const NewsletterForm = () => {
         return
       }
 
-      const ip = await UserService.getIP()
+      let recaptchaToken = ''
+      if (reCaptchaLoaded) {
+        recaptchaToken = await generateReCaptchaToken()
+        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+          recaptchaToken = ''
+        }
+
+        if (!recaptchaToken) {
+          helper.error('reCAPTCHA error')
+        }
+      }
 
       const payload: bookcarsTypes.SendEmailPayload = {
         from: email,
         to: env.CONTACT_EMAIL,
         subject: 'New Newsletter Subscription',
         message: '',
-        recaptchaToken,
-        ip,
         isContactForm: false,
       }
       const status = await UserService.sendEmail(payload)
@@ -76,7 +80,6 @@ const NewsletterForm = () => {
       helper.error(err)
     } finally {
       setSubmitting(false)
-      setRefreshReCaptcha((refresh) => !refresh)
     }
   }
 
@@ -107,7 +110,7 @@ const NewsletterForm = () => {
           <FormHelperText error={!emailValid}>{(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
         </FormControl>
 
-        <Button type="submit" variant="contained" className="btn-primary btn">
+        <Button type="submit" variant="contained" className="btn-primary btn" aria-label="Subscribe">
           {
             submitting
               ? <CircularProgress color="inherit" size={24} />
@@ -115,11 +118,6 @@ const NewsletterForm = () => {
           }
         </Button>
       </div>
-
-      <GoogleReCaptcha
-        refreshReCaptcha={refreshReCaptcha}
-        onVerify={handleRecaptchaVerify}
-      />
     </form>
   )
 }

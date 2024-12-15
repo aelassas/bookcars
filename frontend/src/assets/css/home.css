@@ -110,7 +110,9 @@ div.home div.search {
 }
 
 div.home div.search div.home-search {
-  box-shadow: 0 3px 5px -1px #0003, 0 1px 18px 0 #0000001F, 0 6px 10px 0 #00000024;
+  /* box-shadow: 0 3px 5px -1px #0003, 0 1px 18px 0 #0000001F, 0 6px 10px 0 #00000024; */
+  box-shadow: 0px 2px 16px 0px rgba(26, 26, 26, .24);
+  /* box-shadow: 0px 2px 8px 0px rgba(26, 26, 26, .16); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -273,8 +275,12 @@ div.home div.car-size div.boxes {
 
 div.home div.car-size div.boxes div.box {
   width: 326px;
-  height: 273px;
+  height: 278px;
   background-color: #fff;
+}
+
+div.home div.car-size div.boxes div.box div.box-img {
+  height: 140px;
 }
 
 div.home div.car-size div.boxes div.box img {
@@ -301,6 +307,18 @@ div.home div.car-size div.boxes div.box div.box-content span.price {
 div.home div.car-size div.boxes div.box div.box-content span.unit {
   font-size: 14px;
   color: #A9A9A9;
+}
+
+div.home div.car-size div.boxes div.box div.car-size-action {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+div.home div.car-size div.boxes div.box div.car-size-action .btn-car-size {
+  margin: 0 10px;
+  width: 100%;
 }
 
 div.home div.home-map {
@@ -392,9 +410,10 @@ div.home div.customer-care div.customer-care-img img {
   }
 
   div.home div.search div.home-search {
-    width: calc(100% - 40px) !important;
-    padding: 20px;
-    margin-top: -187px;
+    padding: 20px 10px;
+    margin: -187px 20px 0 20px;
+    width: calc(100% - 20px);
+    max-width: 480px;
   }
 
   div.home div.why div.why-boxes,

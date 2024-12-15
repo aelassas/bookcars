@@ -558,7 +558,7 @@ const BookingList = ({
         </DialogContent>
         <DialogActions className="dialog-actions">
           {!cancelRequestProcessing && (
-            <Button onClick={handleCloseCancelBooking} variant="contained" className="btn-secondary">
+            <Button onClick={handleCloseCancelBooking} variant="outlined" color="primary" className="btn-secondary">
               {commonStrings.CLOSE}
             </Button>
           )}

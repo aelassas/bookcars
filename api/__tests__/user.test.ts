@@ -1860,20 +1860,40 @@ describe('POST /api/verify-recaptcha/:token/:ip', () => {
 
 describe('POST /api/send-email', () => {
   it('should send an email', async () => {
-    // test failure (recaptcha not valid)
-    const ip = '134.236.60.166'
-    const recaptchaToken = 'XXXXXX'
-    const payload = {
-      from: 'no-replay@bookcars.ma',
+    // test success (contact form)
+    const payload: bookcarsTypes.SendEmailPayload = {
+      from: 'no-reply@bookcars.ma',
       to: 'test@test.com',
       subject: 'test',
       message: 'test message',
-      recaptchaToken,
-      ip,
+      isContactForm: true,
     }
-    const res = await request(app)
+    let res = await request(app)
+      .post('/api/send-email')
+      .set('Origin', env.FRONTEND_HOST)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+
+    // test success (newsletter form)
+    payload.isContactForm = false
+    payload.message = ''
+    res = await request(app)
+      .post('/api/send-email')
+      .set('Origin', env.FRONTEND_HOST)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+
+    // test failure (no Origin)
+    res = await request(app)
       .post('/api/send-email')
       .send(payload)
     expect(res.statusCode).toBe(400)
+
+    // test failure (Not allowed by CORS)
+    res = await request(app)
+      .post('/api/send-email')
+      .set('Origin', 'https://unknown.com')
+      .send(payload)
+    expect(res.statusCode).toBe(500)
   })
 })

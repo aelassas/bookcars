@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
+import React, { useEffect, useState } from 'react'
 import {
   OutlinedInput,
   InputLabel,
@@ -16,6 +15,8 @@ import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/contact-form'
 import * as UserService from '@/services/UserService'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
+
 import * as helper from '@/common/helper'
 
 import '@/assets/css/contact-form.css'
@@ -27,14 +28,13 @@ interface ContactFormProps {
 
 const ContactForm = ({ user, className }: ContactFormProps) => {
   const navigate = useNavigate()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [email, setEmail] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
-  const [recaptchaToken, setRecaptchaToken] = useState('')
-  const [refreshReCaptcha, setRefreshReCaptcha] = useState(false)
   const [sending, setSending] = useState(false)
 
   useEffect(() => {
@@ -74,29 +74,33 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
     setMessage(e.target.value)
   }
 
-  const handleRecaptchaVerify = useCallback(async (token: string) => {
-    setRecaptchaToken(token)
-  }, [])
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      setSending(true)
       e.preventDefault()
+      setSending(true)
 
       const _emailValid = await validateEmail(email)
       if (!_emailValid) {
         return
       }
 
-      const ip = await UserService.getIP()
+      let recaptchaToken = ''
+      if (reCaptchaLoaded) {
+        recaptchaToken = await generateReCaptchaToken()
+        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+          recaptchaToken = ''
+        }
+
+        if (!recaptchaToken) {
+          helper.error('reCAPTCHA error')
+        }
+      }
 
       const payload: bookcarsTypes.SendEmailPayload = {
         from: email,
         to: env.CONTACT_EMAIL,
         subject,
         message,
-        recaptchaToken,
-        ip,
         isContactForm: true,
       }
       const status = await UserService.sendEmail(payload)
@@ -115,7 +119,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
       helper.error(err)
     } finally {
       setSending(false)
-      setRefreshReCaptcha((refresh) => !refresh)
     }
   }
 
@@ -170,15 +173,8 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
           />
         </FormControl>
 
-        <div className="recaptcha">
-          <GoogleReCaptcha
-            refreshReCaptcha={refreshReCaptcha}
-            onVerify={handleRecaptchaVerify}
-          />
-        </div>
-
         <div className="buttons">
-          <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom btn" size="small" disabled={sending}>
+          <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom btn" aria-label="Send" disabled={sending}>
             {
               sending
                 ? <CircularProgress color="inherit" size={24} />
@@ -186,9 +182,10 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
             }
           </Button>
           <Button
-            variant="contained"
-            className="btn-secondary btn-margin-bottom btn"
-            size="small"
+            variant="outlined"
+            color="primary"
+            className="btn-margin-bottom btn"
+            aria-label="Cancel"
             onClick={() => {
               navigate('/')
             }}

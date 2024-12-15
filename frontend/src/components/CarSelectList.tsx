@@ -206,7 +206,7 @@ const CarSelectList = ({
           )}
         </DialogContent>
         <DialogActions className="dialog-actions">
-          <Button onClick={handleCloseDialog} variant="contained" className="btn-secondary">
+          <Button onClick={handleCloseDialog} variant="outlined" color="primary" className="btn-secondary">
             {commonStrings.CLOSE}
           </Button>
         </DialogActions>

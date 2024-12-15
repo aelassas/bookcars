@@ -3,8 +3,8 @@ import { Route, Routes } from 'react-router-dom'
 import SuspenseRouter from '@/components/SuspenseRouter'
 import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
+import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { init as initGA } from '@/common/ga4'
-import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import ScrollToTop from '@/components/ScrollToTop'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
@@ -36,7 +36,7 @@ const Faq = lazy(() => import('@/pages/Faq'))
 
 const App = () => (
   <GlobalProvider>
-    <ReCaptchaProvider>
+    <RecaptchaProvider>
       <SuspenseRouter window={window}>
         <ScrollToTop />
 
@@ -70,7 +70,7 @@ const App = () => (
           </Suspense>
         </div>
       </SuspenseRouter>
-    </ReCaptchaProvider>
+    </RecaptchaProvider>
   </GlobalProvider>
 )
 

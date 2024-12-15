@@ -334,7 +334,7 @@ const Header = ({
               </IconButton>
             )}
             {isLoaded && !loading && (
-              <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
+              <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation className="btn-primary">
                 {lang?.label}
               </Button>
             )}
@@ -346,7 +346,7 @@ const Header = ({
           </div>
           <div className="header-mobile">
             {!isSignedIn && !loading && (
-              <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
+              <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation className="btn-primary">
                 {lang?.label}
               </Button>
             )}

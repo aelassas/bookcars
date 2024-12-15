@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import {
   OutlinedInput,
   InputLabel,
@@ -43,6 +42,7 @@ import * as UserService from '@/services/UserService'
 import * as CarService from '@/services/CarService'
 import * as LocationService from '@/services/LocationService'
 import * as StripeService from '@/services/StripeService'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import DatePicker from '@/components/DatePicker'
@@ -53,6 +53,7 @@ import Progress from '@/components/Progress'
 import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/checkout.css'
 
@@ -65,6 +66,7 @@ const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY)
 const Checkout = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -275,24 +277,25 @@ const Checkout = () => {
     }
   }
 
-  const handleRecaptchaVerify = useCallback(async (token: string) => {
-    try {
-      const ip = await UserService.getIP()
-      const status = await UserService.verifyRecaptcha(token, ip)
-      const valid = status === 200
-      setRecaptchaError(!valid)
-    } catch (err) {
-      helper.error(err)
-      setRecaptchaError(true)
-    }
-  }, [])
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault()
 
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
         helper.error()
+        return
+      }
+
+      let recaptchaToken = ''
+      if (reCaptchaLoaded) {
+        recaptchaToken = await generateReCaptchaToken()
+        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
+          recaptchaToken = ''
+        }
+      }
+
+      if (reCaptchaLoaded && !recaptchaToken) {
+        setRecaptchaError(true)
         return
       }
 
@@ -309,10 +312,6 @@ const Checkout = () => {
 
         const _birthDateValid = validateBirthDate(birthDate)
         if (!_birthDateValid) {
-          return
-        }
-
-        if (env.RECAPTCHA_ENABLED && recaptchaError) {
           return
         }
 
@@ -527,413 +526,418 @@ const Checkout = () => {
     <>
       <Layout onLoad={onLoad} strict={false}>
         {visible && car && from && to && pickupLocation && dropOffLocation && (
-          <div className="booking">
-            <Paper className="booking-form" elevation={10}>
-              <h1 className="booking-form-title">
-                {' '}
-                {strings.BOOKING_HEADING}
-                {' '}
-              </h1>
-              <form onSubmit={handleSubmit}>
-                <div>
+          <>
+            <div className="checkout">
+              <Paper className="checkout-form" elevation={10}>
+                <h1 className="checkout-form-title">
+                  {' '}
+                  {strings.BOOKING_HEADING}
+                  {' '}
+                </h1>
+                <form onSubmit={handleSubmit}>
+                  <div>
 
-                  <Map
-                    position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
-                    initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                    parkingSpots={pickupLocation.parkingSpots}
-                    locations={[pickupLocation]}
-                    className="map"
-                  />
+                    <Map
+                      position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
+                      initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                      parkingSpots={pickupLocation.parkingSpots}
+                      locations={[pickupLocation]}
+                      className="map"
+                    />
 
-                  <CarList
-                    cars={[car]}
-                    // pickupLocationName={pickupLocation.name}
-                    // distance={distance}
-                    hidePrice
-                    sizeAuto
-                    onLoad={() => setLoadingPage(false)}
-                  />
+                    <CarList
+                      cars={[car]}
+                      // pickupLocationName={pickupLocation.name}
+                      // distance={distance}
+                      hidePrice
+                      sizeAuto
+                      onLoad={() => setLoadingPage(false)}
+                    />
 
-                  <CheckoutOptions
-                    car={car}
-                    from={from}
-                    to={to}
-                    language={language}
-                    clientSecret={clientSecret}
-                    onPriceChange={(value) => setPrice(value)}
-                    onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
-                    onCancellationChange={(value) => setCancellation(value)}
-                    onAmendmentsChange={(value) => setAmendments(value)}
-                    onTheftProtectionChange={(value) => setTheftProtection(value)}
-                    onCollisionDamageWaiverChange={(value) => setCollisionDamageWaiver(value)}
-                    onFullInsuranceChange={(value) => setFullInsurance(value)}
-                    onAdditionalDriverChange={(value) => setAdditionalDriver(value)}
-                  />
+                    <CheckoutOptions
+                      car={car}
+                      from={from}
+                      to={to}
+                      language={language}
+                      clientSecret={clientSecret}
+                      onPriceChange={(value) => setPrice(value)}
+                      onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
+                      onCancellationChange={(value) => setCancellation(value)}
+                      onAmendmentsChange={(value) => setAmendments(value)}
+                      onTheftProtectionChange={(value) => setTheftProtection(value)}
+                      onCollisionDamageWaiverChange={(value) => setCollisionDamageWaiver(value)}
+                      onFullInsuranceChange={(value) => setFullInsurance(value)}
+                      onAdditionalDriverChange={(value) => setAdditionalDriver(value)}
+                    />
 
-                  <div className="booking-details-container">
-                    <div className="booking-info">
-                      <CarIcon />
-                      <span>{strings.BOOKING_DETAILS}</span>
-                    </div>
-                    <div className="booking-details">
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{strings.DAYS}</span>
-                        <div className="booking-detail-value">
-                          {daysLabel}
-                        </div>
+                    <div className="checkout-details-container">
+                      <div className="checkout-info">
+                        <CarIcon />
+                        <span>{strings.BOOKING_DETAILS}</span>
                       </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
-                        <div className="booking-detail-value">{pickupLocation.name}</div>
-                      </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
-                        <div className="booking-detail-value">{dropOffLocation.name}</div>
-                      </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{strings.CAR}</span>
-                        <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
-                      </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
-                        <div className="booking-detail-value">
-                          <div className="car-supplier">
-                            <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
-                            <span className="car-supplier-name">{car.supplier.fullName}</span>
+                      <div className="checkout-details">
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{strings.DAYS}</span>
+                          <div className="checkout-detail-value">
+                            {daysLabel}
                           </div>
                         </div>
-                      </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{strings.COST}</span>
-                        <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {!authenticated && (
-                    <div className="driver-details">
-                      <div className="booking-info">
-                        <DriverIcon />
-                        <span>{strings.DRIVER_DETAILS}</span>
-                      </div>
-                      <div className="driver-details-form">
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                          <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleFullNameChange} autoComplete="off" />
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={commonStrings.EMAIL}
-                            error={!emailValid || emailRegitered}
-                            onBlur={handleEmailBlur}
-                            onChange={handleEmailChange}
-                            required
-                            autoComplete="off"
-                          />
-                          <FormHelperText error={!emailValid || emailRegitered}>
-                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                            {(emailRegitered && (
-                              <span>
-                                <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
-                                <span> </span>
-                                <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
-                              </span>
-                            ))
-                              || ''}
-                            {(emailInfo && strings.EMAIL_INFO) || ''}
-                          </FormHelperText>
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                          <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
-                          <FormHelperText error={!phoneValid}>
-                            {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                            {(phoneInfo && strings.PHONE_INFO) || ''}
-                          </FormHelperText>
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <DatePicker
-                            label={commonStrings.BIRTH_DATE}
-                            variant="outlined"
-                            required
-                            onChange={(_birthDate) => {
-                              if (_birthDate) {
-                                const _birthDateValid = validateBirthDate(_birthDate)
-
-                                setBirthDate(_birthDate)
-                                setBirthDateValid(_birthDateValid)
-                              }
-                            }}
-                            language={language}
-                          />
-                          <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
-                        </FormControl>
-
-                        {env.RECAPTCHA_ENABLED && (
-                          <div className="recaptcha">
-                            <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
+                          <div className="checkout-detail-value">{pickupLocation.name}</div>
+                        </div>
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
+                          <div className="checkout-detail-value">{dropOffLocation.name}</div>
+                        </div>
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{strings.CAR}</span>
+                          <div className="checkout-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
+                        </div>
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{commonStrings.SUPPLIER}</span>
+                          <div className="checkout-detail-value">
+                            <div className="car-supplier">
+                              <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                              <span className="car-supplier-name">{car.supplier.fullName}</span>
+                            </div>
                           </div>
-                        )}
-
-                        <div className="booking-tos">
-                          <table>
-                            <tbody>
-                              <tr>
-                                <td aria-label="tos">
-                                  <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
-                                </td>
-                                <td>
-                                  <Link href="/tos" target="_blank" rel="noreferrer">
-                                    {commonStrings.TOS}
-                                  </Link>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
                         </div>
-
-                        <SocialLogin />
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{strings.COST}</span>
+                          <div className="checkout-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                        </div>
                       </div>
                     </div>
-                  )}
 
-                  {car.supplier.licenseRequired && (
-                    <div className="driver-details">
-                      <div className="booking-info">
-                        <LicenseIcon />
-                        <span>{commonStrings.DRIVER_LICENSE}</span>
-                      </div>
-                      <div className="driver-details-form">
-                        <DriverLicense
-                          user={user}
-                          variant="outlined"
-                          onUpload={(filename) => {
-                            if (filename) {
-                              setLicenseRequired(false)
-                            } else {
-                              setLicenseRequired(true)
-                            }
-                            setLicense(filename)
-                          }}
-                          onDelete={() => {
-                            setLicenseRequired(false)
-                            setLicense(null)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {(adManuallyChecked && additionalDriver) && (
-                    <div className="driver-details">
-                      <div className="booking-info">
-                        <DriverIcon />
-                        <span>{csStrings.ADDITIONAL_DRIVER}</span>
-                      </div>
-                      <div className="driver-details-form">
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={commonStrings.FULL_NAME}
-                            required={adRequired}
-                            onChange={(e) => {
-                              setAddiontalDriverFullName(e.target.value)
-                            }}
-                            autoComplete="off"
-                          />
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={commonStrings.EMAIL}
-                            error={!addiontalDriverEmailValid}
-                            onBlur={(e) => {
-                              _validateEmail(e.target.value)
-                            }}
-                            onChange={(e) => {
-                              setAddiontalDriverEmail(e.target.value)
-
-                              if (!e.target.value) {
-                                setAddiontalDriverEmailValid(true)
-                              }
-                            }}
-                            required={adRequired}
-                            autoComplete="off"
-                          />
-                          <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={commonStrings.PHONE}
-                            error={!addiontalDriverPhoneValid}
-                            onBlur={(e) => {
-                              _validatePhone(e.target.value)
-                            }}
-                            onChange={(e) => {
-                              setAddiontalDriverPhone(e.target.value)
-
-                              if (!e.target.value) {
-                                setAddiontalDriverPhoneValid(true)
-                              }
-                            }}
-                            required={adRequired}
-                            autoComplete="off"
-                          />
-                          <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
-                        </FormControl>
-                        <FormControl fullWidth margin="dense">
-                          <DatePicker
-                            label={commonStrings.BIRTH_DATE}
-                            variant="outlined"
-                            required={adRequired}
-                            onChange={(_birthDate) => {
-                              if (_birthDate) {
-                                const _birthDateValid = _validateBirthDate(_birthDate)
-
-                                setAddiontalDriverBirthDate(_birthDate)
-                                setAddiontalDriverBirthDateValid(_birthDateValid)
-                              }
-                            }}
-                            language={language}
-                          />
-                          <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
-                        </FormControl>
-                      </div>
-                    </div>
-                  )}
-
-                  {car.supplier.payLater && (
-                    <div className="payment-options-container">
-                      <div className="booking-info">
-                        <PaymentOptionsIcon />
-                        <span>{strings.PAYMENT_OPTIONS}</span>
-                      </div>
-                      <div className="payment-options">
-                        <FormControl>
-                          <RadioGroup
-                            defaultValue="payOnline"
-                            onChange={(event) => {
-                              setPayLater(event.target.value === 'payLater')
-                            }}
-                          >
-                            <FormControlLabel
-                              value="payLater"
-                              control={<Radio />}
-                              label={(
-                                <span className="payment-button">
-                                  <span>{strings.PAY_LATER}</span>
-                                  <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
-                                </span>
-                              )}
+                    {!authenticated && (
+                      <div className="driver-details">
+                        <div className="checkout-info">
+                          <DriverIcon />
+                          <span>{strings.DRIVER_DETAILS}</span>
+                        </div>
+                        <div className="driver-details-form">
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                            <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleFullNameChange} autoComplete="off" />
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                            <OutlinedInput
+                              type="text"
+                              label={commonStrings.EMAIL}
+                              error={!emailValid || emailRegitered}
+                              onBlur={handleEmailBlur}
+                              onChange={handleEmailChange}
+                              required
+                              autoComplete="off"
                             />
-                            <FormControlLabel
-                              value="payOnline"
-                              control={<Radio />}
-                              label={(
-                                <span className="payment-button">
-                                  <span>{strings.PAY_ONLINE}</span>
-                                  <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
+                            <FormHelperText error={!emailValid || emailRegitered}>
+                              {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                              {(emailRegitered && (
+                                <span>
+                                  <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
+                                  <span> </span>
+                                  <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                                 </span>
-                              )}
+                              ))
+                                || ''}
+                              {(emailInfo && emailValid && strings.EMAIL_INFO) || ''}
+                            </FormHelperText>
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                            <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
+                            <FormHelperText error={!phoneValid}>
+                              {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                              {(phoneInfo && strings.PHONE_INFO) || ''}
+                            </FormHelperText>
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <DatePicker
+                              label={commonStrings.BIRTH_DATE}
+                              variant="outlined"
+                              required
+                              onChange={(_birthDate) => {
+                                if (_birthDate) {
+                                  const _birthDateValid = validateBirthDate(_birthDate)
+
+                                  setBirthDate(_birthDate)
+                                  setBirthDateValid(_birthDateValid)
+                                }
+                              }}
+                              language={language}
                             />
-                          </RadioGroup>
-                        </FormControl>
-                      </div>
-                    </div>
-                  )}
+                            <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                          </FormControl>
 
-                  <div className="booking-details-container">
-                    <div className="booking-info">
-                      <ChecklistIcon />
-                      <span>{strings.PICK_UP_CHECKLIST_TITLE}</span>
-                    </div>
-                    <div className="booking-details">
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_TITLE}</span>
-                        <div className="booking-detail-value checklist-content">
-                          {strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT}
+                          <div className="checkout-tos">
+                            <table>
+                              <tbody>
+                                <tr>
+                                  <td aria-label="tos">
+                                    <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
+                                  </td>
+                                  <td>
+                                    <Link href="/tos" target="_blank" rel="noreferrer">
+                                      {commonStrings.TOS}
+                                    </Link>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <SocialLogin />
                         </div>
                       </div>
-                      <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                        <span className="booking-detail-title">{strings.PICK_UP_CHECKLIST_DOCUMENTS_TITLE}</span>
-                        <div className="booking-detail-value checklist-content">
-                          {strings.PICK_UP_CHECKLIST_DOCUMENTS_CONTENT}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="payment-info">
-                    <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
-                    <div className="payment-info-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
-                  </div>
-
-                  {(!car.supplier.payLater || !payLater) && (
-                    clientSecret && (
-                      <div className="payment-options-container">
-                        <EmbeddedCheckoutProvider
-                          stripe={stripePromise}
-                          options={{ clientSecret }}
-                        >
-                          <EmbeddedCheckout />
-                        </EmbeddedCheckoutProvider>
-                      </div>
-                    )
-                  )}
-                  <div className="booking-buttons">
-                    {(!clientSecret || payLater) && (
-                      <Button type="submit" variant="contained" className="btn-checkout btn-margin-bottom" size="small" disabled={loading}>
-                        {
-                          loading
-                            ? <CircularProgress color="inherit" size={24} />
-                            : strings.BOOK
-                        }
-                      </Button>
                     )}
-                    <Button
-                      variant="contained"
-                      className="btn-cancel btn-margin-bottom"
-                      size="small"
-                      onClick={async () => {
-                        try {
-                          if (bookingId && sessionId) {
-                            //
-                            // Delete temporary booking on cancel.
-                            // Otherwise, temporary bookings are
-                            // automatically deleted through a TTL index.
-                            //
-                            await BookingService.deleteTempBooking(bookingId, sessionId)
+
+                    {car.supplier.licenseRequired && (
+                      <div className="driver-details">
+                        <div className="checkout-info">
+                          <LicenseIcon />
+                          <span>{commonStrings.DRIVER_LICENSE}</span>
+                        </div>
+                        <div className="driver-details-form">
+                          <DriverLicense
+                            user={user}
+                            variant="outlined"
+                            onUpload={(filename) => {
+                              if (filename) {
+                                setLicenseRequired(false)
+                              } else {
+                                setLicenseRequired(true)
+                              }
+                              setLicense(filename)
+                            }}
+                            onDelete={() => {
+                              setLicenseRequired(false)
+                              setLicense(null)
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {(adManuallyChecked && additionalDriver) && (
+                      <div className="driver-details">
+                        <div className="checkout-info">
+                          <DriverIcon />
+                          <span>{csStrings.ADDITIONAL_DRIVER}</span>
+                        </div>
+                        <div className="driver-details-form">
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                            <OutlinedInput
+                              type="text"
+                              label={commonStrings.FULL_NAME}
+                              required={adRequired}
+                              onChange={(e) => {
+                                setAddiontalDriverFullName(e.target.value)
+                              }}
+                              autoComplete="off"
+                            />
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                            <OutlinedInput
+                              type="text"
+                              label={commonStrings.EMAIL}
+                              error={!addiontalDriverEmailValid}
+                              onBlur={(e) => {
+                                _validateEmail(e.target.value)
+                              }}
+                              onChange={(e) => {
+                                setAddiontalDriverEmail(e.target.value)
+
+                                if (!e.target.value) {
+                                  setAddiontalDriverEmailValid(true)
+                                }
+                              }}
+                              required={adRequired}
+                              autoComplete="off"
+                            />
+                            <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                            <OutlinedInput
+                              type="text"
+                              label={commonStrings.PHONE}
+                              error={!addiontalDriverPhoneValid}
+                              onBlur={(e) => {
+                                _validatePhone(e.target.value)
+                              }}
+                              onChange={(e) => {
+                                setAddiontalDriverPhone(e.target.value)
+
+                                if (!e.target.value) {
+                                  setAddiontalDriverPhoneValid(true)
+                                }
+                              }}
+                              required={adRequired}
+                              autoComplete="off"
+                            />
+                            <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                          </FormControl>
+                          <FormControl fullWidth margin="dense">
+                            <DatePicker
+                              label={commonStrings.BIRTH_DATE}
+                              variant="outlined"
+                              required={adRequired}
+                              onChange={(_birthDate) => {
+                                if (_birthDate) {
+                                  const _birthDateValid = _validateBirthDate(_birthDate)
+
+                                  setAddiontalDriverBirthDate(_birthDate)
+                                  setAddiontalDriverBirthDateValid(_birthDateValid)
+                                }
+                              }}
+                              language={language}
+                            />
+                            <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                          </FormControl>
+                        </div>
+                      </div>
+                    )}
+
+                    {car.supplier.payLater && (
+                      <div className="payment-options-container">
+                        <div className="checkout-info">
+                          <PaymentOptionsIcon />
+                          <span>{strings.PAYMENT_OPTIONS}</span>
+                        </div>
+                        <div className="payment-options">
+                          <FormControl>
+                            <RadioGroup
+                              defaultValue="payOnline"
+                              onChange={(event) => {
+                                setPayLater(event.target.value === 'payLater')
+                              }}
+                            >
+                              <FormControlLabel
+                                value="payLater"
+                                control={<Radio />}
+                                label={(
+                                  <span className="payment-button">
+                                    <span>{strings.PAY_LATER}</span>
+                                    <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
+                                  </span>
+                                )}
+                              />
+                              <FormControlLabel
+                                value="payOnline"
+                                control={<Radio />}
+                                label={(
+                                  <span className="payment-button">
+                                    <span>{strings.PAY_ONLINE}</span>
+                                    <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
+                                  </span>
+                                )}
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="checkout-details-container">
+                      <div className="checkout-info">
+                        <ChecklistIcon />
+                        <span>{strings.PICK_UP_CHECKLIST_TITLE}</span>
+                      </div>
+                      <div className="checkout-details">
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_TITLE}</span>
+                          <div className="checkout-detail-value checklist-content">
+                            {strings.PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT}
+                          </div>
+                        </div>
+                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                          <span className="checkout-detail-title">{strings.PICK_UP_CHECKLIST_DOCUMENTS_TITLE}</span>
+                          <div className="checkout-detail-value checklist-content">
+                            {strings.PICK_UP_CHECKLIST_DOCUMENTS_CONTENT}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="payment-info">
+                      <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
+                      <div className="payment-info-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                    </div>
+
+                    {(!car.supplier.payLater || !payLater) && (
+                      clientSecret && (
+                        <div className="payment-options-container">
+                          <EmbeddedCheckoutProvider
+                            stripe={stripePromise}
+                            options={{ clientSecret }}
+                          >
+                            <EmbeddedCheckout />
+                          </EmbeddedCheckoutProvider>
+                        </div>
+                      )
+                    )}
+                    <div className="checkout-buttons">
+                      {(!clientSecret || payLater) && (
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          className="btn-checkout btn-margin-bottom"
+                          aria-label="Checkout"
+                          disabled={loading}
+                        >
+                          {
+                            loading
+                              ? <CircularProgress color="inherit" size={24} />
+                              : strings.BOOK
                           }
-                          if (!authenticated && license) {
-                            await UserService.deleteTempLicense(license)
+                        </Button>
+                      )}
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        className="btn-cancel btn-margin-bottom"
+                        aria-label="Cancel"
+                        onClick={async () => {
+                          try {
+                            if (bookingId && sessionId) {
+                              //
+                              // Delete temporary booking on cancel.
+                              // Otherwise, temporary bookings are
+                              // automatically deleted through a TTL index.
+                              //
+                              await BookingService.deleteTempBooking(bookingId, sessionId)
+                            }
+                            if (!authenticated && license) {
+                              await UserService.deleteTempLicense(license)
+                            }
+                          } catch (err) {
+                            helper.error(err)
+                          } finally {
+                            navigate('/')
                           }
-                        } catch (err) {
-                          helper.error(err)
-                        } finally {
-                          navigate('/')
-                        }
-                      }}
-                    >
-                      {commonStrings.CANCEL}
-                    </Button>
+                        }}
+                      >
+                        {commonStrings.CANCEL}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div className="form-error">
-                  {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                  {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                  {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
-                  {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                  {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
-                </div>
-              </form>
-            </Paper>
-          </div>
+                  <div className="form-error">
+                    {tosError && <Error message={commonStrings.TOS_ERROR} />}
+                    {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                    {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
+                    {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                    {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
+                  </div>
+                </form>
+              </Paper>
+            </div>
+
+            <Footer />
+          </>
         )}
         {noMatch && <NoMatch hideHeader />}
 
@@ -941,13 +945,14 @@ const Checkout = () => {
           <CheckoutStatus
             bookingId={bookingId}
             language={language}
+            payLater={payLater}
             status="success"
             className="status"
           />
         )}
       </Layout>
 
-      {loadingPage && <Progress />}
+      {loadingPage && !noMatch && <Progress />}
     </>
   )
 }

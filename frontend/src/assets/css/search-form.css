@@ -56,7 +56,7 @@ form.home-search-form .chk-same-location input[type='checkbox'] {
     padding: 10px;
   }
 
-  form.home-search-form .chk-same-location{
+  form.home-search-form .chk-same-location {
     align-self: flex-start;
     margin-left: 10px;
   }
@@ -92,6 +92,10 @@ form.home-search-form .chk-same-location input[type='checkbox'] {
     display: table-row;
     width: 350px;
     height: 66px;
+  }
+
+  form.home-search-form .drop-off-location>.multiple-select {
+    width: 348px;
   }
 
   form.home-search-form .from,

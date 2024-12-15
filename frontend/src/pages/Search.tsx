@@ -291,6 +291,7 @@ const Search = () => {
                     startIcon={<FiltersIcon />}
                     disableElevation
                     fullWidth
+                    className="btn btn-filters"
                     onClick={() => setShowFilters((prev) => !prev)}
                   >
                     {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
@@ -396,7 +397,7 @@ const Search = () => {
         {noMatch && <NoMatch hideHeader />}
       </Layout>
 
-      {loadingPage && <Progress />}
+      {loadingPage && !noMatch && <Progress />}
     </>
   )
 }

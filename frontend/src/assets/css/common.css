@@ -22,10 +22,10 @@
   color: #fff !important;
 }
 
-.btn-secondary {
+/* .btn-secondary {
   background-color: #999 !important;
   color: #fff !important;
-}
+} */
 
 .btn-primary:hover,
 .btn-secondary:hover,
@@ -39,6 +39,10 @@
 
 .btn-margin-bottom {
   margin-bottom: 10px !important;
+}
+
+.bold {
+  font-weight: 500 !important;
 }
 
 .validate-email {
@@ -220,7 +224,22 @@ div.content {
   background-color: #FAFAFA;
 }
 
+@media only screen and (width <=550px) {
+  .search-dialog-content {
+    width: calc(100% - 20px);
+    max-width: 480px;
+  }
+}
+
+@media only screen and (width <=960px) and (width >550px) {
+  .search-dialog-content {
+    width: 480px;
+    overflow-x: hidden;
+  }
+}
+
 @media only screen and (width <=960px) {
+
   .buttons {
     margin-top: 15px;
     margin-bottom: 5px;

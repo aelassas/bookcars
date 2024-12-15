@@ -34,6 +34,10 @@
 
 .header-desktop {
   display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .header-mobile {
@@ -43,6 +47,7 @@
 .header .btn {
   background-color: transparent !important;
   color: #121212 !important;
+  text-transform: none !important;
 }
 
 .header .btn:hover {
