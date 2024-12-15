@@ -243,7 +243,8 @@ const theme = createTheme(
             // },
             // Selected
             '&[aria-selected="true"]': {
-              backgroundColor: '#faad43 !important',
+              // backgroundColor: '#faad43 !important',
+              backgroundColor: '#F7B644 !important',
             },
           },
         },
@@ -256,20 +257,22 @@ const theme = createTheme(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline>
-      <App />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-      />
-    </CssBaseline>
-  </ThemeProvider>,
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline>
+        <App />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover
+          theme="dark"
+        />
+      </CssBaseline>
+    </ThemeProvider>
+  </React.StrictMode>,
 )
