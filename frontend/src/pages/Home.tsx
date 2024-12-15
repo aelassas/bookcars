@@ -149,6 +149,12 @@ const Home = () => {
           </div>
         </div>
 
+        <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
+          {suppliers.length > 3 && (
+            <SupplierCarrousel suppliers={suppliers} />
+          )}
+        </div>
+
         <div className="why">
 
           {/* <h1>{strings.WHY_TITLE}</h1> */}
@@ -268,14 +274,14 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
+        {/* <div className="home-suppliers" style={suppliers.length < 4 ? { margin: 0 } : undefined}>
           {suppliers.length > 3 && (
             <>
               <h1>{strings.SUPPLIERS_TITLE}</h1>
               <SupplierCarrousel suppliers={suppliers} />
             </>
           )}
-        </div>
+        </div> */}
 
         {countries.length > 0 && (
           <div className="destinations">
