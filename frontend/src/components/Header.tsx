@@ -413,13 +413,13 @@ const Header = ({
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" size="medium" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn btn-margin">
-                  {suStrings.SIGN_UP}
+                <Button variant="contained" size="medium" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn btn-auth" aria-label="Sign in">
+                  <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" size="medium" startIcon={<LoginIcon />} href="/sign-in" disableElevation className="btn">
-                  {strings.SIGN_IN}
+                <Button variant="contained" size="medium" startIcon={<LoginIcon />} href="/sign-in" disableElevation className="btn btn-auth" aria-label="Sign up">
+                  <span className="btn-auth-txt">{strings.SIGN_IN}</span>
                 </Button>
               )}
               {isSignedIn && (
