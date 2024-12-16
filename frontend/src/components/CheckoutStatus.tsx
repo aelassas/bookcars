@@ -63,9 +63,7 @@ const CheckoutStatus = (
       <Toast
         title={strings.CONGRATULATIONS}
         text={success
-          ? payLater
-            ? strings.SUCCESS_PAY_LATER
-            : strings.SUCCESS
+          ? payLater ? strings.SUCCESS_PAY_LATER : strings.SUCCESS
           : strings.ERROR}
         status={status}
       />
@@ -77,38 +75,32 @@ const CheckoutStatus = (
               <CarIcon />
               <span>{checkoutStrings.BOOKING_DETAILS}</span>
             </div>
-            <div className="status-details-container">
-              <div className="status-info">
-                <CarIcon />
-                <span>{checkoutStrings.BOOKING_DETAILS}</span>
+            <div className="status-details">
+              <div className="status-detail">
+                <span className="status-detail-title">{checkoutStrings.CAR}</span>
+                <div className="status-detail-value">
+                  <span>{(booking.car as bookcarsTypes.Car).name}</span>
+                </div>
               </div>
-              <div className="status-details">
-                <div className="status-detail">
-                  <span className="status-detail-title">{checkoutStrings.CAR}</span>
-                  <div className="status-detail-value">
-                    <span>{(booking.car as bookcarsTypes.Car).name}</span>
-                  </div>
+              <div className="status-detail">
+                <span className="status-detail-title">{checkoutStrings.DAYS}</span>
+                <div className="status-detail-value">
+                  {`${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(
+                    format(new Date(booking.from), _format, { locale: _locale }),
+                  )} - ${bookcarsHelper.capitalize(format(new Date(booking.to), _format, { locale: _locale }))})`}
                 </div>
-                <div className="status-detail">
-                  <span className="status-detail-title">{checkoutStrings.DAYS}</span>
-                  <div className="status-detail-value">
-                    {`${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(
-                      format(new Date(booking.from), _format, { locale: _locale }),
-                    )} - ${bookcarsHelper.capitalize(format(new Date(booking.to), _format, { locale: _locale }))})`}
-                  </div>
-                </div>
-                <div className="status-detail">
-                  <span className="status-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
-                  <div className="status-detail-value">{(booking.pickupLocation as bookcarsTypes.Location).name}</div>
-                </div>
-                <div className="status-detail">
-                  <span className="status-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
-                  <div className="status-detail-value">{(booking.dropOffLocation as bookcarsTypes.Location).name}</div>
-                </div>
-                <div className="status-detail">
-                  <span className="status-detail-title">{checkoutStrings.COST}</span>
-                  <div className="status-detail-value status-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
-                </div>
+              </div>
+              <div className="status-detail">
+                <span className="status-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
+                <div className="status-detail-value">{(booking.pickupLocation as bookcarsTypes.Location).name}</div>
+              </div>
+              <div className="status-detail">
+                <span className="status-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
+                <div className="status-detail-value">{(booking.dropOffLocation as bookcarsTypes.Location).name}</div>
+              </div>
+              <div className="status-detail">
+                <span className="status-detail-title">{checkoutStrings.COST}</span>
+                <div className="status-detail-value status-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
               </div>
             </div>
           </div>
