@@ -76,6 +76,11 @@
     min-height: 56px;
   }
 
+  header .btn {
+    padding: 0 8px;
+    min-width: 0;
+  }
+
   .header-desktop {
     display: none;
   }
