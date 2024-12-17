@@ -49,7 +49,6 @@ import { strings as privacyStrings } from '@/lang/privacy'
 import { strings as faqListStrings } from '@/lang/faq-list'
 import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
-import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 
