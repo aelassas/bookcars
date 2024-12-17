@@ -14,7 +14,6 @@ import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import App from '@/App'
 
-import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 
