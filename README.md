@@ -110,6 +110,7 @@ You can install the Android App by downloading the APK and installing it on any 
     1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
+    4. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)
 11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
