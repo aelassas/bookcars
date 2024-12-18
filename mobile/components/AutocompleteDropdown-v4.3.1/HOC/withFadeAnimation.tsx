@@ -10,23 +10,22 @@ interface WithFadeAnimationProps {
 export const withFadeAnimation = <P extends object>(
   WrappedComponent: ComponentType<P>,
   { containerStyle }: WithFadeAnimationProps = {},
-): FC<P> => {
-  return (props: P) => {
-    const opacityAnimationValue = useRef(new Animated.Value(0)).current
+  // eslint-disable-next-line react/display-name
+): FC<P> => function (props: P) {
+  const opacityAnimationValue = useRef(new Animated.Value(0)).current
 
-    useEffect(() => {
-      Animated.timing(opacityAnimationValue, {
-        duration: 800,
-        toValue: 1,
-        useNativeDriver: true,
-        easing: Easing.bezier(0.3, 0.58, 0.25, 0.99),
-      }).start()
-    }, [opacityAnimationValue])
+  useEffect(() => {
+    Animated.timing(opacityAnimationValue, {
+      duration: 800,
+      toValue: 1,
+      useNativeDriver: true,
+      easing: Easing.bezier(0.3, 0.58, 0.25, 0.99),
+    }).start()
+  }, [opacityAnimationValue])
 
-    return (
-      <Animated.View style={[containerStyle, { opacity: opacityAnimationValue }]}>
-        <WrappedComponent {...props} />
-      </Animated.View>
-    )
-  }
+  return (
+    <Animated.View style={[containerStyle, { opacity: opacityAnimationValue }]}>
+      <WrappedComponent {...props} />
+    </Animated.View>
+  )
 }
