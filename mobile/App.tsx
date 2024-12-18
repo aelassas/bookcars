@@ -14,6 +14,7 @@ import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
 import { GlobalProvider } from './context/GlobalContext'
 import * as env from './config/env.config'
+import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -105,11 +106,13 @@ const App = () => {
       <SafeAreaProvider>
         <Provider>
           <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-            <NavigationContainer ref={navigationRef} onReady={onReady}>
-              <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-              <DrawerNavigator />
-              <Toast />
-            </NavigationContainer>
+            <AutocompleteDropdownContextProvider>
+              <NavigationContainer ref={navigationRef} onReady={onReady}>
+                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+                <DrawerNavigator />
+                <Toast />
+              </NavigationContainer>
+            </AutocompleteDropdownContextProvider>
           </StripeProvider>
         </Provider>
       </SafeAreaProvider>
