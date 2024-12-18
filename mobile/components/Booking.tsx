@@ -71,7 +71,7 @@ const Booking = ({
     }
 
     init()
-  }, [booking, car.additionalDriver, car.amendments, car.cancellation, car.collisionDamageWaiver, car.fullInsurance, car.theftProtection, days, language])
+  }, [booking, car, days, language])
 
   return !loading && price && (
     <View key={booking._id} style={styles.bookingContainer}>

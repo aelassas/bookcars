@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import type { FC } from 'react'
 import React, { memo, useMemo } from 'react'
 import type { ViewProps } from 'react-native'
@@ -14,6 +15,7 @@ interface ScrollViewListItemProps {
   numberOfLines?: number
 }
 
+// eslint-disable-next-line react/display-name
 export const ScrollViewListItem: FC<ScrollViewListItemProps> = memo(
   ({ highlight, title, style, onPress, ignoreAccents, numberOfLines = 2 }) => {
     const themeName = useColorScheme()
