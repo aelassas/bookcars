@@ -41,7 +41,7 @@
     "axios-retry": "^4.5.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "date-fns": "^4.1.0",
-    "expo": "~52.0.18",
+    "expo": "~52.0.19",
     "expo-asset": "~11.0.1",
     "expo-constants": "~17.0.3",
     "expo-device": "~7.0.1",
