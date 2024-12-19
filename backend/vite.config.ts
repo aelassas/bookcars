@@ -28,7 +28,7 @@ export default ({ mode }: { mode: string }) => {
       outDir: 'build',
       target: 'esnext',
       modulePreload: true, // Keep modulePreload enabled to ensure the best performance
-      sourcemap: true,
+      sourcemap: false,
       minify: 'esbuild', // Use esbuild for fast minification
       rollupOptions: {
         treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
