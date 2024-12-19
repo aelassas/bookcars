@@ -21,12 +21,19 @@ export default ({ mode }: { mode: string }) => {
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '3006', 10),
     },
 
     build: {
       outDir: 'build',
-      target: 'esnext'
+      target: 'esnext',
+      modulePreload: true, // Keep modulePreload enabled to ensure the best performance
+      sourcemap: true,
+      minify: 'esbuild', // Use esbuild for fast minification
+      rollupOptions: {
+        treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
+      },
+      assetsInlineLimit: 8192, // This reduces the number of small chunk files
     },
   })
 }

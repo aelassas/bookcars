@@ -544,3 +544,13 @@ export const trim = (str: string, char: string): string => {
   res = trimEnd(res, char)
   return res
 }
+
+/**
+ * Wait a certain time in milliseconds.
+ *
+ * @param {number} milliseconds
+ * @returns {Promise<unknown>}
+ */
+export const delay = (milliseconds: number) => new Promise((resolve) => {
+  setTimeout(resolve, milliseconds)
+})
