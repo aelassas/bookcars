@@ -123,7 +123,7 @@ const Home = () => {
               loop
               playsInline
               disablePictureInPicture
-              onLoadedData={() => {
+              onLoadedData={async () => {
                 setVideoLoaded(true)
               }}
             >
@@ -131,10 +131,11 @@ const Home = () => {
               <track kind="captions" />
             </video>
             {!videoLoaded && (
-              <div className="video-background">
-                <img src="cover.png" alt="" />
-              </div>
+              <div className="video-background" />
             )}
+            {/* <div className="video-background">
+              <img src="cover.png" alt="" />
+            </div> */}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>
