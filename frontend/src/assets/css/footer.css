@@ -77,7 +77,7 @@ div.footer div.footer-contact a:hover {
 
 div.footer div.footer-contact .social-icon {
   color: #525252;
-  margin-right: 12px;
+  /* margin-right: 12px; */
 }
 
 div.footer div.footer-contact .social-icon:hover{
