@@ -70,7 +70,6 @@ export default ({ mode }: { mode: string }) => {
       rollupOptions: {
         treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
         output: {
-          // Chunk splitting strategy
           manualChunks: {
             vendor: ['react', 'react-dom'],
             router: ['react-router-dom'],
@@ -83,6 +82,7 @@ export default ({ mode }: { mode: string }) => {
       },
       assetsInlineLimit: 8192, // This reduces the number of small chunk files
     },
+    // Optimize dependencies
     optimizeDeps: {
       include: [
         'react',
