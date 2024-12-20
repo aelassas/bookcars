@@ -306,7 +306,7 @@ div.home div.car-size div.boxes div.box div.box-content span.price {
 
 div.home div.car-size div.boxes div.box div.box-content span.unit {
   font-size: 14px;
-  color: #A9A9A9;
+  color: #696969;
 }
 
 div.home div.car-size div.boxes div.box div.car-size-action {
@@ -392,21 +392,21 @@ div.home div.customer-care div.customer-care-img img {
 
 @media only screen and (width <=960px) {
   div.home div.home-content {
-    padding: 60px 0;
+    padding: 85px 0;
     justify-content: flex-start !important;
-    height: 480px;
+    height: 560px;
   }
 
-  div.home-title {
+  div.home div.home-title {
     font-size: 22px;
     font-weight: 500;
     margin-bottom: 20px;
   }
 
-  div.home-cover {
+  div.home div.home-cover {
     font-size: 40px;
     font-weight: 800;
-    padding: 20px 5px 10px;
+    padding: 0 10px;
   }
 
   div.home div.search div.home-search {
