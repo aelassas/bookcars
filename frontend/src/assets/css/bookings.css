@@ -2,13 +2,8 @@ div.bookings {
   display: flex;
   flex-direction: column;
   align-items: center;
-
   position: absolute;
-  top: 64px;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
+  inset: 64px 0 0;
   transform: translate3d(0, 0, 0);
 }
 

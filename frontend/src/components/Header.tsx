@@ -11,10 +11,9 @@ import {
   Button,
   Drawer,
   List,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
-  Link
+  ListItem
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -59,8 +58,6 @@ interface HeaderProps {
   hideSignin?: boolean
   headerTitle?: string
 }
-
-const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
 
 const Header = ({
   user,
@@ -345,59 +342,122 @@ const Header = ({
                   <MenuIcon />
                 </IconButton>
 
-                <Link href="/" className="logo">BookCars</Link>
+                <Button onClick={() => navigate('/')} className="logo">BookCars</Button>
 
                 {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
               </>
             )}
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
+
+            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu">
               <List sx={classes.list}>
-                <ListItemLink href="/">
-                  <ListItemIcon><HomeIcon className="menu-lnk" /></ListItemIcon>
+                <ListItem
+                  onClick={() => {
+                    navigate('/')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><HomeIcon /></ListItemIcon>
                   <ListItemText primary={strings.HOME} />
-                </ListItemLink>
+                </ListItem>
                 {isSignedIn && (
-                  <ListItemLink href="/bookings">
-                    <ListItemIcon><BookingsIcon className="menu-lnk" /></ListItemIcon>
+                  <ListItem
+                    onClick={() => {
+                      navigate('/bookings')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><BookingsIcon /></ListItemIcon>
                     <ListItemText primary={strings.BOOKINGS} />
-                  </ListItemLink>
+                  </ListItem>
                 )}
-                <ListItemLink href="/suppliers">
-                  <ListItemIcon><SupplierIcon className="menu-lnk" /></ListItemIcon>
+                <ListItem
+                  onClick={() => {
+                    navigate('/suppliers')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><SupplierIcon /></ListItemIcon>
                   <ListItemText primary={strings.SUPPLIERS} />
-                </ListItemLink>
-                <ListItemLink href="/locations">
-                  <ListItemIcon><LocationIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/locations')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><LocationIcon /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
-                </ListItemLink>
-                <ListItemLink href="/about">
-                  <ListItemIcon><AboutIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/about')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><AboutIcon /></ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
-                </ListItemLink>
-                <ListItemLink href="/privacy">
-                  <ListItemIcon><PrivacyIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/privacy')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><PrivacyIcon /></ListItemIcon>
                   <ListItemText primary={strings.PRIVACY_POLICY} />
-                </ListItemLink>
-                <ListItemLink href="/tos">
-                  <ListItemIcon><TosIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/tos')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><TosIcon /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
-                </ListItemLink>
-                <ListItemLink href="/faq">
-                  <ListItemIcon><FaqIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/faq')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><FaqIcon /></ListItemIcon>
                   <ListItemText primary={strings.FAQ} />
-                </ListItemLink>
-                <ListItemLink href="/contact">
-                  <ListItemIcon><MailIcon className="menu-lnk" /></ListItemIcon>
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/contact')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><MailIcon /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
-                </ListItemLink>
+                </ListItem>
                 {env.isMobile && !hideSignin && !isSignedIn && isLoaded && !loading && (
-                  <ListItemLink href="/sign-in">
-                    <ListItemIcon><LoginIcon className="menu-lnk" /></ListItemIcon>
-                    <ListItemText primary={strings.SIGN_IN} />
-                  </ListItemLink>
+                  <>
+                    <ListItem
+                      onClick={() => {
+                        navigate('/sign-in')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><LoginIcon /></ListItemIcon>
+                      <ListItemText primary={strings.SIGN_IN} />
+                    </ListItem>
+                    <ListItem
+                      onClick={() => {
+                        navigate('/sign-up')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><SignUpIcon /></ListItemIcon>
+                      <ListItemText primary={suStrings.SIGN_UP} />
+                    </ListItem>
+                  </>
                 )}
               </List>
             </Drawer>
+
             {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
               {isLoaded && !loading && (
@@ -413,12 +473,12 @@ const Header = ({
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" size="medium" startIcon={<SignUpIcon />} href="/sign-up" disableElevation className="btn btn-auth" aria-label="Sign in">
+                <Button variant="contained" size="medium" startIcon={<SignUpIcon />} onClick={() => navigate('/sign-up')} disableElevation className="btn btn-auth" aria-label="Sign in">
                   <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button variant="contained" size="medium" startIcon={<LoginIcon />} href="/sign-in" disableElevation className="btn btn-auth" aria-label="Sign up">
+                <Button variant="contained" size="medium" startIcon={<LoginIcon />} onClick={() => navigate('/sign-in')} disableElevation className="btn btn-auth" aria-label="Sign up">
                   <span className="btn-auth-txt">{strings.SIGN_IN}</span>
                 </Button>
               )}

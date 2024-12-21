@@ -322,7 +322,7 @@ div.car-container article div.action {
     max-width: 600px;
   }
 
-    div.car-container article {
+  div.car-container article {
     flex-direction: column;
     width: calc(100% - 20px);
   }

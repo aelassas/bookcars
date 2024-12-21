@@ -193,7 +193,6 @@ const Map = ({
       >
         <TileLayer
           // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          attribution=""
           url={tileURL}
         />
         <ZoomTracker setZoom={setZoom} />

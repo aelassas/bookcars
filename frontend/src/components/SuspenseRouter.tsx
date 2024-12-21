@@ -10,6 +10,7 @@ export interface BrowserRouterProps {
 
 export const SuspenseRouter = ({ basename, children, window }: BrowserRouterProps) => {
   const historyRef = useRef<BrowserHistory>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isPending, startTransition] = useTransition()
 
   if (historyRef.current == null) {

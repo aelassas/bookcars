@@ -8,6 +8,6 @@
   visibility: hidden !important;
 } */
 
-.github-fork-ribbon:before {
+.github-fork-ribbon::before {
   background-color: #272727;
 }

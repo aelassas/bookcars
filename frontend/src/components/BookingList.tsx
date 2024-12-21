@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   DataGrid,
   GridColDef,
@@ -69,6 +70,8 @@ const BookingList = ({
   checkboxSelection,
   onLoad,
 }: BookingListProps) => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : env.BOOKINGS_PAGE_SIZE)
@@ -255,7 +258,7 @@ const BookingList = ({
           return (
             <>
               <Tooltip title={strings.VIEW}>
-                <IconButton href={`booking?b=${row._id}`}>
+                <IconButton onClick={() => navigate(`/booking?b=${row._id}`)}>
                   <ViewIcon />
                 </IconButton>
               </Tooltip>
