@@ -27,6 +27,13 @@
   color: #1a1a1a;
 }
 
+.side-menu li {
+  cursor: pointer;
+}
+
+.side-menu li:hover {
+  background-color: #f1f1f1;
+}
 
 .header-action {
   margin-right: 20px;
@@ -60,6 +67,8 @@
 
 .header .logo {
   text-decoration: none;
+  text-transform: none;
+  background: transparent;
   font-size: 18px;
   font-weight: 500;
   color: #121212;

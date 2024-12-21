@@ -6,7 +6,6 @@ import {
   FormHelperText,
   Button,
   Paper,
-  Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -166,7 +165,7 @@ const Activate = () => {
                 {mStrings.RESEND}
               </Button>
               <p className="go-to-home">
-                <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+                <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
               </p>
             </div>
           </Paper>
@@ -206,10 +205,10 @@ const Activate = () => {
                 </FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
+                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
-                <Button variant="outlined" color="primary" className="btn-margin-bottom" href="/">
+                <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

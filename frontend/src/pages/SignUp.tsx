@@ -392,7 +392,7 @@ const SignUp = () => {
                   <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
                     {strings.SIGN_UP}
                   </Button>
-                  <Button variant="outlined" color="primary" className="btn-margin-bottom" href="/">
+                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
                     {' '}
                     {commonStrings.CANCEL}
                   </Button>
