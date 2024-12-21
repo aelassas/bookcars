@@ -72,8 +72,8 @@ export default ({ mode }: { mode: string }) => {
         treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
         output: {
           manualChunks: {
-            vendor: ['react', 'react-dom'],
-            router: ['react-router-dom'],
+            vendor: ['react', 'react-dom'], // Create a separate vendor chunk
+            router: ['react-router-dom'], // Create a separate router chunk
           },
           // Generate chunk names
           assetFileNames: 'assets/[name]-[hash][extname]',
@@ -82,14 +82,6 @@ export default ({ mode }: { mode: string }) => {
         },
       },
       assetsInlineLimit: 8192, // This reduces the number of small chunk files
-    },
-    // Optimize dependencies
-    optimizeDeps: {
-      include: [
-        'react',
-        'react-dom',
-        'react-router-dom',
-      ],
     },
   })
 }

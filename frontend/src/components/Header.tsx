@@ -127,7 +127,8 @@ const Header = ({
       params.delete('l')
       window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : '')
     } else {
-      window.location.reload()
+      // window.location.reload()
+      window.location.replace(window.location.href)
     }
   }
 
