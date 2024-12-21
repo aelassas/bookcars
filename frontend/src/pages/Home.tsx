@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   // Checkbox,
@@ -46,6 +47,8 @@ import Maxi from '@/assets/img/maxi.png'
 import '@/assets/css/home.css'
 
 const Home = () => {
+  const navigate = useNavigate()
+
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [countries, setCountries] = useState<bookcarsTypes.CountryInfo[]>([])
   const [pickupLocation, setPickupLocation] = useState('')
@@ -533,7 +536,7 @@ const Home = () => {
               <Button
                 variant="contained"
                 className="btn-primary btn-home"
-                href="/contact"
+                onClick={() => navigate('/contact')}
               >
                 {strings.CONTACT_US}
               </Button>
