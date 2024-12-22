@@ -53,11 +53,13 @@ describe('POST /api/validate-country', () => {
   it('should validate a country', async () => {
     const token = await testHelper.signinAsAdmin()
 
-    // test success (country not found)
+    // test success (country found)
     const language = testHelper.LANGUAGE
     const name = nanoid()
     const countryValue = new LocationValue({ language, value: name })
     await countryValue.save()
+    const country = new Location({ values: [countryValue.id] })
+    await country.save()
     const payload: bookcarsTypes.ValidateCountryPayload = {
       language,
       name,
@@ -68,14 +70,15 @@ describe('POST /api/validate-country', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
-    // test success (country found)
+    // test success (country not found)
     payload.name = nanoid()
     res = await request(app)
       .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
-    await LocationValue.deleteOne({ _id: countryValue._id })
+    await countryValue.deleteOne()
+    await country.deleteOne()
 
     // test failure (no payload)
     res = await request(app)
