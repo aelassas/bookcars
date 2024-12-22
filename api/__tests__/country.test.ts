@@ -58,7 +58,7 @@ describe('POST /api/validate-country', () => {
     const name = nanoid()
     const countryValue = new LocationValue({ language, value: name })
     await countryValue.save()
-    const country = new Location({ values: [countryValue.id] })
+    const country = new Country({ values: [countryValue.id] })
     await country.save()
     const payload: bookcarsTypes.ValidateCountryPayload = {
       language,
