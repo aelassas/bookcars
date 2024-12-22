@@ -31,11 +31,32 @@ export const validate = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(name)
     const options = 'i'
 
-    const locationValue = await LocationValue.findOne({
-      language: { $eq: language },
-      value: { $regex: new RegExp(`^${keyword}$`), $options: options },
-    })
-    return locationValue ? res.sendStatus(204) : res.sendStatus(200)
+    const locations = await Location.aggregate(
+      [
+        {
+          $lookup: {
+            from: 'LocationValue',
+            let: { values: '$values' },
+            pipeline: [
+              {
+                $match: {
+                  $and: [
+                    { $expr: { $in: ['$_id', '$$values'] } },
+                    { $expr: { $eq: ['$language', language] } },
+                    { $expr: { $regexMatch: { input: '$value', regex: new RegExp(`^${keyword}$`), options } } },
+                  ],
+                },
+              },
+            ],
+            as: 'value',
+          },
+        },
+        { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
+      ],
+      { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
+    )
+
+    return locations.length > 0 ? res.sendStatus(204) : res.sendStatus(200)
   } catch (err) {
     logger.error(`[location.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
