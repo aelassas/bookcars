@@ -90,7 +90,7 @@ You can install the Android App by downloading the APK and installing it on any 
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-# Resources
+# Documentation
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)
