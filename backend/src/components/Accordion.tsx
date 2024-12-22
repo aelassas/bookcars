@@ -47,8 +47,7 @@ const Accordion = ({
       const panel = accordionRef.current.nextElementSibling as HTMLDivElement
       panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offsetHeight])
+  }, [offsetHeight]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`${className ? `${className} ` : ''}accordion-container`}>

@@ -91,18 +91,19 @@ const Settings = () => {
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       if (user && user._id) {
+        const _user = bookcarsHelper.clone(user) as bookcarsTypes.User
         setEnableEmailNotifications(e.target.checked)
 
-        user.enableEmailNotifications = e.target.checked
+        _user.enableEmailNotifications = e.target.checked
 
         const payload: bookcarsTypes.UpdateEmailNotificationsPayload = {
           _id: user._id,
-          enableEmailNotifications: user.enableEmailNotifications
+          enableEmailNotifications: _user.enableEmailNotifications
         }
         const status = await UserService.updateEmailNotifications(payload)
 
         if (status === 200) {
-          setUser(user)
+          setUser(_user)
           helper.info(strings.SETTINGS_UPDATED)
         }
       } else {
@@ -237,7 +238,7 @@ const Settings = () => {
                   <Button
                     variant="contained"
                     className="btn-primary btn-margin btn-margin-bottom"
-                    size="small"
+                    disableElevation
                     onClick={(e) => {
                       e.preventDefault()
                       navigate('/change-password')
@@ -245,14 +246,13 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" size="small" className="btn-primary btn-margin-bottom">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disableElevation>
                     {commonStrings.SAVE}
                   </Button>
                   <Button
                     variant="outlined"
                     color="primary"
-                    className="btn-secondary btn-margin-bottom"
-                    size="small"
+                    className="btn-margin-bottom"
                     onClick={(e) => {
                       e.preventDefault()
                       navigate('/')

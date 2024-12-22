@@ -110,9 +110,11 @@ const Header = ({
 
     if (params.has('l')) {
       params.delete('l')
-      window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : '')
+      // window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : '')
+      window.location.replace(window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : ''))
     } else {
-      window.location.reload()
+      // window.location.reload()
+      window.location.replace(window.location.href)
     }
   }
 

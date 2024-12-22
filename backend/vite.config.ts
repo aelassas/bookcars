@@ -13,6 +13,7 @@ export default ({ mode }: { mode: string }) => {
         babel: {
           plugins: [
             ['@babel/plugin-transform-runtime'],
+            // ['babel-plugin-react-compiler', { optimize: true }],
           ]
         }
       })
@@ -30,7 +31,7 @@ export default ({ mode }: { mode: string }) => {
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '3001', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '3006', 10),
     },
 
     build: {

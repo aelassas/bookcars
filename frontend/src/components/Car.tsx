@@ -119,8 +119,7 @@ const Car = ({
     }
 
     init()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hidePrice])
+  }, [hidePrice]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const getExtraIcon = (option: string, extra: number) => {
     let available = false
