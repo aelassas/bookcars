@@ -57,8 +57,9 @@ const CreateLocation = () => {
 
       let isValid = true
 
+      const _nameErrors = bookcarsHelper.clone(nameErrors) as boolean[]
       for (let i = 0; i < nameErrors.length; i += 1) {
-        nameErrors[i] = false
+        _nameErrors[i] = false
       }
 
       for (let i = 0; i < names.length; i += 1) {
@@ -66,11 +67,11 @@ const CreateLocation = () => {
         const _isValid = (await LocationService.validate({ language: name.language, name: name.name })) === 200
         isValid = isValid && _isValid
         if (!_isValid) {
-          nameErrors[i] = true
+          _nameErrors[i] = true
         }
       }
 
-      setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])
+      setNameErrors(_nameErrors)
 
       if (isValid) {
         const payload: bookcarsTypes.UpsertLocationPayload = {
@@ -84,10 +85,11 @@ const CreateLocation = () => {
         const status = await LocationService.create(payload)
 
         if (status === 200) {
+          const _names = bookcarsHelper.clone(names) as bookcarsTypes.LocationName[]
           for (let i = 0; i < names.length; i += 1) {
-            names[i].name = ''
+            _names[i].name = ''
           }
-          setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
+          setNames(_names)
           setImage(undefined)
           setCountry(null)
           setLongitude('')
@@ -136,6 +138,7 @@ const CreateLocation = () => {
                 variant="standard"
                 onChange={(countries: bookcarsTypes.Option[]) => {
                   setCountry(countries.length > 0 ? countries[0] as bookcarsTypes.Country : null)
+                  console.log(countries[0])
                 }}
                 value={country}
                 required
@@ -151,14 +154,16 @@ const CreateLocation = () => {
                   error={nameErrors[index]}
                   required
                   onChange={(e) => {
-                    names[index] = {
+                    const _names = bookcarsHelper.clone(names) as bookcarsTypes.LocationName[]
+                    _names[index] = {
                       language: language.code,
                       name: e.target.value,
                     }
-                    setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
+                    setNames(_names)
 
-                    nameErrors[index] = false
-                    setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])
+                    const _nameErrors = bookcarsHelper.clone(nameErrors) as boolean[]
+                    _nameErrors[index] = false
+                    setNameErrors(_nameErrors)
                   }}
                   autoComplete="off"
                 />
@@ -190,16 +195,19 @@ const CreateLocation = () => {
               title={strings.PARKING_SPOTS}
               values={parkingSpots}
               onAdd={(value) => {
-                parkingSpots.push(value)
-                setParkingSpots(bookcarsHelper.clone(parkingSpots))
+                const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
+                _parkingSpots.push(value)
+                setParkingSpots(_parkingSpots)
               }}
               onUpdate={(value, index) => {
-                parkingSpots[index] = value
-                setParkingSpots(bookcarsHelper.clone(parkingSpots))
+                const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
+                _parkingSpots[index] = value
+                setParkingSpots(_parkingSpots)
               }}
               onDelete={(_, index) => {
-                parkingSpots.splice(index, 1)
-                setParkingSpots(bookcarsHelper.clone(parkingSpots))
+                const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
+                _parkingSpots.splice(index, 1)
+                setParkingSpots(_parkingSpots)
               }}
             />
 

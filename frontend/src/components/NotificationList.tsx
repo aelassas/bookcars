@@ -112,16 +112,17 @@ const NotificationList = ({ user }: NotificationListProps) => {
                     checked={allChecked}
                     indeterminate={indeterminate}
                     onChange={(event) => {
+                      const _rows = bookcarsHelper.clone(rows) as bookcarsTypes.Notification[]
                       if (indeterminate) {
-                        for (const row of rows) {
+                        for (const row of _rows) {
                           row.checked = false
                         }
                       } else {
-                        for (const row of rows) {
+                        for (const row of _rows) {
                           row.checked = event.target.checked
                         }
                       }
-                      setRows(bookcarsHelper.clone(rows))
+                      setRows(_rows)
                     }}
                   />
                 </div>
@@ -141,10 +142,11 @@ const NotificationList = ({ user }: NotificationListProps) => {
                               const status = await NotificationService.markAsRead(user._id, ids)
 
                               if (status === 200) {
-                                for (const row of rows) {
+                                const __rows = bookcarsHelper.clone(rows) as bookcarsTypes.Notification[]
+                                for (const row of __rows) {
                                   row.isRead = true
                                 }
-                                setRows(bookcarsHelper.clone(rows))
+                                setRows(__rows)
                                 setNotificationCount((prev) => prev - _rows.length)
                               } else {
                                 helper.error()
@@ -172,10 +174,11 @@ const NotificationList = ({ user }: NotificationListProps) => {
                               const status = await NotificationService.markAsUnread(user._id, ids)
 
                               if (status === 200) {
-                                for (const row of rows) {
+                                const __rows = bookcarsHelper.clone(rows) as bookcarsTypes.Notification[]
+                                for (const row of __rows) {
                                   row.isRead = false
                                 }
-                                setRows(bookcarsHelper.clone(rows))
+                                setRows(__rows)
                                 setNotificationCount((prev) => prev + _rows.length)
                               } else {
                                 helper.error()
@@ -366,16 +369,17 @@ const NotificationList = ({ user }: NotificationListProps) => {
               <DialogContent>{selectedRows.length > 1 ? strings.DELETE_NOTIFICATIONS : strings.DELETE_NOTIFICATION}</DialogContent>
               <DialogActions className="dialog-actions">
                 <Button
+                  variant="outlined"
+                  color="primary"
                   onClick={() => {
                     setOpenDeleteDialog(false)
                   }}
-                  variant="outlined"
-                  color="primary"
-                  className="btn-secondary"
                 >
                   {commonStrings.CANCEL}
                 </Button>
                 <Button
+                  variant="contained"
+                  color="primary"
                   onClick={async () => {
                     try {
                       if (!user || !user._id) {
@@ -417,8 +421,6 @@ const NotificationList = ({ user }: NotificationListProps) => {
                       helper.error(err)
                     }
                   }}
-                  variant="contained"
-                  color="error"
                 >
                   {commonStrings.DELETE}
                 </Button>

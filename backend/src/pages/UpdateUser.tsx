@@ -311,9 +311,10 @@ const UpdateUser = () => {
       const status = await UserService.updateUser(data)
 
       if (status === 200) {
-        user.fullName = fullName
-        user.type = type
-        setUser(user)
+        const _user = bookcarsHelper.clone(user) as bookcarsTypes.User
+        _user.fullName = fullName
+        _user.type = type
+        setUser(_user)
         helper.info(commonStrings.UPDATED)
       } else {
         helper.error()

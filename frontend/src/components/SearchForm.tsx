@@ -87,8 +87,7 @@ const SearchForm = ({
       }
     }
     init()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [__pickupLocation])
+  }, [__pickupLocation]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const init = async () => {
@@ -100,8 +99,7 @@ const SearchForm = ({
       }
     }
     init()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [__dropOffLocation])
+  }, [__dropOffLocation]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (from) {
