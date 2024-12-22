@@ -83,10 +83,16 @@ const Car = ({
   }, [])
 
   useEffect(() => {
-    if (from && to) {
-      setDays(bookcarsHelper.days(from, to))
+    const fetchPrice = async () => {
+      if (from && to) {
+        const _totalPrice = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        setTotalPrice(_totalPrice)
+        setDays(bookcarsHelper.days(from, to))
+      }
     }
-  }, [from, to])
+
+    fetchPrice()
+  }, [from, to]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const init = async () => {
