@@ -224,23 +224,8 @@ const CarList = ({
         }
         setInit(false)
       }
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    page,
-    carSuppliers,
-    carKeyword,
-    _carSpecs,
-    _carType,
-    carGearbox,
-    carMileage,
-    _fuelPolicy,
-    carDeposit,
-    carAvailability,
-    range,
-    multimedia,
-    rating,
-    seats,
-  ])
+    }
+  }, [page, carSuppliers, carKeyword, _carSpecs, _carType, carGearbox, carMileage, _fuelPolicy, carDeposit, carAvailability, range, multimedia, rating, seats]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (cars) {
@@ -291,23 +276,8 @@ const CarList = ({
         rating,
         seats,
       )
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    reload,
-    carSuppliers,
-    carKeyword,
-    _carSpecs,
-    _carType,
-    carGearbox,
-    carMileage,
-    _fuelPolicy,
-    carDeposit,
-    carAvailability,
-    range,
-    multimedia,
-    rating,
-    seats,
-  ])
+    }
+  }, [reload, carSuppliers, carKeyword, _carSpecs, _carType, carGearbox, carMileage, _fuelPolicy, carDeposit, carAvailability, range, multimedia, rating, seats,]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setUser(carUser)
@@ -427,7 +397,6 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            // : rows.map((car, index) => {
             : rows.map((car) => {
               const edit = admin || car.supplier._id === user._id
               return (

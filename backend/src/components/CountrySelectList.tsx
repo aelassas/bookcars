@@ -43,7 +43,7 @@ const CountrySelectList = ({
       setSelectedOptions(_value)
     }
 
-    if (value === null || (Array.isArray(value) && value.length === 0)) {
+    if ((value === null || (Array.isArray(value) && value.length === 0)) && selectedOptions.length > 0) {
       setSelectedOptions([])
     }
   }, [value, multiple, selectedOptions])

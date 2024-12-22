@@ -148,15 +148,16 @@ const UpdateBooking = () => {
 
   const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.cancellation = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.cancellation = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setCancellation(booking.cancellation || false)
+          setCancellation(_booking.cancellation || false)
         },
         (err) => {
           helper.error(err)
@@ -167,15 +168,16 @@ const UpdateBooking = () => {
 
   const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.amendments = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.amendments = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setAmendments(booking.amendments || false)
+          setAmendments(_booking.amendments || false)
         },
         (err) => {
           helper.error(err)
@@ -186,15 +188,16 @@ const UpdateBooking = () => {
 
   const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.collisionDamageWaiver = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.collisionDamageWaiver = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setCollisionDamageWaiver(booking.collisionDamageWaiver || false)
+          setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
         },
         (err) => {
           helper.error(err)
@@ -205,15 +208,16 @@ const UpdateBooking = () => {
 
   const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.theftProtection = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.theftProtection = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setTheftProtection(booking.theftProtection || false)
+          setTheftProtection(_booking.theftProtection || false)
         },
         (err) => {
           helper.error(err)
@@ -224,15 +228,16 @@ const UpdateBooking = () => {
 
   const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.fullInsurance = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.fullInsurance = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setFullInsurance(booking.fullInsurance || false)
+          setFullInsurance(_booking.fullInsurance || false)
         },
         (err) => {
           helper.error(err)
@@ -243,15 +248,16 @@ const UpdateBooking = () => {
 
   const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (booking) {
-      booking.additionalDriver = e.target.checked
+      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+      _booking.additionalDriver = e.target.checked
 
       helper.price(
-        booking,
-        booking.car as bookcarsTypes.Car,
+        _booking,
+        _booking.car as bookcarsTypes.Car,
         (_price) => {
-          setBooking(booking)
+          setBooking(_booking)
           setPrice(_price)
-          setAdditionalDriver(booking.additionalDriver || false)
+          setAdditionalDriver(_booking.additionalDriver || false)
         },
         (err) => {
           helper.error(err)
@@ -586,13 +592,14 @@ const UpdateBooking = () => {
                   required
                   onChange={(date) => {
                     if (date) {
-                      booking.from = date
+                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                      _booking.from = date
 
                       helper.price(
-                        booking,
-                        booking.car as bookcarsTypes.Car,
+                        _booking,
+                        _booking.car as bookcarsTypes.Car,
                         (_price) => {
-                          setBooking(booking)
+                          setBooking(_booking)
                           setPrice(_price)
                           setFrom(date)
 
@@ -629,13 +636,14 @@ const UpdateBooking = () => {
                   required
                   onChange={(date) => {
                     if (date) {
-                      booking.to = date
+                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                      _booking.to = date
 
                       helper.price(
-                        booking,
-                        booking.car as bookcarsTypes.Car,
+                        _booking,
+                        _booking.car as bookcarsTypes.Car,
                         (_price) => {
-                          setBooking(booking)
+                          setBooking(_booking)
                           setPrice(_price)
                           setTo(date)
 
@@ -811,9 +819,9 @@ const UpdateBooking = () => {
                   <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit">
                     {commonStrings.SAVE}
                   </Button>
-                  <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                  {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                     {commonStrings.DELETE}
-                  </Button>
+                  </Button> */}
                   <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
                     {commonStrings.CANCEL}
                   </Button>

@@ -51,18 +51,20 @@ const ParkingSpotEditList = (
                     value={(parkingSpot.values![langIndex] && parkingSpot.values![langIndex].value) || ''}
                     required
                     onChange={(e) => {
-                      if (parkingSpot._id) {
-                        parkingSpot.values![langIndex].value = e.target.value
+                      const __values = bookcarsHelper.clone(values) as bookcarsTypes.ParkingSpot[]
+                      const __parkingSpot = __values[index]
+                      if (__parkingSpot._id) {
+                        __parkingSpot.values![langIndex].value = e.target.value
                       } else {
-                        parkingSpot.values![langIndex] = {
+                        __parkingSpot.values![langIndex] = {
                           language: language.code,
                           value: e.target.value,
                         }
                       }
                       if (onUpdate) {
-                        onUpdate(parkingSpot, index)
+                        onUpdate(__parkingSpot, index)
                       }
-                      setValues(bookcarsHelper.clone(values))
+                      setValues(__values)
                     }}
                     autoComplete="off"
                   />
@@ -75,10 +77,11 @@ const ParkingSpotEditList = (
                   value={parkingSpot.latitude}
                   required
                   onChange={(e) => {
-                    parkingSpot.latitude = e.target.value
-                    setValues(bookcarsHelper.clone(values))
+                    const __values = bookcarsHelper.clone(values) as bookcarsTypes.ParkingSpot[]
+                    __values[index].latitude = e.target.value
+                    setValues(__values)
                     if (onUpdate) {
-                      onUpdate(parkingSpot, index)
+                      onUpdate(__values[index], index)
                     }
                   }}
                 />
@@ -90,10 +93,11 @@ const ParkingSpotEditList = (
                   value={parkingSpot.longitude}
                   required
                   onChange={(e) => {
-                    parkingSpot.longitude = e.target.value
-                    setValues(bookcarsHelper.clone(values))
+                    const __values = bookcarsHelper.clone(values) as bookcarsTypes.ParkingSpot[]
+                    __values[index].longitude = e.target.value
+                    setValues(__values)
                     if (onUpdate) {
-                      onUpdate(parkingSpot, index)
+                      onUpdate(__values[index], index)
                     }
                   }}
                 />

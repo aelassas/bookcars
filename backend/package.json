@@ -46,7 +46,9 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.25.9",
+    "babel-plugin-react-compiler": "^19.0.0-beta-201e55d-20241215",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-react-compiler": "^19.0.0-beta-201e55d-20241215",
     "npm-check-updates": "^17.1.12",
     "stylelint": "^16.12.0",
     "stylelint-config-standard": "^36.0.1",

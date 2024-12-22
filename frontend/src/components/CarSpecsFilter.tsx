@@ -34,24 +34,26 @@ const CarSpecsFilter = ({
   }, [allChecked])
 
   const handleCheckAirconChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    const _value = bookcarsHelper.clone(value) as bookcarsTypes.CarSpecs
+
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      value.aircon = true
+      _value.aircon = true
 
       if (value.aircon && value.moreThanFourDoors && value.moreThanFiveSeats) {
         setAllChecked(true)
       }
     } else {
-      value.aircon = undefined
+      _value.aircon = undefined
 
       if (!value.aircon || !value.moreThanFourDoors || !value.moreThanFiveSeats) {
         setAllChecked(false)
       }
     }
 
-    setValue(value)
+    setValue(_value)
 
     if (onChange) {
-      onChange(bookcarsHelper.clone(value))
+      onChange(_value)
     }
   }
 
@@ -64,23 +66,25 @@ const CarSpecsFilter = ({
   }
 
   const handleCheckMoreThanFourDoorsChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    const _value = bookcarsHelper.clone(value) as bookcarsTypes.CarSpecs
+
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      value.moreThanFourDoors = true
+      _value.moreThanFourDoors = true
 
       if (value.aircon && value.moreThanFourDoors && value.moreThanFiveSeats) {
         setAllChecked(true)
       }
     } else {
-      value.moreThanFourDoors = undefined
+      _value.moreThanFourDoors = undefined
       if (!value.aircon || !value.moreThanFourDoors || !value.moreThanFiveSeats) {
         setAllChecked(false)
       }
     }
 
-    setValue(value)
+    setValue(_value)
 
     if (onChange) {
-      onChange(bookcarsHelper.clone(value))
+      onChange(_value)
     }
   }
 
@@ -93,23 +97,25 @@ const CarSpecsFilter = ({
   }
 
   const handleCheckMoreThanFiveSeatsChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    const _value = bookcarsHelper.clone(value) as bookcarsTypes.CarSpecs
+
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      value.moreThanFiveSeats = true
+      _value.moreThanFiveSeats = true
 
       if (value.aircon && value.moreThanFiveSeats && value.moreThanFiveSeats) {
         setAllChecked(true)
       }
     } else {
-      value.moreThanFiveSeats = undefined
+      _value.moreThanFiveSeats = undefined
       if (!value.aircon || !value.moreThanFiveSeats || !value.moreThanFiveSeats) {
         setAllChecked(false)
       }
     }
 
-    setValue(value)
+    setValue(_value)
 
     if (onChange) {
-      onChange(bookcarsHelper.clone(value))
+      onChange(_value)
     }
   }
 
