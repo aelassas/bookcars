@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RouteProp } from '@react-navigation/native'
+import { CommonActions, NavigationRoute, RouteProp } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import * as helper from '@/common/helper'
 import * as env from '@/config/env.config'
@@ -64,7 +65,7 @@ const CarList = ({
   hidePrice,
   footerComponent,
   routeName,
-  route,
+  // route,
   onLoad
 }: CarListProps) => {
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
@@ -251,68 +252,75 @@ const CarList = ({
               setRefreshing(true)
 
               if ((routeName && pickupLocation && dropOffLocation && from && to) && ((routeName === 'Checkout' && cars && cars.length > 0) || routeName === 'Cars')) {
-                helper.navigate(route, navigation, true)
+                // helper.navigate(route, navigation, true)
 
-                // if (route === 'Cars') {
-                //   navigation.navigate(route, {
-                //     pickupLocation: pickupLocation!,
-                //     dropOffLocation: dropOffLocation!,
-                //     from: from!.getTime(),
-                //     to: to!.getTime(),
-                //     d: Date.now(),
-                //   })
-                // } else {
-                //   navigation.navigate(route, {
-                //     car: cars![0]._id,
-                //     pickupLocation: pickupLocation!,
-                //     dropOffLocation: dropOffLocation!,
-                //     from: from!.getTime(),
-                //     to: to!.getTime(),
-                //     d: Date.now(),
-                //   })
-                // }
+                navigation.dispatch((state) => {
+                  const { routes } = state
+                  const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
+                  let index = 0
 
-                // navigation.dispatch((state) => {
-                //   const { routes } = state
-                //   if (route === 'Cars') {
-                //     const index = routes.findIndex((r) => r.name === 'Cars')
-                //     routes.splice(index, 1)
-                //     const now = Date.now()
-                //     routes.push({
-                //       name: 'Cars',
-                //       key: `Cars-${now}`,
-                //       params: {
-                //         pickupLocation: pickupLocation!,
-                //         dropOffLocation: dropOffLocation!,
-                //         from: from!.getTime(),
-                //         to: to!.getTime(),
-                //         d: now,
-                //       },
-                //     })
-                //   } else {
-                //     const index = routes.findIndex((r) => r.name === 'Checkout')
-                //     routes.splice(index, 1)
-                //     const now = Date.now()
-                //     routes.push({
-                //       name: 'Checkout',
-                //       key: `Checkout-${now}`,
-                //       params: {
-                //         car: cars![0]._id,
-                //         pickupLocation: pickupLocation!,
-                //         dropOffLocation: dropOffLocation!,
-                //         from: from!.getTime(),
-                //         to: to!.getTime(),
-                //         d: now,
-                //       },
-                //     })
-                //   }
+                  if (routeName === 'Cars') {
+                    index = routes.findIndex((r) => r.name === 'Cars')
+                    // routes.splice(index, 1)
+                    const now = Date.now()
+                    _routes[index] = {
+                      name: routeName,
+                      key: `${routeName}-${now}`,
+                      params: {
+                        pickupLocation: pickupLocation!,
+                        dropOffLocation: dropOffLocation!,
+                        from: from!.getTime(),
+                        to: to!.getTime(),
+                        d: now,
+                      },
+                    }
+                    // routes.push({
+                    //   name: 'Cars',
+                    //   key: `Cars-${now}`,
+                    //   params: {
+                    //     pickupLocation: pickupLocation!,
+                    //     dropOffLocation: dropOffLocation!,
+                    //     from: from!.getTime(),
+                    //     to: to!.getTime(),
+                    //     d: now,
+                    //   },
+                    // })
+                  } else {
+                    index = routes.findIndex((r) => r.name === 'Checkout')
+                    // routes.splice(index, 1)
+                    const now = Date.now()
+                    _routes[index] = {
+                      name: routeName,
+                      key: `${routeName}-${now}`,
+                      params: {
+                        car: cars![0]._id,
+                        pickupLocation: pickupLocation!,
+                        dropOffLocation: dropOffLocation!,
+                        from: from!.getTime(),
+                        to: to!.getTime(),
+                        d: now,
+                      },
+                    }
+                    // routes.push({
+                    //   name: 'Checkout',
+                    //   key: `Checkout-${now}`,
+                    //   params: {
+                    //     car: cars![0]._id,
+                    //     pickupLocation: pickupLocation!,
+                    //     dropOffLocation: dropOffLocation!,
+                    //     from: from!.getTime(),
+                    //     to: to!.getTime(),
+                    //     d: now,
+                    //   },
+                    // })
+                  }
 
-                //   return CommonActions.reset({
-                //     ...state,
-                //     routes,
-                //     index: routes.length - 1,
-                //   })
-                // })
+                  return CommonActions.reset({
+                    ...state,
+                    routes: _routes,
+                    index,
+                  })
+                })
               } else {
                 setRefreshing(false)
               }
