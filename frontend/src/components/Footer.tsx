@@ -47,8 +47,8 @@ const Footer = () => {
             <a href="mailto:info@bookcars.ma">info@bookcars.ma</a>
           </div>
           <div className="footer-contact">
-            <IconButton href="https://www.facebook.com/profile.php?id=61566121058287" target="_blank" aria-label="Facebook" className="social-icon"><FacebookIcon /></IconButton>
-            <IconButton href="https://x.com/ErbilCarRent" target="_blank" aria-label="X" className="social-icon"><X /></IconButton>
+            <IconButton href="https://www.facebook.com/" target="_blank" aria-label="Facebook" className="social-icon"><FacebookIcon /></IconButton>
+            <IconButton href="https://x.com/" target="_blank" aria-label="X" className="social-icon"><X /></IconButton>
             <IconButton href="https://www.linkedin.com/" target="_blank" aria-label="LinkedIn" className="social-icon"><LinkedIn /></IconButton>
             <IconButton href="https://www.instagram.com/" target="_blank" aria-label="Instagram" className="social-icon"><Instagram /></IconButton>
           </div>
