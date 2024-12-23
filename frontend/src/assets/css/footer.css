@@ -121,6 +121,8 @@ div.footer section.payment div.payment-text {
 
   div.footer section.payment div.payment-text {
     margin: 5px 0;
+    padding-left: 8px;
+    align-items: flex-start;
   }
 
   div.footer section.payment img {
