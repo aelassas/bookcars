@@ -11,7 +11,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: [
     'react-refresh',
-    'react-compiler'
+    'react-compiler',
   ],
   rules: {
     'semi': [
