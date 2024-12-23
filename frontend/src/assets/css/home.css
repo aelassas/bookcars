@@ -48,11 +48,11 @@ div.home div.home-content div.video-background {
   background-position: 50%;
 }
 
-div.home div.home-content div.video-background img {
+/* div.home div.home-content div.video-background img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+} */
 
 /* div.home div.home-content::before {
   position: absolute;
