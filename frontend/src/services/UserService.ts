@@ -213,7 +213,7 @@ export const getLanguage = () => {
   const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')
 
   if (user && user.language) {
-    return user.language
+    return user.language as string
   }
   const lang = localStorage.getItem('bc-fe-language')
   if (lang && lang.length === 2) {

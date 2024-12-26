@@ -23,7 +23,6 @@ import {
 } from '@mui/material'
 import {
   Visibility as ViewIcon,
-  Check as CheckIcon,
   Cancel as CancelIcon
 } from '@mui/icons-material'
 import { format } from 'date-fns'
@@ -34,10 +33,10 @@ import * as BookingService from '@/services/BookingService'
 import * as StripeService from '@/services/StripeService'
 import * as helper from '@/common/helper'
 import { strings } from '@/lang/booking-list'
-import { strings as csStrings } from '@/lang/cars'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
-import BookingStatus from './BookingStatus'
+import BookingStatus from '@/components/BookingStatus'
+import Extras from '@/components/Extras'
 
 import '@/assets/css/booking-list.css'
 
@@ -447,56 +446,10 @@ const BookingList = ({
                     || booking.theftProtection
                     || booking.fullInsurance
                     || booking.additionalDriver) && (
-                      <div className="extras">
-                        <span className="extras-title">{commonStrings.OPTIONS}</span>
-                        {booking.cancellation && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.CANCELLATION}</span>
-                            <span className="extra-text">{helper.getCancellationOption(_bookingCar.cancellation, language as string)}</span>
-                          </div>
-                        )}
-
-                        {booking.amendments && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.AMENDMENTS}</span>
-                            <span className="extra-text">{helper.getAmendmentsOption(_bookingCar.amendments, language as string)}</span>
-                          </div>
-                        )}
-
-                        {booking.collisionDamageWaiver && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="extra-text">{helper.getCollisionDamageWaiverOption(_bookingCar.collisionDamageWaiver, days, language as string)}</span>
-                          </div>
-                        )}
-
-                        {booking.theftProtection && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="extra-text">{helper.getTheftProtectionOption(_bookingCar.theftProtection, days, language as string)}</span>
-                          </div>
-                        )}
-
-                        {booking.fullInsurance && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.FULL_INSURANCE}</span>
-                            <span className="extra-text">{helper.getFullInsuranceOption(_bookingCar.fullInsurance, days, language as string)}</span>
-                          </div>
-                        )}
-
-                        {booking.additionalDriver && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="extra-text">{helper.getAdditionalDriverOption(_bookingCar.additionalDriver, days, language as string)}</span>
-                          </div>
-                        )}
-                      </div>
+                      <Extras
+                        booking={booking}
+                        days={days}
+                      />
                     )}
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.COST}</span>
