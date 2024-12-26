@@ -40,7 +40,7 @@ const CurrencyMenu = ({
     },
     text: {
       color: textColor || '#000',
-      fontWeight: '500'
+      fontWeight: 'bold'
     },
     menu: {
       position: 'absolute',
@@ -51,16 +51,20 @@ const CurrencyMenu = ({
       width: 70,
       height: 32,
       backgroundColor: '#fff',
-      color: '#515151',
-      // backgroundColor: '#feeee4',
-      // color: '#f37022',
-      textAlign: 'center',
-      verticalAlign: 'middle',
       borderColor: '#f1f1f1',
       borderWidth: 1,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    menuItemText: {
+      color: '#515151',
+      textAlign: 'center',
     },
     selected: {
       backgroundColor: '#feeee4',
+    },
+    textSelected: {
       color: '#f37022',
     }
   })
@@ -87,7 +91,9 @@ const CurrencyMenu = ({
                   setShowMenu(false)
                 }}
               >
-                <Text style={{ ...styles.menuItem, ...(currency.code === value ? styles.selected : null) }}>{currency.code}</Text>
+                <View style={{ ...styles.menuItem, ...(currency.code === value ? styles.selected : null) }}>
+                  <Text style={{ ...styles.menuItemText, ...(currency.code === value ? styles.textSelected : null) }}>{currency.code}</Text>
+                </View>
               </Pressable>
             ))
           }

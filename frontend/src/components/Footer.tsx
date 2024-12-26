@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Link } from '@mui/material'
+import { IconButton } from '@mui/material'
 import {
   MailOutline,
   FacebookTwoTone as FacebookIcon,
@@ -47,10 +47,10 @@ const Footer = () => {
             <a href="mailto:info@bookcars.ma">info@bookcars.ma</a>
           </div>
           <div className="footer-contact">
-            <Link href="https://www.facebook.com/" target="_blank"><FacebookIcon className="social-icon" /></Link>
-            <Link href="https://x.com/" target="_blank"><X className="social-icon" /></Link>
-            <Link href="https://www.linkedin.com/" target="_blank"><LinkedIn className="social-icon" /></Link>
-            <Link href="https://www.instagram.com/" target="_blank"><Instagram className="social-icon" /></Link>
+            <IconButton href="https://www.facebook.com/" target="_blank" aria-label="Facebook" className="social-icon"><FacebookIcon /></IconButton>
+            <IconButton href="https://x.com/" target="_blank" aria-label="X" className="social-icon"><X /></IconButton>
+            <IconButton href="https://www.linkedin.com/" target="_blank" aria-label="LinkedIn" className="social-icon"><LinkedIn /></IconButton>
+            <IconButton href="https://www.instagram.com/" target="_blank" aria-label="Instagram" className="social-icon"><Instagram /></IconButton>
           </div>
           <div className="newsletter">
             <NewsletterForm />

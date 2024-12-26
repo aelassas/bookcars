@@ -49,7 +49,6 @@ import { strings as privacyStrings } from '@/lang/privacy'
 import { strings as faqListStrings } from '@/lang/faq-list'
 import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
-import 'react-toastify/dist/ReactToastify.min.css'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 
@@ -158,8 +157,6 @@ if (lang) {
 
     if (country === 'France' || country === 'Morocco') {
       updateLang('fr')
-    } else if (country === 'Greece') {
-      updateLang('el')
     } else {
       updateLang(env.DEFAULT_LANGUAGE)
     }
@@ -257,22 +254,20 @@ const theme = createTheme(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline>
-        <App />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover
-          theme="dark"
-        />
-      </CssBaseline>
-    </ThemeProvider>
-  </React.StrictMode>,
+  <ThemeProvider theme={theme}>
+    <CssBaseline>
+      <App />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover
+        theme="dark"
+      />
+    </CssBaseline>
+  </ThemeProvider>,
 )

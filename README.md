@@ -11,7 +11,7 @@
 [![coveralls](https://coveralls.io/repos/github/aelassas/bookcars/badge.svg)](https://coveralls.io/github/aelassas/bookcars)
 -->
 
-# BookCars
+## BookCars
 
 BookCars is a highly customizable, scalable, and cost-efficient solution for car rental businesses. Its robust feature set and open-source nature make it a sustainable choice for long-term growth in the rental industry.
 
@@ -25,7 +25,7 @@ When new suppliers are created, they receive an email prompting them to create a
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
-# Features
+## Features
 
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
@@ -48,49 +48,49 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Secure against XSS, XST, CSRF and MITM
 * Supported Platforms: iOS, Android, Web, Docker
 
-# Live Demo
+## Live Demo
 
 Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
 
-## Frontend
+### Frontend
 
 * URL: https://bookcars.dynv6.net:3002/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-## Admin Dashboard
+### Admin Dashboard
 
 * URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
-## Mobile App
+### Mobile App
 
 <!--
 You can install the Android app on any Android device.
 
-### Scan this code with a device
+#### Scan this code with a device
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
 ![QR](https://bookcars.github.io/content/qr-code-4.5.png)
 
-### How to install the Mobile App on Android
+#### How to install the Mobile App on Android
 
 * On devices running Android 8.0 (API level 26) and higher, you must navigate to the Install unknown apps system settings screen to enable app installations from a particular location (i.e. the web browser you are downloading the app from).
 
 * On devices running Android 7.1.1 (API level 25) and lower, you should enable the Unknown sources system setting, found in Settings > Security on your device.
 
-### Alternative Way
+#### Alternative Way
 -->
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-4.8.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-# Resources
+## Documentation
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)
@@ -110,6 +110,7 @@ You can install the Android App by downloading the APK and installing it on any 
     1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
+    4. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)
 11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
@@ -117,6 +118,6 @@ You can install the Android App by downloading the APK and installing it on any 
 15. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 16. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
-# License
+## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).

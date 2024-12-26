@@ -37,6 +37,25 @@ const useReCaptcha = (): RecaptchaType => {
   const [reCaptchaLoaded, setReCaptchaLoaded] = useState(false)
 
   // Load ReCaptcha script
+  // useEffect(() => {
+  //   if (!env.RECAPTCHA_ENABLED) return
+  //   if (env.isSafari) return
+  //   if (typeof window === 'undefined' || reCaptchaLoaded) return
+  //   if (window.grecaptcha) {
+  //     showBadge()
+  //     setReCaptchaLoaded(true)
+  //     return
+  //   }
+  //   const script = document.createElement('script')
+  //   script.async = true
+  //   script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
+  //   script.addEventListener('load', () => {
+  //     setReCaptchaLoaded(true)
+  //     showBadge()
+  //   })
+  //   document.body.appendChild(script)
+  // }, [reCaptchaLoaded])
+
   useEffect(() => {
     if (!env.RECAPTCHA_ENABLED) return
     if (env.isSafari) return
@@ -46,14 +65,25 @@ const useReCaptcha = (): RecaptchaType => {
       setReCaptchaLoaded(true)
       return
     }
-    const script = document.createElement('script')
-    script.async = true
-    script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
-    script.addEventListener('load', () => {
-      setReCaptchaLoaded(true)
-      showBadge()
-    })
-    document.body.appendChild(script)
+    let fired = false
+    const loadRecaptchaScript = () => {
+      if (!fired) {
+        const script = document.createElement('script')
+        script.defer = true
+        script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
+        script.addEventListener('load', () => {
+          setReCaptchaLoaded(true)
+          showBadge()
+        })
+        document.body.appendChild(script)
+        fired = true
+      }
+    }
+
+    window.addEventListener('mousemove', loadRecaptchaScript, { once: true })
+    window.addEventListener('touchstart', loadRecaptchaScript, { once: true })
+    window.addEventListener('touchmove', loadRecaptchaScript, { once: true })
+    window.addEventListener('touchend', loadRecaptchaScript, { once: true })
   }, [reCaptchaLoaded])
 
   // Hide badge when unmount

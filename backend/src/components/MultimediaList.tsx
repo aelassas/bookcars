@@ -23,8 +23,7 @@ const MultimediaList = ({
     if (onChange) {
       onChange(value)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
+  }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setValue(mValue || [])

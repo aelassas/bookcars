@@ -9,7 +9,10 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.d.ts', 'vite.config.js'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: [
+    'react-refresh',
+    'react-compiler',
+  ],
   rules: {
     'semi': [
       'error',
@@ -67,5 +70,6 @@ module.exports = {
     'no-console': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'react-compiler/react-compiler': 'error',
   },
 }

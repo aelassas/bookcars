@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -6,7 +7,6 @@ import {
   FormHelperText,
   Button,
   Paper,
-  Link
 } from '@mui/material'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
@@ -21,6 +21,8 @@ import NoMatch from './NoMatch'
 import '@/assets/css/forgot-password.css'
 
 const ForgotPassword = () => {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [visible, setVisible] = useState(false)
   const [error, setError] = useState(false)
@@ -126,7 +128,7 @@ const ForgotPassword = () => {
               <div>
                 <span>{strings.EMAIL_SENT}</span>
                 <p>
-                  <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+                  <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
                 </p>
               </div>
             )}
@@ -145,10 +147,10 @@ const ForgotPassword = () => {
                 <SocialLogin />
 
                 <div className="buttons">
-                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
+                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
                     {strings.RESET}
                   </Button>
-                  <Button className="btn-secondary btn-margin-bottom" size="small" variant="outlined" color="primary" href="/">
+                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
                     {commonStrings.CANCEL}
                   </Button>
                 </div>

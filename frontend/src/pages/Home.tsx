@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   // Checkbox,
@@ -46,6 +47,8 @@ import Maxi from '@/assets/img/maxi.png'
 import '@/assets/css/home.css'
 
 const Home = () => {
+  const navigate = useNavigate()
+
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [countries, setCountries] = useState<bookcarsTypes.CountryInfo[]>([])
   const [pickupLocation, setPickupLocation] = useState('')
@@ -81,8 +84,7 @@ const Home = () => {
     }
 
     init()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
@@ -123,7 +125,7 @@ const Home = () => {
               loop
               playsInline
               disablePictureInPicture
-              onLoadedData={() => {
+              onLoadedData={async () => {
                 setVideoLoaded(true)
               }}
             >
@@ -131,10 +133,11 @@ const Home = () => {
               <track kind="captions" />
             </video>
             {!videoLoaded && (
-              <div className="video-background">
-                <img src="cover.png" alt="" />
-              </div>
+              <div className="video-background" />
             )}
+            {/* <div className="video-background">
+              <img src="cover.png" alt="" />
+            </div> */}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>
@@ -532,7 +535,7 @@ const Home = () => {
               <Button
                 variant="contained"
                 className="btn-primary btn-home"
-                href="/contact"
+                onClick={() => navigate('/contact')}
               >
                 {strings.CONTACT_US}
               </Button>

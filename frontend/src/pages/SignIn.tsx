@@ -5,7 +5,6 @@ import {
   InputLabel,
   Input,
   Button,
-  Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -137,17 +136,17 @@ const SignIn = () => {
                 </label>
               </div>
 
-              <div className="forgot-password">
-                <Link href="/forgot-password">{strings.RESET_PASSWORD}</Link>
+              <div className="forgot-password-wrapper">
+                <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
               </div>
 
               <SocialLogin redirectToHomepage />
 
               <div className="signin-buttons">
-                <Button variant="outlined" color="primary" href="/sign-up" className="btn-margin btn-margin-bottom">
+                <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
                   {suStrings.SIGN_UP}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" disableElevation>
                   {strings.SIGN_IN}
                 </Button>
               </div>
