@@ -1,0 +1,30 @@
+div.extras {
+  margin-bottom: 10px;
+}
+
+div.extras span.extras-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+div.extras div.extra {
+  display: flex;
+  align-items: center;
+  margin: 3px;
+}
+
+div.extras div.extra .extra-icon {
+  color: #1f9201;
+  height: 20px;
+}
+
+div.extras div.extra span.extra-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+div.extras div.extra span.extra-text {
+  font-size: 12px;
+  color: rgb(0 0 0 / 47%);
+}
