@@ -82,8 +82,8 @@ const useReCaptcha = (): RecaptchaType => {
 
     window.addEventListener('mousemove', loadRecaptchaScript, { once: true })
     window.addEventListener('touchstart', loadRecaptchaScript, { once: true })
-    window.addEventListener('touchmove', loadRecaptchaScript, { once: true })
-    window.addEventListener('touchend', loadRecaptchaScript, { once: true })
+    // window.addEventListener('touchmove', loadRecaptchaScript, { once: true })
+    // window.addEventListener('touchend', loadRecaptchaScript, { once: true })
   }, [reCaptchaLoaded])
 
   // Hide badge when unmount
