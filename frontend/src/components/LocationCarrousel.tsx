@@ -32,20 +32,18 @@ const LocationCarrousel = ({
     dots: true,
     // eslint-disable-next-line react/no-unstable-nested-components
     appendDots: (dots: ReactNode) => (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+        <Button variant="text" className="btn-slider btn-slider-prev" onClick={() => slider?.current?.slickPrev()}>
+          <ArrowLeft />
+          {commonStrings.BACK}
+        </Button>
         <ul style={{ margin: '0px', padding: '0px' }}>
-          <Button variant="text" className="btn-slider btn-slider-prev" onClick={() => slider?.current?.slickPrev()}>
-            <ArrowLeft />
-            {commonStrings.BACK}
-          </Button>
-          {' '}
           {dots}
-          {' '}
-          <Button variant="text" className="btn-slider btn-slider-next" onClick={() => slider?.current?.slickNext()}>
-            {commonStrings.NEXT}
-            <ArrowRight />
-          </Button>
         </ul>
+        <Button variant="text" className="btn-slider btn-slider-next" onClick={() => slider?.current?.slickNext()}>
+          {commonStrings.NEXT}
+          <ArrowRight />
+        </Button>
       </div>
     ),
     infinite: true,
