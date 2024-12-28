@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Accordion, AccordionDetails, AccordionSummary, Button } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
 import { ExpandMore } from '@mui/icons-material'
 import { strings } from '@/lang/faq-list'
 
@@ -14,20 +14,19 @@ const Faq = () => {
       <h2>{strings.FAQ_TITLE}</h2>
       <div className="questions">
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_DOCUMENTS_TITLE}</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}><Typography component="span" className="accordion-title">{strings.FAQ_DOCUMENTS_TITLE}</Typography></AccordionSummary>
           <AccordionDetails className="accordion-details">{strings.FAQ_DOCUMENTS_TEXT}</AccordionDetails>
         </Accordion>
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_SERVICES_TITLE}</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}><Typography component="span" className="accordion-title">{strings.FAQ_SERVICES_TITLE}</Typography></AccordionSummary>
           <AccordionDetails className="accordion-details">{strings.FAQ_SERVICES_TEXT}</AccordionDetails>
         </Accordion>
-
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_AGE_TITLE}</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}><Typography component="span" className="accordion-title">{strings.FAQ_AGE_TITLE}</Typography></AccordionSummary>
           <AccordionDetails className="accordion-details">{strings.FAQ_AGE_TEXT}</AccordionDetails>
         </Accordion>
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />} className="accordion-title">{strings.FAQ_CANCEL_TITLE}</AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}><Typography component="span" className="accordion-title">{strings.FAQ_CANCEL_TITLE}</Typography></AccordionSummary>
           <AccordionDetails className="accordion-details">{strings.FAQ_CANCEL_TEXT}</AccordionDetails>
         </Accordion>
       </div>
