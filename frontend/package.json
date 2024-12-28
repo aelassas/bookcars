@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../movinin-helper && npm i && cd ../../frontend",
+    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../frontend",
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "npm run ts:build && vite",
