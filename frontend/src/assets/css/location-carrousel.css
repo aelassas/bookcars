@@ -42,7 +42,7 @@ div.location-caroussel div.box div.location-image img {
   max-height: 100%;
 }
 
-div.location-caroussel div.box div.location-image .location-icon{
+div.location-caroussel div.box div.location-image .location-icon {
   color: #939393;
 }
 
@@ -50,8 +50,12 @@ div.location-caroussel div.box div.title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding-right: 12px;
+}
+
+div.location-caroussel div.box div.title .title-badge {
+  margin-top: 10px;
 }
 
 div.location-caroussel div.box h2 {

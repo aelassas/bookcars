@@ -78,7 +78,7 @@ const LocationCarrousel = ({
             </div>
             <div className="title">
               <h2>{location.name}</h2>
-              <Badge backgroundColor="#B3E5FC" color="#044f71" text="New" />
+              <Badge backgroundColor="#B3E5FC" color="#044f71" text="New" className="title-badge" />
               {/* <Badge backgroundColor="#B3E5FC" color="#2D7AB3" text="New" /> */}
               {/* <Badge backgroundColor="#FFE0B2" color="#EF8743" text="200 m from you" />
               <Badge backgroundColor="#FEEBEE" color="#F37977" text="-20% sale" /> */}
