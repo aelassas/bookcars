@@ -67,7 +67,7 @@ const LocationCarrousel = ({
     <div className="location-caroussel">
       <Slick ref={slider} {...sliderSettings}>
         {locations.map((location) => (
-          <div key={location._id} className="box">
+          <div key={location._id} className="box" aria-hidden="false">
             <div className="location-image">
               {
                 location.image ? (
