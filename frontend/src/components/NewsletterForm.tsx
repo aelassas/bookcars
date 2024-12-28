@@ -99,6 +99,9 @@ const NewsletterForm = () => {
             required
             autoComplete="off"
             value={email}
+            inputProps={{
+              'aria-label': 'email',
+            }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setEmail(e.target.value)
 
