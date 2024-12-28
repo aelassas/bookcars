@@ -4,9 +4,10 @@
   "version": "5.0.0",
   "type": "module",
   "scripts": {
-    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../backend",
-    "build": "npm run install:dependencies && tsc --build --verbose && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
-    "dev": "vite",
+    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../movinin-helper && npm i && cd ../../backend",
+    "ts:build": "npm run install:dependencies && tsc --build --verbose",
+    "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
+    "dev": "npm run ts:build && vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
