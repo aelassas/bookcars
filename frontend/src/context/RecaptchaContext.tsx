@@ -1,5 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { ReactNode, createContext, use, useMemo } from 'react'
+import React, { ReactNode, createContext, useContext, useMemo } from 'react'
 import useReCaptcha from '@/hooks/useRecaptcha'
 
 // Create context
@@ -25,4 +24,5 @@ export const RecaptchaProvider = ({ children }: RecaptchaProviderProps) => {
 }
 
 // Create a custom hook to access context
-export const useRecaptchaContext = () => use(RecaptchaContext)
+// eslint-disable-next-line react-refresh/only-export-components
+export const useRecaptchaContext = () => useContext(RecaptchaContext)
