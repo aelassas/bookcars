@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import SuspenseRouter from '@/components/SuspenseRouter'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
@@ -37,7 +36,7 @@ const Faq = lazy(() => import('@/pages/Faq'))
 const App = () => (
   <GlobalProvider>
     <RecaptchaProvider>
-      <SuspenseRouter window={window}>
+      <BrowserRouter>
         <ScrollToTop />
 
         <div className="app">
@@ -69,7 +68,7 @@ const App = () => (
             </Routes>
           </Suspense>
         </div>
-      </SuspenseRouter>
+      </BrowserRouter>
     </RecaptchaProvider>
   </GlobalProvider>
 )
