@@ -3,7 +3,7 @@
     "jsEngine": "hermes",
     "newArchEnabled": true,
     "name": "BookCars",
-    "version": "5.0.0",
+    "version": "5.1.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
@@ -28,7 +28,7 @@
       "package": "com.bookcars"
     },
     "ios": {
-      "buildNumber": "5.0.0",
+      "buildNumber": "5.1.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       // "splash": {
