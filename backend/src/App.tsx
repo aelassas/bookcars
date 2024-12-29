@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { GlobalProvider } from '@/context/GlobalContext'
-import SuspenseRouter from '@/components/SuspenseRouter'
 import ScrollToTop from '@/components/ScrollToTop'
 
 const SignIn = lazy(() => import('@/pages/SignIn'))
@@ -39,8 +38,8 @@ const CreateCountry = lazy(() => import('@/pages/CreateCountry'))
 const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 
 const App = () => (
-  <GlobalProvider>
-    <SuspenseRouter window={window}>
+  <BrowserRouter>
+    <GlobalProvider>
       <ScrollToTop />
 
       <div className="app">
@@ -83,8 +82,8 @@ const App = () => (
           </Routes>
         </Suspense>
       </div>
-    </SuspenseRouter>
-  </GlobalProvider>
+    </GlobalProvider>
+  </BrowserRouter>
 )
 
 export default App
