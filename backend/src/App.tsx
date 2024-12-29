@@ -38,8 +38,8 @@ const CreateCountry = lazy(() => import('@/pages/CreateCountry'))
 const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 
 const App = () => (
-  <GlobalProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <GlobalProvider>
       <ScrollToTop />
 
       <div className="app">
@@ -82,8 +82,8 @@ const App = () => (
           </Routes>
         </Suspense>
       </div>
-    </BrowserRouter>
-  </GlobalProvider>
+    </GlobalProvider>
+  </BrowserRouter>
 )
 
 export default App

@@ -34,9 +34,9 @@ const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 
 const App = () => (
-  <GlobalProvider>
-    <RecaptchaProvider>
-      <BrowserRouter>
+  <BrowserRouter>
+    <GlobalProvider>
+      <RecaptchaProvider>
         <ScrollToTop />
 
         <div className="app">
@@ -68,9 +68,9 @@ const App = () => (
             </Routes>
           </Suspense>
         </div>
-      </BrowserRouter>
-    </RecaptchaProvider>
-  </GlobalProvider>
+      </RecaptchaProvider>
+    </GlobalProvider>
+  </BrowserRouter>
 )
 
 export default App
