@@ -12,6 +12,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings as suStrings } from '@/lang/sign-up'
 import { strings } from '@/lang/sign-in'
 import * as UserService from '@/services/UserService'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 import Error from '@/components/Error'
 import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
@@ -21,6 +22,7 @@ import '@/assets/css/signin.css'
 const SignIn = () => {
   const navigate = useNavigate()
 
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
@@ -54,6 +56,10 @@ const SignIn = () => {
           setBlacklisted(true)
         } else {
           setError(false)
+
+          const user = await UserService.getUser(res.data._id)
+          setUser(user)
+          setUserLoaded(true)
 
           const params = new URLSearchParams(window.location.search)
           if (params.has('from')) {
