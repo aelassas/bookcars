@@ -13,6 +13,7 @@ import { strings } from '@/lang/cars'
 import * as CarService from '@/services/CarService'
 import Pager from '@/components/Pager'
 import Car from '@/components/Car'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/car-list.css'
 
@@ -116,6 +117,7 @@ const CarList = ({
   ) => {
     try {
       setLoading(true)
+
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: _suppliers ?? [],
         pickupLocation: _pickupLocation,
@@ -236,6 +238,7 @@ const CarList = ({
               hidePrice={hidePrice}
             />
           ))}
+        {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager page={page} pageSize={env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />
