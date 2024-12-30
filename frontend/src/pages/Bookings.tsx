@@ -74,7 +74,7 @@ const Bookings = () => {
         )}
       </Layout>
 
-      {loadingPage && <Progress />}
+      {user?.verified && loadingPage && <Progress />}
     </>
   )
 }

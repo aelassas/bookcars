@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   AppBar,
@@ -47,26 +47,30 @@ import * as langHelper from '@/common/langHelper'
 import * as helper from '@/common/helper'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 import * as StripeService from '@/services/StripeService'
+import { useUserContext, UserContextType } from '@/context/UserContext'
+import { useInit } from '@/common/customHooks'
 
 import '@/assets/css/header.css'
 
 const flagHeight = 28
 
 interface HeaderProps {
-  user?: bookcarsTypes.User
   hidden?: boolean
   hideSignin?: boolean
   headerTitle?: string
 }
 
 const Header = ({
-  user,
   hidden,
   hideSignin,
   headerTitle,
 }: HeaderProps) => {
   const navigate = useNavigate()
+
+  const { user, setUser, setUserLoaded } = useUserContext() as UserContextType
   const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
+
+  const [currentUser, setCurrentUser] = useState<bookcarsTypes.User>()
 
   const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -75,7 +79,7 @@ const Header = ({
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
-  const [loading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
 
   const isMenuOpen = Boolean(anchorEl)
@@ -103,6 +107,76 @@ const Header = ({
       color: '#121212',
     },
   }
+
+  const exit = async () => {
+    setLoading(false)
+    setUserLoaded(true)
+
+    await UserService.signout(false, false)
+  }
+
+  useInit(async () => {
+    const _currentUser = UserService.getCurrentUser()
+
+    if (_currentUser) {
+      try {
+        const status = await UserService.validateAccessToken()
+
+        if (status === 200) {
+          const _user = await UserService.getUser(_currentUser._id)
+
+          if (_user) {
+            if (_user.blacklisted) {
+              await exit()
+              return
+            }
+            setUser(_user)
+            setCurrentUser(_user)
+            setIsSignedIn(true)
+            setLoading(false)
+            setUserLoaded(true)
+          } else {
+            await exit()
+          }
+        } else {
+          await exit()
+        }
+      } catch {
+        await exit()
+      }
+    } else {
+      await exit()
+    }
+  }, [])
+
+  useEffect(() => {
+    const language = langHelper.getLanguage()
+    setLang(helper.getLanguage(language))
+    langHelper.setLanguage(strings, language)
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user)
+    }
+  }, [user])
+
+  useEffect(() => {
+    const init = async () => {
+      if (!hidden) {
+        if (currentUser) {
+          const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id as string)
+          setIsSignedIn(true)
+          setNotificationCount(notificationCounter.count)
+          setIsLoaded(true)
+        } else {
+          setIsLoaded(true)
+        }
+      }
+    }
+
+    init()
+  }, [hidden, currentUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -187,11 +261,13 @@ const Header = ({
   }
 
   const handleSettingsClick = () => {
+    handleMenuClose()
     navigate('/settings')
   }
 
   const handleSignout = async () => {
-    await UserService.signout()
+    await UserService.signout(true, false)
+    handleMenuClose()
   }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -209,28 +285,6 @@ const Header = ({
   const handleNotificationsClick = () => {
     navigate('/notifications')
   }
-
-  useEffect(() => {
-    const language = langHelper.getLanguage()
-    setLang(helper.getLanguage(language))
-    langHelper.setLanguage(strings, language)
-  }, [])
-
-  useEffect(() => {
-    if (!hidden) {
-      if (user) {
-        NotificationService.getNotificationCounter(user._id as string).then((notificationCounter) => {
-          setIsSignedIn(true)
-          setNotificationCount(notificationCounter.count)
-          setIsLoading(false)
-          setIsLoaded(true)
-        })
-      } else {
-        setIsLoading(false)
-        setIsLoaded(true)
-      }
-    }
-  }, [hidden, user, setNotificationCount])
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
@@ -493,7 +547,7 @@ const Header = ({
               )}
               {isSignedIn && (
                 <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} className="btn">
-                  <Avatar loggedUser={user} user={user} size="small" readonly />
+                  <Avatar loggedUser={currentUser} user={currentUser} size="small" readonly />
                 </IconButton>
               )}
             </div>
@@ -536,4 +590,4 @@ const Header = ({
   )
 }
 
-export default Header
+export default memo(Header)
