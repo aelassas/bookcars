@@ -15,20 +15,28 @@ interface RecaptchaType {
 const { RECAPTCHA_SITE_KEY } = env
 
 const showBadge = () => {
-  if (!window.grecaptcha) return
+  if (!window.grecaptcha) {
+    return
+  }
   window.grecaptcha.ready(() => {
     const badge = document.getElementsByClassName('grecaptcha-badge')[0] as HTMLElement
-    if (!badge) return
+    if (!badge) {
+      return
+    }
     badge.style.display = 'block'
     badge.style.zIndex = '1'
   })
 }
 
 const hideBadge = () => {
-  if (!window.grecaptcha) return
+  if (!window.grecaptcha) {
+    return
+  }
   window.grecaptcha.ready(() => {
     const badge = document.getElementsByClassName('grecaptcha-badge')[0] as HTMLElement
-    if (!badge) return
+    if (!badge) {
+      return
+    }
     badge.style.display = 'none'
   })
 }
@@ -36,30 +44,16 @@ const hideBadge = () => {
 const useReCaptcha = (): RecaptchaType => {
   const [reCaptchaLoaded, setReCaptchaLoaded] = useState(false)
 
-  // Load ReCaptcha script
-  // useEffect(() => {
-  //   if (!env.RECAPTCHA_ENABLED) return
-  //   if (env.isSafari) return
-  //   if (typeof window === 'undefined' || reCaptchaLoaded) return
-  //   if (window.grecaptcha) {
-  //     showBadge()
-  //     setReCaptchaLoaded(true)
-  //     return
-  //   }
-  //   const script = document.createElement('script')
-  //   script.async = true
-  //   script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
-  //   script.addEventListener('load', () => {
-  //     setReCaptchaLoaded(true)
-  //     showBadge()
-  //   })
-  //   document.body.appendChild(script)
-  // }, [reCaptchaLoaded])
-
   useEffect(() => {
-    if (!env.RECAPTCHA_ENABLED) return
-    if (env.isSafari) return
-    if (typeof window === 'undefined' || reCaptchaLoaded) return
+    if (!env.RECAPTCHA_ENABLED) {
+      return
+    }
+    if (env.isSafari) {
+      return
+    }
+    if (typeof window === 'undefined' || reCaptchaLoaded) {
+      return
+    }
     if (window.grecaptcha) {
       showBadge()
       setReCaptchaLoaded(true)
@@ -82,8 +76,6 @@ const useReCaptcha = (): RecaptchaType => {
 
     window.addEventListener('mousemove', loadRecaptchaScript, { once: true })
     window.addEventListener('touchstart', loadRecaptchaScript, { once: true })
-    window.addEventListener('touchmove', loadRecaptchaScript, { once: true })
-    window.addEventListener('touchend', loadRecaptchaScript, { once: true })
   }, [reCaptchaLoaded])
 
   // Hide badge when unmount
@@ -91,8 +83,15 @@ const useReCaptcha = (): RecaptchaType => {
 
   // Get token
   const generateReCaptchaToken = (action: string = 'submit'): Promise<string> => new Promise((resolve, reject) => {
-    if (env.isSafari) resolve('')
-    if (!reCaptchaLoaded) reject(new Error('ReCaptcha not loaded'))
+    if (!env.RECAPTCHA_ENABLED) {
+      resolve('')
+    }
+    if (env.isSafari) {
+      resolve('')
+    }
+    if (!reCaptchaLoaded) {
+      reject(new Error('ReCaptcha not loaded'))
+    }
     if (typeof window === 'undefined' || !window.grecaptcha) {
       setReCaptchaLoaded(false)
       reject(new Error('ReCaptcha not loaded'))

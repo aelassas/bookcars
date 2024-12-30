@@ -3,7 +3,8 @@ div.location-caroussel .slick-dots {
 }
 
 div.location-caroussel .slick-dots li.slick-active button::before {
-  color: #1976D2;
+  /* color: #1976D2; */
+  color: #1a1a1a;
 }
 
 div.location-caroussel .btn-slider {
@@ -41,7 +42,7 @@ div.location-caroussel div.box div.location-image img {
   max-height: 100%;
 }
 
-div.location-caroussel div.box div.location-image .location-icon{
+div.location-caroussel div.box div.location-image .location-icon {
   color: #939393;
 }
 
@@ -49,8 +50,12 @@ div.location-caroussel div.box div.title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding-right: 12px;
+}
+
+div.location-caroussel div.box div.title .title-badge {
+  margin-top: 13px;
 }
 
 div.location-caroussel div.box h2 {

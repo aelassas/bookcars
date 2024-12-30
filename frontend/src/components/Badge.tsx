@@ -6,10 +6,16 @@ interface BadgeProps {
   backgroundColor: string
   color: string
   text: string
+  className?: string
 }
 
-const Badge = ({ backgroundColor, color, text }: BadgeProps) => (
-  <div className="badge" style={{ backgroundColor, color }}>{text}</div>
+const Badge = ({
+  backgroundColor,
+  color,
+  text,
+  className,
+}: BadgeProps) => (
+  <div className={`badge ${className}`} style={{ backgroundColor, color }}>{text}</div>
 )
 
 export default Badge

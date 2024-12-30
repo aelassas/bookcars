@@ -66,14 +66,13 @@ Some features are locked down on the demo links provided. To unlock all the feat
 
 ### Mobile App
 
-<!--
 You can install the Android app on any Android device.
 
 #### Scan this code with a device
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-![QR](https://bookcars.github.io/content/qr-code-4.5.png)
+![QR](https://bookcars.github.io/content/qr-code-5.0.png)
 
 #### How to install the Mobile App on Android
 
@@ -82,11 +81,10 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 * On devices running Android 7.1.1 (API level 25) and lower, you should enable the Unknown sources system setting, found in Settings > Security on your device.
 
 #### Alternative Way
--->
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-4.8.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-5.0.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
@@ -121,3 +119,4 @@ You can install the Android App by downloading the APK and installing it on any 
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
+

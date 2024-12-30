@@ -32,20 +32,18 @@ const LocationCarrousel = ({
     dots: true,
     // eslint-disable-next-line react/no-unstable-nested-components
     appendDots: (dots: ReactNode) => (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+        <Button variant="text" className="btn-slider btn-slider-prev" onClick={() => slider?.current?.slickPrev()}>
+          <ArrowLeft />
+          {commonStrings.BACK}
+        </Button>
         <ul style={{ margin: '0px', padding: '0px' }}>
-          <Button variant="text" className="btn-slider btn-slider-prev" onClick={() => slider?.current?.slickPrev()}>
-            <ArrowLeft />
-            {commonStrings.BACK}
-          </Button>
-          {' '}
           {dots}
-          {' '}
-          <Button variant="text" className="btn-slider btn-slider-next" onClick={() => slider?.current?.slickNext()}>
-            {commonStrings.NEXT}
-            <ArrowRight />
-          </Button>
         </ul>
+        <Button variant="text" className="btn-slider btn-slider-next" onClick={() => slider?.current?.slickNext()}>
+          {commonStrings.NEXT}
+          <ArrowRight />
+        </Button>
       </div>
     ),
     infinite: true,
@@ -73,14 +71,15 @@ const LocationCarrousel = ({
             <div className="location-image">
               {
                 location.image ? (
-                  <img alt="Tirana" src={bookcarsHelper.joinURL(env.CDN_LOCATIONS, location.image)} />
+                  <img alt="" src={bookcarsHelper.joinURL(env.CDN_LOCATIONS, location.image)} />
                 )
                   : <LocationIcon className="location-icon" />
               }
             </div>
             <div className="title">
               <h2>{location.name}</h2>
-              <Badge backgroundColor="#B3E5FC" color="#2D7AB3" text="New" />
+              <Badge backgroundColor="#B3E5FC" color="#044f71" text="New" className="title-badge" />
+              {/* <Badge backgroundColor="#B3E5FC" color="#2D7AB3" text="New" /> */}
               {/* <Badge backgroundColor="#FFE0B2" color="#EF8743" text="200 m from you" />
               <Badge backgroundColor="#FEEBEE" color="#F37977" text="-20% sale" /> */}
             </div>
