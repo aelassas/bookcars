@@ -6,6 +6,7 @@ import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { init as initGA } from '@/common/ga4'
 import ScrollToTop from '@/components/ScrollToTop'
+import NProgressIndicator from '@/components/NProgressIndicator'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
@@ -43,7 +44,7 @@ const App = () => (
           <ScrollToTop />
 
           <div className="app">
-            <Suspense fallback={<></>}>
+            <Suspense fallback={<NProgressIndicator />}>
               <Header />
 
               <Routes>
