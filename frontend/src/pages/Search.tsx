@@ -253,26 +253,27 @@ const Search = () => {
             <div className="col-1">
               {!loading && (
                 <>
-                  {pickupLocation.latitude && pickupLocation.longitude && (
-                    <Map
-                      position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
-                      initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                      locations={[pickupLocation]}
-                      parkingSpots={pickupLocation.parkingSpots}
-                      className="map"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOpenMapDialog(true)
-                        }}
-                        className="view-on-map"
+                  {((pickupLocation.latitude && pickupLocation.longitude)
+                    || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
+                      <Map
+                        position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
+                        initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                        locations={[pickupLocation]}
+                        parkingSpots={pickupLocation.parkingSpots}
+                        className="map"
                       >
-                        <img alt="View On Map" src={ViewOnMap} />
-                        <span>{strings.VIEW_ON_MAP}</span>
-                      </button>
-                    </Map>
-                  )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOpenMapDialog(true)
+                          }}
+                          className="view-on-map"
+                        >
+                          <img alt="View On Map" src={ViewOnMap} />
+                          <span>{strings.VIEW_ON_MAP}</span>
+                        </button>
+                      </Map>
+                    )}
 
                   <CarFilter
                     className="filter"
@@ -336,8 +337,8 @@ const Search = () => {
                 multimedia={multimedia}
                 rating={rating}
                 seats={seats}
-                // distance={distance}
-                // onLoad={() => setLoadingPage(false)}
+              // distance={distance}
+              // onLoad={() => setLoadingPage(false)}
               />
             </div>
           </div>
