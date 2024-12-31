@@ -26,7 +26,7 @@ import CarRangeFilter from '@/components/CarRangeFilter'
 import CarMultimediaFilter from '@/components/CarMultimediaFilter'
 import CarSeatsFilter from '@/components/CarSeatsFilter'
 import Map from '@/components/Map'
-import Progress from '@/components/Progress'
+// import Progress from '@/components/Progress'
 
 import ViewOnMap from '@/assets/img/view-on-map.png'
 
@@ -59,7 +59,7 @@ const Search = () => {
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-  const [loadingPage, setLoadingPage] = useState(true)
+  // const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -337,7 +337,7 @@ const Search = () => {
                 rating={rating}
                 seats={seats}
                 // distance={distance}
-                onLoad={() => setLoadingPage(false)}
+                // onLoad={() => setLoadingPage(false)}
               />
             </div>
           </div>
@@ -397,7 +397,7 @@ const Search = () => {
         {noMatch && <NoMatch hideHeader />}
       </Layout>
 
-      {loadingPage && !noMatch && <Progress />}
+      {/* {loadingPage && !noMatch && <Progress />} */}
     </>
   )
 }
