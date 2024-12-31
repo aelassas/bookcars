@@ -205,13 +205,13 @@ const User = () => {
                   </IconButton>
                 </Tooltip>
               )}
-              {edit && (
+              {/* {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={user._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )}
+              )} */}
             </div>
           </div>
           <div className="col-2">
