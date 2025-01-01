@@ -1,4 +1,4 @@
-import LocalizedStrings from 'react-localization'
+import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/common/langHelper'
 
 const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars`

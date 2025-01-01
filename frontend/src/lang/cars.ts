@@ -1,4 +1,4 @@
-import LocalizedStrings from 'react-localization'
+import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/common/langHelper'
 import env from '@/config/env.config'
 import * as StripeService from '@/services/StripeService'
