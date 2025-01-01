@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../frontend",
+    "install:currency-converter": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../frontend",
+    "install:reactjs-social-login": "cd ../packages/reactjs-social-login && npm i && cd ../../frontend",
+    "install:dependencies": "npm run install:currency-converter && npm run install:reactjs-social-login",
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "npm run ts:build && vite",
@@ -56,7 +58,6 @@
     "react-router-dom": "^7.1.1",
     "react-slick": "^0.30.3",
     "react-toastify": "^11.0.2",
-    "reactjs-social-login": "^2.6.3",
     "slick-carousel": "^1.8.1",
     "typescript": "^5.2.2",
     "validator": "^13.12.0",

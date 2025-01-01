@@ -26,6 +26,7 @@ export default ({ mode }: { mode: string }) => {
         ':bookcars-helper': path.resolve(__dirname, '../packages/bookcars-helper'),
         ':disable-react-devtools': path.resolve(__dirname, '../packages/disable-react-devtools'),
         ':currency-converter': path.resolve(__dirname, '../packages/currency-converter'),
+        ':reactjs-social-login': path.resolve(__dirname, '../packages/reactjs-social-login'),
       },
     },
 
