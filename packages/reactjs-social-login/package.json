@@ -1,0 +1,22 @@
+{
+  "name": "reactjs-social-login",
+  "version": "1.0.0",
+  "type": "module",
+  "source": "./src/index.tsx",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "scripts": {
+    "build": "rimraf ./dist && tsc --build --verbose"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.3",
+    "@types/react": "^19.0.2",
+    "microbundle-crl": "^0.13.11",
+    "react": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2"
+  },
+  "files": [
+    "dist/"
+  ]
+}
