@@ -1,4 +1,4 @@
-import LocalizedStrings from 'react-localization'
+import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/common/langHelper'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
