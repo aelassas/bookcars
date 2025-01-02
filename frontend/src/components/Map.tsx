@@ -67,10 +67,10 @@ const ZoomControlledLayer = ({ zoom, minZoom, children }: ZoomControlledLayerPro
 interface MapProps {
   title?: string
   position?: LatLngExpression
-  initialZoom?: number,
+  initialZoom?: number
   locations?: bookcarsTypes.Location[]
-  parkingSpots?: bookcarsTypes.ParkingSpot[],
-  className?: string,
+  parkingSpots?: bookcarsTypes.ParkingSpot[]
+  className?: string
   children?: ReactNode
   onSelelectPickUpLocation?: (locationId: string) => void
   // onSelelectDropOffLocation?: (locationId: string) => void
@@ -102,7 +102,8 @@ const Map = ({
   // Tile server
   //
 
-  const tileURL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  const tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  // const tileURL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
   // const language = UserService.getLanguage()
   // if (language === 'fr') {
   //   tileURL = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'

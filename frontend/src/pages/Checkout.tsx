@@ -47,13 +47,15 @@ import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
-// import Map from '@/components/Map'
+import Map from '@/components/Map'
 import DriverLicense from '@/components/DriverLicense'
 import Progress from '@/components/Progress'
 import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
 import Footer from '@/components/Footer'
+import ViewOnMapButton from '@/components/ViewOnMapButton'
+import MapDialog from '@/components/MapDialog'
 
 import '@/assets/css/checkout.css'
 
@@ -123,6 +125,7 @@ const Checkout = () => {
   // const [distance, setDistance] = useState('')
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [license, setLicense] = useState<string | null>(null)
+  const [openMapDialog, setOpenMapDialog] = useState(false)
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -537,7 +540,7 @@ const Checkout = () => {
                 <form onSubmit={handleSubmit}>
                   <div>
 
-                    {/* {((pickupLocation.latitude && pickupLocation.longitude)
+                    {((pickupLocation.latitude && pickupLocation.longitude)
                       || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
                         <Map
                           position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
@@ -545,8 +548,10 @@ const Checkout = () => {
                           parkingSpots={pickupLocation.parkingSpots}
                           locations={[pickupLocation]}
                           className="map"
-                        />
-                      )} */}
+                        >
+                          <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
+                        </Map>
+                      )}
 
                     <CarList
                       cars={[car]}
@@ -953,6 +958,12 @@ const Checkout = () => {
             className="status"
           />
         )}
+
+        <MapDialog
+          pickupLocation={pickupLocation}
+          openMapDialog={openMapDialog}
+          onClose={() => setOpenMapDialog(false)}
+        />
       </Layout>
 
       {loadingPage && !noMatch && <Progress />}
