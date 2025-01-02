@@ -46,6 +46,7 @@ div.footer ul.links li {
   list-style: none;
   cursor: pointer;
   margin: 10px 0;
+  width: fit-content;
 }
 
 div.footer ul.links li:hover {
