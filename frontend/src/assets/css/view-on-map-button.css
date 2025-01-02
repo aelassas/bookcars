@@ -1,0 +1,25 @@
+.view-on-map {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10000;
+  /* background-color: #062638; */
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 0;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-on-map img {
+  max-width: 20px;
+  max-height: 20px;
+  margin-right: 2px;
+}
+
+.view-on-map span {
+  margin-top: 2px;
+}
