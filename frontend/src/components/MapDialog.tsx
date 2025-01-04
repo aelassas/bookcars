@@ -42,9 +42,16 @@ const MapDialog = ({
       sx={{
         '& .MuiDialog-container': {
           '& .MuiPaper-root': {
-            width: '90%',
-            height: '90%',
+            width: '95%',
+            height: '95%',
           },
+          '& .MuiDialogTitle-root': {
+            padding: 0,
+            backgroundColor: '#1a1a1a',
+          },
+          '& .MuiDialogContent-root': {
+            padding: 0,
+          }
         },
       }}
     >
@@ -52,11 +59,12 @@ const MapDialog = ({
         <Box display="flex" justifyContent="flex-end">
           <Box>
             <IconButton
+              className="close-btn"
               onClick={() => {
                 close()
               }}
             >
-              <CloseIcon />
+              <CloseIcon className="close-icon" />
             </IconButton>
           </Box>
         </Box>
