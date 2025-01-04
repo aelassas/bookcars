@@ -45,7 +45,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Responsive admin dashboard and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
-* Secure against XSS, XST, CSRF and MITM
+* Secure against XSS, XST, CSR, MITM and DDoS
 * Supported Platforms: iOS, Android, Web, Docker
 
 ## Live Demo
