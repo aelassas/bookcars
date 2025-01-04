@@ -50,7 +50,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 
 ## Live Demo
 
-Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
+Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will you give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
 
 ### Frontend
 

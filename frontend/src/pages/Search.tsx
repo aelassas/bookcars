@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { Close as CloseIcon, Tune as FiltersIcon } from '@mui/icons-material'
+import { Button } from '@mui/material'
+import { Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '@/config/env.config'
 import { strings } from '@/lang/search'
 import * as helper from '@/common/helper'
 import * as LocationService from '@/services/LocationService'
@@ -27,8 +26,8 @@ import CarMultimediaFilter from '@/components/CarMultimediaFilter'
 import CarSeatsFilter from '@/components/CarSeatsFilter'
 import Map from '@/components/Map'
 // import Progress from '@/components/Progress'
-
-import ViewOnMap from '@/assets/img/view-on-map.png'
+import ViewOnMapButton from '@/components/ViewOnMapButton'
+import MapDialog from '@/components/MapDialog'
 
 import '@/assets/css/search.css'
 
@@ -262,16 +261,7 @@ const Search = () => {
                         parkingSpots={pickupLocation.parkingSpots}
                         className="map"
                       >
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setOpenMapDialog(true)
-                          }}
-                          className="view-on-map"
-                        >
-                          <img alt="View On Map" src={ViewOnMap} />
-                          <span>{strings.VIEW_ON_MAP}</span>
-                        </button>
+                        <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
                       </Map>
                     )}
 
@@ -344,56 +334,11 @@ const Search = () => {
           </div>
         )}
 
-        <Dialog
-          fullWidth={env.isMobile}
-          maxWidth={false}
-          open={openMapDialog}
-          onClose={() => {
-            setOpenMapDialog(false)
-          }}
-          sx={{
-            '& .MuiDialog-container': {
-              '& .MuiPaper-root': {
-                width: '80%',
-                height: '800px',
-              },
-            },
-          }}
-        >
-          <DialogTitle>
-            <Box display="flex" justifyContent="flex-end">
-              <Box>
-                <IconButton
-                  onClick={() => {
-                    setOpenMapDialog(false)
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </Box>
-          </DialogTitle>
-          <DialogContent className="map-dialog-content">
-            {pickupLocation && (
-              <Map
-                position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
-                initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-                locations={[pickupLocation]}
-                parkingSpots={pickupLocation.parkingSpots}
-                className="map"
-              >
-                <button
-                  type="button"
-                  onClick={() => { }}
-                  className="view-on-map"
-                >
-                  <img alt="View On Map" src={ViewOnMap} />
-                  <span>{strings.VIEW_ON_MAP}</span>
-                </button>
-              </Map>
-            )}
-          </DialogContent>
-        </Dialog>
+        <MapDialog
+          pickupLocation={pickupLocation}
+          openMapDialog={openMapDialog}
+          onClose={() => setOpenMapDialog(false)}
+        />
 
         {noMatch && <NoMatch hideHeader />}
       </Layout>

@@ -54,6 +54,8 @@ import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
 import Footer from '@/components/Footer'
+import ViewOnMapButton from '@/components/ViewOnMapButton'
+import MapDialog from '@/components/MapDialog'
 
 import '@/assets/css/checkout.css'
 
@@ -123,6 +125,7 @@ const Checkout = () => {
   // const [distance, setDistance] = useState('')
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [license, setLicense] = useState<string | null>(null)
+  const [openMapDialog, setOpenMapDialog] = useState(false)
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -545,7 +548,9 @@ const Checkout = () => {
                           parkingSpots={pickupLocation.parkingSpots}
                           locations={[pickupLocation]}
                           className="map"
-                        />
+                        >
+                          <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
+                        </Map>
                       )}
 
                     <CarList
@@ -953,6 +958,12 @@ const Checkout = () => {
             className="status"
           />
         )}
+
+        <MapDialog
+          pickupLocation={pickupLocation}
+          openMapDialog={openMapDialog}
+          onClose={() => setOpenMapDialog(false)}
+        />
       </Layout>
 
       {loadingPage && !noMatch && <Progress />}

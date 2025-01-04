@@ -3,16 +3,13 @@ import * as langHelper from '@/common/langHelper'
 
 const strings = new LocalizedStrings({
   fr: {
-    SHOW_FILTERS: 'Afficher les filtres',
-    HILE_FILTERS: 'Masquer les filtres',
+    VIEW_ON_MAP: 'Voir sur la carte',
   },
   en: {
-    SHOW_FILTERS: 'Show Filters',
-    HILE_FILTERS: 'Hide Filters',
+    VIEW_ON_MAP: 'View on map',
   },
   es: {
-    SHOW_FILTERS: 'Mostrar filtros',
-    HILE_FILTERS: 'Ocultar filtros',
+    VIEW_ON_MAP: 'Ver en el mapa',
   },
 })
 
