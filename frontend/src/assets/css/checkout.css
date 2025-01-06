@@ -13,6 +13,11 @@ div.checkout .map {
   height: 340px;
 }
 
+div.checkout .payment-radio-disabled>*,
+div.checkout .payment-radio-disabled span.payment-info {
+  color: #919191 !important;
+}
+
 @media only screen and (width <=960px) {
   div.checkout {
     flex: 0 1 auto;
