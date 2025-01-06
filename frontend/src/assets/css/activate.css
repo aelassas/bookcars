@@ -4,8 +4,9 @@ div.activate {
   flex-direction: row;
   flex: 1 0 auto;
   justify-content: center;
-  margin: 45px 0;
+  padding-top: 120px;
   transform: translate3d(0, 0, 0);
+  min-height: 100vh;
 }
 
 div.activate h1.activate-form-title {
@@ -17,10 +18,11 @@ div.resend {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 45px 0;
+  padding-top: 120px;
   transform: translate3d(0, 0, 0);
   flex: 1 0 auto;
   padding-bottom: 40px;
+  min-height: 100vh;
 }
 
 .activate-form h1,
