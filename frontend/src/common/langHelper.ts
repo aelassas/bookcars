@@ -1,4 +1,4 @@
-import { LocalizedStrings } from 'react-localization'
+import { LocalizedStrings } from 'localized-strings'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'
 

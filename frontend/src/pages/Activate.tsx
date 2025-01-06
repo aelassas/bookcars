@@ -16,13 +16,17 @@ import { strings as cpStrings } from '@/lang/change-password'
 import { strings as rpStrings } from '@/lang/reset-password'
 import { strings as mStrings } from '@/lang/master'
 import { strings } from '@/lang/activate'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/activate.css'
 
 const Activate = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -74,6 +78,10 @@ const Activate = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -217,6 +225,8 @@ const Activate = () => {
         </div>
       )}
       {noMatch && <NoMatch hideHeader />}
+
+      {(resend || visible) && <Footer />}
     </Layout>
   )
 }

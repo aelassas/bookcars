@@ -18,48 +18,10 @@ div.search div.col-1 .map {
   margin-bottom: 3px;
 }
 
-div.search div.col-1 .map .view-on-map {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10000;
-  background-color: #062638;
-  color: #fff;
-  border: 0;
-  padding: 5px 10px;
-  display: flex;
-  flex-direction: row;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-div.search div.col-1 .map .view-on-map img {
-  max-width: 20px;
-  max-height: 20px;
-  margin-right: 2px;
-}
-
-div.search div.col-1 .map .view-on-map span {
-  margin-top: 2px;
-}
-
 div.search div.col-1 .filter {
   margin: 5px 0;
   width: 100%;
   max-width: 480px;
-}
-
-.map-dialog {
-  width: 80%;
-  height: 800px;
-}
-
-.map-dialog-content {
-  margin: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 div.search .btn-filters {

@@ -14,14 +14,18 @@ import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as cpStrings } from '@/lang/change-password'
 import { strings as rpStrings } from '@/lang/reset-password'
+import { useUserContext, UserContextType } from '@/context/UserContext'
+import * as helper from '@/common/helper'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import * as helper from '@/common/helper'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/reset-password.css'
 
 const ResetPassword = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -73,6 +77,10 @@ const ResetPassword = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -133,49 +141,53 @@ const ResetPassword = () => {
   return (
     <Layout onLoad={onLoad} strict={false}>
       {visible && (
-        <div className="reset-password">
-          <Paper className="reset-password-form" elevation={10}>
-            <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
-            <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required" error={passwordError}>
-                  {cpStrings.NEW_PASSWORD}
-                </InputLabel>
-                <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required />
-                <FormHelperText error={passwordError}>{(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth margin="dense" error={confirmPasswordError}>
-                <InputLabel error={confirmPasswordError} className="required">
-                  {commonStrings.CONFIRM_PASSWORD}
-                </InputLabel>
-                <Input
-                  id="password-confirm"
-                  onChange={handleConfirmPasswordChange}
-                  onKeyDown={handleConfirmPasswordKeyDown}
-                  error={confirmPasswordError || passwordLengthError}
-                  type="password"
-                  value={confirmPassword}
-                  required
-                />
-                <FormHelperText error={confirmPasswordError || passwordLengthError}>
-                  {
-                    (confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH)
-                    || (passwordLengthError && commonStrings.PASSWORD_ERROR)
-                    || ''
-                  }
-                </FormHelperText>
-              </FormControl>
-              <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
-                  {commonStrings.UPDATE}
-                </Button>
-                <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
-                  {commonStrings.CANCEL}
-                </Button>
-              </div>
-            </form>
-          </Paper>
-        </div>
+        <>
+          <div className="reset-password">
+            <Paper className="reset-password-form" elevation={10}>
+              <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
+              <form onSubmit={handleSubmit}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required" error={passwordError}>
+                    {cpStrings.NEW_PASSWORD}
+                  </InputLabel>
+                  <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required />
+                  <FormHelperText error={passwordError}>{(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}</FormHelperText>
+                </FormControl>
+                <FormControl fullWidth margin="dense" error={confirmPasswordError}>
+                  <InputLabel error={confirmPasswordError} className="required">
+                    {commonStrings.CONFIRM_PASSWORD}
+                  </InputLabel>
+                  <Input
+                    id="password-confirm"
+                    onChange={handleConfirmPasswordChange}
+                    onKeyDown={handleConfirmPasswordKeyDown}
+                    error={confirmPasswordError || passwordLengthError}
+                    type="password"
+                    value={confirmPassword}
+                    required
+                  />
+                  <FormHelperText error={confirmPasswordError || passwordLengthError}>
+                    {
+                      (confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH)
+                      || (passwordLengthError && commonStrings.PASSWORD_ERROR)
+                      || ''
+                    }
+                  </FormHelperText>
+                </FormControl>
+                <div className="buttons">
+                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
+                    {commonStrings.SAVE}
+                  </Button>
+                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                    {commonStrings.CANCEL}
+                  </Button>
+                </div>
+              </form>
+            </Paper>
+          </div>
+
+          <Footer />
+        </>
       )}
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}

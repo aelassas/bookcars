@@ -56,11 +56,11 @@ const App = () => (
             {/* <Route path="/create-supplier" element={<CreateSupplier />} /> */}
             {/* <Route path="/update-supplier" element={<UpdateSupplier />} /> */}
             <Route path="/locations" element={<Locations />} />
-            <Route path="/create-location" element={<CreateLocation />} />
+            {/* <Route path="/create-location" element={<CreateLocation />} /> */}
             {/* <Route path="/update-location" element={<UpdateLocation />} /> */}
             <Route path="/cars" element={<Cars />} />
             <Route path="/car" element={<Car />} />
-            <Route path="/create-car" element={<CreateCar />} />
+            {/* <Route path="/create-car" element={<CreateCar />} /> */}
             {/* <Route path="/update-car" element={<UpdateCar />} /> */}
             <Route path="/update-booking" element={<UpdateBooking />} />
             <Route path="/create-booking" element={<CreateBooking />} />
@@ -75,7 +75,7 @@ const App = () => (
             <Route path="/tos" element={<ToS />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/countries" element={<Countries />} />
-            <Route path="/create-country" element={<CreateCountry />} />
+            {/* <Route path="/create-country" element={<CreateCountry />} /> */}
             {/* <Route path="/update-country" element={<UpdateCountry />} /> */}
 
             <Route path="*" element={<NoMatch />} />

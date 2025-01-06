@@ -8,14 +8,19 @@ div.checkout {
   margin: 80px 0 200px 0;
 }
 
+div.checkout .map {
+  min-height: 0;
+  height: 340px;
+}
+
+div.checkout .payment-radio-disabled>*,
+div.checkout .payment-radio-disabled span.payment-info {
+  color: #919191 !important;
+}
+
 @media only screen and (width <=960px) {
   div.checkout {
     flex: 0 1 auto;
-  }
-
-  div.checkout .map {
-    min-height: 0;
-    height: 340px;
   }
 }
 

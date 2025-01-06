@@ -1,0 +1,16 @@
+.map-dialog-content {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-icon {
+  color: #fff;
+  font-size: 20px !important;
+}
+
+.close-btn:hover > * {
+  color: #d1d1d1;
+}
