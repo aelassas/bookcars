@@ -31,7 +31,7 @@ export default ({ mode }: { mode: string }) => {
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '3006', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
     },
 
     build: {
