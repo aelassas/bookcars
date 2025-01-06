@@ -16,6 +16,7 @@ import { useUserContext, UserContextType } from '@/context/UserContext'
 import Error from '@/components/Error'
 import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/signin.css'
 
@@ -114,55 +115,59 @@ const SignIn = () => {
   return (
     <Layout strict={false} onLoad={onLoad}>
       {visible && (
-        <div className="signin">
-          <Paper className="signin-form" elevation={10}>
-            <form onSubmit={handleSubmit}>
-              <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.EMAIL}</InputLabel>
-                <Input type="text" onChange={handleEmailChange} autoComplete="email" required />
-              </FormControl>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.PASSWORD}</InputLabel>
-                <Input onChange={handlePasswordChange} onKeyDown={handlePasswordKeyDown} autoComplete="password" type="password" required />
-              </FormControl>
+        <>
+          <div className="signin">
+            <Paper className="signin-form" elevation={10}>
+              <form onSubmit={handleSubmit}>
+                <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{commonStrings.EMAIL}</InputLabel>
+                  <Input type="text" onChange={handleEmailChange} autoComplete="email" required />
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{commonStrings.PASSWORD}</InputLabel>
+                  <Input onChange={handlePasswordChange} onKeyDown={handlePasswordKeyDown} autoComplete="password" type="password" required />
+                </FormControl>
 
-              <div className="stay-connected">
-                <input
-                  id="stay-connected"
-                  type="checkbox"
-                  onChange={(e) => {
-                    UserService.setStayConnected(e.currentTarget.checked)
-                  }}
-                />
-                <label
-                  htmlFor="stay-connected"
-                >
-                  {strings.STAY_CONNECTED}
-                </label>
-              </div>
+                <div className="stay-connected">
+                  <input
+                    id="stay-connected"
+                    type="checkbox"
+                    onChange={(e) => {
+                      UserService.setStayConnected(e.currentTarget.checked)
+                    }}
+                  />
+                  <label
+                    htmlFor="stay-connected"
+                  >
+                    {strings.STAY_CONNECTED}
+                  </label>
+                </div>
 
-              <div className="forgot-password-wrapper">
-                <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
-              </div>
+                <div className="forgot-password-wrapper">
+                  <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
+                </div>
 
-              <SocialLogin redirectToHomepage />
+                <SocialLogin redirectToHomepage />
 
-              <div className="signin-buttons">
-                <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
-                  {suStrings.SIGN_UP}
-                </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" disableElevation>
-                  {strings.SIGN_IN}
-                </Button>
-              </div>
-              <div className="form-error">
-                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
-              </div>
-            </form>
-          </Paper>
-        </div>
+                <div className="signin-buttons">
+                  <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
+                    {suStrings.SIGN_UP}
+                  </Button>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" disableElevation>
+                    {strings.SIGN_IN}
+                  </Button>
+                </div>
+                <div className="form-error">
+                  {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
+                  {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
+                </div>
+              </form>
+            </Paper>
+          </div>
+
+          <Footer />
+        </>
       )}
     </Layout>
   )
