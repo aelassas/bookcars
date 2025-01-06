@@ -140,8 +140,7 @@ const ChangePassword = () => {
 
   return (
     <Layout onLoad={onLoad} strict>
-
-      {visible &&
+      {visible && (
         <>
           <div className="password-reset">
             <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
@@ -204,8 +203,7 @@ const ChangePassword = () => {
 
           <Footer />
         </>
-      }
-
+      )}
     </Layout>
   )
 }
