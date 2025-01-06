@@ -19,17 +19,21 @@ import * as helper from '@/common/helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/sign-up'
 import * as UserService from '@/services/UserService'
+import { useUserContext, UserContextType } from '@/context/UserContext'
+import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
-import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
@@ -235,6 +239,9 @@ const SignUp = () => {
         })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
           navigate(`/${window.location.search}`)
         } else {
           setPasswordError(false)
@@ -274,140 +281,143 @@ const SignUp = () => {
   return (
     <Layout strict={false} onLoad={onLoad}>
       {visible && (
-        <div className="signup">
-          <Paper className="signup-form" elevation={10}>
-            <h1 className="signup-form-title">
-              {' '}
-              {strings.SIGN_UP_HEADING}
-              {' '}
-            </h1>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                  <OutlinedInput type="text" label={commonStrings.FULL_NAME} value={fullName} required onChange={handleFullNameChange} autoComplete="off" />
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                  <OutlinedInput
-                    type="text"
-                    label={commonStrings.EMAIL}
-                    error={!emailValid || emailError}
-                    value={email}
-                    onBlur={handleEmailBlur}
-                    onChange={handleEmailChange}
-                    required
-                    autoComplete="off"
-                  />
-                  <FormHelperText error={!emailValid || emailError}>
-                    {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                  </FormHelperText>
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <OutlinedInput
-                    type="text"
-                    label={commonStrings.PHONE}
-                    error={!phoneValid}
-                    value={phone}
-                    onBlur={handlePhoneBlur}
-                    onChange={handlePhoneChange}
-                    required
-                    autoComplete="off"
-                  />
-                  <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <DatePicker
-                    label={commonStrings.BIRTH_DATE}
-                    value={birthDate}
-                    variant="outlined"
-                    required
-                    onChange={(_birthDate) => {
-                      if (_birthDate) {
-                        const _birthDateValid = validateBirthDate(_birthDate)
+        <>
+          <div className="signup">
+            <Paper className="signup-form" elevation={10}>
+              <h1 className="signup-form-title">
+                {' '}
+                {strings.SIGN_UP_HEADING}
+                {' '}
+              </h1>
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                    <OutlinedInput type="text" label={commonStrings.FULL_NAME} value={fullName} required onChange={handleFullNameChange} autoComplete="off" />
+                  </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                    <OutlinedInput
+                      type="text"
+                      label={commonStrings.EMAIL}
+                      error={!emailValid || emailError}
+                      value={email}
+                      onBlur={handleEmailBlur}
+                      onChange={handleEmailChange}
+                      required
+                      autoComplete="off"
+                    />
+                    <FormHelperText error={!emailValid || emailError}>
+                      {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                      {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                    <OutlinedInput
+                      type="text"
+                      label={commonStrings.PHONE}
+                      error={!phoneValid}
+                      value={phone}
+                      onBlur={handlePhoneBlur}
+                      onChange={handlePhoneChange}
+                      required
+                      autoComplete="off"
+                    />
+                    <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                  </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <DatePicker
+                      label={commonStrings.BIRTH_DATE}
+                      value={birthDate}
+                      variant="outlined"
+                      required
+                      onChange={(_birthDate) => {
+                        if (_birthDate) {
+                          const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(_birthDate)
-                        setBirthDateValid(_birthDateValid)
-                      }
-                    }}
-                    language={language}
-                  />
-                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
-                  <OutlinedInput
-                    label={commonStrings.PASSWORD}
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                    type="password"
-                    inputProps={{
-                      autoComplete: 'new-password',
-                      form: {
-                        autoComplete: 'off',
-                      },
-                    }}
-                  />
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                  <OutlinedInput
-                    label={commonStrings.CONFIRM_PASSWORD}
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                    required
-                    type="password"
-                    inputProps={{
-                      autoComplete: 'new-password',
-                      form: {
-                        autoComplete: 'off',
-                      },
-                    }}
-                  />
-                </FormControl>
+                          setBirthDate(_birthDate)
+                          setBirthDateValid(_birthDateValid)
+                        }
+                      }}
+                      language={language}
+                    />
+                    <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
+                  </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
+                    <OutlinedInput
+                      label={commonStrings.PASSWORD}
+                      value={password}
+                      onChange={handlePasswordChange}
+                      required
+                      type="password"
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autoComplete: 'off',
+                        },
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
+                    <OutlinedInput
+                      label={commonStrings.CONFIRM_PASSWORD}
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      required
+                      type="password"
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autoComplete: 'off',
+                        },
+                      }}
+                    />
+                  </FormControl>
 
-                <div className="signup-tos">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td aria-label="tos">
-                          <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
-                        </td>
-                        <td>
-                          <Link href="/tos" target="_blank" rel="noreferrer">
-                            {commonStrings.TOS}
-                          </Link>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div className="signup-tos">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td aria-label="tos">
+                            <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
+                          </td>
+                          <td>
+                            <Link href="/tos" target="_blank" rel="noreferrer">
+                              {commonStrings.TOS}
+                            </Link>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <SocialLogin />
+
+                  <div className="buttons">
+                    <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
+                      {strings.SIGN_UP}
+                    </Button>
+                    <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                      {commonStrings.CANCEL}
+                    </Button>
+                  </div>
                 </div>
-
-                <SocialLogin />
-
-                <div className="buttons">
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
-                    {strings.SIGN_UP}
-                  </Button>
-                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
-                    {' '}
-                    {commonStrings.CANCEL}
-                  </Button>
+                <div className="form-error">
+                  {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
+                  {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                  {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                  {tosError && <Error message={commonStrings.TOS_ERROR} />}
+                  {error && <Error message={strings.SIGN_UP_ERROR} />}
                 </div>
-              </div>
-              <div className="form-error">
-                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                {error && <Error message={strings.SIGN_UP_ERROR} />}
-              </div>
-            </form>
-          </Paper>
-        </div>
+              </form>
+            </Paper>
+          </div>
+
+          <Footer />
+        </>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>

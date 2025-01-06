@@ -17,6 +17,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/reset-password'
 import SocialLogin from '@/components/SocialLogin'
 import NoMatch from './NoMatch'
+import Footer from '@/components/Footer'
 
 import '@/assets/css/forgot-password.css'
 
@@ -117,47 +118,51 @@ const ForgotPassword = () => {
   return (
     <Layout onLoad={onLoad} strict={false}>
       {visible && (
-        <div className="forgot-password">
-          <Paper className="forgot-password-form" elevation={10}>
-            <h1 className="forgot-password-title">
-              {' '}
-              {strings.RESET_PASSWORD_HEADING}
-              {' '}
-            </h1>
-            {sent && (
-              <div>
-                <span>{strings.EMAIL_SENT}</span>
-                <p>
-                  <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
-                </p>
-              </div>
-            )}
-            {!sent && (
-              <form onSubmit={handleSubmit}>
-                <span>{strings.RESET_PASSWORD}</span>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                  <Input onChange={handleEmailChange} onKeyDown={handleEmailKeyDown} onBlur={handleEmailBlur} type="text" error={error || !emailValid} autoComplete="off" required />
-                  <FormHelperText error={error || !emailValid}>
-                    {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                    {(error && strings.EMAIL_ERROR) || ''}
-                  </FormHelperText>
-                </FormControl>
-
-                <SocialLogin />
-
-                <div className="buttons">
-                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
-                    {strings.RESET}
-                  </Button>
-                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
-                    {commonStrings.CANCEL}
-                  </Button>
+        <>
+          <div className="forgot-password">
+            <Paper className="forgot-password-form" elevation={10}>
+              <h1 className="forgot-password-title">
+                {' '}
+                {strings.RESET_PASSWORD_HEADING}
+                {' '}
+              </h1>
+              {sent && (
+                <div>
+                  <span>{strings.EMAIL_SENT}</span>
+                  <p>
+                    <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
+                  </p>
                 </div>
-              </form>
-            )}
-          </Paper>
-        </div>
+              )}
+              {!sent && (
+                <form onSubmit={handleSubmit}>
+                  <span>{strings.RESET_PASSWORD}</span>
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                    <Input onChange={handleEmailChange} onKeyDown={handleEmailKeyDown} onBlur={handleEmailBlur} type="text" error={error || !emailValid} autoComplete="off" required />
+                    <FormHelperText error={error || !emailValid}>
+                      {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                      {(error && strings.EMAIL_ERROR) || ''}
+                    </FormHelperText>
+                  </FormControl>
+
+                  <SocialLogin />
+
+                  <div className="buttons">
+                    <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
+                      {strings.RESET}
+                    </Button>
+                    <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                      {commonStrings.CANCEL}
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </Paper>
+          </div>
+
+          <Footer />
+        </>
       )}
       {noMatch && <NoMatch hideHeader />}
     </Layout>
