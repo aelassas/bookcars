@@ -394,7 +394,7 @@ const SignUp = () => {
                     </table>
                   </div>
 
-                  <SocialLogin />
+                  <SocialLogin redirectToHomepage />
 
                   <div className="buttons">
                     <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">

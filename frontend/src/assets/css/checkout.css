@@ -112,7 +112,7 @@ div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value 
 div.checkout div.checkout-details div.checkout-detail div.checkout-detail-value span.car-supplier-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
-  line-height: 1em;
+  /* line-height: 1em; */
   white-space: nowrap;
   margin-left: 5px;
   overflow: hidden;
