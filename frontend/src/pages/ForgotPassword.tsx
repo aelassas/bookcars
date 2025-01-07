@@ -146,7 +146,7 @@ const ForgotPassword = () => {
                     </FormHelperText>
                   </FormControl>
 
-                  <SocialLogin />
+                  <SocialLogin redirectToHomepage />
 
                   <div className="buttons">
                     <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
