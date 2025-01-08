@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f37022',
     // borderColor: '#d9d8d9',
     borderColor: '#f37022',
     borderRadius: 4,
@@ -313,11 +313,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   shwoFiltersIcon: {
-    color: '#f37022',
+    color: '#fff',
     marginRight: 5,
   },
   shwoFiltersTxt: {
-    color: '#f37022',
+    color: '#fff',
   }
 })
 
