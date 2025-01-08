@@ -135,36 +135,34 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  if (mongoose.connection.readyState) {
-    await testHelper.close()
+  await testHelper.close()
 
-    // delete the supplier
-    await testHelper.deleteSupplier(SUPPLIER_ID)
+  // delete the supplier
+  await testHelper.deleteSupplier(SUPPLIER_ID)
 
-    // delete the location
-    await testHelper.deleteLocation(LOCATION_ID)
+  // delete the location
+  await testHelper.deleteLocation(LOCATION_ID)
 
-    // delete the car
-    await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
+  // delete the car
+  await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
 
-    // delete drivers
-    // await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-    const drivers = await User.find({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-    expect(drivers.length).toBe(2)
-    for (const driver of drivers) {
-      if (driver.license) {
-        const license = path.join(env.CDN_LICENSES, driver.license)
-        if (await helper.exists(license)) {
-          await fs.unlink(license)
-        }
+  // delete drivers
+  // await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+  const drivers = await User.find({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+  expect(drivers.length).toBe(2)
+  for (const driver of drivers) {
+    if (driver.license) {
+      const license = path.join(env.CDN_LICENSES, driver.license)
+      if (await helper.exists(license)) {
+        await fs.unlink(license)
       }
-      await driver.deleteOne()
     }
-    await Notification.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-    await NotificationCounter.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-
-    await databaseHelper.close()
+    await driver.deleteOne()
   }
+  await Notification.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+  await NotificationCounter.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+
+  await databaseHelper.close()
 })
 
 //
