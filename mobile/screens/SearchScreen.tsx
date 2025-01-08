@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { MaterialIcons } from '@expo/vector-icons'
 // import * as Location from 'expo-location'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -26,7 +27,7 @@ import SearchFormFilter from '@/components/SearchFormFilter'
 import CarRatingFilter from '@/components/CarRatingFilter'
 import Indicator from '@/components/Indicator'
 
-const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
+const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
   const isFocused = useIsFocused()
 
   const [language, setLanguage] = useState('')
@@ -49,6 +50,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
   // const [distance, setDistance] = useState('')
   const [rating, setRating] = useState(-1)
+  const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
     const updateSuppliers = async () => {
@@ -222,17 +224,28 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
                 toTime={new Date(route.params.to)}
               />
 
-              <SupplierFilter style={styles.filter} visible={loaded} suppliers={suppliers} onChange={onChangeSuppliers} />
-              <CarRatingFilter style={styles.filter} visible={loaded} onChange={onChangeCarRating} />
-              <CarRangeFilter style={styles.filter} visible={loaded} onChange={onChangeCarRange} />
-              <CarMultimediaFilter style={styles.filter} visible={loaded} onChange={onChangeCarMultimedia} />
-              <CarSeatsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSeats} />
-              <CarSpecsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSpecs} />
-              <CarTypeFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
-              <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
-              <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
-              <FuelPolicyFilter style={styles.filter} visible={loaded} onChange={onChangeFuelPolicy} />
-              <DepositFilter language={language} style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
+              <Pressable onPress={() => setShowFilters((prev) => !prev)}>
+                <View style={styles.shwoFiltersBtn}>
+                  <MaterialIcons name="filter-list" size={22} style={styles.shwoFiltersIcon} />
+                  <Text style={styles.shwoFiltersTxt}>{showFilters ? i18n.t('HIDE_FILTERS') : i18n.t('SHOW_FILTERS')}</Text>
+                </View>
+              </Pressable>
+
+              {showFilters && (
+                <>
+                  <SupplierFilter style={styles.filter} visible={loaded} suppliers={suppliers} onChange={onChangeSuppliers} />
+                  <CarRatingFilter style={styles.filter} visible={loaded} onChange={onChangeCarRating} />
+                  <CarRangeFilter style={styles.filter} visible={loaded} onChange={onChangeCarRange} />
+                  <CarMultimediaFilter style={styles.filter} visible={loaded} onChange={onChangeCarMultimedia} />
+                  <CarSeatsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSeats} />
+                  <CarSpecsFilter style={styles.filter} visible={loaded} onChange={onChangeCarSpecs} />
+                  <CarTypeFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
+                  <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
+                  <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
+                  <FuelPolicyFilter style={styles.filter} visible={loaded} onChange={onChangeFuelPolicy} />
+                  <DepositFilter language={language} style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
+                </>
+              )}
 
               {loaded && (
                 <View style={styles.title}>
@@ -285,6 +298,27 @@ const styles = StyleSheet.create({
     color: '#717171',
     marginTop: 3,
   },
+  shwoFiltersBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    // borderColor: '#d9d8d9',
+    borderColor: '#f37022',
+    borderRadius: 4,
+    borderWidth: 1,
+    marginRight: 7,
+    marginBottom: 10,
+    marginLeft: 7,
+    paddingVertical: 5,
+  },
+  shwoFiltersIcon: {
+    color: '#f37022',
+    marginRight: 5,
+  },
+  shwoFiltersTxt: {
+    color: '#f37022',
+  }
 })
 
-export default CarsScreen
+export default SearchScreen

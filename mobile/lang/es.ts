@@ -239,4 +239,6 @@ export const es = {
   DRIVER_LICENSE: 'Licencia de conducir',
   LICENSE_REQUIRED: 'Se requiere licencia de conducir',
   UPLOAD_FILE: 'Subir archivo...',
+  SHOW_FILTERS: 'Mostrar filtros',
+  HIDE_FILTERS: 'Ocultar filtros',
 }
