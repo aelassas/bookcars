@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import mongoose from 'mongoose'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import * as env from '../src/config/env.config'
@@ -21,9 +20,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  if (mongoose.connection.readyState) {
-    await databaseHelper.close()
-  }
+  await databaseHelper.close()
 })
 
 const createBookingIndex = async (expireAfterSeconds: number): Promise<void> => {

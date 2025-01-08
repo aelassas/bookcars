@@ -57,9 +57,7 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
  * @returns {Promise<void>}
  */
 export const close = async (force: boolean = false): Promise<void> => {
-  if (mongoose.connection.readyState) {
-    await mongoose.connection.close(force)
-  }
+  await mongoose.connection.close(force)
 }
 
 /**

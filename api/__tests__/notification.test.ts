@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import request from 'supertest'
-import mongoose from 'mongoose'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import Notification from '../src/models/Notification'
@@ -42,17 +41,15 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  if (mongoose.connection.readyState) {
-    await testHelper.close()
+  await testHelper.close()
 
-    await testHelper.deleteSupplier(SUPPLIER_ID)
+  await testHelper.deleteSupplier(SUPPLIER_ID)
 
-    // clear admin user notifications and notification counter
-    await Notification.deleteMany({ user: ADMIN_USER_ID })
-    await NotificationCounter.deleteOne({ user: ADMIN_USER_ID })
+  // clear admin user notifications and notification counter
+  await Notification.deleteMany({ user: ADMIN_USER_ID })
+  await NotificationCounter.deleteOne({ user: ADMIN_USER_ID })
 
-    await databaseHelper.close()
-  }
+  await databaseHelper.close()
 })
 
 //
