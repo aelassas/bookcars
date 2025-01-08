@@ -239,4 +239,6 @@ export const en = {
   DRIVER_LICENSE: "Driver's License",
   LICENSE_REQUIRED: "Driver's license required",
   UPLOAD_FILE: 'Upload file...',
+  SHOW_FILTERS: 'Show filters',
+  HIDE_FILTERS: 'Hide filters',
 }
