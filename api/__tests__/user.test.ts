@@ -4,7 +4,6 @@ import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
-import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -58,13 +57,11 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  if (mongoose.connection.readyState) {
-    await testHelper.close()
+  await testHelper.close()
 
-    await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
+  await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
 
-    await databaseHelper.close()
-  }
+  await databaseHelper.close()
 })
 
 //
