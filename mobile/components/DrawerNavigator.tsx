@@ -16,7 +16,7 @@ import ContactScreen from '@/screens/ContactScreen'
 import SignInScreen from '@/screens/SignInScreen'
 import SignUpScreen from '@/screens/SignUpScreen'
 import ForgotPasswordScreen from '@/screens/ForgotPasswordScreen'
-import CarsScreen from '@/screens/CarsScreen'
+import SearchScreen from '@/screens/SearchScreen'
 import * as UserService from '@/services/UserService'
 import i18n from '@/lang/i18n'
 import * as env from '@/config/env.config'
@@ -190,7 +190,7 @@ const DrawerNavigator = () => {
                 <Drawer.Screen
                   key={drawer.name}
                   name={drawer.name}
-                  component={CarsScreen}
+                  component={SearchScreen}
                   options={{
                     title: drawer.title,
                     drawerItemStyle: {
