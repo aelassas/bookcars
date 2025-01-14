@@ -23,6 +23,8 @@ const LANGUAGES = [
 const env = {
   isMobile: window.innerWidth <= 960,
 
+  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME),
+
   APP_TYPE: bookcarsTypes.AppType.Backend,
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),

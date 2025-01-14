@@ -399,7 +399,7 @@ const Header = ({
                   <MenuIcon />
                 </IconButton>
 
-                <Button onClick={() => navigate('/')} className="logo">BookCars</Button>
+                <Button onClick={() => navigate('/')} className="logo">{env.WEBSITE_NAME}</Button>
 
                 {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
               </>
