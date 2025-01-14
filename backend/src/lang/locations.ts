@@ -18,6 +18,14 @@ const strings = new LocalizedStrings({
     LOCATION: 'location',
     LOCATIONS: 'locations',
   },
+  es: {
+    NEW_LOCATION: 'Nuevo lugar',
+    DELETE_LOCATION: '¿Estás seguro de que quieres eliminar este lugar?',
+    CANNOT_DELETE_LOCATION: 'Este lugar no puede ser eliminado porque está relacionado con coches.',
+    EMPTY_LIST: 'No hay lugares.',
+    LOCATION: 'lugar',
+    LOCATIONS: 'lugares',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -12,6 +12,11 @@ const strings = new LocalizedStrings({
     VIEW_SUPPLIER: 'View supplier profile',
     DELETE_SUPPLIER: 'Are you sure you want to delete this supplier and all its data?',
   },
+  es: {
+    EMPTY_LIST: 'No hay proveedores.',
+    VIEW_SUPPLIER: 'Ver perfil del proveedor',
+    DELETE_SUPPLIER: '¿Estás seguro de que quieres eliminar este proveedor y todos sus datos?',
+  },
 })
 
 langHelper.setLanguage(strings)
