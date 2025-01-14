@@ -8,6 +8,9 @@ const strings = new LocalizedStrings({
   en: {
     NEW_PARKING_SPOT: 'New parking spot',
   },
+  es: {
+    NEW_PARKING_SPOT: 'Nueva plaza de aparcamiento',
+  },
 })
 
 langHelper.setLanguage(strings)
