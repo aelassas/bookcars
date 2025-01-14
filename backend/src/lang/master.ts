@@ -15,7 +15,7 @@ const strings = new LocalizedStrings({
     VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
   },
   es: {
-    VALIDATE_EMAIL: "Se ha enviado un correo electrónico de validación a su dirección de correo electrónico. Por favor, revise su bandeja de entrada y valide su cuenta haciendo clic en el enlace del correo electrónico. Expirará después de un día. Si no recibió el correo electrónico de validación, haga clic en reenviar.",
+    VALIDATE_EMAIL: 'Se ha enviado un correo electrónico de validación a su dirección de correo electrónico. Por favor, revise su bandeja de entrada y valide su cuenta haciendo clic en el enlace del correo electrónico. Expirará después de un día. Si no recibió el correo electrónico de validación, haga clic en reenviar.',
     RESEND: 'Reenviar',
     VALIDATION_EMAIL_SENT: 'Correo electrónico de validación enviado.',
     VALIDATION_EMAIL_ERROR: 'Se produjo un error al enviar el correo electrónico de validación.',
