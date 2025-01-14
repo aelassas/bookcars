@@ -3,3 +3,4 @@
 /**/*.pem
 /**/*.pem-chain
 /**/*.ca.pem
+/**/.DS_Store

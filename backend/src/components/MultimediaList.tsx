@@ -95,7 +95,7 @@ const MultimediaList = ({
               }}
             />
           )}
-          label={strings.TOUCHSCEEN}
+          label={strings.TOUCHSCREEN}
         />
       </div>
     </div>
