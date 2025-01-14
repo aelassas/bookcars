@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
@@ -16,7 +17,14 @@ export default ({ mode }: { mode: string }) => {
             // ['babel-plugin-react-compiler', { optimize: true }],
           ]
         }
-      })
+      }),
+      createHtmlPlugin({
+        inject: {
+          data: {
+            WEBSITE_NAME: process.env.VITE_BC_WEBSITE_NAME || 'BookCars',
+          },
+        },
+      }),
     ],
 
     resolve: {

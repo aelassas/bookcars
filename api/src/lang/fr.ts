@@ -1,3 +1,5 @@
+import * as env from '../config/env.config'
+
 export const fr = {
   ERROR: 'Erreur interne : ',
   DB_ERROR: 'Échec de la requête dans la base de données : ',
@@ -5,7 +7,7 @@ export const fr = {
   ACCOUNT_ACTIVATION_SUBJECT: 'Activation de votre compte',
   HELLO: 'Bonjour ',
   ACCOUNT_ACTIVATION_LINK: 'Veuillez activer votre compte en cliquant sur le lien :',
-  REGARDS: "Cordialement,<br>L'équipe BookCars",
+  REGARDS: `Cordialement,<br>L'équipe ${env.WEBSITE_NAME}`,
   ACCOUNT_ACTIVATION_TECHNICAL_ISSUE: 'Problème technique! Veuillez cliquer sur renvoyer pour valider votre e-mail.',
   ACCOUNT_ACTIVATION_LINK_EXPIRED: 'Votre lien de validation a peut-être expiré. Veuillez cliquer sur renvoyer pour valider votre e-mail.',
   ACCOUNT_ACTIVATION_LINK_ERROR: "Nous n'avons pas pu trouver d'utilisateur correspondant à cette adresse e-mail. Veuillez vous inscrire.",

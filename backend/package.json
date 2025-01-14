@@ -53,6 +53,7 @@
     "npm-check-updates": "^17.1.13",
     "stylelint": "^16.12.0",
     "stylelint-config-standard": "^36.0.1",
-    "terser": "^5.37.0"
+    "terser": "^5.37.0",
+    "vite-plugin-html": "^3.2.2"
   }
 }
