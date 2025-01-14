@@ -10,6 +10,10 @@ const strings = new LocalizedStrings({
     PICK_UP_LOCATION: 'Pick-up location',
     DROP_OFF_LOCATION: 'Drop-off location',
   },
+  es: {
+    PICK_UP_LOCATION: 'Lugar de recogida',
+    DROP_OFF_LOCATION: 'Lugar de entrega',
+  },
 })
 
 langHelper.setLanguage(strings)
