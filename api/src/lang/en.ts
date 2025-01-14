@@ -1,4 +1,3 @@
-import { process } from 'node:process';
 import * as env from '../config/env.config'
 
 export const en = {

@@ -1,9 +1,8 @@
-import LocalizedStrings from 'localized-strings';
-import * as langHelper from '@/common/langHelper';
+import LocalizedStrings from 'localized-strings'
+import * as langHelper from '@/common/langHelper'
+import env from '@/config/env.config'
 
-const WEBSITE_NAME = import.meta.env.VITE_BC_WEBSITE_NAME || 'BookCars';
-
-const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} ${WEBSITE_NAME}`;
+const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} ${env.WEBSITE_NAME}`
 
 const strings = new LocalizedStrings({
   fr: {
@@ -17,7 +16,7 @@ const strings = new LocalizedStrings({
     LOCATIONS: 'Lieux',
     SUPPORT: 'Support',
     CONTACT: 'Contact',
-    SECURE_PAYMENT: `Paiement 100% sécurisé avec ${WEBSITE_NAME}`,
+    SECURE_PAYMENT: `Paiement 100% sécurisé avec ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Politique de Confidentialité',
     FAQ: 'FAQ',
   },
@@ -32,7 +31,7 @@ const strings = new LocalizedStrings({
     LOCATIONS: 'Locations',
     SUPPORT: 'Support',
     CONTACT: 'Contact',
-    SECURE_PAYMENT: `100% secure payment with ${WEBSITE_NAME}`,
+    SECURE_PAYMENT: `100% secure payment with ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Privacy Policy',
     FAQ: 'FAQ',
   },
@@ -47,11 +46,11 @@ const strings = new LocalizedStrings({
     LOCATIONS: 'Ubicaciones',
     SUPPORT: 'Soporte',
     CONTACT: 'Contacto',
-    SECURE_PAYMENT: `Pago 100% seguro con ${WEBSITE_NAME}`,
+    SECURE_PAYMENT: `Pago 100% seguro con ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Política de Privacidad',
     FAQ: 'Preguntas frecuentes',
   },
-});
+})
 
-langHelper.setLanguage(strings);
-export { strings };
+langHelper.setLanguage(strings)
+export { strings }
