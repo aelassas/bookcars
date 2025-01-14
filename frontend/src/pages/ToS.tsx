@@ -11,7 +11,8 @@ const ToS = () => {
   return (
     <Layout onLoad={onLoad} strict={false}>
       <div className="tos">
-        {strings.TOS}
+        <h1>{strings.TITLE}</h1>
+        <p>{strings.TOS}</p>
       </div>
       <Footer />
     </Layout>

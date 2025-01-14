@@ -11,7 +11,8 @@ const ToS = () => {
   return (
     <Layout onLoad={onLoad} strict={false}>
       <div className="privacy">
-        {strings.PRIVACY_POLICY}
+        <h1>{strings.TITLE}</h1>
+        <p>{strings.PRIVACY_POLICY}</p>
       </div>
       <Footer />
     </Layout>
