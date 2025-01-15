@@ -1,3 +1,37 @@
-.about {
-    padding: 15px;
+div.about {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: flex-start;
+  transform: translate3d(0, 0, 0);
+  white-space: pre-wrap;
+  padding: 50px 20% 120px 20%;
+  font-size: 15px;
+  color: #1a1a1a;
+  min-height: 100vh;
+  background-color: #FFF;
+}
+
+div.about h1 {
+  font-size: 36px;
+  color: #1a1a1a;
+}
+
+div.about h2 {
+  font-size: 24px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+div.about p {
+  font-size: 20px;
+  /* font-weight: 400; */
+  color: #000;
+  margin-bottom: 40px;
+}
+
+@media only screen and (width <=960px) {
+  div.about {
+    padding: 30px 20px 120px 20px;
+  }
 }
