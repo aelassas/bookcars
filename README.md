@@ -45,7 +45,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Responsive admin dashboard and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
-* Secure against XSS, XST, CSRF and MITM
+* Secure against XSS, XST, CSR, MITM and DDoS
 * Supported Platforms: iOS, Android, Web, Docker
 
 ## Live Demo
@@ -72,7 +72,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-![QR](https://bookcars.github.io/content/qr-code-5.1.png)
+![QR](https://bookcars.github.io/content/qr-code-5.3.png)
 
 #### How to install the Mobile App on Android
 
@@ -84,7 +84,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-5.1.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-5.3.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 

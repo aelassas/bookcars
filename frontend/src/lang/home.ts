@@ -1,5 +1,6 @@
 import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/common/langHelper'
+import env from '@/config/env.config'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -44,10 +45,10 @@ const strings = new LocalizedStrings({
     SERVICE_INSTANT_BOOKING: "Pas d'attente ! Une fois que vous avez choisi votre véhicule et effectué votre réservation, vous recevrez une confirmation immédiate, garantissant un processus de location fluide et sans tracas.",
     SERVICES_SUPPORT_TITLE: 'Assistance client 24h/24 et 7j/7',
     SERVICES_SUPPORT: "Que vous réserviez un véhicule, que vous ayez besoin d'assistance sur la route ou que vous ayez des questions, notre équipe d'assistance dédiée est disponible 24 heures sur 24.",
-    CUSTOMER_CARE_TITLE: 'Service client BookCars',
+    CUSTOMER_CARE_TITLE: `Service client ${env.WEBSITE_NAME}`,
     CONTACT_US: 'Nous Contacter',
     CUSTOMER_CARE_SUBTITLE: 'Toujours là pour vous aider',
-    CUSTOMER_CARE_TEXT: 'Chez BookCars, nous nous engageons à fournir une assistance rapide et fiable pour garantir que votre expérience de location de voiture soit fluide et agréable du début à la fin.',
+    CUSTOMER_CARE_TEXT: `Chez ${env.WEBSITE_NAME}, nous nous engageons à fournir une assistance rapide et fiable pour garantir que votre expérience de location de voiture soit fluide et agréable du début à la fin.`,
     CUSTOMER_CARE_ASSISTANCE: 'Assistance routière 24h/24 et 7j/7',
     CUSTOMER_CARE_MODIFICATION: 'Demandes de renseignements et modifications',
     CUSTOMER_CARE_GUIDANCE: 'Guide pour la sélection du véhicule',
@@ -95,10 +96,10 @@ const strings = new LocalizedStrings({
     SERVICE_INSTANT_BOOKING: "No waiting around! Once you choose your vehicle and complete your booking, you'll receive an immediate confirmation, ensuring a smooth and hassle-free rental process.",
     SERVICES_SUPPORT_TITLE: '24/7 Customer Support',
     SERVICES_SUPPORT: "Whether you're booking a vehicle, need assistance on the road, or have any questions, our dedicated support team is available around the clock.",
-    CUSTOMER_CARE_TITLE: 'BookCars Customer Care',
+    CUSTOMER_CARE_TITLE: `${env.WEBSITE_NAME} Customer Care`,
     CONTACT_US: 'Contact Us',
     CUSTOMER_CARE_SUBTITLE: 'Always Here to Help',
-    CUSTOMER_CARE_TEXT: "At BookCars, we're dedicated to providing prompt and reliable support to ensure your car rental experience is smooth and enjoyable from start to finish.",
+    CUSTOMER_CARE_TEXT: `At ${env.WEBSITE_NAME}, we're dedicated to providing prompt and reliable support to ensure your car rental experience is smooth and enjoyable from start to finish.`,
     CUSTOMER_CARE_ASSISTANCE: '24/7 Roadside Assistance',
     CUSTOMER_CARE_MODIFICATION: 'Inquiries and Modifications',
     CUSTOMER_CARE_GUIDANCE: 'Vehicle Selection Guidance',
@@ -146,10 +147,10 @@ const strings = new LocalizedStrings({
     SERVICE_INSTANT_BOOKING: '¡Sin esperas! Una vez que elijas tu vehículo y completes tu reserva, recibirás una confirmación inmediata, lo que garantiza un proceso de alquiler sin complicaciones y sin complicaciones.',
     SERVICES_SUPPORT_TITLE: 'Atención al cliente las 24 horas, los 7 días de la semana',
     SERVICES_SUPPORT: 'Ya sea que estés reservando un vehículo, necesites asistencia en la carretera o tengas alguna pregunta, nuestro equipo de soporte dedicado está disponible las 24 horas.',
-    CUSTOMER_CARE_TITLE: 'Atención al cliente de BookCars',
+    CUSTOMER_CARE_TITLE: `Atención al cliente de ${env.WEBSITE_NAME}`,
     CONTACT_US: 'Contáctanos',
     CUSTOMER_CARE_SUBTITLE: 'Siempre aquí para ayudar',
-    CUSTOMER_CARE_TEXT: 'En BookCars, nos dedicamos a brindar asistencia rápida y confiable para garantizar que su experiencia de alquiler de automóviles sea fluida y placentera de principio a fin',
+    CUSTOMER_CARE_TEXT: `En ${env.WEBSITE_NAME}, nos dedicamos a brindar asistencia rápida y confiable para garantizar que su experiencia de alquiler de automóviles sea fluida y placentera de principio a fin`,
     CUSTOMER_CARE_ASSISTANCE: 'Asistencia en carretera las 24 horas, los 7 días de la semana',
     CUSTOMER_CARE_MODIFICATION: 'Consultas y modificaciones',
     CUSTOMER_CARE_GUIDANCE: 'Orientación para la selección de vehículos',

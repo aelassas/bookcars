@@ -47,13 +47,19 @@ const CURRENCIES: Currency[] = [
   {
     code: 'GBP',
     symbol: '£',
-  }
+  },
+  {
+    code: 'AUD',
+    symbol: '$',
+  },
 ]
 
 const env = {
   isMobile: window.innerWidth <= 960,
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
   isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
+
+  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'BookCars'),
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),

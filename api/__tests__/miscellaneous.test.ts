@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -22,9 +21,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  if (mongoose.connection.readyState) {
-    await databaseHelper.close()
-  }
+  await databaseHelper.close()
 })
 
 const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {

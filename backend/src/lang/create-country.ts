@@ -14,6 +14,12 @@ const strings = new LocalizedStrings({
     INVALID_COUNTRY: 'This country already exists.',
     COUNTRY_CREATED: 'Country created successfully.',
   },
+  es: {
+    NEW_COUNTRY_HEADING: 'Nuevo país',
+    COUNTRY_NAME: 'País',
+    INVALID_COUNTRY: 'Este país ya existe.',
+    COUNTRY_CREATED: 'País creado con éxito.',
+  },
 })
 
 langHelper.setLanguage(strings)

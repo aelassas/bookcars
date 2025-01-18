@@ -25,6 +25,7 @@ interface SocialLoginProps {
   apple?: boolean
   google?: boolean
   redirectToHomepage?: boolean
+  reloadPage?: boolean
   className?: string
   onError?: (error: any) => void
   onSignInError?: () => void
@@ -36,6 +37,7 @@ const SocialLogin = ({
   apple,
   google = true,
   redirectToHomepage,
+  reloadPage,
   className,
   onError,
   onSignInError,
@@ -68,7 +70,9 @@ const SocialLogin = ({
 
         if (redirectToHomepage) {
           navigate('/')
-        } else {
+        }
+
+        if (reloadPage) {
           navigate(0)
         }
       }
