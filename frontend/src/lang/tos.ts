@@ -14,7 +14,7 @@ En accédant ou en utilisant nos services, vous confirmez avoir lu, compris et a
 
 2. Utilisation de nos services
 
-Vous acceptez d'utiliser nos services uniquement à des fins légales et d'une manière qui ne porte pas atteinte aux droits, ne restreint ni n'empêche quiconque d'utiliser nos services. Cela inclut le respect de toutes les lois et réglementations applicables au Kurdistan, en Irak.
+Vous acceptez d'utiliser nos services uniquement à des fins légales et d'une manière qui ne porte pas atteinte aux droits, ne restreint ni n'empêche quiconque d'utiliser nos services. Cela inclut le respect de toutes les lois et réglementations applicables.
 
 3. Réservations et paiements
 
@@ -38,7 +38,7 @@ Nous nous réservons le droit de modifier ces conditions de service à tout mome
 
 8. Loi applicable
 
-Ces conditions de service seront régies et interprétées conformément aux lois du Kurdistan, en Irak. Tout litige découlant de ces conditions sera résolu devant les tribunaux du Kurdistan.
+Ces conditions de service seront régies et interprétées conformément aux lois. Tout litige découlant de ces conditions sera résolu devant les tribunaux.
 
 9. Coordonnées
 
@@ -62,7 +62,7 @@ By accessing or using our services, you confirm that you have read, understood, 
 
 2. Use of Our Services
 
-You agree to use our services only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit anyone else's use of our services. This includes compliance with all applicable laws and regulations in Kurdistan, Iraq.
+You agree to use our services only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit anyone else's use of our services. This includes compliance with all applicable laws and regulations.
 
 
 3. Reservations and Payments
@@ -92,7 +92,7 @@ We reserve the right to modify these Terms of Service at any time. Any changes w
 
 8. Governing Law
 
-These Terms of Service shall be governed by and construed in accordance with the laws of Kurdistan, Iraq. Any disputes arising out of these terms shall be resolved in the courts of Kurdistan.
+These Terms of Service shall be governed by and construed in accordance with the laws. Any disputes arising out of these terms shall be resolved in the courts.
 
 
 9. Contact Information
@@ -116,7 +116,7 @@ Al acceder o utilizar nuestros servicios, usted confirma que ha leído, comprend
 
 2. Uso de nuestros servicios
 
-Usted acepta utilizar nuestros servicios solo con fines legales y de una manera que no infrinja los derechos de terceros ni restrinja o inhiba el uso de nuestros servicios por parte de terceros. Esto incluye el cumplimiento de todas las leyes y regulaciones aplicables en Kurdistán, Irak.
+Usted acepta utilizar nuestros servicios solo con fines legales y de una manera que no infrinja los derechos de terceros ni restrinja o inhiba el uso de nuestros servicios por parte de terceros. Esto incluye el cumplimiento de todas las leyes y regulaciones aplicables.
 
 3. Reservas y pagos
 
@@ -140,7 +140,7 @@ Nos reservamos el derecho de modificar estos Términos de servicio en cualquier 
 
 8. Ley aplicable
 
-Estos Términos de servicio se regirán e interpretarán de acuerdo con las leyes de Kurdistán, Irak. Cualquier disputa que surja de estos términos se resolverá en los tribunales de Kurdistán.
+Estos Términos de servicio se regirán e interpretarán de acuerdo con las leyes. Cualquier disputa que surja de estos términos se resolverá en los tribunales.
 
 9. Información de contacto
 
