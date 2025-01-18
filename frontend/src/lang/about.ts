@@ -4,7 +4,7 @@ import env from '@/config/env.config'
 
 const strings = new LocalizedStrings({
   fr: {
-    TITLE1: `${env.WEBSITE_NAME} - Votre service de location de voitures de premier ordre`,
+    TITLE1: `${env.WEBSITE_NAME} - Votre service de location de voitures`,
     SUBTITLE1: 'Votre partenaire de confiance pour la location de voitures',
     CONTENT1: `Chez ${env.WEBSITE_NAME}, nous comprenons que chaque voyage est unique. Nous nous engageons à fournir à nos clients une sélection diversifiée de véhicules qui répondent à tous les besoins de voyage. Que vous exploriez une ville, que vous vous déplaciez pour affaires ou que vous recherchiez l'aventure, nos services de location de voitures fiables garantissent que votre aventure commence en toute transparence. Notre mission est de fournir un service client exceptionnel, rendant votre expérience agréable et sans stress. Avec des tarifs compétitifs, une variété de véhicules bien entretenus et une équipe dédiée prête à vous aider, nous nous efforçons d'être votre partenaire de confiance sur la route. Choisissez ${env.WEBSITE_NAME} pour tous vos besoins de location de voiture et découvrez la liberté d'explorer à votre rythme.`,
     TITLE2: `Pourquoi choisir ${env.WEBSITE_NAME}`,
@@ -22,7 +22,7 @@ const strings = new LocalizedStrings({
     FIND_DEAL: 'Find Deal',
   },
   es: {
-    TITLE1: `${env.WEBSITE_NAME} - Su servicio de alquiler de coches de primera calidad`,
+    TITLE1: `${env.WEBSITE_NAME} - Su servicio de alquiler de coches`,
     SUBTITLE1: 'Su socio de confianza para alquileres de coches',
     CONTENT1: `En ${env.WEBSITE_NAME}, entendemos que cada viaje es único. Nos comprometemos a brindarles a nuestros clientes una selección diversa de vehículos que satisfagan todas las necesidades de viaje. Ya sea que esté explorando una ciudad, viajando por negocios o buscando aventuras, nuestros confiables servicios de alquiler de automóviles garantizan que su aventura comience sin problemas. Nuestra misión es brindar un servicio al cliente excepcional, haciendo que su experiencia sea agradable y sin estrés. Con tarifas competitivas, una variedad de vehículos bien mantenidos y un equipo dedicado listo para ayudarlo, nos esforzamos por ser su socio de confianza en la carretera. Elija ${env.WEBSITE_NAME} para todas sus necesidades de alquiler de automóviles y experimente la libertad de explorar a su propio ritmo.`,
     TITLE2: `Por qué elegir ${env.WEBSITE_NAME}`,
