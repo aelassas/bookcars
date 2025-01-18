@@ -36,7 +36,7 @@ export const LANGUAGES = [
 ]
 
 /**
- * Website Name
+ * Website Name.
  *
  * @type {string}
  */
