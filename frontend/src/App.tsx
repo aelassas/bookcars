@@ -35,6 +35,7 @@ const NoMatch = lazy(() => import('@/pages/NoMatch'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
+const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 
 const App = () => (
   <BrowserRouter>
@@ -69,6 +70,7 @@ const App = () => (
                 <Route path="/locations" element={<Locations />} />
                 <Route path="/suppliers" element={<Suppliers />} />
                 <Route path="/faq" element={<Faq />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
 
                 <Route path="*" element={<NoMatch />} />
               </Routes>
