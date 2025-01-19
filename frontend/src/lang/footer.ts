@@ -19,6 +19,7 @@ const strings = new LocalizedStrings({
     SECURE_PAYMENT: `Paiement 100% sécurisé avec ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Politique de Confidentialité',
     FAQ: 'FAQ',
+    COOKIE_POLICY: 'Politique de cookies',
   },
   en: {
     COPYRIGHT_PART1,
@@ -34,6 +35,7 @@ const strings = new LocalizedStrings({
     SECURE_PAYMENT: `100% secure payment with ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Privacy Policy',
     FAQ: 'FAQ',
+    COOKIE_POLICY: 'Cookie Policy',
   },
   es: {
     COPYRIGHT_PART1,
@@ -49,6 +51,7 @@ const strings = new LocalizedStrings({
     SECURE_PAYMENT: `Pago 100% seguro con ${env.WEBSITE_NAME}`,
     PRIVACY_POLICY: 'Política de Privacidad',
     FAQ: 'Preguntas frecuentes',
+    COOKIE_POLICY: 'Política de Cookies',
   },
 })
 
