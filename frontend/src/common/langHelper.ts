@@ -1,4 +1,4 @@
-import { LocalizedStrings } from 'localized-strings'
+import LocalizedStrings from 'localized-strings'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'
 
@@ -20,10 +20,10 @@ export const getLanguage = () => {
 /**
  * Set LocalizedStrings language.
  *
- * @param {LocalizedStrings<any>} strings
+ * @param {LocalizedStrings} strings
  * @param {?string} [language]
  */
-export const setLanguage = (strings: LocalizedStrings<any>, language?: string) => {
+export const setLanguage = (strings: LocalizedStrings, language?: string) => {
   const lang = language || getLanguage()
   strings.setLanguage(lang)
 }
