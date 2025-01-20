@@ -9,9 +9,9 @@
 [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars)
 [![codecov](https://img.shields.io/codecov/c/github/aelassas/bookcars?logo=codecov)](https://codecov.io/gh/aelassas/bookcars)
 [![coveralls](https://coveralls.io/repos/github/aelassas/bookcars/badge.svg)](https://coveralls.io/github/aelassas/bookcars)
--->
 
 https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
+-->
 
 ## BookCars
 
