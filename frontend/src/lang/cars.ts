@@ -86,6 +86,8 @@ const strings = new LocalizedStrings({
     TITLE_CAR_AVAILABLE: 'voiture disponible',
     TITLE_CARS_AVAILABLE: 'voitures disponibles',
     DETAILS: 'Détails',
+    ALREADY_BOOKED: 'Déjà Réservée',
+    COMING_SOON: 'Bientôt Disponible',
   },
   en: {
     NEW_CAR: 'New car',
@@ -163,6 +165,8 @@ const strings = new LocalizedStrings({
     TITLE_CAR_AVAILABLE: 'car available',
     TITLE_CARS_AVAILABLE: 'cars available',
     DETAILS: 'Details',
+    ALREADY_BOOKED: 'Already Booked',
+    COMING_SOON: 'Coming Soon',
   },
   es: {
     NEW_CAR: 'Coche nuevo',
@@ -240,6 +244,8 @@ const strings = new LocalizedStrings({
     TITLE_CAR_AVAILABLE: 'coche disponible',
     TITLE_CARS_AVAILABLE: 'coches disponibles',
     DETAILS: 'Detalles',
+    ALREADY_BOOKED: 'Ya Reservado',
+    COMING_SOON: 'Próximamente',
   }
 })
 

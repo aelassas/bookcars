@@ -30,6 +30,7 @@ const strings = new LocalizedStrings({
     MULTIMEDIA: 'Multimédia',
     RATING: 'Notation',
     CO2: 'CO2 (g/km)',
+    COMING_SOON: 'Bientôt Disponible',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -58,6 +59,7 @@ const strings = new LocalizedStrings({
     MULTIMEDIA: 'Multimedia',
     RATING: 'Rating',
     CO2: 'CO2 (g/km)',
+    COMING_SOON: 'Coming Soon',
   },
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
@@ -86,6 +88,7 @@ const strings = new LocalizedStrings({
     MULTIMEDIA: 'Multimedia',
     RATING: 'Calificación',
     CO2: 'CO2 (g/km)',
+    COMING_SOON: 'Próximamente',
   },
 })
 

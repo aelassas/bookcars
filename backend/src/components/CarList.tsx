@@ -515,14 +515,22 @@ const CarList = ({
                     </ul>
                     <ul className="extras-list">
                       {edit && (
-                        <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                          <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                        <>
+                          <li className={car.available ? 'car-available' : 'car-unavailable'}>
+                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                              <div className="car-info-list-item">
+                                {car.available ? <CheckIcon /> : <UncheckIcon />}
+                                {car.available ? <span className="car-info-list-text">{strings.CAR_AVAILABLE}</span> : <span className="car-info-list-text">{strings.CAR_UNAVAILABLE}</span>}
+                              </div>
+                            </Tooltip>
+                          </li>
+                          <li className="car-coming-soon">
                             <div className="car-info-list-item">
-                              {car.available ? <CheckIcon /> : <UncheckIcon />}
-                              {car.available ? <span className="car-info-list-text">{strings.CAR_AVAILABLE}</span> : <span className="car-info-list-text">{strings.CAR_UNAVAILABLE}</span>}
+                              <CheckIcon />
+                              <span className="car-info-list-text">{strings.COMING_SOON}</span>
                             </div>
-                          </Tooltip>
-                        </li>
+                          </li>
+                        </>
                       )}
                       {car.cancellation > -1 && (
                         <li>
