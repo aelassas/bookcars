@@ -23,9 +23,11 @@ div.car-container article span.already-booked {
   border-radius: 4px;
   min-width: 160px;
   text-align: center;
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
-div.car-container article span.coming-soon {
+/* div.car-container article span.coming-soon {
   background-color: #0078D4;
   color: #fff;
 }
@@ -33,7 +35,7 @@ div.car-container article span.coming-soon {
 div.car-container article span.already-booked {
   background-color: #FD3446;
   color: #fff;
-}
+} */
 
 div.car-container div.car-header {
   padding: 10px 0;
