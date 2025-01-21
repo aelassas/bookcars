@@ -16,6 +16,25 @@ div.car-container article .btn-book {
   padding: 0 20px;
 }
 
+div.car-container article span.coming-soon,
+div.car-container article span.already-booked {
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 4px;
+  min-width: 160px;
+  text-align: center;
+}
+
+div.car-container article span.coming-soon {
+  background-color: #0078D4;
+  color: #fff;
+}
+
+div.car-container article span.already-booked {
+  background-color: #FD3446;
+  color: #fff;
+}
+
 div.car-container div.car-header {
   padding: 10px 0;
   border-bottom: #d9d8d9 2px solid;

@@ -367,23 +367,31 @@ const Car = ({
 
           {!hidePrice && (
             <div className="action">
-              <Button
-                variant="contained"
-                className="btn-primary btn-book btn-margin-bottom"
-                onClick={() => {
-                  navigate('/checkout', {
-                    state: {
-                      carId: car._id,
-                      pickupLocationId: pickupLocation,
-                      dropOffLocationId: dropOffLocation,
-                      from,
-                      to
-                    }
-                  })
-                }}
-              >
-                {strings.BOOK}
-              </Button>
+              {
+                car.comingSoon ? (
+                  <span className="coming-soon">{strings.COMING_SOON}</span>
+                ) : car.available ? (
+                  <Button
+                    variant="contained"
+                    className="btn-primary btn-book btn-margin-bottom"
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          carId: car._id,
+                          pickupLocationId: pickupLocation,
+                          dropOffLocationId: dropOffLocation,
+                          from,
+                          to
+                        }
+                      })
+                    }}
+                  >
+                    {strings.BOOK}
+                  </Button>
+                ) : (
+                  <span className="already-booked">{strings.ALREADY_BOOKED}</span>
+                )
+              }
             </div>
           )}
         </div>

@@ -105,6 +105,7 @@ export const update = async (req: Request, res: Response) => {
         multimedia,
         rating,
         co2,
+        comingSoon,
       } = body
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
@@ -138,6 +139,7 @@ export const update = async (req: Request, res: Response) => {
       car.multimedia = multimedia
       car.rating = rating
       car.co2 = co2
+      car.comingSoon = comingSoon
 
       await car.save()
       return res.json(car)
@@ -647,15 +649,25 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       rating,
       seats,
       days,
+      includeAlreadyBookedCars,
+      includeComingSoonCars,
     } = body
 
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { supplier: { $in: suppliers } },
         { locations: pickupLocation },
-        { available: true }, { type: { $in: carType } },
+        { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
       ],
+    }
+
+    if (!includeAlreadyBookedCars) {
+      $match.$and!.push({ available: true })
+    }
+
+    if (!includeComingSoonCars) {
+      $match.$and!.push({ $or: [{ comingSoon: false }, { comingSoon: null }] })
     }
 
     if (fuelPolicy) {

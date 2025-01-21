@@ -81,6 +81,7 @@ const strings = new LocalizedStrings({
     PRICE_PER_DAY: 'Prix par jour :',
     TRIPS: 'locations',
     CO2: 'Effet CO2',
+    COMING_SOON: 'Bientôt Disponible',
   },
   en: {
     NEW_CAR: 'New car',
@@ -155,6 +156,7 @@ const strings = new LocalizedStrings({
     PRICE_PER_DAY: 'Price per day:',
     TRIPS: 'trips',
     CO2: 'CO2 effect',
+    COMING_SOON: 'Coming Soon',
   },
   es: {
     NEW_CAR: 'Nuevo coche',
@@ -229,6 +231,7 @@ const strings = new LocalizedStrings({
     PRICE_PER_DAY: 'Precio por día:',
     TRIPS: 'alquileres',
     CO2: 'Efecto CO2',
+    COMING_SOON: 'Próximamente',
   },
 })
 

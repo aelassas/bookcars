@@ -65,6 +65,10 @@ const carSchema = new Schema<env.Car>(
       required: [true, "can't be blank"],
       index: true,
     },
+    comingSoon: {
+      type: Boolean,
+      default: false,
+    },
     type: {
       type: String,
       enum: [

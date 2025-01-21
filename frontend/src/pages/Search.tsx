@@ -327,8 +327,10 @@ const Search = () => {
                 multimedia={multimedia}
                 rating={rating}
                 seats={seats}
-              // distance={distance}
-              // onLoad={() => setLoadingPage(false)}
+                // distance={distance}
+                // onLoad={() => setLoadingPage(false)}
+                // includeAlreadyBookedCars
+                // includeComingSoonCars
               />
             </div>
           </div>
