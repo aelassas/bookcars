@@ -671,6 +671,8 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       },
       fuelPolicy: [bookcarsTypes.FuelPolicy.LikeForLike],
       days: 3,
+      includeAlreadyBookedCars: true,
+      includeComingSoonCars: true,
     }
     let res = await request(app)
       .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
