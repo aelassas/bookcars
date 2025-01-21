@@ -92,6 +92,7 @@ const Checkout = () => {
   const [tosError, setTosError] = useState(false)
   const [error, setError] = useState(false)
   const [price, setPrice] = useState(0)
+  const [depositPrice, setDepositPrice] = useState(0)
   const [emailInfo, setEmailInfo] = useState(true)
   const [phoneInfo, setPhoneInfo] = useState(true)
 
@@ -113,6 +114,7 @@ const Checkout = () => {
   const [addiontalDriverPhoneValid, setAddiontalDriverPhoneValid] = useState(true)
   const [addiontalDriverBirthDateValid, setAddiontalDriverBirthDateValid] = useState(true)
   const [payLater, setPayLater] = useState(false)
+  const [payDeposit, setPayDeposit] = useState(false)
   const [recaptchaError, setRecaptchaError] = useState(false)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
@@ -399,7 +401,7 @@ const Checkout = () => {
       let _sessionId: string | undefined
       if (!payLater) {
         const payload: bookcarsTypes.CreatePaymentPayload = {
-          amount: price,
+          amount: payDeposit ? depositPrice : price,
           currency: StripeService.getCurrency(),
           locale: language,
           receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
@@ -504,11 +506,13 @@ const Checkout = () => {
       }
 
       const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
+      const _depositPrice = _car.deposit > 0 ? await StripeService.convertPrice(_car.deposit) : 0
 
       const included = (val: number) => val === 0
 
       setCar(_car)
       setPrice(_price)
+      setDepositPrice(_depositPrice)
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
@@ -543,7 +547,7 @@ const Checkout = () => {
                     {((pickupLocation.latitude && pickupLocation.longitude)
                       || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
                         <Map
-                          position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
+                          position={[pickupLocation.latitude || -37.840935, pickupLocation.longitude || 144.946457]}
                           initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
                           parkingSpots={pickupLocation.parkingSpots}
                           locations={[pickupLocation]}
@@ -560,6 +564,7 @@ const Checkout = () => {
                       hidePrice
                       sizeAuto
                       onLoad={() => setLoadingPage(false)}
+                      hideSupplier
                     />
 
                     <CheckoutOptions
@@ -822,6 +827,7 @@ const Checkout = () => {
                               defaultValue="payOnline"
                               onChange={(event) => {
                                 setPayLater(event.target.value === 'payLater')
+                                setPayDeposit(event.target.value === 'payDeposit')
                               }}
                             >
                               <FormControlLabel
@@ -836,6 +842,22 @@ const Checkout = () => {
                                   </span>
                                 )}
                               />
+                              {
+                                car.deposit > 0 && (
+                                  <FormControlLabel
+                                    value="payDeposit"
+                                    control={<Radio />}
+                                    disabled={!!clientSecret}
+                                    className={clientSecret ? 'payment-radio-disabled' : ''}
+                                    label={(
+                                      <span className="payment-button">
+                                        <span>{strings.PAY_DEPOSIT}</span>
+                                        <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
+                                      </span>
+                                    )}
+                                  />
+                                )
+                              }
                               <FormControlLabel
                                 value="payOnline"
                                 control={<Radio />}
@@ -876,8 +898,16 @@ const Checkout = () => {
                     </div>
 
                     <div className="payment-info">
-                      <div className="payment-info-title">{`${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`}</div>
-                      <div className="payment-info-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
+                      <div className="payment-info-title">
+                        {
+                          payDeposit ? strings.DEPOSIT : `${strings.PRICE_FOR} ${days} ${days > 1 ? strings.DAYS : strings.DAY}`
+                        }
+                      </div>
+                      <div className="payment-info-price">
+                        {
+                          bookcarsHelper.formatPrice(payDeposit ? depositPrice : price, commonStrings.CURRENCY, language)
+                        }
+                      </div>
                     </div>
 
                     {(!car.supplier.payLater || !payLater) && (
