@@ -72,7 +72,7 @@ section.car-list .empty-list {
     max-height: 75%;
   }
 
-section.car-list article div.car div.car-footer {
+  section.car-list article div.car div.car-footer {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -168,6 +168,10 @@ section.car-list article div.car div.car-footer {
   section.car-list article div.car-info ul.extras-list li.car-available,
   section.car-list article div.car-info ul.extras-list .available {
     color: #1f9201;
+  }
+
+  section.car-list article div.car-info ul.extras-list li.car-coming-soon {
+    color: #0064c8;
   }
 
   section.car-list article div.car-info ul.extras-list li.car-unavailable,
@@ -456,6 +460,10 @@ section.car-list article div.car div.car-footer {
   section.car-list article div.car-info ul.extras-list li.car-available,
   section.car-list article div.car-info ul.extras-list .available {
     color: #1f9201;
+  }
+
+  section.car-list article div.car-info ul.extras-list li.car-coming-soon {
+    color: #0064c8;
   }
 
   section.car-list article div.car-info ul.extras-list li.car-unavailable,

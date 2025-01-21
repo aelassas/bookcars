@@ -43,6 +43,8 @@ interface CarListProps {
   rating?: number
   seats?: number
   distance?: string
+  includeAlreadyBookedCars?: boolean
+  includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -72,6 +74,8 @@ const CarList = ({
   rating,
   seats,
   distance,
+  includeAlreadyBookedCars,
+  includeComingSoonCars,
   onLoad,
 }: CarListProps) => {
   const [init, setInit] = useState(true)
@@ -132,6 +136,8 @@ const CarList = ({
         rating: _rating,
         seats: _seats,
         days: bookcarsHelper.days(from, to),
+        includeAlreadyBookedCars,
+        includeComingSoonCars,
       }
 
       const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)

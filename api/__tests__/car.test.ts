@@ -207,6 +207,7 @@ describe('PUT /api/update-car', () => {
       range: bookcarsTypes.CarRange.Midi,
       multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
       rating: 4,
+      comingSoon: true,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -244,6 +245,7 @@ describe('PUT /api/update-car', () => {
     expect(car.range).toBe(payload.range)
     expect(car.multimedia).toStrictEqual(payload.multimedia)
     expect(car.rating).toBe(payload.rating)
+    expect(car.comingSoon).toBe(payload.comingSoon)
 
     // test success (booking not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
