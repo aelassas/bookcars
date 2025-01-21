@@ -99,6 +99,10 @@ const bookingSchema = new Schema<env.Booking>(
     customerId: {
       type: String,
     },
+    isDeposit: {
+      type: Boolean,
+      default: false,
+    },
     expireAt: {
       //
       // Bookings created from checkout with Stripe are temporary and

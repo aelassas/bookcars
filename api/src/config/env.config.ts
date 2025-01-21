@@ -36,11 +36,11 @@ export const LANGUAGES = [
 ]
 
 /**
- * Website Name.
+ * Website Name
  *
  * @type {string}
  */
-export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
+export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'bookcars')
 
 /**
  * Server Port. Default is 4002.
@@ -475,6 +475,7 @@ export interface Booking extends Document {
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
+  isDeposit: boolean
 }
 
 /**

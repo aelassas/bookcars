@@ -93,6 +93,7 @@ export interface Booking {
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
+  isDeposit?: boolean
 }
 
 export interface CheckoutPayload {

@@ -417,6 +417,8 @@ const Checkout = () => {
         _customerId = res.customerId
       }
 
+      booking.isDeposit = payDeposit
+
       const payload: bookcarsTypes.CheckoutPayload = {
         driver,
         booking,
