@@ -524,12 +524,14 @@ const CarList = ({
                               </div>
                             </Tooltip>
                           </li>
-                          <li className="car-coming-soon">
-                            <div className="car-info-list-item">
-                              <CheckIcon />
-                              <span className="car-info-list-text">{strings.COMING_SOON}</span>
-                            </div>
-                          </li>
+                          {car.comingSoon && (
+                            <li className="car-coming-soon">
+                              <div className="car-info-list-item">
+                                <CheckIcon />
+                                <span className="car-info-list-text">{strings.COMING_SOON}</span>
+                              </div>
+                            </li>
+                          )}
                         </>
                       )}
                       {car.cancellation > -1 && (
