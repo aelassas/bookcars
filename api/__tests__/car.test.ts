@@ -111,6 +111,7 @@ describe('POST /api/create-car', () => {
       range: bookcarsTypes.CarRange.Mini,
       multimedia: [bookcarsTypes.CarMultimedia.Bluetooth],
       rating: 3,
+      comingSoon: true,
     }
     let res = await request(app)
       .post('/api/create-car')
@@ -207,7 +208,7 @@ describe('PUT /api/update-car', () => {
       range: bookcarsTypes.CarRange.Midi,
       multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
       rating: 4,
-      comingSoon: true,
+      comingSoon: false,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -671,14 +672,22 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       },
       fuelPolicy: [bookcarsTypes.FuelPolicy.LikeForLike],
       days: 3,
-      includeAlreadyBookedCars: true,
-      includeComingSoonCars: true,
     }
     let res = await request(app)
       .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    payload.includeAlreadyBookedCars = true
+    payload.includeComingSoonCars = true
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.includeAlreadyBookedCars = false
+    payload.includeComingSoonCars = false
 
     payload.days = undefined
     res = await request(app)
