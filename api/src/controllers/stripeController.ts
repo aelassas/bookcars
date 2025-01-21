@@ -133,7 +133,7 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       }
 
       booking.expireAt = undefined
-      booking.status = bookcarsTypes.BookingStatus.Paid
+      booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
       await booking.save()
 
       // Mark car as unavailable
