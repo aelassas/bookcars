@@ -140,6 +140,12 @@ export const getFuelPolicy = (type: string) => {
     case bookcarsTypes.FuelPolicy.FreeTank:
       return strings.FUEL_POLICY_FREE_TANK
 
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return strings.FUEL_POLICY_FULL_TO_FULL
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return strings.FUEL_POLICY_FULL_TO_EMPTY
+
     default:
       return ''
   }
@@ -221,6 +227,12 @@ export const getFuelPolicyTooltip = (fuelPolicy: string) => {
 
     case bookcarsTypes.FuelPolicy.FreeTank:
       return strings.FUEL_POLICY_FREE_TANK_TOOLTIP
+
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return strings.FUEL_POLICY_FULL_TO_FULL_TOOLTIP
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return strings.FUEL_POLICY_FULL_TO_EMPTY_TOOLTIP
 
     default:
       return ''

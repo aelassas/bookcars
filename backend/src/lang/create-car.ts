@@ -10,7 +10,7 @@ const strings = new LocalizedStrings({
     RECOMMENDED_IMAGE_SIZE: `Taille d'image recommandée : ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Fournisseur',
     LOCATIONS: 'Lieux de prise en charge',
-    AVAILABLE: 'Disponible à la location',
+    AVAILABLE: 'Disponible',
     CAR_TYPE: 'Moteur',
     DAILY_PRICE: 'Prix/jour',
     DISCOUNTED_DAILY_PRICE: 'Prix discount/jour',
@@ -31,6 +31,7 @@ const strings = new LocalizedStrings({
     RATING: 'Notation',
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Bientôt Disponible',
+    FULLY_BOOKED: 'Déjà réservée',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -39,7 +40,7 @@ const strings = new LocalizedStrings({
     RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Supplier',
     LOCATIONS: 'Pick-up locations',
-    AVAILABLE: 'Available for rental',
+    AVAILABLE: 'Available',
     CAR_TYPE: 'Engine',
     DAILY_PRICE: 'Daily Price',
     DISCOUNTED_DAILY_PRICE: 'Discounted Daily Price',
@@ -60,6 +61,7 @@ const strings = new LocalizedStrings({
     RATING: 'Rating',
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Coming Soon',
+    FULLY_BOOKED: 'Fully Booked',
   },
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
@@ -68,7 +70,7 @@ const strings = new LocalizedStrings({
     RECOMMENDED_IMAGE_SIZE: `Tamaño de imagen recomendado: ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Proveedor',
     LOCATIONS: 'Lugares de recogida',
-    AVAILABLE: 'Disponible para alquiler',
+    AVAILABLE: 'Disponible',
     CAR_TYPE: 'Motor',
     DAILY_PRICE: 'Precio diario',
     DISCOUNTED_DAILY_PRICE: 'Precio diario con descuento',
@@ -89,6 +91,7 @@ const strings = new LocalizedStrings({
     RATING: 'Calificación',
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Próximamente',
+    FULLY_BOOKED: 'Ya Reservado',
   },
 })
 

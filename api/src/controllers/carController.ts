@@ -78,6 +78,8 @@ export const update = async (req: Request, res: Response) => {
         name,
         minimumAge,
         available,
+        fullyBooked,
+        comingSoon,
         type,
         locations,
         dailyPrice,
@@ -105,7 +107,6 @@ export const update = async (req: Request, res: Response) => {
         multimedia,
         rating,
         co2,
-        comingSoon,
       } = body
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
@@ -113,6 +114,8 @@ export const update = async (req: Request, res: Response) => {
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
       car.available = available
+      car.fullyBooked = fullyBooked
+      car.comingSoon = comingSoon
       car.type = type as bookcarsTypes.CarType
       car.dailyPrice = dailyPrice
       car.discountedDailyPrice = discountedDailyPrice
@@ -139,7 +142,6 @@ export const update = async (req: Request, res: Response) => {
       car.multimedia = multimedia
       car.rating = rating
       car.co2 = co2
-      car.comingSoon = comingSoon
 
       await car.save()
       return res.json(car)
@@ -663,11 +665,21 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     }
 
     if (!includeAlreadyBookedCars) {
-      $match.$and!.push({ available: true })
+      $match.$and!.push({
+        $or: [
+          { $and: [{ $or: [{ fullyBooked: false }, { fullyBooked: null }] }, { available: true }] },
+          { $and: [{ $or: [{ fullyBooked: false }, { fullyBooked: null }] }, { available: false }] },
+        ],
+      })
     }
 
     if (!includeComingSoonCars) {
-      $match.$and!.push({ $or: [{ comingSoon: false }, { comingSoon: null }] })
+      $match.$and!.push({
+        $or: [
+          { $and: [{ $or: [{ comingSoon: false }, { comingSoon: null }] }, { available: true }] },
+          { $and: [{ $or: [{ comingSoon: false }, { comingSoon: null }] }, { available: false }] },
+        ],
+      })
     }
 
     if (fuelPolicy) {
