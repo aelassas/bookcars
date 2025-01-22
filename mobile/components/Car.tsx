@@ -259,6 +259,11 @@ const Car = ({
       fontSize: 13,
       color: '#a1a1a1',
     },
+    carInfo: {
+      fontSize: 13,
+      fontWeight: 'bold',
+      color: '#FD3446',
+    },
     buttonContainer: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -418,11 +423,19 @@ const Car = ({
               <Text style={styles.priceSecondary}>{helper.getDays(days)}</Text>
               <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(totalPrice, currencySymbol, language)}`}</Text>
               <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(totalPrice / days, currencySymbol, language)}`}</Text>
+
+              {
+                car.comingSoon ? (
+                  <Text style={styles.carInfo}>{i18n.t('COMING_SOON')}</Text>
+                ) : car.fullyBooked ? (
+                  <Text style={styles.carInfo}>{i18n.t('FULLY_BOOKED')}</Text>
+                ) : null
+              }
             </View>
           )}
         </View>
 
-        {!hidePrice && from && to && pickupLocation && dropOffLocation && (
+        {!hidePrice && from && to && pickupLocation && dropOffLocation && car.available && !car.fullyBooked && !car.comingSoon && (
           <View style={styles.buttonContainer}>
             <Button
               style={styles.button}

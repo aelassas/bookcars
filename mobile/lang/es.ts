@@ -122,6 +122,8 @@ export const es = {
   FUEL_POLICY: 'Política de combustible',
   FUEL_POLICY_LIKE_FOR_LIKE: 'Lleno/Lleno',
   FUEL_POLICY_FREE_TANK: 'Tanque lleno incluido',
+  FUEL_POLICY_FULL_TO_FULL: 'Lleno/Lleno',
+  FUEL_POLICY_FULL_TO_EMPTY: 'Lleno/Vacío',
   MILEAGE: 'Kilometraje',
   MILEAGE_UNIT: 'KM/día',
   UNLIMITED: 'Ilimitado',
@@ -241,4 +243,6 @@ export const es = {
   UPLOAD_FILE: 'Subir archivo...',
   SHOW_FILTERS: 'Mostrar filtros',
   HIDE_FILTERS: 'Ocultar filtros',
+  COMING_SOON: 'Próximamente',
+  FULLY_BOOKED: 'Ya Reservado',
 }

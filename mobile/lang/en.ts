@@ -123,6 +123,8 @@ export const en = {
   FUEL_POLICY: 'Fuel policy',
   FUEL_POLICY_LIKE_FOR_LIKE: 'Like for Like',
   FUEL_POLICY_FREE_TANK: 'Free tank',
+  FUEL_POLICY_FULL_TO_FULL: 'Full to Full',
+  FUEL_POLICY_FULL_TO_EMPTY: 'Full to Empty',
   MILEAGE: 'Mileage',
   MILEAGE_UNIT: 'KM/day',
   UNLIMITED: 'Unlimited',
@@ -241,4 +243,6 @@ export const en = {
   UPLOAD_FILE: 'Upload file...',
   SHOW_FILTERS: 'Show filters',
   HIDE_FILTERS: 'Hide filters',
+  COMING_SOON: 'Coming Soon',
+  FULLY_BOOKED: 'Fully Booked',
 }
