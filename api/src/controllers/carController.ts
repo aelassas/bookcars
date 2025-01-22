@@ -771,7 +771,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
           $facet: {
             resultData: [
               {
-                $sort: { price: 1, _id: 1, comingSoon: -1, fullyBooked: -1 },
+                $sort: { price: 1, comingSoon: 1, fullyBooked: 1, _id: 1 },
               },
               { $skip: (page - 1) * size },
               { $limit: size },
