@@ -397,7 +397,7 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            : rows.map((car, index) => {
+            : rows.map((car) => {
               const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
