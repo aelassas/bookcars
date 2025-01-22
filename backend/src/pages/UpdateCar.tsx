@@ -54,6 +54,7 @@ const UpdateCar = () => {
   const [rating, setRating] = useState('')
   const [co2, setCo2] = useState('')
   const [available, setAvailable] = useState(false)
+  const [fullyBooked, setFullyBooked] = useState(false)
   const [comingSoon, setComingSoon] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
@@ -163,6 +164,10 @@ const UpdateCar = () => {
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAvailable(e.target.checked)
+  }
+
+  const handleFullyBookedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullyBooked(e.target.checked)
   }
 
   const handleComingSoonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,6 +288,7 @@ const UpdateCar = () => {
         rating: Number(rating) || undefined,
         co2: Number(co2) || undefined,
         comingSoon,
+        fullyBooked,
       }
 
       const status = await CarService.update(data)
@@ -351,6 +357,7 @@ const UpdateCar = () => {
                 setCo2(_car.co2.toString())
               }
               setAvailable(_car.available)
+              setFullyBooked(_car.fullyBooked || false)
               setComingSoon(_car.comingSoon || false)
               setType(_car.type)
               setGearbox(_car.gearbox)
@@ -651,6 +658,20 @@ const UpdateCar = () => {
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel control={<Switch checked={available} onChange={handleAvailableChange} color="primary" />} label={strings.AVAILABLE} className="checkbox-fcl" />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={fullyBooked}
+                      color="primary"
+                      onChange={handleFullyBookedChange}
+                    />
+                  )}
+                  label={strings.FULLY_BOOKED}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">

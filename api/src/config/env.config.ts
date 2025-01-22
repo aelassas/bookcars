@@ -503,6 +503,8 @@ export interface Car extends Document {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: bookcarsTypes.CarType
   gearbox: bookcarsTypes.GearboxType
   aircon: boolean
@@ -522,7 +524,6 @@ export interface Car extends Document {
   rating?: number
   trips: number
   co2?: number
-  comingSoon?: boolean
 }
 
 /**

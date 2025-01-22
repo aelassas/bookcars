@@ -51,6 +51,7 @@ const CreateCar = () => {
   const [rating, setRating] = useState('')
   const [co2, setCo2] = useState('')
   const [available, setAvailable] = useState(false)
+  const [fullyBooked, setFullyBooked] = useState(false)
   const [comingSoon, setComingSoon] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
@@ -163,6 +164,10 @@ const CreateCar = () => {
     setAvailable(e.target.checked)
   }
 
+  const handleFullyBookedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullyBooked(e.target.checked)
+  }
+
   const handleComingSoonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComingSoon(e.target.checked)
   }
@@ -261,6 +266,8 @@ const CreateCar = () => {
         discountedMonthlyPrice: getPrice(discountedMonthlyPrice),
         deposit: Number(deposit),
         available,
+        fullyBooked,
+        comingSoon,
         type,
         gearbox,
         aircon,
@@ -279,7 +286,6 @@ const CreateCar = () => {
         multimedia,
         rating: Number(rating) || undefined,
         co2: Number(co2) || undefined,
-        comingSoon,
       }
 
       const car = await CarService.create(data)
@@ -570,6 +576,20 @@ const CreateCar = () => {
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel control={<Switch checked={available} onChange={handleAvailableChange} color="primary" />} label={strings.AVAILABLE} className="checkbox-fcl" />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={fullyBooked}
+                    color="primary"
+                    onChange={handleFullyBookedChange}
+                  />
+                )}
+                label={strings.FULLY_BOOKED}
+                className="checkbox-fcl"
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">

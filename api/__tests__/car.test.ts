@@ -112,6 +112,7 @@ describe('POST /api/create-car', () => {
       multimedia: [bookcarsTypes.CarMultimedia.Bluetooth],
       rating: 3,
       comingSoon: true,
+      fullyBooked: true,
     }
     let res = await request(app)
       .post('/api/create-car')
@@ -209,6 +210,7 @@ describe('PUT /api/update-car', () => {
       multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
       rating: 4,
       comingSoon: false,
+      fullyBooked: false,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -247,6 +249,7 @@ describe('PUT /api/update-car', () => {
     expect(car.multimedia).toStrictEqual(payload.multimedia)
     expect(car.rating).toBe(payload.rating)
     expect(car.comingSoon).toBe(payload.comingSoon)
+    expect(car.fullyBooked).toBe(payload.fullyBooked)
 
     // test success (booking not found)
     payload._id = testHelper.GetRandromObjectIdAsString()

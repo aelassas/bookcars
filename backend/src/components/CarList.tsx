@@ -524,6 +524,14 @@ const CarList = ({
                               </div>
                             </Tooltip>
                           </li>
+                          {car.fullyBooked && (
+                            <li className="car-unavailable">
+                              <div className="car-info-list-item">
+                                <UncheckIcon />
+                                <span className="car-info-list-text">{strings.FULLY_BOOKED}</span>
+                              </div>
+                            </li>
+                          )}
                           {car.comingSoon && (
                             <li className="car-coming-soon">
                               <div className="car-info-list-item">

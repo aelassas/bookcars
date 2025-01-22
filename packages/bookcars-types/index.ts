@@ -39,7 +39,9 @@ export enum GearboxType {
 
 export enum FuelPolicy {
   LikeForLike = 'likeForlike',
-  FreeTank = 'freeTank'
+  FreeTank = 'freeTank',
+  FullToFull = 'fullToFull',
+  FullToEmpty = 'FullToEmpty'
 }
 
 export enum BookingStatus {
@@ -181,6 +183,8 @@ export interface CreateCarPayload {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: string
   gearbox: string
   aircon: boolean
@@ -199,7 +203,6 @@ export interface CreateCarPayload {
   multimedia: string[]
   rating?: number
   co2?: number
-  comingSoon?: boolean
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
@@ -428,6 +431,8 @@ export interface Car {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: CarType
   gearbox: GearboxType
   aircon: boolean
@@ -447,7 +452,6 @@ export interface Car {
   rating?: number
   trips: number
   co2?: number
-  comingSoon?: boolean
   [propKey: string]: any
 }
 
