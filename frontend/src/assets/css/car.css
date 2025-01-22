@@ -17,25 +17,20 @@ div.car-container article .btn-book {
 }
 
 div.car-container article span.coming-soon,
-div.car-container article span.already-booked {
-  font-size: 13px;
-  padding: 4px;
-  border-radius: 4px;
-  min-width: 160px;
-  text-align: center;
-  background-color: #1a1a1a;
-  color: #fff;
+div.car-container article span.fully-booked {
+  font-size: 12px;
+  font-weight: bold;
+  display: table-row;
+  text-align: right;
 }
 
-/* div.car-container article span.coming-soon {
-  background-color: #0078D4;
-  color: #fff;
+div.car-container article span.coming-soon {
+  color: #FD3446;
 }
 
-div.car-container article span.already-booked {
-  background-color: #FD3446;
-  color: #fff;
-} */
+div.car-container article span.fully-booked {
+  color: #FD3446;
+}
 
 div.car-container div.car-header {
   padding: 10px 0;
@@ -211,6 +206,7 @@ div.car-container article div.car-info div.car-info-header div.name {
 
 div.car-container article div.price {
   display: table;
+  border-collapse: separate;
 }
 
 div.car-container article span.price-main {

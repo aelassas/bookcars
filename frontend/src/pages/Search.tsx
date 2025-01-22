@@ -49,7 +49,7 @@ const Search = () => {
   const [carType, setCarType] = useState(bookcarsHelper.getAllCarTypes())
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
-  const [fuelPolicy, setFuelPolicy] = useState([bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForLike])
+  const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
   const [deposit, setDeposit] = useState(-1)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
@@ -327,8 +327,11 @@ const Search = () => {
                 multimedia={multimedia}
                 rating={rating}
                 seats={seats}
-              // distance={distance}
-              // onLoad={() => setLoadingPage(false)}
+                // distance={distance}
+                // onLoad={() => setLoadingPage(false)}
+                hideSupplier
+                // includeAlreadyBookedCars
+                includeComingSoonCars
               />
             </div>
           </div>

@@ -223,6 +223,13 @@ const Car = ({
                   <span>{`${strings.PRICE_PER_DAY} `}</span>
                   <span className="price-day-value">{bookcarsHelper.formatPrice(totalPrice / days, commonStrings.CURRENCY, language)}</span>
                 </span>
+                {
+                  car.comingSoon ? (
+                    <span className="coming-soon">{strings.COMING_SOON}</span>
+                  ) : car.fullyBooked ? (
+                    <span className="fully-booked">{strings.FULLY_BOOKED}</span>
+                  ) : null
+                }
               </div>
             )}
           </div>
@@ -368,9 +375,7 @@ const Car = ({
           {!hidePrice && (
             <div className="action">
               {
-                car.comingSoon ? (
-                  <span className="coming-soon">{strings.COMING_SOON}</span>
-                ) : car.available ? (
+                car.available && !car.comingSoon && !car.fullyBooked && (
                   <Button
                     variant="contained"
                     className="btn-primary btn-book btn-margin-bottom"
@@ -388,8 +393,6 @@ const Car = ({
                   >
                     {strings.BOOK}
                   </Button>
-                ) : (
-                  <span className="already-booked">{strings.ALREADY_BOOKED}</span>
                 )
               }
             </div>

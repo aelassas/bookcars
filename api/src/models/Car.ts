@@ -65,6 +65,10 @@ const carSchema = new Schema<env.Car>(
       required: [true, "can't be blank"],
       index: true,
     },
+    fullyBooked: {
+      type: Boolean,
+      default: false,
+    },
     comingSoon: {
       type: Boolean,
       default: false,
@@ -111,7 +115,12 @@ const carSchema = new Schema<env.Car>(
     },
     fuelPolicy: {
       type: String,
-      enum: [bookcarsTypes.FuelPolicy.LikeForLike, bookcarsTypes.FuelPolicy.FreeTank],
+      enum: [
+        bookcarsTypes.FuelPolicy.LikeForLike,
+        bookcarsTypes.FuelPolicy.FreeTank,
+        bookcarsTypes.FuelPolicy.FullToFull,
+        bookcarsTypes.FuelPolicy.FullToEmpty,
+      ],
       required: [true, "can't be blank"],
     },
     mileage: {

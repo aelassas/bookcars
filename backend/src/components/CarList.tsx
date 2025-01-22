@@ -397,7 +397,7 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            : rows.map((car) => {
+            : rows.map((car, index) => {
               const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
@@ -524,6 +524,14 @@ const CarList = ({
                               </div>
                             </Tooltip>
                           </li>
+                          {car.fullyBooked && (
+                            <li className="car-unavailable">
+                              <div className="car-info-list-item">
+                                <UncheckIcon />
+                                <span className="car-info-list-text">{strings.FULLY_BOOKED}</span>
+                              </div>
+                            </li>
+                          )}
                           {car.comingSoon && (
                             <li className="car-coming-soon">
                               <div className="car-info-list-item">
