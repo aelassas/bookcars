@@ -661,25 +661,16 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         { locations: pickupLocation },
         { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
+        { available: true },
       ],
     }
 
     if (!includeAlreadyBookedCars) {
-      $match.$and!.push({
-        $or: [
-          { $and: [{ $or: [{ fullyBooked: false }, { fullyBooked: null }] }, { available: true }] },
-          { $and: [{ $or: [{ fullyBooked: false }, { fullyBooked: null }] }, { available: false }] },
-        ],
-      })
+      $match.$and!.push({ $or: [{ fullyBooked: false }, { fullyBooked: null }] })
     }
 
     if (!includeComingSoonCars) {
-      $match.$and!.push({
-        $or: [
-          { $and: [{ $or: [{ comingSoon: false }, { comingSoon: null }] }, { available: true }] },
-          { $and: [{ $or: [{ comingSoon: false }, { comingSoon: null }] }, { available: false }] },
-        ],
-      })
+      $match.$and!.push({ $or: [{ comingSoon: false }, { comingSoon: null }] })
     }
 
     if (fuelPolicy) {

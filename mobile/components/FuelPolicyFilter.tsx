@@ -22,7 +22,9 @@ const FuelPolicyFilter = ({
   onChange
 }: FuelPolicyFilterProps) => {
   const [freeTank, setFreeTank] = useState(false)
-  const [likeForLike, setlikeForLike] = useState(false)
+  const [likeForLike, setLikeForLike] = useState(false)
+  const [fullToFull, setFullToFull] = useState(false)
+  const [fullToEmpty, setFullToEmpty] = useState(false)
   const [values, setValues] = useState<bookcarsTypes.FuelPolicy[]>([])
   const [allChecked, setAllChecked] = useState(false)
 
@@ -36,7 +38,7 @@ const FuelPolicyFilter = ({
     if (checked) {
       values.push(bookcarsTypes.FuelPolicy.FreeTank)
 
-      if (values.length === 2) {
+      if (values.length === allValues.length) {
         setAllChecked(true)
       }
     } else {
@@ -55,11 +57,11 @@ const FuelPolicyFilter = ({
     handleChange(values)
   }
 
-  const onValueChangelikeForLike = (checked: boolean) => {
+  const onValueChangeLikeForLike = (checked: boolean) => {
     if (checked) {
       values.push(bookcarsTypes.FuelPolicy.LikeForLike)
 
-      if (values.length === 2) {
+      if (values.length === allValues.length) {
         setAllChecked(true)
       }
     } else {
@@ -73,7 +75,53 @@ const FuelPolicyFilter = ({
       }
     }
 
-    setlikeForLike(checked)
+    setLikeForLike(checked)
+    setValues(values)
+    handleChange(values)
+  }
+
+  const onValueChangeFullToFull = (checked: boolean) => {
+    if (checked) {
+      values.push(bookcarsTypes.FuelPolicy.FullToFull)
+
+      if (values.length === allValues.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.FuelPolicy.FullToFull),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setFullToFull(checked)
+    setValues(values)
+    handleChange(values)
+  }
+
+  const onValueChangeFullToEmpty = (checked: boolean) => {
+    if (checked) {
+      values.push(bookcarsTypes.FuelPolicy.FullToEmpty)
+
+      if (values.length === allValues.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.FuelPolicy.FullToEmpty),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setFullToEmpty(checked)
     setValues(values)
     handleChange(values)
   }
@@ -84,7 +132,9 @@ const FuelPolicyFilter = ({
         <Accordion style={styles.accordion} title={i18n.t('FUEL_POLICY')}>
           <View style={styles.contentContainer}>
             <Switch style={styles.component} textStyle={styles.text} value={freeTank} label={i18n.t('FUEL_POLICY_FREE_TANK')} onValueChange={onValueChangeFreeTank} />
-            <Switch style={styles.component} textStyle={styles.text} value={likeForLike} label={i18n.t('FUEL_POLICY_LIKE_FOR_LIKE')} onValueChange={onValueChangelikeForLike} />
+            <Switch style={styles.component} textStyle={styles.text} value={likeForLike} label={i18n.t('FUEL_POLICY_LIKE_FOR_LIKE')} onValueChange={onValueChangeLikeForLike} />
+            <Switch style={styles.component} textStyle={styles.text} value={fullToFull} label={i18n.t('FUEL_POLICY_FULL_TO_FULL')} onValueChange={onValueChangeFullToFull} />
+            <Switch style={styles.component} textStyle={styles.text} value={fullToEmpty} label={i18n.t('FUEL_POLICY_FULL_TO_EMPTY')} onValueChange={onValueChangeFullToEmpty} />
           </View>
           <Link
             style={styles.link}
@@ -93,13 +143,13 @@ const FuelPolicyFilter = ({
             onPress={() => {
               if (allChecked) {
                 setFreeTank(false)
-                setlikeForLike(false)
+                setLikeForLike(false)
                 setAllChecked(false)
                 setValues([])
               } else {
                 const _values = allValues
                 setFreeTank(true)
-                setlikeForLike(true)
+                setLikeForLike(true)
                 setAllChecked(true)
                 setValues(_values)
                 handleChange(_values)
