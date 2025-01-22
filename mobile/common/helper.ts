@@ -230,6 +230,12 @@ export const getFuelPolicy = (type: string) => {
     case bookcarsTypes.FuelPolicy.FreeTank:
       return i18n.t('FUEL_POLICY_FREE_TANK')
 
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return i18n.t('FUEL_POLICY_FULL_TO_FULL')
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return i18n.t('FUEL_POLICY_FULL_TO_EMPTY')
+
     default:
       return ''
   }

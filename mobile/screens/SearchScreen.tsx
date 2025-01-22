@@ -208,6 +208,8 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
             }
           }}
           routeName="Cars"
+          // includeAlreadyBookedCars
+          includeComingSoonCars
           header={(
             <View>
               <SearchFormFilter

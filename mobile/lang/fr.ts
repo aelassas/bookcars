@@ -120,8 +120,10 @@ export const fr = {
   GEARBOX_MANUAL_SHORT: 'M',
   GEARBOX_AUTOMATIC_SHORT: 'A',
   FUEL_POLICY: 'Politique carburant',
-  FUEL_POLICY_LIKE_FOR_LIKE: 'Plein/Plein',
+  FUEL_POLICY_LIKE_FOR_LIKE: 'Même niveau',
   FUEL_POLICY_FREE_TANK: 'Plein inclus',
+  FUEL_POLICY_FULL_TO_FULL: 'Plein/Plein',
+  FUEL_POLICY_FULL_TO_EMPTY: 'Plein/Vide',
   MILEAGE: 'Kilométrage',
   MILEAGE_UNIT: 'KM/jour',
   UNLIMITED: 'Illimité',
@@ -241,4 +243,6 @@ export const fr = {
   UPLOAD_FILE: 'Charger un ficher...',
   SHOW_FILTERS: 'Montrer les filtres',
   HIDE_FILTERS: 'Cacher les filtres',
+  COMING_SOON: 'Bientôt Disponible',
+  FULLY_BOOKED: 'Déjà réservée',
 }
