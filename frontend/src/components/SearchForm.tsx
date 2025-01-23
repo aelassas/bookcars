@@ -203,9 +203,12 @@ const SearchForm = ({
               setFrom(date)
               setMinDate(__minDate)
               setFromError(false)
-              const _to = new Date(date)
-              _to.setDate(date.getDate() + 3)
-              setTo(_to)
+
+              if (to!.getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
+                const _to = new Date(date)
+                _to.setDate(_to.getDate() + 3)
+                setTo(_to)
+              }
             } else {
               setFrom(undefined)
               setMinDate(_minDate)

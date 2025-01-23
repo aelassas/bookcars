@@ -46,21 +46,24 @@ const VehicleScheduler = (
       }
     ]
 
+    const dateBetween = new Date(query.end.getTime() - Math.ceil(query.end.getTime() - query.start.getTime()) / 2)
+    dateBetween.setHours(23, 59, 0, 0)
+
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers,
       statuses,
       filter: {
-        // from: query.view !== 'day' ? query.start : undefined,
         from: query.view !== 'day' ? new Date(query.start.getFullYear(), query.start.getMonth() - 1, 1) : undefined,
-        dateBetween: query.view === 'day' ? new Date(query.end.getFullYear(), query.end.getMonth(), query.end.getDate(), 0, 0, 0) : undefined,
-        // to: query.view === 'month' ? query.end : new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0),
-        to: new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0),
+        dateBetween: query.view === 'day' ? dateBetween : undefined,
+        to: query.view === 'month' ? new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0) : new Date(query.end.getFullYear(), query.end.getMonth() + 2, 0),
         pickupLocation: filter?.pickupLocation,
         dropOffLocation: filter?.dropOffLocation,
         keyword: filter?.keyword,
       },
       user: (user && user._id) || undefined,
     }
+    console.log(payload.filter?.dateBetween)
+    console.log(payload.filter?.to)
 
     const data = await BookingService.getBookings(payload, 1, 10000)
     const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
