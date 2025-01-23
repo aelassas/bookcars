@@ -1,0 +1,14 @@
+div.vehicle-scheduler-filter {
+  background: #fafafa;
+  margin: 10px 10px 0 0;
+  border: 1px solid #dadada;
+  font-size: 13px;
+}
+
+div.vehicle-scheduler-filter .bf-search {
+  margin-top: 7px;
+}
+
+div.vehicle-scheduler-filter .btn-search {
+  margin: 20px 0;
+}

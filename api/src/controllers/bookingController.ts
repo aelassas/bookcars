@@ -792,6 +792,7 @@ export const getBookings = async (req: Request, res: Response) => {
       car,
     } = body
     const from = (body.filter && body.filter.from && new Date(body.filter.from)) || null
+    const dateBetween = (body.filter && body.filter.dateBetween && new Date(body.filter.dateBetween)) || null
     const to = (body.filter && body.filter.to && new Date(body.filter.to)) || null
     const pickupLocation = (body.filter && body.filter.pickupLocation) || null
     const dropOffLocation = (body.filter && body.filter.dropOffLocation) || null
@@ -808,12 +809,16 @@ export const getBookings = async (req: Request, res: Response) => {
     if (car) {
       $match.$and!.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
     }
-    if (from) {
-      $match.$and!.push({ from: { $gte: from } })
-    } // $from > from
+
+    if (dateBetween) {
+      $match.$and!.push({ $and: [{ from: { $lte: dateBetween } }, { to: { $gte: dateBetween } }] })
+    } else if (from) {
+      $match.$and!.push({ from: { $gte: from } }) // $from > from
+    }
+
     if (to) {
-      $match.$and!.push({ to: { $lte: to } })
-    } // $to < to
+      $match.$and!.push({ to: { $lte: to } })// $to < to
+    }
     if (pickupLocation) {
       $match.$and!.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
     }
