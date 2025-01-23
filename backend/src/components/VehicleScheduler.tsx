@@ -27,7 +27,6 @@ const VehicleScheduler = (
     language,
   }: VehicleSchedulerProps
 ) => {
-  const [remoteQuery, setRemoteQuery] = useState<RemoteQuery>()
   const [filter, setFilter] = useState<bookcarsTypes.Filter>()
   const [init, setInit] = useState(true)
 
@@ -38,8 +37,6 @@ const VehicleScheduler = (
   }, [filterFromProps])
 
   const fetchBookings = useCallback(async (query: RemoteQuery): Promise<ProcessedEvent[]> => {
-    setRemoteQuery(query)
-
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers,
       statuses,
