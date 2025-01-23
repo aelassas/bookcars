@@ -417,6 +417,68 @@ export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
 }
 
 /**
+ * Get booking status background color.
+ *
+ * @param {string} status
+ * @returns {string}
+ */
+export const getBookingStatusBackgroundColor = (status?: bookcarsTypes.BookingStatus) => {
+  switch (status) {
+    case bookcarsTypes.BookingStatus.Void:
+      return '#D9D9D9'
+
+    case bookcarsTypes.BookingStatus.Pending:
+      return '#FBDCC2'
+
+    case bookcarsTypes.BookingStatus.Deposit:
+      return '#CDECDA'
+
+    case bookcarsTypes.BookingStatus.Paid:
+      return '#D1F9D1'
+
+    case bookcarsTypes.BookingStatus.Reserved:
+      return '#D9E7F4'
+
+    case bookcarsTypes.BookingStatus.Cancelled:
+      return '#FBDFDE'
+
+    default:
+      return ''
+  }
+}
+
+/**
+ * Get booking status text color.
+ *
+ * @param {string} status
+ * @returns {string}
+ */
+export const getBookingStatusTextColor = (status?: bookcarsTypes.BookingStatus) => {
+  switch (status) {
+    case bookcarsTypes.BookingStatus.Void:
+      return '#6E7C86'
+
+    case bookcarsTypes.BookingStatus.Pending:
+      return '#EF6C00'
+
+    case bookcarsTypes.BookingStatus.Deposit:
+      return '#3CB371'
+
+    case bookcarsTypes.BookingStatus.Paid:
+      return '#77BC23'
+
+    case bookcarsTypes.BookingStatus.Reserved:
+      return '#1E88E5'
+
+    case bookcarsTypes.BookingStatus.Cancelled:
+      return '#E53935'
+
+    default:
+      return ''
+  }
+}
+
+/**
  * Get all booking statuses.
  *
  * @returns {bookcarsTypes.StatusFilterItem[]}

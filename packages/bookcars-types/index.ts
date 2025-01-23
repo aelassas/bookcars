@@ -110,6 +110,7 @@ export interface CheckoutPayload {
 
 export interface Filter {
   from?: Date
+  dateBetween?: Date
   to?: Date
   keyword?: string
   pickupLocation?: string

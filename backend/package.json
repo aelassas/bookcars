@@ -16,6 +16,7 @@
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix"
   },
   "dependencies": {
+    "@aldabil/react-scheduler": "^2.9.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.0",
@@ -31,7 +32,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.9",
     "cross-env": "^7.0.3",
-    "date-fns": "^2.29.3",
+    "date-fns": "^3.2.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.11",
