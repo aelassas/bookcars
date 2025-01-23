@@ -49,9 +49,11 @@ const VehicleScheduler = (
       suppliers,
       statuses,
       filter: {
-        from: query.view !== 'day' ? query.start : undefined,
+        // from: query.view !== 'day' ? query.start : undefined,
+        from: query.view !== 'day' ? new Date(query.start.getFullYear(), query.start.getMonth() - 1, 1) : undefined,
         dateBetween: query.view === 'day' ? new Date(query.end.getFullYear(), query.end.getMonth(), query.end.getDate(), 0, 0, 0) : undefined,
-        to: query.view === 'month' ? query.end : new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0),
+        // to: query.view === 'month' ? query.end : new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0),
+        to: new Date(query.end.getFullYear(), query.end.getMonth() + 1, 0),
         pickupLocation: filter?.pickupLocation,
         dropOffLocation: filter?.dropOffLocation,
         keyword: filter?.keyword,
