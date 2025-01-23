@@ -73,9 +73,6 @@ const SearchForm = (
   const _minDate = new Date()
   _minDate.setDate(_minDate.getDate() + 2)
 
-  const _maxDate = new Date(_toDate)
-  _maxDate.setDate(_maxDate.getDate() - 1)
-
   const [pickupLocationId, setPickupLocationId] = useState(pickupLocation || '')
   const [dropOffLocationId, setDropOffLocationId] = useState(dropOffLocation || '')
   const [sameLocation, setSameLocation] = useState(pickupLocation === dropOffLocation)
@@ -85,7 +82,6 @@ const SearchForm = (
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [blur, setBlur] = useState(false)
   const [minDate, setMinDate] = useState(_minDate)
-  const [maxDate, setMaxDate] = useState(_maxDate)
   const [fromDate, setFromDate] = useState<Date | undefined>(_fromDate)
   const [fromTime, setFromTime] = useState<Date | undefined>(_fromTime)
   const [toTime, setToTime] = useState<Date | undefined>(_toTime)
@@ -246,7 +242,7 @@ const SearchForm = (
           label={i18n.t('FROM_DATE')}
           value={fromDate}
           minDate={_fromDate}
-          maxDate={maxDate}
+          // maxDate={maxDate}
           hideClearButton
           size={size || undefined}
           onChange={(date) => {
@@ -258,6 +254,9 @@ const SearchForm = (
               const __minDate = new Date(date)
               __minDate.setDate(date.getDate() + 1)
               setMinDate(__minDate)
+              const _to = new Date(date)
+              _to.setDate(date.getDate() + 3)
+              setToDate(_to)
             } else {
               setMinDate(_minDate)
             }
@@ -295,11 +294,6 @@ const SearchForm = (
           onChange={(date) => {
             if (date) {
               setToDate(date)
-              const __maxDate = new Date(date)
-              __maxDate.setDate(__maxDate.getDate() - 1)
-              setMaxDate(__maxDate)
-            } else {
-              setMaxDate(_maxDate)
             }
           }}
           onPress={blurLocations}
