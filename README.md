@@ -36,6 +36,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * Location, country, parking spots and map features
 * Booking management
+* [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * Payment management
 * Customer management
 * Multiple login options (Google, Facebook, Apple, Email)
