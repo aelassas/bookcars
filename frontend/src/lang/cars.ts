@@ -92,6 +92,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Détails',
     FULLY_BOOKED: 'Déjà Réservée',
     COMING_SOON: 'Bientôt Disponible',
+    CAR_RANGE_MINI: 'Voiture',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Fourgon',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   en: {
     NEW_CAR: 'New car',
@@ -175,6 +179,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Details',
     FULLY_BOOKED: 'Fully Booked',
     COMING_SOON: 'Coming Soon',
+    CAR_RANGE_MINI: 'Car',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Van',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   es: {
     NEW_CAR: 'Coche nuevo',
@@ -258,6 +266,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Detalles',
     FULLY_BOOKED: 'Ya Reservado',
     COMING_SOON: 'Próximamente',
+    CAR_RANGE_MINI: 'Auto',
+    CAR_RANGE_MIDI: 'Todoterreno',
+    CAR_RANGE_MAXI: 'furgoneta',
+    CAR_RANGE_SCOOTER: 'Scooter',
   }
 })
 
