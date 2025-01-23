@@ -790,3 +790,28 @@ export const downloadURI = (uri: string, name: string = '') => {
   link.click()
   link.remove()
 }
+
+/**
+ * Get car range label.
+ *
+ * @param {string} range
+ * @returns {string}
+ */
+export const getCarRange = (range: bookcarsTypes.CarRange) => {
+  switch (range) {
+    case bookcarsTypes.CarRange.Mini:
+      return strings.CAR_RANGE_MINI
+
+    case bookcarsTypes.CarRange.Midi:
+      return strings.CAR_RANGE_MIDI
+
+    case bookcarsTypes.CarRange.Maxi:
+      return strings.CAR_RANGE_MAXI
+
+    case bookcarsTypes.CarRange.Scooter:
+      return strings.CAR_RANGE_SCOOTER
+
+    default:
+      return ''
+  }
+}

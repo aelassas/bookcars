@@ -87,6 +87,10 @@ const strings = new LocalizedStrings({
     CO2: 'Effet CO2',
     COMING_SOON: 'Bientôt Disponible',
     FULLY_BOOKED: 'Déjà réservée',
+    CAR_RANGE_MINI: 'Voiture',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Fourgon',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   en: {
     NEW_CAR: 'New car',
@@ -168,6 +172,10 @@ const strings = new LocalizedStrings({
     CO2: 'CO2 effect',
     COMING_SOON: 'Coming Soon',
     FULLY_BOOKED: 'Fully Booked',
+    CAR_RANGE_MINI: 'Car',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Van',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   es: {
     NEW_CAR: 'Nuevo coche',
@@ -248,6 +256,10 @@ const strings = new LocalizedStrings({
     CO2: 'Efecto CO2',
     COMING_SOON: 'Próximamente',
     FULLY_BOOKED: 'Ya Reservado',
+    CAR_RANGE_MINI: 'Auto',
+    CAR_RANGE_MIDI: 'Todoterreno',
+    CAR_RANGE_MAXI: 'furgoneta',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
 })
 
