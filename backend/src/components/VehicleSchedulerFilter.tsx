@@ -11,7 +11,6 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/booking-filter'
 import LocationSelectList from './LocationSelectList'
-import DatePicker from './DatePicker'
 import Accordion from '@/components/Accordion'
 
 import '@/assets/css/vehicle-scheduler-filter.css'
