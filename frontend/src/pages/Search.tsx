@@ -329,7 +329,7 @@ const Search = () => {
                 seats={seats}
                 // distance={distance}
                 // onLoad={() => setLoadingPage(false)}
-                hideSupplier
+                // hideSupplier
                 // includeAlreadyBookedCars
                 includeComingSoonCars
               />
