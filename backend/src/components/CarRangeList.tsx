@@ -6,6 +6,7 @@ import {
   SelectChangeEvent
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
+import * as helper from '@/common/helper'
 
 interface CarRangeListProps {
   value?: string
@@ -29,7 +30,6 @@ const CarRangeList = ({
   }, [carRangeValue])
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    console.log(e.target.value)
     const _value = e.target.value || ''
     setValue(_value)
 
@@ -42,10 +42,10 @@ const CarRangeList = ({
     <div>
       <InputLabel className={required ? 'required' : ''}>{label}</InputLabel>
       <Select label={label} value={value} onChange={handleChange} variant={variant || 'standard'} required={required} fullWidth>
-        <MenuItem value={bookcarsTypes.CarRange.Mini}>MINI</MenuItem>
-        <MenuItem value={bookcarsTypes.CarRange.Midi}>MIDI</MenuItem>
-        <MenuItem value={bookcarsTypes.CarRange.Maxi}>MAXI</MenuItem>
-        <MenuItem value={bookcarsTypes.CarRange.Scooter}>SCOOTER</MenuItem>
+        <MenuItem value={bookcarsTypes.CarRange.Mini}>{helper.getCarRange(bookcarsTypes.CarRange.Mini)}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarRange.Midi}>{helper.getCarRange(bookcarsTypes.CarRange.Midi)}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarRange.Maxi}>{helper.getCarRange(bookcarsTypes.CarRange.Maxi)}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarRange.Scooter}>{helper.getCarRange(bookcarsTypes.CarRange.Scooter)}</MenuItem>
       </Select>
     </div>
   )

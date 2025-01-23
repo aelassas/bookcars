@@ -25,6 +25,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
+import { strings as carsStrings } from '@/lang/cars'
 import { strings } from '@/lang/home'
 import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'
@@ -64,8 +65,8 @@ const Home = () => {
   const [miniPricePday, setMiniPricePday] = useState(40)
   const [midiPricePhr, setMidiPricePhr] = useState(3.5)
   const [midiPricePday, setMidiPricePday] = useState(50)
-  const [maxiPricePhr, setMaxiPricePhr] = useState(3.5)
-  const [maxiPricePday, setMaxiPricePday] = useState(50)
+  const [maxiPricePhr, setMaxiPricePhr] = useState(4.5)
+  const [maxiPricePday, setMaxiPricePday] = useState(80)
 
   useEffect(() => {
     const init = async () => {
@@ -345,7 +346,7 @@ const Home = () => {
                   )}
                   label={strings.MINI}
                 /> */}
-                <span>{strings.MINI}</span>
+                <span>{carsStrings.CAR_RANGE_MINI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -394,7 +395,7 @@ const Home = () => {
                   )}
                   label={strings.MIDI}
                 /> */}
-                <span>{strings.MIDI}</span>
+                <span>{carsStrings.CAR_RANGE_MIDI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -442,7 +443,7 @@ const Home = () => {
                   )}
                   label={strings.MAXI}
                 /> */}
-                <span>{strings.MAXI}</span>
+                <span>{carsStrings.CAR_RANGE_MAXI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -488,7 +489,7 @@ const Home = () => {
         <div className="home-map">
           <Map
             title={strings.MAP_TITLE}
-            position={new L.LatLng(34.0268755, 1.6528399999999976)}
+            position={new L.LatLng(-37.840935, 144.946457)}
             initialZoom={5}
             locations={locations}
             onSelelectPickUpLocation={async (locationId) => {
