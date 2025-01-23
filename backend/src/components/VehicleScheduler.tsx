@@ -45,6 +45,7 @@ const VehicleScheduler = (
         end: new Date(1970, 0, 2),
       }
     ]
+
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers,
       statuses,
@@ -77,6 +78,7 @@ const VehicleScheduler = (
       color: helper.getBookingStatusBackgroundColor(booking.status),
       textColor: helper.getBookingStatusTextColor(booking.status),
     }))
+
     setInit(false)
 
     if (events.length === 0) {
@@ -93,7 +95,7 @@ const VehicleScheduler = (
     if (!init && statuses.length > 0 && suppliers.length > 0) {
       fetchEvents()
     }
-  }, [statuses, suppliers, filter, init, fetchBookings])
+  }, [statuses, suppliers, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const getTranslations = (_language: string) => {
     if (_language === 'fr') {
@@ -212,6 +214,7 @@ const VehicleScheduler = (
       disableViewer
       editable={false}
       draggable={false}
+      agenda={false}
       onEventClick={(event: ProcessedEvent) => {
         const url = `/update-booking?b=${event.event_id}`
         window.open(url, '_blank')!.focus()
