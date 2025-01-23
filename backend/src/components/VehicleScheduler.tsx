@@ -37,6 +37,14 @@ const VehicleScheduler = (
   }, [filterFromProps])
 
   const fetchBookings = useCallback(async (query: RemoteQuery): Promise<ProcessedEvent[]> => {
+    const emptyEvents: ProcessedEvent[] = [
+      {
+        event_id: '1',
+        title: 'Dummy Event',
+        start: new Date(1970, 0, 1),
+        end: new Date(1970, 0, 2),
+      }
+    ]
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers,
       statuses,
@@ -55,9 +63,10 @@ const VehicleScheduler = (
     const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
     if (!_data) {
       helper.error()
-      return []
+      return emptyEvents
     }
     const bookings = _data.resultData
+
     const events = bookings.map((booking): ProcessedEvent => ({
       event_id: booking._id as string,
       title: `${(booking.car as bookcarsTypes.Car).name} / ${(booking.supplier as bookcarsTypes.User).fullName} / ${helper.getBookingStatus(booking.status)}`,
@@ -67,6 +76,10 @@ const VehicleScheduler = (
       textColor: helper.getBookingStatusTextColor(booking.status),
     }))
     setInit(false)
+
+    if (events.length === 0) {
+      return emptyEvents
+    }
     return events
   }, [filter, statuses, suppliers, user])
 
