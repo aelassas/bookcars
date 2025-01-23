@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { ReactNode, createContext, use, useMemo, useState } from 'react'
+import React, { ReactNode, createContext, useContext, useMemo, useState } from 'react'
 
 // Create context
 export interface GlobalContextType {
@@ -24,4 +24,4 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 }
 
 // Create a custom hook to access context
-export const useGlobalContext = () => use(GlobalContext)
+export const useGlobalContext = () => useContext(GlobalContext)
