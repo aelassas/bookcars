@@ -812,9 +812,19 @@ export const getBookings = async (req: Request, res: Response) => {
     }
 
     if (dateBetween) {
-      $match.$and!.push({ $and: [{ from: { $lte: dateBetween } }, { to: { $gte: dateBetween } }] })
+      const dateBetweenStart = new Date(dateBetween)
+      dateBetweenStart.setHours(0, 0, 0, 0)
+      const dateBetweenEnd = new Date(dateBetween)
+      dateBetweenEnd.setHours(23, 59, 59, 999)
+
+      $match.$and!.push({
+        $and: [
+          { from: { $lte: dateBetweenEnd } },
+          { to: { $gte: dateBetweenStart } },
+        ],
+      })
     } else if (from) {
-      $match.$and!.push({ from: { $gte: from } }) // $from > from
+      $match.$and!.push({ from: { $gte: from } }) // $from >= from
     }
 
     if (to) {

@@ -47,7 +47,7 @@ const VehicleScheduler = (
     ]
 
     const dateBetween = new Date(query.end.getTime() - Math.ceil(query.end.getTime() - query.start.getTime()) / 2)
-    dateBetween.setHours(23, 59, 0, 0)
+    dateBetween.setHours(10, 0, 0, 0)
 
     const payload: bookcarsTypes.GetBookingsPayload = {
       suppliers,
@@ -62,8 +62,6 @@ const VehicleScheduler = (
       },
       user: (user && user._id) || undefined,
     }
-    console.log(payload.filter?.dateBetween)
-    console.log(payload.filter?.to)
 
     const data = await BookingService.getBookings(payload, 1, 10000)
     const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
@@ -212,8 +210,8 @@ const VehicleScheduler = (
   return (
     <ReactScheduler
       ref={schedulerRef}
-      locale={language === 'fr' ? fr : language === 'es' ? es : enUS}
       view="month"
+      locale={language === 'fr' ? fr : language === 'es' ? es : enUS}
       disableViewer
       editable={false}
       draggable={false}
