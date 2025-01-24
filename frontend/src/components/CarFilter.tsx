@@ -154,7 +154,6 @@ const CarFilter = ({
                 label={strings.PICK_UP_DATE}
                 value={from}
                 minDate={_minDate}
-                // maxDate={maxDate}
                 variant="standard"
                 required
                 onChange={(date) => {
@@ -253,7 +252,6 @@ const CarFilter = ({
                       label={strings.PICK_UP_DATE}
                       value={from}
                       minDate={_minDate}
-                      // maxDate={maxDate}
                       variant="standard"
                       required
                       onChange={(date) => {
