@@ -193,7 +193,6 @@ const SearchForm = ({
           label={strings.PICK_UP_DATE}
           value={from}
           minDate={_minDate}
-          // maxDate={maxDate}
           variant="outlined"
           required
           onChange={(date) => {

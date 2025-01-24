@@ -27,7 +27,7 @@ export const en = {
   BOOKING_CONFIRMED_PART3: ' Please present yourself to our agency ',
   BOOKING_CONFIRMED_PART4: ' (',
   BOOKING_CONFIRMED_PART5: ') on ',
-  BOOKING_CONFIRMED_PART6: ' (local time) to pick up your vehicle ',
+  BOOKING_CONFIRMED_PART6: ` (${env.TIMEZONE}) to pick up your vehicle `,
   BOOKING_CONFIRMED_PART7: '.',
   BOOKING_CONFIRMED_PART8: "Please bring your ID, driver's license and warranty check with you.",
   BOOKING_CONFIRMED_PART9: 'You must drop-off the vehicle to our agency ',

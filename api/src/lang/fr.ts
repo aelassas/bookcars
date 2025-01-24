@@ -27,7 +27,7 @@ export const fr = {
   BOOKING_CONFIRMED_PART3: ' Veuillez vous rendre à notre agence ',
   BOOKING_CONFIRMED_PART4: ' (',
   BOOKING_CONFIRMED_PART5: ') le ',
-  BOOKING_CONFIRMED_PART6: ' (heure locale) pour récupérer votre véhicule ',
+  BOOKING_CONFIRMED_PART6: ` (${env.TIMEZONE}) pour récupérer votre véhicule `,
   BOOKING_CONFIRMED_PART7: '.',
   BOOKING_CONFIRMED_PART8: "Veuillez apporter avec vous votre pièce d'identité, votre permis de conduire et le chèque de garantie.",
   BOOKING_CONFIRMED_PART9: 'Vous devez rendre le véhicule à notre agence ',
