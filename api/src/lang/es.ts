@@ -33,7 +33,7 @@ export const es = {
   BOOKING_CONFIRMED_PART9: 'Debe devolver el vehículo en nuestra agencia ',
   BOOKING_CONFIRMED_PART10: ' (',
   BOOKING_CONFIRMED_PART11: ') el ',
-  BOOKING_CONFIRMED_PART12: ' (hora local).',
+  BOOKING_CONFIRMED_PART12: ` (${env.TIMEZONE}).`,
   BOOKING_CONFIRMED_PART13: 'Por favor, respete las fechas y horarios de recogida y devolución del vehículo.',
   BOOKING_CONFIRMED_PART14: 'Puede seguir su reserva en: ',
   BOOKING_PAY_LATER_NOTIFICATION: 'ha confirmado la reserva',

@@ -33,7 +33,7 @@ export const en = {
   BOOKING_CONFIRMED_PART9: 'You must drop-off the vehicle to our agency ',
   BOOKING_CONFIRMED_PART10: ' (',
   BOOKING_CONFIRMED_PART11: ') on ',
-  BOOKING_CONFIRMED_PART12: ' (local time).',
+  BOOKING_CONFIRMED_PART12: ` (${env.TIMEZONE}).`,
   BOOKING_CONFIRMED_PART13: 'Please respect the pick-up and drop-off dates and times.',
   BOOKING_CONFIRMED_PART14: 'You can follow your booking on: ',
   BOOKING_PAY_LATER_NOTIFICATION: 'confirmed the booking',
