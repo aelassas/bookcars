@@ -41,6 +41,12 @@ div.scheduler {
     padding-right: 15px;
     padding-left: 15px;
   }
+
+  div.scheduler div.col-1 .cl-new-booking {
+    width: calc(100% - 20px);
+    max-width: 480px;
+    margin: 15px 10px 5px;
+  }
 }
 
 @media only screen and (width >=960px) {
@@ -91,4 +97,8 @@ div.scheduler {
     margin-bottom: 10px;
   }
 
+  div.scheduler div.col-1 .cl-new-booking {
+    width: 265px;
+    margin-left: 5px;
+  }
 }
