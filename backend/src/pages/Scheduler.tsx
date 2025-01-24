@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
+import { strings } from '@/lang/bookings'
 import env from '@/config/env.config'
 import * as helper from '@/common/helper'
 import * as SupplierService from '@/services/SupplierService'
@@ -56,6 +58,9 @@ const Scheduler = () => {
           <div className="col-1">
             {leftPanel && (
               <>
+                <Button variant="contained" className="btn-primary cl-new-booking" size="small" href="/create-booking">
+                  {strings.NEW_BOOKING}
+                </Button>
                 {admin
                   && (
                     <SupplierFilter
