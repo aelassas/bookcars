@@ -149,7 +149,7 @@ const SignIn = () => {
                   <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
                     {suStrings.SIGN_UP}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" disableElevation>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom">
                     {strings.SIGN_IN}
                   </Button>
                 </div>
