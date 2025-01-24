@@ -175,7 +175,7 @@ const ResetPassword = () => {
                   </FormHelperText>
                 </FormControl>
                 <div className="buttons">
-                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
+                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
                     {commonStrings.SAVE}
                   </Button>
                   <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
