@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { fr, enUS, es } from 'date-fns/locale'
-import { Scheduler as ReactScheduler } from '@aldabil/react-scheduler'
+import { Scheduler } from '@/components/scheduler/index'
 import {
   ProcessedEvent,
   RemoteQuery,
   SchedulerRef,
-} from '@aldabil/react-scheduler/types'
+} from '@/components/scheduler/types'
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '@/common/helper'
 import * as BookingService from '@/services/BookingService'
@@ -208,7 +208,7 @@ const VehicleScheduler = (
   }
 
   return (
-    <ReactScheduler
+    <Scheduler
       ref={schedulerRef}
       view="month"
       locale={language === 'fr' ? fr : language === 'es' ? es : enUS}
