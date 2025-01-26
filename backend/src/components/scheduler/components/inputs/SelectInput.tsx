@@ -80,11 +80,12 @@ const EditorSelect = ({
     }
     // eslint-disable-next-line
   }, [touched]);
-  const handleTouched = () => {
-    if (!state.touched) {
-      setState((prev) => ({ ...prev, touched: true, errorMsg: errMsg || prev.errorMsg }))
-    }
-  }
+
+  // const handleTouched = () => {
+  //   if (!state.touched) {
+  //     setState((prev) => ({ ...prev, touched: true, errorMsg: errMsg || prev.errorMsg }))
+  //   }
+  // }
 
   return (
     <>

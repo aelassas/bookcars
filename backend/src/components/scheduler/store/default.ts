@@ -84,9 +84,9 @@ const defaultViews = (props: Partial<SchedulerProps>) => {
 
 export const defaultProps = (props: Partial<SchedulerProps>) => {
   const {
-    month,
-    week,
-    day,
+    // month,
+    // week,
+    // day,
     translations,
     resourceFields,
     view,
