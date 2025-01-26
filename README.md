@@ -115,9 +115,10 @@ You can install the Android App by downloading the APK and installing it on any 
 11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
-14. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
-15. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
-16. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+14. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
+15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
 ## License
 
