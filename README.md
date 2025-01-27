@@ -21,7 +21,7 @@ With BookCars, you can deploy your own customizable car rental marketplace at mi
 
 BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
 
-From the admin dashboard, admins can create and manage suppliers, cars, countries, locations, parking spots, customers and bookings.
+From the admin dashboard, admins can create and manage suppliers, cars, countries, locations, parking spots, customers, bookings and payments.
 
 When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleets and bookings.
 
