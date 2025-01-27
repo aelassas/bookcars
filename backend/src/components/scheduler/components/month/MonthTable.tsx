@@ -152,7 +152,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       return rows
     },
     [
-      // CELL_HEIGHT,
+      CELL_HEIGHT,
       cellRenderer,
       daysList,
       disableGoToDay,
