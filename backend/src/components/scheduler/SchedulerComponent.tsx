@@ -23,7 +23,7 @@ const SchedulerComponent = forwardRef<SchedulerRef, unknown>((_, ref) => {
       case 'day':
         return <Day />
       default:
-        return ''
+        return null
     }
   }, [view])
 

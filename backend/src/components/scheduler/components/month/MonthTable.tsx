@@ -61,6 +61,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
         resourcedEvents = getResourcedEvents(events, _resource, resourceFields, fields)
       }
       const rows: ReactNode[] = []
+      const cellHeights: number[] = []
 
       for (const startDay of eachWeekStart) {
         const cells = weekDays.map((d) => {
@@ -78,13 +79,17 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
               return false
             })
           const isToday = isTimeZonedToday({ dateLeft: today, timeZone })
+          const _cellHeight = 27 + 26 * todayEvents.length + 17 + 12 + 10
+          cellHeights.push(_cellHeight)
+          // const cellHeight = Math.max(CELL_HEIGHT, ...cellHeights)
+          const cellHeight = CELL_HEIGHT
           return (
-            <span style={{ height: CELL_HEIGHT }} key={d.toString()} className="rs__cell">
+            <span style={{ height: cellHeight }} key={d.toString()} className="rs__cell">
               <Cell
                 start={start}
                 end={end}
                 day={selectedDate}
-                height={CELL_HEIGHT}
+                height={cellHeight}
                 resourceKey={field}
                 resourceVal={_resource ? _resource[field] : null}
                 cellRenderer={cellRenderer}
@@ -135,7 +140,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                       handleGotoDay(e)
                     }
                   }}
-                  cellHeight={CELL_HEIGHT}
+                  cellHeight={cellHeight}
                 />
               </>
             </span>
@@ -147,7 +152,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       return rows
     },
     [
-      CELL_HEIGHT,
+      // CELL_HEIGHT,
       cellRenderer,
       daysList,
       disableGoToDay,
