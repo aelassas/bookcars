@@ -24,7 +24,8 @@ const setEventPositions = (events: ProcessedEvent[]) => {
         }
         slots[day][event.event_id] = position
       } else {
-        slots[day] = { [event.event_id]: position }
+        // slots[day] = { [event.event_id]: position }
+        slots[day] = { [event.event_id]: 0 }
       }
     }
 
