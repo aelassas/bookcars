@@ -4,7 +4,6 @@ title: "BookCars: A Car Rental Booking System"
 authors:
   - name: "Akram El Assas"
 year: 2025
-version: "5.5.0"
 repository-code: "https://github.com/aelassas/bookcars"
 license: "MIT"
 keywords:
