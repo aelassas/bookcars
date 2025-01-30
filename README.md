@@ -40,7 +40,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Payment management
 * Customer management
 * Multiple login options (Google, Facebook, Apple, Email)
-* Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay Later)
+* Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit)
 * Multiple language support (English, French, Spanish)
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
