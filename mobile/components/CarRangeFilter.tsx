@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
+import * as helper from '@/common/helper'
 import i18n from '@/lang/i18n'
 import Accordion from './Accordion'
 import Link from './Link'
@@ -131,10 +132,10 @@ const CarRangeFilter = ({
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('CAR_RANGE')}>
           <View style={styles.contentContainer}>
-            <Switch style={styles.component} textStyle={styles.text} value={mini} label={i18n.t('CAR_RANGE_MINI')} onValueChange={onValueChangeMini} />
-            <Switch style={styles.component} textStyle={styles.text} value={midi} label={i18n.t('CAR_RANGE_MIDI')} onValueChange={onValueChangeMidi} />
-            <Switch style={styles.component} textStyle={styles.text} value={maxi} label={i18n.t('CAR_RANGE_MAXI')} onValueChange={onValueChangeMaxi} />
-            <Switch style={styles.component} textStyle={styles.text} value={scooter} label={i18n.t('CAR_RANGE_SCOOTER')} onValueChange={onValueChangeScooter} />
+            <Switch style={styles.component} textStyle={styles.text} value={mini} label={helper.getCarRange(bookcarsTypes.CarRange.Mini)} onValueChange={onValueChangeMini} />
+            <Switch style={styles.component} textStyle={styles.text} value={midi} label={helper.getCarRange(bookcarsTypes.CarRange.Midi)} onValueChange={onValueChangeMidi} />
+            <Switch style={styles.component} textStyle={styles.text} value={maxi} label={helper.getCarRange(bookcarsTypes.CarRange.Maxi)} onValueChange={onValueChangeMaxi} />
+            <Switch style={styles.component} textStyle={styles.text} value={scooter} label={helper.getCarRange(bookcarsTypes.CarRange.Scooter)} onValueChange={onValueChangeScooter} />
           </View>
           <Link
             style={styles.link}

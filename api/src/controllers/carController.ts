@@ -78,6 +78,8 @@ export const update = async (req: Request, res: Response) => {
         name,
         minimumAge,
         available,
+        fullyBooked,
+        comingSoon,
         type,
         locations,
         dailyPrice,
@@ -112,6 +114,8 @@ export const update = async (req: Request, res: Response) => {
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
       car.available = available
+      car.fullyBooked = fullyBooked
+      car.comingSoon = comingSoon
       car.type = type as bookcarsTypes.CarType
       car.dailyPrice = dailyPrice
       car.discountedDailyPrice = discountedDailyPrice
@@ -551,7 +555,7 @@ export const getCars = async (req: Request, res: Response) => {
         {
           $facet: {
             resultData: [{ $sort: { updatedAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
-            // resultData: [{ $sort: { price: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            // resultData: [{ $sort: { dailyPrice: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -647,15 +651,26 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       rating,
       seats,
       days,
+      includeAlreadyBookedCars,
+      includeComingSoonCars,
     } = body
 
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { supplier: { $in: suppliers } },
         { locations: pickupLocation },
-        { available: true }, { type: { $in: carType } },
+        { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
+        { available: true },
       ],
+    }
+
+    if (!includeAlreadyBookedCars) {
+      $match.$and!.push({ $or: [{ fullyBooked: false }, { fullyBooked: null }] })
+    }
+
+    if (!includeComingSoonCars) {
+      $match.$and!.push({ $or: [{ comingSoon: false }, { comingSoon: null }] })
     }
 
     if (fuelPolicy) {
@@ -754,7 +769,13 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         // },
         {
           $facet: {
-            resultData: [{ $sort: { price: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              {
+                $sort: { fullyBooked: 1, comingSoon: 1, dailyPrice: 1, _id: 1 },
+              },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
                 $count: 'totalRecords',

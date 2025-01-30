@@ -118,6 +118,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
+    timeZone: env.TIMEZONE,
   }
   const from = booking.from.toLocaleString(locale, options)
   const to = booking.to.toLocaleString(locale, options)
@@ -542,6 +543,7 @@ export const update = async (req: Request, res: Response) => {
         fullInsurance,
         additionalDriver,
         price,
+        isDeposit,
       } = body.booking
 
       const previousStatus = booking.status
@@ -561,6 +563,7 @@ export const update = async (req: Request, res: Response) => {
       booking.fullInsurance = fullInsurance
       booking.additionalDriver = additionalDriver
       booking.price = price as number
+      booking.isDeposit = isDeposit || false
 
       if (!additionalDriver && booking._additionalDriver) {
         booking._additionalDriver = undefined
@@ -790,6 +793,7 @@ export const getBookings = async (req: Request, res: Response) => {
       car,
     } = body
     const from = (body.filter && body.filter.from && new Date(body.filter.from)) || null
+    const dateBetween = (body.filter && body.filter.dateBetween && new Date(body.filter.dateBetween)) || null
     const to = (body.filter && body.filter.to && new Date(body.filter.to)) || null
     const pickupLocation = (body.filter && body.filter.pickupLocation) || null
     const dropOffLocation = (body.filter && body.filter.dropOffLocation) || null
@@ -806,12 +810,26 @@ export const getBookings = async (req: Request, res: Response) => {
     if (car) {
       $match.$and!.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
     }
-    if (from) {
-      $match.$and!.push({ from: { $gte: from } })
-    } // $from > from
+
+    if (dateBetween) {
+      const dateBetweenStart = new Date(dateBetween)
+      dateBetweenStart.setHours(0, 0, 0, 0)
+      const dateBetweenEnd = new Date(dateBetween)
+      dateBetweenEnd.setHours(23, 59, 59, 999)
+
+      $match.$and!.push({
+        $and: [
+          { from: { $lte: dateBetweenEnd } },
+          { to: { $gte: dateBetweenStart } },
+        ],
+      })
+    } else if (from) {
+      $match.$and!.push({ from: { $gte: from } }) // $from >= from
+    }
+
     if (to) {
-      $match.$and!.push({ to: { $lte: to } })
-    } // $to < to
+      $match.$and!.push({ to: { $lte: to } })// $to < to
+    }
     if (pickupLocation) {
       $match.$and!.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
     }

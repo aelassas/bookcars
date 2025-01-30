@@ -36,11 +36,11 @@ export const LANGUAGES = [
 ]
 
 /**
- * Website Name.
+ * Website Name
  *
  * @type {string}
  */
-export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
+export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'bookcars')
 
 /**
  * Server Port. Default is 4002.
@@ -367,6 +367,15 @@ export const ADMIN_EMAIL = __env__('BC_ADMIN_EMAIL', false)
 export const RECAPTCHA_SECRET = __env__('BC_RECAPTCHA_SECRET', false)
 
 /**
+ * Timezone for cenverting dates from UTC to local time.
+ * Must be a valid TZ idenfidier: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ * Default is UTC.
+ *
+ * @type {string}
+ */
+export const TIMEZONE = __env__('BC_TIMEZONE', false, 'UTC')
+
+/**
  * User Document.
  *
  * @export
@@ -475,6 +484,7 @@ export interface Booking extends Document {
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
+  isDeposit: boolean
 }
 
 /**
@@ -502,6 +512,8 @@ export interface Car extends Document {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: bookcarsTypes.CarType
   gearbox: bookcarsTypes.GearboxType
   aircon: boolean

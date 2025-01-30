@@ -38,6 +38,8 @@ interface CarListProps {
   footerComponent?: React.ReactElement
   routeName?: 'Cars' | 'Checkout',
   route: RouteProp<StackParams, keyof StackParams>
+  includeAlreadyBookedCars?: boolean
+  includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -66,7 +68,9 @@ const CarList = ({
   footerComponent,
   routeName,
   // route,
-  onLoad
+  includeAlreadyBookedCars,
+  includeComingSoonCars,
+  onLoad,
 }: CarListProps) => {
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
@@ -123,6 +127,8 @@ const CarList = ({
           mileage: _mileage,
           fuelPolicy: _fuelPolicy,
           deposit: _deposit,
+          includeAlreadyBookedCars,
+          includeComingSoonCars,
         }
 
         const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)

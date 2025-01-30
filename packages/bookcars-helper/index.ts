@@ -447,6 +447,8 @@ export const getAllMultimedias = () => [
 export const getAllFuelPolicies = () => [
   bookcarsTypes.FuelPolicy.FreeTank,
   bookcarsTypes.FuelPolicy.LikeForLike,
+  bookcarsTypes.FuelPolicy.FullToFull,
+  bookcarsTypes.FuelPolicy.FullToEmpty,
 ]
 
 /**

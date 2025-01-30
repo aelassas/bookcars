@@ -140,6 +140,12 @@ export const getFuelPolicy = (type: string) => {
     case bookcarsTypes.FuelPolicy.FreeTank:
       return strings.FUEL_POLICY_FREE_TANK
 
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return strings.FUEL_POLICY_FULL_TO_FULL
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return strings.FUEL_POLICY_FULL_TO_EMPTY
+
     default:
       return ''
   }
@@ -221,6 +227,12 @@ export const getFuelPolicyTooltip = (fuelPolicy: string) => {
 
     case bookcarsTypes.FuelPolicy.FreeTank:
       return strings.FUEL_POLICY_FREE_TANK_TOOLTIP
+
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return strings.FUEL_POLICY_FULL_TO_FULL_TOOLTIP
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return strings.FUEL_POLICY_FULL_TO_EMPTY_TOOLTIP
 
     default:
       return ''
@@ -656,5 +668,30 @@ export const verifyReCaptcha = async (token: string): Promise<boolean> => {
   } catch (err) {
     error(err)
     return false
+  }
+}
+
+/**
+ * Get car range label.
+ *
+ * @param {string} range
+ * @returns {string}
+ */
+export const getCarRange = (range: bookcarsTypes.CarRange) => {
+  switch (range) {
+    case bookcarsTypes.CarRange.Mini:
+      return strings.CAR_RANGE_MINI
+
+    case bookcarsTypes.CarRange.Midi:
+      return strings.CAR_RANGE_MIDI
+
+    case bookcarsTypes.CarRange.Maxi:
+      return strings.CAR_RANGE_MAXI
+
+    case bookcarsTypes.CarRange.Scooter:
+      return strings.CAR_RANGE_SCOOTER
+
+    default:
+      return ''
   }
 }

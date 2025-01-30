@@ -223,6 +223,13 @@ const Car = ({
                   <span>{`${strings.PRICE_PER_DAY} `}</span>
                   <span className="price-day-value">{bookcarsHelper.formatPrice(totalPrice / days, commonStrings.CURRENCY, language)}</span>
                 </span>
+                {
+                  car.comingSoon ? (
+                    <span className="coming-soon">{strings.COMING_SOON}</span>
+                  ) : car.fullyBooked ? (
+                    <span className="fully-booked">{strings.FULLY_BOOKED}</span>
+                  ) : null
+                }
               </div>
             )}
           </div>
@@ -367,23 +374,27 @@ const Car = ({
 
           {!hidePrice && (
             <div className="action">
-              <Button
-                variant="contained"
-                className="btn-primary btn-book btn-margin-bottom"
-                onClick={() => {
-                  navigate('/checkout', {
-                    state: {
-                      carId: car._id,
-                      pickupLocationId: pickupLocation,
-                      dropOffLocationId: dropOffLocation,
-                      from,
-                      to
-                    }
-                  })
-                }}
-              >
-                {strings.BOOK}
-              </Button>
+              {
+                car.available && !car.comingSoon && !car.fullyBooked && (
+                  <Button
+                    variant="contained"
+                    className="btn-primary btn-book btn-margin-bottom"
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          carId: car._id,
+                          pickupLocationId: pickupLocation,
+                          dropOffLocationId: dropOffLocation,
+                          from,
+                          to
+                        }
+                      })
+                    }}
+                  >
+                    {strings.BOOK}
+                  </Button>
+                )
+              }
             </div>
           )}
         </div>

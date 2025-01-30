@@ -51,6 +51,8 @@ const CreateCar = () => {
   const [rating, setRating] = useState('')
   const [co2, setCo2] = useState('')
   const [available, setAvailable] = useState(false)
+  const [fullyBooked, setFullyBooked] = useState(false)
+  const [comingSoon, setComingSoon] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
   const [dailyPrice, setDailyPrice] = useState('')
@@ -162,6 +164,14 @@ const CreateCar = () => {
     setAvailable(e.target.checked)
   }
 
+  const handleFullyBookedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullyBooked(e.target.checked)
+  }
+
+  const handleComingSoonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComingSoon(e.target.checked)
+  }
+
   const handleCarTypeChange = (value: string) => {
     setType(value)
   }
@@ -256,6 +266,8 @@ const CreateCar = () => {
         discountedMonthlyPrice: getPrice(discountedMonthlyPrice),
         deposit: Number(deposit),
         available,
+        fullyBooked,
+        comingSoon,
         type,
         gearbox,
         aircon,
@@ -566,6 +578,34 @@ const CreateCar = () => {
               <FormControlLabel control={<Switch checked={available} onChange={handleAvailableChange} color="primary" />} label={strings.AVAILABLE} className="checkbox-fcl" />
             </FormControl>
 
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={fullyBooked}
+                    color="primary"
+                    onChange={handleFullyBookedChange}
+                  />
+                )}
+                label={strings.FULLY_BOOKED}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={comingSoon}
+                    color="primary"
+                    onChange={handleComingSoonChange}
+                  />
+                )}
+                label={strings.COMING_SOON}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
             <FormControl fullWidth margin="dense">
               <CarTypeList label={strings.CAR_TYPE} variant="standard" required onChange={handleCarTypeChange} />
             </FormControl>
@@ -683,8 +723,8 @@ const CreateCar = () => {
                 onClick={async () => {
                   if (image) {
                     await CarService.deleteTempImage(image)
-                    navigate('/cars')
                   }
+                  navigate('/cars')
                 }}
               >
                 {commonStrings.CANCEL}
