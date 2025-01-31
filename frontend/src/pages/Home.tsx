@@ -31,7 +31,7 @@ import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'
 import * as CountryService from '@/services/CountryService'
 import * as LocationService from '@/services/LocationService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 import Layout from '@/components/Layout'
 import SupplierCarrousel from '@/components/SupplierCarrousel'
 import TabPanel, { a11yProps } from '@/components/TabPanel'
@@ -70,17 +70,17 @@ const Home = () => {
 
   useEffect(() => {
     const init = async () => {
-      const _miniPricePhr = await StripeService.convertPrice(miniPricePhr)
+      const _miniPricePhr = await PaymentService.convertPrice(miniPricePhr)
       setMiniPricePhr(_miniPricePhr)
-      const _miniPricePday = await StripeService.convertPrice(miniPricePday)
+      const _miniPricePday = await PaymentService.convertPrice(miniPricePday)
       setMiniPricePday(_miniPricePday)
-      const _midiPricePhr = await StripeService.convertPrice(midiPricePhr)
+      const _midiPricePhr = await PaymentService.convertPrice(midiPricePhr)
       setMidiPricePhr(_midiPricePhr)
-      const _midiPricePday = await StripeService.convertPrice(midiPricePday)
+      const _midiPricePday = await PaymentService.convertPrice(midiPricePday)
       setMidiPricePday(_midiPricePday)
-      const _maxiPricePhr = await StripeService.convertPrice(maxiPricePhr)
+      const _maxiPricePhr = await PaymentService.convertPrice(maxiPricePhr)
       setMaxiPricePhr(_maxiPricePhr)
-      const _maxiPricePday = await StripeService.convertPrice(maxiPricePday)
+      const _maxiPricePday = await PaymentService.convertPrice(maxiPricePday)
       setMaxiPricePday(_maxiPricePday)
     }
 

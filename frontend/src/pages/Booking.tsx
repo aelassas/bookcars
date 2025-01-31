@@ -18,7 +18,7 @@ import Layout from '@/components/Layout'
 import * as UserService from '@/services/UserService'
 import * as BookingService from '@/services/BookingService'
 import * as CarService from '@/services/CarService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
@@ -256,7 +256,7 @@ const Booking = () => {
           const _booking = await BookingService.getBooking(id)
           if (_booking) {
             setBooking(_booking)
-            setPrice(await StripeService.convertPrice(_booking.price!))
+            setPrice(await PaymentService.convertPrice(_booking.price!))
             setLoading(false)
             setVisible(true)
             const cmp = _booking.supplier as bookcarsTypes.User

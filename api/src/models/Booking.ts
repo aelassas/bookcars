@@ -103,6 +103,9 @@ const bookingSchema = new Schema<env.Booking>(
       type: Boolean,
       default: false,
     },
+    paypalOrderId: {
+      type: String,
+    },
     expireAt: {
       //
       // Bookings created from checkout with Stripe are temporary and
