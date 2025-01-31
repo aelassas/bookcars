@@ -24,6 +24,7 @@
     "@mui/material": "^6.4.1",
     "@mui/x-data-grid": "^7.24.1",
     "@mui/x-date-pickers": "^7.24.1",
+    "@paypal/react-paypal-js": "^8.8.1",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.5.0",
     "@types/leaflet": "^1.9.16",

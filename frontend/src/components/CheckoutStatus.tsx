@@ -6,7 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/common/helper'
 import * as BookingService from '@/services/BookingService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 import { strings } from '@/lang/checkout-status'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as checkoutStrings } from '@/lang/checkout'
@@ -39,7 +39,7 @@ const CheckoutStatus = (
     const init = async () => {
       const _booking = await BookingService.getBooking(bookingId)
       setBooking(_booking)
-      setPrice(await StripeService.convertPrice(_booking.price!))
+      setPrice(await PaymentService.convertPrice(_booking.price!))
       setLoading(false)
     }
 
