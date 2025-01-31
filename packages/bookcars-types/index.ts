@@ -72,6 +72,11 @@ export enum RecordType {
   Country = 'country',
 }
 
+export enum PaymentGateway {
+  PayPal = 'payPal',
+  Stripe = 'stripe',
+}
+
 export interface Booking {
   _id?: string
   supplier: string | User
@@ -96,6 +101,7 @@ export interface Booking {
   customerId?: string
   expireAt?: Date
   isDeposit?: boolean
+  paypalOrderId?: string
 }
 
 export interface CheckoutPayload {
@@ -106,6 +112,7 @@ export interface CheckoutPayload {
   sessionId?: string
   paymentIntentId?: string
   customerId?: string
+  payPal?: boolean
 }
 
 export interface Filter {
@@ -513,6 +520,13 @@ export interface CreatePaymentPayload {
   customerName: string
   name: string
   description?: string
+}
+
+export interface CreatePayPalOrderPayload {
+  bookingId: string
+  amount: number
+  currency: string
+  name: string
 }
 
 export interface PaymentResult {

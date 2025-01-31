@@ -29,6 +29,7 @@ import {
   EmbeddedCheckout,
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import { PayPalButtons } from '@paypal/react-paypal-js'
 import CarList from '@/components/CarList'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -41,7 +42,9 @@ import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
 import * as CarService from '@/services/CarService'
 import * as LocationService from '@/services/LocationService'
+import * as PaymentService from '@/services/PaymentService'
 import * as StripeService from '@/services/StripeService'
+import * as PayPalService from '@/services/PayPalService'
 import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
@@ -56,6 +59,7 @@ import CheckoutOptions from '@/components/CheckoutOptions'
 import Footer from '@/components/Footer'
 import ViewOnMapButton from '@/components/ViewOnMapButton'
 import MapDialog from '@/components/MapDialog'
+import Backdrop from '@/components/SimpleBackdrop'
 
 import '@/assets/css/checkout.css'
 
@@ -63,7 +67,7 @@ import '@/assets/css/checkout.css'
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 //
-const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY)
+const stripePromise = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe ? loadStripe(env.STRIPE_PUBLISHABLE_KEY) : null
 
 const Checkout = () => {
   const location = useLocation()
@@ -128,6 +132,9 @@ const Checkout = () => {
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [license, setLicense] = useState<string | null>(null)
   const [openMapDialog, setOpenMapDialog] = useState(false)
+  const [payPalLoaded, setPayPalLoaded] = useState(false)
+  const [payPalInit, setPayPalInit] = useState(false)
+  const [payPalProcessing, setPayPalProcessing] = useState(false)
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -365,7 +372,7 @@ const Checkout = () => {
         }
       }
 
-      const basePrice = await bookcarsHelper.convertPrice(price, StripeService.getCurrency(), env.BASE_CURRENCY)
+      const basePrice = await bookcarsHelper.convertPrice(price, PaymentService.getCurrency(), env.BASE_CURRENCY)
 
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
@@ -400,21 +407,25 @@ const Checkout = () => {
       let _customerId: string | undefined
       let _sessionId: string | undefined
       if (!payLater) {
-        const payload: bookcarsTypes.CreatePaymentPayload = {
-          amount: payDeposit ? depositPrice : price,
-          currency: StripeService.getCurrency(),
-          locale: language,
-          receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
-          name: `${car.name} 
+        if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe) {
+          const payload: bookcarsTypes.CreatePaymentPayload = {
+            amount: payDeposit ? depositPrice : price,
+            currency: PaymentService.getCurrency(),
+            locale: language,
+            receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
+            name: `${car.name} 
           - ${daysLabel} 
           - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`,
-          description: `${env.WEBSITE_NAME} Web Service`,
-          customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
+            description: `${env.WEBSITE_NAME} Web Service`,
+            customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
+          }
+          const res = await StripeService.createCheckoutSession(payload)
+          setClientSecret(res.clientSecret)
+          _sessionId = res.sessionId
+          _customerId = res.customerId
+        } else {
+          setPayPalLoaded(true)
         }
-        const res = await StripeService.createCheckoutSession(payload)
-        setClientSecret(res.clientSecret)
-        _sessionId = res.sessionId
-        _customerId = res.customerId
       }
 
       booking.isDeposit = payDeposit
@@ -425,7 +436,8 @@ const Checkout = () => {
         additionalDriver: _additionalDriver,
         payLater,
         sessionId: _sessionId,
-        customerId: _customerId
+        customerId: _customerId,
+        payPal: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal,
       }
 
       const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
@@ -507,8 +519,8 @@ const Checkout = () => {
         return
       }
 
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
-      const _depositPrice = _car.deposit > 0 ? await StripeService.convertPrice(_car.deposit) : 0
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
+      const _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
 
       const included = (val: number) => val === 0
 
@@ -566,7 +578,7 @@ const Checkout = () => {
                       hidePrice
                       sizeAuto
                       onLoad={() => setLoadingPage(false)}
-                      hideSupplier
+                    // hideSupplier
                     />
 
                     <CheckoutOptions
@@ -913,33 +925,72 @@ const Checkout = () => {
                     </div>
 
                     {(!car.supplier.payLater || !payLater) && (
-                      clientSecret && (
-                        <div className="payment-options-container">
-                          <EmbeddedCheckoutProvider
-                            stripe={stripePromise}
-                            options={{ clientSecret }}
-                          >
-                            <EmbeddedCheckout />
-                          </EmbeddedCheckoutProvider>
-                        </div>
-                      )
+                      env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe
+                        ? (
+                          clientSecret && (
+                            <div className="payment-options-container">
+                              <EmbeddedCheckoutProvider
+                                stripe={stripePromise}
+                                options={{ clientSecret }}
+                              >
+                                <EmbeddedCheckout />
+                              </EmbeddedCheckoutProvider>
+                            </div>
+                          )
+                        )
+                        : payPalLoaded ? (
+                          <div className="payment-options-container">
+                            <PayPalButtons
+                              createOrder={async () => {
+                                const name = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                const amount = payDeposit ? depositPrice : price
+                                const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name)
+                                return orderId
+                              }}
+                              onApprove={async (data) => {
+                                try {
+                                  setPayPalProcessing(true)
+                                  const { orderID } = data
+                                  const status = await PayPalService.checkOrder(bookingId!, orderID)
+
+                                  if (status === 200) {
+                                    setVisible(false)
+                                    setSuccess(true)
+                                  } else {
+                                    setPaymentFailed(true)
+                                  }
+                                } catch (err) {
+                                  helper.error(err)
+                                } finally {
+                                  setPayPalProcessing(false)
+                                }
+                              }}
+                              onInit={() => {
+                                setPayPalInit(true)
+                              }}
+                            />
+                          </div>
+                        ) : null
                     )}
                     <div className="checkout-buttons">
-                      {(!clientSecret || payLater) && (
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          className="btn-checkout btn-margin-bottom"
-                          aria-label="Checkout"
-                          disabled={loading}
-                        >
-                          {
-                            loading
-                              ? <CircularProgress color="inherit" size={24} />
-                              : strings.BOOK
-                          }
-                        </Button>
-                      )}
+                      {(
+                        (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe && !clientSecret)
+                        || (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal && !payPalInit)
+                        || payLater) && (
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            className="btn-checkout btn-margin-bottom"
+                            aria-label="Checkout"
+                            disabled={loading || (payPalLoaded && !payPalInit)}
+                          >
+                            {
+                              (loading || (payPalLoaded && !payPalInit))
+                                ? <CircularProgress color="inherit" size={24} />
+                                : strings.BOOK
+                            }
+                          </Button>
+                        )}
                       <Button
                         variant="outlined"
                         color="primary"
@@ -983,6 +1034,7 @@ const Checkout = () => {
             <Footer />
           </>
         )}
+
         {noMatch && <NoMatch hideHeader />}
 
         {success && bookingId && (
@@ -994,6 +1046,8 @@ const Checkout = () => {
             className="status"
           />
         )}
+
+        {payPalProcessing && <Backdrop text={strings.CHECKING} />}
 
         <MapDialog
           pickupLocation={pickupLocation}
