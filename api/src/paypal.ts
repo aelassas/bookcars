@@ -2,9 +2,13 @@ import axios from 'axios'
 import * as env from './config/env.config'
 import * as helper from './common/helper'
 
+const PAYPAL_API = env.PAYPAL_SANDBOX
+  ? 'https://api-m.sandbox.paypal.com' // PayPal sandbox host (for testing)
+  : 'https://api-m.paypal.com' // PayPal production host (for production) https://developer.paypal.com/api/rest/production/
+
 export const getToken = async () => {
   const res = await axios.post(
-    'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+    `${PAYPAL_API}/v1/oauth2/token`,
     { grant_type: 'client_credentials' },
     {
       auth: {
@@ -24,7 +28,7 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
   const price = helper.formatPayPalPrice(amount)
   const token = await getToken()
   const res = await axios.post(
-    'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+    `${PAYPAL_API}/v2/checkout/orders`,
     {
       intent: 'CAPTURE',
       payment_source: {
@@ -88,7 +92,7 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
 export const getOrder = async (orderId: string) => {
   const token = await getToken()
   const res = await axios.get(
-    `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}`,
+    `${PAYPAL_API}/v2/checkout/orders/${orderId}`,
     {
       headers: {
         'Content-Type': 'application/json',
