@@ -91,6 +91,7 @@ export const getOrder = async (orderId: string) => {
     `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}`,
     {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     },
