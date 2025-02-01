@@ -9,6 +9,14 @@ import User from '../models/User'
 import Car from '../models/Car'
 import * as bookingController from './bookingController'
 
+/**
+ * Create PayPal order.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export const createPayPalOrder = async (req: Request, res: Response) => {
   try {
     const { bookingId, amount, currency, name }: bookcarsTypes.CreatePayPalOrderPayload = req.body
@@ -62,11 +70,6 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (order.status === 'APPROVED') {
-      const supplier = await User.findById(booking.supplier)
-      if (!supplier) {
-        throw new Error(`Supplier ${booking.supplier} not found`)
-      }
-
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
       booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
@@ -80,6 +83,11 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       }
       car.trips += 1
       await car.save()
+
+      const supplier = await User.findById(booking.supplier)
+      if (!supplier) {
+        throw new Error(`Supplier ${booking.supplier} not found`)
+      }
 
       // Send confirmation email to customer
       const user = await User.findById(booking.driver)
