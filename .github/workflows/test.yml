@@ -62,6 +62,8 @@ jobs:
            echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
            echo BC_EXPO_ACCESS_TOKEN=$BC_EXPO_ACCESS_TOKEN >> .env
            echo BC_STRIPE_SECRET_KEY=$BC_STRIPE_SECRET_KEY >> .env
+           echo BC_PAYPAL_CLIENT_ID=$BC_PAYPAL_CLIENT_ID >> .env
+           echo BC_PAYPAL_CLIENT_SECRET=$BC_PAYPAL_CLIENT_SECRET >> .env
            echo BC_ADMIN_EMAIL=$BC_ADMIN_EMAIL >> .env
            npm install
            npm test
@@ -97,4 +99,6 @@ jobs:
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
         BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}
         BC_STRIPE_SECRET_KEY: ${{ secrets.BC_STRIPE_SECRET_KEY }}
+        BC_PAYPAL_CLIENT_ID: ${{ secrets.BC_PAYPAL_CLIENT_ID }}
+        BC_PAYPAL_CLIENT_SECRET: ${{ secrets.BC_PAYPAL_CLIENT_SECRET }}
         BC_ADMIN_EMAIL: ${{ vars.BC_ADMIN_EMAIL }}
