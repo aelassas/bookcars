@@ -127,11 +127,6 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (session.payment_status === 'paid') {
-      const supplier = await User.findById(booking.supplier)
-      if (!supplier) {
-        throw new Error(`Supplier ${booking.supplier} not found`)
-      }
-
       booking.expireAt = undefined
       booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
       await booking.save()
@@ -144,6 +139,11 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       }
       car.trips += 1
       await car.save()
+
+      const supplier = await User.findById(booking.supplier)
+      if (!supplier) {
+        throw new Error(`Supplier ${booking.supplier} not found`)
+      }
 
       // Send confirmation email to customer
       const user = await User.findById(booking.driver)
