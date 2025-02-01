@@ -67,7 +67,7 @@ const strings = new LocalizedStrings({
     AVAILABLE: 'Disponile',
     UNAVAILABLE: 'Indisponible',
     CAR_AVAILABLE: 'Répertoriée dans les résultats de recherche',
-    CAR_AVAILABLE_TOOLTIP: 'Cette voiture est eépertoriée dans les résultats de recherche.',
+    CAR_AVAILABLE_TOOLTIP: 'Cette voiture est répertoriée dans les résultats de recherche.',
     CAR_UNAVAILABLE: 'Non répertoriée dans les résultats de recherche',
     CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas répertoriée dans les résultats de recherche.",
     VIEW_CAR: 'Voir cette voiture',
