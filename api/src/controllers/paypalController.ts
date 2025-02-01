@@ -40,7 +40,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     const booking = await Booking.findOne({ _id: bookingId, expireAt: { $ne: null } })
     if (!booking) {
       const msg = `Booking with id ${bookingId} not found`
-      logger.info(`[paypal.checkPaypalOrder] ${msg}`)
+      logger.info(`[paypal.checkPayPalOrder] ${msg}`)
       return res.status(204).send(msg)
     }
 
@@ -48,12 +48,12 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     try {
       order = await paypal.getOrder(orderId)
     } catch (err) {
-      logger.error(`[paypal.checkPaypalOrder] retrieve paypal order error: ${orderId}`, err)
+      logger.error(`[paypal.checkPayPalOrder] retrieve paypal order error: ${orderId}`, err)
     }
 
     if (!order) {
       const msg = `Order ${order} not found`
-      logger.info(`[paypal.checkPaypalOrder] ${msg}`)
+      logger.info(`[paypal.checkPayPalOrder] ${msg}`)
       return res.status(204).send(msg)
     }
 
@@ -116,7 +116,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     await booking.deleteOne()
     return res.status(400).send(order.status)
   } catch (err) {
-    logger.error(`[paypal.checkPaypalOrder] ${i18n.t('ERROR')}`, err)
+    logger.error(`[paypal.checkPayPalOrder] ${i18n.t('ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
