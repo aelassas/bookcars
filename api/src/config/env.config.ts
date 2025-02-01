@@ -336,6 +336,13 @@ stripeSessionExpireAt = stripeSessionExpireAt <= 82800 ? stripeSessionExpireAt :
 export const STRIPE_SESSION_EXPIRE_AT = stripeSessionExpireAt
 
 /**
+ * Indicates whether PayPal is used in sandbox mode or production.
+ *
+ * @type {boolean}
+ */
+export const PAYPAL_SANDBOX = helper.StringToBoolean(__env__('BC_PAYPAL_SANDBOX', false, 'true'))
+
+/**
  * PayPal client ID.
  *
  * @type {string}
