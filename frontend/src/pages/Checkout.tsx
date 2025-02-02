@@ -561,7 +561,7 @@ const Checkout = () => {
                     {((pickupLocation.latitude && pickupLocation.longitude)
                       || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
                         <Map
-                          position={[pickupLocation.latitude || -37.840935, pickupLocation.longitude || 144.946457]}
+                          position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
                           initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
                           parkingSpots={pickupLocation.parkingSpots}
                           locations={[pickupLocation]}

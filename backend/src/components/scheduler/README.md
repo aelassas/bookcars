@@ -1,6 +1,6 @@
 # React Scheduler Component
 
-This component was forked from the following [project]()https://github.com/aldabil21/react-scheduler and was updated to fix bugs and meet specific needs.
+This component was forked from the following [project](https://github.com/aldabil21/react-scheduler) and was updated to fix bugs and meet specific needs.
 
 > :warning: **Notice**: This component uses `mui`/`emotion`/`date-fns`. if your project is not already using these libs, this component may not be suitable.
 
