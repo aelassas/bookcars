@@ -124,6 +124,7 @@ You can install the Android App by downloading the APK and installing it on any 
 15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 
 ## License
 
