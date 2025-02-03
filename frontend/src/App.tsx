@@ -70,7 +70,7 @@ const App = () => (
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/locations" element={<Locations />} />
-                  <Route path="/suppliers" element={<Suppliers />} />
+                  {!env.HIDE_SUPPLIERS && <Route path="/suppliers" element={<Suppliers />} />}
                   <Route path="/faq" element={<Faq />} />
                   <Route path="/cookie-policy" element={<CookiePolicy />} />
 
