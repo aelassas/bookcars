@@ -428,15 +428,17 @@ const Header = ({
                     <ListItemText primary={strings.BOOKINGS} />
                   </ListItem>
                 )}
-                <ListItem
-                  onClick={() => {
-                    navigate('/suppliers')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SupplierIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SUPPLIERS} />
-                </ListItem>
+                {!env.HIDE_SUPPLIERS && (
+                  <ListItem
+                    onClick={() => {
+                      navigate('/suppliers')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><SupplierIcon /></ListItemIcon>
+                    <ListItemText primary={strings.SUPPLIERS} />
+                  </ListItem>
+                )}
                 <ListItem
                   onClick={() => {
                     navigate('/locations')

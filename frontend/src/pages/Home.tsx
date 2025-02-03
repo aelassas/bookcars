@@ -92,10 +92,13 @@ const Home = () => {
   }
 
   const onLoad = async () => {
-    let _suppliers = await SupplierService.getAllSuppliers()
-    _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
-    bookcarsHelper.shuffle(_suppliers)
-    setSuppliers(_suppliers)
+    if (!env.HIDE_SUPPLIERS) {
+      let _suppliers = await SupplierService.getAllSuppliers()
+      _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
+      bookcarsHelper.shuffle(_suppliers)
+      setSuppliers(_suppliers)
+    }
+
     const _countries = await CountryService.getCountriesWithLocations('', true, env.MIN_LOCATIONS)
     setCountries(_countries)
     const _locations = await LocationService.getLocationsWithPosition()

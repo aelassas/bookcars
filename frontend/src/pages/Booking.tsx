@@ -319,16 +319,18 @@ const Booking = () => {
         <div className="booking">
           <div className="col-1">
             <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin="dense">
-                <SupplierSelectList
-                  label={blStrings.SUPPLIER}
-                  required
-                  variant="standard"
-                  onChange={handleSupplierChange}
-                  value={supplier}
-                  readOnly={!edit}
-                />
-              </FormControl>
+              {!env.HIDE_SUPPLIERS && (
+                <FormControl fullWidth margin="dense">
+                  <SupplierSelectList
+                    label={blStrings.SUPPLIER}
+                    required
+                    variant="standard"
+                    onChange={handleSupplierChange}
+                    value={supplier}
+                    readOnly={!edit}
+                  />
+                </FormControl>
+              )}
 
               <FormControl fullWidth margin="dense">
                 <LocationSelectList
