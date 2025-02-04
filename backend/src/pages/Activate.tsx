@@ -19,11 +19,15 @@ import { strings as mStrings } from '@/lang/master'
 import { strings } from '@/lang/activate'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/activate.css'
 
 const Activate = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -73,6 +77,10 @@ const Activate = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -112,9 +120,7 @@ const Activate = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user) {
-      setNoMatch(true)
-    } else {
+    if (!user) {
       const params = new URLSearchParams(window.location.search)
       if (params.has('u') && params.has('e') && params.has('t')) {
         const _userId = params.get('u')

@@ -15,11 +15,15 @@ import * as UserService from '@/services/UserService'
 import Header from '@/components/Header'
 import Error from '@/components/Error'
 import * as langHelper from '@/common/langHelper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/signin.css'
 
 const SignIn = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
@@ -54,6 +58,10 @@ const SignIn = () => {
           setBlacklisted(true)
         } else {
           setError(false)
+
+          const user = await UserService.getUser(res.data._id)
+          setUser(user)
+          setUserLoaded(true)
 
           const params = new URLSearchParams(window.location.search)
 
