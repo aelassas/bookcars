@@ -4,6 +4,10 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+#nprogress .bar {
+  background: #1a1a1a !important;
+}
+
 .buttons button {
   margin-right: 15px;
   margin-left: 0 !important;

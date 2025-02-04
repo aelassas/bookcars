@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { UserProvider } from '@/context/UserContext'
 import ScrollToTop from '@/components/ScrollToTop'
+import NProgressIndicator from '@/components/NProgressIndicator'
 
 const Header = lazy(() => import('@/components/Header'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
@@ -46,7 +47,7 @@ const App = () => (
       <ScrollToTop />
 
       <div className="app">
-        <Suspense fallback={<></>}>
+        <Suspense fallback={<NProgressIndicator />}>
           <Header />
 
           <Routes>
