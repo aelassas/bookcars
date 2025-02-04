@@ -119,7 +119,9 @@ const Activate = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    if (!user) {
+    if (user) {
+      setNoMatch(true)
+    } else {
       const params = new URLSearchParams(window.location.search)
       if (params.has('u') && params.has('e') && params.has('t')) {
         const _userId = params.get('u')
