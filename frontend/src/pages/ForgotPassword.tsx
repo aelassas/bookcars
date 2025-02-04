@@ -110,6 +110,7 @@ const ForgotPassword = () => {
   const onLoad = (user?: bookcarsTypes.User) => {
     if (user) {
       setNoMatch(true)
+      setVisible(false)
     } else {
       setVisible(true)
     }
@@ -149,7 +150,7 @@ const ForgotPassword = () => {
                   <SocialLogin redirectToHomepage />
 
                   <div className="buttons">
-                    <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disableElevation>
+                    <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
                       {strings.RESET}
                     </Button>
                     <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>

@@ -135,7 +135,7 @@ const Supplier = () => {
   const edit = user && supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === supplier._id)
 
   return (
-    <Layout onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && supplier && suppliers && (
         <div className="supplier">
           <div className="col-1">
@@ -149,8 +149,7 @@ const Supplier = () => {
                   hideDelete
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
-                  // readonly={!edit}
-                  readonly
+                  readonly={!edit}
                   color="disabled"
                   className="supplier-avatar"
                 />
@@ -194,13 +193,13 @@ const Supplier = () => {
                   </IconButton>
                 </Tooltip>
               )}
-              {/* {edit && (
+              {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={supplier._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )} */}
+              )}
             </div>
             {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
           </div>

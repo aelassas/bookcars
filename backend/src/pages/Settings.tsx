@@ -19,11 +19,13 @@ import * as UserService from '@/services/UserService'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/settings.css'
 
 const Settings = () => {
-  const [user, setUser] = useState<bookcarsTypes.User>()
+  const { user, setUser } = useUserContext() as UserContextType
+
   const [admin, setAdmin] = useState(false)
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
@@ -154,7 +156,7 @@ const Settings = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && user && (
         <div className="settings">
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
@@ -164,8 +166,7 @@ const Settings = () => {
                 mode="update"
                 record={user}
                 size="large"
-                // readonly={false}
-                readonly
+                readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 hideDelete={!admin}
@@ -197,7 +198,7 @@ const Settings = () => {
                 <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href="/change-password">
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">

@@ -107,8 +107,10 @@ const ForgotPassword = () => {
   const onLoad = (user?: bookcarsTypes.User) => {
     if (user) {
       setNoMatch(true)
+      setVisible(false)
     } else {
       setVisible(true)
+      console.log('boo')
     }
   }
 

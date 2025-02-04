@@ -17,11 +17,15 @@ import { strings as rpStrings } from '@/lang/reset-password'
 import Error from './Error'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/reset-password.css'
 
 const ResetPassword = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -71,6 +75,10 @@ const ResetPassword = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -96,9 +104,7 @@ const ResetPassword = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user) {
-      setNoMatch(true)
-    } else {
+    if (!user) {
       const params = new URLSearchParams(window.location.search)
       if (params.has('u') && params.has('e') && params.has('t')) {
         const _userId = params.get('u')

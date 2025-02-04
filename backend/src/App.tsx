@@ -1,8 +1,10 @@
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { GlobalProvider } from '@/context/GlobalContext'
+import { UserProvider } from '@/context/UserContext'
 import ScrollToTop from '@/components/ScrollToTop'
 
+const Header = lazy(() => import('@/components/Header'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
@@ -45,6 +47,8 @@ const App = () => (
 
       <div className="app">
         <Suspense fallback={<></>}>
+          <Header />
+
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/activate" element={<Activate />} />
