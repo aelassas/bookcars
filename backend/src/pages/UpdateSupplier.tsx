@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -29,6 +30,8 @@ import ContractList from '@/components/ContractList'
 import '@/assets/css/update-supplier.css'
 
 const UpdateSupplier = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [supplier, setSupplier] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
@@ -375,13 +378,13 @@ const UpdateSupplier = () => {
                 </FormControl>
               )}
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${supplier && supplier._id}`}>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${supplier && supplier._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/suppliers">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/suppliers')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

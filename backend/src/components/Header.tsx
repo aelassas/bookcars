@@ -160,10 +160,12 @@ const Header = ({
   }
 
   const handleSettingsClick = () => {
+    handleMenuClose()
     navigate('/settings')
   }
 
   const handleSignout = async () => {
+    handleMenuClose()
     await UserService.signout()
   }
 

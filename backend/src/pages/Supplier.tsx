@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Typography,
   IconButton,
@@ -11,7 +12,6 @@ import {
   Link
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -169,7 +169,9 @@ const Supplier = () => {
             )}
             {supplier.bio && (
               helper.isValidURL(supplier.bio)
-                ? (<Link href={supplier.bio} className="supplier-bio-link">{supplier.bio}</Link>) : (
+                ? (
+                  <Link href={supplier.bio} target="_blank" rel="noreferrer" className="supplier-bio-link">{supplier.bio}</Link>
+                ) : (
                   <Typography variant="h6" className="supplier-info">
                     {supplier.bio}
                   </Typography>
@@ -188,7 +190,7 @@ const Supplier = () => {
             <div className="supplier-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
-                  <IconButton href={`/update-supplier?c=${supplier._id}`}>
+                  <IconButton onClick={() => navigate(`/update-supplier?c=${supplier._id}`)}>
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
