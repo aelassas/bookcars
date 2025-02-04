@@ -11,9 +11,9 @@ import {
   Button,
   Drawer,
   List,
-  ListItemButton,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  ListItem
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -44,30 +44,31 @@ import Avatar from './Avatar'
 import * as langHelper from '@/common/langHelper'
 import * as helper from '@/common/helper'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
+import { useUserContext, UserContextType } from '@/context/UserContext'
+import { useInit } from '@/common/customHooks'
 
 import '@/assets/css/header.css'
 
 interface HeaderProps {
-  user?: bookcarsTypes.User
   hidden?: boolean
 }
 
-const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
-
 const Header = ({
-  user,
   hidden,
 }: HeaderProps) => {
   const navigate = useNavigate()
+
+  const { user, setUser, setUserLoaded, setUnauthorized } = useUserContext() as UserContextType
   const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
 
+  const [currentUser, setCurrentUser] = useState<bookcarsTypes.User>()
   const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
-  const [loading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
 
   const isMenuOpen = Boolean(anchorEl)
@@ -182,6 +183,50 @@ const Header = ({
     navigate('/notifications')
   }
 
+  const exit = async () => {
+    setLoading(false)
+    setUserLoaded(true)
+
+    await UserService.signout(false)
+  }
+
+  useInit(async () => {
+    const _currentUser = UserService.getCurrentUser()
+
+    if (_currentUser) {
+      try {
+        const status = await UserService.validateAccessToken()
+
+        if (status === 200) {
+          const _user = await UserService.getUser(_currentUser._id)
+
+          if (_user) {
+            if (_user.blacklisted) {
+              setUser(_user)
+              setUnauthorized(true)
+              setLoading(false)
+              return
+            }
+
+            setUser(_user)
+            setCurrentUser(_user)
+            setIsSignedIn(true)
+            setLoading(false)
+            setUserLoaded(true)
+          } else {
+            await exit()
+          }
+        } else {
+          await exit()
+        }
+      } catch {
+        await exit()
+      }
+    } else {
+      await exit()
+    }
+  })
+
   useEffect(() => {
     const language = langHelper.getLanguage()
     setLang(helper.getLanguage(language))
@@ -189,21 +234,27 @@ const Header = ({
   }, [])
 
   useEffect(() => {
-    if (!hidden) {
-      if (user) {
-        NotificationService.getNotificationCounter(user._id as string)
-          .then((notificationCounter) => {
-            setIsSignedIn(true)
-            setNotificationCount(notificationCounter.count)
-            setIsLoading(false)
-            setIsLoaded(true)
-          })
-      } else {
-        setIsLoading(false)
-        setIsLoaded(true)
+    if (user) {
+      setCurrentUser(user)
+    }
+  }, [user])
+
+  useEffect(() => {
+    const init = async () => {
+      if (!hidden) {
+        if (currentUser) {
+          const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id as string)
+          setIsSignedIn(true)
+          setNotificationCount(notificationCounter.count)
+          setIsLoaded(true)
+        } else {
+          setIsLoaded(true)
+        }
       }
     }
-  }, [hidden, user, setNotificationCount])
+
+    init()
+  }, [hidden, currentUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
@@ -277,8 +328,8 @@ const Header = ({
     </Menu>
   )
 
-  return (
-    <div style={hidden ? { display: 'none' } : classes.grow} className="header">
+  return !hidden && !loading && (
+    <div style={classes.grow} className="header">
       <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
         <Toolbar className="toolbar">
           {isLoaded && !loading && isSignedIn && (
@@ -287,48 +338,98 @@ const Header = ({
             </IconButton>
           )}
           <>
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
+            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu  side-menu">
               <List sx={classes.list}>
-                <ListItemLink href="/">
+                <ListItem
+                  onClick={() => {
+                    navigate('/')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><DashboardIcon /></ListItemIcon>
                   <ListItemText primary={strings.DASHBOARD} />
-                </ListItemLink>
-                <ListItemLink href="/scheduler">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/scheduler')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><SchedulerIcon /></ListItemIcon>
                   <ListItemText primary={strings.SCHEDULER} />
-                </ListItemLink>
-                <ListItemLink href="/suppliers">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/suppliers')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><SuppliersIcon /></ListItemIcon>
                   <ListItemText primary={strings.COMPANIES} />
-                </ListItemLink>
-                <ListItemLink href="/countries">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/countries')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><CountriesIcon /></ListItemIcon>
                   <ListItemText primary={strings.COUNTRIES} />
-                </ListItemLink>
-                <ListItemLink href="/locations">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/locations')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><LocationsIcon /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
-                </ListItemLink>
-                <ListItemLink href="/cars">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/cars')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><CarsIcon /></ListItemIcon>
                   <ListItemText primary={strings.CARS} />
-                </ListItemLink>
-                <ListItemLink href="/users">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/users')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><UsersIcon /></ListItemIcon>
                   <ListItemText primary={strings.USERS} />
-                </ListItemLink>
-                <ListItemLink href="/about">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/about')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><AboutIcon /></ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
-                </ListItemLink>
-                <ListItemLink href="/tos">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/tos')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><TosIcon /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
-                </ListItemLink>
-                <ListItemLink href="/contact">
+                </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/contact')
+                    handleSideMenuClose()
+                  }}
+                >
                   <ListItemIcon><MailIcon /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
-                </ListItemLink>
+                </ListItem>
               </List>
             </Drawer>
           </>

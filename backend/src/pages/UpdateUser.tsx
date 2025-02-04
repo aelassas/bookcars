@@ -332,7 +332,7 @@ const UpdateUser = () => {
     || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User && user.supplier as string === loggedUser._id)
 
   return (
-    <Layout onLoad={onLoad} user={loggedUser} strict>
+    <Layout onLoad={onLoad} strict>
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
