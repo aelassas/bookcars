@@ -508,6 +508,7 @@ const Booking = () => {
               booking={booking}
               cars={[booking.car as bookcarsTypes.Car]}
               hidePrice
+              hideSupplier={env.HIDE_SUPPLIERS}
             />
           </div>
         </div>
