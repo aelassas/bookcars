@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Dialog,
@@ -37,6 +38,8 @@ import DoorsIcon from '@/assets/img/car-door.png'
 import '@/assets/css/car.css'
 
 const Car = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [error, setError] = useState(false)
@@ -182,8 +185,7 @@ const Car = () => {
                   mode="update"
                   record={car}
                   size="large"
-                  // readonly={!edit}
-                  readonly
+                  readonly={!edit}
                   hideDelete
                   onBeforeUpload={handleBeforeUpload}
                   onChange={handleImageChange}
@@ -333,12 +335,12 @@ const Car = () => {
             </section>
             {edit && (
               <section className="buttons action">
-                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/update-car?cr=${car._id}`}>
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/update-car?cr=${car._id}`)}>
                   {commonStrings.UPDATE}
                 </Button>
-                {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                   {commonStrings.DELETE}
-                </Button> */}
+                </Button>
               </section>
             )}
           </div>

@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   FormControl,
   FormControlLabel,
@@ -19,7 +20,6 @@ import {
 import { DateTimeValidationError } from '@mui/x-date-pickers'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -447,7 +447,7 @@ const UpdateBooking = () => {
               if (!helper.admin(_user) && (_booking.supplier as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
-                return
+                  return
               }
 
               if (!_booking.driver) {
@@ -819,10 +819,10 @@ const UpdateBooking = () => {
                   <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit">
                     {commonStrings.SAVE}
                   </Button>
-                  {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                  <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                     {commonStrings.DELETE}
-                  </Button> */}
-                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
+                  </Button>
+                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                     {commonStrings.CANCEL}
                   </Button>
                 </div>

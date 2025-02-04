@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   IconButton,
   Button,
@@ -41,6 +42,8 @@ const SupplierList = ({
   onDelete,
   onLoad
 }: SupplierListProps) => {
+  const navigate = useNavigate()
+
   const [keyword, setKeyword] = useState(supplierListKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -204,20 +207,20 @@ const SupplierList = ({
                 <div className="supplier-actions">
                   {/* {canDelete && (
                     <Tooltip title={commonStrings.DELETE}>
-                      <IconButton data-id={supplier._id} data-index={index} onClick={handleDelete}>
+                      <IconButton data-id={supplier._id} data-index={_index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   )} */}
                   {edit && (
                     <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton href={`/update-supplier?c=${supplier._id}`}>
+                      <IconButton onClick={() => navigate(`/update-supplier?c=${supplier._id}`)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
                   )}
                   <Tooltip title={strings.VIEW_SUPPLIER}>
-                    <IconButton href={`/supplier?c=${supplier._id}`}>
+                    <IconButton onClick={() => navigate(`/supplier?c=${supplier._id}`)}>
                       <ViewIcon />
                     </IconButton>
                   </Tooltip>

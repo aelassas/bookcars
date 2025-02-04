@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -7,7 +8,6 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
@@ -169,7 +169,7 @@ const ResetPassword = () => {
                 <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                   {commonStrings.UPDATE}
                 </Button>
-                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
+                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

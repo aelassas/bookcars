@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
@@ -10,6 +11,8 @@ import InfoBox from '@/components/InfoBox'
 import '@/assets/css/countries.css'
 
 const Countries = () => {
+  const navigate = useNavigate()
+
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
 
@@ -37,7 +40,7 @@ const Countries = () => {
             <Search className="search" onSubmit={handleSearch} />
 
             {rowCount > -1 && (
-              <Button variant="contained" className="btn-primary new-country" size="small" href="/create-country">
+              <Button variant="contained" className="btn-primary new-country" size="small" onClick={() => navigate('/create-country')}>
                 {strings.NEW_COUNTRY}
               </Button>
             )}

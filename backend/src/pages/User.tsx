@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Typography,
   IconButton,
@@ -11,7 +12,6 @@ import {
   Link,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -30,6 +30,7 @@ import '@/assets/css/user.css'
 
 const User = () => {
   const navigate = useNavigate()
+
   const statuses = helper.getBookingStatuses().map((status) => status.value)
 
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
@@ -200,18 +201,18 @@ const User = () => {
             <div className="user-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
-                  <IconButton href={`/update-user?u=${user._id}`}>
+                  <IconButton onClick={() => navigate(`/update-user?u=${user._id}`)}>
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
               )}
-              {/* {edit && (
+              {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={user._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )} */}
+              )}
             </div>
           </div>
           <div className="col-2">
