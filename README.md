@@ -20,9 +20,9 @@ BookCars is a highly customizable, scalable, and cost-efficient solution for car
 BookCars integrates Stripe and PayPal [payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways). You can choose either to use Stripe or PayPal for payments. If your country is not supported by [Stripe](https://stripe.com/global), you can check if it is supported by [PayPal](https://www.paypal.com/us/webapps/mpp/country-worldwide). And if so, you can use PayPal payment gateway instead of Stripe.
 
 With BookCars, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe and PayPal for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
-
+<!--
 BookCars is free and open source. You can customize it as you want and deploy it yourself by following the [documentation](https://github.com/aelassas/bookcars/wiki). If you want me to customize it and deploy it for you, contact me by email. You can find my email in my [GitHub profile page](https://github.com/aelassas). You need to be logged in to GitHub to view my email. I can deploy the platform to the cloud for you, configure your DNS, emailing, webmail and all related tasks.
-
+-->
 BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
 
 From the admin dashboard, admins can create and manage suppliers, cars, countries, locations, parking spots, customers, bookings and payments.
@@ -56,9 +56,9 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Supported Platforms: iOS, Android, Web, Docker
 
 ## Live Demo
-
+<!--
 Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will you give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
-
+-->
 ### Frontend
 
 * URL: https://bookcars.dynv6.net:3002/
