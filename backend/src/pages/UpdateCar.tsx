@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -37,6 +38,8 @@ import CarRangeList from '@/components/CarRangeList'
 import '@/assets/css/create-car.css'
 
 const UpdateCar = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [noMatch, setNoMatch] = useState(false)
@@ -800,7 +803,7 @@ const UpdateCar = () => {
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/cars">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/cars')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

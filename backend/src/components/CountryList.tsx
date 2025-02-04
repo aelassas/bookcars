@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   IconButton,
   Button,
@@ -43,6 +44,8 @@ const CountryList = ({
   onLoad,
   onDelete
 }: CountryListProps) => {
+  const navigate = useNavigate()
+
   const [keyword, setKeyword] = useState(countryKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -218,7 +221,7 @@ const CountryList = ({
                 secondaryAction={(
                   <div>
                     <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton edge="end" href={`/update-country?loc=${country._id}`}>
+                      <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>

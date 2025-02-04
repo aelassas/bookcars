@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -19,6 +20,8 @@ import env from '@/config/env.config'
 import '@/assets/css/create-country.css'
 
 const CreateCountry = () => {
+  const navigate = useNavigate()
+
   const [visible, setVisible] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.CountryName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])
@@ -108,7 +111,7 @@ const CreateCountry = () => {
               <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                 {commonStrings.CREATE}
               </Button>
-              <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/countries">
+              <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/countries')}>
                 {commonStrings.CANCEL}
               </Button>
             </div>
