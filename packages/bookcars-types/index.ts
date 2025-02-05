@@ -39,7 +39,9 @@ export enum GearboxType {
 
 export enum FuelPolicy {
   LikeForLike = 'likeForlike',
-  FreeTank = 'freeTank'
+  FreeTank = 'freeTank',
+  FullToFull = 'fullToFull',
+  FullToEmpty = 'FullToEmpty'
 }
 
 export enum BookingStatus {
@@ -70,6 +72,11 @@ export enum RecordType {
   Country = 'country',
 }
 
+export enum PaymentGateway {
+  PayPal = 'payPal',
+  Stripe = 'stripe',
+}
+
 export interface Booking {
   _id?: string
   supplier: string | User
@@ -93,6 +100,8 @@ export interface Booking {
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
+  isDeposit?: boolean
+  paypalOrderId?: string
 }
 
 export interface CheckoutPayload {
@@ -103,10 +112,12 @@ export interface CheckoutPayload {
   sessionId?: string
   paymentIntentId?: string
   customerId?: string
+  payPal?: boolean
 }
 
 export interface Filter {
   from?: Date
+  dateBetween?: Date
   to?: Date
   keyword?: string
   pickupLocation?: string
@@ -180,6 +191,8 @@ export interface CreateCarPayload {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: string
   gearbox: string
   aircon: boolean
@@ -225,6 +238,8 @@ export interface GetCarsPayload {
   rating?: number
   seats?: number
   days?: number
+  includeAlreadyBookedCars?: boolean
+  includeComingSoonCars?: boolean
 }
 
 export interface SignUpPayload {
@@ -424,6 +439,8 @@ export interface Car {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: CarType
   gearbox: GearboxType
   aircon: boolean
@@ -503,6 +520,13 @@ export interface CreatePaymentPayload {
   customerName: string
   name: string
   description?: string
+}
+
+export interface CreatePayPalOrderPayload {
+  bookingId: string
+  amount: number
+  currency: string
+  name: string
 }
 
 export interface PaymentResult {

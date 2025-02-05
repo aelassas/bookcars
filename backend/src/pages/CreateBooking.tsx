@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   FormControl,
   Button,
@@ -16,7 +17,6 @@ import {
 import { DateTimeValidationError } from '@mui/x-date-pickers'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -532,7 +532,7 @@ const CreateBooking = () => {
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.CREATE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

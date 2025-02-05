@@ -26,6 +26,7 @@ const Footer = () => {
           <div className="title">{strings.CORPORATE}</div>
           <ul className="links">
             <li onClick={() => navigate('/about')}>{strings.ABOUT}</li>
+            <li onClick={() => navigate('/cookie-policy')}>{strings.COOKIE_POLICY}</li>
             <li onClick={() => navigate('/privacy')}>{strings.PRIVACY_POLICY}</li>
             <li onClick={() => navigate('/tos')}>{strings.TOS}</li>
           </ul>
@@ -33,7 +34,7 @@ const Footer = () => {
         <div className="main-section">
           <div className="title">{strings.RENT}</div>
           <ul className="links">
-            <li onClick={() => navigate('/suppliers')}>{strings.SUPPLIERS}</li>
+            {!env.HIDE_SUPPLIERS && <li onClick={() => navigate('/suppliers')}>{strings.SUPPLIERS}</li>}
             <li onClick={() => navigate('/locations')}>{strings.LOCATIONS}</li>
           </ul>
         </div>

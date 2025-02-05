@@ -5,9 +5,9 @@ import * as logger from '../src/common/logger'
 import * as databaseHelper from '../src/common/databaseHelper'
 // import User from '../src/models/User'
 
-if (
-  await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)
-) {
+if (await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
+  // await User.updateMany({ type: bookcarsTypes.UserType.Supplier }, { payLater: true })
+
   await databaseHelper.close()
   logger.info('Database connection closed')
   process.exit(0)

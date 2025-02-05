@@ -36,7 +36,7 @@ export const LANGUAGES = [
 ]
 
 /**
- * Website Name
+ * Website Name.
  *
  * @type {string}
  */
@@ -336,6 +336,27 @@ stripeSessionExpireAt = stripeSessionExpireAt <= 82800 ? stripeSessionExpireAt :
 export const STRIPE_SESSION_EXPIRE_AT = stripeSessionExpireAt
 
 /**
+ * Indicates whether PayPal is used in sandbox mode or production.
+ *
+ * @type {boolean}
+ */
+export const PAYPAL_SANDBOX = helper.StringToBoolean(__env__('BC_PAYPAL_SANDBOX', false, 'true'))
+
+/**
+ * PayPal client ID.
+ *
+ * @type {string}
+ */
+export const PAYPAL_CLIENT_ID = __env__('BC_PAYPAL_CLIENT_ID', false, 'PAYPAL_CLIENT_ID')
+
+/**
+ * PayPal client secret.
+ *
+ * @type {string}
+ */
+export const PAYPAL_CLIENT_SECRET = __env__('BC_PAYPAL_CLIENT_SECRET', false, 'PAYPAL_CLIENT_SECRET')
+
+/**
  * Booking expiration in seconds.
  * Bookings created from checkout with Stripe are temporary and are automatically deleted if the payment checkout session expires.
  *
@@ -365,6 +386,15 @@ export const ADMIN_EMAIL = __env__('BC_ADMIN_EMAIL', false)
  * @type {string}
  */
 export const RECAPTCHA_SECRET = __env__('BC_RECAPTCHA_SECRET', false)
+
+/**
+ * Timezone for cenverting dates from UTC to local time.
+ * Must be a valid TZ idenfidier: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ * Default is UTC.
+ *
+ * @type {string}
+ */
+export const TIMEZONE = __env__('BC_TIMEZONE', false, 'UTC')
 
 /**
  * User Document.
@@ -475,6 +505,8 @@ export interface Booking extends Document {
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
+  isDeposit: boolean
+  paypalOrderId?: string
 }
 
 /**
@@ -502,6 +534,8 @@ export interface Car extends Document {
 
   deposit: number
   available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
   type: bookcarsTypes.CarType
   gearbox: bookcarsTypes.GearboxType
   aircon: boolean

@@ -111,6 +111,8 @@ describe('POST /api/create-car', () => {
       range: bookcarsTypes.CarRange.Mini,
       multimedia: [bookcarsTypes.CarMultimedia.Bluetooth],
       rating: 3,
+      comingSoon: true,
+      fullyBooked: true,
     }
     let res = await request(app)
       .post('/api/create-car')
@@ -207,6 +209,8 @@ describe('PUT /api/update-car', () => {
       range: bookcarsTypes.CarRange.Midi,
       multimedia: [bookcarsTypes.CarMultimedia.AndroidAuto],
       rating: 4,
+      comingSoon: false,
+      fullyBooked: false,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -244,6 +248,8 @@ describe('PUT /api/update-car', () => {
     expect(car.range).toBe(payload.range)
     expect(car.multimedia).toStrictEqual(payload.multimedia)
     expect(car.rating).toBe(payload.rating)
+    expect(car.comingSoon).toBe(payload.comingSoon)
+    expect(car.fullyBooked).toBe(payload.fullyBooked)
 
     // test success (booking not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
@@ -675,6 +681,16 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    payload.includeAlreadyBookedCars = true
+    payload.includeComingSoonCars = true
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    payload.includeAlreadyBookedCars = false
+    payload.includeComingSoonCars = false
 
     payload.days = undefined
     res = await request(app)

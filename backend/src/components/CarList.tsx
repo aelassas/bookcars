@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   IconButton,
   Button,
@@ -96,6 +97,8 @@ const CarList = ({
   onLoad,
   onDelete
 }: CarListProps) => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -515,14 +518,32 @@ const CarList = ({
                     </ul>
                     <ul className="extras-list">
                       {edit && (
-                        <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                          <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
-                            <div className="car-info-list-item">
-                              {car.available ? <CheckIcon /> : <UncheckIcon />}
-                              {car.available ? <span className="car-info-list-text">{strings.CAR_AVAILABLE}</span> : <span className="car-info-list-text">{strings.CAR_UNAVAILABLE}</span>}
-                            </div>
-                          </Tooltip>
-                        </li>
+                        <>
+                          <li className={car.available ? 'car-available' : 'car-unavailable'}>
+                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                              <div className="car-info-list-item">
+                                {car.available ? <CheckIcon /> : <UncheckIcon />}
+                                {car.available ? <span className="car-info-list-text">{strings.CAR_AVAILABLE}</span> : <span className="car-info-list-text">{strings.CAR_UNAVAILABLE}</span>}
+                              </div>
+                            </Tooltip>
+                          </li>
+                          {car.fullyBooked && (
+                            <li className="car-unavailable">
+                              <div className="car-info-list-item">
+                                <UncheckIcon />
+                                <span className="car-info-list-text">{strings.FULLY_BOOKED}</span>
+                              </div>
+                            </li>
+                          )}
+                          {car.comingSoon && (
+                            <li className="car-coming-soon">
+                              <div className="car-info-list-item">
+                                <CheckIcon />
+                                <span className="car-info-list-text">{strings.COMING_SOON}</span>
+                              </div>
+                            </li>
+                          )}
+                        </>
                       )}
                       {car.cancellation > -1 && (
                         <li>
@@ -599,12 +620,12 @@ const CarList = ({
                     {edit && (
                       <>
                         <Tooltip title={strings.VIEW_CAR}>
-                          <IconButton href={`/car?cr=${car._id}`}>
+                          <IconButton onClick={() => navigate(`/car?cr=${car._id}`)}>
                             <ViewIcon />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title={commonStrings.UPDATE}>
-                          <IconButton href={`/update-car?cr=${car._id}`}>
+                          <IconButton onClick={() => navigate(`/update-car?cr=${car._id}`)}>
                             <EditIcon />
                           </IconButton>
                         </Tooltip>

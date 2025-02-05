@@ -10,6 +10,14 @@
   z-index: 1401 !important;
 }
 
+.side-menu li {
+  cursor: pointer;
+}
+
+.side-menu li:hover {
+  background-color: #f1f1f1;
+}
+
 .header-action {
   margin-right: 20px;
 }

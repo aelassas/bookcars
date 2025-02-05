@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -28,6 +29,8 @@ import CarSeatsFilter from '@/components/CarSeatsFilter'
 import '@/assets/css/cars.css'
 
 const Cars = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
@@ -40,7 +43,7 @@ const Cars = () => {
   const [gearbox, setGearbox] = useState<string[]>([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState<string[]>([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [availability, setAvailability] = useState<string[]>([bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable])
-  const [fuelPolicy, setFuelPolicy] = useState([bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForLike])
+  const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
   const [deposit, setDeposit] = useState(-1)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
@@ -173,7 +176,7 @@ const Cars = () => {
             <div className="col-1-container">
               <Search onSubmit={handleSearch} className="search" />
 
-              <Button type="submit" variant="contained" className="btn-primary new-car" size="small" href="/create-car">
+              <Button type="submit" variant="contained" className="btn-primary new-car" size="small" onClick={() => navigate('/create-car')}>
                 {strings.NEW_CAR}
               </Button>
 

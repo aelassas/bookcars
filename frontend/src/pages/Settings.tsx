@@ -239,7 +239,6 @@ const Settings = () => {
                   <Button
                     variant="contained"
                     className="btn-primary btn-margin btn-margin-bottom"
-                    disableElevation
                     onClick={(e) => {
                       e.preventDefault()
                       navigate('/change-password')
@@ -247,7 +246,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disableElevation>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
                     {commonStrings.SAVE}
                   </Button>
                   <Button

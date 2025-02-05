@@ -230,6 +230,12 @@ export const getFuelPolicy = (type: string) => {
     case bookcarsTypes.FuelPolicy.FreeTank:
       return i18n.t('FUEL_POLICY_FREE_TANK')
 
+    case bookcarsTypes.FuelPolicy.FullToFull:
+      return i18n.t('FUEL_POLICY_FULL_TO_FULL')
+
+    case bookcarsTypes.FuelPolicy.FullToEmpty:
+      return i18n.t('FUEL_POLICY_FULL_TO_EMPTY')
+
     default:
       return ''
   }
@@ -767,5 +773,30 @@ export const getDepositFilterValue = async (language: string, value: DepositFilt
     case 'en':
     default:
       return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+  }
+}
+
+/**
+ * Get fuel policy label.
+ *
+ * @param {string} range
+ * @returns {string}
+ */
+export const getCarRange = (range: bookcarsTypes.CarRange) => {
+  switch (range) {
+    case bookcarsTypes.CarRange.Mini:
+      return i18n.t('CAR_RANGE_MINI')
+
+    case bookcarsTypes.CarRange.Midi:
+      return i18n.t('CAR_RANGE_MIDI')
+
+    case bookcarsTypes.CarRange.Maxi:
+      return i18n.t('CAR_RANGE_MAXI')
+
+    case bookcarsTypes.CarRange.Scooter:
+      return i18n.t('CAR_RANGE_SCOOTER')
+
+    default:
+      return ''
   }
 }

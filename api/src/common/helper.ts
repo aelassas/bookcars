@@ -263,3 +263,18 @@ export const validateAccessToken = async (socialSignInType: bookcarsTypes.Social
 
   return false
 }
+
+/**
+ * Format PayPal price.
+ *
+ * Example:
+ * 1          1.00
+ * 1.2        1.20
+ * 1.341      1.34
+ * 1.345      1.34
+ * 1.378      1.37
+ *
+ * @param {number} price
+ * @returns {string}
+ */
+export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 100).toFixed(2)

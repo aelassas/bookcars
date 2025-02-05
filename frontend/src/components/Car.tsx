@@ -27,7 +27,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import Badge from '@/components/Badge'
 import * as UserService from '@/services/UserService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 
 import DoorsIcon from '@/assets/img/car-door.png'
 import DistanceIcon from '@/assets/img/distance-icon.png'
@@ -85,7 +85,7 @@ const Car = ({
   useEffect(() => {
     const fetchPrice = async () => {
       if (from && to) {
-        const _totalPrice = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
         setTotalPrice(_totalPrice)
         setDays(bookcarsHelper.days(from, to))
       }
@@ -112,7 +112,7 @@ const Car = ({
       setLoading(false)
 
       if (!hidePrice) {
-        const _totalPrice = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
         setTotalPrice(_totalPrice)
       }
       // console.log('init car')
@@ -223,6 +223,13 @@ const Car = ({
                   <span>{`${strings.PRICE_PER_DAY} `}</span>
                   <span className="price-day-value">{bookcarsHelper.formatPrice(totalPrice / days, commonStrings.CURRENCY, language)}</span>
                 </span>
+                {
+                  car.comingSoon ? (
+                    <span className="coming-soon">{strings.COMING_SOON}</span>
+                  ) : car.fullyBooked ? (
+                    <span className="fully-booked">{strings.FULLY_BOOKED}</span>
+                  ) : null
+                }
               </div>
             )}
           </div>
@@ -367,23 +374,27 @@ const Car = ({
 
           {!hidePrice && (
             <div className="action">
-              <Button
-                variant="contained"
-                className="btn-primary btn-book btn-margin-bottom"
-                onClick={() => {
-                  navigate('/checkout', {
-                    state: {
-                      carId: car._id,
-                      pickupLocationId: pickupLocation,
-                      dropOffLocationId: dropOffLocation,
-                      from,
-                      to
-                    }
-                  })
-                }}
-              >
-                {strings.BOOK}
-              </Button>
+              {
+                car.available && !car.comingSoon && !car.fullyBooked && (
+                  <Button
+                    variant="contained"
+                    className="btn-primary btn-book btn-margin-bottom"
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          carId: car._id,
+                          pickupLocationId: pickupLocation,
+                          dropOffLocationId: dropOffLocation,
+                          from,
+                          to
+                        }
+                      })
+                    }}
+                  >
+                    {strings.BOOK}
+                  </Button>
+                )
+              }
             </div>
           )}
         </div>

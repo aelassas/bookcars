@@ -6,6 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/search'
 import * as helper from '@/common/helper'
+import env from '@/config/env.config'
 import * as LocationService from '@/services/LocationService'
 import * as SupplierService from '@/services/SupplierService'
 // import * as UserService from '@/services/UserService'
@@ -49,7 +50,7 @@ const Search = () => {
   const [carType, setCarType] = useState(bookcarsHelper.getAllCarTypes())
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
-  const [fuelPolicy, setFuelPolicy] = useState([bookcarsTypes.FuelPolicy.FreeTank, bookcarsTypes.FuelPolicy.LikeForLike])
+  const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
   const [deposit, setDeposit] = useState(-1)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
@@ -291,7 +292,7 @@ const Search = () => {
                   {
                     showFilters && (
                       <>
-                        <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />
+                        {!env.HIDE_SUPPLIERS && <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />}
                         <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
                         <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
                         <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
@@ -327,8 +328,11 @@ const Search = () => {
                 multimedia={multimedia}
                 rating={rating}
                 seats={seats}
-              // distance={distance}
-              // onLoad={() => setLoadingPage(false)}
+                // distance={distance}
+                // onLoad={() => setLoadingPage(false)}
+                hideSupplier={env.HIDE_SUPPLIERS}
+                // includeAlreadyBookedCars
+                includeComingSoonCars
               />
             </div>
           </div>

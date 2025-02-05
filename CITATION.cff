@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use BookCars in your research or projects, please cite it using the following metadata."
+title: "BookCars: A Car Rental Booking Platform with Mobile App"
+authors:
+  - name: "Akram El Assas"
+year: 2025
+repository-code: "https://github.com/aelassas/bookcars"
+license: "MIT"
+keywords:
+  - car rental
+  - booking system
+  - aggregator
+  - web application
+  - mobile app
+  - react
+  - react native
+  - mongodb
+  - stripe
+  - paypal
+url: "https://github.com/aelassas/bookcars"
+type: software

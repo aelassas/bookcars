@@ -16,6 +16,22 @@ div.car-container article .btn-book {
   padding: 0 20px;
 }
 
+div.car-container article span.coming-soon,
+div.car-container article span.fully-booked {
+  font-size: 12px;
+  font-weight: bold;
+  display: table-row;
+  text-align: right;
+}
+
+div.car-container article span.coming-soon {
+  color: #FD3446;
+}
+
+div.car-container article span.fully-booked {
+  color: #FD3446;
+}
+
 div.car-container div.car-header {
   padding: 10px 0;
   border-bottom: #d9d8d9 2px solid;
@@ -190,6 +206,7 @@ div.car-container article div.car-info div.car-info-header div.name {
 
 div.car-container article div.price {
   display: table;
+  border-collapse: separate;
 }
 
 div.car-container article span.price-main {

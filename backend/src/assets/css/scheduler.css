@@ -1,0 +1,104 @@
+div.scheduler {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+@media only screen and (width <=960px) {
+  div.scheduler {
+    top: 56px;
+    overflow-y: auto;
+  }
+
+  div.scheduler div.col-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  div.scheduler div.col-2 {
+    display: flex;
+  }
+
+  div.scheduler div.col-1 .cl-supplier-filter label.accordion,
+  div.scheduler div.col-1 .cl-status-filter label.accordion,
+  div.scheduler div.col-1 .cl-scheduler-filter label.accordion {
+    background: #fff;
+  }
+
+  div.scheduler div.col-1 .cl-supplier-filter,
+  div.scheduler div.col-1 .cl-status-filter,
+  div.scheduler div.col-1 .cl-scheduler-filter {
+    margin: 5px 10px;
+    background-color: #fff;
+    max-width: 480px;
+    width: calc(100% - 20px);
+  }
+
+  div.scheduler div.col-1 .cl-scheduler-filter div.panel,
+  div.scheduler div.col-1 .cl-scheduler-filter div.panel-collapse {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  div.scheduler div.col-1 .cl-new-booking {
+    width: calc(100% - 20px);
+    max-width: 480px;
+    margin: 15px 10px 5px;
+  }
+}
+
+@media only screen and (width >=960px) {
+  div.scheduler {
+    top: 64px;
+  }
+
+  div.scheduler div.col-1 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    padding: 12px 0 0 12px;
+    background: #fefefe;
+    overflow: auto;
+  }
+
+  div.scheduler div.col-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 300px;
+  }
+
+  div.scheduler div.col-1 .cl-supplier-filter label.accordion,
+  div.scheduler div.col-1 .cl-status-filter label.accordion,
+  div.scheduler div.col-1 .cl-scheduler-filter label.accordion {
+    background: #fafafa;
+  }
+
+  div.scheduler div.col-1 .cl-supplier-filter,
+  div.scheduler div.col-1 .cl-status-filter,
+  div.scheduler div.col-1 .cl-scheduler-filter {
+    margin: 10px 10px 10px 0;
+    background-color: #fafafa;
+  }
+
+  div.scheduler div.col-1 .cl-scheduler-filter div.panel,
+  div.scheduler div.col-1 .cl-scheduler-filter div.panel-collapse {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  div.scheduler div.col-1 .cl-status-filter,
+  div.scheduler div.col-1 .cl-scheduler-filter {
+    margin-bottom: 10px;
+  }
+
+  div.scheduler div.col-1 .cl-new-booking {
+    width: 265px;
+    margin-left: 5px;
+  }
+}

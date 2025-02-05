@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -37,6 +38,8 @@ import CarRangeList from '@/components/CarRangeList'
 import '@/assets/css/create-car.css'
 
 const UpdateCar = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [noMatch, setNoMatch] = useState(false)
@@ -54,6 +57,8 @@ const UpdateCar = () => {
   const [rating, setRating] = useState('')
   const [co2, setCo2] = useState('')
   const [available, setAvailable] = useState(false)
+  const [fullyBooked, setFullyBooked] = useState(false)
+  const [comingSoon, setComingSoon] = useState(false)
   const [type, setType] = useState('')
   const [gearbox, setGearbox] = useState('')
   const [dailyPrice, setDailyPrice] = useState('')
@@ -162,6 +167,14 @@ const UpdateCar = () => {
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAvailable(e.target.checked)
+  }
+
+  const handleFullyBookedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullyBooked(e.target.checked)
+  }
+
+  const handleComingSoonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComingSoon(e.target.checked)
   }
 
   const handleCarTypeChange = (value: string) => {
@@ -277,6 +290,8 @@ const UpdateCar = () => {
         multimedia,
         rating: Number(rating) || undefined,
         co2: Number(co2) || undefined,
+        comingSoon,
+        fullyBooked,
       }
 
       const status = await CarService.update(data)
@@ -345,6 +360,8 @@ const UpdateCar = () => {
                 setCo2(_car.co2.toString())
               }
               setAvailable(_car.available)
+              setFullyBooked(_car.fullyBooked || false)
+              setComingSoon(_car.comingSoon || false)
               setType(_car.type)
               setGearbox(_car.gearbox)
               setAircon(_car.aircon)
@@ -646,6 +663,34 @@ const UpdateCar = () => {
                 <FormControlLabel control={<Switch checked={available} onChange={handleAvailableChange} color="primary" />} label={strings.AVAILABLE} className="checkbox-fcl" />
               </FormControl>
 
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={fullyBooked}
+                      color="primary"
+                      onChange={handleFullyBookedChange}
+                    />
+                  )}
+                  label={strings.FULLY_BOOKED}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={comingSoon}
+                      color="primary"
+                      onChange={handleComingSoonChange}
+                    />
+                  )}
+                  label={strings.COMING_SOON}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <CarTypeList label={strings.CAR_TYPE} variant="standard" required value={type} onChange={handleCarTypeChange} />
               </FormControl>
@@ -758,7 +803,7 @@ const UpdateCar = () => {
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/cars">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/cars')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>
