@@ -578,7 +578,7 @@ const Checkout = () => {
                       hidePrice
                       sizeAuto
                       onLoad={() => setLoadingPage(false)}
-                    // hideSupplier
+                      hideSupplier={env.HIDE_SUPPLIERS}
                     />
 
                     <CheckoutOptions
@@ -621,15 +621,17 @@ const Checkout = () => {
                           <span className="checkout-detail-title">{strings.CAR}</span>
                           <div className="checkout-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
                         </div>
-                        <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
-                          <span className="checkout-detail-title">{commonStrings.SUPPLIER}</span>
-                          <div className="checkout-detail-value">
-                            <div className="car-supplier">
-                              <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
-                              <span className="car-supplier-name">{car.supplier.fullName}</span>
+                        {!env.HIDE_SUPPLIERS && (
+                          <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
+                            <span className="checkout-detail-title">{commonStrings.SUPPLIER}</span>
+                            <div className="checkout-detail-value">
+                              <div className="car-supplier">
+                                <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                                <span className="car-supplier-name">{car.supplier.fullName}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )}
                         <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
                           <span className="checkout-detail-title">{strings.COST}</span>
                           <div className="checkout-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>

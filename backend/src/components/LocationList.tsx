@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   IconButton,
   Button,
@@ -42,6 +43,8 @@ const LocationList = ({
   onLoad,
   onDelete
 }: LocationListProps) => {
+  const navigate = useNavigate()
+
   const [keyword, setKeyword] = useState(locationKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -217,12 +220,12 @@ const LocationList = ({
                 secondaryAction={(
                   <div>
                     <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton edge="end" href={`/update-location?loc=${location._id}`}>
+                      <IconButton edge="end" onClick={() => navigate(`/update-location?loc=${location._id}`)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title={commonStrings.DELETE}>
-                      <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
+                      <IconButton edge="end" data-id={location._id} data-index={_index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip> */}

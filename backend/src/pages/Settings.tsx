@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -19,11 +20,15 @@ import * as UserService from '@/services/UserService'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/settings.css'
 
 const Settings = () => {
-  const [user, setUser] = useState<bookcarsTypes.User>()
+  const navigate = useNavigate()
+
+  const { user, setUser } = useUserContext() as UserContextType
+
   const [admin, setAdmin] = useState(false)
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
@@ -154,7 +159,7 @@ const Settings = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && user && (
         <div className="settings">
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
@@ -164,8 +169,7 @@ const Settings = () => {
                 mode="update"
                 record={user}
                 size="large"
-                // readonly={false}
-                readonly
+                readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 hideDelete={!admin}
@@ -194,13 +198,13 @@ const Settings = () => {
                 <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
               <div className="buttons">
-                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href="/change-password">
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate('/change-password')}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -15,7 +16,6 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -38,6 +38,7 @@ import '@/assets/css/update-user.css'
 
 const UpdateUser = () => {
   const navigate = useNavigate()
+
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [visible, setVisible] = useState(false)
@@ -332,7 +333,7 @@ const UpdateUser = () => {
     || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User && user.supplier as string === loggedUser._id)
 
   return (
-    <Layout onLoad={onLoad} user={loggedUser} strict>
+    <Layout onLoad={onLoad} strict>
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
@@ -486,7 +487,7 @@ const UpdateUser = () => {
               )}
 
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${user._id}`}>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${user._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
 

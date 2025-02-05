@@ -6,7 +6,6 @@ import {
   FormHelperText,
   Button,
   Paper,
-  Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -19,11 +18,15 @@ import { strings as mStrings } from '@/lang/master'
 import { strings } from '@/lang/activate'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/activate.css'
 
 const Activate = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -73,6 +76,10 @@ const Activate = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -164,7 +171,7 @@ const Activate = () => {
                 {mStrings.RESEND}
               </Button>
               <p className="go-to-home">
-                <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+                <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
               </p>
             </div>
           </Paper>
@@ -203,7 +210,7 @@ const Activate = () => {
                 <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
-                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
+                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

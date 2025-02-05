@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Paper,
   FormControl,
   InputLabel,
   Input,
   Button,
-  Link
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/sign-in'
@@ -15,11 +14,15 @@ import * as UserService from '@/services/UserService'
 import Header from '@/components/Header'
 import Error from '@/components/Error'
 import * as langHelper from '@/common/langHelper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/signin.css'
 
 const SignIn = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
@@ -54,6 +57,10 @@ const SignIn = () => {
           setBlacklisted(true)
         } else {
           setError(false)
+
+          const user = await UserService.getUser(res.data._id)
+          setUser(user)
+          setUserLoaded(true)
 
           const params = new URLSearchParams(window.location.search)
 
@@ -148,7 +155,7 @@ const SignIn = () => {
               </div>
 
               <div className="forgot-password">
-                <Link href="/forgot-password">{strings.RESET_PASSWORD}</Link>
+                <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
               </div>
 
               <div className="signin-buttons">

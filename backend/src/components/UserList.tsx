@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   DataGrid,
   GridColDef,
@@ -49,6 +50,8 @@ const UserList = ({
   checkboxSelection,
   onLoad
 }: UserListProps) => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(env.PAGE_SIZE)
@@ -256,7 +259,7 @@ const UserList = ({
           return _user.type === bookcarsTypes.RecordType.Admin || __user.supplier === _user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
-                <IconButton href={`update-user?u=${row._id}`}>
+                <IconButton onClick={() => navigate(`/update-user?u=${row._id}`)}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>

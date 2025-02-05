@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Typography,
   IconButton,
@@ -11,7 +12,6 @@ import {
   Link
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -135,7 +135,7 @@ const Supplier = () => {
   const edit = user && supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === supplier._id)
 
   return (
-    <Layout onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && supplier && suppliers && (
         <div className="supplier">
           <div className="col-1">
@@ -149,8 +149,7 @@ const Supplier = () => {
                   hideDelete
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
-                  // readonly={!edit}
-                  readonly
+                  readonly={!edit}
                   color="disabled"
                   className="supplier-avatar"
                 />
@@ -170,7 +169,9 @@ const Supplier = () => {
             )}
             {supplier.bio && (
               helper.isValidURL(supplier.bio)
-                ? (<Link href={supplier.bio} className="supplier-bio-link">{supplier.bio}</Link>) : (
+                ? (
+                  <Link href={supplier.bio} target="_blank" rel="noreferrer" className="supplier-bio-link">{supplier.bio}</Link>
+                ) : (
                   <Typography variant="h6" className="supplier-info">
                     {supplier.bio}
                   </Typography>
@@ -189,18 +190,18 @@ const Supplier = () => {
             <div className="supplier-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
-                  <IconButton href={`/update-supplier?c=${supplier._id}`}>
+                  <IconButton onClick={() => navigate(`/update-supplier?c=${supplier._id}`)}>
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
               )}
-              {/* {edit && (
+              {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={supplier._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )} */}
+              )}
             </div>
             {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
           </div>
