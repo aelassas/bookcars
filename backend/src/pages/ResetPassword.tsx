@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -7,7 +8,6 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
@@ -17,11 +17,15 @@ import { strings as rpStrings } from '@/lang/reset-password'
 import Error from './Error'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
+import { useUserContext, UserContextType } from '@/context/UserContext'
 
 import '@/assets/css/reset-password.css'
 
 const ResetPassword = () => {
   const navigate = useNavigate()
+
+  const { setUser, setUserLoaded } = useUserContext() as UserContextType
+
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [token, setToken] = useState('')
@@ -71,6 +75,10 @@ const ResetPassword = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
+          const user = await UserService.getUser(signInResult.data._id)
+          setUser(user)
+          setUserLoaded(true)
+
           const _status = await UserService.deleteTokens(userId)
 
           if (_status === 200) {
@@ -163,7 +171,7 @@ const ResetPassword = () => {
                 <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                   {commonStrings.UPDATE}
                 </Button>
-                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
+                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" onClick={() => navigate('/')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

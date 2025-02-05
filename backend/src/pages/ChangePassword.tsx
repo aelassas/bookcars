@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Paper,
   Input,
@@ -18,6 +19,8 @@ import * as helper from '@/common/helper'
 import '@/assets/css/change-password.css'
 
 const ChangePassword = () => {
+  const navigate = useNavigate()
+
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [userId, setUserId] = useState<string>()
   const [newPassword, setNewPassword] = useState('')
@@ -170,7 +173,7 @@ const ChangePassword = () => {
               <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                 {commonStrings.RESET_PASSWORD}
               </Button>
-              <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
+              <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" onClick={() => navigate('/')}>
                 {commonStrings.CANCEL}
               </Button>
             </div>

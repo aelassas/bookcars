@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
@@ -10,6 +11,8 @@ import InfoBox from '@/components/InfoBox'
 import '@/assets/css/locations.css'
 
 const Locations = () => {
+  const navigate = useNavigate()
+
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
 
@@ -37,7 +40,7 @@ const Locations = () => {
             <Search className="search" onSubmit={handleSearch} />
 
             {rowCount > -1 && (
-              <Button variant="contained" className="btn-primary new-location" size="small" href="/create-location">
+              <Button variant="contained" className="btn-primary new-location" size="small" onClick={() => navigate('/create-location')}>
                 {strings.NEW_LOCATION}
               </Button>
             )}
