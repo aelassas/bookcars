@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -16,6 +17,8 @@ import Layout from '@/components/Layout'
 import '@/assets/css/scheduler.css'
 
 const Scheduler = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
@@ -58,7 +61,7 @@ const Scheduler = () => {
           <div className="col-1">
             {leftPanel && (
               <>
-                <Button variant="contained" className="btn-primary cl-new-booking" size="small" href="/create-booking">
+                <Button variant="contained" className="btn-primary cl-new-booking" size="small" onClick={() => navigate('/create-booking')}>
                   {strings.NEW_BOOKING}
                 </Button>
                 {admin

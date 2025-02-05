@@ -68,6 +68,7 @@ const Bookings = () => {
                 hideDates={env.isMobile}
                 checkboxSelection={false}
                 onLoad={() => setLoadingPage(false)}
+                hideSupplierColumn={env.HIDE_SUPPLIERS}
               />
             </div>
           </div>

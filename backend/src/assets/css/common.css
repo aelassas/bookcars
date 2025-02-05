@@ -4,6 +4,10 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+#nprogress .bar {
+  background: #1a1a1a !important;
+}
+
 .buttons button {
   margin-right: 15px;
   margin-left: 0 !important;
@@ -33,6 +37,21 @@
 .btn-margin-bottom {
   margin-bottom: 10px !important;
 }
+
+.btn-lnk {
+  background-color: transparent !important;
+  color: #1a1a1a !important;
+  font-weight: 400 !important;
+  text-decoration: underline !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  padding: 0 !important;
+}
+
+.btn-lnk:hover {
+  opacity: 0.8;
+}
+
 
 .validate-email {
   margin: 15px;

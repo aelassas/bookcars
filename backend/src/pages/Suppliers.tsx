@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
@@ -11,6 +12,8 @@ import * as helper from '@/common/helper'
 import '@/assets/css/suppliers.css'
 
 const Suppliers = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
@@ -49,7 +52,7 @@ const Suppliers = () => {
                   variant="contained"
                   className="btn-primary new-supplier"
                   size="small"
-                  href="/create-supplier"
+                  onClick={() => navigate('/create-supplier')}
                 >
                   {strings.NEW_SUPPLIER}
                 </Button>

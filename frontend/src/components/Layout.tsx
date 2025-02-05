@@ -24,14 +24,16 @@ const Layout = ({
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (userLoaded && !user && strict) {
-      // UserService.signout(false, true)
-      UserService.signout(true, false)
-    } else {
-      setLoading(false)
+    if (userLoaded) {
+      if (!user && strict) {
+        // UserService.signout(false, true)
+        UserService.signout(true, false)
+      } else {
+        setLoading(false)
 
-      if (onLoad) {
-        onLoad(user || undefined)
+        if (onLoad) {
+          onLoad(user || undefined)
+        }
       }
     }
   }, [user, userLoaded, strict]) // eslint-disable-line react-hooks/exhaustive-deps

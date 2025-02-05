@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -28,6 +29,8 @@ import CarSeatsFilter from '@/components/CarSeatsFilter'
 import '@/assets/css/cars.css'
 
 const Cars = () => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
@@ -173,7 +176,7 @@ const Cars = () => {
             <div className="col-1-container">
               <Search onSubmit={handleSearch} className="search" />
 
-              <Button type="submit" variant="contained" className="btn-primary new-car" size="small" href="/create-car">
+              <Button type="submit" variant="contained" className="btn-primary new-car" size="small" onClick={() => navigate('/create-car')}>
                 {strings.NEW_CAR}
               </Button>
 
