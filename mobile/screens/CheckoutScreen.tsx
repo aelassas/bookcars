@@ -257,12 +257,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setCurrencySymbol(await StripeService.getCurrencySymbol())
 
       const days = bookcarsHelper.days(_from, _to)
-      setCancellationText(await helper.getCancellationOption(_car.cancellation, language))
-      setAmendmentsText(await helper.getAmendmentsOption(_car.amendments, language))
-      setCollisionDamageWaiverText(await helper.getCollisionDamageWaiverOption(_car.collisionDamageWaiver, days, language))
-      setTheftProtectionText(await helper.getTheftProtectionOption(_car.theftProtection, days, language))
-      setFullInsuranceText(await helper.getFullInsuranceOption(_car.fullInsurance, days, language))
-      setAdditionalDriverText(await helper.getAdditionalDriverOption(_car.additionalDriver, days, language))
+      setCancellationText(await helper.getCancellationOption(_car.cancellation, _language))
+      setAmendmentsText(await helper.getAmendmentsOption(_car.amendments, _language))
+      setCollisionDamageWaiverText(await helper.getCollisionDamageWaiverOption(_car.collisionDamageWaiver, days, _language))
+      setTheftProtectionText(await helper.getTheftProtectionOption(_car.theftProtection, days, _language))
+      setFullInsuranceText(await helper.getFullInsuranceOption(_car.fullInsurance, days, _language))
+      setAdditionalDriverText(await helper.getAdditionalDriverOption(_car.additionalDriver, days, _language))
 
       setVisible(true)
       setFormVisible(true)
@@ -651,13 +651,19 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       let customerId: string | undefined
       try {
         if (!payLater) {
+          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
+          const _locale = _fr ? fr : enUS
+          const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
+          const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+          const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
+
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
             amount: price,
             currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
-            name: '',
-            description: 'BookCars Mobile Service',
+            name,
+            description,
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
 
@@ -901,7 +907,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     </View>
 
                     <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                    <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(price, currencySymbol, language)}`}</Text>
+                    <Text style={styles.detailTextBold}>{bookcarsHelper.formatPrice(price, currencySymbol, language)}</Text>
                   </View>
 
                   {!authenticated && (
