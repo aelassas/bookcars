@@ -19,9 +19,9 @@ import * as bookingController from './bookingController'
  */
 export const createPayPalOrder = async (req: Request, res: Response) => {
   try {
-    const { bookingId, amount, currency, name }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+    const { bookingId, amount, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
 
-    const orderId = await paypal.createOrder(bookingId, amount, currency, name)
+    const orderId = await paypal.createOrder(bookingId, amount, currency, name, description)
 
     return res.json(orderId)
   } catch (err) {

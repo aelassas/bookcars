@@ -24,7 +24,7 @@ export const getToken = async () => {
   return res.data.access_token
 }
 
-export const createOrder = async (bookingId: string, amount: number, currency: string, name: string) => {
+export const createOrder = async (bookingId: string, amount: number, currency: string, name: string, description: string) => {
   const price = helper.formatPayPalPrice(amount)
   const token = await getToken()
   const res = await axios.post(
@@ -59,7 +59,7 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
           items: [
             {
               name,
-              description: name,
+              description,
               unit_amount: {
                 currency_code: currency,
                 value: price,

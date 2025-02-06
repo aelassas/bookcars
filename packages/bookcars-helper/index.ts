@@ -556,3 +556,22 @@ export const trim = (str: string, char: string): string => {
 export const delay = (milliseconds: number) => new Promise((resolve) => {
   setTimeout(resolve, milliseconds)
 })
+
+/**
+ * Truncates a string.
+ *
+ * @param {string} str 
+ * @param {number} maxLength 
+ * @returns {string} 
+ */
+export const truncateString = (str: string, maxLength: number) => {
+  if (str.length <= maxLength) {
+    return str
+  }
+
+  if (maxLength >= 6) {
+    return `${str.slice(0, maxLength - 3)}...`
+  }
+
+  return str.slice(0, maxLength)
+}
