@@ -20,4 +20,5 @@ declare module '@env' {
   export const BC_DEPOSIT_FILTER_VALUE_1: string
   export const BC_DEPOSIT_FILTER_VALUE_2: string
   export const BC_DEPOSIT_FILTER_VALUE_3: string
+  export const BC_WEBSITE_NAME: string
 }
