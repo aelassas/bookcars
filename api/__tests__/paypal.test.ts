@@ -31,6 +31,7 @@ describe('POST /api/create-paypal-order', () => {
       amount: 234,
       currency: 'USD',
       name: 'BMW X1',
+      description: 'BMW X1',
       bookingId: testHelper.GetRandromObjectIdAsString(),
     }
     let res = await request(app)
@@ -42,7 +43,7 @@ describe('POST /api/create-paypal-order', () => {
     // test failure (create paypal order failure)
     payload.currency = 'xxxxxxxxxxxxxxx'
     res = await request(app)
-    .post('/api/create-paypal-order')
+      .post('/api/create-paypal-order')
       .send(payload)
     expect(res.statusCode).toBe(400)
   })
@@ -83,6 +84,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
         amount: booking.price,
         currency: 'USD',
         name: 'BMW X1',
+        description: 'BMW X1',
         bookingId: booking.id,
       }
       let res = await request(app)
