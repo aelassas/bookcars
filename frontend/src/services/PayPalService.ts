@@ -2,6 +2,22 @@ import axiosInstance from './axiosInstance'
 import * as UserService from '@/services/UserService'
 
 /**
+ * Order item name max length 200 characters
+ * https://developer.paypal.com/docs/api/invoicing/v2/#invoices_create!ct=application/json&path=items/name&t=request
+ *
+ * @type {200}
+ */
+export const ORDER_NAME_MAX_LENGTH = 200
+
+/**
+ * Order item description max length 1000 characters
+ * https://developer.paypal.com/docs/api/invoicing/v2/#invoices_create!ct=application/json&path=items/description&t=request
+ *
+ * @type {1000}
+ */
+export const ORDER_DESCRIPTION_MAX_LENGTH = 1000
+
+/**
  * Returns PayPal locale.
  *
  * @returns {("fr_FR" | "es_ES" | "en_US")}
@@ -27,7 +43,7 @@ export const getLocale = () => {
  * @param {string} sessionId
  * @returns {Promise<number>}
  */
-export const createOrder = (bookingId: string, amount: number, currency: string, name: string): Promise<string> =>
+export const createOrder = (bookingId: string, amount: number, currency: string, name: string, description: string): Promise<string> =>
   axiosInstance
     .post(
       '/api/create-paypal-order/',
@@ -36,6 +52,7 @@ export const createOrder = (bookingId: string, amount: number, currency: string,
         amount,
         currency,
         name,
+        description,
       }
     )
     .then((res) => res.data)
