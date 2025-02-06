@@ -944,7 +944,7 @@ const Checkout = () => {
                           <div className="payment-options-container">
                             <PayPalButtons
                               createOrder={async () => {
-                                const name = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                const name = `${car.name}`
                                 const amount = payDeposit ? depositPrice : price
                                 const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name)
                                 return orderId
