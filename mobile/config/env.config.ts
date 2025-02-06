@@ -20,6 +20,7 @@ import {
   BC_DEPOSIT_FILTER_VALUE_1,
   BC_DEPOSIT_FILTER_VALUE_2,
   BC_DEPOSIT_FILTER_VALUE_3,
+  BC_WEBSITE_NAME,
 } from '@env'
 
 /**
@@ -76,6 +77,13 @@ export const CURRENCIES: Currency[] = [
  * @type {string}
  */
 export const APP_TYPE: string = 'frontend'
+
+/**
+ * Website name.
+ *
+ * @type {string}
+ */
+export const WEBSITE_NAME: string = String(BC_WEBSITE_NAME || 'BookCars')
 
 /**
  * API host.

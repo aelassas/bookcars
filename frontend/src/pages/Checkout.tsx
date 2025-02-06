@@ -404,13 +404,17 @@ const Checkout = () => {
       let _sessionId: string | undefined
       if (!payLater) {
         if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe) {
+          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
+          const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+          const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
+
           const payload: bookcarsTypes.CreatePaymentPayload = {
             amount: payDeposit ? depositPrice : price,
             currency: PaymentService.getCurrency(),
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
-            name: `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`,
-            description: `${env.WEBSITE_NAME} Web Service`,
+            name,
+            description,
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
           const res = await StripeService.createCheckoutSession(payload)

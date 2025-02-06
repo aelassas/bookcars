@@ -651,13 +651,19 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       let customerId: string | undefined
       try {
         if (!payLater) {
+          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
+          const _locale = _fr ? fr : enUS
+          const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
+          const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+          const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
+
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
             amount: price,
             currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
-            name: '',
-            description: 'BookCars Mobile Service',
+            name,
+            description,
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
 
