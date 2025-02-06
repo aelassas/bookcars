@@ -2,9 +2,9 @@
   "expo": {
     "jsEngine": "hermes",
     "newArchEnabled": true,
-    "name": "Sicarro",
+    "name": "BookCars",
     "version": "5.6.0",
-    "slug": "sicarro",
+    "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
@@ -19,18 +19,24 @@
         "foregroundImage": "./assets/icon.png"
       },
       "icon": "./assets/icon.png",
+      // "splash": {
+      //   "backgroundColor": "#f37022",
+      //   "image": "./assets/splash.png"
+      // },
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.sicarro"
+      "package": "com.bookcars"
     },
     "ios": {
       "buildNumber": "5.6.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
-      "bundleIdentifier": "com.sicarro",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
+      // "splash": {
+      //   "backgroundColor": "#f37022",
+      //   "image": "./assets/splash.png",
+      //   "tabletImage": "./assets/splash-tablet.png"
+      // },
+      "bundleIdentifier": "com.bookcars"
     },
     "plugins": [
       "expo-localization",
@@ -44,20 +50,27 @@
         }
       ],
       [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "MERCHANT_IDENTIFIER",
+          "enableGooglePay": true
+        }
+      ],
+      [
         "expo-document-picker",
         {
           "iCloudContainerEnvironment": "Production"
         }
       ]
     ],
-    "owner": "guillermopaz",
+    "owner": "aelassas",
     "extra": {
       "eas": {
-        "projectId": "ecdecc8f-1b81-4571-b3fe-1edbb69c2ce3"
+        "projectId": "fe1ab335-41ae-4a35-960b-0052b493db49"
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/ecdecc8f-1b81-4571-b3fe-1edbb69c2ce3"
+      "url": "https://u.expo.dev/fe1ab335-41ae-4a35-960b-0052b493db49"
     },
     "experiments": {
       "tsconfigPaths": true
