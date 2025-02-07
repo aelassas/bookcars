@@ -220,7 +220,7 @@ export const en = {
   CAR_SEATS_FIVE: '5 Seats',
   CAR_SEATS_FIVE_PLUS: '5+ Seats',
   ANY: 'Any',
-  BOOKCARS: 'BookCars',
+  BOOKCARS: env.WEBSITE_NAME,
   SEARCH_TITLE_1: 'Auto ',
   SEARCH_TITLE_2: ' for you',
   CAR_AVAILABLE: 'car available',
