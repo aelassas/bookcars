@@ -22,7 +22,7 @@ function Update-NpmPackageVersion {
     # Validate version format (semantic versioning)
     if ($Version -notmatch '^\d+\.\d+\.\d+(-[\w\.]+)?(\+[\w\.]+)?$') {
         Write-Error "Invalid version format. Please use semantic versioning (e.g., 1.0.0, 2.1.0-beta.1)"
-        return $false
+        return
     }
 
     # Validate and resolve folder path
@@ -30,18 +30,18 @@ function Update-NpmPackageVersion {
         $resolvedPath = Resolve-Path $FolderPath -ErrorAction Stop
         if (-not (Test-Path $resolvedPath)) {
             Write-Error "Folder path does not exist: $FolderPath"
-            return $false
+            return
         }
     } catch {
         Write-Error "Invalid folder path: $FolderPath"
-        return $false
+        return
     }
 
     # Check if package.json exists in the specified folder
     $packageJsonPath = Join-Path $resolvedPath "package.json"
     if (-not (Test-Path $packageJsonPath)) {
         Write-Error "package.json not found in folder: $FolderPath"
-        return $false
+        return
     }
 
     try {
@@ -65,15 +65,12 @@ function Update-NpmPackageVersion {
         $result = npm version @npmArgs 2>&1
 
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "Successfully updated package version from $oldVersion to $Version in folder: $FolderPath"
-            return $true
+            Write-Host "Successfully updated package version from $oldVersion to $Version in folder: $FolderPath" -ForegroundColor Green
         } else {
             Write-Error "npm version command failed: $result"
-            return $false
         }
     } catch {
         Write-Error "Error updating package version: $_"
-        return $false
     } finally {
         # Restore original location
         Set-Location $originalLocation
@@ -216,6 +213,7 @@ function Update-ExpoAppJson {
     }
     
     # Update the version and buildNumber
+    $oldVersion = $appJson.expo.version
     $appJson.expo.version = $Version
     $appJson.expo.ios.buildNumber = $Version
     $appJson.expo.android.versionCode = [int]($Version -replace '\.', '')
@@ -225,7 +223,7 @@ function Update-ExpoAppJson {
     
     # Write back to file
     Set-Content -Path $appJsonPath -Value $updatedJson -Encoding UTF8
-    Write-Host "Updated app.json successfully!" -ForegroundColor Green
+    Write-Host "Successfully updated app.json from $oldVersion to $Version in folder: $FolderPath" -ForegroundColor Green
 }
 
 # Example usage:
