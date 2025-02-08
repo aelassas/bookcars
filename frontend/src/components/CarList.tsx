@@ -228,22 +228,39 @@ const CarList = ({
             </Card>
           )
           : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
-          && rows.map((car) => (
-            <Car
-              key={car._id}
-              car={car}
-              booking={booking}
-              pickupLocation={pickupLocation}
-              dropOffLocation={dropOffLocation}
-              from={from as Date}
-              to={to as Date}
-              pickupLocationName={pickupLocationName}
-              distance={distance}
-              hideSupplier={hideSupplier}
-              sizeAuto={sizeAuto}
-              hidePrice={hidePrice}
-            />
-          ))}
+          && (
+            <>
+              {totalRecords > 0 && (
+                <div className="title">
+                  <div className="bookcars">
+                    <span>{strings.TITLE_1}</span>
+                    <span className="title-bookcars">{env.WEBSITE_NAME}</span>
+                    <span>{strings.TITLE_2}</span>
+                  </div>
+                  <div className="car-count">
+                    {`(${totalRecords} ${totalRecords === 1 ? strings.TITLE_CAR_AVAILABLE : strings.TITLE_CARS_AVAILABLE})`}
+                  </div>
+                </div>
+              )}
+
+              {rows.map((car) => (
+                <Car
+                  key={car._id}
+                  car={car}
+                  booking={booking}
+                  pickupLocation={pickupLocation}
+                  dropOffLocation={dropOffLocation}
+                  from={from as Date}
+                  to={to as Date}
+                  pickupLocationName={pickupLocationName}
+                  distance={distance}
+                  hideSupplier={hideSupplier}
+                  sizeAuto={sizeAuto}
+                  hidePrice={hidePrice}
+                />
+              ))}
+            </>
+          )}
         {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
