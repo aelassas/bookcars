@@ -1,4 +1,4 @@
-{
+﻿{
   "expo": {
     "jsEngine": "hermes",
     "newArchEnabled": true,
@@ -14,15 +14,11 @@
       "image": "./assets/splash.png"
     },
     "android": {
-      "versionCode": 1,
+      "versionCode": 570,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
       "icon": "./assets/icon.png",
-      // "splash": {
-      //   "backgroundColor": "#f37022",
-      //   "image": "./assets/splash.png"
-      // },
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.bookcars"
@@ -31,11 +27,6 @@
       "buildNumber": "5.7.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
-      // "splash": {
-      //   "backgroundColor": "#f37022",
-      //   "image": "./assets/splash.png",
-      //   "tabletImage": "./assets/splash-tablet.png"
-      // },
       "bundleIdentifier": "com.bookcars"
     },
     "plugins": [
@@ -80,3 +71,4 @@
     }
   }
 }
+
