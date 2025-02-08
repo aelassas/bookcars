@@ -284,7 +284,7 @@ export const checkout = async (req: Request, res: Response) => {
         }
 
         body.booking.paymentIntentId = paymentIntentId
-        body.booking.status = bookcarsTypes.BookingStatus.Paid
+        body.booking.status = body.booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
       } else {
         //
         // Bookings created from checkout with Stripe are temporary

@@ -96,6 +96,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [license, setLicense] = useState<string | null>(null)
+  const [depositPrice, setDepositPrice] = useState(0)
+  const [payDeposit, setPayDeposit] = useState(false)
   const adRequired = true
 
   const { presentPaymentSheet } = useStripe()
@@ -243,6 +245,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
       setPrice(_price)
+
+      const _depositPrice = _car.deposit > 0 ? await StripeService.convertPrice(_car.deposit) : 0
+      setDepositPrice(_depositPrice)
 
       const included = (val: number) => val === 0
 
@@ -658,7 +663,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
-            amount: price,
+            amount: payDeposit ? depositPrice : price,
             currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
@@ -733,7 +738,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         dropOffLocation: dropOffLocation._id as string,
         from,
         to,
-        status: payLater ? bookcarsTypes.BookingStatus.Pending : bookcarsTypes.BookingStatus.Paid,
+        status: payLater ? bookcarsTypes.BookingStatus.Pending : payDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid,
         cancellation,
         amendments,
         theftProtection,
@@ -741,6 +746,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         fullInsurance,
         additionalDriver,
         price: basePrice,
+        isDeposit: payDeposit,
       }
 
       if (adRequired && additionalDriver && addtionalDriverBirthDate) {
@@ -1083,15 +1089,32 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         checked={payLater}
                         onValueChange={(checked: boolean) => {
                           setPayLater(checked)
+                          setPayDeposit(!checked)
                         }}
                       />
                       <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
 
+                      {
+                        car.deposit > 0 && (
+                          <>
+                            <RadioButton
+                              label={i18n.t('PAY_DEPOSIT')}
+                              checked={payDeposit}
+                              onValueChange={(checked: boolean) => {
+                                setPayDeposit(checked)
+                                setPayLater(!checked)
+                              }}
+                            />
+                            <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
+                          </>
+                        )}
+
                       <RadioButton
                         label={i18n.t('PAY_ONLINE')}
-                        checked={!payLater}
+                        checked={!payLater && !payDeposit}
                         onValueChange={(checked: boolean) => {
                           setPayLater(!checked)
+                          setPayDeposit(!checked)
                         }}
                       />
                       <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
