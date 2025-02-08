@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 
 BookCars is a highly customizable, scalable, and cost-efficient solution for car rental businesses. Its robust feature set and open-source nature make it a sustainable choice for long-term growth in the rental industry.
 
-BookCars integrates Stripe and PayPal [payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways). You can choose either to use Stripe or PayPal for payments. If your country is not supported by [Stripe](https://stripe.com/global), you can check if it is supported by [PayPal](https://www.paypal.com/us/webapps/mpp/country-worldwide). And if so, you can use PayPal payment gateway instead of Stripe.
+BookCars integrates Stripe and PayPal [payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways). You can choose either to use Stripe or PayPal for payments. If [Stripe](https://stripe.com/global) isn't available in your country, simply check if [PayPal](https://www.paypal.com/us/webapps/mpp/country-worldwide) is supported and use it as an alternative for a smooth and secure payments.
 
 With BookCars, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe and PayPal for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single/multi-supplier operations looking for a scalable and cost-effective solution. You can deploy this solution for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 <!--
