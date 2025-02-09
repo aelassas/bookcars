@@ -21,7 +21,7 @@ function Update-NpmPackageVersion {
 
     # Validate version format (semantic versioning)
     if ($Version -notmatch '^\d+\.\d+\.\d+(-[\w\.]+)?(\+[\w\.]+)?$') {
-        Write-Error "Invalid version format. Please use semantic versioning (e.g., 1.0.0, 2.1.0-beta.1)"
+        Write-Host "Error: Invalid version format. Please use semantic versioning (e.g., 1.0.0, 2.1.0-beta.1)" -ForegroundColor Red
         return
     }
 
@@ -29,18 +29,18 @@ function Update-NpmPackageVersion {
     try {
         $resolvedPath = Resolve-Path $FolderPath -ErrorAction Stop
         if (-not (Test-Path $resolvedPath)) {
-            Write-Error "Folder path does not exist: $FolderPath"
+            Write-Host "Error: Folder path does not exist: $FolderPath" -ForegroundColor Red
             return
         }
     } catch {
-        Write-Error "Invalid folder path: $FolderPath"
+        Write-Host "Error: Invalid folder path: $FolderPath" -ForegroundColor Red
         return
     }
 
     # Check if package.json exists in the specified folder
     $packageJsonPath = Join-Path $resolvedPath "package.json"
     if (-not (Test-Path $packageJsonPath)) {
-        Write-Error "package.json not found in folder: $FolderPath"
+        Write-Host "Error package.json not found in folder: $FolderPath" -ForegroundColor Red
         return
     }
 
@@ -67,10 +67,10 @@ function Update-NpmPackageVersion {
         if ($LASTEXITCODE -eq 0) {
             Write-Host "Successfully updated package version from $oldVersion to $Version in folder: $FolderPath" -ForegroundColor Green
         } else {
-            Write-Error "npm version command failed: $result"
+            Write-Host "Error: npm version command failed: $result" -ForegroundColor Red
         }
     } catch {
-        Write-Error "Error updating package version: $_"
+        Write-Host "Error: An error occured while updating package version: $_" -ForegroundColor Red
     } finally {
         # Restore original location
         Set-Location $originalLocation
