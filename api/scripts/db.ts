@@ -4,9 +4,12 @@ import * as env from '../src/config/env.config'
 import * as logger from '../src/common/logger'
 import * as databaseHelper from '../src/common/databaseHelper'
 // import User from '../src/models/User'
+// import Car from '../src/models/Car'
 
 if (await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
   // await User.updateMany({ type: bookcarsTypes.UserType.Supplier }, { payLater: true })
+
+  // await Car.updateMany({ _id: { $ne: '67a9c53e1833956ec3fabb89' } }, { isDateBasedPrice: false, dateBasedPrices: [] })
 
   await databaseHelper.close()
   logger.info('Database connection closed')

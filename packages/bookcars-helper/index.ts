@@ -252,72 +252,103 @@ export const formatPrice = (price: number, currency: string, language: string) =
  * @returns {number}
  */
 export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
-  const _days = days(from, to)
+  let totalPrice = 0
+  const totalDays = days(from, to)
 
-  let remainingDays = _days
-  let _price = 0
+  if (car.isDateBasedPrice) {
+    let currentDate = new Date(from)
 
-  if (remainingDays >= 30) { // higher than one month
-    if (car.discountedMonthlyPrice || car.monthlyPrice) {
-      _price = (car.discountedMonthlyPrice || car.monthlyPrice)! * (Math.floor(_days / 30))
-      remainingDays = _days % 30
+    // Reset time to 00:00:00 before loop
+    currentDate.setHours(0, 0, 0, 0)
+    to.setHours(0, 0, 0, 0) // Ensure endDate is also normalized
+
+    // Loop until the day before endDate
+    while (currentDate.getTime() < to.getTime()) {
+      let applicableRate = (car.discountedDailyPrice || car.dailyPrice)
+
+      // Check if a custom rate applies
+      for (const dateBasedPrice of car.dateBasedPrices) {
+        // Ensure startDate and endDate are also normalized
+        const _startDate = new Date(dateBasedPrice.startDate!)
+        _startDate.setHours(0, 0, 0, 0)
+        const _endDate = new Date(dateBasedPrice.endDate!)
+        _endDate.setHours(0, 0, 0, 0)
+
+        if (currentDate.getTime() >= _startDate.getTime() && currentDate.getTime() <= _endDate.getTime()) {
+          applicableRate = Number(dateBasedPrice.dailyPrice)
+          break
+        }
+      }
+
+      totalPrice += applicableRate
+      currentDate.setDate(currentDate.getDate() + 1)
+      currentDate.setHours(0, 0, 0, 0); // Ensure time is reset
     }
+  } else {
+    let remainingDays = totalDays
 
-    if (remainingDays >= 7) {
-      if (car.discountedWeeklyPrice || car.weeklyPrice) {
-        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
-        remainingDays = remainingDays % 7
+    if (remainingDays >= 30) { // higher than one month
+      if (car.discountedMonthlyPrice || car.monthlyPrice) {
+        totalPrice = (car.discountedMonthlyPrice || car.monthlyPrice)! * (Math.floor(totalDays / 30))
+        remainingDays = totalDays % 30
       }
 
-      if (remainingDays >= 3) {
-        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
-          remainingDays = remainingDays % 3
+      if (remainingDays >= 7) {
+        if (car.discountedWeeklyPrice || car.weeklyPrice) {
+          totalPrice += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+          remainingDays = remainingDays % 7
         }
 
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        if (remainingDays >= 3) {
+          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+            remainingDays = remainingDays % 3
+          }
+
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        } else {
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        }
       } else {
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        if (remainingDays >= 3) {
+          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+            remainingDays = remainingDays % 3
+          }
+
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        } else {
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        }
       }
-    } else {
-      if (remainingDays >= 3) {
-        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
-          remainingDays = remainingDays % 3
+    } else { // lower than one month
+      if (remainingDays >= 7) {
+        if (car.discountedWeeklyPrice || car.weeklyPrice) {
+          totalPrice += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+          remainingDays = remainingDays % 7
         }
 
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
-      } else {
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
-      }
-    }
-  } else { // lower than one month
-    if (remainingDays >= 7) {
-      if (car.discountedWeeklyPrice || car.weeklyPrice) {
-        _price += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
-        remainingDays = remainingDays % 7
-      }
+        if (remainingDays >= 3) {
+          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+            remainingDays = remainingDays % 3
+          }
 
-      if (remainingDays >= 3) {
-        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
-          remainingDays = remainingDays % 3
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        } else {
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
         }
-
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
       } else {
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
-      }
-    } else {
-      if (remainingDays >= 3) {
-        if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-          _price += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
-          remainingDays = remainingDays % 3
+        if (remainingDays >= 3) {
+          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
+            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+            remainingDays = remainingDays % 3
+          }
+
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+        } else {
+          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
         }
-
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
-      } else {
-        _price += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
       }
     }
   }
@@ -325,26 +356,26 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
   // add extra options
   if (options) {
     if (options.cancellation && car.cancellation > 0) {
-      _price += car.cancellation
+      totalPrice += car.cancellation
     }
     if (options.amendments && car.amendments > 0) {
-      _price += car.amendments
+      totalPrice += car.amendments
     }
     if (options.theftProtection && car.theftProtection > 0) {
-      _price += car.theftProtection * _days
+      totalPrice += car.theftProtection * totalDays
     }
     if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-      _price += car.collisionDamageWaiver * _days
+      totalPrice += car.collisionDamageWaiver * totalDays
     }
     if (options.fullInsurance && car.fullInsurance > 0) {
-      _price += car.fullInsurance * _days
+      totalPrice += car.fullInsurance * totalDays
     }
     if (options.additionalDriver && car.additionalDriver > 0) {
-      _price += car.additionalDriver * _days
+      totalPrice += car.additionalDriver * totalDays
     }
   }
 
-  return _price
+  return totalPrice
 }
 
 /**

@@ -14,6 +14,7 @@ import User from '../src/models/User'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
+import DateBasedPrice from '../src/models/DateBasedPrice'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -355,6 +356,26 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
     const carImageName = 'bmw-x1.jpg'
     const carImagePath = path.join(__dirname, `./img/${carImageName}`)
+    const startDate1 = new Date()
+    const endDate1 = new Date(startDate1)
+    endDate1.setDate(endDate1.getDate() + 1)
+    const startDate2 = new Date(endDate1)
+    const endDate2 = new Date(startDate2)
+    endDate2.setDate(endDate2.getDate() + 1)
+
+    const dbp1 = new DateBasedPrice({
+      startDate: startDate1,
+      endDate: endDate1,
+      dailyPrice: 30,
+    })
+    await dbp1.save()
+    const dbp2 = new DateBasedPrice({
+      startDate: startDate2,
+      endDate: endDate2,
+      dailyPrice: 40,
+    })
+    await dbp2.save()
+
     let car = new Car({
       name: 'BMW X1',
       supplier: supplierId,
@@ -378,6 +399,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
       fullInsurance: 20,
       additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
+      isDateBasedPrice: true,
+      dateBasedPrices: [dbp1.id, dbp2.id],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
     if (!await helper.exists(carImage)) {
@@ -419,6 +442,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(await helper.exists(avatar)).toBeFalsy()
     expect(await helper.exists(contractFile)).toBeFalsy()
     await testHelper.deleteLocation(locationId)
+    const dateBasedPrices = await DateBasedPrice.find({ _id: { $in: [dbp1.id, dbp2.id] } })
+    expect(dateBasedPrices.length).toBe(0)
 
     // test success (supplier not found)
     res = await request(app)

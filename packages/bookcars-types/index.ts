@@ -180,6 +180,7 @@ export interface CreateCarPayload {
   minimumAge: number
   locations: string[]
 
+  // price fields
   dailyPrice: number
   discountedDailyPrice: number | null
   biWeeklyPrice: number | null
@@ -188,6 +189,10 @@ export interface CreateCarPayload {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
+
+  // date based price
+  isDateBasedPrice: boolean
+  dateBasedPrices: DateBasedPrice[]
 
   deposit: number
   available: boolean
@@ -421,6 +426,14 @@ export interface CountryInfo extends Country {
   locations?: Location[]
 }
 
+export interface DateBasedPrice {
+  _id?: string
+  startDate: Date | null
+  endDate: Date | null
+  dailyPrice: number | string
+}
+
+
 export interface Car {
   _id: string
   name: string
@@ -428,6 +441,7 @@ export interface Car {
   minimumAge: number
   locations: Location[]
 
+  // price fields
   dailyPrice: number
   discountedDailyPrice: number | null
   biWeeklyPrice: number | null
@@ -436,6 +450,10 @@ export interface Car {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
+
+  // date based price fields
+  isDateBasedPrice: boolean
+  dateBasedPrices: DateBasedPrice[]
 
   deposit: number
   available: boolean

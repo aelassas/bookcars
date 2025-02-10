@@ -32,6 +32,8 @@ const strings = new LocalizedStrings({
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Bientôt Disponible',
     FULLY_BOOKED: 'Déjà réservée',
+    IS_DATE_BASED_PRICE: 'Prix basé sur des dates',
+    DATE_BASED_PRICES: 'Prix par dates',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -62,6 +64,8 @@ const strings = new LocalizedStrings({
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Coming Soon',
     FULLY_BOOKED: 'Fully Booked',
+    IS_DATE_BASED_PRICE: 'Date Based Prices',
+    DATE_BASED_PRICES: 'Date Based Prices',
   },
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
@@ -92,6 +96,8 @@ const strings = new LocalizedStrings({
     CO2: 'CO2 (g/km)',
     COMING_SOON: 'Próximamente',
     FULLY_BOOKED: 'Ya Reservado',
+    IS_DATE_BASED_PRICE: 'Precio basado en fechas',
+    DATE_BASED_PRICES: 'Precios por fechas',
   },
 })
 

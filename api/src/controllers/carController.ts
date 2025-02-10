@@ -11,6 +11,7 @@ import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
+import DateBasedPrice from '../models/DateBasedPrice'
 
 /**
  * Create a Car.
@@ -29,7 +30,18 @@ export const create = async (req: Request, res: Response) => {
       throw new Error('Image not found in payload')
     }
 
-    const car = new Car(body)
+    // date based price
+    const { dateBasedPrices, ...carFields } = body
+    const dateBasedPriceIds: string[] = []
+    if (body.isDateBasedPrice) {
+      for (const dateBasePrice of dateBasedPrices) {
+        const dbp = new DateBasedPrice(dateBasePrice)
+        await dbp.save()
+        dateBasedPriceIds.push(dbp.id)
+      }
+    }
+
+    const car = new Car({ ...carFields, dateBasedPrices: dateBasedPriceIds })
     await car.save()
 
     const image = path.join(env.CDN_TEMP_CARS, body.image)
@@ -51,6 +63,16 @@ export const create = async (req: Request, res: Response) => {
     logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
+}
+
+const createDateBasedPrice = async (dateBasedPrice: bookcarsTypes.DateBasedPrice): Promise<string> => {
+  const dbp = new DateBasedPrice({
+    startDate: dateBasedPrice.startDate,
+    endDate: dateBasedPrice.endDate,
+    dailyPrice: dateBasedPrice.dailyPrice,
+  })
+  await dbp.save()
+  return dbp.id
 }
 
 /**
@@ -107,6 +129,8 @@ export const update = async (req: Request, res: Response) => {
         multimedia,
         rating,
         co2,
+        isDateBasedPrice,
+        dateBasedPrices,
       } = body
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
@@ -142,8 +166,43 @@ export const update = async (req: Request, res: Response) => {
       car.multimedia = multimedia
       car.rating = rating
       car.co2 = co2
+      car.isDateBasedPrice = isDateBasedPrice
+
+      //
+      // Date based prices
+      //
+
+      // Remove all date based prices not in body.dateBasedPrices
+      const dateBasedPriceIds = dateBasedPrices.filter((dbp) => !!dbp._id).map((dbp) => dbp._id)
+      const dateBasedPriceIdsToDelete = car.dateBasedPrices.filter((id) => !dateBasedPriceIds.includes(id.toString()))
+      if (dateBasedPriceIdsToDelete.length > 0) {
+        for (const dbpId of dateBasedPriceIdsToDelete) {
+          car.dateBasedPrices.splice(car.dateBasedPrices.indexOf(dbpId), 1)
+        }
+
+        await DateBasedPrice.deleteMany({ _id: { $in: dateBasedPriceIdsToDelete } })
+      }
+
+      // Add all new date based prices
+      for (const dateBasedPrice of dateBasedPrices.filter((dbp) => dbp._id === undefined)) {
+        const dbpId = await createDateBasedPrice(dateBasedPrice)
+        car.dateBasedPrices.push(new mongoose.Types.ObjectId(dbpId))
+      }
+
+      // Update existing date based prices
+      for (const dateBasedPrice of dateBasedPrices.filter((dbp) => !!dbp._id)) {
+        const dbp = await DateBasedPrice.findById(dateBasedPrice._id)
+        if (dbp) {
+          dbp.startDate = new Date(dateBasedPrice.startDate!)
+          dbp.endDate = new Date(dateBasedPrice.endDate!)
+          dbp.dailyPrice = Number(dateBasedPrice.dailyPrice)
+
+          await dbp.save()
+        }
+      }
 
       await car.save()
+
       return res.json(car)
     }
 
@@ -201,6 +260,10 @@ export const deleteCar = async (req: Request, res: Response) => {
     const car = await Car.findById(id)
     if (car) {
       await Car.deleteOne({ _id: id })
+
+      if (car.dateBasedPrices?.length > 0) {
+        await DateBasedPrice.deleteMany({ _id: { $in: car.dateBasedPrices } })
+      }
 
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
@@ -370,6 +433,7 @@ export const getCar = async (req: Request, res: Response) => {
   try {
     const car = await Car.findById(id)
       .populate<{ supplier: env.UserInfo }>('supplier')
+      .populate<{ dateBasedPrices: env.DateBasedPrice[] }>('dateBasedPrices')
       .populate<{ locations: env.LocationInfo[] }>({
         path: 'locations',
         populate: {
@@ -752,6 +816,20 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
         {
           $match: $supplierMatch,
+        },
+        {
+          $lookup: {
+            from: 'DateBasedPrice',
+            let: { dateBasedPrices: '$dateBasedPrices' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $in: ['$_id', '$$dateBasedPrices'] },
+                },
+              },
+            ],
+            as: 'dateBasedPrices',
+          },
         },
         // {
         //   $lookup: {
