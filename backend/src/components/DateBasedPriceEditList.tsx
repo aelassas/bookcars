@@ -49,16 +49,8 @@ const DateBasedPriceEditList = (
                     label={commonStrings.START_DATE}
                     required
                     onChange={(date) => {
-                      if (date) {
-                        if (dateBasedPrice.endDate && dateBasedPrice.endDate.getTime() < date.getTime()) {
-                          dateBasedPrice.endDate = null
-                        }
-
-                        // const _minDate = new Date(date)
-                        // _minDate.setDate(date.getDate() + 1)
-                        // setMinDate(_minDate)
-                      } else {
-                        // setMinDate(undefined)
+                      if (date && dateBasedPrice.endDate && dateBasedPrice.endDate.getTime() < date.getTime()) {
+                        dateBasedPrice.endDate = null
                       }
 
                       const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
@@ -79,16 +71,8 @@ const DateBasedPriceEditList = (
                     label={commonStrings.END_DATE}
                     required
                     onChange={(date) => {
-                      if (date) {
-                        if (dateBasedPrice.startDate && dateBasedPrice.startDate.getTime() > date.getTime()) {
-                          dateBasedPrice.startDate = null
-                        }
-
-                        // const _minDate = new Date(date)
-                        // _minDate.setDate(date.getDate() + 1)
-                        // setMinDate(_minDate)
-                      } else {
-                        // setMinDate(undefined)
+                      if (date && dateBasedPrice.startDate && dateBasedPrice.startDate.getTime() > date.getTime()) {
+                        dateBasedPrice.startDate = null
                       }
 
                       const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
