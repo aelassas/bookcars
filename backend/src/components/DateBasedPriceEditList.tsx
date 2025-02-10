@@ -49,7 +49,7 @@ const DateBasedPriceEditList = (
                     label={commonStrings.START_DATE}
                     required
                     onChange={(date) => {
-                      if (date && dateBasedPrice.endDate && dateBasedPrice.endDate.getTime() < date.getTime()) {
+                      if (date && dateBasedPrice.endDate && new Date(dateBasedPrice.endDate).getTime() < date.getTime()) {
                         dateBasedPrice.endDate = null
                       }
 
@@ -71,7 +71,7 @@ const DateBasedPriceEditList = (
                     label={commonStrings.END_DATE}
                     required
                     onChange={(date) => {
-                      if (date && dateBasedPrice.startDate && dateBasedPrice.startDate.getTime() > date.getTime()) {
+                      if (date && dateBasedPrice.startDate && new Date(dateBasedPrice.startDate).getTime() > date.getTime()) {
                         dateBasedPrice.startDate = null
                       }
 
@@ -108,7 +108,7 @@ const DateBasedPriceEditList = (
                 required
                 variant="standard"
                 autoComplete="off"
-                value={dateBasedPrice.dailyPrice}
+                value={dateBasedPrice.dailyPrice.toString()}
                 fullWidth
                 className="price"
               />
