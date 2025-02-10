@@ -517,6 +517,20 @@ export interface Booking extends Document {
  * @typedef {Car}
  * @extends {Document}
  */
+export interface DateBasedPrice extends Document {
+  startDate: Date
+  endDate: Date
+  dailyPrice: number
+}
+
+/**
+ * Car Document.
+ *
+ * @export
+ * @interface Car
+ * @typedef {Car}
+ * @extends {Document}
+ */
 export interface Car extends Document {
   name: string
   supplier: Types.ObjectId
@@ -531,6 +545,9 @@ export interface Car extends Document {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
+
+  isDateBasedPrice: boolean
+  dateBasedPrices: Types.ObjectId[]
 
   deposit: number
   available: boolean
