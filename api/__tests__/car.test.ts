@@ -12,6 +12,7 @@ import * as testHelper from './testHelper'
 import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
+import DateBasedPrice from '../src/models/DateBasedPrice'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -25,7 +26,8 @@ let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
 let LOCATION1_ID: string
 let LOCATION2_ID: string
-let CAR_ID: string
+let CAR1_ID: string
+let CAR2_ID: string
 
 //
 // Connecting and initializing the database before running the test suite
@@ -113,6 +115,8 @@ describe('POST /api/create-car', () => {
       rating: 3,
       comingSoon: true,
       fullyBooked: true,
+      isDateBasedPrice: false,
+      dateBasedPrices: [],
     }
     let res = await request(app)
       .post('/api/create-car')
@@ -150,7 +154,48 @@ describe('POST /api/create-car', () => {
     expect(car.range).toBe(payload.range)
     expect(car.multimedia).toStrictEqual(payload.multimedia)
     expect(car.rating).toBe(payload.rating)
-    CAR_ID = res.body._id
+    CAR1_ID = res.body._id
+
+    // test success date based price
+    if (!await helper.exists(tempImage)) {
+      await fs.copyFile(IMAGE1_PATH, tempImage)
+    }
+    const startDate1 = new Date()
+    const endDate1 = new Date(startDate1)
+    endDate1.setDate(endDate1.getDate() + 1)
+    const startDate2 = new Date(endDate1)
+    const endDate2 = new Date(startDate2)
+    endDate2.setDate(endDate2.getDate() + 1)
+
+    payload.name = 'BMW X3'
+    payload.isDateBasedPrice = true
+    payload.dateBasedPrices = [
+      {
+        startDate: startDate1,
+        endDate: endDate1,
+        dailyPrice: 30,
+      },
+      {
+        startDate: startDate2,
+        endDate: endDate2,
+        dailyPrice: 40,
+      },
+    ]
+    res = await request(app)
+      .post('/api/create-car')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBeDefined()
+    CAR2_ID = res.body._id
+    expect(res.body.isDateBasedPrice).toBeTruthy()
+    expect(res.body.dateBasedPrices.length).toBe(2)
+    for (const dbp of res.body.dateBasedPrices) {
+      const dailyBasedPrice = await DateBasedPrice.findById(dbp)
+      expect(dailyBasedPrice).toBeTruthy()
+    }
+    payload.isDateBasedPrice = false
+    payload.dateBasedPrices = []
 
     // test failure (no image)
     payload.image = undefined
@@ -177,8 +222,42 @@ describe('PUT /api/update-car', () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success
+    const startDate1 = new Date()
+    startDate1.setDate(startDate1.getDate() + 1)
+    const endDate1 = new Date(startDate1)
+    endDate1.setDate(endDate1.getDate() + 2)
+    const startDate2 = new Date(endDate1)
+    const endDate2 = new Date(startDate2)
+    endDate2.setDate(endDate2.getDate() + 2)
+
+    const startDate3 = new Date(endDate2)
+    const endDate3 = new Date(startDate3)
+    endDate3.setDate(endDate3.getDate() + 2)
+
+    const car2 = await Car.findById(CAR2_ID)
+    expect(car2?.dateBasedPrices.length).toBe(2)
+
+    const dateBasedPrices: bookcarsTypes.DateBasedPrice[] = [
+      {
+        _id: car2?.dateBasedPrices[0].toString(),
+        startDate: startDate1,
+        endDate: endDate1,
+        dailyPrice: 70,
+      },
+      {
+        startDate: startDate2,
+        endDate: endDate2,
+        dailyPrice: 80,
+      },
+      {
+        startDate: startDate3,
+        endDate: endDate3,
+        dailyPrice: 90,
+      },
+    ]
+
     const payload: bookcarsTypes.UpdateCarPayload = {
-      _id: CAR_ID,
+      _id: CAR2_ID,
       name: 'BMW X5',
       supplier: SUPPLIER2_ID,
       minimumAge: 23,
@@ -211,6 +290,8 @@ describe('PUT /api/update-car', () => {
       rating: 4,
       comingSoon: false,
       fullyBooked: false,
+      isDateBasedPrice: true,
+      dateBasedPrices,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -250,6 +331,52 @@ describe('PUT /api/update-car', () => {
     expect(car.rating).toBe(payload.rating)
     expect(car.comingSoon).toBe(payload.comingSoon)
     expect(car.fullyBooked).toBe(payload.fullyBooked)
+    expect(car.isDateBasedPrice).toBe(payload.isDateBasedPrice)
+    expect(car.dateBasedPrices.length).toBe(payload.dateBasedPrices.length)
+
+    // test success (dateBasedPrices undefined)
+    const car3 = new Car({
+      name: 'Renault Clio',
+      supplier: SUPPLIER1_ID,
+      minimumAge: 21,
+      locations: [LOCATION1_ID],
+      dailyPrice: 78,
+      deposit: 950,
+      available: false,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      image: 'clio.png',
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
+      range: bookcarsTypes.CarRange.Midi,
+    })
+    await car3.save()
+
+    payload._id = car3.id
+    payload.dateBasedPrices[0] = {
+      _id: testHelper.GetRandromObjectIdAsString(),
+      startDate: startDate1,
+      endDate: endDate1,
+      dailyPrice: 23,
+    }
+    res = await request(app)
+      .put('/api/update-car')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.dateBasedPrices.length).toBe(2)
+    await car3.deleteOne()
+    await DateBasedPrice.deleteMany({ _id: { $in: res.body.dateBasedPrices } })
+    payload._id = CAR2_ID
 
     // test success (booking not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
@@ -274,12 +401,12 @@ describe('POST /api/delete-car-image/:id', () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success
-    const car = await Car.findById(CAR_ID)
+    const car = await Car.findById(CAR1_ID)
     const image = path.join(env.CDN_CARS, car?.image as string)
     let imageExists = await helper.exists(image)
     expect(imageExists).toBeTruthy()
     let res = await request(app)
-      .post(`/api/delete-car-image/${CAR_ID}`)
+      .post(`/api/delete-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     imageExists = await helper.exists(image)
@@ -289,7 +416,7 @@ describe('POST /api/delete-car-image/:id', () => {
     car!.image = ''
     await car?.save()
     res = await request(app)
-      .post(`/api/delete-car-image/${CAR_ID}`)
+      .post(`/api/delete-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
@@ -297,7 +424,7 @@ describe('POST /api/delete-car-image/:id', () => {
     car!.image = `${nanoid()}.jpg`
     await car?.save()
     res = await request(app)
-      .post(`/api/delete-car-image/${CAR_ID}`)
+      .post(`/api/delete-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
@@ -349,14 +476,14 @@ describe('POST /api/update-car-image/:id', () => {
 
     // test success
     let res = await request(app)
-      .post(`/api/update-car-image/${CAR_ID}`)
+      .post(`/api/update-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', IMAGE2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const imageExists = await helper.exists(path.join(env.CDN_CARS, filename))
     expect(imageExists).toBeTruthy()
-    const car = await Car.findById(CAR_ID)
+    const car = await Car.findById(CAR1_ID)
     expect(car).not.toBeNull()
     expect(car?.image).toBe(filename)
 
@@ -364,7 +491,7 @@ describe('POST /api/update-car-image/:id', () => {
     car!.image = `${nanoid()}.jpg`
     await car?.save()
     res = await request(app)
-      .post(`/api/update-car-image/${CAR_ID}`)
+      .post(`/api/update-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', IMAGE2_PATH)
     expect(res.statusCode).toBe(200)
@@ -373,7 +500,7 @@ describe('POST /api/update-car-image/:id', () => {
 
     // test failure (image not attached)
     res = await request(app)
-      .post(`/api/update-car-image/${CAR_ID}`)
+      .post(`/api/update-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -386,7 +513,7 @@ describe('POST /api/update-car-image/:id', () => {
 
     // test success (car found)
     res = await request(app)
-      .post(`/api/update-car-image/${CAR_ID}`)
+      .post(`/api/update-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', IMAGE1_PATH)
     expect(res.statusCode).toBe(200)
@@ -432,7 +559,12 @@ describe('GET /api/car/:id/:language', () => {
   it('should return a car', async () => {
     // test success
     let res = await request(app)
-      .get(`/api/car/${CAR_ID}/${testHelper.LANGUAGE}`)
+      .get(`/api/car/${CAR1_ID}/${testHelper.LANGUAGE}`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.name).toBe('BMW X1')
+
+    res = await request(app)
+      .get(`/api/car/${CAR2_ID}/${testHelper.LANGUAGE}`)
     expect(res.statusCode).toBe(200)
     expect(res.body.name).toBe('BMW X5')
 
@@ -799,14 +931,14 @@ describe('GET /api/check-car/:id', () => {
 
     // test success (car related not to a booking)
     let res = await request(app)
-      .get(`/api/check-car/${CAR_ID}`)
+      .get(`/api/check-car/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
     // test success (car related to a booking)
     const booking = new Booking({
       supplier: SUPPLIER1_ID,
-      car: CAR_ID,
+      car: CAR1_ID,
       driver: testHelper.getUserId(),
       pickupLocation: LOCATION1_ID,
       dropOffLocation: LOCATION1_ID,
@@ -823,7 +955,7 @@ describe('GET /api/check-car/:id', () => {
     })
     await booking.save()
     res = await request(app)
-      .get(`/api/check-car/${CAR_ID}`)
+      .get(`/api/check-car/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
     await Booking.deleteOne({ _id: booking._id })
@@ -844,12 +976,23 @@ describe('DELETE /api/delete-car/:id', () => {
 
     // test success
     let res = await request(app)
-      .delete(`/api/delete-car/${CAR_ID}`)
+      .delete(`/api/delete-car/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
+    // test success (date based prices)
+    let car = await Car.findById(CAR2_ID)
+    let dbps = await DateBasedPrice.find({ _id: { $in: car?.dateBasedPrices } })
+    expect(dbps.length).toBe(3)
+    res = await request(app)
+      .delete(`/api/delete-car/${CAR2_ID}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+    dbps = await DateBasedPrice.find({ _id: { $in: car?.dateBasedPrices } })
+    expect(dbps.length).toBe(0)
+
     // test success (no image)
-    let car = new Car({
+    car = new Car({
       name: 'BMW X1',
       supplier: SUPPLIER1_ID,
       minimumAge: 21,

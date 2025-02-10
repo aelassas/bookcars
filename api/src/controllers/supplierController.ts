@@ -13,6 +13,7 @@ import Notification from '../models/Notification'
 import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
+import DateBasedPrice from '../models/DateBasedPrice'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
 
@@ -145,6 +146,10 @@ export const deleteSupplier = async (req: Request, res: Response) => {
       const cars = await Car.find({ supplier: id })
       await Car.deleteMany({ supplier: id })
       for (const car of cars) {
+        if (car.dateBasedPrices?.length > 0) {
+          await DateBasedPrice.deleteMany({ _id: { $in: car.dateBasedPrices } })
+        }
+
         if (car.image) {
           const image = path.join(env.CDN_CARS, car.image)
           if (await helper.exists(image)) {

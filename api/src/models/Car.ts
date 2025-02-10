@@ -54,6 +54,16 @@ const carSchema = new Schema<env.Car>(
     discountedMonthlyPrice: {
       type: Number,
     },
+
+    // date based price fields
+    isDateBasedPrice: {
+      type: Boolean,
+      default: false,
+    },
+    dateBasedPrices: {
+      type: [Schema.Types.ObjectId],
+      ref: 'DateBasedPrice',
+    },
     // --------- end of price fields ---------
 
     deposit: {

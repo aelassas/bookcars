@@ -1,0 +1,32 @@
+div.date-based-price-edit-list {
+  padding: 20px;
+  background-color: #f7f7f7;
+}
+
+div.date-based-price-edit-list span.title {
+  color: #919191;
+}
+
+div.date-based-price-edit-list div.date-range {
+  display: flex;
+  flex-direction: row;
+}
+
+div.date-based-price-edit-list div.date-range .date,
+div.date-based-price-edit-list .price {
+  padding-right: 24px;
+}
+
+div.date-based-price-edit-list div.rows div.row div.row-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+div.date-based-price-edit-list div.global-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
