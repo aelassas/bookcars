@@ -9,7 +9,7 @@ import * as databaseHelper from '../src/common/databaseHelper'
 if (await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
   // await User.updateMany({ type: bookcarsTypes.UserType.Supplier }, { payLater: true })
 
-  // await Car.updateMany({ _id: { $ne: '67a9c53e1833956ec3fabb89' } }, { isDateBasedPrice: false, dateBasedPrices: [] })
+  // await Car.updateMany({}, { isDateBasedPrice: false, dateBasedPrices: [] })
 
   await databaseHelper.close()
   logger.info('Database connection closed')
