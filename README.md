@@ -38,6 +38,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Ready for one or multiple suppliers
 * Car fleet management
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * Location, country, parking spots and map features
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
@@ -79,7 +80,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-![QR](https://bookcars.github.io/content/qr-code-5.6.png)
+![QR](https://bookcars.github.io/content/qr-code-5.7.png)
 
 #### How to install the Mobile App on Android
 
@@ -91,7 +92,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-5.6.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-5.7.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
@@ -122,6 +123,10 @@ You can install the Android App by downloading the APK and installing it on any 
 13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 14. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
 15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+    1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)
+    2. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)
+    3. [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
+    4. [Calculation Algorithm](https://github.com/aelassas/bookcars/wiki/Price-Calculation#calculation-algorithm)
 16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
