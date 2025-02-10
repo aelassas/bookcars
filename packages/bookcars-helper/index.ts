@@ -260,10 +260,10 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
 
     // Reset time to 00:00:00 before loop
     currentDate.setHours(0, 0, 0, 0)
-    to.setHours(0, 0, 0, 0) // Ensure endDate is also normalized
 
-    // Loop until the day before endDate
-    while (currentDate.getTime() < to.getTime()) {
+    // Loop until the last day is reached
+    let currentDay = 1
+    while (currentDay <= totalDays) {
       let applicableRate = (car.discountedDailyPrice || car.dailyPrice)
 
       // Check if a custom rate applies
@@ -283,6 +283,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
       totalPrice += applicableRate
       currentDate.setDate(currentDate.getDate() + 1)
       currentDate.setHours(0, 0, 0, 0); // Ensure time is reset
+      currentDay += 1
     }
   } else {
     let remainingDays = totalDays
