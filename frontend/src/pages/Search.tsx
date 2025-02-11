@@ -272,7 +272,6 @@ const Search = () => {
                     dropOffLocation={dropOffLocation}
                     from={from}
                     to={to}
-                    accordion
                     collapse
                     onSubmit={handleCarFilterSubmit}
                   />
