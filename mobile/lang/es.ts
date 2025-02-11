@@ -246,4 +246,6 @@ export const es = {
   HIDE_FILTERS: 'Ocultar filtros',
   COMING_SOON: 'Próximamente',
   FULLY_BOOKED: 'Ya Reservado',
+  MIN_PICK_UP_HOURS_ERROR: `La hora de recogida del vehículo debe ser al menos ${env.MIN_PICK_UP_HOURS} hora${env.MIN_PICK_UP_HOURS > 1 ? 's' : ''} en el futuro`,
+  MIN_RENTAL_HOURS_ERROR: `Debe haber al menos ${env.MIN_RENTAL_HOURS} hora${env.MIN_RENTAL_HOURS > 1 ? 's' : ''} entre la recogida y la devolución del vehículo`,
 }
