@@ -67,6 +67,30 @@ const getPaymentGateway = () => {
 
 const PAYMENT_GATEWAY = getPaymentGateway()
 
+/**
+ * Minimum rental duration in hours between pick up and drop off. Default is 1 hour.
+ * Should be equal to 1 hour or higher.
+ *
+ * @type {number}
+ */
+let MIN_RENTAL_HOURS = Number.parseInt(String(import.meta.env.VITE_BC_MIN_RENTAL_HOURS), 10) || 1
+
+if (MIN_RENTAL_HOURS < 1) {
+  MIN_RENTAL_HOURS = 1
+}
+
+/**
+ * Minimum required time in hours before pick-up. Default is 1 hour.
+ * Should be equal to 1 hour or higher.
+ *
+ * @type {number}
+ */
+let MIN_PICK_UP_HOURS = Number.parseInt(String(import.meta.env.VITE_BC_MIN_PICK_UP_HOURS), 10) || 1
+
+if (MIN_PICK_UP_HOURS < 1) {
+  MIN_PICK_UP_HOURS = 1
+}
+
 const env = {
   isMobile: window.innerWidth <= 960,
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
@@ -129,6 +153,8 @@ const env = {
    */
   MIN_LOCATIONS: Number.parseInt(String(import.meta.env.VITE_BC_MIN_LOCATIONS), 10) || 4,
   HIDE_SUPPLIERS: (import.meta.env.VITE_BC_HIDE_SUPPLIERS && import.meta.env.VITE_BC_HIDE_SUPPLIERS.toLowerCase()) === 'true',
+  MIN_RENTAL_HOURS,
+  MIN_PICK_UP_HOURS,
 }
 
 export default env
