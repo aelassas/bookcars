@@ -55,14 +55,22 @@ const SearchForm = ({
 
   useEffect(() => {
     const _from = new Date()
-    _from.setDate(_from.getDate() + 3)
+    if (env.MIN_PICK_UP_HOURS < 72) {
+      _from.setDate(_from.getDate() + 3)
+    } else {
+      _from.setDate(_from.getDate() + Math.ceil(env.MIN_PICK_UP_HOURS / 24) + 1)
+    }
     _from.setHours(10)
     _from.setMinutes(0)
     _from.setSeconds(0)
     _from.setMilliseconds(0)
 
     const _to = new Date(_from)
-    _to.setDate(_to.getDate() + 3)
+    if (env.MIN_RENTAL_HOURS < 72) {
+      _to.setDate(_to.getDate() + 3)
+    } else {
+      _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+    }
 
     let __minDate = new Date()
     __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
@@ -116,7 +124,11 @@ const SearchForm = ({
     if (from && to) {
       if (from.getTime() > to.getTime()) {
         const _to = new Date(from)
-        _to.setDate(_to.getDate() + 1)
+        if (env.MIN_RENTAL_HOURS < 24) {
+          _to.setDate(_to.getDate() + 1)
+        } else {
+          _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+        }
         setTo(_to)
       } else if (to.getTime() - from.getTime() < env.MIN_RENTAL_HOURS * 60 * 60 * 1000) {
         setMinRentalHoursError(true)
