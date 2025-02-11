@@ -114,7 +114,11 @@ const SearchForm = ({
     }
 
     if (from && to) {
-      if (to.getTime() - from.getTime() < env.MIN_RENTAL_HOURS * 60 * 60 * 1000) {
+      if (from.getTime() > to.getTime()) {
+        const _to = new Date(from)
+        _to.setDate(_to.getDate() + 1)
+        setTo(_to)
+      } else if (to.getTime() - from.getTime() < env.MIN_RENTAL_HOURS * 60 * 60 * 1000) {
         setMinRentalHoursError(true)
       } else {
         setMinRentalHoursError(false)
