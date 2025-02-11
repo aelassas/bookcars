@@ -21,6 +21,8 @@ import {
   BC_DEPOSIT_FILTER_VALUE_2,
   BC_DEPOSIT_FILTER_VALUE_3,
   BC_WEBSITE_NAME,
+  BC_MIN_PICK_UP_HOURS,
+  BC_MIN_RENTAL_HOURS,
 } from '@env'
 
 /**
@@ -259,3 +261,31 @@ export const DEPOSIT_FILTER_VALUE_2: number = Number(BC_DEPOSIT_FILTER_VALUE_2)
  * @type {number}
  */
 export const DEPOSIT_FILTER_VALUE_3: number = Number(BC_DEPOSIT_FILTER_VALUE_3)
+
+/**
+ * Minimum rental duration in hours between pick up and drop off. Default is 1 hour.
+ * Should be equal to 1 hour or higher.
+ *
+ * @type {number}
+ */
+let _MIN_RENTAL_HOURS = Number.parseInt(BC_MIN_RENTAL_HOURS, 10) || 1
+
+if (_MIN_RENTAL_HOURS < 1) {
+  _MIN_RENTAL_HOURS = 1
+}
+
+export const MIN_RENTAL_HOURS: number = _MIN_RENTAL_HOURS
+
+/**
+ * Minimum required time in hours before pick-up. Default is 1 hour.
+ * Should be equal to 1 hour or higher.
+ *
+ * @type {number}
+ */
+let _MIN_PICK_UP_HOURS = Number.parseInt(BC_MIN_PICK_UP_HOURS, 10) || 1
+
+if (_MIN_PICK_UP_HOURS < 1) {
+  _MIN_PICK_UP_HOURS = 1
+}
+
+export const MIN_PICK_UP_HOURS: number = _MIN_PICK_UP_HOURS

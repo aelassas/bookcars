@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
-
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { addHours } from 'date-fns'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
@@ -44,35 +44,6 @@ const SearchForm = (
 ) => {
   const isFocused = useIsFocused()
 
-  const dateOffset = 3
-
-  const _fromDate = __fromDate || new Date()
-  if (!__fromDate) {
-    _fromDate.setDate(_fromDate.getDate() + 1)
-    _fromDate.setHours(0)
-    _fromDate.setMinutes(0)
-    _fromDate.setSeconds(0)
-    _fromDate.setMilliseconds(0)
-  }
-
-  const _fromTime = __fromTime || new Date(_fromDate)
-  if (!__fromTime) {
-    _fromTime.setHours(10)
-  }
-
-  const _toDate = __toDate || new Date(_fromDate)
-  if (!__toDate) {
-    _toDate.setDate(_toDate.getDate() + dateOffset)
-  }
-
-  const _toTime = __toTime || new Date(_toDate)
-  if (!__toTime) {
-    _toTime.setHours(10)
-  }
-
-  const _minDate = new Date()
-  _minDate.setDate(_minDate.getDate() + 2)
-
   const [pickupLocationId, setPickupLocationId] = useState(pickupLocation || '')
   const [dropOffLocationId, setDropOffLocationId] = useState(dropOffLocation || '')
   const [sameLocation, setSameLocation] = useState(pickupLocation === dropOffLocation)
@@ -81,13 +52,16 @@ const SearchForm = (
 
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [blur, setBlur] = useState(false)
-  const [minDate, setMinDate] = useState(_minDate)
-  const [fromDate, setFromDate] = useState<Date | undefined>(_fromDate)
-  const [fromTime, setFromTime] = useState<Date | undefined>(_fromTime)
-  const [toTime, setToTime] = useState<Date | undefined>(_toTime)
-  const [toDate, setToDate] = useState<Date | undefined>(_toDate)
+  const [fromMinDate, setFromMinDate] = useState<Date | undefined>()
+  const [minDate, setMinDate] = useState<Date | undefined>()
+  const [fromDate, setFromDate] = useState<Date | undefined>()
+  const [fromTime, setFromTime] = useState<Date | undefined>()
+  const [toDate, setToDate] = useState<Date | undefined>()
+  const [toTime, setToTime] = useState<Date | undefined>()
   const [init, setInit] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [minPickupHoursError, setMinPickupHoursError] = useState(false)
+  const [minRentalHoursError, setMinRentalHoursError] = useState(false)
 
   useEffect(() => {
     if (pickupLocation) {
@@ -100,14 +74,54 @@ const SearchForm = (
     i18n.locale = _language
     setLanguage(_language)
 
+    Keyboard.addListener('keyboardDidHide', () => {
+      setBlur(true)
+    })
+
+    const _fromDate = __fromDate || new Date()
+    if (!__fromDate) {
+      if (env.MIN_PICK_UP_HOURS < 72) {
+        _fromDate.setDate(_fromDate.getDate() + 3)
+      } else {
+        _fromDate.setDate(_fromDate.getDate() + Math.ceil(env.MIN_PICK_UP_HOURS / 24) + 1)
+      }
+      _fromDate.setHours(0)
+      _fromDate.setMinutes(0)
+      _fromDate.setSeconds(0)
+      _fromDate.setMilliseconds(0)
+    }
+
+    const _fromTime = __fromTime || new Date(_fromDate)
+    if (!__fromTime) {
+      _fromTime.setHours(10)
+    }
+
+    const _toDate = __toDate || new Date(_fromDate)
+    if (!__toDate) {
+      if (env.MIN_RENTAL_HOURS < 72) {
+        _toDate.setDate(_toDate.getDate() + 3)
+      } else {
+        _toDate.setDate(_toDate.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+      }
+    }
+
+    const _toTime = __toTime || new Date(_toDate)
+    if (!__toTime) {
+      _toTime.setHours(10)
+    }
+
+    let _minDate = new Date()
+    _minDate = addHours(_minDate, env.MIN_RENTAL_HOURS)
+
+    setMinDate(_minDate)
     setFromDate(_fromDate)
     setFromTime(_fromTime)
     setToDate(_toDate)
     setToTime(_toTime)
 
-    Keyboard.addListener('keyboardDidHide', () => {
-      setBlur(true)
-    })
+    let __minDate = new Date()
+    __minDate = addHours(__minDate, env.MIN_PICK_UP_HOURS)
+    setFromMinDate(__minDate)
 
     setInit(true)
     setVisible(true)
@@ -185,10 +199,20 @@ const SearchForm = (
       return
     }
 
+    const now = Date.now()
     const from = helper.dateTime(fromDate, fromTime)
     const to = helper.dateTime(toDate, toTime)
 
-    const now = Date.now()
+    if (from.getTime() - now < env.MIN_PICK_UP_HOURS * 60 * 60 * 1000) {
+      setMinPickupHoursError(true)
+      return
+    }
+
+    if (to.getTime() - from.getTime() < env.MIN_RENTAL_HOURS * 60 * 60 * 1000) {
+      setMinRentalHoursError(true)
+      return
+    }
+
     const params = {
       pickupLocation: pickupLocationId,
       dropOffLocation: dropOffLocationId,
@@ -241,26 +265,31 @@ const SearchForm = (
           style={styles.component}
           label={i18n.t('FROM_DATE')}
           value={fromDate}
-          minDate={_fromDate}
+          minDate={fromMinDate}
           // maxDate={maxDate}
           hideClearButton
           size={size || undefined}
           onChange={(date) => {
             if (date) {
-              if (toDate && toDate.getTime() <= date.getTime()) {
-                setToDate(undefined)
-              }
-
-              const __minDate = new Date(date)
-              __minDate.setDate(date.getDate() + 1)
-              setMinDate(__minDate)
-              if (toDate!.getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
+              setMinPickupHoursError(false)
+              setMinRentalHoursError(false)
+              if (date.getTime() > toDate!.getTime()) {
                 const _to = new Date(date)
-                _to.setDate(_to.getDate() + 3)
+                if (env.MIN_RENTAL_HOURS < 24) {
+                  _to.setDate(_to.getDate() + 1)
+                } else {
+                  _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+                }
                 setToDate(_to)
               }
+
+              let __minDate = new Date(date)
+              __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+              setMinDate(__minDate)
             } else {
-              setMinDate(_minDate)
+              let __minDate = new Date()
+              __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+              setMinDate(__minDate)
             }
 
             setFromDate(date)
@@ -272,16 +301,21 @@ const SearchForm = (
         <DateTimePicker
           mode="time"
           locale={language}
-          style={styles.component}
+          style={minPickupHoursError ? styles.timeComponent : styles.component}
           label={i18n.t('FROM_TIME')}
           value={fromTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
+            setMinPickupHoursError(false)
+            setMinRentalHoursError(false)
+
             setFromTime(time)
           }}
           onPress={blurLocations}
           backgroundColor={backgroundColor}
+          error={minPickupHoursError}
+          helperText={(minPickupHoursError && i18n.t('MIN_PICK_UP_HOURS_ERROR')) || ''}
         />
 
         <DateTimePicker
@@ -295,6 +329,9 @@ const SearchForm = (
           size={size || undefined}
           onChange={(date) => {
             if (date) {
+              setMinPickupHoursError(false)
+              setMinRentalHoursError(false)
+
               setToDate(date)
             }
           }}
@@ -305,16 +342,21 @@ const SearchForm = (
         <DateTimePicker
           mode="time"
           locale={language}
-          style={styles.component}
+          style={minRentalHoursError ? styles.timeComponent : styles.component}
           label={i18n.t('TO_TIME')}
           value={toTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
+            setMinPickupHoursError(false)
+            setMinRentalHoursError(false)
+
             setToTime(time)
           }}
           onPress={blurLocations}
           backgroundColor={backgroundColor}
+          error={minRentalHoursError}
+          helperText={(minRentalHoursError && i18n.t('MIN_RENTAL_HOURS_ERROR')) || ''}
         />
 
         <Button
@@ -376,6 +418,11 @@ const styles = StyleSheet.create({
   component: {
     alignSelf: 'stretch',
     margin: 10,
+  },
+  timeComponent: {
+    alignSelf: 'stretch',
+    marginHorizontal: 10,
+    marginBottom: 40,
   },
 })
 
