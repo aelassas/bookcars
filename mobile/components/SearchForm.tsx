@@ -110,7 +110,7 @@ const SearchForm = (
       _toTime.setHours(10)
     }
 
-    let _minDate = new Date()
+    let _minDate = new Date(_fromDate)
     _minDate = addHours(_minDate, env.MIN_RENTAL_HOURS)
 
     setMinDate(_minDate)
