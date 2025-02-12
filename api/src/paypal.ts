@@ -24,7 +24,14 @@ export const getToken = async () => {
   return res.data.access_token
 }
 
-export const createOrder = async (bookingId: string, amount: number, currency: string, name: string, description: string) => {
+export const createOrder = async (
+  bookingId: string,
+  amount: number,
+  currency: string,
+  name: string,
+  description: string,
+  countryCode: string,
+) => {
   const price = helper.formatPayPalPrice(amount)
   const token = await getToken()
   const res = await axios.post(
@@ -33,12 +40,11 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
       intent: 'CAPTURE',
       payer: {
         address: {
-          country_code: 'US', // Only the country is required, prevents full address collection
+          country_code: countryCode, // Only the country is required, prevents full address collection
         },
       },
       application_context: {
         brand_name: env.WEBSITE_NAME,
-        locale: 'en-US',
         shipping_preference: 'NO_SHIPPING', // Removes shipping address
         user_action: 'PAY_NOW', // Skips review page
         payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED', // Ensures instant payment
@@ -70,14 +76,6 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
                 value: price,
               },
               quantity: '1',
-              // category: 'cars',
-              // sku: 'sku01',
-              // image_url: 'https://example.com/static/images/items/1/tshirt_green.jpg',
-              // url: 'https://example.com/url-to-the-item-being-purchased-1',
-              // upc: {
-              //   type: 'UPC-A',
-              //   code: '123456789012',
-              // },
             },
           ],
         },
