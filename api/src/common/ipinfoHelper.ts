@@ -34,7 +34,7 @@ export const getClientIp = (req: Request): string => {
  */
 export const getCountryCode = async (ip: string): Promise<string> => {
   let ipinfoURI = `https://ipinfo.io/${ip}/json`
-  if (env.IPINFO_API_KEY) {
+  if (env.IPINFO_API_KEY && env.IPINFO_API_KEY !== 'IPINFO_API_KEY') {
     ipinfoURI = `https://ipinfo.io/${ip}/json?token=${env.IPINFO_API_KEY}`
   }
   try {
