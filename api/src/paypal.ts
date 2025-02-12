@@ -31,16 +31,21 @@ export const createOrder = async (bookingId: string, amount: number, currency: s
     `${PAYPAL_API}/v2/checkout/orders`,
     {
       intent: 'CAPTURE',
+      payer: {
+        address: {
+          country_code: 'US', // Only the country is required, prevents full address collection
+        },
+      },
+      application_context: {
+        brand_name: env.WEBSITE_NAME,
+        locale: 'en-US',
+        shipping_preference: 'NO_SHIPPING', // Removes shipping address
+        user_action: 'PAY_NOW', // Skips review page
+        payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED', // Ensures instant payment
+      },
       payment_source: {
-        paypal: {
-          experience_context: {
-            payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
-            landing_page: 'LOGIN',
-            shipping_preference: 'GET_FROM_FILE',
-            user_action: 'PAY_NOW',
-            // return_url: `${helper.trimEnd(env.FRONTEND_HOST, '/')}/checkout-session/${bookingId}`,
-            // cancel_url: env.FRONTEND_HOST,
-          },
+        card: {
+          billing_address: null, // Explicitly disable billing address
         },
       },
       purchase_units: [
