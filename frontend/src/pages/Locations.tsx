@@ -26,8 +26,8 @@ const Locations = () => {
     <Layout onLoad={onLoad} strict={false}>
       <div className="locations">
         <Map
-          position={new L.LatLng(34.0268755, 1.6528399999999976)}
-          initialZoom={5}
+          position={new L.LatLng(env.MAP_LATITUDE, env.MAP_LONGITUDE)}
+          initialZoom={env.MAP_ZOOM}
           locations={locations}
           onSelelectPickUpLocation={async (locationId) => {
             setPickupLocation(locationId)
