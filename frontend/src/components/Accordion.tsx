@@ -24,15 +24,18 @@ const Accordion = ({
     const panel = e.currentTarget.nextElementSibling as HTMLDivElement
     const _collapse = panel.classList.contains('panel-collapse')
 
-    if (panel.style.maxHeight || _collapse) {
+    if (panel.style.minHeight || _collapse) {
       if (_collapse) {
         panel.classList.remove('panel-collapse')
         panel.classList.add('panel')
+        panel.style.minHeight = ''
+        panel.style.maxHeight = '0'
       }
-
-      panel.style.maxHeight = ''
     } else {
-      panel.style.maxHeight = `${panel.scrollHeight}px`
+      panel.style.minHeight = `${panel.scrollHeight}px`
+      panel.style.maxHeight = ''
+      panel.classList.remove('panel')
+      panel.classList.add('panel-collapse')
     }
   }
 
@@ -45,7 +48,8 @@ const Accordion = ({
   useEffect(() => {
     if (collapse && accordionRef.current) {
       const panel = accordionRef.current.nextElementSibling as HTMLDivElement
-      panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
+      panel.style.minHeight = `${panel.scrollHeight + offsetHeight}px`
+      panel.style.maxHeight = ''
     }
   }, [offsetHeight]) // eslint-disable-line react-hooks/exhaustive-deps
 
