@@ -183,7 +183,13 @@ const Avatar = ({
                 horizontal: 'right',
               }}
               badgeContent={(
-                <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
+                <Box
+                  className="avatar-action-box"
+                  onClick={handleDeleteAvatar}
+                  sx={{
+                    borderRadius: '50%'
+                  }}
+                >
                   <DeleteIcon className="avatar-action-icon" />
                 </Box>
               )}
@@ -195,7 +201,13 @@ const Avatar = ({
                   horizontal: 'right',
                 }}
                 badgeContent={(
-                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                  <Box
+                    className="avatar-action-box"
+                    onClick={handleUpload}
+                    sx={{
+                      borderRadius: '50%'
+                    }}
+                  >
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 )}
@@ -212,7 +224,13 @@ const Avatar = ({
               }}
               badgeContent={(
                 <div>
-                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                  <Box
+                    className="avatar-action-box"
+                    onClick={handleUpload}
+                    sx={{
+                      borderRadius: '50%'
+                    }}
+                  >
                     <PhotoCameraIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
                   </Box>
                 </div>
