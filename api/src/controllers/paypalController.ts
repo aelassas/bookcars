@@ -112,7 +112,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       await bookingController.notify(user, booking.id, supplier, message)
 
       // Notify admin
-      const admin = env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
         message = i18n.t('BOOKING_PAID_NOTIFICATION')
