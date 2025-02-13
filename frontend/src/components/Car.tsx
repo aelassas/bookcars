@@ -96,12 +96,12 @@ const Car = ({
 
   useEffect(() => {
     const init = async () => {
-      const _cancellation = (car.cancellation > -1 && await helper.getCancellation(car.cancellation, language)) || ''
-      const _amendments = (car.amendments > -1 && await helper.getAmendments(car.amendments, language)) || ''
-      const _theftProtection = (car.theftProtection > -1 && await helper.getTheftProtection(car.theftProtection, language)) || ''
-      const _collisionDamageWaiver = (car.collisionDamageWaiver > -1 && await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)) || ''
-      const _fullInsurance = (car.fullInsurance > -1 && await helper.getFullInsurance(car.fullInsurance, language)) || ''
-      const _additionalDriver = (car.additionalDriver > -1 && await helper.getAdditionalDriver(car.additionalDriver, language)) || ''
+      const _cancellation = (car.cancellation > -1 && (await helper.getCancellation(car.cancellation, language))) || ''
+      const _amendments = (car.amendments > -1 && (await helper.getAmendments(car.amendments, language))) || ''
+      const _theftProtection = (car.theftProtection > -1 && (await helper.getTheftProtection(car.theftProtection, language))) || ''
+      const _collisionDamageWaiver = (car.collisionDamageWaiver > -1 && (await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language))) || ''
+      const _fullInsurance = (car.fullInsurance > -1 && (await helper.getFullInsurance(car.fullInsurance, language))) || ''
+      const _additionalDriver = (car.additionalDriver > -1 && (await helper.getAdditionalDriver(car.additionalDriver, language))) || ''
 
       setCancellation(_cancellation)
       setAmendments(_amendments)
