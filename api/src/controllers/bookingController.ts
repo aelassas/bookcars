@@ -352,7 +352,7 @@ export const checkout = async (req: Request, res: Response) => {
       await notify(user, booking.id, supplier, message)
 
       // Notify admin
-      const admin = env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
         message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
@@ -1059,7 +1059,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
       await notify(booking.driver, booking.id, supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
 
       // Notify admin
-      const admin = env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
         await notify(booking.driver, booking.id, admin, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
