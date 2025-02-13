@@ -256,8 +256,8 @@ const Search = () => {
                   {((pickupLocation.latitude && pickupLocation.longitude)
                     || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
                       <Map
-                        position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
-                        initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                        position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
+                        initialZoom={10}
                         locations={[pickupLocation]}
                         parkingSpots={pickupLocation.parkingSpots}
                         className="map"
