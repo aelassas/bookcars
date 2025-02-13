@@ -372,10 +372,14 @@ const MultipleSelect = ({
             </li>
           )
         }}
-        ListboxProps={ListboxProps || undefined}
         onFocus={onFocus || undefined}
-        ListboxComponent={ListBox}
         onOpen={onOpen || undefined}
+        slotProps={{
+          listbox: {
+            component: ListBox,
+            ...ListboxProps
+          }
+        }}
       />
     </div>
   )
