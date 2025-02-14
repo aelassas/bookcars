@@ -102,7 +102,6 @@ You can install the Android App by downloading the APK and installing it on any 
 2. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
-4. [Installing (VPS)](https://github.com/aelassas/bookcars/wiki/Installing-(VPS))
 5. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
