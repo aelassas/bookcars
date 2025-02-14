@@ -29,6 +29,8 @@ interface CarFilterProps {
   onSubmit: bookcarsTypes.CarFilterSubmitEvent
 }
 
+const OFFSET_HEIGHT = 100
+
 const CarFilter = ({
   from: filterFrom,
   to: filterTo,
@@ -49,7 +51,7 @@ const CarFilter = ({
   const [sameLocation, setSameLocation] = useState(filterPickupLocation === filterDropOffLocation)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
-  const [offsetHeight, setOffsetHeight] = useState(0)
+  const [offsetHeight, setOffsetHeight] = useState(OFFSET_HEIGHT)
   const [minPickupHoursError, setMinPickupHoursError] = useState(false)
   const [minRentalHoursError, setMinRentalHoursError] = useState(false)
 
@@ -105,9 +107,9 @@ const CarFilter = ({
 
   useEffect(() => {
     if (sameLocation) {
-      setOffsetHeight(0)
+      setOffsetHeight(OFFSET_HEIGHT)
     } else {
-      setOffsetHeight(56)
+      setOffsetHeight((prev) => prev + 56)
     }
   }, [sameLocation])
 
