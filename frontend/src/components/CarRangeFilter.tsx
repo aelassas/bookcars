@@ -3,6 +3,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/car-range-filter'
+import * as helper from '@/common/helper'
 import Accordion from './Accordion'
 
 import '@/assets/css/car-range-filter.css'
@@ -219,7 +220,7 @@ const CarRangeFilter = ({
             role="button"
             tabIndex={0}
           >
-            {strings.MINI}
+            {helper.getCarRange(bookcarsTypes.CarRange.Mini)}
           </span>
         </div>
         <div className="filter-element">
@@ -229,7 +230,7 @@ const CarRangeFilter = ({
             role="button"
             tabIndex={0}
           >
-            {strings.MIDI}
+            {helper.getCarRange(bookcarsTypes.CarRange.Midi)}
           </span>
         </div>
         <div className="filter-element">
@@ -239,7 +240,7 @@ const CarRangeFilter = ({
             role="button"
             tabIndex={0}
           >
-            {strings.MAXI}
+            {helper.getCarRange(bookcarsTypes.CarRange.Maxi)}
           </span>
         </div>
         <div className="filter-element">
@@ -249,7 +250,7 @@ const CarRangeFilter = ({
             role="button"
             tabIndex={0}
           >
-            {strings.SCOOTER}
+            {helper.getCarRange(bookcarsTypes.CarRange.Scooter)}
           </span>
         </div>
       </div>

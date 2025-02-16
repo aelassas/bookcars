@@ -12,7 +12,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings as csStrings } from '@/lang/cars'
 import { strings } from '@/lang/checkout'
 import * as helper from '@/common/helper'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 
 import '@/assets/css/checkout-options.css'
 
@@ -97,7 +97,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setCancellation(_cancellation)
       onCancellationChange(_cancellation)
@@ -116,7 +116,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setAmendments(_amendments)
       onAmendmentsChange(_amendments)
@@ -135,7 +135,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setTheftProtection(_theftProtection)
       onTheftProtectionChange(_theftProtection)
@@ -154,7 +154,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setCollisionDamageWaiver(_collisionDamageWaiver)
       onCollisionDamageWaiverChange(_collisionDamageWaiver)
@@ -173,7 +173,7 @@ const CheckoutOptions = ({
         fullInsurance: _fullInsurance,
         additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setFullInsurance(_fullInsurance)
       onFullInsuranceChange(_fullInsurance)
@@ -192,7 +192,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver: _additionalDriver,
       }
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
 
       setAdditionalDriver(_additionalDriver)
       onAdditionalDriverChange(_additionalDriver)

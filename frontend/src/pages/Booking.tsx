@@ -18,7 +18,7 @@ import Layout from '@/components/Layout'
 import * as UserService from '@/services/UserService'
 import * as BookingService from '@/services/BookingService'
 import * as CarService from '@/services/CarService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
@@ -256,7 +256,7 @@ const Booking = () => {
           const _booking = await BookingService.getBooking(id)
           if (_booking) {
             setBooking(_booking)
-            setPrice(await StripeService.convertPrice(_booking.price!))
+            setPrice(await PaymentService.convertPrice(_booking.price!))
             setLoading(false)
             setVisible(true)
             const cmp = _booking.supplier as bookcarsTypes.User
@@ -319,16 +319,18 @@ const Booking = () => {
         <div className="booking">
           <div className="col-1">
             <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin="dense">
-                <SupplierSelectList
-                  label={blStrings.SUPPLIER}
-                  required
-                  variant="standard"
-                  onChange={handleSupplierChange}
-                  value={supplier}
-                  readOnly={!edit}
-                />
-              </FormControl>
+              {!env.HIDE_SUPPLIERS && (
+                <FormControl fullWidth margin="dense">
+                  <SupplierSelectList
+                    label={blStrings.SUPPLIER}
+                    required
+                    variant="standard"
+                    onChange={handleSupplierChange}
+                    value={supplier}
+                    readOnly={!edit}
+                  />
+                </FormControl>
+              )}
 
               <FormControl fullWidth margin="dense">
                 <LocationSelectList
@@ -506,6 +508,7 @@ const Booking = () => {
               booking={booking}
               cars={[booking.car as bookcarsTypes.Car]}
               hidePrice
+              hideSupplier={env.HIDE_SUPPLIERS}
             />
           </div>
         </div>

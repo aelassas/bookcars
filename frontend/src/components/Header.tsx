@@ -42,12 +42,12 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings as suStrings } from '@/lang/sign-up'
 import { strings } from '@/lang/header'
 import * as UserService from '@/services/UserService'
+import * as PaymentService from '@/services/PaymentService'
 import * as NotificationService from '@/services/NotificationService'
 import Avatar from './Avatar'
 import * as langHelper from '@/common/langHelper'
 import * as helper from '@/common/helper'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
-import * as StripeService from '@/services/StripeService'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import { useInit } from '@/common/customHooks'
 
@@ -247,10 +247,10 @@ const Header = ({
 
     const { code } = event.currentTarget.dataset
     if (code) {
-      const currentCurrency = StripeService.getCurrency()
+      const currentCurrency = PaymentService.getCurrency()
 
       if (code && code !== currentCurrency) {
-        StripeService.setCurrency(code)
+        PaymentService.setCurrency(code)
         // Refresh page
         refreshPage()
       }
@@ -428,15 +428,17 @@ const Header = ({
                     <ListItemText primary={strings.BOOKINGS} />
                   </ListItem>
                 )}
-                <ListItem
-                  onClick={() => {
-                    navigate('/suppliers')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SupplierIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SUPPLIERS} />
-                </ListItem>
+                {!env.HIDE_SUPPLIERS && (
+                  <ListItem
+                    onClick={() => {
+                      navigate('/suppliers')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><SupplierIcon /></ListItemIcon>
+                    <ListItemText primary={strings.SUPPLIERS} />
+                  </ListItem>
+                )}
                 <ListItem
                   onClick={() => {
                     navigate('/locations')
@@ -529,7 +531,7 @@ const Header = ({
             <div className="header-desktop">
               {isLoaded && !loading && (
                 <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn bold">
-                  {StripeService.getCurrency()}
+                  {PaymentService.getCurrency()}
                 </Button>
               )}
               {isLoaded && !loading && (
@@ -565,7 +567,7 @@ const Header = ({
             <div className="header-mobile">
               {!loading && (
                 <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn bold">
-                  {StripeService.getCurrency()}
+                  {PaymentService.getCurrency()}
                 </Button>
               )}
               {!loading && (

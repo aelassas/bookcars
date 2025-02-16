@@ -11,8 +11,40 @@ section.car-list .empty-list {
   width: 250px;
 }
 
+section.car-list div.title {
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+section.car-list div.title div.bookcars {
+  font-size: 22px;
+}
+
+section.car-list div.title div.bookcars span.title-bookcars {
+  color: #212121;
+  font-weight: 500;
+}
+
+section.car-list div.title div.car-count {
+  color: #717171;
+  font-size: 14px;
+}
+
 @media only screen and (width <=960px) {
   section.car-list .empty-list {
     width: calc(100% - 20px);
+  }
+
+  section.car-list div.title {
+    max-width: 600px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (width >=960px) {
+  section.car-list div.title {
+    min-width: 800px;
   }
 }

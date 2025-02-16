@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@mui/material'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/no-match'
 import Layout from '@/components/Layout'
@@ -9,11 +10,13 @@ interface NoMatchProps {
 }
 
 const NoMatch = ({ hideHeader }: NoMatchProps) => {
+  const navigate = useNavigate()
+
   const noMatch = () => (
     <div className="msg">
       <h2>{strings.NO_MATCH}</h2>
       <p>
-        <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+        <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">{commonStrings.GO_TO_HOME}</Button>
       </p>
     </div>
   )

@@ -7,7 +7,6 @@ import {
   Checkbox,
 } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import env from '@/config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
@@ -42,7 +41,6 @@ const SearchForm = ({
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [selectedDropOffLocation, setSelectedDropOffLocation] = useState<bookcarsTypes.Location | undefined>(undefined)
   const [minDate, setMinDate] = useState(_minDate)
-  const [maxDate, setMaxDate] = useState<Date>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [sameLocation, setSameLocation] = useState(true)
@@ -60,10 +58,6 @@ const SearchForm = ({
 
     const _to = new Date(_from)
     _to.setDate(_to.getDate() + 3)
-
-    const _maxDate = new Date(_to)
-    _maxDate.setDate(_maxDate.getDate() - 1)
-    setMaxDate(_maxDate)
 
     const __minDate = new Date(_from)
     __minDate.setDate(__minDate.getDate() + 1)
@@ -185,8 +179,9 @@ const SearchForm = ({
         <LocationSelectList
           label={commonStrings.PICK_UP_LOCATION}
           hidePopupIcon
-          customOpen={env.isMobile}
-          init={!env.isMobile}
+          // customOpen={env.isMobile}
+          // init={!env.isMobile}
+          init
           required
           variant="outlined"
           value={selectedPickupLocation}
@@ -198,7 +193,6 @@ const SearchForm = ({
           label={strings.PICK_UP_DATE}
           value={from}
           minDate={_minDate}
-          maxDate={maxDate}
           variant="outlined"
           required
           onChange={(date) => {
@@ -208,6 +202,12 @@ const SearchForm = ({
               setFrom(date)
               setMinDate(__minDate)
               setFromError(false)
+
+              if (to!.getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
+                const _to = new Date(date)
+                _to.setDate(_to.getDate() + 3)
+                setTo(_to)
+              }
             } else {
               setFrom(undefined)
               setMinDate(_minDate)
@@ -232,14 +232,10 @@ const SearchForm = ({
           required
           onChange={(date) => {
             if (date) {
-              const _maxDate = new Date(date)
-              _maxDate.setDate(_maxDate.getDate() - 1)
               setTo(date)
-              setMaxDate(_maxDate)
               setToError(false)
             } else {
               setTo(undefined)
-              setMaxDate(undefined)
             }
           }}
           onError={(err: DateTimeValidationError) => {
@@ -272,8 +268,9 @@ const SearchForm = ({
           <LocationSelectList
             label={commonStrings.DROP_OFF_LOCATION}
             hidePopupIcon
-            customOpen={env.isMobile}
-            init={!env.isMobile}
+            // customOpen={env.isMobile}
+            // init={!env.isMobile}
+            init
             value={selectedDropOffLocation}
             required
             variant="outlined"

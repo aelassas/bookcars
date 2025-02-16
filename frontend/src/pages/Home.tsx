@@ -25,12 +25,13 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
+import { strings as carsStrings } from '@/lang/cars'
 import { strings } from '@/lang/home'
 import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'
 import * as CountryService from '@/services/CountryService'
 import * as LocationService from '@/services/LocationService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 import Layout from '@/components/Layout'
 import SupplierCarrousel from '@/components/SupplierCarrousel'
 import TabPanel, { a11yProps } from '@/components/TabPanel'
@@ -64,22 +65,22 @@ const Home = () => {
   const [miniPricePday, setMiniPricePday] = useState(40)
   const [midiPricePhr, setMidiPricePhr] = useState(3.5)
   const [midiPricePday, setMidiPricePday] = useState(50)
-  const [maxiPricePhr, setMaxiPricePhr] = useState(3.5)
-  const [maxiPricePday, setMaxiPricePday] = useState(50)
+  const [maxiPricePhr, setMaxiPricePhr] = useState(4.5)
+  const [maxiPricePday, setMaxiPricePday] = useState(80)
 
   useEffect(() => {
     const init = async () => {
-      const _miniPricePhr = await StripeService.convertPrice(miniPricePhr)
+      const _miniPricePhr = await PaymentService.convertPrice(miniPricePhr)
       setMiniPricePhr(_miniPricePhr)
-      const _miniPricePday = await StripeService.convertPrice(miniPricePday)
+      const _miniPricePday = await PaymentService.convertPrice(miniPricePday)
       setMiniPricePday(_miniPricePday)
-      const _midiPricePhr = await StripeService.convertPrice(midiPricePhr)
+      const _midiPricePhr = await PaymentService.convertPrice(midiPricePhr)
       setMidiPricePhr(_midiPricePhr)
-      const _midiPricePday = await StripeService.convertPrice(midiPricePday)
+      const _midiPricePday = await PaymentService.convertPrice(midiPricePday)
       setMidiPricePday(_midiPricePday)
-      const _maxiPricePhr = await StripeService.convertPrice(maxiPricePhr)
+      const _maxiPricePhr = await PaymentService.convertPrice(maxiPricePhr)
       setMaxiPricePhr(_maxiPricePhr)
-      const _maxiPricePday = await StripeService.convertPrice(maxiPricePday)
+      const _maxiPricePday = await PaymentService.convertPrice(maxiPricePday)
       setMaxiPricePday(_maxiPricePday)
     }
 
@@ -91,10 +92,13 @@ const Home = () => {
   }
 
   const onLoad = async () => {
-    let _suppliers = await SupplierService.getAllSuppliers()
-    _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
-    bookcarsHelper.shuffle(_suppliers)
-    setSuppliers(_suppliers)
+    if (!env.HIDE_SUPPLIERS) {
+      let _suppliers = await SupplierService.getAllSuppliers()
+      _suppliers = _suppliers.filter((supplier) => supplier.avatar && !/no-image/i.test(supplier.avatar))
+      bookcarsHelper.shuffle(_suppliers)
+      setSuppliers(_suppliers)
+    }
+
     const _countries = await CountryService.getCountriesWithLocations('', true, env.MIN_LOCATIONS)
     setCountries(_countries)
     const _locations = await LocationService.getLocationsWithPosition()
@@ -345,7 +349,7 @@ const Home = () => {
                   )}
                   label={strings.MINI}
                 /> */}
-                <span>{strings.MINI}</span>
+                <span>{carsStrings.CAR_RANGE_MINI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -394,7 +398,7 @@ const Home = () => {
                   )}
                   label={strings.MIDI}
                 /> */}
-                <span>{strings.MIDI}</span>
+                <span>{carsStrings.CAR_RANGE_MIDI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
@@ -442,7 +446,7 @@ const Home = () => {
                   )}
                   label={strings.MAXI}
                 /> */}
-                <span>{strings.MAXI}</span>
+                <span>{carsStrings.CAR_RANGE_MAXI}</span>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>

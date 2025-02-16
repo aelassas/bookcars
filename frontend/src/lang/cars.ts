@@ -1,13 +1,13 @@
 import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/common/langHelper'
 import env from '@/config/env.config'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 
-const currency = StripeService.getCurrencySymbol()
+const currency = PaymentService.getCurrencySymbol()
 
-const depositFilterValue1 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_1)
-const depositFilterValue2 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_2)
-const depositFilterValue3 = await StripeService.convertPrice(env.DEPOSIT_FILTER_VALUE_3)
+const depositFilterValue1 = await PaymentService.convertPrice(env.DEPOSIT_FILTER_VALUE_1)
+const depositFilterValue2 = await PaymentService.convertPrice(env.DEPOSIT_FILTER_VALUE_2)
+const depositFilterValue3 = await PaymentService.convertPrice(env.DEPOSIT_FILTER_VALUE_3)
 
 const strings = new LocalizedStrings({
   fr: {
@@ -79,9 +79,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Transmission',
     ENGINE: 'Moteur',
     DEPOSIT: 'Dépôt de garantie',
-    LESS_THAN_VALUE_1: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_2: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_3: `Moins de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_1: `Moins de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue1}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Moins de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue2}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Moins de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue3}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'locations',
     CO2: 'Effet CO2',
     FROM_YOU: ' de vous',
@@ -92,6 +92,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Détails',
     FULLY_BOOKED: 'Déjà Réservée',
     COMING_SOON: 'Bientôt Disponible',
+    CAR_RANGE_MINI: 'Voiture',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Fourgon',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   en: {
     NEW_CAR: 'New car',
@@ -162,9 +166,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Gearbox',
     ENGINE: 'Engine',
     DEPOSIT: 'Deposit at pick-up',
-    LESS_THAN_VALUE_1: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_2: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_3: `Less than ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_1: `Less than ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue1}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Less than ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue2}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Less than ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue3}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'trips',
     CO2: 'CO2 effect',
     FROM_YOU: ' from you',
@@ -175,6 +179,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Details',
     FULLY_BOOKED: 'Fully Booked',
     COMING_SOON: 'Coming Soon',
+    CAR_RANGE_MINI: 'Car',
+    CAR_RANGE_MIDI: 'SUV',
+    CAR_RANGE_MAXI: 'Van',
+    CAR_RANGE_SCOOTER: 'Scooter',
   },
   es: {
     NEW_CAR: 'Coche nuevo',
@@ -245,9 +253,9 @@ const strings = new LocalizedStrings({
     GEARBOX: 'Caja de cambios',
     ENGINE: 'Motor',
     DEPOSIT: 'Depósito al recoger',
-    LESS_THAN_VALUE_1: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue1}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_2: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue2}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
-    LESS_THAN_VALUE_3: `Menos de ${StripeService.currencyRTL() ? currency : ''}${depositFilterValue3}${!StripeService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_1: `Menos de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue1}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_2: `Menos de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue2}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
+    LESS_THAN_VALUE_3: `Menos de ${PaymentService.currencyRTL() ? currency : ''}${depositFilterValue3}${!PaymentService.currencyRTL() ? (` ${currency}`) : ''}`,
     TRIPS: 'viajes',
     CO2: 'Efecto CO2',
     FROM_YOU: ' de ti',
@@ -258,6 +266,10 @@ const strings = new LocalizedStrings({
     DETAILS: 'Detalles',
     FULLY_BOOKED: 'Ya Reservado',
     COMING_SOON: 'Próximamente',
+    CAR_RANGE_MINI: 'Auto',
+    CAR_RANGE_MIDI: 'Todoterreno',
+    CAR_RANGE_MAXI: 'furgoneta',
+    CAR_RANGE_SCOOTER: 'Scooter',
   }
 })
 
