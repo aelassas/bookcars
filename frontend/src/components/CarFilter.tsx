@@ -40,7 +40,6 @@ const CarFilter = ({
   const [from, setFrom] = useState<Date | undefined>(filterFrom)
   const [to, setTo] = useState<Date | undefined>(filterTo)
   const [minDate, setMinDate] = useState<Date>()
-  const [maxDate, setMaxDate] = useState<Date>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location | null | undefined>(filterPickupLocation)
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location | null | undefined>(filterDropOffLocation)
   const [sameLocation, setSameLocation] = useState(filterPickupLocation === filterDropOffLocation)
@@ -56,14 +55,6 @@ const CarFilter = ({
       setMinDate(__minDate)
     }
   }, [filterFrom])
-
-  useEffect(() => {
-    if (filterTo) {
-      const __maxDate = new Date(filterTo)
-      __maxDate.setDate(__maxDate.getDate() - 1)
-      setMaxDate(__maxDate)
-    }
-  }, [filterTo])
 
   useEffect(() => {
     setPickupLocation(filterPickupLocation)
@@ -163,7 +154,6 @@ const CarFilter = ({
                 label={strings.PICK_UP_DATE}
                 value={from}
                 minDate={_minDate}
-                maxDate={maxDate}
                 variant="standard"
                 required
                 onChange={(date) => {
@@ -173,6 +163,11 @@ const CarFilter = ({
                     setFrom(date)
                     setMinDate(__minDate)
                     setFromError(false)
+                    if (to!.getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
+                      const _to = new Date(date)
+                      _to.setDate(_to.getDate() + 3)
+                      setTo(_to)
+                    }
                   } else {
                     setFrom(undefined)
                     setMinDate(_minDate)
@@ -197,14 +192,10 @@ const CarFilter = ({
                 required
                 onChange={(date) => {
                   if (date) {
-                    const _maxDate = new Date(date)
-                    _maxDate.setDate(_maxDate.getDate() - 1)
                     setTo(date)
-                    setMaxDate(_maxDate)
                     setToError(false)
                   } else {
                     setTo(undefined)
-                    setMaxDate(undefined)
                   }
                 }}
                 onError={(err: DateTimeValidationError) => {
@@ -261,7 +252,6 @@ const CarFilter = ({
                       label={strings.PICK_UP_DATE}
                       value={from}
                       minDate={_minDate}
-                      maxDate={maxDate}
                       variant="standard"
                       required
                       onChange={(date) => {
@@ -271,6 +261,12 @@ const CarFilter = ({
                           setFrom(date)
                           setMinDate(__minDate)
                           setFromError(false)
+
+                          if (to!.getTime() - date.getTime() < 24 * 60 * 60 * 1000) {
+                            const _to = new Date(date)
+                            _to.setDate(_to.getDate() + 3)
+                            setTo(_to)
+                          }
                         } else {
                           setFrom(undefined)
                           setMinDate(_minDate)
@@ -325,14 +321,10 @@ const CarFilter = ({
                     required
                     onChange={(date) => {
                       if (date) {
-                        const _maxDate = new Date(date)
-                        _maxDate.setDate(_maxDate.getDate() - 1)
                         setTo(date)
-                        setMaxDate(_maxDate)
                         setToError(false)
                       } else {
                         setTo(undefined)
-                        setMaxDate(undefined)
                       }
                     }}
                     onError={(err: DateTimeValidationError) => {

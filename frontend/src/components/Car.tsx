@@ -27,7 +27,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import Badge from '@/components/Badge'
 import * as UserService from '@/services/UserService'
-import * as StripeService from '@/services/StripeService'
+import * as PaymentService from '@/services/PaymentService'
 
 import DoorsIcon from '@/assets/img/car-door.png'
 import DistanceIcon from '@/assets/img/distance-icon.png'
@@ -85,7 +85,7 @@ const Car = ({
   useEffect(() => {
     const fetchPrice = async () => {
       if (from && to) {
-        const _totalPrice = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
         setTotalPrice(_totalPrice)
         setDays(bookcarsHelper.days(from, to))
       }
@@ -112,7 +112,7 @@ const Car = ({
       setLoading(false)
 
       if (!hidePrice) {
-        const _totalPrice = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
         setTotalPrice(_totalPrice)
       }
       // console.log('init car')

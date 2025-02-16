@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   IconButton,
   Button,
@@ -96,6 +97,8 @@ const CarList = ({
   onLoad,
   onDelete
 }: CarListProps) => {
+  const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -617,12 +620,12 @@ const CarList = ({
                     {edit && (
                       <>
                         <Tooltip title={strings.VIEW_CAR}>
-                          <IconButton href={`/car?cr=${car._id}`}>
+                          <IconButton onClick={() => navigate(`/car?cr=${car._id}`)}>
                             <ViewIcon />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title={commonStrings.UPDATE}>
-                          <IconButton href={`/update-car?cr=${car._id}`}>
+                          <IconButton onClick={() => navigate(`/update-car?cr=${car._id}`)}>
                             <EditIcon />
                           </IconButton>
                         </Tooltip>

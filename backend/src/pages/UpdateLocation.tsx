@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -27,6 +28,8 @@ import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 import '@/assets/css/update-location.css'
 
 const UpdateLocation = () => {
+  const navigate = useNavigate()
+
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
@@ -290,7 +293,7 @@ const UpdateLocation = () => {
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/locations">
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/locations')}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>

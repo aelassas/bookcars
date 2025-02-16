@@ -775,3 +775,28 @@ export const getDepositFilterValue = async (language: string, value: DepositFilt
       return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
   }
 }
+
+/**
+ * Get fuel policy label.
+ *
+ * @param {string} range
+ * @returns {string}
+ */
+export const getCarRange = (range: bookcarsTypes.CarRange) => {
+  switch (range) {
+    case bookcarsTypes.CarRange.Mini:
+      return i18n.t('CAR_RANGE_MINI')
+
+    case bookcarsTypes.CarRange.Midi:
+      return i18n.t('CAR_RANGE_MIDI')
+
+    case bookcarsTypes.CarRange.Maxi:
+      return i18n.t('CAR_RANGE_MAXI')
+
+    case bookcarsTypes.CarRange.Scooter:
+      return i18n.t('CAR_RANGE_SCOOTER')
+
+    default:
+      return ''
+  }
+}
