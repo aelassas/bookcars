@@ -360,7 +360,7 @@ const SearchForm = (
         />
 
         <Button
-          style={styles.component}
+          style={styles.button}
           label={i18n.t('SEARCH')}
           size={size || undefined}
           onPress={handleSearch}
@@ -418,6 +418,11 @@ const styles = StyleSheet.create({
   component: {
     alignSelf: 'stretch',
     margin: 10,
+  },
+  button: {
+    alignSelf: 'stretch',
+    marginVertical: 20,
+    marginHorizontal: 10,
   },
   timeComponent: {
     alignSelf: 'stretch',
