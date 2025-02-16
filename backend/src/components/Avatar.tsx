@@ -536,7 +536,12 @@ const Avatar = ({
                   }}
                   badgeContent={(
                     <Tooltip title={commonStrings.VERIFIED}>
-                      <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
+                      <Box
+                        sx={{
+                          borderRadius: '50%',
+                        }}
+                        className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}
+                      >
                         <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
                       </Box>
                     </Tooltip>
@@ -560,7 +565,13 @@ const Avatar = ({
                 <></>
               ) : (
                 <Tooltip title={commonStrings.DELETE_IMAGE}>
-                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
+                  <Box
+                    sx={{
+                      borderRadius: '50%',
+                    }}
+                    className="avatar-action-box"
+                    onClick={handleDeleteAvatar}
+                  >
                     <DeleteIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
@@ -576,7 +587,13 @@ const Avatar = ({
               className={type === bookcarsTypes.RecordType.Supplier ? 'supplier-avatar' : ''}
               badgeContent={(
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
-                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                  <Box
+                    sx={{
+                      borderRadius: '50%',
+                    }}
+                    className="avatar-action-box"
+                    onClick={handleUpload}
+                  >
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
@@ -619,7 +636,12 @@ const Avatar = ({
                   }}
                   badgeContent={(
                     <Tooltip title={commonStrings.VERIFIED}>
-                      <Box borderRadius="50%" className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}>
+                      <Box
+                        sx={{
+                          borderRadius: '50%',
+                        }}
+                        className={size ? `user-avatar-verified-${size}` : 'user-avatar-verified-medium'}
+                      >
                         <VerifiedIcon className={size ? `user-avatar-verified-icon-${size}` : 'user-avatar-verified-icon-medium'} />
                       </Box>
                     </Tooltip>
@@ -647,7 +669,13 @@ const Avatar = ({
               }}
               badgeContent={(
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
-                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                  <Box
+                    sx={{
+                      borderRadius: '50%',
+                    }}
+                    className="avatar-action-box"
+                    onClick={handleUpload}
+                  >
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
