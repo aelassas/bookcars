@@ -17,7 +17,7 @@ const Accordion = ({
   offsetHeight = 0,
   children
 }: AccordionProps) => {
-  const accordionRef = useRef<HTMLLabelElement>(null)
+  const accordionRef = useRef<HTMLSpanElement>(null)
 
   const handleAccordionClick = (e: React.MouseEvent<HTMLElement>) => {
     e.currentTarget.classList.toggle('accordion-active')
@@ -32,7 +32,7 @@ const Accordion = ({
 
       panel.style.maxHeight = ''
     } else {
-      panel.style.maxHeight = `${panel.scrollHeight}px`
+      panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
     }
   }
 

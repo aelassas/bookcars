@@ -18,8 +18,7 @@
 .env.development
 .env.development.local
 .env.test.local
-.env.production
-.env.production.local
+.env.*production*
 .env.docker
 
 npm-debug.log*

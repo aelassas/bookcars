@@ -56,7 +56,12 @@ const MapDialog = ({
       }}
     >
       <DialogTitle>
-        <Box display="flex" justifyContent="flex-end">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
           <Box>
             <IconButton
               className="close-btn"
