@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Pressable, Text } from 'react-native'
-import ReactDateTimePicker from '@react-native-community/datetimepicker'
+import React, { useState, useEffect, useCallback } from 'react'
+import { StyleSheet, View, Pressable, Text, Platform, StyleProp, ViewStyle } from 'react-native'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { format } from 'date-fns'
 import { enUS, fr, es } from 'date-fns/locale'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -9,12 +10,12 @@ import * as bookcarsHelper from ':bookcars-helper'
 interface DateTimePickerProps {
   value?: Date
   locale?: string,
-  mode?: 'date' | 'datetime' | 'time' | 'countdown'
+  mode?: 'date' | 'datetime' | 'time'
   size?: 'small'
   label: string
   backgroundColor?: string
   error?: boolean
-  style?: object
+  style?: StyleProp<ViewStyle>
   helperText?: string
   minDate?: Date
   maxDate?: Date
@@ -24,12 +25,12 @@ interface DateTimePickerProps {
   onChange?: (date: Date | undefined) => void
 }
 
-const DateTimePicker = ({
-  value: dateTimeValue,
-  locale: dateTimeLocale,
-  mode,
+const CustomDateTimePicker: React.FC<DateTimePickerProps> = ({
+  value: initialValue,
+  locale: initialLocale = 'en',
+  mode = 'date',
   size,
-  label: dateTimeLabel,
+  label,
   backgroundColor,
   error,
   style,
@@ -40,25 +41,41 @@ const DateTimePicker = ({
   hideClearButton,
   onPress,
   onChange
-}: DateTimePickerProps) => {
-  const [label, setLabel] = useState('')
-  const [value, setValue] = useState<Date | undefined>(dateTimeValue)
-  const [show, setShow] = useState(false)
-  const [locale, setLoacle] = useState(dateTimeLocale === 'fr' ? fr : dateTimeLocale === 'es' ? es : enUS)
-  const _format = mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm'
-  const now = new Date()
+}) => {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialValue)
+  const [showPicker, setShowPicker] = useState(false)
+  const [formattedLabel, setFormattedLabel] = useState(label)
+
+  const localeMap = { fr, es, en: enUS }
+  const dateLocale = localeMap[initialLocale as keyof typeof localeMap] || enUS
+  const dateFormat = mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm'
   const small = size === 'small'
 
   useEffect(() => {
-    const _locale = dateTimeLocale === 'fr' ? fr : dateTimeLocale === 'es' ? es : enUS
-    setLoacle(_locale)
-    setLabel((value && bookcarsHelper.capitalize(format(value, _format, { locale: _locale }))) || dateTimeLabel)
-  }, [dateTimeLocale]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (selectedDate) {
+      setFormattedLabel(bookcarsHelper.capitalize(format(selectedDate, dateFormat, { locale: dateLocale })))
+    } else {
+      setFormattedLabel(label)
+    }
+  }, [selectedDate, initialLocale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setValue(dateTimeValue)
-    setLabel((dateTimeValue && bookcarsHelper.capitalize(format(dateTimeValue, _format, { locale }))) || dateTimeLabel)
-  }, [dateTimeValue]) // eslint-disable-line react-hooks/exhaustive-deps
+    setSelectedDate(initialValue)
+  }, [initialValue])
+
+  const handleDateChange = useCallback((date?: Date) => {
+    setShowPicker(false)
+    if (date) {
+      setSelectedDate(date)
+      onChange?.(date)
+    }
+  }, [onChange])
+
+  const handleClear = useCallback(() => {
+    setSelectedDate(undefined)
+    setFormattedLabel(label)
+    onChange?.(undefined)
+  }, [label, onChange])
 
   const styles = StyleSheet.create({
     container: {
@@ -113,63 +130,53 @@ const DateTimePicker = ({
   })
 
   return (
-    <View style={{ ...style, ...styles.container }}>
-      {value && <Text style={styles.label}>{dateTimeLabel}</Text>}
+    <View style={[styles.container, style]}>
+      {selectedDate && <Text style={styles.label}>{label}</Text>}
+
       <View style={styles.dateContainer}>
         <Pressable
           style={styles.dateButton}
           onPress={() => {
-            setShow(true)
-            if (onPress) {
-              onPress()
-            }
+            setShowPicker(true)
+            onPress?.()
           }}
         >
-          <Text
-            style={{
-              ...styles.dateText,
-              color: value ? 'rgba(0, 0, 0, 0.87)' : '#a3a3a3',
-            }}
-          >
-            {label}
+          <Text style={[styles.dateText, { color: selectedDate ? 'rgba(0, 0, 0, 0.87)' : '#a3a3a3' }]}>
+            {formattedLabel}
           </Text>
-          {!readOnly && value !== undefined && !hideClearButton && (
-            <MaterialIcons
-              style={styles.clear}
-              name="clear"
-              size={22}
-              color="rgba(0, 0, 0, 0.28)"
-              onPress={() => {
-                setLabel(dateTimeLabel)
-                setValue(undefined)
-                if (onChange) {
-                  onChange(undefined)
-                }
-              }}
-            />
+
+          {!readOnly && selectedDate && !hideClearButton && (
+            <MaterialIcons style={styles.clear} name="clear" size={22} color="rgba(0, 0, 0, 0.28)" onPress={handleClear} />
           )}
         </Pressable>
+
+        {showPicker && Platform.select({
+          android: (
+            <DateTimePicker
+              mode={mode}
+              value={selectedDate || new Date()}
+              minimumDate={minDate}
+              maximumDate={maxDate}
+              onChange={(event, date) => handleDateChange(date ?? selectedDate)}
+            />
+          ),
+          ios: (
+            <DateTimePickerModal
+              isVisible={showPicker}
+              mode={mode}
+              date={selectedDate || new Date()}
+              minimumDate={minDate}
+              maximumDate={maxDate}
+              onConfirm={handleDateChange}
+              onCancel={() => setShowPicker(false)}
+            />
+          )
+        })}
+
         {helperText && <Text style={styles.helperText}>{helperText}</Text>}
-        {show && (
-          <ReactDateTimePicker
-            mode={mode}
-            value={value || now}
-            minimumDate={minDate}
-            maximumDate={maxDate}
-            onChange={(event, date) => {
-              setShow(false)
-              if (event.type === 'set' && date) {
-                setValue(date)
-                if (onChange) {
-                  onChange(date)
-                }
-              }
-            }}
-          />
-        )}
       </View>
     </View>
   )
 }
 
-export default DateTimePicker
+export default CustomDateTimePicker
