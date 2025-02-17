@@ -103,7 +103,6 @@ div.footer section.payment div.payment-text {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: -25px 5px 0 0;
 }
 
 @media only screen and (width <=960px) {
