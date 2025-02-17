@@ -8,12 +8,16 @@ import {
   LinkedIn,
   Instagram,
 } from '@mui/icons-material'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '@/lang/footer'
 import NewsletterForm from '@/components/NewsletterForm'
 import env from '@/config/env.config'
 
-import SecurePayment from '@/assets/img/secure-payment.png'
+import Stripe from '@/assets/img/stripe.png'
+import PayPal from '@/assets/img/paypal.png'
 import '@/assets/css/footer.css'
+
+const SecurePayment = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe ? Stripe : PayPal
 
 const Footer = () => {
   const navigate = useNavigate()
@@ -60,8 +64,17 @@ const Footer = () => {
         </div>
       </section>
       <section className="payment">
-        <div className="payment-text">{strings.SECURE_PAYMENT}</div>
-        <img src={SecurePayment} alt="" />
+        <div
+          className="payment-text"
+          style={{ margin: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? '0 20px' : '-25px 10px 0 0' }}
+        >
+          {strings.SECURE_PAYMENT}
+        </div>
+        <img
+          src={SecurePayment}
+          alt=""
+          style={{ height: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? 64 : 'auto' }}
+        />
       </section>
       <section className="copyright">
         <div className="copyright">
