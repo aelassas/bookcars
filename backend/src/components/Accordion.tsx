@@ -32,7 +32,7 @@ const Accordion = ({
 
       panel.style.maxHeight = ''
     } else {
-      panel.style.maxHeight = `${panel.scrollHeight}px`
+      panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
     }
   }
 

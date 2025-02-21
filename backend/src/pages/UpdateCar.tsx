@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
@@ -34,6 +35,7 @@ import DoorsList from '@/components/DoorsList'
 import FuelPolicyList from '@/components/FuelPolicyList'
 import MultimediaList from '@/components/MultimediaList'
 import CarRangeList from '@/components/CarRangeList'
+import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
 
 import '@/assets/css/create-car.css'
 
@@ -84,6 +86,8 @@ const UpdateCar = () => {
   const [minimumAgeValid, setMinimumAgeValid] = useState(true)
   const [formError, setFormError] = useState(false)
   const [deposit, setDeposit] = useState('')
+  const [isDateBasedPrice, setIsDateBasedPrice] = useState(false)
+  const [dateBasedPrices, setDateBasedPrices] = useState<bookcarsTypes.DateBasedPrice[]>([])
 
   const handleBeforeUpload = () => {
     setLoading(true)
@@ -292,6 +296,8 @@ const UpdateCar = () => {
         co2: Number(co2) || undefined,
         comingSoon,
         fullyBooked,
+        isDateBasedPrice,
+        dateBasedPrices,
       }
 
       const status = await CarService.update(data)
@@ -375,6 +381,8 @@ const UpdateCar = () => {
               setCollisionDamageWaiver(extraToString(_car.collisionDamageWaiver))
               setFullInsurance(extraToString(_car.fullInsurance))
               setAdditionalDriver(extraToString(_car.additionalDriver))
+              setIsDateBasedPrice(_car.isDateBasedPrice)
+              setDateBasedPrices(_car.dateBasedPrices)
               setVisible(true)
               setLoading(false)
             } else {
@@ -497,113 +505,155 @@ const UpdateCar = () => {
                 />
               </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setBiWeeklyPrice(e.target.value)
-                  }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={biWeeklyPrice}
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={isDateBasedPrice}
+                      color="primary"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setIsDateBasedPrice(e.target.checked)
+                      }}
+                    />
+                  )}
+                  label={strings.IS_DATE_BASED_PRICE}
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.DISCOUNTED_BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
+              {isDateBasedPrice && (
+                <DateBasedPriceEditList
+                  title={strings.DATE_BASED_PRICES}
+                  values={dateBasedPrices}
+                  onAdd={(value) => {
+                    const _dateBasedPrices = bookcarsHelper.clone(dateBasedPrices) as bookcarsTypes.DateBasedPrice[]
+                    _dateBasedPrices.push(value)
+                    setDateBasedPrices(_dateBasedPrices)
                   }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setDiscountedBiWeeklyPrice(e.target.value)
+                  onUpdate={(value, index) => {
+                    const _dateBasedPrices = bookcarsHelper.clone(dateBasedPrices) as bookcarsTypes.DateBasedPrice[]
+                    _dateBasedPrices[index] = value
+                    setDateBasedPrices(_dateBasedPrices)
                   }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={discountedBiWeeklyPrice}
+                  onDelete={(_, index) => {
+                    const _dateBasedPrices = bookcarsHelper.clone(dateBasedPrices) as bookcarsTypes.DateBasedPrice[]
+                    _dateBasedPrices.splice(index, 1)
+                    setDateBasedPrices(_dateBasedPrices)
+                  }}
                 />
-              </FormControl>
+              )}
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setWeeklyPrice(e.target.value)
-                  }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={weeklyPrice}
-                />
-              </FormControl>
+              {!isDateBasedPrice && (
+                <>
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setBiWeeklyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={biWeeklyPrice}
+                    />
+                  </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.DISCOUNTED_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setDiscountedWeeklyPrice(e.target.value)
-                  }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={discountedWeeklyPrice}
-                />
-              </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.DISCOUNTED_BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setDiscountedBiWeeklyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={discountedBiWeeklyPrice}
+                    />
+                  </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.MONTHLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setMonthlyPrice(e.target.value)
-                  }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={monthlyPrice}
-                />
-              </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setWeeklyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={weeklyPrice}
+                    />
+                  </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <TextField
-                  label={`${strings.DISCOUNTED_MONThLY_PRICE} (${commonStrings.CURRENCY})`}
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: 'numeric',
-                      pattern: '^\\d+(.\\d+)?$'
-                    }
-                  }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setDiscountedMonthlyPrice(e.target.value)
-                  }}
-                  variant="standard"
-                  autoComplete="off"
-                  value={discountedMonthlyPrice}
-                />
-              </FormControl>
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.DISCOUNTED_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setDiscountedWeeklyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={discountedWeeklyPrice}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.MONTHLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setMonthlyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={monthlyPrice}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <TextField
+                      label={`${strings.DISCOUNTED_MONThLY_PRICE} (${commonStrings.CURRENCY})`}
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: 'numeric',
+                          pattern: '^\\d+(.\\d+)?$'
+                        }
+                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setDiscountedMonthlyPrice(e.target.value)
+                      }}
+                      variant="standard"
+                      autoComplete="off"
+                      value={discountedMonthlyPrice}
+                    />
+                  </FormControl>
+                </>
+              )}
 
               <FormControl fullWidth margin="dense">
                 <TextField

@@ -8,6 +8,7 @@ import Booking from '../models/Booking'
 import User from '../models/User'
 import Car from '../models/Car'
 import * as bookingController from './bookingController'
+import * as ipinfoHelper from '../common/ipinfoHelper'
 
 /**
  * Create PayPal order.
@@ -19,9 +20,12 @@ import * as bookingController from './bookingController'
  */
 export const createPayPalOrder = async (req: Request, res: Response) => {
   try {
-    const { bookingId, amount, currency, name }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+    const { bookingId, amount, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
 
-    const orderId = await paypal.createOrder(bookingId, amount, currency, name)
+    const clientIp = ipinfoHelper.getClientIp(req)
+    const countryCode = await ipinfoHelper.getCountryCode(clientIp)
+
+    const orderId = await paypal.createOrder(bookingId, amount, currency, name, description, countryCode)
 
     return res.json(orderId)
   } catch (err) {
@@ -108,7 +112,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       await bookingController.notify(user, booking.id, supplier, message)
 
       // Notify admin
-      const admin = !!env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
         message = i18n.t('BOOKING_PAID_NOTIFICATION')

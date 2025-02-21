@@ -141,11 +141,7 @@ const Checkout = () => {
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
-  const daysLabel = from && to && `
-  ${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(
-    format(from, _format, { locale: _locale }),
-  )} 
-  - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
+  const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -408,15 +404,17 @@ const Checkout = () => {
       let _sessionId: string | undefined
       if (!payLater) {
         if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe) {
+          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
+          const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+          const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
+
           const payload: bookcarsTypes.CreatePaymentPayload = {
             amount: payDeposit ? depositPrice : price,
             currency: PaymentService.getCurrency(),
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
-            name: `${car.name} 
-          - ${daysLabel} 
-          - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`,
-            description: `${env.WEBSITE_NAME} Web Service`,
+            name,
+            description,
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
           const res = await StripeService.createCheckoutSession(payload)
@@ -561,8 +559,8 @@ const Checkout = () => {
                     {((pickupLocation.latitude && pickupLocation.longitude)
                       || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
                         <Map
-                          position={[pickupLocation.latitude || 34.0268755, pickupLocation.longitude || 1.6528399999999976]}
-                          initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
+                          position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
+                          initialZoom={10}
                           parkingSpots={pickupLocation.parkingSpots}
                           locations={[pickupLocation]}
                           className="map"
@@ -944,9 +942,11 @@ const Checkout = () => {
                           <div className="payment-options-container">
                             <PayPalButtons
                               createOrder={async () => {
-                                const name = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
+                                const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
                                 const amount = payDeposit ? depositPrice : price
-                                const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name)
+                                const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
                                 return orderId
                               }}
                               onApprove={async (data) => {

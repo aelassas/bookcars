@@ -397,6 +397,21 @@ export const RECAPTCHA_SECRET = __env__('BC_RECAPTCHA_SECRET', false)
 export const TIMEZONE = __env__('BC_TIMEZONE', false, 'UTC')
 
 /**
+ * ipinfo.io API key.
+ * Required for more tha, 1000 requests/day.
+ *
+ * @type {string}
+ */
+export const IPINFO_API_KEY = __env__('BC_IPINFO_API_KEY', false)
+
+/**
+ * Default ISO 2 country code ipinfo.io.
+ *
+ * @type {string}
+ */
+export const IPINFO_DEFAULT_COUNTRY = __env__('BC_IPINFO_DEFAULT_COUNTRY', false, 'US')
+
+/**
  * User Document.
  *
  * @export
@@ -517,6 +532,20 @@ export interface Booking extends Document {
  * @typedef {Car}
  * @extends {Document}
  */
+export interface DateBasedPrice extends Document {
+  startDate: Date
+  endDate: Date
+  dailyPrice: number
+}
+
+/**
+ * Car Document.
+ *
+ * @export
+ * @interface Car
+ * @typedef {Car}
+ * @extends {Document}
+ */
 export interface Car extends Document {
   name: string
   supplier: Types.ObjectId
@@ -531,6 +560,9 @@ export interface Car extends Document {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
+
+  isDateBasedPrice: boolean
+  dateBasedPrices: Types.ObjectId[]
 
   deposit: number
   available: boolean
