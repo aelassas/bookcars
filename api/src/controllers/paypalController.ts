@@ -73,7 +73,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     // 2. Update Booking if the payment succeeded
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
-    if (order.status === 'APPROVED') {
+    if (order.status === 'COMPLETED') {
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
       booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
