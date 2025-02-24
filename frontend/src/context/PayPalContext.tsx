@@ -18,6 +18,7 @@ const PayPalProvider = ({ children }: PayPalProviderProps) => (
         intent: 'capture',
         locale: PayPalService.getLocale(),
         // buyerCountry: 'US',
+        debug: env.PAYPAL_DEBUG,
       }}
     >
       {children}
