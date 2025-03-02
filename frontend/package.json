@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "fix": "eslint --fix .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "ncu": "ncu -u -x eslint,eslint-plugin-react-hooks,eslint-plugin-react-refresh",
+    "ncu": "ncu -u -x typescript,eslint,eslint-plugin-react-hooks,eslint-plugin-react-refresh",
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix"
   },
