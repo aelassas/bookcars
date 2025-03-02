@@ -10,7 +10,7 @@
     "start": "npm run build && node dist/src",
     "test": "rimraf coverage && npm run build && cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --coverage --no-cache",
     "lint": "eslint --ext .ts .",
-    "ncu": "ncu -u -x eslint,@types/express",
+    "ncu": "ncu -u -x typescript,eslint,@types/express",
     "script:db": "npm run build && node dist/scripts/db.js"
   },
   "keywords": [],
