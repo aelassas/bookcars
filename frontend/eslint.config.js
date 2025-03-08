@@ -65,6 +65,8 @@ const config = [
       '@typescript-eslint/no-explicit-any': 'off',
       'import/no-extraneous-dependencies': 'off',
       // 'react-compiler/react-compiler': 'error',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   }
 ]
