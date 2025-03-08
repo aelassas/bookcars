@@ -28,7 +28,9 @@ const WeekAgenda = ({ daysList, events }: Props) => {
         const today = isTimeZonedToday({ dateLeft: day, timeZone })
         const dayEvents = filterTodayAgendaEvents(events, day)
 
-        if (!alwaysShowAgendaDays && !dayEvents.length) return null
+        if (!alwaysShowAgendaDays && !dayEvents.length) {
+          return null
+        }
 
         return (
           <div key={day.getTime()} className={`rs__agenda_row ${isToday(day) ? 'rs__today_cell' : ''}`}>

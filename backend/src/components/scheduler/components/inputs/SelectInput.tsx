@@ -130,7 +130,9 @@ const EditorSelect = ({
               return text.join(',')
             }
             for (const opt of options) {
-              if (selected === opt.value) text.push([opt.text])
+              if (selected === opt.value) {
+                text.push([opt.text])
+              }
             }
             return text.join(',')
           }}

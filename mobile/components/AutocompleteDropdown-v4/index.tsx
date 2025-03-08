@@ -446,7 +446,7 @@ export const AutocompleteDropdown = memo<
     )
 
     const onPressOut = useCallback(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       (e: GestureResponderEvent) => {
         if (editable) {
           inputRef?.current?.focus()
@@ -457,7 +457,7 @@ export const AutocompleteDropdown = memo<
       [editable, toggle],
     )
 
-    // eslint-disable-next-line consistent-return
+     
     useEffect(() => {
       if ((!content && !inputRef.current?.isFocused()) || loading) {
         const db = debounce(() => {

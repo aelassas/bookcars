@@ -509,7 +509,7 @@ export default function removeDiacritics(text: string): string {
     const searchChar = text.charAt(i)
     let foundChar = false
 
-    // eslint-disable-next-line guard-for-in
+     
     for (const key in diacritics) {
       const index = diacritics[key]?.indexOf(searchChar)
       if (index !== -1) {

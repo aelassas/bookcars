@@ -73,9 +73,13 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
           const todayEvents = resourcedEvents
             .flatMap((e) => getRecurrencesForDate(e, today))
             .filter((e) => {
-              if (isSameDay(e.start, today)) return true
+              if (isSameDay(e.start, today)) {
+                return true
+              }
               const dayInterval = { start: startOfDay(e.start), end: endOfDay(e.end) }
-              if (eachFirstDayInCalcRow && isWithinInterval(eachFirstDayInCalcRow, dayInterval)) return true
+              if (eachFirstDayInCalcRow && isWithinInterval(eachFirstDayInCalcRow, dayInterval)) {
+                return true
+              }
               return false
             })
           const isToday = isTimeZonedToday({ dateLeft: today, timeZone })

@@ -10,7 +10,7 @@ interface WithFadeAnimationProps {
 export const withFadeAnimation = <P extends object>(
   WrappedComponent: ComponentType<P>,
   { containerStyle }: WithFadeAnimationProps = {},
-  // eslint-disable-next-line react/display-name
+   
 ): FC<P> => function (props: P) {
   const opacityAnimationValue = useRef(new Animated.Value(0)).current
 

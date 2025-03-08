@@ -50,7 +50,7 @@ const BookingFilter = ({
 
   useEffect(() => {
     _init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   const blurLocations = () => {
     setBlur(true)

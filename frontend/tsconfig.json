@@ -20,6 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    "typeRoots": ["./node_modules/@types", "./types", "./src/types"],
+    
     "paths": {
       "@/*": ["./src/*"],
       ":bookcars-types": ["../packages/bookcars-types"],
