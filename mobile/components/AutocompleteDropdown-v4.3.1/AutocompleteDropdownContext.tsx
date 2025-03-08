@@ -87,7 +87,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
         }
         setInputMeasurements((prev) =>
           (JSON.stringify(prev) === JSON.stringify(currentMeasurement) ? prev : currentMeasurement),)
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+         
         showAfterCalculation && setShow(true)
       })
     })

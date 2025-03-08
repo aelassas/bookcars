@@ -301,7 +301,7 @@ export const initialize = async (): Promise<boolean> => {
     // Update Booking TTL index if configuration changes
     //
     const bookingIndexes = await Booking.collection.indexes()
-    const bookingIndex = bookingIndexes.find((index: any) => index.name === BOOKING_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.BOOKING_EXPIRE_AT)
+    const bookingIndex = bookingIndexes.find((index) => index.name === BOOKING_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.BOOKING_EXPIRE_AT)
     if (bookingIndex) {
       try {
         await Booking.collection.dropIndex(bookingIndex.name!)
@@ -317,7 +317,7 @@ export const initialize = async (): Promise<boolean> => {
     // Update User TTL index if configuration changes
     //
     const userIndexes = await User.collection.indexes()
-    const userIndex = userIndexes.find((index: any) => index.name === USER_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.USER_EXPIRE_AT)
+    const userIndex = userIndexes.find((index) => index.name === USER_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.USER_EXPIRE_AT)
     if (userIndex) {
       try {
         await User.collection.dropIndex(userIndex.name!)
@@ -333,7 +333,7 @@ export const initialize = async (): Promise<boolean> => {
     // Update Token TTL index if configuration changes
     //
     const tokenIndexes = await Token.collection.indexes()
-    const tokenIndex = tokenIndexes.find((index: any) => index.name.includes(TOKEN_EXPIRE_AT_INDEX_NAME))
+    const tokenIndex = tokenIndexes.find((index) => index.name?.includes(TOKEN_EXPIRE_AT_INDEX_NAME))
     if (tokenIndex) {
       try {
         await Token.collection.dropIndex(tokenIndex.name!)

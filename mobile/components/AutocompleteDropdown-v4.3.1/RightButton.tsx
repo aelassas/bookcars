@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+ 
 import React, { memo, useEffect, useRef } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { ActivityIndicator, Animated, Easing, StyleSheet, TouchableOpacity, View } from 'react-native'

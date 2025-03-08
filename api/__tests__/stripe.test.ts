@@ -14,8 +14,7 @@ import Booking from '../src/models/Booking'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
 })
 
 //

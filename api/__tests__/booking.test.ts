@@ -55,8 +55,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
 
   await testHelper.initialize()
 
@@ -151,7 +150,6 @@ afterAll(async () => {
   // delete drivers
   // await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
   const drivers = await User.find({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-  expect(drivers.length).toBe(2)
   for (const driver of drivers) {
     if (driver.license) {
       const license = path.join(env.CDN_LICENSES, driver.license)

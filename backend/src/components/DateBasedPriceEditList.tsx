@@ -50,15 +50,22 @@ const DateBasedPriceEditList = (
                     required
                     onChange={(date) => {
                       if (date && dateBasedPrice.endDate && new Date(dateBasedPrice.endDate).getTime() < date.getTime()) {
-                        dateBasedPrice.endDate = null
+                        const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
+                        __values[index].startDate = date
+                        __values[index].endDate = null
+                        setValues(__values)
+                        if (onUpdate) {
+                          onUpdate(__values[index], index)
+                        }
+                      } else {
+                        const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
+                        __values[index].startDate = date
+                        setValues(__values)
+                        if (onUpdate) {
+                          onUpdate(__values[index], index)
+                        }
                       }
 
-                      const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
-                      __values[index].startDate = date
-                      setValues(__values)
-                      if (onUpdate) {
-                        onUpdate(__values[index], index)
-                      }
                     }}
                     language={UserService.getLanguage()}
                     variant="standard"
@@ -72,14 +79,20 @@ const DateBasedPriceEditList = (
                     required
                     onChange={(date) => {
                       if (date && dateBasedPrice.startDate && new Date(dateBasedPrice.startDate).getTime() > date.getTime()) {
-                        dateBasedPrice.startDate = null
-                      }
-
-                      const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
-                      __values[index].endDate = date
-                      setValues(__values)
-                      if (onUpdate) {
-                        onUpdate(__values[index], index)
+                        const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
+                        __values[index].startDate = null
+                        __values[index].endDate = date
+                        setValues(__values)
+                        if (onUpdate) {
+                          onUpdate(__values[index], index)
+                        }
+                      } else {
+                        const __values = bookcarsHelper.clone(values) as bookcarsTypes.DateBasedPrice[]
+                        __values[index].endDate = date
+                        setValues(__values)
+                        if (onUpdate) {
+                          onUpdate(__values[index], index)
+                        }
                       }
                     }}
                     language={UserService.getLanguage()}
