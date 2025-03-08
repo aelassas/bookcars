@@ -7,7 +7,7 @@ interface NothingFoundProps {
   emptyResultText?: string
 }
 
-// eslint-disable-next-line react/display-name
+ 
 export const NothingFound: FC<NothingFoundProps> = memo(({ ...props }) => {
   const EL = withFadeAnimation(
     () => (

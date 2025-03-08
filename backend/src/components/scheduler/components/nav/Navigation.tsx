@@ -92,7 +92,9 @@ const Navigation = () => {
     }
   }
 
-  if (!navigation && disableViewNavigator) return null
+  if (!navigation && disableViewNavigator) {
+    return null
+  }
 
   return (
     <NavigationDiv sticky={stickyNavigation ? '1' : '0'}>

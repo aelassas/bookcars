@@ -49,8 +49,7 @@ let countryId = ''
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
 
   const countryValue1 = new LocationValue({ language: 'en', value: 'Country 1' })
@@ -688,7 +687,7 @@ describe('DELETE /api/delete-location/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(204)
 
-    // test (wrong location id)
+    // test failure (wrong location id)
     res = await request(app)
       .delete('/api/delete-location/0')
       .set(env.X_ACCESS_TOKEN, token)

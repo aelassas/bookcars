@@ -505,12 +505,12 @@ const diacritics: DiacriticsMap = {
 export default function removeDiacritics(text: string): string {
   const result: string[] = []
 
-  // eslint-disable-next-line no-plusplus
+   
   for (let i = 0; i < text.length; i++) {
     const searchChar = text.charAt(i)
     let foundChar = false
 
-    // eslint-disable-next-line guard-for-in
+     
     for (const key in diacritics) {
       const index = diacritics[key]?.indexOf(searchChar)
       if (index !== -1) {

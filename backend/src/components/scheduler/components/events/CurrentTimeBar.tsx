@@ -36,7 +36,9 @@ const CurrentTimeBar = (props: CurrentTimeBarProps) => {
   }, [startHour, step, minuteHeight, timeZone])
 
   // Prevent showing bar on top of days/header
-  if (top < 0) return null
+  if (top < 0) {
+    return null
+  }
 
   return (
     <TimeIndicatorBar style={{ top, zIndex }}>

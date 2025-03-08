@@ -24,7 +24,9 @@ const TodayTypo = ({ date, onClick, locale }: TodayTypoProps) => {
         className={onClick ? 'rs__hover__op' : ''}
         onClick={(e) => {
           e.stopPropagation()
-          if (onClick) onClick(date)
+          if (onClick) {
+            onClick(date)
+          }
         }}
       >
         {format(date, 'dd', { locale })}

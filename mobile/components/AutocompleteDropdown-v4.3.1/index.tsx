@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+ 
 import React, {
   forwardRef,
   memo,
@@ -442,7 +442,7 @@ export const AutocompleteDropdown = memo<
     )
 
     const onPressOut = useCallback(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       (e: GestureResponderEvent) => {
         closeAll()
         if (editable) {
@@ -454,7 +454,7 @@ export const AutocompleteDropdown = memo<
       [closeAll, editable, toggle],
     )
 
-    // eslint-disable-next-line consistent-return
+     
     useEffect(() => {
       if ((!content && !inputRef.current?.isFocused()) || loading) {
         const db = debounce(() => {
@@ -518,7 +518,7 @@ export const AutocompleteDropdown = memo<
         style={[styles.container, containerStyle]}>
         <View
           ref={containerRef}
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+           
           onLayout={(_) => { }} // it's necessary use onLayout here for Androd (bug?)
           style={[styles.inputContainerStyle, inputContainerStyle]}>
           {LeftComponent}

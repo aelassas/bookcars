@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [route.params, isFocused])  
 
   const onLoad = () => {
     setReload(false)
