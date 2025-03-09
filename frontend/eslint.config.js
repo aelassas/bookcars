@@ -6,17 +6,18 @@ import reactRefreshPlugin from 'eslint-plugin-react-refresh'
 import reactCompilerPlugin from 'eslint-plugin-react-compiler'
 
 const config = [
-  { ...reactPlugin.configs.flat.recommended, settings: { react: { version: "detect" } } },
+  { ...reactPlugin.configs.flat.recommended, settings: { react: { version: 'detect' } } },
   reactCompilerPlugin.configs.recommended, 
   {
     ignores: [
       'node_modules/',
       'build/',
+      'vite.config.js',
       'vite.config.d.ts',
     ]
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -64,9 +65,9 @@ const config = [
       'no-console': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'import/no-extraneous-dependencies': 'off',
+      'quotes': ['error', 'single', { 'avoidEscape': true }],
+      'jsx-quotes': ['error', 'prefer-double'],
       // 'react-compiler/react-compiler': 'error',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
     },
   }
 ]
