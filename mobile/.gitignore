@@ -92,3 +92,5 @@ android/
 ios/
 
 %ProgramData%/
+
+*.tsbuildinfo
