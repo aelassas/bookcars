@@ -43,6 +43,7 @@ const config = [
       'semi': ['error', 'never'],
       'brace-style': ['error', '1tbs'],
       'curly': 'error',
+      'quotes': ['error', 'single', { 'avoidEscape': true }],
 
       // Import plugin rules
       'import/no-unresolved': 'off',
