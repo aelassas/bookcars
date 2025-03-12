@@ -867,8 +867,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.supplier
-      car.supplier = { _id, fullName, avatar }
+      const { _id, fullName, avatar, priceChangeRate } = car.supplier
+      car.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
     return res.json(data)
