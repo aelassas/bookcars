@@ -87,6 +87,7 @@ const strings = new LocalizedStrings({
     MIN_RENTAL_DAYS: 'Jours Minimum de location',
     DRIVER_LICENSE: 'Permis de conduire',
     UPLOAD_DRIVER_LICENSE: 'Charger le permis de conduire...',
+    PRICE_CHANGE_RATE: 'Taux de variation du prix (+/- %)',
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -172,6 +173,7 @@ const strings = new LocalizedStrings({
     MIN_RENTAL_DAYS: 'Minimum Rental Days',
     DRIVER_LICENSE: "Driver's License",
     UPLOAD_DRIVER_LICENSE: "Upload driver's license...",
+    PRICE_CHANGE_RATE: 'Price Change Rate (+/- %)',
   },
   es: {
     GENERIC_ERROR: 'Se ha producido un error no controlado.',
@@ -257,6 +259,7 @@ const strings = new LocalizedStrings({
     MIN_RENTAL_DAYS: 'Días mínimos de alquiler',
     DRIVER_LICENSE: 'Licencia de conducir',
     UPLOAD_DRIVER_LICENSE: 'Subir licencia de conducir...',
+    PRICE_CHANGE_RATE: 'Tasa de cambio de precio (+/- %)',
   },
 })
 

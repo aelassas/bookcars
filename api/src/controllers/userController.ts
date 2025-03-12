@@ -961,6 +961,7 @@ export const update = async (req: Request, res: Response) => {
       payLater,
       licenseRequired,
       minimumRentalDays,
+      priceChangeRate,
     } = body
 
     if (fullName) {
@@ -971,6 +972,7 @@ export const update = async (req: Request, res: Response) => {
     user.bio = bio
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     user.minimumRentalDays = minimumRentalDays
+    user.priceChangeRate = priceChangeRate
     if (type) {
       user.type = type as bookcarsTypes.UserType
     }
@@ -1097,6 +1099,7 @@ export const getUser = async (req: Request, res: Response) => {
       licenseRequired: 1,
       license: 1,
       minimumRentalDays: 1,
+      priceChangeRate: 1,
     }).lean()
 
     if (!user) {

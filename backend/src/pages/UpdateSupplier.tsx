@@ -50,6 +50,7 @@ const UpdateSupplier = () => {
   const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -97,6 +98,10 @@ const UpdateSupplier = () => {
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,6 +201,7 @@ const UpdateSupplier = () => {
               setPayLater(_supplier.payLater || false)
               setLicenseRequired(_supplier.licenseRequired || false)
               setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
+              setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -252,7 +258,8 @@ const UpdateSupplier = () => {
         bio,
         payLater,
         licenseRequired,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
       }
 
       const res = await SupplierService.update(data)
@@ -350,6 +357,18 @@ const UpdateSupplier = () => {
                   value={minimumRentalDays}
                 />
               </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                <Input
+                  type="text"
+                  onChange={handlePriceChangeRateChange}
+                  autoComplete="off"
+                  slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }}
+                  value={priceChangeRate}
+                />
+              </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
                 <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
