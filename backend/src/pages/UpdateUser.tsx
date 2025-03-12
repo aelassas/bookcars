@@ -61,6 +61,7 @@ const UpdateUser = () => {
   const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -118,6 +119,10 @@ const UpdateUser = () => {
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,6 +238,7 @@ const UpdateUser = () => {
               setPayLater(_user.payLater || false)
               setLicenseRequired(_user.licenseRequired || false)
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
+              setPriceChangeRate(_user.priceChangeRate?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -302,6 +308,7 @@ const UpdateUser = () => {
         avatar,
         birthDate,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -449,6 +456,17 @@ const UpdateUser = () => {
                       autoComplete="off"
                       slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
                       value={minimumRentalDays}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                    <Input
+                      type="text"
+                      onChange={handlePriceChangeRateChange}
+                      autoComplete="off"
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }}
+                      value={priceChangeRate}
                     />
                   </FormControl>
                 </>

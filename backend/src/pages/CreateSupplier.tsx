@@ -47,6 +47,7 @@ const CreateSupplier = () => {
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -126,6 +127,10 @@ const CreateSupplier = () => {
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +239,8 @@ const CreateSupplier = () => {
         payLater,
         licenseRequired,
         contracts,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
       }
 
       const status = await UserService.create(data)
@@ -345,6 +351,11 @@ const CreateSupplier = () => {
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
               <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+              <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }} />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

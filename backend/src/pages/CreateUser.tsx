@@ -59,6 +59,7 @@ const CreateUser = () => {
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [license, setLicense] = useState<string | undefined>()
+  const [priceChangeRate, setPriceChangeRate] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -158,6 +159,10 @@ const CreateUser = () => {
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -299,6 +304,7 @@ const CreateUser = () => {
         language,
         supplier,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         license,
       }
 
@@ -458,6 +464,11 @@ const CreateUser = () => {
                   <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                     <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                    <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }} />
                   </FormControl>
                 </>
               )}
