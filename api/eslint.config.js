@@ -44,6 +44,7 @@ const config = [
       'brace-style': ['error', '1tbs'],
       'curly': 'error',
       'quotes': ['error', 'single', { 'avoidEscape': true }],
+      'no-unused-vars': 'error',
 
       // Import plugin rules
       'import/no-unresolved': 'off',

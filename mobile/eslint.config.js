@@ -62,6 +62,7 @@ const config = [
       'curly': 'error',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      'no-unused-vars': 'off',
     },
   },
 ]
