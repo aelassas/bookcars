@@ -172,6 +172,7 @@ export interface UpdateSupplierPayload {
   payLater: boolean
   licenseRequired: boolean
   minimumRentalDays?: number
+  priceChangeRate?: number
 }
 
 export interface CreateCarPayload {
@@ -282,6 +283,7 @@ export interface CreateUserPayload {
   licenseRequired?: boolean
   minimumRentalDays?: number
   license?: string
+  priceChangeRate?: number
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -383,6 +385,7 @@ export interface User {
   licenseRequired?: boolean
   license?: string | null
   minimumRentalDays?: number
+  priceChangeRate?: number
 }
 
 export interface Option {

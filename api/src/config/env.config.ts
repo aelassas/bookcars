@@ -443,6 +443,7 @@ export interface User extends Document {
   license?: string | null
   minimumRentalDays?: number
   expireAt?: Date
+  priceChangeRate?: number
 }
 
 /**
