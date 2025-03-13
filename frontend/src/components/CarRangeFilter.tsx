@@ -28,13 +28,19 @@ const CarRangeFilter = ({
   const midiRef = useRef<HTMLInputElement>(null)
   const maxiRef = useRef<HTMLInputElement>(null)
   const scooterRef = useRef<HTMLInputElement>(null)
+  const busRef = useRef<HTMLInputElement>(null)
+  const truckRef = useRef<HTMLInputElement>(null)
+  const caravanRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (allChecked && miniRef.current && midiRef.current && maxiRef.current && scooterRef.current) {
+    if (allChecked && miniRef.current && midiRef.current && maxiRef.current && scooterRef.current && busRef.current && truckRef.current && caravanRef.current) {
       miniRef.current.checked = true
       midiRef.current.checked = true
       maxiRef.current.checked = true
       scooterRef.current.checked = true
+      busRef.current.checked = true
+      truckRef.current.checked = true
+      caravanRef.current.checked = true
     }
   }, [allChecked])
 
@@ -168,6 +174,99 @@ const CarRangeFilter = ({
     handleCheckScooterChange(event)
   }
 
+  const handleCheckBusChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    if ('checked' in e.currentTarget && e.currentTarget.checked) {
+      values.push(bookcarsTypes.CarRange.Bus)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Bus),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setValues(values)
+
+    handleOnChange(values)
+  }
+
+  const handleBusClick = (e: React.MouseEvent<HTMLElement>) => {
+    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckBusChange(event)
+  }
+
+  const handleCheckTruckChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    if ('checked' in e.currentTarget && e.currentTarget.checked) {
+      values.push(bookcarsTypes.CarRange.Truck)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Truck),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setValues(values)
+
+    handleOnChange(values)
+  }
+
+  const handleTruckClick = (e: React.MouseEvent<HTMLElement>) => {
+    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckTruckChange(event)
+  }
+
+  const handleCheckCaravanChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    if ('checked' in e.currentTarget && e.currentTarget.checked) {
+      values.push(bookcarsTypes.CarRange.Caravan)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Caravan),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setValues(values)
+
+    handleOnChange(values)
+  }
+
+  const handleCaravanClick = (e: React.MouseEvent<HTMLElement>) => {
+    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckCaravanChange(event)
+  }
+
   const handleUncheckAllChange = () => {
     if (allChecked) {
       // uncheck all
@@ -182,6 +281,15 @@ const CarRangeFilter = ({
       }
       if (scooterRef.current) {
         scooterRef.current.checked = false
+      }
+      if (busRef.current) {
+        busRef.current.checked = false
+      }
+      if (truckRef.current) {
+        truckRef.current.checked = false
+      }
+      if (caravanRef.current) {
+        caravanRef.current.checked = false
       }
 
       setAllChecked(false)
@@ -199,6 +307,15 @@ const CarRangeFilter = ({
       }
       if (scooterRef.current) {
         scooterRef.current.checked = true
+      }
+      if (busRef.current) {
+        busRef.current.checked = true
+      }
+      if (truckRef.current) {
+        truckRef.current.checked = true
+      }
+      if (caravanRef.current) {
+        caravanRef.current.checked = true
       }
 
       setAllChecked(true)
@@ -251,6 +368,37 @@ const CarRangeFilter = ({
             tabIndex={0}
           >
             {helper.getCarRange(bookcarsTypes.CarRange.Scooter)}
+          </span>
+        </div>
+
+        <div className="filter-element">
+          <input ref={busRef} type="checkbox" className="range-checkbox" onChange={handleCheckBusChange} />
+          <span
+            onClick={handleBusClick}
+            role="button"
+            tabIndex={0}
+          >
+            {helper.getCarRange(bookcarsTypes.CarRange.Bus)}
+          </span>
+        </div>
+        <div className="filter-element">
+          <input ref={truckRef} type="checkbox" className="range-checkbox" onChange={handleCheckTruckChange} />
+          <span
+            onClick={handleTruckClick}
+            role="button"
+            tabIndex={0}
+          >
+            {helper.getCarRange(bookcarsTypes.CarRange.Truck)}
+          </span>
+        </div>
+        <div className="filter-element">
+          <input ref={caravanRef} type="checkbox" className="range-checkbox" onChange={handleCheckCaravanChange} />
+          <span
+            onClick={handleCaravanClick}
+            role="button"
+            tabIndex={0}
+          >
+            {helper.getCarRange(bookcarsTypes.CarRange.Caravan)}
           </span>
         </div>
       </div>

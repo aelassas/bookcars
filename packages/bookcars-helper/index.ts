@@ -460,6 +460,9 @@ export const getAllRanges = () => [
   bookcarsTypes.CarRange.Midi,
   bookcarsTypes.CarRange.Maxi,
   bookcarsTypes.CarRange.Scooter,
+  bookcarsTypes.CarRange.Bus,
+  bookcarsTypes.CarRange.Truck,
+  bookcarsTypes.CarRange.Caravan,
 ]
 
 /**

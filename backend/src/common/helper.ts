@@ -749,6 +749,15 @@ export const getCarRange = (range: bookcarsTypes.CarRange) => {
     case bookcarsTypes.CarRange.Scooter:
       return strings.CAR_RANGE_SCOOTER
 
+    case bookcarsTypes.CarRange.Bus:
+      return strings.CAR_RANGE_BUS
+
+    case bookcarsTypes.CarRange.Truck:
+      return strings.CAR_RANGE_TRUCK
+
+    case bookcarsTypes.CarRange.Caravan:
+      return strings.CAR_RANGE_CARAVAN
+
     default:
       return ''
   }
