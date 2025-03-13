@@ -246,9 +246,10 @@ export const getFuelPolicy = (type: string) => {
  *
  * @param {number} cancellation
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getCancellation = async (cancellation: number, language: string) => {
+export const getCancellation = async (cancellation: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -256,7 +257,8 @@ export const getCancellation = async (cancellation: number, language: string) =>
   } if (cancellation === 0) {
     return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _cancellation = await StripeService.convertPrice(cancellation)
+  let _cancellation = await StripeService.convertPrice(cancellation)
+  _cancellation += _cancellation * (priceChangeRate / 100)
   return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_cancellation, (await StripeService.getCurrencySymbol()), language)}`
 }
 
@@ -265,9 +267,10 @@ export const getCancellation = async (cancellation: number, language: string) =>
  *
  * @param {number} amendments
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getAmendments = async (amendments: number, language: string) => {
+export const getAmendments = async (amendments: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -275,7 +278,8 @@ export const getAmendments = async (amendments: number, language: string) => {
   } if (amendments === 0) {
     return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   }
-  const _amendments = await StripeService.convertPrice(amendments)
+  let _amendments = await StripeService.convertPrice(amendments)
+  _amendments += _amendments * (priceChangeRate / 100)
   return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_amendments, (await StripeService.getCurrencySymbol()), language)}`
 }
 
@@ -284,9 +288,10 @@ export const getAmendments = async (amendments: number, language: string) => {
  *
  * @param {number} theftProtection
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getTheftProtection = async (theftProtection: number, language: string) => {
+export const getTheftProtection = async (theftProtection: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -294,7 +299,8 @@ export const getTheftProtection = async (theftProtection: number, language: stri
   } if (theftProtection === 0) {
     return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  let _theftProtection = await StripeService.convertPrice(theftProtection)
+  _theftProtection += _theftProtection * (priceChangeRate / 100)
   return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_theftProtection, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
@@ -303,9 +309,10 @@ export const getTheftProtection = async (theftProtection: number, language: stri
  *
  * @param {number} collisionDamageWaiver
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, language: string) => {
+export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -313,7 +320,8 @@ export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, la
   } if (collisionDamageWaiver === 0) {
     return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  let _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  _collisionDamageWaiver += _collisionDamageWaiver * (priceChangeRate / 100)
   return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_collisionDamageWaiver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
@@ -322,9 +330,10 @@ export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, la
  *
  * @param {number} fullInsurance
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getFullInsurance = async (fullInsurance: number, language: string) => {
+export const getFullInsurance = async (fullInsurance: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -332,7 +341,8 @@ export const getFullInsurance = async (fullInsurance: number, language: string) 
   } if (fullInsurance === 0) {
     return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  let _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  _fullInsurance += _fullInsurance * (priceChangeRate / 100)
   return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_fullInsurance, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
@@ -341,9 +351,10 @@ export const getFullInsurance = async (fullInsurance: number, language: string) 
  *
  * @param {number} additionalDriver
  * @param {string} language
+ * @param {number} priceChangeRate
  * @returns {string}
  */
-export const getAdditionalDriver = async (additionalDriver: number, language: string) => {
+export const getAdditionalDriver = async (additionalDriver: number, language: string, priceChangeRate: number) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (additionalDriver === -1) {
@@ -351,7 +362,8 @@ export const getAdditionalDriver = async (additionalDriver: number, language: st
   } if (additionalDriver === 0) {
     return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}`
   }
-  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  let _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  _additionalDriver += _additionalDriver * (priceChangeRate / 100)
   return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_additionalDriver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')}`
 }
 
@@ -376,10 +388,11 @@ export const getDaysShort = (days: number) => `${days} ${i18n.t('PRICE_DAYS_PART
  *
  * @param {number} cancellation
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getCancellationOption = async (cancellation: number, language: string, hidePlus?: boolean) => {
+export const getCancellationOption = async (cancellation: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
@@ -387,7 +400,8 @@ export const getCancellationOption = async (cancellation: number, language: stri
   } if (cancellation === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _cancellation = await StripeService.convertPrice(cancellation)
+  let _cancellation = await StripeService.convertPrice(cancellation)
+  _cancellation += _cancellation * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_cancellation, (await StripeService.getCurrencySymbol()), language)}`
 }
 
@@ -396,10 +410,11 @@ export const getCancellationOption = async (cancellation: number, language: stri
  *
  * @param {number} amendments
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getAmendmentsOption = async (amendments: number, language: string, hidePlus?: boolean) => {
+export const getAmendmentsOption = async (amendments: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
@@ -407,7 +422,8 @@ export const getAmendmentsOption = async (amendments: number, language: string, 
   } if (amendments === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   }
-  const _amendments = await StripeService.convertPrice(amendments)
+  let _amendments = await StripeService.convertPrice(amendments)
+  _amendments += _amendments * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_amendments, (await StripeService.getCurrencySymbol()), language)}`
 }
 
@@ -417,10 +433,11 @@ export const getAmendmentsOption = async (amendments: number, language: string, 
  * @param {number} collisionDamageWaiver
  * @param {number} days
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: number, days: number, language: string, hidePlus?: boolean) => {
+export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: number, days: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (collisionDamageWaiver === -1) {
@@ -428,7 +445,8 @@ export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: numb
   } if (collisionDamageWaiver === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  let _collisionDamageWaiver = await StripeService.convertPrice(collisionDamageWaiver)
+  _collisionDamageWaiver += _collisionDamageWaiver * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_collisionDamageWaiver * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_collisionDamageWaiver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
@@ -438,10 +456,11 @@ export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: numb
  * @param {number} theftProtection
  * @param {number} days
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getTheftProtectionOption = async (theftProtection: number, days: number, language: string, hidePlus?: boolean) => {
+export const getTheftProtectionOption = async (theftProtection: number, days: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (theftProtection === -1) {
@@ -449,7 +468,8 @@ export const getTheftProtectionOption = async (theftProtection: number, days: nu
   } if (theftProtection === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _theftProtection = await StripeService.convertPrice(theftProtection)
+  let _theftProtection = await StripeService.convertPrice(theftProtection)
+  _theftProtection += _theftProtection * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_theftProtection * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_theftProtection, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
@@ -459,10 +479,11 @@ export const getTheftProtectionOption = async (theftProtection: number, days: nu
  * @param {number} fullInsurance
  * @param {number} days
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getFullInsuranceOption = async (fullInsurance: number, days: number, language: string, hidePlus?: boolean) => {
+export const getFullInsuranceOption = async (fullInsurance: number, days: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (fullInsurance === -1) {
@@ -470,7 +491,8 @@ export const getFullInsuranceOption = async (fullInsurance: number, days: number
   } if (fullInsurance === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   }
-  const _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  let _fullInsurance = await StripeService.convertPrice(fullInsurance)
+  _fullInsurance += _fullInsurance * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_fullInsurance * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_fullInsurance, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
@@ -480,16 +502,18 @@ export const getFullInsuranceOption = async (fullInsurance: number, days: number
  * @param {number} additionalDriver
  * @param {number} days
  * @param {string} language
+ * @param {number} priceChangeRate
  * @param {?boolean} [hidePlus]
  * @returns {string}
  */
-export const getAdditionalDriverOption = async (additionalDriver: number, days: number, language: string, hidePlus?: boolean) => {
+export const getAdditionalDriverOption = async (additionalDriver: number, days: number, language: string, priceChangeRate: number, hidePlus?: boolean) => {
   if (additionalDriver === -1) {
     return i18n.t('UNAVAILABLE')
   } if (additionalDriver === 0) {
     return i18n.t('INCLUDED')
   }
-  const _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  let _additionalDriver = await StripeService.convertPrice(additionalDriver)
+  _additionalDriver += _additionalDriver * (priceChangeRate / 100)
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(_additionalDriver * days, (await StripeService.getCurrencySymbol()), language)} (${bookcarsHelper.formatPrice(_additionalDriver, (await StripeService.getCurrencySymbol()), language)}${i18n.t('DAILY')})`
 }
 
