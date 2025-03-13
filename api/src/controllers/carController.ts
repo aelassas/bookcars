@@ -667,9 +667,24 @@ export const getBookingCars = async (req: Request, res: Response) => {
     const cars = await Car.aggregate(
       [
         {
+          $lookup: {
+            from: 'User',
+            let: { userId: '$supplier' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$userId'] },
+                },
+              },
+            ],
+            as: 'supplier',
+          },
+        },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        {
           $match: {
             $and: [
-              { supplier: { $eq: supplier } },
+              { 'supplier._id': supplier },
               { locations: pickupLocation },
               { available: true }, { name: { $regex: keyword, $options: options } },
             ],
@@ -682,6 +697,11 @@ export const getBookingCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
+    for (const car of cars) {
+      const { _id, fullName, avatar, priceChangeRate } = car.supplier
+      car.supplier = { _id, fullName, avatar, priceChangeRate }
+    }
+    console.log(cars[cars.length - 1])
     return res.json(cars)
   } catch (err) {
     logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
