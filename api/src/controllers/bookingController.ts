@@ -725,6 +725,7 @@ export const getBooking = async (req: Request, res: Response) => {
         fullName: booking.supplier.fullName,
         avatar: booking.supplier.avatar,
         payLater: booking.supplier.payLater,
+        priceChangeRate: booking.supplier.priceChangeRate,
       }
 
       booking.car.supplier = {
@@ -732,6 +733,7 @@ export const getBooking = async (req: Request, res: Response) => {
         fullName: booking.car.supplier.fullName,
         avatar: booking.car.supplier.avatar,
         payLater: booking.car.supplier.payLater,
+        priceChangeRate: booking.car.supplier.priceChangeRate,
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
