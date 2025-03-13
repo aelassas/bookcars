@@ -19,9 +19,9 @@ export enum CarType {
 }
 
 export enum CarRange {
-  Mini = 'mini',
-  Midi = 'midi',
-  Maxi = 'maxi',
+  Mini = 'mini', // car
+  Midi = 'midi', // suv
+  Maxi = 'maxi', // van
   Scooter = 'scooter',
   Bus = 'bus',
   Truck = 'truck',
