@@ -58,7 +58,7 @@ const Booking = ({
   useEffect(() => {
     const init = async () => {
       if (booking && car && language && days) {
-        const priceChangeRate = car.supplier.priceChangeRate || 0
+        const priceChangeRate = (booking.supplier as bookcarsTypes.User).priceChangeRate || 0
         setCurrencySymbol(await StripeService.getCurrencySymbol())
         setPrice(await StripeService.convertPrice(booking.price!))
         setCancellation(await helper.getCancellationOption(car.cancellation, language, priceChangeRate, true))
