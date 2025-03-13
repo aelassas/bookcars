@@ -472,8 +472,9 @@ export interface UserInfo {
   type?: string
   blacklisted?: boolean
   payLater?: boolean
-  licenseRequired?: boolean,
+  licenseRequired?: boolean
   license?: string
+  priceChangeRate?: number
 }
 
 /**

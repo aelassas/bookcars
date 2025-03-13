@@ -450,6 +450,7 @@ export const getCar = async (req: Request, res: Response) => {
         avatar,
         payLater,
         licenseRequired,
+        priceChangeRate,
       } = car.supplier
       car.supplier = {
         _id,
@@ -457,6 +458,7 @@ export const getCar = async (req: Request, res: Response) => {
         avatar,
         payLater,
         licenseRequired,
+        priceChangeRate,
       }
 
       for (const location of car.locations) {
