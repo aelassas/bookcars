@@ -15,7 +15,7 @@ export enum CarType {
   Electric = 'electric',
   Hybrid = 'hybrid',
   PlugInHybrid = 'plugInHybrid',
-  Unknown = 'unknown'
+  Unknown = 'unknown',
 }
 
 export enum CarRange {
@@ -23,6 +23,9 @@ export enum CarRange {
   Midi = 'midi',
   Maxi = 'maxi',
   Scooter = 'scooter',
+  Bus = 'bus',
+  Truck = 'truck',
+  Caravan = 'caravan',
 }
 
 export enum CarMultimedia {
@@ -34,14 +37,14 @@ export enum CarMultimedia {
 
 export enum GearboxType {
   Manual = 'manual',
-  Automatic = 'automatic'
+  Automatic = 'automatic',
 }
 
 export enum FuelPolicy {
   LikeForLike = 'likeForlike',
   FreeTank = 'freeTank',
   FullToFull = 'fullToFull',
-  FullToEmpty = 'FullToEmpty'
+  FullToEmpty = 'FullToEmpty',
 }
 
 export enum BookingStatus {
@@ -50,17 +53,17 @@ export enum BookingStatus {
   Deposit = 'deposit',
   Paid = 'paid',
   Reserved = 'reserved',
-  Cancelled = 'cancelled'
+  Cancelled = 'cancelled',
 }
 
 export enum Mileage {
   Limited = 'limited',
-  Unlimited = 'unlimited'
+  Unlimited = 'unlimited',
 }
 
 export enum Availablity {
   Available = 'available',
-  Unavailable = 'unavailable'
+  Unavailable = 'unavailable',
 }
 
 export enum RecordType {

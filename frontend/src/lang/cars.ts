@@ -96,6 +96,9 @@ const strings = new LocalizedStrings({
     CAR_RANGE_MIDI: 'SUV',
     CAR_RANGE_MAXI: 'Fourgon',
     CAR_RANGE_SCOOTER: 'Scooter',
+    CAR_RANGE_BUS: 'Bus',
+    CAR_RANGE_TRUCK: 'Camion',
+    CAR_RANGE_CARAVAN: 'Caravane',
   },
   en: {
     NEW_CAR: 'New car',
@@ -183,6 +186,9 @@ const strings = new LocalizedStrings({
     CAR_RANGE_MIDI: 'SUV',
     CAR_RANGE_MAXI: 'Van',
     CAR_RANGE_SCOOTER: 'Scooter',
+    CAR_RANGE_BUS: 'Bus',
+    CAR_RANGE_TRUCK: 'Truck',
+    CAR_RANGE_CARAVAN: 'Caravan',
   },
   es: {
     NEW_CAR: 'Coche nuevo',
@@ -270,6 +276,9 @@ const strings = new LocalizedStrings({
     CAR_RANGE_MIDI: 'Todoterreno',
     CAR_RANGE_MAXI: 'furgoneta',
     CAR_RANGE_SCOOTER: 'Scooter',
+    CAR_RANGE_BUS: 'Autobús',
+    CAR_RANGE_TRUCK: 'Camión',
+    CAR_RANGE_CARAVAN: 'Caravana',
   }
 })
 
