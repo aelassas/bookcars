@@ -4,7 +4,6 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
-import * as CarService from '@/services/CarService'
 import env from '@/config/env.config'
 
 /**
@@ -511,68 +510,7 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
 ]
 
 /**
- * Get price.
- *
- * @async
- * @param {bookcarsTypes.Booking} booking
- * @param {(bookcarsTypes.Car | undefined | null)} car
- * @param {(price: number) => void} onSucess
- * @param {(err: unknown) => void} onError
- * @returns {void, onError: (err: unknown) => void) => any}
- */
-export const price = async (
-  booking: bookcarsTypes.Booking,
-  car: bookcarsTypes.Car | undefined | null,
-  onSucess: (_price: number) => void,
-  onError: (err: unknown) => void
-) => {
-  const totalDays = (date1: Date, date2: Date) => Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
-
-  try {
-    if (!car) {
-      car = await CarService.getCar(booking.car as string)
-    }
-
-    if (car) {
-      const from = new Date(booking.from)
-      const to = new Date(booking.to)
-      const days = totalDays(from, to)
-
-      let _price = bookcarsHelper.calculateTotalPrice(car, from, to)
-      if (booking.cancellation && car.cancellation > 0) {
-        _price += car.cancellation
-      }
-      if (booking.amendments && car.amendments > 0) {
-        _price += car.amendments
-      }
-      if (booking.theftProtection && car.theftProtection > 0) {
-        _price += car.theftProtection * days
-      }
-      if (booking.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-        _price += car.collisionDamageWaiver * days
-      }
-      if (booking.fullInsurance && car.fullInsurance > 0) {
-        _price += car.fullInsurance * days
-      }
-      if (booking.additionalDriver && car.additionalDriver > 0) {
-        _price += car.additionalDriver * days
-      }
-
-      if (onSucess) {
-        onSucess(_price)
-      }
-    } else if (onError) {
-      onError(`Car ${booking.car} not found.`)
-    }
-  } catch (err) {
-    if (onError) {
-      onError(err)
-    }
-  }
-}
-
-/**
- * Get all user type;s.
+ * Get all user types.
  *
  * @returns {{}}
  */
