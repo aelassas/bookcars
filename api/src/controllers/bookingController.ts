@@ -985,8 +985,8 @@ export const getBookings = async (req: Request, res: Response) => {
     const bookings: env.BookingInfo[] = data[0].resultData
 
     for (const booking of bookings) {
-      const { _id, fullName, avatar } = booking.supplier
-      booking.supplier = { _id, fullName, avatar }
+      const { _id, fullName, avatar, priceChangeRate } = booking.supplier
+      booking.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
     return res.json(data)

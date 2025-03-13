@@ -30,23 +30,25 @@ const Extras = ({
       if (booking && days) {
         const language = UserService.getLanguage()
         const car = booking.car as bookcarsTypes.Car
+        const priceChangeRate = (booking.supplier as bookcarsTypes.User).priceChangeRate || 0
+
         if (booking.cancellation) {
-          setCancellationOption(await helper.getCancellationOption(car.cancellation, language))
+          setCancellationOption(await helper.getCancellationOption(car.cancellation, language, priceChangeRate))
         }
         if (booking.amendments) {
-          setAmendmentsOption(await helper.getAmendmentsOption(car.amendments, language))
+          setAmendmentsOption(await helper.getAmendmentsOption(car.amendments, language, priceChangeRate))
         }
         if (booking.collisionDamageWaiver) {
-          setCollisionDamageWaiverOption(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language))
+          setCollisionDamageWaiverOption(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, priceChangeRate))
         }
         if (booking.theftProtection) {
-          setTheftProtectionOption(await helper.getTheftProtectionOption(car.theftProtection, days, language))
+          setTheftProtectionOption(await helper.getTheftProtectionOption(car.theftProtection, days, language, priceChangeRate))
         }
         if (booking.fullInsurance) {
-          setFullInsuranceOption(await helper.getFullInsuranceOption(car.fullInsurance, days, language))
+          setFullInsuranceOption(await helper.getFullInsuranceOption(car.fullInsurance, days, language, priceChangeRate))
         }
         if (booking.additionalDriver) {
-          setAdditionalDriverOption(await helper.getAdditionalDriverOption(car.additionalDriver, days, language))
+          setAdditionalDriverOption(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, priceChangeRate))
         }
         setLoading(false)
       }
