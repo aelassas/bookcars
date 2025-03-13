@@ -701,7 +701,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
       const { _id, fullName, avatar, priceChangeRate } = car.supplier
       car.supplier = { _id, fullName, avatar, priceChangeRate }
     }
-    console.log(cars[cars.length - 1])
+
     return res.json(cars)
   } catch (err) {
     logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
