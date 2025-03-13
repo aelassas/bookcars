@@ -26,6 +26,9 @@ const CarRangeFilter = ({
   const [midi, setMidi] = useState(false)
   const [maxi, setMaxi] = useState(false)
   const [scooter, setScooter] = useState(false)
+  const [bus, setBus] = useState(false)
+  const [truck, setTruck] = useState(false)
+  const [caravan, setCaravan] = useState(false)
   const [values, setValues] = useState<bookcarsTypes.CarRange[]>([])
   const [allChecked, setAllChecked] = useState(false)
 
@@ -127,6 +130,75 @@ const CarRangeFilter = ({
     handleChange(values)
   }
 
+  const onValueChangeBus = (checked: boolean) => {
+    if (checked) {
+      values.push(bookcarsTypes.CarRange.Bus)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Bus),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setBus(checked)
+    setValues(values)
+    handleChange(values)
+  }
+
+  const onValueChangeTruck = (checked: boolean) => {
+    if (checked) {
+      values.push(bookcarsTypes.CarRange.Truck)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Truck),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setTruck(checked)
+    setValues(values)
+    handleChange(values)
+  }
+
+  const onValueChangeCaravan = (checked: boolean) => {
+    if (checked) {
+      values.push(bookcarsTypes.CarRange.Caravan)
+
+      if (values.length === allRanges.length) {
+        setAllChecked(true)
+      }
+    } else {
+      values.splice(
+        values.findIndex((v) => v === bookcarsTypes.CarRange.Caravan),
+        1,
+      )
+
+      if (values.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setCaravan(checked)
+    setValues(values)
+    handleChange(values)
+  }
+
   return (
     visible && (
       <View style={{ ...styles.container, ...style }}>
@@ -136,6 +208,9 @@ const CarRangeFilter = ({
             <Switch style={styles.component} textStyle={styles.text} value={midi} label={helper.getCarRange(bookcarsTypes.CarRange.Midi)} onValueChange={onValueChangeMidi} />
             <Switch style={styles.component} textStyle={styles.text} value={maxi} label={helper.getCarRange(bookcarsTypes.CarRange.Maxi)} onValueChange={onValueChangeMaxi} />
             <Switch style={styles.component} textStyle={styles.text} value={scooter} label={helper.getCarRange(bookcarsTypes.CarRange.Scooter)} onValueChange={onValueChangeScooter} />
+            <Switch style={styles.component} textStyle={styles.text} value={bus} label={helper.getCarRange(bookcarsTypes.CarRange.Bus)} onValueChange={onValueChangeBus} />
+            <Switch style={styles.component} textStyle={styles.text} value={truck} label={helper.getCarRange(bookcarsTypes.CarRange.Truck)} onValueChange={onValueChangeTruck} />
+            <Switch style={styles.component} textStyle={styles.text} value={caravan} label={helper.getCarRange(bookcarsTypes.CarRange.Caravan)} onValueChange={onValueChangeCaravan} />
           </View>
           <Link
             style={styles.link}
@@ -147,6 +222,9 @@ const CarRangeFilter = ({
                 setMidi(false)
                 setMaxi(false)
                 setScooter(false)
+                setBus(false)
+                setTruck(false)
+                setCaravan(false)
                 setAllChecked(false)
                 setValues([])
               } else {
@@ -155,6 +233,9 @@ const CarRangeFilter = ({
                 setMidi(true)
                 setMaxi(true)
                 setScooter(true)
+                setBus(true)
+                setTruck(true)
+                setCaravan(true)
                 setAllChecked(true)
                 setValues(_values)
                 handleChange(_values)
