@@ -39,6 +39,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Car fleet management
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
+* [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Location, country, parking spots and map features
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
@@ -125,6 +126,7 @@ You can install the Android App by downloading the APK and installing it on any 
     1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)
     2. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)
     3. [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
+    4. [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
     4. [Calculation Algorithm](https://github.com/aelassas/bookcars/wiki/Price-Calculation#calculation-algorithm)
 16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
