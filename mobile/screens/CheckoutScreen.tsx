@@ -243,10 +243,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const _to = new Date(route.params.to)
       setTo(_to)
 
-      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
+      const priceChangeRate = _car.supplier.priceChangeRate || 0
+      const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to, priceChangeRate))
       setPrice(_price)
 
-      const _depositPrice = _car.deposit > 0 ? await StripeService.convertPrice(_car.deposit) : 0
+      let _depositPrice = _car.deposit > 0 ? await StripeService.convertPrice(_car.deposit) : 0
+      _depositPrice += _depositPrice * (priceChangeRate / 100)
       setDepositPrice(_depositPrice)
 
       const included = (val: number) => val === 0
@@ -262,12 +264,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setCurrencySymbol(await StripeService.getCurrencySymbol())
 
       const days = bookcarsHelper.days(_from, _to)
-      setCancellationText(await helper.getCancellationOption(_car.cancellation, _language))
-      setAmendmentsText(await helper.getAmendmentsOption(_car.amendments, _language))
-      setCollisionDamageWaiverText(await helper.getCollisionDamageWaiverOption(_car.collisionDamageWaiver, days, _language))
-      setTheftProtectionText(await helper.getTheftProtectionOption(_car.theftProtection, days, _language))
-      setFullInsuranceText(await helper.getFullInsuranceOption(_car.fullInsurance, days, _language))
-      setAdditionalDriverText(await helper.getAdditionalDriverOption(_car.additionalDriver, days, _language))
+      setCancellationText(await helper.getCancellationOption(_car.cancellation, _language, priceChangeRate))
+      setAmendmentsText(await helper.getAmendmentsOption(_car.amendments, _language, priceChangeRate))
+      setCollisionDamageWaiverText(await helper.getCollisionDamageWaiverOption(_car.collisionDamageWaiver, days, _language, priceChangeRate))
+      setTheftProtectionText(await helper.getTheftProtectionOption(_car.theftProtection, days, _language, priceChangeRate))
+      setFullInsuranceText(await helper.getFullInsuranceOption(_car.fullInsurance, days, _language, priceChangeRate))
+      setAdditionalDriverText(await helper.getAdditionalDriverOption(_car.additionalDriver, days, _language, priceChangeRate))
 
       setVisible(true)
       setFormVisible(true)
@@ -487,7 +489,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setCancellation(checked)
     setPrice(_price)
   }
@@ -501,7 +503,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setAmendments(checked)
     setPrice(_price)
   }
@@ -515,7 +517,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setCollisionDamageWaiver(checked)
     setPrice(_price)
   }
@@ -529,7 +531,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setTheftProtection(checked)
     setPrice(_price)
   }
@@ -543,7 +545,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance: checked,
       additionalDriver,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setFullInsurance(checked)
     setPrice(_price)
   }
@@ -557,7 +559,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver: checked,
     }
-    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, options))
+    const _price = await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car as bookcarsTypes.Car, from as Date, to as Date, (car as bookcarsTypes.Car).supplier.priceChangeRate || 0, options))
     setAdditionalDriver(checked)
     setPrice(_price)
     setAdManuallyChecked(checked)
