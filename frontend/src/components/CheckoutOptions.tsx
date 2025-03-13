@@ -22,6 +22,7 @@ interface CheckoutOptionsProps {
   to: Date
   language: string
   clientSecret: string | null
+  payPalLoaded: boolean
   onPriceChange: (value: number) => void
   onAdManuallyCheckedChange: (value: boolean) => void
   onCancellationChange: (value: boolean) => void
@@ -38,6 +39,7 @@ const CheckoutOptions = ({
   to,
   language,
   clientSecret,
+  payPalLoaded,
   onPriceChange,
   onAdManuallyCheckedChange,
   onCancellationChange,
@@ -70,12 +72,13 @@ const CheckoutOptions = ({
 
   useEffect(() => {
     const fetchPrices = async () => {
-      setCancellationOption(await helper.getCancellationOption(car.cancellation, language))
-      setAmendmentsOption(await helper.getAmendmentsOption(car.amendments, language))
-      setTheftProtectionOption(await helper.getTheftProtectionOption(car.theftProtection, days, language))
-      setCollisionDamageWaiverOption(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language))
-      setFullInsuranceOption(await helper.getFullInsuranceOption(car.fullInsurance, days, language))
-      setAdditionalDriverOption(await helper.getAdditionalDriverOption(car.additionalDriver, days, language))
+      const priceChangeRate = car.supplier.priceChangeRate || 0
+      setCancellationOption(await helper.getCancellationOption(car.cancellation, language, priceChangeRate))
+      setAmendmentsOption(await helper.getAmendmentsOption(car.amendments, language, priceChangeRate))
+      setTheftProtectionOption(await helper.getTheftProtectionOption(car.theftProtection, days, language, priceChangeRate))
+      setCollisionDamageWaiverOption(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, priceChangeRate))
+      setFullInsuranceOption(await helper.getFullInsuranceOption(car.fullInsurance, days, language, priceChangeRate))
+      setAdditionalDriverOption(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, priceChangeRate))
       setLoading(false)
     }
 
@@ -97,7 +100,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setCancellation(_cancellation)
       onCancellationChange(_cancellation)
@@ -116,7 +119,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setAmendments(_amendments)
       onAmendmentsChange(_amendments)
@@ -135,7 +138,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setTheftProtection(_theftProtection)
       onTheftProtectionChange(_theftProtection)
@@ -154,7 +157,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setCollisionDamageWaiver(_collisionDamageWaiver)
       onCollisionDamageWaiverChange(_collisionDamageWaiver)
@@ -173,7 +176,7 @@ const CheckoutOptions = ({
         fullInsurance: _fullInsurance,
         additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setFullInsurance(_fullInsurance)
       onFullInsuranceChange(_fullInsurance)
@@ -192,7 +195,7 @@ const CheckoutOptions = ({
         fullInsurance,
         additionalDriver: _additionalDriver,
       }
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, options))
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options))
 
       setAdditionalDriver(_additionalDriver)
       onAdditionalDriverChange(_additionalDriver)
@@ -210,7 +213,7 @@ const CheckoutOptions = ({
       <div className="checkout-options">
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret}
+            disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
             label={(
               <span>
@@ -223,7 +226,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret}
+            disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
             label={(
               <span>
@@ -236,7 +239,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret}
+            disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
             label={(
               <span>
@@ -249,7 +252,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret}
+            disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
             label={(
               <span>
@@ -262,7 +265,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret}
+            disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
             label={(
               <span>
@@ -275,7 +278,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.additionalDriver === -1 || !!clientSecret}
+            disabled={car.additionalDriver === -1 || !!clientSecret || payPalLoaded}
             control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
             label={(
               <span>

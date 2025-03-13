@@ -58,14 +58,15 @@ const Booking = ({
   useEffect(() => {
     const init = async () => {
       if (booking && car && language && days) {
+        const priceChangeRate = car.supplier.priceChangeRate || 0
         setCurrencySymbol(await StripeService.getCurrencySymbol())
         setPrice(await StripeService.convertPrice(booking.price!))
-        setCancellation(await helper.getCancellationOption(car.cancellation, language, true))
-        setAmendments(await helper.getAmendmentsOption(car.amendments, language, true))
-        setCollisionDamageWaiver(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, true))
-        setTheftProtection(await helper.getTheftProtectionOption(car.theftProtection, days, language, true))
-        setFullInsurance(await helper.getFullInsuranceOption(car.fullInsurance, days, language, true))
-        setAdditionalDriver(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, true))
+        setCancellation(await helper.getCancellationOption(car.cancellation, language, priceChangeRate, true))
+        setAmendments(await helper.getAmendmentsOption(car.amendments, language, priceChangeRate, true))
+        setCollisionDamageWaiver(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, priceChangeRate, true))
+        setTheftProtection(await helper.getTheftProtectionOption(car.theftProtection, days, language, priceChangeRate, true))
+        setFullInsurance(await helper.getFullInsuranceOption(car.fullInsurance, days, language, priceChangeRate, true))
+        setAdditionalDriver(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, priceChangeRate, true))
         setLoading(false)
       }
     }

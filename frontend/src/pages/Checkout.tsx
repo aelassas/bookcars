@@ -517,8 +517,10 @@ const Checkout = () => {
         return
       }
 
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
-      const _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
+      const priceChangeRate = _car.supplier.priceChangeRate || 0
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to, priceChangeRate))
+      let _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
+      _depositPrice += _depositPrice * (priceChangeRate / 100)
 
       const included = (val: number) => val === 0
 
@@ -585,6 +587,7 @@ const Checkout = () => {
                       to={to}
                       language={language}
                       clientSecret={clientSecret}
+                      payPalLoaded={payPalLoaded}
                       onPriceChange={(value) => setPrice(value)}
                       onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
                       onCancellationChange={(value) => setCancellation(value)}
