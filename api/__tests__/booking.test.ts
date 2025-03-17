@@ -87,6 +87,7 @@ beforeAll(async () => {
 
   // create car
   const payload: bookcarsTypes.CreateCarPayload = {
+    loggedUser: testHelper.GetRandromObjectIdAsString(),
     name: 'BMW X1',
     supplier: SUPPLIER_ID,
     minimumAge: 21,
