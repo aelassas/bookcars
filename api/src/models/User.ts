@@ -127,6 +127,9 @@ const userSchema = new Schema<env.User>(
     priceChangeRate: {
       type: Number,
     },
+    supplierCarLimit: {
+      type: Number,
+    },
     expireAt: {
       //
       // Non verified and active users created from checkout with Stripe are temporary and

@@ -444,6 +444,7 @@ export interface User extends Document {
   minimumRentalDays?: number
   expireAt?: Date
   priceChangeRate?: number
+  supplierCarLimit?: number
 }
 
 /**
@@ -475,6 +476,7 @@ export interface UserInfo {
   licenseRequired?: boolean
   license?: string
   priceChangeRate?: number
+  supplierCarLimit?: number
 }
 
 /**

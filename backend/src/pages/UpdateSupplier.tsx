@@ -51,6 +51,7 @@ const UpdateSupplier = () => {
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -94,6 +95,10 @@ const UpdateSupplier = () => {
 
   const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateFullName(e.target.value)
+  }
+
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
   }
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,6 +207,7 @@ const UpdateSupplier = () => {
               setLicenseRequired(_supplier.licenseRequired || false)
               setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
               setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
+              setSupplierCarLimit(_supplier.supplierCarLimit?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -260,6 +266,7 @@ const UpdateSupplier = () => {
         licenseRequired,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
       }
 
       const res = await SupplierService.update(data)
@@ -346,6 +353,17 @@ const UpdateSupplier = () => {
                 <InfoIcon />
                 <span>{commonStrings.OPTIONAL}</span>
               </div>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                <Input
+                  type="text"
+                  onChange={handleSupplierCarLimitChange}
+                  autoComplete="off"
+                  slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                  value={supplierCarLimit}
+                />
+              </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>

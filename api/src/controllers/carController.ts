@@ -867,23 +867,87 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         //     as: 'locations',
         //   },
         // },
+
+        // begining of supplierCarLimit -----------------------------------
+        {
+          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
+          $addFields: {
+            maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use a fallback if supplierCarLimit is undefined
+          },
+        },
+        {
+          // Add a custom stage to limit cars per supplier
+          $group: {
+            _id: '$supplier._id', // Group by supplier
+            supplierData: { $first: '$supplier' },
+            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
+            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
+          },
+        },
+        {
+          // Limit cars based on maxAllowedCars for each supplier
+          $project: {
+            supplier: '$supplierData',
+            cars: {
+              $cond: {
+                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
+                then: [], // Return an empty array (no cars)
+                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
+              },
+            },
+          },
+        },
+        {
+          // Flatten the grouped result and apply sorting
+          $unwind: '$cars',
+        },
+        {
+          // Ensure unique cars by grouping by car ID
+          $group: {
+            _id: '$cars._id',
+            car: { $first: '$cars' },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
+        },
+        {
+          // Sort the cars before pagination
+          $sort: { dailyPrice: 1, _id: 1 },
+        },
         {
           $facet: {
             resultData: [
-              {
-                // $sort: { fullyBooked: 1, comingSoon: 1, dailyPrice: 1, _id: 1 },
-                $sort: { dailyPrice: 1, _id: 1 },
-              },
-              { $skip: (page - 1) * size },
-              { $limit: size },
+              { $skip: (page - 1) * size }, // Skip results based on page
+              { $limit: size }, // Limit to the page size
             ],
             pageInfo: [
               {
-                $count: 'totalRecords',
+                $count: 'totalRecords', // Count total number of cars (before pagination)
               },
             ],
           },
         },
+        // end of supplierCarLimit -----------------------------------
+
+        // old query without supplierCarLimit
+        // {
+        //   $facet: {
+        //     resultData: [
+        //       {
+        //         // $sort: { fullyBooked: 1, comingSoon: 1, dailyPrice: 1, _id: 1 },
+        //         $sort: { dailyPrice: 1, _id: 1 },
+        //       },
+        //       { $skip: (page - 1) * size },
+        //       { $limit: size },
+        //     ],
+        //     pageInfo: [
+        //       {
+        //         $count: 'totalRecords',
+        //       },
+        //     ],
+        //   },
+        // },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )

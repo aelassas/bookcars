@@ -62,6 +62,7 @@ const UpdateUser = () => {
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -115,6 +116,10 @@ const UpdateUser = () => {
     } else {
       setFullNameError(false)
     }
+  }
+
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
   }
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -239,6 +244,7 @@ const UpdateUser = () => {
               setLicenseRequired(_user.licenseRequired || false)
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
               setPriceChangeRate(_user.priceChangeRate?.toString() || '')
+              setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
               setVisible(true)
               setLoading(false)
             } else {
@@ -309,6 +315,7 @@ const UpdateUser = () => {
         birthDate,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -445,6 +452,17 @@ const UpdateUser = () => {
                         />
                       )}
                       label={commonStrings.LICENSE_REQUIRED}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                    <Input
+                      type="text"
+                      onChange={handleSupplierCarLimitChange}
+                      autoComplete="off"
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                      value={supplierCarLimit}
                     />
                   </FormControl>
 
