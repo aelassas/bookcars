@@ -261,6 +261,7 @@ const UpdateCar = () => {
       }
 
       const data: bookcarsTypes.UpdateCarPayload = {
+        loggedUser: user!._id!,
         _id: car._id,
         name,
         supplier: supplier._id,

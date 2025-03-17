@@ -24,11 +24,14 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import ContractList from '@/components/ContractList'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-supplier.css'
 
 const CreateSupplier = () => {
   const navigate = useNavigate()
+
+  const { user } = useUserContext() as UserContextType
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -49,6 +52,7 @@ const CreateSupplier = () => {
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -201,8 +205,8 @@ const CreateSupplier = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setVisible(true)
     }
   }
@@ -247,6 +251,7 @@ const CreateSupplier = () => {
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar,
       }
 
       const status = await UserService.create(data)
@@ -353,6 +358,22 @@ const CreateSupplier = () => {
               <InfoIcon />
               <span>{commonStrings.OPTIONAL}</span>
             </div>
+
+            <FormControl fullWidth margin="dense">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={notifyAdminOnNewCar}
+                    disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                    onChange={(e) => {
+                      setNotifyAdminOnNewCar(e.target.checked)
+                    }}
+                    color="primary"
+                  />
+                )}
+                label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+              />
+            </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>

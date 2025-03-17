@@ -46,4 +46,6 @@ export const en = {
   FROM: 'From',
   MESSAGE: 'Message',
   LOCATION_IMAGE_NOT_FOUND: 'Location image not found',
+  NEW_CAR_NOTIFICATION_PART1: 'The supplier ',
+  NEW_CAR_NOTIFICATION_PART2: ' created a new car.',
 }

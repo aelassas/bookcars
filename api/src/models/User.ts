@@ -130,6 +130,9 @@ const userSchema = new Schema<env.User>(
     supplierCarLimit: {
       type: Number,
     },
+    notifyAdminOnNewCar: {
+      type: Boolean,
+    },
     expireAt: {
       //
       // Non verified and active users created from checkout with Stripe are temporary and

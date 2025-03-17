@@ -74,6 +74,7 @@ export const update = async (req: Request, res: Response) => {
         minimumRentalDays,
         priceChangeRate,
         supplierCarLimit,
+        notifyAdminOnNewCar,
       } = body
       supplier.fullName = fullName
       supplier.phone = phone
@@ -84,6 +85,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.minimumRentalDays = minimumRentalDays
       supplier.priceChangeRate = priceChangeRate
       supplier.supplierCarLimit = supplierCarLimit
+      supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
 
       await supplier.save()
       return res.json({
@@ -99,6 +101,7 @@ export const update = async (req: Request, res: Response) => {
         licenseRequired: supplier.licenseRequired,
         priceChangeRate: supplier.priceChangeRate,
         supplierCarLimit: supplier.supplierCarLimit,
+        notifyAdminOnNewCar: supplier.notifyAdminOnNewCar,
       })
     }
     logger.error('[supplier.update] Supplier not found:', _id)
@@ -206,6 +209,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       minimumRentalDays,
       priceChangeRate,
       supplierCarLimit,
+      notifyAdminOnNewCar,
     } = user
 
     return res.json({
@@ -222,6 +226,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       minimumRentalDays,
       priceChangeRate,
       supplierCarLimit,
+      notifyAdminOnNewCar,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)

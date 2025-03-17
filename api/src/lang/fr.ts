@@ -46,4 +46,6 @@ export const fr = {
   FROM: 'De',
   MESSAGE: 'Message',
   LOCATION_IMAGE_NOT_FOUND: 'Image de lieu introuvable',
+  NEW_CAR_NOTIFICATION_PART1: 'Le fournisseur ',
+  NEW_CAR_NOTIFICATION_PART2: ' a créé une nouvelle voiture.',
 }

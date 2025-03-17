@@ -61,6 +61,7 @@ const CreateUser = () => {
   const [license, setLicense] = useState<string | undefined>()
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -312,6 +313,7 @@ const CreateUser = () => {
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -464,6 +466,22 @@ const CreateUser = () => {
                         />
                       )}
                       label={commonStrings.LICENSE_REQUIRED}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={notifyAdminOnNewCar}
+                          disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                          onChange={(e) => {
+                            setNotifyAdminOnNewCar(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
                     />
                   </FormControl>
 
