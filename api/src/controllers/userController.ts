@@ -962,6 +962,8 @@ export const update = async (req: Request, res: Response) => {
       licenseRequired,
       minimumRentalDays,
       priceChangeRate,
+      supplierCarLimit,
+      notifyAdminOnNewCar,
     } = body
 
     if (fullName) {
@@ -973,6 +975,8 @@ export const update = async (req: Request, res: Response) => {
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     user.minimumRentalDays = minimumRentalDays
     user.priceChangeRate = priceChangeRate
+    user.supplierCarLimit = supplierCarLimit
+    user.notifyAdminOnNewCar = notifyAdminOnNewCar
     if (type) {
       user.type = type as bookcarsTypes.UserType
     }
@@ -1100,6 +1104,8 @@ export const getUser = async (req: Request, res: Response) => {
       license: 1,
       minimumRentalDays: 1,
       priceChangeRate: 1,
+      supplierCarLimit: 1,
+      notifyAdminOnNewCar: 1,
     }).lean()
 
     if (!user) {

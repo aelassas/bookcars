@@ -177,9 +177,11 @@ export interface UpdateSupplierPayload {
   minimumRentalDays?: number
   priceChangeRate?: number
   supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface CreateCarPayload {
+  loggedUser: string
   name: string
   supplier: string
   minimumAge: number
@@ -194,7 +196,6 @@ export interface CreateCarPayload {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
-
   // date based price
   isDateBasedPrice: boolean
   dateBasedPrices: DateBasedPrice[]
@@ -289,6 +290,7 @@ export interface CreateUserPayload {
   license?: string
   priceChangeRate?: number
   supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -392,6 +394,7 @@ export interface User {
   minimumRentalDays?: number
   priceChangeRate?: number
   supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface Option {
@@ -505,6 +508,7 @@ export interface Notification {
   user: string
   message: string
   booking?: string
+  car?: string
   isRead?: boolean
   checked?: boolean
   createdAt?: Date

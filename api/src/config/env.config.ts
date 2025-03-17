@@ -445,6 +445,7 @@ export interface User extends Document {
   expireAt?: Date
   priceChangeRate?: number
   supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 /**
@@ -477,6 +478,7 @@ export interface UserInfo {
   license?: string
   priceChangeRate?: number
   supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 /**
@@ -753,6 +755,7 @@ export interface Notification extends Document {
   user: Types.ObjectId
   message: string
   booking: Types.ObjectId
+  car: Types.ObjectId
   isRead?: boolean
 }
 

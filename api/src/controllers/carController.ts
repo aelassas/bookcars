@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
+import nodemailer from 'nodemailer'
 import * as bookcarsTypes from ':bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
@@ -12,6 +13,10 @@ import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
 import DateBasedPrice from '../models/DateBasedPrice'
+import User from '../models/User'
+import Notification from '../models/Notification'
+import NotificationCounter from '../models/NotificationCounter'
+import * as mailHelper from '../common/mailHelper'
 
 /**
  * Create a Car.
@@ -56,6 +61,57 @@ export const create = async (req: Request, res: Response) => {
     } else {
       await Car.deleteOne({ _id: car._id })
       throw new Error(`Image ${body.image} not found`)
+    }
+
+    // notify admin if the car was created by a supplier
+    if (body.loggedUser) {
+      const loggedUser = await User.findById(body.loggedUser)
+
+      if (loggedUser && loggedUser.type === bookcarsTypes.UserType.Supplier) {
+        const supplier = await User.findById(body.supplier)
+
+        if (supplier?.notifyAdminOnNewCar) {
+          const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+          if (admin) {
+            i18n.locale = admin.language
+            const message = i18n.t('NEW_CAR_NOTIFICATION_PART1') + supplier.fullName + i18n.t('NEW_CAR_NOTIFICATION_PART2')
+
+            // notification
+            const notification = new Notification({
+              user: admin._id,
+              message,
+              car: car.id,
+            })
+
+            await notification.save()
+            let counter = await NotificationCounter.findOne({ user: admin._id })
+            if (counter && typeof counter.count !== 'undefined') {
+              counter.count += 1
+              await counter.save()
+            } else {
+              counter = new NotificationCounter({ user: admin._id, count: 1 })
+              await counter.save()
+            }
+
+            // mail
+            if (admin.enableEmailNotifications) {
+              const mailOptions: nodemailer.SendMailOptions = {
+                from: env.SMTP_FROM,
+                to: admin.email,
+                subject: message,
+                html: `<p>
+${i18n.t('HELLO')}${admin.fullName},<br><br>
+${message}<br><br>
+${helper.joinURL(env.BACKEND_HOST, `update-car?cr=${car.id}`)}<br><br>
+${i18n.t('REGARDS')}<br>
+</p>`,
+              }
+
+              await mailHelper.sendMail(mailOptions)
+            }
+          }
+        }
+      }
     }
 
     return res.json(car)

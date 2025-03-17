@@ -228,7 +228,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                     <div className="message-container">
                       <div className="message">{row.message}</div>
                       <div className="actions">
-                        {row.booking && (
+                        {(row.booking || row.car) && (
                           <Tooltip title={strings.VIEW}>
                             <IconButton
                               onClick={async () => {
@@ -239,9 +239,9 @@ const NotificationList = ({ user }: NotificationListProps) => {
                                   }
 
                                   const __navigate__ = () => {
-                                    navigate(`/update-booking?b=${row.booking}`)
+                                    const url = row.booking ? `/update-booking?b=${row.booking}` : `/update-car?cr=${row.car}`
+                                    navigate(url)
                                   }
-
                                   if (!row.isRead) {
                                     const status = await NotificationService.markAsRead(user._id, [row._id])
 

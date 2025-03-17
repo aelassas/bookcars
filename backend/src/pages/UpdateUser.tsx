@@ -63,6 +63,7 @@ const UpdateUser = () => {
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -245,6 +246,7 @@ const UpdateUser = () => {
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
               setPriceChangeRate(_user.priceChangeRate?.toString() || '')
               setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
+              setNotifyAdminOnNewCar(!!_user.notifyAdminOnNewCar)
               setVisible(true)
               setLoading(false)
             } else {
@@ -316,6 +318,7 @@ const UpdateUser = () => {
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -456,6 +459,22 @@ const UpdateUser = () => {
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={notifyAdminOnNewCar}
+                          disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
+                          onChange={(e) => {
+                            setNotifyAdminOnNewCar(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
                     <Input
                       type="text"
@@ -463,6 +482,7 @@ const UpdateUser = () => {
                       autoComplete="off"
                       slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
                       value={supplierCarLimit}
+                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                     />
                   </FormControl>
 
