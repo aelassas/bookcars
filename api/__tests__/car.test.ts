@@ -81,6 +81,7 @@ describe('POST /api/create-car', () => {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const payload: bookcarsTypes.CreateCarPayload = {
+      loggedUser: testHelper.GetRandromObjectIdAsString(),
       name: 'BMW X1',
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
@@ -256,6 +257,7 @@ describe('PUT /api/update-car', () => {
     ]
 
     const payload: bookcarsTypes.UpdateCarPayload = {
+      loggedUser: testHelper.GetRandromObjectIdAsString(),
       _id: CAR2_ID,
       name: 'BMW X5',
       supplier: SUPPLIER2_ID,
