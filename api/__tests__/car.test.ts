@@ -13,6 +13,8 @@ import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import DateBasedPrice from '../src/models/DateBasedPrice'
+import User from 'src/models/User'
+import NotificationCounter from 'src/models/NotificationCounter'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -48,6 +50,12 @@ beforeAll(async () => {
   // create two locations
   LOCATION1_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
   LOCATION2_ID = await testHelper.createLocation('Location 2 EN', 'Location 2 FR')
+
+  // cleanup admin notifications
+  const admin = await User.findOne({ email: env.ADMIN_EMAIL })
+  if (admin) {
+    await NotificationCounter.deleteMany({ user: admin.id })
+  }
 })
 
 //
