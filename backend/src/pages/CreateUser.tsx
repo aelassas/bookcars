@@ -60,6 +60,7 @@ const CreateUser = () => {
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [license, setLicense] = useState<string | undefined>()
   const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -155,6 +156,10 @@ const CreateUser = () => {
 
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateEmail(e.target.value)
+  }
+
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
   }
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -303,9 +308,10 @@ const CreateUser = () => {
         birthDate,
         language,
         supplier,
+        license,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        license,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -459,6 +465,11 @@ const CreateUser = () => {
                       )}
                       label={commonStrings.LICENSE_REQUIRED}
                     />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                    <Input type="text" onChange={handleSupplierCarLimitChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">

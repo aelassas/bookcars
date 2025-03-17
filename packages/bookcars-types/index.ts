@@ -176,6 +176,7 @@ export interface UpdateSupplierPayload {
   licenseRequired: boolean
   minimumRentalDays?: number
   priceChangeRate?: number
+  supplierCarLimit?: number
 }
 
 export interface CreateCarPayload {
@@ -287,6 +288,7 @@ export interface CreateUserPayload {
   minimumRentalDays?: number
   license?: string
   priceChangeRate?: number
+  supplierCarLimit?: number
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -389,6 +391,7 @@ export interface User {
   license?: string | null
   minimumRentalDays?: number
   priceChangeRate?: number
+  supplierCarLimit?: number
 }
 
 export interface Option {

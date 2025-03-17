@@ -88,6 +88,7 @@ const strings = new LocalizedStrings({
     DRIVER_LICENSE: 'Permis de conduire',
     UPLOAD_DRIVER_LICENSE: 'Charger le permis de conduire...',
     PRICE_CHANGE_RATE: 'Taux de variation du prix (+/- %)',
+    SUPPLIER_CAR_LIMIT: 'Nombre max. de voitures dans la recherche',
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -174,6 +175,7 @@ const strings = new LocalizedStrings({
     DRIVER_LICENSE: "Driver's License",
     UPLOAD_DRIVER_LICENSE: "Upload driver's license...",
     PRICE_CHANGE_RATE: 'Price Change Rate (+/- %)',
+    SUPPLIER_CAR_LIMIT: 'Max Allowed Cars in Search',
   },
   es: {
     GENERIC_ERROR: 'Se ha producido un error no controlado.',
@@ -260,6 +262,7 @@ const strings = new LocalizedStrings({
     DRIVER_LICENSE: 'Licencia de conducir',
     UPLOAD_DRIVER_LICENSE: 'Subir licencia de conducir...',
     PRICE_CHANGE_RATE: 'Tasa de cambio de precio (+/- %)',
+    SUPPLIER_CAR_LIMIT: 'Número máx. de coches en la búsqueda',
   },
 })
 
