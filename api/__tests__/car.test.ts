@@ -13,8 +13,8 @@ import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import DateBasedPrice from '../src/models/DateBasedPrice'
-import User from 'src/models/User'
-import NotificationCounter from 'src/models/NotificationCounter'
+import User from '../src/models/User'
+import NotificationCounter from '../src/models/NotificationCounter'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
