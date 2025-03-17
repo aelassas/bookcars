@@ -52,6 +52,7 @@ const UpdateSupplier = () => {
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -208,6 +209,7 @@ const UpdateSupplier = () => {
               setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
               setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
               setSupplierCarLimit(_supplier.supplierCarLimit?.toString() || '')
+              setNotifyAdminOnNewCar(!!_supplier.notifyAdminOnNewCar)
               setVisible(true)
               setLoading(false)
             } else {
@@ -267,6 +269,7 @@ const UpdateSupplier = () => {
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar,
       }
 
       const res = await SupplierService.update(data)
@@ -353,6 +356,22 @@ const UpdateSupplier = () => {
                 <InfoIcon />
                 <span>{commonStrings.OPTIONAL}</span>
               </div>
+
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={notifyAdminOnNewCar}
+                      disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                      onChange={(e) => {
+                        setNotifyAdminOnNewCar(e.target.checked)
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                />
+              </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>

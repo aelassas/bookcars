@@ -182,6 +182,7 @@ describe('PUT /api/update-supplier', () => {
       licenseRequired: true,
       priceChangeRate: 5,
       supplierCarLimit: 3,
+      notifyAdminOnNewCar: true,
     }
     let res = await request(app)
       .put('/api/update-supplier')
@@ -197,6 +198,7 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.licenseRequired).toBeTruthy()
     expect(res.body.priceChangeRate).toBe(5)
     expect(res.body.supplierCarLimit).toBe(3)
+    expect(res.body.notifyAdminOnNewCar).toBeTruthy()
 
     // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()

@@ -34,11 +34,14 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import CarRangeList from '@/components/CarRangeList'
 import MultimediaList from '@/components/MultimediaList'
 import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-car.css'
 
 const CreateCar = () => {
   const navigate = useNavigate()
+
+  const { user } = useUserContext() as UserContextType
   const [isSupplier, setIsSupplier] = useState(false)
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -256,6 +259,7 @@ const CreateCar = () => {
       }
 
       const data: bookcarsTypes.CreateCarPayload = {
+        loggedUser: user!._id!,
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
