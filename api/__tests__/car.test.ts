@@ -167,6 +167,7 @@ describe('POST /api/create-car', () => {
     const endDate2 = new Date(startDate2)
     endDate2.setDate(endDate2.getDate() + 1)
 
+    payload.loggedUser = SUPPLIER2_ID
     payload.name = 'BMW X3'
     payload.isDateBasedPrice = true
     payload.dateBasedPrices = [
