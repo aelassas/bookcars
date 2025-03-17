@@ -37,6 +37,7 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmPasswordError, setConfirmPasswordError] = useState(false)
   const [passwordLengthError, setPasswordLengthError] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
@@ -69,7 +70,7 @@ const ResetPassword = () => {
       setConfirmPasswordError(false)
       setPasswordError(false)
 
-      const data = { userId, token, password }
+      const data: bookcarsTypes.ActivatePayload = { userId, token, password }
 
       const status = await UserService.activate(data)
 
@@ -78,6 +79,7 @@ const ResetPassword = () => {
 
         if (signInResult.status === 200) {
           const user = await UserService.getUser(signInResult.data._id)
+          setIsAuthenticated(true)
           setUser(user)
           setUserLoaded(true)
 
@@ -150,7 +152,7 @@ const ResetPassword = () => {
                   <InputLabel className="required" error={passwordError}>
                     {cpStrings.NEW_PASSWORD}
                   </InputLabel>
-                  <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required />
+                  <Input onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required autoComplete="new-password" />
                   <FormHelperText error={passwordError}>{(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={confirmPasswordError}>
@@ -158,13 +160,13 @@ const ResetPassword = () => {
                     {commonStrings.CONFIRM_PASSWORD}
                   </InputLabel>
                   <Input
-                    id="password-confirm"
                     onChange={handleConfirmPasswordChange}
                     onKeyDown={handleConfirmPasswordKeyDown}
                     error={confirmPasswordError || passwordLengthError}
                     type="password"
                     value={confirmPassword}
                     required
+                    autoComplete="new-password"
                   />
                   <FormHelperText error={confirmPasswordError || passwordLengthError}>
                     {
@@ -190,7 +192,7 @@ const ResetPassword = () => {
         </>
       )}
       {error && <Error />}
-      {noMatch && <NoMatch hideHeader />}
+      {!isAuthenticated && noMatch && <NoMatch hideHeader />}
     </Layout>
   )
 }
