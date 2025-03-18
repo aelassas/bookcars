@@ -17,6 +17,7 @@ import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/settings'
 import * as UserService from '@/services/UserService'
+import * as BankDetailsService from '@/services/BankDetailsService'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
@@ -38,6 +39,13 @@ const Settings = () => {
   const [loading, setLoading] = useState(true)
   const [phoneValid, setPhoneValid] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
+
+  const [bankDetailsId, setBankDetailsId] = useState('')
+  const [accountHolder, setAccountHolder] = useState('')
+  const [bankName, setBankName] = useState('')
+  const [iban, setIban] = useState('')
+  const [swiftBic, setSwiftBic] = useState('')
+  const [showBankDetailsPage, setShowBankDetailsPage] = useState(true)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -144,7 +152,33 @@ const Settings = () => {
     }
   }
 
-  const onLoad = (_user?: bookcarsTypes.User) => {
+  const handleBankDetailsSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault()
+
+      const payload: bookcarsTypes.UpsertBankDetailsPayload = {
+        _id: bankDetailsId || undefined,
+        accountHolder,
+        bankName,
+        iban,
+        swiftBic,
+        showBankDetailsPage,
+      }
+
+      const { status, data } = await BankDetailsService.upsertBankDetails(payload)
+
+      if (status === 200) {
+        helper.info(strings.SETTINGS_UPDATED)
+        setBankDetailsId(data._id)
+      } else {
+        helper.error()
+      }
+    } catch (err) {
+      helper.error(err)
+    }
+  }
+
+  const onLoad = async (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
       setAdmin(helper.admin(_user))
@@ -153,6 +187,17 @@ const Settings = () => {
       setLocation(_user.location || '')
       setBio(_user.bio || '')
       setEnableEmailNotifications(_user.enableEmailNotifications || false)
+
+      const bankDetails = await BankDetailsService.getBankDetails()
+      if (bankDetails) {
+        setBankDetailsId(bankDetails._id)
+        setAccountHolder(bankDetails.accountHolder)
+        setBankName(bankDetails.bankName)
+        setIban(bankDetails.iban)
+        setSwiftBic(bankDetails.swiftBic)
+        setShowBankDetailsPage(bankDetails.showBankDetailsPage)
+      }
+
       setVisible(true)
       setLoading(false)
     }
@@ -162,6 +207,7 @@ const Settings = () => {
     <Layout onLoad={onLoad} strict>
       {visible && user && (
         <div className="settings">
+
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
             <form onSubmit={handleSubmit}>
               <Avatar
@@ -211,6 +257,7 @@ const Settings = () => {
               </div>
             </form>
           </Paper>
+
           <Paper className="settings-net settings-net-wrapper" elevation={10}>
             <h1 className="settings-form-title">
               {' '}
@@ -218,9 +265,71 @@ const Settings = () => {
               {' '}
             </h1>
             <FormControl component="fieldset">
-              <FormControlLabel control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />} label={strings.SETTINGS_EMAIL_NOTIFICATIONS} />
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={enableEmailNotifications}
+                    onChange={handleEmailNotificationsChange}
+                  />
+                )}
+                label={strings.SETTINGS_EMAIL_NOTIFICATIONS}
+              />
             </FormControl>
           </Paper>
+
+          <Paper className="settings-form settings-form-wrapper" elevation={10}>
+            <form onSubmit={handleBankDetailsSubmit}>
+              <h1 className="settings-form-title">
+                {' '}
+                {strings.BANK_DETAILS}
+                {' '}
+              </h1>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">{strings.ACCOUNT_HOLDER}</InputLabel>
+                <Input type="text" required onChange={(e) => setAccountHolder(e.target.value)} autoComplete="off" value={accountHolder} />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">{strings.BANK_NAME}</InputLabel>
+                <Input type="text" required onChange={(e) => setBankName(e.target.value)} autoComplete="off" value={bankName} />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">{strings.IBAN}</InputLabel>
+                <Input type="text" required onChange={(e) => setIban(e.target.value)} autoComplete="off" value={iban} />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">{strings.SWIFT_BIC}</InputLabel>
+                <Input type="text" required onChange={(e) => setSwiftBic(e.target.value)} autoComplete="off" value={swiftBic} />
+              </FormControl>
+
+              <FormControl component="fieldset">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={showBankDetailsPage}
+                      onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setShowBankDetailsPage(e.target.checked)
+                      }}
+                    />
+                  )}
+                  label={strings.SHOW_BANK_DETAILS_PAGE}
+                />
+              </FormControl>
+
+              <div className="buttons">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                  {commonStrings.SAVE}
+                </Button>
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
+                  {commonStrings.CANCEL}
+                </Button>
+              </div>
+            </form>
+          </Paper>
+
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}

@@ -40,6 +40,7 @@ const Countries = lazy(() => import('@/pages/Countries'))
 const CreateCountry = lazy(() => import('@/pages/CreateCountry'))
 const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 const Scheduler = lazy(() => import('@/pages/Scheduler'))
+const BankDetails = lazy(() => import('@/pages/BankDetails'))
 
 const App = () => (
   <BrowserRouter>
@@ -85,6 +86,7 @@ const App = () => (
               {/* <Route path="/create-country" element={<CreateCountry />} /> */}
               {/* <Route path="/update-country" element={<UpdateCountry />} /> */}
               <Route path="/scheduler" element={<Scheduler />} />
+              <Route path="/bank-details" element={<BankDetails />} />
 
               <Route path="*" element={<NoMatch />} />
             </Routes>

@@ -581,6 +581,24 @@ export interface Response<T> {
   data: T
 }
 
+export interface BankDetails {
+  _id: string
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
+}
+
+export interface UpsertBankDetailsPayload {
+  _id?: string
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
+}
+
 // 
 // React types
 //
