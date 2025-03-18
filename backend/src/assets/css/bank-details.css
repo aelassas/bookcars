@@ -1,60 +1,36 @@
-/* settings */
-div.settings {
+div.bank-details {
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
   justify-content: center;
   align-items: center;
-  margin: 45px 0;
   transform: translate3d(0, 0, 0);
 }
 
-.settings-form-wrapper {
-  margin: 32px 0;
+.bank-details-form-wrapper {
+  margin: 100px 0;
+  padding: 62px;
 }
 
-.settings-form-title {
+.bank-details-form-title {
   text-align: center;
   text-transform: capitalize;
   color: #121212;
-}
-
-.settings-net-wrapper {
-  margin: 32px 0;
+  margin-top: -18px;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
-  .settings-form {
+  .bank-details-form {
     width: 360px;
-    padding: 30px;
-  }
-
-  .settings-ctn {
-    height: 240px;
-  }
-
-  .settings-net {
-    width: 360px;
-    padding: 30px;
   }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
-  .settings-form {
+  .bank-details-form {
     width: 550px;
-    padding: 30px;
-  }
-
-  .settings-ctn {
-    height: 190px;
-  }
-
-  .settings-net {
-    width: 550px;
-    padding: 30px;
   }
 }
