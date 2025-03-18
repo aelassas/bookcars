@@ -277,58 +277,60 @@ const Settings = () => {
             </FormControl>
           </Paper>
 
-          <Paper className="settings-form settings-form-wrapper" elevation={10}>
-            <form onSubmit={handleBankDetailsSubmit}>
-              <h1 className="settings-form-title">
-                {' '}
-                {strings.BANK_DETAILS}
-                {' '}
-              </h1>
+          {user.type === bookcarsTypes.UserType.Admin && (
+            <Paper className="settings-form settings-form-wrapper" elevation={10}>
+              <form onSubmit={handleBankDetailsSubmit}>
+                <h1 className="settings-form-title">
+                  {' '}
+                  {strings.BANK_DETAILS}
+                  {' '}
+                </h1>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{strings.ACCOUNT_HOLDER}</InputLabel>
-                <Input type="text" required onChange={(e) => setAccountHolder(e.target.value)} autoComplete="off" value={accountHolder} />
-              </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{strings.ACCOUNT_HOLDER}</InputLabel>
+                  <Input type="text" required onChange={(e) => setAccountHolder(e.target.value)} autoComplete="off" value={accountHolder} />
+                </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{strings.BANK_NAME}</InputLabel>
-                <Input type="text" required onChange={(e) => setBankName(e.target.value)} autoComplete="off" value={bankName} />
-              </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{strings.BANK_NAME}</InputLabel>
+                  <Input type="text" required onChange={(e) => setBankName(e.target.value)} autoComplete="off" value={bankName} />
+                </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{strings.IBAN}</InputLabel>
-                <Input type="text" required onChange={(e) => setIban(e.target.value)} autoComplete="off" value={iban} />
-              </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{strings.IBAN}</InputLabel>
+                  <Input type="text" required onChange={(e) => setIban(e.target.value)} autoComplete="off" value={iban} />
+                </FormControl>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{strings.SWIFT_BIC}</InputLabel>
-                <Input type="text" required onChange={(e) => setSwiftBic(e.target.value)} autoComplete="off" value={swiftBic} />
-              </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{strings.SWIFT_BIC}</InputLabel>
+                  <Input type="text" required onChange={(e) => setSwiftBic(e.target.value)} autoComplete="off" value={swiftBic} />
+                </FormControl>
 
-              <FormControl component="fieldset">
-                <FormControlLabel
-                  control={(
-                    <Switch
-                      checked={showBankDetailsPage}
-                      onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setShowBankDetailsPage(e.target.checked)
-                      }}
-                    />
-                  )}
-                  label={strings.SHOW_BANK_DETAILS_PAGE}
-                />
-              </FormControl>
+                <FormControl component="fieldset">
+                  <FormControlLabel
+                    control={(
+                      <Switch
+                        checked={showBankDetailsPage}
+                        onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                          setShowBankDetailsPage(e.target.checked)
+                        }}
+                      />
+                    )}
+                    label={strings.SHOW_BANK_DETAILS_PAGE}
+                  />
+                </FormControl>
 
-              <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
-                  {commonStrings.SAVE}
-                </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
-                  {commonStrings.CANCEL}
-                </Button>
-              </div>
-            </form>
-          </Paper>
+                <div className="buttons">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                    {commonStrings.SAVE}
+                  </Button>
+                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
+                    {commonStrings.CANCEL}
+                  </Button>
+                </div>
+              </form>
+            </Paper>
+          )}
 
         </div>
       )}
