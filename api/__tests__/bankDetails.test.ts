@@ -95,7 +95,7 @@ describe('GET /api/bank-details', () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success
-    let res = await request(app)
+    const res = await request(app)
       .get('/api/bank-details')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
