@@ -798,3 +798,19 @@ export interface Token extends Document {
   token: string
   expireAt?: Date
 }
+
+/**
+ * BankDetails Document.
+ *
+ * @export
+ * @interface BankDetails
+ * @typedef {BankDetails}
+ * @extends {Document}
+ */
+export interface BankDetails extends Document {
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
+}
