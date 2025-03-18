@@ -321,7 +321,7 @@ const Settings = () => {
                 </FormControl>
 
                 <div className="buttons">
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
                     {commonStrings.SAVE}
                   </Button>
                   <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
