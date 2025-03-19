@@ -9,7 +9,7 @@ import NoMatch from './NoMatch'
 
 import '@/assets/css/bank-details.css'
 
-const About = () => {
+const BankDetails = () => {
   const [bankDetails, setBankDetails] = useState<bookcarsTypes.BankDetails | null>(null)
   const [noMatch, setNoMatch] = useState(false)
 
@@ -66,4 +66,4 @@ const About = () => {
   )
 }
 
-export default About
+export default BankDetails
