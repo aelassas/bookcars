@@ -18,6 +18,7 @@ const strings = new LocalizedStrings({
     SIGN_OUT: 'Déconnexion',
     COUNTRIES: 'Pays',
     BANK_DETAILS: 'Détails bancaires',
+    PRICING: 'Tarification',
   },
   en: {
     DASHBOARD: 'Dashboard',
@@ -35,6 +36,7 @@ const strings = new LocalizedStrings({
     SIGN_OUT: 'Sign out',
     COUNTRIES: 'Countries',
     BANK_DETAILS: 'Bank Details',
+    PRICING: 'Pricing',
   },
   es: {
     DASHBOARD: 'Panel de control',
@@ -52,6 +54,7 @@ const strings = new LocalizedStrings({
     SIGN_OUT: 'Cerrar sesión',
     COUNTRIES: 'Países',
     BANK_DETAILS: 'Detalles bancarios',
+    PRICING: 'Precios',
   },
 })
 
