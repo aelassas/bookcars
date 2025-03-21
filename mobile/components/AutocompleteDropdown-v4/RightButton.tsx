@@ -19,7 +19,6 @@ interface RightButtonProps {
   onRightIconComponentPress?: () => void
 }
 
- 
 export const RightButton: React.FC<RightButtonProps> = memo(
   ({
     inputHeight,
