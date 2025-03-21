@@ -8,7 +8,7 @@ const About = () => {
   const onLoad = () => { }
 
   return (
-    <Layout onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict>
       <div className="about">
         <h1>{strings.TITLE1}</h1>
         <h2>{strings.SUBTITLE1}</h2>

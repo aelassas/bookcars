@@ -13,7 +13,7 @@ const Contact = () => {
   }
 
   return (
-    <Layout onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict>
       <div className="contact">
         <ContactForm user={user} className="form" />
       </div>
