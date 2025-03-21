@@ -5,6 +5,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import env from '@/config/env.config'
+import * as UserService from '@/services/UserService'
 
 /**
  * Get language.
@@ -760,5 +761,24 @@ export const getCarRange = (range: bookcarsTypes.CarRange) => {
 
     default:
       return ''
+  }
+}
+
+/**
+ * Verify reCAPTCHA token.
+ *
+ * @async
+ * @param {string} token
+ * @returns {Promise<boolean>}
+ */
+export const verifyReCaptcha = async (token: string): Promise<boolean> => {
+  try {
+    const ip = await UserService.getIP()
+    const status = await UserService.verifyRecaptcha(token, ip)
+    const valid = status === 200
+    return valid
+  } catch (err) {
+    error(err)
+    return false
   }
 }
