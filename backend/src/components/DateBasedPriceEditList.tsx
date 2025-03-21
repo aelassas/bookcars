@@ -65,7 +65,6 @@ const DateBasedPriceEditList = (
                           onUpdate(__values[index], index)
                         }
                       }
-
                     }}
                     language={UserService.getLanguage()}
                     variant="standard"

@@ -87,7 +87,6 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
         }
         setInputMeasurements((prev) =>
           (JSON.stringify(prev) === JSON.stringify(currentMeasurement) ? prev : currentMeasurement),)
-         
         showAfterCalculation && setShow(true)
       })
     })

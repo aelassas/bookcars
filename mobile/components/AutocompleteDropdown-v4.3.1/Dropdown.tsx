@@ -1,4 +1,3 @@
- 
 import React, { memo, useMemo } from 'react'
 import type { ListRenderItem } from 'react-native'
 import { StyleSheet, FlatList, View, useColorScheme } from 'react-native'

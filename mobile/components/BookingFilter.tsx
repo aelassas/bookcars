@@ -50,7 +50,7 @@ const BookingFilter = ({
 
   useEffect(() => {
     _init()
-  }, [])  
+  }, [])
 
   const blurLocations = () => {
     setBlur(true)

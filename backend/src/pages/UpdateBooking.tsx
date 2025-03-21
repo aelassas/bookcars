@@ -666,7 +666,6 @@ const UpdateBooking = () => {
                       _maxDate.setDate(_maxDate.getDate() - 1)
                       setMaxDate(_maxDate)
                       setToError(false)
-
                     } else {
                       setTo(undefined)
                       setMaxDate(undefined)
