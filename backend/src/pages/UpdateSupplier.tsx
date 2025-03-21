@@ -404,6 +404,7 @@ const UpdateSupplier = () => {
                   autoComplete="off"
                   slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }}
                   value={priceChangeRate}
+                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
                 />
               </FormControl>
 
