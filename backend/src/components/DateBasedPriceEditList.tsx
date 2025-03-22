@@ -106,7 +106,7 @@ const DateBasedPriceEditList = (
                 slotProps={{
                   htmlInput: {
                     inputMode: 'numeric',
-                    pattern: '^\\d+(.\\d+)?$'
+                    pattern: '^\\d+(\\.\\d+)?$'
                   }
                 }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
