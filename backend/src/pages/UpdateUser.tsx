@@ -503,7 +503,7 @@ const UpdateUser = () => {
                       type="text"
                       onChange={handlePriceChangeRateChange}
                       autoComplete="off"
-                      slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }}
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }}
                       value={priceChangeRate}
                       disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                     />
