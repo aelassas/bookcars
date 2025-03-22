@@ -11,6 +11,8 @@ const strings = new LocalizedStrings({
     SUBTITLE2: "Découvrez l'excellence à chaque voyage",
     CONTENT2: "Profitez d'une commodité, d'une fiabilité et d'une valeur inégalées avec notre service de location de voitures. Des réservations sans effort aux véhicules de haute qualité, nous sommes votre partenaire de voyage de confiance.",
     FIND_DEAL: 'Trouver une Offre',
+    PRICING: 'Tarification',
+
   },
   en: {
     TITLE1: `${env.WEBSITE_NAME} - Your Premier Car Rental Service`,
@@ -20,6 +22,7 @@ const strings = new LocalizedStrings({
     SUBTITLE2: 'Experience Excellence in Every Journey',
     CONTENT2: "Enjoy unmatched convenience, reliability, and value with our premier car rental service. From effortless bookings to high-quality vehicles, we're your trusted travel partner.",
     FIND_DEAL: 'Find Deal',
+    PRICING: 'Pricing',
   },
   es: {
     TITLE1: `${env.WEBSITE_NAME} - Su servicio de alquiler de coches`,
@@ -29,6 +32,7 @@ const strings = new LocalizedStrings({
     SUBTITLE2: 'Experimenta la excelencia en cada viaje',
     CONTENT2: 'Disfruta de una comodidad, fiabilidad y valor inigualables con nuestro servicio de alquiler de coches de primera calidad. Desde reservas sencillas hasta vehículos de alta calidad, somos tu socio de viajes de confianza.',
     FIND_DEAL: 'Buscar oferta',
+    PRICING: 'Precios',
   },
 })
 
