@@ -687,7 +687,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
             const { error: initPaymentSheetError } = await initPaymentSheet({
               customerId,
               paymentIntentClientSecret: clientSecret,
-              merchantDisplayName: 'BookCars',
+              merchantDisplayName: 'SiCarro',
               googlePay: {
                 merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
                 testEnv: env.STRIPE_PUBLISHABLE_KEY.includes('_test_'),

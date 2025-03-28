@@ -40,7 +40,7 @@ export const LANGUAGES = [
  *
  * @type {string}
  */
-export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
+export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'SiCarro')
 
 /**
  * Server Port. Default is 4002.
@@ -141,11 +141,11 @@ export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, si
 export const FRONTEND_AUTH_COOKIE_NAME = 'bc-x-access-token-frontend'
 
 /**
- * Backend authentication cookie name.
+ * Backoffice authentication cookie name.
  *
  * @type {"bc-x-access-token-frontend"}
  */
-export const BACKEND_AUTH_COOKIE_NAME = 'bc-x-access-token-backend'
+export const BACKOFFICE_AUTH_COOKIE_NAME = 'bc-x-access-token-backoffice'
 
 /**
  * Mobile App and unit tests authentication header name.
@@ -281,11 +281,11 @@ export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
 export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
 
 /**
- * Backend host.
+ * Backoffice host.
  *
  * @type {string}
  */
-export const BACKEND_HOST = __env__('BC_BACKEND_HOST', true)
+export const BACKOFFICE_HOST = __env__('BC_BACKOFFICE_HOST', true)
 
 /**
  * Frontend host.

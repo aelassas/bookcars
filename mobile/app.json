@@ -2,7 +2,7 @@
   "expo": {
     "jsEngine": "hermes",
     "newArchEnabled": true,
-    "name": "BookCars",
+    "name": "SiCarro",
     "version": "6.5.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",

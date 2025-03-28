@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
 
           <View style={styles.contentContainer}>
             <View style={styles.logo}>
-              <Text style={styles.logoMain}>BookCars</Text>
+              <Text style={styles.logoMain}>SiCarro</Text>
               <Text style={styles.logoRegistered}>®</Text>
             </View>
             <SearchForm

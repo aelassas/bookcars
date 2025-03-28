@@ -6,7 +6,7 @@ const routes = {
   getSuppliers: '/api/suppliers/:page/:size',
   getAllSuppliers: '/api/all-suppliers',
   getFrontendSuppliers: '/api/frontend-suppliers',
-  getBackendSuppliers: '/api/backend-suppliers',
+  getBackofficeSuppliers: '/api/backoffice-suppliers',
   createContract: '/api/create-contract/:language',
   updateContract: '/api/update-contract/:id/:language',
   deleteContract: '/api/delete-contract/:id/:language',

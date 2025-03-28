@@ -4,3 +4,9 @@
 /**/*.pem-chain
 /**/*.ca.pem
 /**/.DS_Store
+
+cdn
+.cursor
+
+/**/.env
+

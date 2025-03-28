@@ -63,7 +63,7 @@ export const close = async (force: boolean = false): Promise<void> => {
 /**
  * Initialize locations.
  * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * The new language values must be updated from the backoffice.
  *
  * @async
  * @returns {*}
@@ -121,7 +121,7 @@ export const initializeLocations = async () => {
 /**
  * Initialize countries.
  * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * The new language values must be updated from the backoffice.
  *
  * @async
  * @returns {*}
@@ -179,7 +179,7 @@ export const initializeCountries = async () => {
 /**
  * Initialize parkingSpots.
  * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * The new language values must be updated from the backoffice.
  *
  * @async
  * @returns {*}

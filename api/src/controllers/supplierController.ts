@@ -495,14 +495,14 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
 }
 
 /**
- * Get Backend Suppliers.
+ * Get Backoffice Suppliers.
  *
  * @async
  * @param {Request} req
  * @param {Response} res
  * @returns {unknown}
  */
-export const getBackendSuppliers = async (req: Request, res: Response) => {
+export const getBackofficeSuppliers = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const {
@@ -629,7 +629,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    logger.error(`[supplier.getBackendSuppliers] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[supplier.getBackofficeSuppliers] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
