@@ -171,6 +171,10 @@ export interface UpdateSupplierPayload {
   fullName: string
   phone: string
   location: string
+  locationCoordinates?: {
+    lat: number
+    lng: number
+  }
   bio: string
   payLater: boolean
   licenseRequired: boolean
@@ -273,6 +277,10 @@ export interface CreateUserPayload {
   email?: string
   phone: string
   location: string
+  locationCoordinates?: {
+    lat: number
+    lng: number
+  }
   bio: string
   fullName: string
   type?: string
@@ -381,6 +389,10 @@ export interface User {
   avatar?: string
   bio?: string
   location?: string
+  locationCoordinates?: {
+    lat: number
+    lng: number
+  }
   type?: string
   blacklisted?: boolean
   payLater?: boolean

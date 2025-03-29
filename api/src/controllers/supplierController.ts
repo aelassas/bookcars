@@ -68,6 +68,7 @@ export const update = async (req: Request, res: Response) => {
         fullName,
         phone,
         location,
+        locationCoordinates,
         bio,
         payLater,
         licenseRequired,
@@ -79,6 +80,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.fullName = fullName
       supplier.phone = phone
       supplier.location = location
+      supplier.locationCoordinates = locationCoordinates
       supplier.bio = bio
       supplier.payLater = payLater
       supplier.licenseRequired = licenseRequired
@@ -93,6 +95,7 @@ export const update = async (req: Request, res: Response) => {
         fullName: supplier.fullName,
         phone: supplier.phone,
         location: supplier.location,
+        locationCoordinates: supplier.locationCoordinates,
         bio: supplier.bio,
         avatar: supplier.avatar,
         payLater: supplier.payLater,
@@ -202,6 +205,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       avatar,
       phone,
       location,
+      locationCoordinates,
       bio,
       payLater,
       contracts,
@@ -219,6 +223,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       avatar,
       phone,
       location,
+      locationCoordinates,
       bio,
       payLater,
       contracts,

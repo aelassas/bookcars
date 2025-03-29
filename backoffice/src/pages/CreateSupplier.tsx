@@ -25,6 +25,7 @@ import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import ContractList from '@/components/ContractList'
 import { UserContextType, useUserContext } from '@/context/UserContext'
+import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/create-supplier.css'
 
@@ -36,6 +37,7 @@ const CreateSupplier = () => {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number, lng: number }>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [emailError, setEmailError] = useState(false)
@@ -166,8 +168,9 @@ const CreateSupplier = () => {
     validatePhone(e.target.value)
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
+  const handleLocationChange = (newLocation: { address: string, coordinates?: { lat: number, lng: number } }) => {
+    setLocation(newLocation.address)
+    setLocationCoordinates(newLocation.coordinates)
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -241,6 +244,7 @@ const CreateSupplier = () => {
         fullName,
         phone,
         location,
+        locationCoordinates,
         bio,
         language: UserService.getLanguage(),
         type: bookcarsTypes.RecordType.Supplier,
@@ -397,8 +401,10 @@ const CreateSupplier = () => {
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input type="text" onChange={handleLocationChange} autoComplete="off" />
+              <LocationPicker 
+                value={location}
+                onChange={handleLocationChange}
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

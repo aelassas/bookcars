@@ -26,6 +26,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
 import ContractList from '@/components/ContractList'
+import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/update-supplier.css'
 
@@ -37,6 +38,7 @@ const UpdateSupplier = () => {
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number, lng: number }>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -134,8 +136,9 @@ const UpdateSupplier = () => {
     validatePhone(e.target.value)
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
+  const handleLocationChange = (newLocation: { address: string, coordinates?: { lat: number, lng: number } }) => {
+    setLocation(newLocation.address)
+    setLocationCoordinates(newLocation.coordinates)
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,6 +206,7 @@ const UpdateSupplier = () => {
               setFullName(_supplier.fullName || '')
               setPhone(_supplier.phone || '')
               setLocation(_supplier.location || '')
+              setLocationCoordinates(_supplier.locationCoordinates)
               setBio(_supplier.bio || '')
               setPayLater(_supplier.payLater || false)
               setLicenseRequired(_supplier.licenseRequired || false)
@@ -263,6 +267,7 @@ const UpdateSupplier = () => {
         fullName,
         phone,
         location,
+        locationCoordinates,
         bio,
         payLater,
         licenseRequired,
@@ -414,8 +419,10 @@ const UpdateSupplier = () => {
                 <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <LocationPicker 
+                  value={location}
+                  onChange={handleLocationChange}
+                />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
