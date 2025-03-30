@@ -1,4 +1,5 @@
-import React, { Typography } from '@mui/material'
+import React from 'react'
+import { Typography } from '@mui/material'
 import { AgendaDiv } from '../../styles/styles'
 import useStore from '../../hooks/useStore'
 

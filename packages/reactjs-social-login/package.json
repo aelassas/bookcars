@@ -9,12 +9,12 @@
     "build": "rimraf ./dist && tsc --build --verbose"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "@types/react": "^19.0.8",
+    "@types/node": "^22.13.14",
+    "@types/react": "^19.0.12",
     "microbundle-crl": "^0.13.11",
-    "react": "^19.0.0",
+    "react": "^19.1.0",
     "rimraf": "^6.0.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   },
   "files": [
     "dist/"
