@@ -86,6 +86,9 @@ div.car-container article {
 div.car-container article div.car {
   padding: 10px;
   width: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 div.car-container article div.car .car-img {
@@ -93,6 +96,10 @@ div.car-container article div.car .car-img {
   margin-bottom: 0;
   max-width: 100%;
   max-height: 100%;
+}
+
+div.car-container article div.car div.car-row {
+  margin-top: 10px;
 }
 
 div.car-container article div.car div.car-supplier {
