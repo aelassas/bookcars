@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/common/helper'
@@ -35,6 +35,7 @@ const Cars = () => {
   const [admin, setAdmin] = useState(false)
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
   const [suppliers, setSuppliers] = useState<string[]>()
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -160,6 +161,7 @@ const Cars = () => {
       const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
       setAllSuppliers(_allSuppliers)
       setSuppliers(_suppliers)
+      setLoadingSuppliers(false)
     } else {
       const supplierId = (_user && _user._id) as string
       setSuppliers([supplierId])
@@ -182,7 +184,14 @@ const Cars = () => {
 
               {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
 
-              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
+              {
+                loadingSuppliers ? (
+                  <div className="filter-progress-wrapper">
+                    <CircularProgress className="filter-progress" size="1.3rem" />
+                  </div>
+                )
+                  : <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
+              }
 
               {rowCount > -1 && (
                 <>
