@@ -177,39 +177,41 @@ const Car = ({
       <article>
         <div className="car">
           <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-          {!hideSupplier && (
-            <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
-              <span className="car-supplier-logo">
-                <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
-              </span>
-              <span className="car-supplier-info">{car.supplier.fullName}</span>
-            </div>
-          )}
-          <div className="car-footer">
-            <div className="rating">
-              {car.rating && car.rating >= 1 && (
-                <>
-                  <span className="value">{car.rating.toFixed(2)}</span>
-                  <img alt="Rating" src={RatingIcon} />
-                </>
-              )}
-              {car.trips >= 10 && <span className="trips">{`(${car.trips} ${strings.TRIPS})`}</span>}
-            </div>
-            {car.co2 && (
-              <div className="co2">
-                <img
-                  alt="CO2 Effect"
-                  src={
-                    car.co2 <= 90
-                      ? CO2MinIcon
-                      : car.co2 <= 110
-                        ? CO2MiddleIcon
-                        : CO2MaxIcon
-                  }
-                />
-                <span>{strings.CO2}</span>
+          <div className="car-row">
+            {!hideSupplier && (
+              <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
+                <span className="car-supplier-logo">
+                  <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
+                </span>
+                <span className="car-supplier-info">{car.supplier.fullName}</span>
               </div>
             )}
+            <div className="car-footer">
+              <div className="rating">
+                {car.rating && car.rating >= 1 && (
+                  <>
+                    <span className="value">{car.rating.toFixed(2)}</span>
+                    <img alt="Rating" src={RatingIcon} />
+                  </>
+                )}
+                {car.trips >= 10 && <span className="trips">{`(${car.trips} ${strings.TRIPS})`}</span>}
+              </div>
+              {car.co2 && (
+                <div className="co2">
+                  <img
+                    alt="CO2 Effect"
+                    src={
+                      car.co2 <= 90
+                        ? CO2MinIcon
+                        : car.co2 <= 110
+                          ? CO2MiddleIcon
+                          : CO2MaxIcon
+                    }
+                  />
+                  <span>{strings.CO2}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="car-info">
