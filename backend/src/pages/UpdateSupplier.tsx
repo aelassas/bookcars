@@ -197,6 +197,12 @@ const UpdateSupplier = () => {
             const _supplier = await SupplierService.getSupplier(id)
 
             if (_supplier) {
+              if (!(_user.type === bookcarsTypes.UserType.Admin || _user._id === _supplier._id)) {
+                setLoading(false)
+                setNoMatch(true)
+                return
+              }
+
               setSupplier(_supplier)
               setEmail(_supplier.email || '')
               setAvatar(_supplier.avatar || '')
