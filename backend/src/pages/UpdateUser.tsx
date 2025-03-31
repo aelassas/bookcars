@@ -230,6 +230,16 @@ const UpdateUser = () => {
             const _user = await UserService.getUser(id)
 
             if (_user) {
+              if (!(
+                _loggedUser.type === bookcarsTypes.UserType.Admin
+                || (_user.type === bookcarsTypes.UserType.Supplier && _loggedUser._id === _user._id)
+                || (_user.type === bookcarsTypes.UserType.User && _loggedUser._id === _user.supplier)
+              )) {
+                setLoading(false)
+                setNoMatch(true)
+                return
+              }
+
               setLoggedUser(_loggedUser)
               setUser(_user)
               setAdmin(helper.admin(_loggedUser))
