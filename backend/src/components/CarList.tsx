@@ -400,13 +400,10 @@ const CarList = ({
                 </CardContent>
               </Card>
             )
-            : rows.map((car, _index) => {
+            : rows.map((car, index) => {
               const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
-                  <div className="name">
-                    <h2>{car.name}</h2>
-                  </div>
                   <div className="car">
                     <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                     <div className="car-footer">
@@ -449,6 +446,10 @@ const CarList = ({
                     </div>
                   </div>
                   <div className="car-info">
+                    <div className="car-info-header">
+                      <div className="name"><h2>{car.name}</h2></div>
+                      {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
+                    </div>
                     <ul className="car-info-list">
                       {car.type !== bookcarsTypes.CarType.Unknown && (
                         <li className="car-type">
@@ -497,6 +498,8 @@ const CarList = ({
                           </Tooltip>
                         </li>
                       )}
+                    </ul>
+                    <ul className="extras-list">
                       {car.mileage !== 0 && (
                         <li className="mileage">
                           <Tooltip title={helper.getMileageTooltip(car.mileage, language as string)} placement="left">
@@ -515,8 +518,6 @@ const CarList = ({
                           </div>
                         </Tooltip>
                       </li>
-                    </ul>
-                    <ul className="extras-list">
                       {edit && (
                         <>
                           <li className={car.available ? 'car-available' : 'car-unavailable'}>
@@ -614,28 +615,27 @@ const CarList = ({
                         </li>
                       )}
                     </ul>
-                  </div>
-                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
-                  <div className="action">
-                    {edit && (
-                      <>
-                        <Tooltip title={strings.VIEW_CAR}>
-                          <IconButton onClick={() => navigate(`/car?cr=${car._id}`)}>
-                            <ViewIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={commonStrings.UPDATE}>
-                          <IconButton onClick={() => navigate(`/update-car?cr=${car._id}`)}>
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        {/* <Tooltip title={commonStrings.DELETE}>
-                          <IconButton data-id={car._id} data-index={_index} onClick={handleDelete}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip> */}
-                      </>
-                    )}
+                    <div className="action">
+                      {edit && (
+                        <>
+                          <Tooltip title={strings.VIEW_CAR}>
+                            <IconButton onClick={() => navigate(`/car?cr=${car._id}`)}>
+                              <ViewIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={commonStrings.UPDATE}>
+                            <IconButton onClick={() => navigate(`/update-car?cr=${car._id}`)}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          {/* <Tooltip title={commonStrings.DELETE}>
+                            <IconButton data-id={car._id} data-index={index} onClick={handleDelete}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip> */}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </article>
               )

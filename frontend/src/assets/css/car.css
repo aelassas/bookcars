@@ -98,7 +98,6 @@ div.car-container article div.car .car-img {
 div.car-container article div.car div.car-supplier {
   display: flex;
   align-items: center;
-  margin-top: 5px;
   color: rgb(0 0 0 / 60%);
   font-size: 1em;
   line-height: 1em;
@@ -114,7 +113,6 @@ div.car-container article div.car div.car-supplier span.car-supplier-logo {
   justify-content: center;
   width: 62px;
   height: 32px;
-  margin-right: 5px;
 }
 
 div.car-container article div.car div.car-supplier span.car-supplier-logo img {
@@ -138,7 +136,7 @@ div.car-container article div.car .car-footer {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 div.car-container article div.car .car-footer div.rating,
@@ -189,7 +187,7 @@ div.car-container article div.car-info div.car-info-header {
 }
 
 div.car-container article div.car-info div.car-info-header div.name {
-  padding: 7px 11px;
+  padding: 0 11px;
   pointer-events: none;
 
   font-size: 1.8em;
@@ -205,8 +203,9 @@ div.car-container article div.car-info div.car-info-header div.name {
 }
 
 div.car-container article div.price {
-  display: table;
-  border-collapse: separate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 div.car-container article span.price-main {
@@ -227,6 +226,7 @@ div.car-container article span.price-day {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-end;
+  width: max-content;
 }
 
 div.car-container article span.price-day span.price-day-value {
@@ -346,5 +346,9 @@ div.car-container article div.action {
 
   div.car-container div.car-header {
     width: calc(100% - 20px);
+  }
+
+  div.car-container article div.car .car-footer {
+    margin-bottom: 20px;
   }
 }
