@@ -182,7 +182,7 @@ const Cars = () => {
                 {strings.NEW_CAR}
               </Button>
 
-              {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
+              {rowCount > 0 && <InfoBox value={`${bookcarsHelper.formatNumber(rowCount, language)} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
 
               {
                 loadingSuppliers ? (
