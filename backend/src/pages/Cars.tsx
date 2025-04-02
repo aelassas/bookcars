@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, CircularProgress } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
@@ -53,27 +53,27 @@ const Cars = () => {
   const [rating, setRating] = useState(-1)
   const [seats, setSeats] = useState(-1)
 
-  useEffect(() => {
-    const updateSuppliers = async () => {
-      const payload: bookcarsTypes.GetCarsPayload = {
-        carSpecs,
-        carType,
-        gearbox,
-        mileage,
-        fuelPolicy,
-        deposit,
-        availability,
-        ranges,
-        multimedia,
-        rating,
-        seats,
-      }
-      const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
-      setAllSuppliers(_allSuppliers)
-    }
+  // useEffect(() => {
+  //   const updateSuppliers = async () => {
+  //     const payload: bookcarsTypes.GetCarsPayload = {
+  //       carSpecs,
+  //       carType,
+  //       gearbox,
+  //       mileage,
+  //       fuelPolicy,
+  //       deposit,
+  //       availability,
+  //       ranges,
+  //       multimedia,
+  //       rating,
+  //       seats,
+  //     }
+  //     const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
+  //     setAllSuppliers(_allSuppliers)
+  //   }
 
-    updateSuppliers()
-  }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability, ranges, multimedia, rating, seats])
+  //   updateSuppliers()
+  // }, [carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, availability, ranges, multimedia, rating, seats])
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
@@ -144,29 +144,30 @@ const Cars = () => {
     setAdmin(_isAdmin)
 
     if (_isAdmin) {
-      const payload: bookcarsTypes.GetCarsPayload = {
-        carSpecs,
-        carType,
-        gearbox,
-        mileage,
-        fuelPolicy,
-        deposit,
-        availability,
-        ranges,
-        multimedia,
-        rating,
-        seats,
-      }
-      const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
+      // const payload: bookcarsTypes.GetCarsPayload = {
+      //   carSpecs,
+      //   carType,
+      //   gearbox,
+      //   mileage,
+      //   fuelPolicy,
+      //   deposit,
+      //   availability,
+      //   ranges,
+      //   multimedia,
+      //   rating,
+      //   seats,
+      // }
+      // const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
+      const _allSuppliers = await SupplierService.getAllSuppliers()
       const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
       setAllSuppliers(_allSuppliers)
       setSuppliers(_suppliers)
-      setLoadingSuppliers(false)
     } else {
       const supplierId = (_user && _user._id) as string
       setSuppliers([supplierId])
     }
 
+    setLoadingSuppliers(false)
     setLoading(false)
   }
 
@@ -184,14 +185,14 @@ const Cars = () => {
 
               {rowCount > 0 && <InfoBox value={`${bookcarsHelper.formatNumber(rowCount, language)} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
 
-              {
+              {admin && (
                 loadingSuppliers ? (
                   <div className="filter-progress-wrapper">
                     <CircularProgress className="filter-progress" size="1.3rem" />
                   </div>
                 )
                   : <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
-              }
+              )}
 
               {rowCount > -1 && (
                 <>
