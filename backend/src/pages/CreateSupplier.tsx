@@ -387,7 +387,7 @@ const CreateSupplier = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
-              <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+$' } }} />
+              <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }} />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

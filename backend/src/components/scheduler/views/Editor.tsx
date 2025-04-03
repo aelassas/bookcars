@@ -5,10 +5,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import Grid from '@mui/material/GridLegacy'
 import { addMinutes, differenceInMinutes } from 'date-fns'
 import { EditorDatePicker } from '../components/inputs/DatePicker'
 import { EditorInput } from '../components/inputs/Input'

@@ -1,4 +1,5 @@
-import React, { Avatar, Typography, useTheme } from '@mui/material'
+import React from 'react'
+import { Avatar, Typography, useTheme } from '@mui/material'
 import {
   addDays,
   endOfDay,
