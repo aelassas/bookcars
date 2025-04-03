@@ -321,6 +321,7 @@ section.car-list article div.action {
 
   section.car-list article {
     flex-direction: column;
+    align-items: flex-start;
     width: calc(100% - 20px);
   }
 
