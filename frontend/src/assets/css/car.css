@@ -353,6 +353,7 @@ div.car-container article div.action {
 
   div.car-container article {
     flex-direction: column;
+    align-items: flex-start;
     width: calc(100% - 20px);
   }
 
