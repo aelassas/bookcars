@@ -78,10 +78,14 @@ section.car-list article {
 
 section.car-list article div.car {
   padding: 10px;
-  width: 340px;
+  width: 290px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  position: relative;
+  top: 0;
+  overflow: hidden;
 }
 
 section.car-list article div.car .car-img {
@@ -178,7 +182,8 @@ section.car-list article div.car .car-footer div.co2 img {
 }
 
 section.car-list article div.car-info {
-  width: 100%;
+  /* width: 100%; */
+  width: 510px;
 }
 
 section.car-list article div.car-info div.car-info-header {
@@ -321,5 +326,9 @@ section.car-list article div.action {
 
   section.car-list div.car-header {
     width: calc(100% - 20px);
+  }
+
+  section.car-list article div.car-info {
+    width: 100%;
   }
 }
