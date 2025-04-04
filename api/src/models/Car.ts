@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
+import * as logger from '../common/logger'
 
 const carSchema = new Schema<env.Car>(
   {
@@ -203,6 +204,19 @@ const carSchema = new Schema<env.Car>(
   },
 )
 
+// Add custom indexes
+carSchema.index({ updatedAt: -1, _id: 1 })
+carSchema.index({ name: 'text' })
+carSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -1, _id: 1 })
+carSchema.index({ available: 1, gearbox: 1, deposit: 1 })
+carSchema.index({ seats: 1, doors: 1 })
+carSchema.index({ mileage: 1, fuelPolicy: 1 })
+
 const Car = model<env.Car>('Car', carSchema)
+
+// Create indexes manually and handle potential errors
+Car.syncIndexes().catch((err) => {
+  logger.error('Error creating Car indexes:', err)
+})
 
 export default Car
