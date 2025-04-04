@@ -443,6 +443,13 @@ describe('POST /api/activate', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload.userId = '0'
+    res = await request(app)
+      .post('/api/activate')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .post('/api/activate')

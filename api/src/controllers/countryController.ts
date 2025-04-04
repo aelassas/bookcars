@@ -24,6 +24,9 @@ export const validate = async (req: Request, res: Response) => {
   const { language, name } = body
 
   try {
+    if (language.length !== 2) {
+      throw new Error('Language not valid')
+    }
     const keyword = escapeStringRegexp(name)
     const options = 'i'
 
