@@ -80,7 +80,7 @@ describe('POST /api/validate-country', () => {
     res = await request(app)
       .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })

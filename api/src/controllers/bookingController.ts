@@ -43,10 +43,10 @@ export const create = async (req: Request, res: Response) => {
     const booking = new Booking(body.booking)
 
     await booking.save()
-    return res.json(booking)
+    res.json(booking)
   } catch (err) {
     logger.error(`[booking.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -280,7 +280,7 @@ export const checkout = async (req: Request, res: Response) => {
         if (paymentIntent.status !== 'succeeded') {
           const message = `Payment failed: ${paymentIntent.status}`
           logger.error(message, body)
-          return res.status(400).send(message)
+          res.status(400).send(message)
         }
 
         body.booking.paymentIntentId = paymentIntentId
@@ -342,8 +342,9 @@ export const checkout = async (req: Request, res: Response) => {
 
     if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
       // Send confirmation email to customer
-      if (!await confirm(user, supplier, booking, body.payLater)) {
-        return res.sendStatus(400)
+      if (!(await confirm(user, supplier, booking, body.payLater))) {
+        res.sendStatus(400)
+        return
       }
 
       // Notify supplier
@@ -360,10 +361,10 @@ export const checkout = async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(200).send({ bookingId: booking.id })
+    res.status(200).send({ bookingId: booking.id })
   } catch (err) {
     logger.error(`[booking.checkout] ${i18n.t('ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -509,7 +510,8 @@ export const update = async (req: Request, res: Response) => {
           if (!additionalDriver) {
             const msg = `Additional Driver ${booking._additionalDriver} not found`
             logger.info(msg)
-            return res.status(204).send(msg)
+            res.status(204).send(msg)
+            return
           }
           additionalDriver.fullName = fullName
           additionalDriver.email = email
@@ -578,14 +580,15 @@ export const update = async (req: Request, res: Response) => {
         await notifyDriver(booking)
       }
 
-      return res.json(booking)
+      res.json(booking)
+      return
     }
 
     logger.error('[booking.update] Booking not found:', body.booking._id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[booking.update] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -615,10 +618,10 @@ export const updateStatus = async (req: Request, res: Response) => {
       }
     }
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[booking.updateStatus] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -645,10 +648,10 @@ export const deleteBookings = async (req: Request, res: Response) => {
     const additionalDivers = bookings.map((booking) => new mongoose.Types.ObjectId(booking._additionalDriver))
     await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[booking.deleteBookings] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -670,10 +673,10 @@ export const deleteTempBooking = async (req: Request, res: Response) => {
       await user?.deleteOne()
     }
     await booking?.deleteOne()
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[booking.deleteTempBooking] ${i18n.t('DB_ERROR')} ${JSON.stringify({ bookingId, sessionId })}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -739,14 +742,15 @@ export const getBooking = async (req: Request, res: Response) => {
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
       booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value
 
-      return res.json(booking)
+      res.json(booking)
+      return
     }
 
     logger.error('[booking.getBooking] Booking not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[booking.getBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -767,12 +771,13 @@ export const getBookingId = async (req: Request, res: Response) => {
 
     if (!booking) {
       logger.error('[booking.getBookingId] Booking not found (sessionId):', sessionId)
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
-    return res.json(booking?.id)
+    res.json(booking?.id)
   } catch (err) {
     logger.error(`[booking.getBookingId] (sessionId) ${i18n.t('DB_ERROR')} ${sessionId}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -989,10 +994,10 @@ export const getBookings = async (req: Request, res: Response) => {
       booking.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[booking.getBookings] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -1017,13 +1022,14 @@ export const hasBookings = async (req: Request, res: Response) => {
       .countDocuments()
 
     if (count === 1) {
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[booking.hasBookings] ${i18n.t('DB_ERROR')} ${driver}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -1055,7 +1061,8 @@ export const cancelBooking = async (req: Request, res: Response) => {
       const supplier = await User.findById(booking.supplier)
       if (!supplier) {
         logger.info(`Supplier ${booking.supplier} not found`)
-        return res.sendStatus(204)
+        res.sendStatus(204)
+        return
       }
       i18n.locale = supplier.language
       await notify(booking.driver, booking.id, supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
@@ -1067,12 +1074,13 @@ export const cancelBooking = async (req: Request, res: Response) => {
         await notify(booking.driver, booking.id, admin, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
       }
 
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[booking.cancelBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

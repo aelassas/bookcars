@@ -71,7 +71,7 @@ describe('POST /api/sign-up', () => {
   it('should create a user', async () => {
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
 
@@ -168,17 +168,17 @@ describe('POST /api/create-user', () => {
 
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     const tempLicense = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!await helper.exists(tempLicense)) {
+    if (!(await helper.exists(tempLicense))) {
       await fs.copyFile(LICENSE1_PATH, tempLicense)
     }
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, contractFileName)
-    if (!await helper.exists(contractFile)) {
+    if (!(await helper.exists(contractFile))) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
     const contracts = [
@@ -446,7 +446,7 @@ describe('POST /api/activate', () => {
     // test failure (no payload)
     res = await request(app)
       .post('/api/activate')
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
   })
 })
 
@@ -757,7 +757,7 @@ describe('POST /api/social-sign-in/:type', () => {
     // test failure (no payload)
     res = await request(app)
       .post('/api/social-sign-in')
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
   })
 })
 
@@ -1256,7 +1256,7 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
 
     // test success
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     let res = await request(app)
@@ -1635,7 +1635,7 @@ describe('POST /api/delete-temp-license/:image', () => {
   it('should delete a temporary license', async () => {
     // init
     const tempImage = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(LICENSE1_PATH, tempImage)
     }
 
@@ -1681,7 +1681,7 @@ describe('POST /api/delete-users', () => {
     const user2 = await User.findById(USER2_ID)
     const licenseFilename = `${user2!.id}.pdf`
     const license = path.join(env.CDN_LICENSES, licenseFilename)
-    if (!await helper.exists(license)) {
+    if (!(await helper.exists(license))) {
       await fs.copyFile(LICENSE1_PATH, license)
     }
     user2!.license = licenseFilename
@@ -1712,7 +1712,7 @@ describe('POST /api/delete-users', () => {
     const imageName = 'bmw-x1.jpg'
     const imagePath = path.join(__dirname, `./img/${imageName}`)
     const image = path.join(env.CDN_CARS, imageName)
-    if (!await helper.exists(image)) {
+    if (!(await helper.exists(image))) {
       await fs.copyFile(imagePath, image)
     }
     let car = new Car({

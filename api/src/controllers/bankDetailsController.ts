@@ -47,10 +47,10 @@ export const upsert = async (req: Request, res: Response) => {
     }
     await bankDetails.save()
 
-    return res.json(bankDetails)
+    res.json(bankDetails)
   } catch (err) {
     logger.error(`[bankDetails.upsert] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -65,9 +65,9 @@ export const upsert = async (req: Request, res: Response) => {
 export const get = async (req: Request, res: Response) => {
   try {
     const bankDetails = await BankDetails.findOne()
-    return res.json(bankDetails)
+    res.json(bankDetails)
   } catch (err) {
     logger.error(`[bankDetails.get] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }

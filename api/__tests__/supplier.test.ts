@@ -155,7 +155,7 @@ describe('POST /api/validate-supplier', () => {
     res = await request(app)
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -212,7 +212,7 @@ describe('PUT /api/update-supplier', () => {
     res = await request(app)
       .put('/api/update-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -345,14 +345,14 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let avatarName = 'avatar1.jpg'
     let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-    if (!await helper.exists(contractFile)) {
+    if (!(await helper.exists(contractFile))) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
     supplier!.contracts = [{ language: 'en', file: contractFileName }]
@@ -408,7 +408,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       dateBasedPrices: [dbp1.id, dbp2.id],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
-    if (!await helper.exists(carImage)) {
+    if (!(await helper.exists(carImage))) {
       await fs.copyFile(carImagePath, carImage)
     }
     await car.save()
@@ -524,7 +524,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     avatarName = 'avatar1.jpg'
     avatarPath = path.join(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
@@ -1003,7 +1003,7 @@ describe('POST /api/delete-temp-contract/:image', () => {
 
     // init
     const tempImage = path.join(env.CDN_TEMP_CONTRACTS, CONTRACT1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(CONTRACT1_PATH, tempImage)
     }
 

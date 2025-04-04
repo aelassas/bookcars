@@ -20,14 +20,15 @@ export const notificationCounter = async (req: Request, res: Response) => {
     const counter = await NotificationCounter.findOne({ user: userId })
 
     if (counter) {
-      return res.json(counter)
+      res.json(counter)
+      return
     }
     const cnt = new NotificationCounter({ user: userId })
     await cnt.save()
-    return res.json(cnt)
+    res.json(cnt)
   } catch (err) {
     logger.error(`[notification.notificationCounter] ${i18n.t('DB_ERROR')} ${userId}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -62,10 +63,10 @@ export const getNotifications = async (req: Request, res: Response) => {
       },
     ])
 
-    return res.json(notifications)
+    res.json(notifications)
   } catch (err) {
     logger.error(`[notification.getNotifications] ${i18n.t('DB_ERROR')} ${_userId}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -99,20 +100,21 @@ export const markAsRead = async (req: Request, res: Response) => {
 
     // if (result.modifiedCount !== length) {
     //   logger.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`)
-    //   return res.status(400).send(i18n.t('DB_ERROR'))
+    //   res.status(400).send(i18n.t('DB_ERROR'))
     // }
 
     const counter = await NotificationCounter.findOne({ user: userId })
     if (!counter || typeof counter.count === 'undefined') {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
     counter.count -= length
     await counter.save()
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -146,20 +148,21 @@ export const markAsUnRead = async (req: Request, res: Response) => {
 
     // if (result.modifiedCount !== length) {
     //   logger.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`)
-    //   return res.status(400).send(i18n.t('DB_ERROR'))
+    //   res.status(400).send(i18n.t('DB_ERROR'))
     // }
 
     const counter = await NotificationCounter.findOne({ user: userId })
     if (!counter || typeof counter.count === 'undefined') {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
     counter.count += length
     await counter.save()
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -188,14 +191,15 @@ export const deleteNotifications = async (req: Request, res: Response) => {
 
     const counter = await NotificationCounter.findOne({ user: userId })
     if (!counter || typeof counter.count === 'undefined') {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
     counter.count -= count
     await counter.save()
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[notification.deleteNotifications] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

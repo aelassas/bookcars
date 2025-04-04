@@ -80,10 +80,10 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       customerId: customer.id,
       clientSecret: session.client_secret,
     }
-    return res.json(result)
+    res.json(result)
   } catch (err) {
     logger.error(`[stripe.createCheckoutSession] ${i18n.t('ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -112,14 +112,16 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     if (!session) {
       const msg = `Session ${sessionId} not found`
       logger.info(`[stripe.checkCheckoutSession] ${msg}`)
-      return res.status(204).send(msg)
+      res.status(204).send(msg)
+      return
     }
 
     const booking = await Booking.findOne({ sessionId, expireAt: { $ne: null } })
     if (!booking) {
       const msg = `Booking with sessionId ${sessionId} not found`
       logger.info(`[stripe.checkCheckoutSession] ${msg}`)
-      return res.status(204).send(msg)
+      res.status(204).send(msg)
+      return
     }
 
     //
@@ -154,8 +156,8 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       user.expireAt = undefined
       await user.save()
 
-      if (!await bookingController.confirm(user, supplier, booking, false)) {
-        return res.sendStatus(400)
+      if (!(await bookingController.confirm(user, supplier, booking, false))) {
+        res.sendStatus(400)
       }
 
       // Notify supplier
@@ -171,17 +173,18 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
         await bookingController.notify(user, booking.id, admin, message)
       }
 
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
     //
     // 3. Delete Booking if the payment didn't succeed
     //
     await booking.deleteOne()
-    return res.status(400).send(session.payment_status)
+    res.status(400).send(session.payment_status)
   } catch (err) {
     logger.error(`[stripe.checkCheckoutSession] ${i18n.t('ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -245,9 +248,9 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       customerId: customer.id,
       clientSecret: paymentIntent.client_secret,
     }
-    return res.status(200).json(result)
+    res.status(200).json(result)
   } catch (err) {
     logger.error(`[stripe.createPaymentIntent] ${i18n.t('ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
