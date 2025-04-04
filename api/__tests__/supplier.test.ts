@@ -208,6 +208,14 @@ describe('PUT /api/update-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload._id = '0'
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .put('/api/update-supplier')
