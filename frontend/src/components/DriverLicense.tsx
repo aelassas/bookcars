@@ -13,6 +13,7 @@ import '@/assets/css/driver-license.css'
 interface DriverLicenseProps {
   user?: bookcarsTypes.User
   variant?: 'standard' | 'outlined'
+  hideDelete?: boolean
   className?: string
   onUpload?: (filename: string) => void
   onDelete?: () => void
@@ -21,6 +22,7 @@ interface DriverLicenseProps {
 const DriverLicense = ({
   user,
   variant = 'standard',
+  hideDelete = false,
   className,
   onUpload,
   onDelete,
@@ -114,32 +116,34 @@ const DriverLicense = ({
             >
               <ViewIcon className="icon" />
             </IconButton>
-            <IconButton
-              onClick={async () => {
-                try {
-                  let status = 0
-                  if (user) {
-                    status = await UserService.deleteLicense(user._id!)
-                  } else {
-                    status = await UserService.deleteTempLicense(license!)
-                  }
-
-                  if (status === 200) {
-                    setLicense(null)
-
-                    if (onDelete) {
-                      onDelete()
+            {!hideDelete && (
+              <IconButton
+                onClick={async () => {
+                  try {
+                    let status = 0
+                    if (user) {
+                      status = await UserService.deleteLicense(user._id!)
+                    } else {
+                      status = await UserService.deleteTempLicense(license!)
                     }
-                  } else {
-                    helper.error()
+
+                    if (status === 200) {
+                      setLicense(null)
+
+                      if (onDelete) {
+                        onDelete()
+                      }
+                    } else {
+                      helper.error()
+                    }
+                  } catch (err) {
+                    helper.error(err)
                   }
-                } catch (err) {
-                  helper.error(err)
-                }
-              }}
-            >
-              <DeleteIcon className="icon" />
-            </IconButton>
+                }}
+              >
+                <DeleteIcon className="icon" />
+              </IconButton>
+            )}
           </>
         )}
       </div>
