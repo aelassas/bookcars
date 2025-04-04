@@ -566,6 +566,19 @@ const CarList = ({
                           </Tooltip>
                         </li>
                       )}
+                      {car.theftProtection > -1 && (
+                        <li>
+                          <Tooltip
+                            title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, language as string)}
+                            placement="left"
+                          >
+                            <div className="car-info-list-item">
+                              {getExtraIcon('theftProtection', car.theftProtection)}
+                              <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, language as string)}</span>
+                            </div>
+                          </Tooltip>
+                        </li>
+                      )}
                       {car.collisionDamageWaiver > -1 && (
                         <li>
                           <Tooltip
@@ -577,19 +590,6 @@ const CarList = ({
                             <div className="car-info-list-item">
                               {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
                               <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language as string)}</span>
-                            </div>
-                          </Tooltip>
-                        </li>
-                      )}
-                      {car.theftProtection > -1 && (
-                        <li>
-                          <Tooltip
-                            title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, language as string)}
-                            placement="left"
-                          >
-                            <div className="car-info-list-item">
-                              {getExtraIcon('theftProtection', car.theftProtection)}
-                              <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, language as string)}</span>
                             </div>
                           </Tooltip>
                         </li>

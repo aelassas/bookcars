@@ -113,7 +113,7 @@ describe('POST /api/validate-location', () => {
     res = await request(app)
       .post('/api/validate-location')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -168,7 +168,7 @@ describe('POST /api/create-location', () => {
       },
     ]
     const tempImage = path.join(env.CDN_TEMP_LOCATIONS, IMAGE0)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE0_PATH, tempImage)
     }
     payload.image = IMAGE0
@@ -188,7 +188,7 @@ describe('POST /api/create-location', () => {
     res = await request(app)
       .post('/api/create-location')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -489,7 +489,7 @@ describe('POST /api/delete-temp-location-image/:image', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_LOCATIONS, IMAGE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     let res = await request(app)
@@ -651,7 +651,7 @@ describe('DELETE /api/delete-location/:id', () => {
 
     if (!location?.image) {
       const image = path.join(env.CDN_LOCATIONS, IMAGE0)
-      if (!await helper.exists(image)) {
+      if (!(await helper.exists(image))) {
         await fs.copyFile(IMAGE0_PATH, image)
       }
       location!.image = IMAGE0

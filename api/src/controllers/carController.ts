@@ -114,10 +114,10 @@ ${i18n.t('REGARDS')}<br>
       }
     }
 
-    return res.json(car)
+    res.json(car)
   } catch (err) {
     logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -259,14 +259,15 @@ export const update = async (req: Request, res: Response) => {
 
       await car.save()
 
-      return res.json(car)
+      res.json(car)
+      return
     }
 
     logger.error('[car.update] Car not found:', _id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -290,13 +291,14 @@ export const checkCar = async (req: Request, res: Response) => {
       .countDocuments()
 
     if (count === 1) {
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -329,12 +331,13 @@ export const deleteCar = async (req: Request, res: Response) => {
       }
       await Booking.deleteMany({ car: car._id })
     } else {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -357,10 +360,10 @@ export const createImage = async (req: Request, res: Response) => {
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
-    return res.json(filename)
+    res.json(filename)
   } catch (err) {
     logger.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -380,7 +383,8 @@ export const updateImage = async (req: Request, res: Response) => {
     if (!req.file) {
       const msg = '[car.updateImage] req.file not found'
       logger.error(msg)
-      return res.status(400).send(msg)
+      res.status(400).send(msg)
+      return
     }
 
     const { file } = req
@@ -401,14 +405,15 @@ export const updateImage = async (req: Request, res: Response) => {
       await fs.writeFile(filepath, file.buffer)
       car.image = filename
       await car.save()
-      return res.json(filename)
+      res.json(filename)
+      return
     }
 
     logger.error('[car.updateImage] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -437,13 +442,14 @@ export const deleteImage = async (req: Request, res: Response) => {
       car.image = null
 
       await car.save()
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
     logger.error('[car.deleteImage] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -461,7 +467,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (!await helper.exists(imageFile)) {
+    if (!(await helper.exists(imageFile))) {
       throw new Error(`[car.deleteTempImage] temp image ${imageFile} not found`)
     }
 
@@ -521,13 +527,14 @@ export const getCar = async (req: Request, res: Response) => {
         location.name = location.values.filter((value) => value.language === language)[0].value
       }
 
-      return res.json(car)
+      res.json(car)
+      return
     }
     logger.error('[car.getCar] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -599,7 +606,8 @@ export const getCars = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -614,7 +622,8 @@ export const getCars = async (req: Request, res: Response) => {
         && availability[0] === bookcarsTypes.Availablity.Unavailable) {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -741,10 +750,10 @@ export const getCars = async (req: Request, res: Response) => {
       car.supplier = { _id, fullName, avatar }
     }
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -805,10 +814,10 @@ export const getBookingCars = async (req: Request, res: Response) => {
       car.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
-    return res.json(cars)
+    res.json(cars)
   } catch (err) {
     logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -885,7 +894,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -1061,9 +1071,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       car.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

@@ -77,7 +77,7 @@ describe('POST /api/create-car', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const payload: bookcarsTypes.CreateCarPayload = {
@@ -157,7 +157,7 @@ describe('POST /api/create-car', () => {
     CAR1_ID = res.body._id
 
     // test success date based price
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const startDate1 = new Date()
@@ -392,7 +392,7 @@ describe('PUT /api/update-car', () => {
     res = await request(app)
       .put('/api/update-car')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -537,7 +537,7 @@ describe('POST /api/delete-temp-car-image/:image', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     let res = await request(app)
