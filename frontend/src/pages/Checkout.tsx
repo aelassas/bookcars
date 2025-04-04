@@ -745,6 +745,7 @@ const Checkout = () => {
                               setLicenseRequired(false)
                               setLicense(null)
                             }}
+                            hideDelete={!!clientSecret || payPalLoaded}
                           />
                         </div>
                       </div>
@@ -850,8 +851,8 @@ const Checkout = () => {
                               <FormControlLabel
                                 value="payLater"
                                 control={<Radio />}
-                                disabled={!!clientSecret}
-                                className={clientSecret ? 'payment-radio-disabled' : ''}
+                                disabled={!!clientSecret || payPalLoaded}
+                                className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                 label={(
                                   <span className="payment-button">
                                     <span>{strings.PAY_LATER}</span>
@@ -864,8 +865,8 @@ const Checkout = () => {
                                   <FormControlLabel
                                     value="payDeposit"
                                     control={<Radio />}
-                                    disabled={!!clientSecret}
-                                    className={clientSecret ? 'payment-radio-disabled' : ''}
+                                    disabled={!!clientSecret || payPalLoaded}
+                                    className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                     label={(
                                       <span className="payment-button">
                                         <span>{strings.PAY_DEPOSIT}</span>
@@ -878,8 +879,8 @@ const Checkout = () => {
                               <FormControlLabel
                                 value="payOnline"
                                 control={<Radio />}
-                                disabled={!!clientSecret}
-                                className={clientSecret ? 'payment-radio-disabled' : ''}
+                                disabled={!!clientSecret || payPalLoaded}
+                                className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                 label={(
                                   <span className="payment-button">
                                     <span>{strings.PAY_ONLINE}</span>

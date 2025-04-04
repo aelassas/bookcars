@@ -248,7 +248,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       customerId: customer.id,
       clientSecret: paymentIntent.client_secret,
     }
-    res.status(200).json(result)
+    res.json(result)
   } catch (err) {
     logger.error(`[stripe.createPaymentIntent] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
