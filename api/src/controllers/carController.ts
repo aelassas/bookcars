@@ -648,18 +648,12 @@ export const getCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$supplier' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
-                },
-              },
-            ],
+            localField: 'supplier',
+            foreignField: '_id',
             as: 'supplier',
           },
         },
-        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        { $unwind: '$supplier' },
         // {
         //   $lookup: {
         //     from: 'Location',
@@ -676,11 +670,17 @@ export const getCars = async (req: Request, res: Response) => {
         // },
         {
           $facet: {
-            resultData: [{ $sort: { updatedAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
-            // resultData: [{ $sort: { dailyPrice: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              { $sort: { updatedAt: -1, _id: 1 } },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
-                $count: 'totalRecords',
+                $group: {
+                  _id: null,
+                  totalRecords: { $sum: 1 },
+                },
               },
             ],
           },
@@ -688,6 +688,53 @@ export const getCars = async (req: Request, res: Response) => {
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
+
+    // const data = await Car.aggregate(
+    //   [
+    //     { $match },
+    //     {
+    //       $lookup: {
+    //         from: 'User',
+    //         let: { userId: '$supplier' },
+    //         pipeline: [
+    //           {
+    //             $match: {
+    //               $expr: { $eq: ['$_id', '$$userId'] },
+    //             },
+    //           },
+    //         ],
+    //         as: 'supplier',
+    //       },
+    //     },
+    //     { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+    //     // {
+    //     //   $lookup: {
+    //     //     from: 'Location',
+    //     //     let: { locations: '$locations' },
+    //     //     pipeline: [
+    //     //       {
+    //     //         $match: {
+    //     //           $expr: { $in: ['$_id', '$$locations'] },
+    //     //         },
+    //     //       },
+    //     //     ],
+    //     //     as: 'locations',
+    //     //   },
+    //     // },
+    //     {
+    //       $facet: {
+    //         resultData: [{ $sort: { updatedAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+    //         // resultData: [{ $sort: { dailyPrice: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+    //         pageInfo: [
+    //           {
+    //             $count: 'totalRecords',
+    //           },
+    //         ],
+    //       },
+    //     },
+    //   ],
+    //   { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
+    // )
 
     for (const car of data[0].resultData) {
       const { _id, fullName, avatar } = car.supplier
