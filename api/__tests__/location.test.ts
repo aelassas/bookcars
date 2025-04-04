@@ -109,6 +109,14 @@ describe('POST /api/validate-location', () => {
     await locationValue.deleteOne()
     await location.deleteOne()
 
+    // test failure (wrong language)
+    payload.language = 'unknown'
+    res = await request(app)
+      .post('/api/validate-location')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .post('/api/validate-location')
