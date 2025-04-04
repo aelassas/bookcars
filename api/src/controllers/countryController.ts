@@ -52,10 +52,14 @@ export const validate = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return countries.length > 0 ? res.sendStatus(204) : res.sendStatus(200)
+    if (countries.length > 0) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
   } catch (err) {
     logger.error(`[country.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -85,10 +89,10 @@ export const create = async (req: Request, res: Response) => {
 
     const country = new Country({ values })
     await country.save()
-    return res.send(country)
+    res.send(country)
   } catch (err) {
     logger.error(`[country.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -125,14 +129,15 @@ export const update = async (req: Request, res: Response) => {
           await country.save()
         }
       }
-      return res.json(country)
+      res.json(country)
+      return
     }
 
     logger.error('[country.update] Country not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[country.update] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -153,14 +158,15 @@ export const deleteCountry = async (req: Request, res: Response) => {
     if (!country) {
       const msg = `[country.delete] Country ${id} not found`
       logger.info(msg)
-      return res.status(204).send(msg)
+      res.status(204).send(msg)
+      return
     }
     await Country.deleteOne({ _id: id })
     await LocationValue.deleteMany({ _id: { $in: country.values } })
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[country.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -182,13 +188,14 @@ export const getCountry = async (req: Request, res: Response) => {
     if (country) {
       const name = (country.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
       const c = { ...country, name }
-      return res.json(c)
+      res.json(c)
+      return
     }
     logger.error('[country.getCountry] Country not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[country.getCountry] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -245,10 +252,10 @@ export const getCountries = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(countries)
+    res.json(countries)
   } catch (err) {
     logger.error(`[country.getCountries] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -352,10 +359,10 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(countries)
+    res.json(countries)
   } catch (err) {
     logger.error(`[country.getCountries] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -380,13 +387,14 @@ export const checkCountry = async (req: Request, res: Response) => {
       .countDocuments()
 
     if (count === 1) {
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[country.checkCountry] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -408,11 +416,12 @@ export const getCountryId = async (req: Request, res: Response) => {
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
       const country = await Country.findOne({ values: lv.id })
-      return res.status(200).json(country?.id)
+      res.status(200).json(country?.id)
+      return
     }
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[country.getCountryId] ${i18n.t('DB_ERROR')} ${name}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

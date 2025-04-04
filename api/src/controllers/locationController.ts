@@ -56,10 +56,14 @@ export const validate = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return locations.length > 0 ? res.sendStatus(204) : res.sendStatus(200)
+    if (locations.length > 0) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
   } catch (err) {
     logger.error(`[location.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -109,7 +113,7 @@ export const create = async (req: Request, res: Response) => {
     if (image) {
       const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
-      if (!await helper.exists(_image)) {
+      if (!(await helper.exists(_image))) {
         throw new Error(`Location image not found: ${_image}`)
       }
     }
@@ -152,10 +156,10 @@ export const create = async (req: Request, res: Response) => {
       await location.save()
     }
 
-    return res.send(location)
+    res.send(location)
   } catch (err) {
     logger.error(`[location.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -269,14 +273,15 @@ export const update = async (req: Request, res: Response) => {
 
       await location.save()
 
-      return res.json(location)
+      res.json(location)
+      return
     }
 
     logger.error('[location.update] Location not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.update] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -297,7 +302,8 @@ export const deleteLocation = async (req: Request, res: Response) => {
     if (!location) {
       const msg = `[location.delete] Location ${id} not found`
       logger.info(msg)
-      return res.status(204).send(msg)
+      res.status(204).send(msg)
+      return
     }
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     await Location.deleteOne({ _id: id })
@@ -316,10 +322,10 @@ export const deleteLocation = async (req: Request, res: Response) => {
       }
     }
 
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[location.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -367,13 +373,14 @@ export const getLocation = async (req: Request, res: Response) => {
       }
       const name = (location.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
       const l = { ...location, name }
-      return res.json(l)
+      res.json(l)
+      return
     }
     logger.error('[location.getLocation] Location not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.getLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -470,10 +477,10 @@ export const getLocations = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(locations)
+    res.json(locations)
   } catch (err) {
     logger.error(`[location.getLocations] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -534,10 +541,10 @@ export const getLocationsWithPosition = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(locations)
+    res.json(locations)
   } catch (err) {
     logger.error(`[location.getLocationsWithPosition] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -562,13 +569,14 @@ export const checkLocation = async (req: Request, res: Response) => {
       .countDocuments()
 
     if (count === 1) {
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.checkLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -590,12 +598,13 @@ export const getLocationId = async (req: Request, res: Response) => {
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
       const location = await Location.findOne({ values: lv.id })
-      return res.status(200).json(location?.id)
+      res.status(200).json(location?.id)
+      return
     }
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.getLocationId] ${i18n.t('DB_ERROR')} ${name}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -618,10 +627,10 @@ export const createImage = async (req: Request, res: Response) => {
     const filepath = path.join(env.CDN_TEMP_LOCATIONS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
-    return res.json(filename)
+    res.json(filename)
   } catch (err) {
     logger.error(`[location.createImage] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -641,7 +650,8 @@ export const updateImage = async (req: Request, res: Response) => {
     if (!req.file) {
       const msg = '[location.updateImage] req.file not found'
       logger.error(msg)
-      return res.status(400).send(msg)
+      res.status(400).send(msg)
+      return
     }
 
     const { file } = req
@@ -662,14 +672,15 @@ export const updateImage = async (req: Request, res: Response) => {
       await fs.writeFile(filepath, file.buffer)
       location.image = filename
       await location.save()
-      return res.json(filename)
+      res.json(filename)
+      return
     }
 
     logger.error('[location.updateImage] Location not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -701,13 +712,14 @@ export const deleteImage = async (req: Request, res: Response) => {
       location.image = null
 
       await location.save()
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
     logger.error('[location.deleteImage] Location not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[location.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

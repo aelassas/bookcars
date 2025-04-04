@@ -248,13 +248,14 @@ const Header = ({
   useEffect(() => {
     const init = async () => {
       if (!hidden) {
-        const _bankDetails = await BankDetailsService.getBankDetails()
-        setBankDetails(_bankDetails)
-
         if (currentUser) {
           const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id as string)
-          setIsSignedIn(true)
           setNotificationCount(notificationCounter.count)
+
+          const _bankDetails = await BankDetailsService.getBankDetails()
+          setBankDetails(_bankDetails)
+
+          setIsSignedIn(true)
           setIsLoaded(true)
         } else {
           setIsLoaded(true)
