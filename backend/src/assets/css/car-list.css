@@ -122,8 +122,9 @@ section.car-list article div.car div.car-supplier span.car-supplier-logo img {
 }
 
 section.car-list article div.car div.car-supplier a.car-supplier-info {
+  color: #0064c8;
   font-size: 0.9em;
-  line-height: 1em;
+  /* line-height: 1em; */
   white-space: nowrap;
   margin-left: 5px;
   word-break: break-word;
