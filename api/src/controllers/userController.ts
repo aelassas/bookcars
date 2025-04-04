@@ -955,6 +955,7 @@ export const update = async (req: Request, res: Response) => {
       phone,
       bio,
       location,
+      locationCoordinates,
       type,
       birthDate,
       enableEmailNotifications,
@@ -971,6 +972,7 @@ export const update = async (req: Request, res: Response) => {
     }
     user.phone = phone
     user.location = location
+    user.locationCoordinates = locationCoordinates
     user.bio = bio
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     user.minimumRentalDays = minimumRentalDays
@@ -1095,6 +1097,7 @@ export const getUser = async (req: Request, res: Response) => {
       avatar: 1,
       bio: 1,
       location: 1,
+      locationCoordinates: 1,
       type: 1,
       blacklisted: 1,
       birthDate: 1,
