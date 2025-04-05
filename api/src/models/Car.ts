@@ -211,6 +211,12 @@ carSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -1,
 carSchema.index({ available: 1, gearbox: 1, deposit: 1 })
 carSchema.index({ seats: 1, doors: 1 })
 carSchema.index({ mileage: 1, fuelPolicy: 1 })
+carSchema.index({ locations: 1, available: 1, fullyBooked: 1 })
+carSchema.index({ comingSoon: 1 })
+carSchema.index({ range: 1 })
+carSchema.index({ multimedia: 1 })
+carSchema.index({ dailyPrice: 1, _id: 1 })
+carSchema.index({ dateBasedPrices: 1 })
 
 const Car = model<env.Car>('Car', carSchema)
 
