@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
+import * as logger from '../common/logger'
 
 const notificationSchema = new Schema<env.Notification>(
   {
@@ -33,6 +34,14 @@ const notificationSchema = new Schema<env.Notification>(
   },
 )
 
+// Add custom indexes
+notificationSchema.index({ user: 1, createdAt: -1, _id: 1 })
+
 const Notification = model<env.Notification>('Notification', notificationSchema)
+
+// Create indexes manually and handle potential errors
+Notification.syncIndexes().catch((err) => {
+  logger.error('Error creating Notification indexes:', err)
+})
 
 export default Notification
