@@ -22,6 +22,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
         res
             .status(405)
             .send('Method Not Allowed')
+        return
     }
     next()
 }
