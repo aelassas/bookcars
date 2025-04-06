@@ -12,4 +12,5 @@
     { "directory": "frontend", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
     { "directory": "mobile", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
   ],
+  "files.insertFinalNewline": true
 }
