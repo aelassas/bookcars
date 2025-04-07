@@ -19,7 +19,7 @@
     "build:ios:preview": "cross-env EAS_NO_VCS=1 npm run ts:build && eas build --profile preview --platform android",
     "lint": "eslint .",
     "fix": "eslint --fix .",
-    "ncu": "ncu -u -x eslint,react,@types/react,react-native,typescript,eslint-plugin-import,eslint-plugin-react,eslint-plugin-react-hooks && npm i --force && npm prune && expo install --fix",
+    "ncu": "ncu -u -x react,@types/react,react-native,@react-navigation/drawer,@react-navigation/native,@react-navigation/native-stack,@react-navigation/stack && npm i --force && npm prune && expo install --fix",
     "prebuild": "expo prebuild",
     "prebuild:clean": "expo prebuild --clean"
   },
@@ -41,7 +41,7 @@
     "axios-retry": "^4.5.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "date-fns": "^4.1.0",
-    "expo": "~52.0.43",
+    "expo": "~52.0.44",
     "expo-asset": "~11.0.5",
     "expo-constants": "~17.0.8",
     "expo-device": "~7.0.3",
@@ -81,11 +81,11 @@
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
     "cross-env": "^7.0.3",
-    "eslint": "^9.22.0",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint": "^9.24.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "npm-check-updates": "^17.1.16",
-    "typescript": "~5.3.3"
+    "typescript": "~5.8.3"
   },
   "private": true
 }
