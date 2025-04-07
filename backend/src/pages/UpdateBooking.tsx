@@ -830,9 +830,9 @@ const UpdateBooking = () => {
                   <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit">
                     {commonStrings.SAVE}
                   </Button>
-                  <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                  {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                     {commonStrings.DELETE}
-                  </Button>
+                  </Button> */}
                   <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                     {commonStrings.CANCEL}
                   </Button>
