@@ -195,13 +195,13 @@ const Supplier = () => {
                   </IconButton>
                 </Tooltip>
               )}
-              {edit && (
+              {/* {edit && (
                 <Tooltip title={commonStrings.DELETE}>
                   <IconButton data-id={supplier._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-              )}
+              )} */}
             </div>
             {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
           </div>
