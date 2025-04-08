@@ -158,6 +158,7 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
 
       if (!(await bookingController.confirm(user, supplier, booking, false))) {
         res.sendStatus(400)
+        return
       }
 
       // Notify supplier
