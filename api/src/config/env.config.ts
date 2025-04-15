@@ -412,6 +412,13 @@ export const IPINFO_API_KEY = __env__('BC_IPINFO_API_KEY', false)
 export const IPINFO_DEFAULT_COUNTRY = __env__('BC_IPINFO_DEFAULT_COUNTRY', false, 'US')
 
 /**
+ * Indicates whether to mark the car as fully booked after checkout (stripe, paypal, pay deposit, pay later)
+ *
+ * @type {boolean}
+ */
+export const MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT = helper.StringToBoolean(__env__('BC_MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT', false, 'false'))
+
+/**
  * User Document.
  *
  * @export
