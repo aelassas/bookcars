@@ -81,11 +81,12 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
       await booking.save()
 
-      // Mark car as unavailable
-      // await Car.updateOne({ _id: booking.car }, { available: false })
       const car = await Car.findById(booking.car)
       if (!car) {
         throw new Error(`Car ${booking.car} not found`)
+      }
+      if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
+        car.fullyBooked = true
       }
       car.trips += 1
       await car.save()

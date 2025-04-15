@@ -341,6 +341,11 @@ export const checkout = async (req: Request, res: Response) => {
     }
 
     if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
+      // Mark car as fully booked
+      if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
+        await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
+      }
+
       // Send confirmation email to customer
       if (!(await confirm(user, supplier, booking, body.payLater))) {
         res.sendStatus(400)
