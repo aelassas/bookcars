@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   api:
     build: 
@@ -20,9 +19,9 @@ services:
     environment:
       # Provide your credentials here
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: PASSWORD
+      MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
-      - 27017:27017
+      - 27018:27017
 
   backend:
     build: 
@@ -40,8 +39,8 @@ services:
     depends_on:
       - api
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
 
