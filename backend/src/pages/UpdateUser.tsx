@@ -554,7 +554,7 @@ const UpdateUser = () => {
               )}
 
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${user._id}`)}>
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${user._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
 

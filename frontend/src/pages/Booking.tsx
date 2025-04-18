@@ -1,532 +1,515 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
-  FormControl,
-  FormControlLabel,
-  Switch,
-  Button
+  DataGrid,
+  GridColDef,
+  GridPaginationModel,
+  GridRowId,
+  GridRenderCellParams
+} from '@mui/x-data-grid'
+import {
+  Tooltip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  CircularProgress,
+  Stack
 } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
+import {
+  Visibility as ViewIcon,
+  Cancel as CancelIcon
+} from '@mui/icons-material'
+import { format } from 'date-fns'
+import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings as commonStrings } from '@/lang/common'
-import { strings as blStrings } from '@/lang/booking-list'
-import { strings as bfStrings } from '@/lang/booking-filter'
-import { strings as csStrings } from '@/lang/cars'
-import env from '@/config/env.config'
-import * as helper from '@/common/helper'
-import Layout from '@/components/Layout'
-import * as UserService from '@/services/UserService'
 import * as BookingService from '@/services/BookingService'
-import * as CarService from '@/services/CarService'
 import * as PaymentService from '@/services/PaymentService'
-import Backdrop from '@/components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Error from './Error'
-import CarList from '@/components/CarList'
-import SupplierSelectList from '@/components/SupplierSelectList'
-import LocationSelectList from '@/components/LocationSelectList'
-import CarSelectList from '@/components/CarSelectList'
-import StatusList from '@/components/StatusList'
-import DateTimePicker from '@/components/DateTimePicker'
+import * as helper from '@/common/helper'
+import { strings } from '@/lang/booking-list'
+import { strings as commonStrings } from '@/lang/common'
+import env from '@/config/env.config'
+import BookingStatus from '@/components/BookingStatus'
+import Extras from '@/components/Extras'
 
-import '@/assets/css/booking.css'
+import '@/assets/css/booking-list.css'
 
-const Booking = () => {
-  const [loading, setLoading] = useState(false)
-  const [noMatch, setNoMatch] = useState(false)
-  const [error, setError] = useState(false)
-  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
-  const [booking, setBooking] = useState<bookcarsTypes.Booking>()
-  const [visible, setVisible] = useState(false)
-  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
-  const [car, setCar] = useState<bookcarsTypes.Car>()
-  const [price, setPrice] = useState<number>()
-  const [driver, setDriver] = useState<bookcarsTypes.Option>()
-  const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Option>()
-  const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Option>()
-  const [from, setFrom] = useState<Date>()
-  const [to, setTo] = useState<Date>()
-  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState<Date>()
-  const edit = false
+interface BookingListProps {
+  suppliers?: string[]
+  statuses?: string[]
+  filter?: bookcarsTypes.Filter | null
+  car?: string
+  user?: bookcarsTypes.User
+  hideDates?: boolean
+  hideCarColumn?: boolean
+  hideSupplierColumn?: boolean
+  language?: string
+  loading?: boolean
+  checkboxSelection?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Booking>
+}
 
-  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
-    setSupplier(values.length > 0 ? values[0] : undefined)
-  }
+const BookingList = ({
+  suppliers: bookingSuppliers,
+  statuses: bookingStatuses,
+  filter: bookingFilter,
+  car: bookingCar,
+  user: bookingUser,
+  hideDates,
+  hideCarColumn,
+  hideSupplierColumn,
+  language,
+  checkboxSelection,
+  onLoad,
+}: BookingListProps) => {
+  const navigate = useNavigate()
 
-  const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    setPickupLocation(values.length > 0 ? values[0] : undefined)
-  }
+  const [user, setUser] = useState<bookcarsTypes.User>()
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : env.BOOKINGS_PAGE_SIZE)
+  const [columns, setColumns] = useState<GridColDef<bookcarsTypes.Booking>[]>([])
+  const [rows, setRows] = useState<bookcarsTypes.Booking[]>([])
+  const [rowCount, setRowCount] = useState(0)
+  const [fetch, setFetch] = useState(false)
+  const [selectedId, setSelectedId] = useState('')
+  const [suppliers, setSuppliers] = useState<string[] | undefined>(bookingSuppliers)
+  const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
+  const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
+  const [car, setCar] = useState<string>(bookingCar || '')
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    pageSize: env.BOOKINGS_PAGE_SIZE,
+    page: 0,
+  })
+  const [loading, setLoading] = useState(true)
+  const [openCancelDialog, setOpenCancelDialog] = useState(false)
+  const [cancelRequestSent, setCancelRequestSent] = useState(false)
+  const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
 
-  const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setDropOffLocation(values.length > 0 ? values[0] : undefined)
-  }
+  useEffect(() => {
+    if (!env.isMobile) {
+      setPage(paginationModel.page)
+      setPageSize(paginationModel.pageSize)
+    }
+  }, [paginationModel])
 
-  const handleCarSelectListChange = async (values: bookcarsTypes.Car[]) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
-      const newCar = values.length > 0 ? values[0] : undefined
+      const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-      if ((!car && newCar) || (car && newCar && car._id !== newCar._id)) {
-        // car changed
-        const _car = await CarService.getCar(newCar._id)
+      if (suppliers && statuses) {
+        setLoading(true)
 
-        if (_car && from && to) {
-          const _booking = bookcarsHelper.clone(booking)
-          _booking.car = _car
-          const _price = bookcarsHelper.calculateTotalPrice(_car, from, to, _booking)
+        const payload: bookcarsTypes.GetBookingsPayload = {
+          suppliers,
+          statuses,
+          filter: filter || undefined,
+          car,
+          user: (_user && _user._id) || undefined,
+        }
 
-          setBooking(_booking)
-          setPrice(_price)
-          setCar(newCar)
+        const data = await BookingService.getBookings(
+          payload,
+          _page + 1,
+          _pageSize,
+        )
+        const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
+        if (!_data) {
+          helper.error()
+          return
+        }
+        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+
+        for (const booking of _data.resultData) {
+          booking.price = await PaymentService.convertPrice(booking.price!)
+        }
+
+        if (env.isMobile) {
+          const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+          setRows(_rows)
+          setRowCount(totalRecords)
+          setFetch(_data.resultData.length > 0)
+          if (onLoad) {
+            onLoad({ rows: _data.resultData, rowCount: totalRecords })
+          }
+        } else {
+          setRows(_data.resultData)
+          setRowCount(totalRecords)
+          if (onLoad) {
+            onLoad({ rows: _data.resultData, rowCount: totalRecords })
+          }
+        }
+      } else {
+        setRows([])
+        setRowCount(0)
+        if (onLoad) {
+          onLoad({ rows: [], rowCount: 0 })
+        }
+      }
+    } catch (err) {
+      helper.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setSuppliers(bookingSuppliers)
+  }, [bookingSuppliers])
+
+  useEffect(() => {
+    setStatuses(bookingStatuses)
+  }, [bookingStatuses])
+
+  useEffect(() => {
+    setFilter(bookingFilter)
+  }, [bookingFilter])
+
+  useEffect(() => {
+    setCar(bookingCar || '')
+  }, [bookingCar])
+
+  useEffect(() => {
+    setUser(bookingUser)
+  }, [bookingUser])
+
+  useEffect(() => {
+    if (suppliers && statuses && user) {
+      fetchData(page, user)
+    }
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (suppliers && statuses && user) {
+      if (page === 0) {
+        fetchData(0, user)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
+    }
+  }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const getDate = (date?: string) => {
+    if (date) {
+      const d = new Date(date)
+      return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
+    }
+
+    throw new Error('Invalid date')
+  }
+
+  const getColumns = (): GridColDef<bookcarsTypes.Booking>[] => {
+    const _columns: GridColDef<bookcarsTypes.Booking>[] = [
+      {
+        field: 'from',
+        headerName: commonStrings.FROM,
+        flex: 1,
+        valueGetter: (value: string) => getDate(value),
+      },
+      {
+        field: 'to',
+        headerName: commonStrings.TO,
+        flex: 1,
+        valueGetter: (value: string) => getDate(value),
+      },
+      {
+        field: 'price',
+        headerName: strings.PRICE,
+        flex: 1,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <span className="bp">{value}</span>,
+        valueGetter: (value: number) => bookcarsHelper.formatPrice(value, commonStrings.CURRENCY, language as string),
+      },
+      {
+        field: 'status',
+        headerName: strings.STATUS,
+        flex: 1,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <BookingStatus value={value!} showIcon />,
+        valueGetter: (value: string) => value,
+      },
+      {
+        field: 'action',
+        headerName: '',
+        sortable: false,
+        disableColumnMenu: true,
+        renderCell: ({ row }: GridRenderCellParams<bookcarsTypes.Booking>) => {
+          const cancelBooking = (e: React.MouseEvent<HTMLElement>) => {
+            e.stopPropagation() // don't select this row after clicking
+            setSelectedId(row._id || '')
+            setOpenCancelDialog(true)
+          }
+
+          const today = new Date()
+          today.setHours(0)
+          today.setMinutes(0)
+          today.setSeconds(0)
+          today.setMilliseconds(0)
+
+          return (
+            <>
+              <Tooltip title={strings.VIEW}>
+                <IconButton onClick={() => navigate(`/booking?b=${row._id}`)}>
+                  <ViewIcon />
+                </IconButton>
+              </Tooltip>
+              {row.cancellation
+                && !row.cancelRequest
+                && row.status !== bookcarsTypes.BookingStatus.Cancelled
+                && new Date(row.from) >= today && (
+                  <Tooltip title={strings.CANCEL}>
+                    <IconButton onClick={cancelBooking}>
+                      <CancelIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
+            </>
+          )
+        },
+      },
+    ]
+
+    if (hideDates) {
+      _columns.splice(0, 2)
+    }
+
+    if (!hideCarColumn) {
+      _columns.unshift({
+        field: 'car',
+        headerName: strings.CAR,
+        flex: 1,
+        valueGetter: (value: bookcarsTypes.Car) => value?.name,
+      })
+    }
+
+    if (!hideSupplierColumn) {
+      _columns.unshift({
+        field: 'supplier',
+        headerName: commonStrings.SUPPLIER,
+        flex: 1,
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
+          <div className="cell-supplier">
+            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value} />
+          </div>
+        ),
+        valueGetter: (value: bookcarsTypes.User) => value?.fullName,
+      })
+    }
+
+    return _columns
+  }
+
+  useEffect(() => {
+    if (suppliers && statuses && user) {
+      const _columns = getColumns()
+      setColumns(_columns)
+
+      if (page === 0) {
+        fetchData(0, user)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
+    }
+  }, [suppliers, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (env.isMobile) {
+      const element = document.querySelector('body')
+
+      if (element) {
+        element.onscroll = () => {
+          if (fetch
+            && !loading
+            && window.scrollY > 0
+            && window.scrollY + window.innerHeight + env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
+            setLoading(true)
+            setPage(page + 1)
+          }
+        }
+      }
+    }
+  }, [page, fetch, loading])
+
+  const handleCloseCancelBooking = () => {
+    setOpenCancelDialog(false)
+    if (cancelRequestSent) {
+      setTimeout(() => {
+        setCancelRequestSent(false)
+      }, 500)
+    }
+  }
+
+  const handleConfirmCancelBooking = async () => {
+    try {
+      setCancelRequestProcessing(true)
+      const status = await BookingService.cancel(selectedId)
+      if (status === 200) {
+        const row = rows.find((r) => r._id === selectedId)
+        if (row) {
+          row.cancelRequest = true
+
+          setCancelRequestSent(true)
+          setRows(rows)
+          setSelectedId('')
+          setCancelRequestProcessing(false)
         } else {
           helper.error()
         }
-      } else if (!newCar) {
-        setPrice(0)
-        setCar(newCar)
       } else {
-        setCar(newCar)
+        helper.error()
+        setOpenCancelDialog(false)
+        setCancelRequestProcessing(false)
       }
     } catch (err) {
       helper.error(err)
+      setOpenCancelDialog(false)
+      setCancelRequestProcessing(false)
     }
   }
 
-  const handleStatusChange = (value: bookcarsTypes.BookingStatus) => {
-    setStatus(value)
-  }
-
-  const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.cancellation = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setCancellation(_booking.cancellation)
-    }
-  }
-
-  const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.amendments = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setAmendments(_booking.amendments)
-    }
-  }
-
-  const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.collisionDamageWaiver = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setCollisionDamageWaiver(_booking.collisionDamageWaiver)
-    }
-  }
-
-  const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.theftProtection = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setTheftProtection(_booking.theftProtection)
-    }
-  }
-
-  const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.fullInsurance = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setFullInsurance(_booking.fullInsurance)
-    }
-  }
-
-  const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.additionalDriver = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setAdditionalDriver(_booking.additionalDriver)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault()
-
-      if (!booking || !supplier || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
-        helper.error()
-        return
-      }
-
-      const _booking: bookcarsTypes.Booking = {
-        _id: booking._id,
-        supplier: supplier._id,
-        car: car._id,
-        driver: driver._id,
-        pickupLocation: pickupLocation._id,
-        dropOffLocation: dropOffLocation._id,
-        from,
-        to,
-        status,
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        price
-      }
-
-      const payload = { booking: _booking }
-      const _status = await BookingService.update(payload)
-
-      if (_status === 200) {
-        helper.info(commonStrings.UPDATED)
-      } else {
-        helper.error()
-      }
-    } catch (err) {
-      helper.error(err)
-    }
-  }
-
-  const onLoad = async () => {
-    setLoading(true)
-    setLanguage(UserService.getLanguage())
-
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('b')) {
-      const id = params.get('b')
-      if (id && id !== '') {
-        try {
-          const _booking = await BookingService.getBooking(id)
-          if (_booking) {
-            setBooking(_booking)
-            setPrice(await PaymentService.convertPrice(_booking.price!))
-            setLoading(false)
-            setVisible(true)
-            const cmp = _booking.supplier as bookcarsTypes.User
-            setSupplier({
-              _id: cmp._id as string,
-              name: cmp.fullName,
-              image: cmp.avatar,
-            })
-            setCar(_booking.car as bookcarsTypes.Car)
-            const drv = _booking.driver as bookcarsTypes.User
-            setDriver({
-              _id: drv._id as string,
-              name: drv.fullName,
-              image: drv.avatar,
-            })
-            const pul = _booking.pickupLocation as bookcarsTypes.Location
-            setPickupLocation({
-              _id: pul._id,
-              name: pul.name || '',
-            })
-            const dol = _booking.dropOffLocation as bookcarsTypes.Location
-            setDropOffLocation({
-              _id: dol._id,
-              name: dol.name || '',
-            })
-            setFrom(new Date(_booking.from))
-            setMinDate(new Date(_booking.from))
-            setTo(new Date(_booking.to))
-            setStatus(_booking.status)
-            setCancellation(_booking.cancellation || false)
-            setAmendments(_booking.amendments || false)
-            setTheftProtection(_booking.theftProtection || false)
-            setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
-            setFullInsurance(_booking.fullInsurance || false)
-            setAdditionalDriver((_booking.additionalDriver && !!_booking._additionalDriver) || false)
-          } else {
-            setLoading(false)
-            setNoMatch(true)
-          }
-        } catch {
-          setLoading(false)
-          setError(true)
-          setVisible(false)
-        }
-      } else {
-        setLoading(false)
-        setNoMatch(true)
-      }
-    } else {
-      setLoading(false)
-      setNoMatch(true)
-    }
-  }
-
-  const days = bookcarsHelper.days(from, to)
+  const _fr = language === 'fr'
+  const _locale = _fr ? dfnsFR : dfnsENUS
+  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
   return (
-    <Layout onLoad={onLoad} strict>
-      {visible && booking && (
-        <div className="booking">
-          <div className="col-1">
-            <form onSubmit={handleSubmit}>
-              {!env.HIDE_SUPPLIERS && (
-                <FormControl fullWidth margin="dense">
-                  <SupplierSelectList
-                    label={blStrings.SUPPLIER}
-                    required
-                    variant="standard"
-                    onChange={handleSupplierChange}
-                    value={supplier}
-                    readOnly={!edit}
-                  />
-                </FormControl>
-              )}
+    <div className="bs-list">
+      {user
+        && (env.isMobile ? (
+          <>
+            {rows.map((booking) => {
+              const _bookingCar = booking.car as bookcarsTypes.Car
+              const bookingSupplier = booking.supplier as bookcarsTypes.User
+              const from = new Date(booking.from)
+              const to = new Date(booking.to)
+              const days = bookcarsHelper.days(from, to)
 
-              <FormControl fullWidth margin="dense">
-                <LocationSelectList
-                  label={bfStrings.PICK_UP_LOCATION}
-                  required
-                  variant="standard"
-                  onChange={handlePickupLocationChange}
-                  value={pickupLocation}
-                  // init
-                  readOnly={!edit}
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense">
-                <LocationSelectList
-                  label={bfStrings.DROP_OFF_LOCATION}
-                  required
-                  variant="standard"
-                  onChange={handleDropOffLocationChange}
-                  value={dropOffLocation}
-                  // init
-                  readOnly={!edit}
-                />
-              </FormControl>
-
-              <CarSelectList
-                label={blStrings.CAR}
-                supplier={(supplier && supplier._id) || ''}
-                pickupLocation={(pickupLocation && pickupLocation._id) || ''}
-                onChange={handleCarSelectListChange}
-                required
-                value={car}
-                readOnly={!edit}
-              />
-
-              <FormControl fullWidth margin="dense">
-                <DateTimePicker
-                  label={commonStrings.FROM}
-                  value={from}
-                  required
-                  readOnly={!edit}
-                  onChange={(_from) => {
-                    if (_from) {
-                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-                      _booking.from = _from
-
-                      const _price = bookcarsHelper.calculateTotalPrice(
-                        booking.car as bookcarsTypes.Car,
-                        new Date(booking.from),
-                        new Date(booking.to),
-                        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-                        booking as bookcarsTypes.CarOptions,
-                      )
-                      _booking.price = _price
-                      setBooking(_booking)
-                      setPrice(_price)
-                      setFrom(_from)
-                      setMinDate(_from)
-                    }
-                  }}
-                  language={UserService.getLanguage()}
-                />
-              </FormControl>
-              <FormControl fullWidth margin="dense">
-                <DateTimePicker
-                  label={commonStrings.TO}
-                  value={to}
-                  minDate={minDate}
-                  required
-                  readOnly={!edit}
-                  onChange={(_to) => {
-                    if (_to) {
-                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-                      _booking.to = _to
-
-                      const _price = bookcarsHelper.calculateTotalPrice(
-                        booking.car as bookcarsTypes.Car,
-                        new Date(booking.from),
-                        new Date(booking.to),
-                        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-                        booking as bookcarsTypes.CarOptions,
-                      )
-                      _booking.price = _price
-                      setBooking(_booking)
-                      setPrice(_price)
-                      setTo(_to)
-                    }
-                  }}
-                  language={UserService.getLanguage()}
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense">
-                <StatusList label={blStrings.STATUS} onChange={handleStatusChange} required disabled value={status} />
-              </FormControl>
-
-              <div className="info">
-                <InfoIcon />
-                <span>{commonStrings.OPTIONAL}</span>
-              </div>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).cancellation === -1 || (booking.car as bookcarsTypes.Car).cancellation === 0}
-                  control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
-                  label={csStrings.CANCELLATION}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).amendments === -1 || (booking.car as bookcarsTypes.Car).amendments === 0}
-                  control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
-                  label={csStrings.AMENDMENTS}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).collisionDamageWaiver === -1 || (booking.car as bookcarsTypes.Car).collisionDamageWaiver === 0}
-                  control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
-                  label={csStrings.COLLISION_DAMAGE_WAVER}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).theftProtection === -1 || (booking.car as bookcarsTypes.Car).theftProtection === 0}
-                  control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
-                  label={csStrings.THEFT_PROTECTION}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).fullInsurance === -1 || (booking.car as bookcarsTypes.Car).fullInsurance === 0}
-                  control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
-                  label={csStrings.FULL_INSURANCE}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).additionalDriver === -1 || (booking.car as bookcarsTypes.Car).additionalDriver === 0}
-                  control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
-                  label={csStrings.ADDITIONAL_DRIVER}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <div>
-                {edit && (
-                  <div className="booking-buttons">
-                    <Button variant="contained" className="btn-primary btn-margin-bottom" type="submit">
-                      {commonStrings.SAVE}
-                    </Button>
+              return (
+                <div key={booking._id} className="booking-details">
+                  <div className={`bs bs-${booking.status}`}>
+                    <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
-                )}
-              </div>
-            </form>
-          </div>
-          <div className="col-2">
-            <div className="col-2-header">
-              <div className="price">
-                <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
-              </div>
-            </div>
-            <CarList
-              className="car"
-              booking={booking}
-              cars={[booking.car as bookcarsTypes.Car]}
-              hidePrice
-              hideSupplier={env.HIDE_SUPPLIERS}
-            />
-          </div>
-        </div>
-      )}
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{strings.CAR}</span>
+                    <div className="booking-detail-value">{_bookingCar.name}</div>
+                  </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{strings.DAYS}</span>
+                    <div className="booking-detail-value">
+                      {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
+                        format(from, _format, { locale: _locale }),
+                      )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}
+                    </div>
+                  </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
+                    <div className="booking-detail-value">{(booking.pickupLocation as bookcarsTypes.Location).name}</div>
+                  </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
+                    <div className="booking-detail-value">{(booking.dropOffLocation as bookcarsTypes.Location).name}</div>
+                  </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
+                    <div className="booking-detail-value">
+                      <div className="car-supplier">
+                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, bookingSupplier.avatar)} alt={bookingSupplier.fullName} />
+                        <span className="car-supplier-name">{bookingSupplier.fullName}</span>
+                      </div>
+                    </div>
+                  </div>
 
-      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-      {noMatch && <NoMatch hideHeader />}
-      {error && <Error />}
-    </Layout>
+                  {(booking.cancellation
+                    || booking.amendments
+                    || booking.collisionDamageWaiver
+                    || booking.theftProtection
+                    || booking.fullInsurance
+                    || booking.additionalDriver) && (
+                      <Extras
+                        booking={booking}
+                        days={days}
+                      />
+                    )}
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <span className="booking-detail-title">{strings.COST}</span>
+                    <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(booking.price as number, commonStrings.CURRENCY, language as string)}</div>
+                  </div>
+
+                  <div className="bs-buttons">
+                    {booking.cancellation
+                      && !booking.cancelRequest
+                      && booking.status !== bookcarsTypes.BookingStatus.Cancelled
+                      && new Date(booking.from) > new Date() && (
+                        <Button
+                          variant="contained"
+                          className="btn-secondary"
+                          onClick={() => {
+                            setSelectedId(booking._id as string)
+                            setOpenCancelDialog(true)
+                          }}
+                        >
+                          {strings.CANCEL}
+                        </Button>
+                      )}
+                  </div>
+                </div>
+              )
+            })}
+          </>
+        ) : (
+          <DataGrid
+            className="data-grid"
+            checkboxSelection={checkboxSelection}
+            getRowId={(row: bookcarsTypes.Booking): GridRowId => row._id as GridRowId}
+            columns={columns}
+            rows={rows}
+            rowCount={rowCount}
+            loading={loading}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: env.BOOKINGS_PAGE_SIZE },
+              },
+            }}
+            pageSizeOptions={[env.BOOKINGS_PAGE_SIZE, 50, 100]}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            disableRowSelectionOnClick
+          />
+        ))}
+
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openCancelDialog}>
+        <DialogTitle className="dialog-header">{!cancelRequestSent && !cancelRequestProcessing && commonStrings.CONFIRM_TITLE}</DialogTitle>
+        <DialogContent className="dialog-content">
+          {cancelRequestProcessing ? (
+            <Stack sx={{ color: '#232323' }}>
+              <CircularProgress color="inherit" />
+            </Stack>
+          ) : cancelRequestSent ? (
+            strings.CANCEL_BOOKING_REQUEST_SENT
+          ) : (
+            strings.CANCEL_BOOKING
+          )}
+        </DialogContent>
+        <DialogActions className="dialog-actions">
+          {!cancelRequestProcessing && (
+            <Button onClick={handleCloseCancelBooking} variant="outlined" color="primary" className="btn-secondary">
+              {commonStrings.CLOSE}
+            </Button>
+          )}
+          {!cancelRequestSent && !cancelRequestProcessing && (
+            <Button onClick={handleConfirmCancelBooking} variant="contained" className="btn-primary">
+              {commonStrings.CONFIRM}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    </div>
   )
 }
 
-export default Booking
+export default BookingList

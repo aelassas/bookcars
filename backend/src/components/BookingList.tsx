@@ -16,9 +16,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Card,
-  CardContent,
-  Typography
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
@@ -67,7 +64,6 @@ const BookingList = ({
   hideCarColumn,
   hideSupplierColumn,
   language,
-  loading: bookingLoading,
   checkboxSelection,
   onLoad,
 }: BookingListProps) => {
@@ -97,7 +93,7 @@ const BookingList = ({
     page: 0,
   })
   const [init, setInit] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!env.isMobile) {
@@ -480,18 +476,7 @@ const BookingList = ({
   return (
     <div className="bs-list">
       {loggedUser
-        && (rows.length === 0 ? (
-          !loading
-          && !init
-          && !bookingLoading
-          && (
-            <Card variant="outlined" className="empty-list">
-              <CardContent>
-                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-              </CardContent>
-            </Card>
-          )
-        ) : env.isMobile ? (
+        && (env.isMobile ? (
           <>
             {rows.map((booking, index) => {
               const from = new Date(booking.from)
