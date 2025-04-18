@@ -8,7 +8,7 @@ import BookingList from '@/components/BookingList'
 import SupplierFilter from '@/components/SupplierFilter'
 import StatusFilter from '@/components/StatusFilter'
 import BookingFilter from '@/components/BookingFilter'
-import Progress from '@/components/Progress'
+// import Progress from '@/components/Progress'
 import * as SupplierService from '@/services/SupplierService'
 
 import '@/assets/css/bookings.css'
@@ -20,7 +20,7 @@ const Bookings = () => {
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingSuppliers, setLoadingSuppliers] = useState(true)
-  const [loadingPage, setLoadingPage] = useState(true)
+  // const [loadingPage, setLoadingPage] = useState(true)
 
   const handleSupplierFilterChange = (_suppliers: string[]) => {
     setSuppliers(_suppliers)
@@ -67,7 +67,7 @@ const Bookings = () => {
                 loading={loadingSuppliers}
                 hideDates={env.isMobile}
                 checkboxSelection={false}
-                onLoad={() => setLoadingPage(false)}
+                // onLoad={() => setLoadingPage(false)}
                 hideSupplierColumn={env.HIDE_SUPPLIERS}
               />
             </div>
@@ -75,7 +75,7 @@ const Bookings = () => {
         )}
       </Layout>
 
-      {user?.verified && loadingPage && <Progress />}
+      {/* {user?.verified && loadingPage && <Progress />} */}
     </>
   )
 }
