@@ -51,6 +51,7 @@ services:
     volumes:
       - ./backend:/bookcars/backend
       - backend_node_modules:/bookcars/backend/node_modules
+      - cdn:/var/www/cdn/bookcars
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
