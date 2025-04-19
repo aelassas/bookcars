@@ -10,6 +10,8 @@
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "npm run ts:build && vite",
+    "ts:docker-build": "tsc --build --verbose",
+    "dev:docker": "npm run ts:docker-build && vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
     "lint": "eslint .",
