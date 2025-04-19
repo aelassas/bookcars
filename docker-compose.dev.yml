@@ -8,6 +8,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
       - 27018:27017
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
 
   mongo-express:
     image: mongo-express:latest
@@ -51,7 +54,6 @@ services:
     volumes:
       - ./backend:/bookcars/backend
       - backend_node_modules:/bookcars/backend/node_modules
-      - cdn:/var/www/cdn/bookcars
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
@@ -65,10 +67,9 @@ services:
     depends_on:
       - api
     ports:
-      - 8080:3002
+      - 8080:8080
       - 8443:443
     volumes:
-      - cdn:/var/www/cdn/bookcars
       - ./frontend:/bookcars/frontend
       - frontend_node_modules:/bookcars/frontend/node_modules
     environment:
@@ -80,3 +81,5 @@ volumes:
   api_node_modules:
   backend_node_modules:
   frontend_node_modules:
+  mongodb_data:
+  mongodb_config:
