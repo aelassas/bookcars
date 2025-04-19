@@ -116,7 +116,7 @@ const Navigation = () => {
         {enableAgenda
           && (isDesktop ? (
             <Button
-              color={agenda ? 'primary' : 'inherit'}
+              color={agenda ? 'info' : 'inherit'}
               onClick={toggleAgenda}
               aria-label={translations.navigation.agenda}
             >
@@ -124,7 +124,7 @@ const Navigation = () => {
             </Button>
           ) : (
             <IconButton
-              color={agenda ? 'primary' : 'default'}
+              color={agenda ? 'info' : 'default'}
               style={{ padding: 5 }}
               onClick={toggleAgenda}
             >
@@ -137,7 +137,7 @@ const Navigation = () => {
             views.map((v) => (
               <Button
                 key={v}
-                color={v === view ? 'primary' : 'inherit'}
+                color={v === view ? 'info' : 'inherit'}
                 onClick={() => handleChangeView(v)}
                 onDragOver={(e) => {
                   e.preventDefault()
