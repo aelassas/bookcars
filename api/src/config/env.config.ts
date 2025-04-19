@@ -211,6 +211,13 @@ export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
 export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
 
 /**
+ * CDN root folder path.
+ *
+ * @type {string}
+ */
+export const CDN_ROOT = __env__('BC_CDN_ROOT', false, '/var/www/cdn')
+
+/**
  * Users' cdn folder path.
  *
  * @type {string}
