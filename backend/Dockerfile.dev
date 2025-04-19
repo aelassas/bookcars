@@ -20,7 +20,7 @@ COPY ./backend/package*.json ./
 RUN npm install --force && npm cache clean --force
 
 COPY ./backend ./ 
-COPY ./backend/.env.docker .env
+COPY ./backend/.env.docker.development .env
 
 # Copy preinstalled internal packages
 COPY --from=packages /bookcars/packages /bookcars/packages
