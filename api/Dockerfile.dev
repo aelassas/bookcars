@@ -31,7 +31,7 @@ COPY --from=build /bookcars/api/node_modules ./node_modules
 COPY --from=packages /bookcars/packages /bookcars/packages
 
 COPY ./api ./
-COPY ./api/.env.docker .env
+COPY ./api/.env.docker.development .env
 
 EXPOSE 4002
 
