@@ -113,6 +113,7 @@ You can install the Android App by downloading the APK and installing it on any 
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
    2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
 9. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+10. [Run from Source (Docker)](https://github.com/aelassas/bookcars/wiki/Run-from-Source-(Docker))
 10. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
     1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
