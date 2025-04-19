@@ -160,6 +160,105 @@ export const create = async (req: Request, res: Response) => {
 }
 
 /**
+ * Create multiple Locations in bulk.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const bulkCreate = async (req: Request, res: Response) => {
+  const { locations } = req.body
+
+  if (!locations || !Array.isArray(locations)) {
+    return res.status(400).send('Invalid locations data')
+  }
+
+  const results = {
+    successCount: 0,
+    errors: [] as string[]
+  }
+
+  try {
+    for (const locationData of locations) {
+      try {
+        const {
+          country,
+          longitude,
+          latitude,
+          names,
+          image,
+          parkingSpots: _parkingSpots,
+        } = locationData
+
+        // Verify image if provided
+        if (image) {
+          const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
+
+          if (!await helper.exists(_image)) {
+            throw new Error(`Location image not found: ${_image}`)
+          }
+        }
+
+        // Create parking spots
+        const parkingSpots: string[] = []
+        if (_parkingSpots) {
+          for (const parkingSpot of _parkingSpots) {
+            const psId = await createParkingSpot(parkingSpot)
+            parkingSpots.push(psId)
+          }
+        }
+
+        // Create location values
+        const values: string[] = []
+        for (const name of names) {
+          const locationValue = new LocationValue({
+            language: name.language,
+            value: name.name,
+          })
+          await locationValue.save()
+          values.push(locationValue.id)
+        }
+
+        // Create the location
+        const location = new Location({
+          country,
+          longitude,
+          latitude,
+          values,
+          parkingSpots,
+        })
+        await location.save()
+
+        // Move the image if provided
+        if (image) {
+          const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
+
+          const filename = `${location._id}_${Date.now()}${path.extname(image)}`
+          const newPath = path.join(env.CDN_LOCATIONS, filename)
+
+          await fs.rename(_image, newPath)
+          location.image = filename
+          await location.save()
+        }
+
+        results.successCount++
+      } catch (err: any) {
+        const errorMessage = err.message || 'Unknown error'
+        results.errors.push(`Error creating location: ${errorMessage}`)
+        logger.error(`[location.bulkCreate] Error processing location: ${errorMessage}`, err)
+      }
+    }
+
+    return res.status(200).json(results)
+  } catch (err) {
+    logger.error(`[location.bulkCreate] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
  * Update a Location.
  *
  * @export

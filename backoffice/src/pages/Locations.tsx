@@ -7,12 +7,13 @@ import { strings } from '@/lang/locations'
 import Search from '@/components/Search'
 import LocationList from '@/components/LocationList'
 import InfoBox from '@/components/InfoBox'
+import * as helper from '@/common/helper'
 
 import '@/assets/css/locations.css'
 
 const Locations = () => {
   const navigate = useNavigate()
-
+  const [user, setUser] = useState<bookcarsTypes.User>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
 
@@ -30,7 +31,11 @@ const Locations = () => {
     setRowCount(_rowCount)
   }
 
-  const onLoad = () => { }
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    setUser(_user)
+  }
+
+  const isAdmin = helper.admin(user)
 
   return (
     <Layout onLoad={onLoad} strict>
@@ -40,9 +45,22 @@ const Locations = () => {
             <Search className="search" onSubmit={handleSearch} />
 
             {rowCount > -1 && (
-              <Button variant="contained" className="btn-primary new-location" size="small" onClick={() => navigate('/create-location')}>
-                {strings.NEW_LOCATION}
-              </Button>
+              <div className="location-buttons">
+                <Button variant="contained" className="btn-primary new-location" size="small" onClick={() => navigate('/create-location')}>
+                  {strings.NEW_LOCATION}
+                </Button>
+
+                {isAdmin && (
+                  <Button
+                    variant="contained"
+                    className="btn-primary bulk-locations"
+                    size="small"
+                    onClick={() => navigate('/bulk-locations')}
+                  >
+                    {strings.BULK_LOCATIONS}
+                  </Button>
+                )}
+              </div>
             )}
 
             {rowCount > 0

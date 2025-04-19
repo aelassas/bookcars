@@ -782,3 +782,13 @@ export const verifyReCaptcha = async (token: string): Promise<boolean> => {
     return false
   }
 }
+
+export function getErrorMessage(err: unknown): import('react').SetStateAction<string | null> {
+  if (err instanceof Error) {
+    return err.message
+  }
+  if (typeof err === 'string') {
+    return err
+  }
+  return commonStrings.GENERIC_ERROR
+}

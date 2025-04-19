@@ -33,6 +33,25 @@ export const create = (data: bookcarsTypes.UpsertLocationPayload): Promise<numbe
     .then((res) => res.status)
 
 /**
+ * Create multiple Locations at once.
+ *
+ * @param {bookcarsTypes.UpsertLocationPayload[]} data
+ * @returns {Promise<{status: number, successCount: number, errors: string[]}>}
+ */
+export const bulkCreate = (data: bookcarsTypes.UpsertLocationPayload[]): Promise<{status: number, successCount: number, errors: string[]}> =>
+  axiosInstance
+    .post(
+      '/api/bulk-create-locations',
+      { locations: data },
+      { withCredentials: true }
+    )
+    .then((res) => ({
+      status: res.status,
+      successCount: res.data.successCount,
+      errors: res.data.errors
+    }))
+
+/**
  * Update a Location.
  *
  * @param {string} id

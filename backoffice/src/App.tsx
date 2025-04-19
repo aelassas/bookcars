@@ -18,6 +18,7 @@ const CreateSupplier = lazy(() => import('@/pages/CreateSupplier'))
 const UpdateSupplier = lazy(() => import('@/pages/UpdateSupplier'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const CreateLocation = lazy(() => import('@/pages/CreateLocation'))
+const BulkLocations = lazy(() => import('@/pages/BulkLocations'))
 const UpdateLocation = lazy(() => import('@/pages/UpdateLocation'))
 const Cars = lazy(() => import('@/pages/Cars'))
 const Car = lazy(() => import('@/pages/Car'))
@@ -68,6 +69,7 @@ const App = () => (
                 <Route path="/update-supplier" element={<UpdateSupplier />} />
                 <Route path="/locations" element={<Locations />} />
                 <Route path="/create-location" element={<CreateLocation />} />
+                <Route path="/bulk-locations" element={<BulkLocations />} />
                 <Route path="/update-location" element={<UpdateLocation />} />
                 <Route path="/cars" element={<Cars />} />
                 <Route path="/car" element={<Car />} />

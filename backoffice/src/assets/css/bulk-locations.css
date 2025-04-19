@@ -1,0 +1,82 @@
+.bulk-locations {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-form-wrapper {
+  width: 650px;
+  height: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.location-form-title {
+  margin-top: 0;
+  text-align: center;
+}
+
+.file-upload-container {
+  margin-bottom: 20px;
+}
+
+.upload-instructions {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.upload-box {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.upload-button {
+  margin-right: 15px !important;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(0 0 0 / 60%);
+  font-size: 14px;
+}
+
+.upload-alert {
+  margin-bottom: 20px !important;
+}
+
+.buttons {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.btn-margin-bottom {
+  margin-bottom: 15px !important;
+  margin-right: 15px !important;
+}
+
+@media (width <= 660px) {
+  .location-form-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+  }
+
+  .upload-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .upload-button {
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+  }
+} 
