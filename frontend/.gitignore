@@ -28,3 +28,4 @@ yarn-error.log*
 *.tsbuildinfo
 vite.config.d.ts
 vite.config.js
+.cache/
