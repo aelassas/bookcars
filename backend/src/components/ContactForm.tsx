@@ -90,10 +90,11 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
         if (!(await helper.verifyReCaptcha(recaptchaToken))) {
           recaptchaToken = ''
         }
+      }
 
-        if (!recaptchaToken) {
-          helper.error('reCAPTCHA error')
-        }
+      if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
+        helper.error('reCAPTCHA error')
+        return
       }
 
       const payload: bookcarsTypes.SendEmailPayload = {

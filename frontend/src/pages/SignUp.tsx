@@ -205,7 +205,7 @@ const SignUp = () => {
         }
       }
 
-      if (reCaptchaLoaded && !recaptchaToken) {
+      if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
         setRecaptchaError(true)
         return
       }
