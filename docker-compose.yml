@@ -39,8 +39,8 @@ services:
     depends_on:
       - api
     ports:
-      - 8080:80
-      - 8443:443
+      - 80:80
+      - 443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
 
