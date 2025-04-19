@@ -26,5 +26,5 @@ COPY ./frontend/.env.docker .env
 # Copy preinstalled internal packages
 COPY --from=packages /bookcars/packages /bookcars/packages
 
-EXPOSE 3002
+EXPOSE 8080
 CMD ["npm", "run", "dev:docker"]
