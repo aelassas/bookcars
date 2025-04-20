@@ -21,7 +21,7 @@ COPY ./frontend/package*.json ./
 RUN npm install --force && npm cache clean --force
 
 COPY ./frontend ./ 
-COPY ./frontend/.env.docker.development .env
+COPY ./frontend/.env.docker .env
 
 # Copy preinstalled internal packages
 COPY --from=packages /bookcars/packages /bookcars/packages
