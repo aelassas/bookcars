@@ -85,7 +85,7 @@ const Car = ({
   useEffect(() => {
     const fetchPrice = async () => {
       if (from && to) {
-        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date, car.supplier.priceChangeRate || 0))
         setTotalPrice(_totalPrice)
         setDays(bookcarsHelper.days(from, to))
       }
@@ -96,12 +96,13 @@ const Car = ({
 
   useEffect(() => {
     const init = async () => {
-      const _cancellation = (car.cancellation > -1 && (await helper.getCancellation(car.cancellation, language))) || ''
-      const _amendments = (car.amendments > -1 && (await helper.getAmendments(car.amendments, language))) || ''
-      const _theftProtection = (car.theftProtection > -1 && (await helper.getTheftProtection(car.theftProtection, language))) || ''
-      const _collisionDamageWaiver = (car.collisionDamageWaiver > -1 && (await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language))) || ''
-      const _fullInsurance = (car.fullInsurance > -1 && (await helper.getFullInsurance(car.fullInsurance, language))) || ''
-      const _additionalDriver = (car.additionalDriver > -1 && (await helper.getAdditionalDriver(car.additionalDriver, language))) || ''
+      const priceChangeRate = car.supplier.priceChangeRate || 0
+      const _cancellation = (car.cancellation > -1 && (await helper.getCancellation(car.cancellation, language, priceChangeRate))) || ''
+      const _amendments = (car.amendments > -1 && (await helper.getAmendments(car.amendments, language, priceChangeRate))) || ''
+      const _theftProtection = (car.theftProtection > -1 && (await helper.getTheftProtection(car.theftProtection, language, priceChangeRate))) || ''
+      const _collisionDamageWaiver = (car.collisionDamageWaiver > -1 && (await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language, priceChangeRate))) || ''
+      const _fullInsurance = (car.fullInsurance > -1 && (await helper.getFullInsurance(car.fullInsurance, language, priceChangeRate))) || ''
+      const _additionalDriver = (car.additionalDriver > -1 && (await helper.getAdditionalDriver(car.additionalDriver, language, priceChangeRate))) || ''
 
       setCancellation(_cancellation)
       setAmendments(_amendments)
@@ -112,10 +113,9 @@ const Car = ({
       setLoading(false)
 
       if (!hidePrice) {
-        const _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date))
+        let _totalPrice = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date, car.supplier.priceChangeRate || 0))
         setTotalPrice(_totalPrice)
       }
-      // console.log('init car')
     }
 
     init()
@@ -177,39 +177,41 @@ const Car = ({
       <article>
         <div className="car">
           <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-          {!hideSupplier && (
-            <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
-              <span className="car-supplier-logo">
-                <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
-              </span>
-              <span className="car-supplier-info">{car.supplier.fullName}</span>
-            </div>
-          )}
-          <div className="car-footer">
-            <div className="rating">
-              {car.rating && car.rating >= 1 && (
-                <>
-                  <span className="value">{car.rating.toFixed(2)}</span>
-                  <img alt="Rating" src={RatingIcon} />
-                </>
-              )}
-              {car.trips >= 10 && <span className="trips">{`(${car.trips} ${strings.TRIPS})`}</span>}
-            </div>
-            {car.co2 && (
-              <div className="co2">
-                <img
-                  alt="CO2 Effect"
-                  src={
-                    car.co2 <= 90
-                      ? CO2MinIcon
-                      : car.co2 <= 110
-                        ? CO2MiddleIcon
-                        : CO2MaxIcon
-                  }
-                />
-                <span>{strings.CO2}</span>
+          <div className="car-row">
+            {!hideSupplier && (
+              <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}} title={car.supplier.fullName}>
+                <span className="car-supplier-logo">
+                  <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
+                </span>
+                <span className="car-supplier-info">{car.supplier.fullName}</span>
               </div>
             )}
+            <div className="car-footer">
+              <div className="rating">
+                {car.rating && car.rating >= 1 && (
+                  <>
+                    <span className="value">{car.rating.toFixed(2)}</span>
+                    <img alt="Rating" src={RatingIcon} />
+                  </>
+                )}
+                {car.trips >= 10 && <span className="trips">{`(${car.trips} ${strings.TRIPS})`}</span>}
+              </div>
+              {car.co2 && (
+                <div className="co2">
+                  <img
+                    alt="CO2 Effect"
+                    src={
+                      car.co2 <= 90
+                        ? CO2MinIcon
+                        : car.co2 <= 110
+                          ? CO2MiddleIcon
+                          : CO2MaxIcon
+                    }
+                  />
+                  <span>{strings.CO2}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="car-info">

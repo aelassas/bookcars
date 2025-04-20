@@ -15,8 +15,8 @@ export default ({ mode }: { mode: string }) => {
           plugins: [
             ['@babel/plugin-transform-runtime'],
             // ['babel-plugin-react-compiler', { optimize: true }],
-          ]
-        }
+          ],
+        },
       }),
       createHtmlPlugin({
         inject: {
@@ -40,7 +40,17 @@ export default ({ mode }: { mode: string }) => {
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '8080', 10),
+      watch: {
+        usePolling: true,
+        interval: 100,
+      },
+      hmr: {
+        protocol: 'ws',
+        host: process.env.VITE_HMR_HOST || 'localhost',
+        port: Number.parseInt(process.env.VITE_HMR_PORT || '8080', 10),
+        clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '8080', 10),
+      },
     },
 
     build: {
@@ -54,7 +64,7 @@ export default ({ mode }: { mode: string }) => {
       minify: 'terser', // Can also use 'esbuild' which is faster but less optimized
       terserOptions: {
         compress: {
-          drop_console: true, // Removes console.* calls
+          drop_console: false, // Keep console.* calls
           drop_debugger: true, // Removes debugger statements
           dead_code: true, // Removes unreachable code
           passes: 3, // Number of compression passes
@@ -70,8 +80,8 @@ export default ({ mode }: { mode: string }) => {
           comments: false, // Remove comments
         },
         mangle: {
-          properties: false // Don't rename properties (safer)
-        }
+          properties: false, // Don't rename properties (safer)
+        },
       },
 
       // Control chunk size

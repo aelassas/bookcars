@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 declare global {
   namespace setInterval {
     function setInterval(callback: () => void, ms?: number | undefined): NodeJS.Timeout

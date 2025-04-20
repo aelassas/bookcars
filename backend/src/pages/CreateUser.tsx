@@ -59,6 +59,9 @@ const CreateUser = () => {
   const [birthDateValid, setBirthDateValid] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [license, setLicense] = useState<string | undefined>()
+  const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -156,8 +159,16 @@ const CreateUser = () => {
     await validateEmail(e.target.value)
   }
 
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
+  }
+
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,8 +309,11 @@ const CreateUser = () => {
         birthDate,
         language,
         supplier,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         license,
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -456,8 +470,34 @@ const CreateUser = () => {
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={notifyAdminOnNewCar}
+                          disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                          onChange={(e) => {
+                            setNotifyAdminOnNewCar(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                    <Input type="text" onChange={handleSupplierCarLimitChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                     <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                    <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }} />
                   </FormControl>
                 </>
               )}

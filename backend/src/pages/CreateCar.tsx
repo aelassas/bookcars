@@ -34,11 +34,14 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import CarRangeList from '@/components/CarRangeList'
 import MultimediaList from '@/components/MultimediaList'
 import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-car.css'
 
 const CreateCar = () => {
   const navigate = useNavigate()
+
+  const { user } = useUserContext() as UserContextType
   const [isSupplier, setIsSupplier] = useState(false)
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -256,6 +259,7 @@ const CreateCar = () => {
       }
 
       const data: bookcarsTypes.CreateCarPayload = {
+        loggedUser: user!._id!,
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
@@ -387,7 +391,7 @@ const CreateCar = () => {
                 slotProps={{
                   htmlInput: {
                     inputMode: 'numeric',
-                    pattern: '^\\d+(.\\d+)?$'
+                    pattern: '^\\d+(\\.\\d+)?$'
                   }
                 }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -406,7 +410,7 @@ const CreateCar = () => {
                 slotProps={{
                   htmlInput: {
                     inputMode: 'numeric',
-                    pattern: '^\\d+(.\\d+)?$'
+                    pattern: '^\\d+(\\.\\d+)?$'
                   }
                 }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -467,7 +471,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -485,7 +489,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -503,7 +507,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -521,7 +525,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -539,7 +543,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -557,7 +561,7 @@ const CreateCar = () => {
                       slotProps={{
                         htmlInput: {
                           inputMode: 'numeric',
-                          pattern: '^\\d+(.\\d+)?$'
+                          pattern: '^\\d+(\\.\\d+)?$'
                         }
                       }}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -578,7 +582,7 @@ const CreateCar = () => {
                 slotProps={{
                   htmlInput: {
                     inputMode: 'numeric',
-                    pattern: '^\\d+(.\\d+)?$'
+                    pattern: '^\\d+(\\.\\d+)?$'
                   }
                 }}
                 onChange={handleDepositChange}
@@ -618,7 +622,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={strings.CO2}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleCo2Change}
                 variant="standard"
                 autoComplete="off"
@@ -690,7 +694,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleMileageChange}
                 variant="standard"
                 autoComplete="off"
@@ -701,7 +705,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleCancellationChange}
                 variant="standard"
                 autoComplete="off"
@@ -712,7 +716,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleAmendmentsChange}
                 variant="standard"
                 autoComplete="off"
@@ -723,7 +727,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleTheftProtectionChange}
                 variant="standard"
                 autoComplete="off"
@@ -734,7 +738,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleCollisionDamageWaiverChange}
                 variant="standard"
                 autoComplete="off"
@@ -745,7 +749,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleFullinsuranceChange}
                 variant="standard"
                 autoComplete="off"
@@ -756,7 +760,7 @@ const CreateCar = () => {
             <FormControl fullWidth margin="dense">
               <TextField
                 label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(.\\d+)?$' } }}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '^\\d+(\\.\\d+)?$' } }}
                 onChange={handleAdditionalDriverChange}
                 variant="standard"
                 autoComplete="off"

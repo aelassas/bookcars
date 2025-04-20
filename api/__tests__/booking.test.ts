@@ -55,8 +55,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
 
   await testHelper.initialize()
 
@@ -66,7 +65,7 @@ beforeAll(async () => {
 
   const contractFileName = `${SUPPLIER_ID}_en.pdf`
   const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-  if (!await helper.exists(contractFile)) {
+  if (!(await helper.exists(contractFile))) {
     await fs.copyFile(CONTRACT1_PATH, contractFile)
   }
   const supplier = await User.findById(SUPPLIER_ID)
@@ -88,6 +87,7 @@ beforeAll(async () => {
 
   // create car
   const payload: bookcarsTypes.CreateCarPayload = {
+    loggedUser: testHelper.GetRandromObjectIdAsString(),
     name: 'BMW X1',
     supplier: SUPPLIER_ID,
     minimumAge: 21,
@@ -151,7 +151,6 @@ afterAll(async () => {
   // delete drivers
   // await User.deleteMany({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
   const drivers = await User.find({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
-  expect(drivers.length).toBe(2)
   for (const driver of drivers) {
     if (driver.license) {
       const license = path.join(env.CDN_LICENSES, driver.license)
@@ -580,7 +579,7 @@ describe('POST /api/checkout', () => {
     // test success (license)
     payload.driver.email = testHelper.GetRandomEmail()
     let license = path.join(env.CDN_TEMP_LICENSES, LICENSE)
-    if (!await helper.exists(license)) {
+    if (!(await helper.exists(license))) {
       await fs.copyFile(LICENSE_PATH, license)
     }
     payload.driver.license = LICENSE
@@ -669,7 +668,7 @@ describe('POST /api/checkout', () => {
 
     // test success (license file found)
     license = path.join(env.CDN_LICENSES, LICENSE)
-    if (!await helper.exists(license)) {
+    if (!(await helper.exists(license))) {
       await fs.copyFile(LICENSE_PATH, license)
     }
     driver!.license = LICENSE

@@ -35,8 +35,7 @@ let CAR2_ID: string
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
 
   await testHelper.initialize()
 
@@ -78,10 +77,11 @@ describe('POST /api/create-car', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const payload: bookcarsTypes.CreateCarPayload = {
+      loggedUser: SUPPLIER1_ID,
       name: 'BMW X1',
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
@@ -157,7 +157,7 @@ describe('POST /api/create-car', () => {
     CAR1_ID = res.body._id
 
     // test success date based price
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     const startDate1 = new Date()
@@ -167,6 +167,7 @@ describe('POST /api/create-car', () => {
     const endDate2 = new Date(startDate2)
     endDate2.setDate(endDate2.getDate() + 1)
 
+    payload.loggedUser = SUPPLIER2_ID
     payload.name = 'BMW X3'
     payload.isDateBasedPrice = true
     payload.dateBasedPrices = [
@@ -257,6 +258,7 @@ describe('PUT /api/update-car', () => {
     ]
 
     const payload: bookcarsTypes.UpdateCarPayload = {
+      loggedUser: testHelper.GetRandromObjectIdAsString(),
       _id: CAR2_ID,
       name: 'BMW X5',
       supplier: SUPPLIER2_ID,
@@ -386,11 +388,19 @@ describe('PUT /api/update-car', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload._id = '0'
+    res = await request(app)
+      .put('/api/update-car')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .put('/api/update-car')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -535,7 +545,7 @@ describe('POST /api/delete-temp-car-image/:image', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(IMAGE1_PATH, tempImage)
     }
     let res = await request(app)

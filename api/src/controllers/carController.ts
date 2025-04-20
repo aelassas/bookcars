@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
+import nodemailer from 'nodemailer'
 import * as bookcarsTypes from ':bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
@@ -12,6 +13,10 @@ import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
 import DateBasedPrice from '../models/DateBasedPrice'
+import User from '../models/User'
+import Notification from '../models/Notification'
+import NotificationCounter from '../models/NotificationCounter'
+import * as mailHelper from '../common/mailHelper'
 
 /**
  * Create a Car.
@@ -58,10 +63,61 @@ export const create = async (req: Request, res: Response) => {
       throw new Error(`Image ${body.image} not found`)
     }
 
-    return res.json(car)
+    // notify admin if the car was created by a supplier
+    if (body.loggedUser) {
+      const loggedUser = await User.findById(body.loggedUser)
+
+      if (loggedUser && loggedUser.type === bookcarsTypes.UserType.Supplier) {
+        const supplier = await User.findById(body.supplier)
+
+        if (supplier?.notifyAdminOnNewCar) {
+          const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+          if (admin) {
+            i18n.locale = admin.language
+            const message = i18n.t('NEW_CAR_NOTIFICATION_PART1') + supplier.fullName + i18n.t('NEW_CAR_NOTIFICATION_PART2')
+
+            // notification
+            const notification = new Notification({
+              user: admin._id,
+              message,
+              car: car.id,
+            })
+
+            await notification.save()
+            let counter = await NotificationCounter.findOne({ user: admin._id })
+            if (counter && typeof counter.count !== 'undefined') {
+              counter.count += 1
+              await counter.save()
+            } else {
+              counter = new NotificationCounter({ user: admin._id, count: 1 })
+              await counter.save()
+            }
+
+            // mail
+            if (admin.enableEmailNotifications) {
+              const mailOptions: nodemailer.SendMailOptions = {
+                from: env.SMTP_FROM,
+                to: admin.email,
+                subject: message,
+                html: `<p>
+${i18n.t('HELLO')}${admin.fullName},<br><br>
+${message}<br><br>
+${helper.joinURL(env.BACKEND_HOST, `update-car?cr=${car.id}`)}<br><br>
+${i18n.t('REGARDS')}<br>
+</p>`,
+              }
+
+              await mailHelper.sendMail(mailOptions)
+            }
+          }
+        }
+      }
+    }
+
+    res.json(car)
   } catch (err) {
     logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -203,14 +259,15 @@ export const update = async (req: Request, res: Response) => {
 
       await car.save()
 
-      return res.json(car)
+      res.json(car)
+      return
     }
 
     logger.error('[car.update] Car not found:', _id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -234,13 +291,14 @@ export const checkCar = async (req: Request, res: Response) => {
       .countDocuments()
 
     if (count === 1) {
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -273,12 +331,13 @@ export const deleteCar = async (req: Request, res: Response) => {
       }
       await Booking.deleteMany({ car: car._id })
     } else {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -301,10 +360,10 @@ export const createImage = async (req: Request, res: Response) => {
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
-    return res.json(filename)
+    res.json(filename)
   } catch (err) {
     logger.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -324,7 +383,8 @@ export const updateImage = async (req: Request, res: Response) => {
     if (!req.file) {
       const msg = '[car.updateImage] req.file not found'
       logger.error(msg)
-      return res.status(400).send(msg)
+      res.status(400).send(msg)
+      return
     }
 
     const { file } = req
@@ -345,14 +405,15 @@ export const updateImage = async (req: Request, res: Response) => {
       await fs.writeFile(filepath, file.buffer)
       car.image = filename
       await car.save()
-      return res.json(filename)
+      res.json(filename)
+      return
     }
 
     logger.error('[car.updateImage] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -381,13 +442,14 @@ export const deleteImage = async (req: Request, res: Response) => {
       car.image = null
 
       await car.save()
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
     logger.error('[car.deleteImage] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -405,7 +467,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (!await helper.exists(imageFile)) {
+    if (!(await helper.exists(imageFile))) {
       throw new Error(`[car.deleteTempImage] temp image ${imageFile} not found`)
     }
 
@@ -450,6 +512,7 @@ export const getCar = async (req: Request, res: Response) => {
         avatar,
         payLater,
         licenseRequired,
+        priceChangeRate,
       } = car.supplier
       car.supplier = {
         _id,
@@ -457,19 +520,21 @@ export const getCar = async (req: Request, res: Response) => {
         avatar,
         payLater,
         licenseRequired,
+        priceChangeRate,
       }
 
       for (const location of car.locations) {
         location.name = location.values.filter((value) => value.language === language)[0].value
       }
 
-      return res.json(car)
+      res.json(car)
+      return
     }
     logger.error('[car.getCar] Car not found:', id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -541,7 +606,8 @@ export const getCars = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -556,7 +622,8 @@ export const getCars = async (req: Request, res: Response) => {
         && availability[0] === bookcarsTypes.Availablity.Unavailable) {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -590,18 +657,12 @@ export const getCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$supplier' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
-                },
-              },
-            ],
+            localField: 'supplier',
+            foreignField: '_id',
             as: 'supplier',
           },
         },
-        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        { $unwind: '$supplier' },
         // {
         //   $lookup: {
         //     from: 'Location',
@@ -618,11 +679,17 @@ export const getCars = async (req: Request, res: Response) => {
         // },
         {
           $facet: {
-            resultData: [{ $sort: { updatedAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
-            // resultData: [{ $sort: { dailyPrice: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              { $sort: { updatedAt: -1, _id: 1 } },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
-                $count: 'totalRecords',
+                $group: {
+                  _id: null,
+                  totalRecords: { $sum: 1 },
+                },
               },
             ],
           },
@@ -631,15 +698,62 @@ export const getCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
+    // const data = await Car.aggregate(
+    //   [
+    //     { $match },
+    //     {
+    //       $lookup: {
+    //         from: 'User',
+    //         let: { userId: '$supplier' },
+    //         pipeline: [
+    //           {
+    //             $match: {
+    //               $expr: { $eq: ['$_id', '$$userId'] },
+    //             },
+    //           },
+    //         ],
+    //         as: 'supplier',
+    //       },
+    //     },
+    //     { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+    //     // {
+    //     //   $lookup: {
+    //     //     from: 'Location',
+    //     //     let: { locations: '$locations' },
+    //     //     pipeline: [
+    //     //       {
+    //     //         $match: {
+    //     //           $expr: { $in: ['$_id', '$$locations'] },
+    //     //         },
+    //     //       },
+    //     //     ],
+    //     //     as: 'locations',
+    //     //   },
+    //     // },
+    //     {
+    //       $facet: {
+    //         resultData: [{ $sort: { updatedAt: -1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+    //         // resultData: [{ $sort: { dailyPrice: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+    //         pageInfo: [
+    //           {
+    //             $count: 'totalRecords',
+    //           },
+    //         ],
+    //       },
+    //     },
+    //   ],
+    //   { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
+    // )
+
     for (const car of data[0].resultData) {
       const { _id, fullName, avatar } = car.supplier
       car.supplier = { _id, fullName, avatar }
     }
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -665,9 +779,24 @@ export const getBookingCars = async (req: Request, res: Response) => {
     const cars = await Car.aggregate(
       [
         {
+          $lookup: {
+            from: 'User',
+            let: { userId: '$supplier' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$userId'] },
+                },
+              },
+            ],
+            as: 'supplier',
+          },
+        },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
+        {
           $match: {
             $and: [
-              { supplier: { $eq: supplier } },
+              { 'supplier._id': supplier },
               { locations: pickupLocation },
               { available: true }, { name: { $regex: keyword, $options: options } },
             ],
@@ -680,10 +809,15 @@ export const getBookingCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(cars)
+    for (const car of cars) {
+      const { _id, fullName, avatar, priceChangeRate } = car.supplier
+      car.supplier = { _id, fullName, avatar, priceChangeRate }
+    }
+
+    res.json(cars)
   } catch (err) {
     logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -726,6 +860,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
         { available: true },
+        { fullyBooked: { $in: [false, null] } },
       ],
     }
 
@@ -759,7 +894,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [] }])
+        return
       }
     }
 
@@ -845,35 +981,99 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         //     as: 'locations',
         //   },
         // },
+
+        // begining of supplierCarLimit -----------------------------------
+        {
+          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
+          $addFields: {
+            maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use a fallback if supplierCarLimit is undefined
+          },
+        },
+        {
+          // Add a custom stage to limit cars per supplier
+          $group: {
+            _id: '$supplier._id', // Group by supplier
+            supplierData: { $first: '$supplier' },
+            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
+            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
+          },
+        },
+        {
+          // Limit cars based on maxAllowedCars for each supplier
+          $project: {
+            supplier: '$supplierData',
+            cars: {
+              $cond: {
+                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
+                then: [], // Return an empty array (no cars)
+                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
+              },
+            },
+          },
+        },
+        {
+          // Flatten the grouped result and apply sorting
+          $unwind: '$cars',
+        },
+        {
+          // Ensure unique cars by grouping by car ID
+          $group: {
+            _id: '$cars._id',
+            car: { $first: '$cars' },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
+        },
+        {
+          // Sort the cars before pagination
+          $sort: { dailyPrice: 1, _id: 1 },
+        },
         {
           $facet: {
             resultData: [
-              {
-                // $sort: { fullyBooked: 1, comingSoon: 1, dailyPrice: 1, _id: 1 },
-                $sort: { dailyPrice: 1, _id: 1 },
-              },
-              { $skip: (page - 1) * size },
-              { $limit: size },
+              { $skip: (page - 1) * size }, // Skip results based on page
+              { $limit: size }, // Limit to the page size
             ],
             pageInfo: [
               {
-                $count: 'totalRecords',
+                $count: 'totalRecords', // Count total number of cars (before pagination)
               },
             ],
           },
         },
+        // end of supplierCarLimit -----------------------------------
+
+        // old query without supplierCarLimit
+        // {
+        //   $facet: {
+        //     resultData: [
+        //       {
+        //         // $sort: { fullyBooked: 1, comingSoon: 1, dailyPrice: 1, _id: 1 },
+        //         $sort: { dailyPrice: 1, _id: 1 },
+        //       },
+        //       { $skip: (page - 1) * size },
+        //       { $limit: size },
+        //     ],
+        //     pageInfo: [
+        //       {
+        //         $count: 'totalRecords',
+        //       },
+        //     ],
+        //   },
+        // },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.supplier
-      car.supplier = { _id, fullName, avatar }
+      const { _id, fullName, avatar, priceChangeRate } = car.supplier
+      car.supplier = { _id, fullName, avatar, priceChangeRate }
     }
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

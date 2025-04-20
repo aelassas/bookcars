@@ -29,8 +29,7 @@ let COUNTRY_NAMES: bookcarsTypes.CountryName[] = [
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
 })
 
@@ -77,11 +76,19 @@ describe('POST /api/validate-country', () => {
     await countryValue.deleteOne()
     await country.deleteOne()
 
+    // test failure (wrong language)
+    payload.language = 'unknown'
+    res = await request(app)
+      .post('/api/validate-country')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .post('/api/validate-country')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })

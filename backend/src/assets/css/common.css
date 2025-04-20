@@ -4,6 +4,10 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
 #nprogress .bar {
   background: #1a1a1a !important;
 }

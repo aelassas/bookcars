@@ -1,0 +1,76 @@
+div.pricing {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  justify-content: center;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+}
+
+.pricing-plan-wrapper {
+  padding: 20px;
+}
+
+.pricing-plan-title {
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
+}
+
+.pricing-plan-price {
+  text-align: center;
+  font-size: 1.5em;
+  color: #121212;
+}
+
+ul.pricing-plan-features {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul.pricing-plan-features li {
+  padding: 5px 0;
+  text-align: center;
+  color: #444;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (width <=960px) {
+  .pricing-plans {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .pricing-plan {
+    width: 360px;
+    min-height: 300px;
+  }
+
+  .pricing-plan-wrapper {
+    margin: 30px 0;
+  }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (width >=960px) {
+  .pricing-plans {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 100px 0;
+  }
+
+  .pricing-plan {
+    width: 260px;
+    min-height: 300px;
+    margin-top: 20px;
+    margin-right: 50px;
+  }
+}

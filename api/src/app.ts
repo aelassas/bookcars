@@ -17,6 +17,7 @@ import stripeRoutes from './routes/stripeRoutes'
 import countryRoutes from './routes/countryRoutes'
 import paypalRoutes from './routes/paypalRoutes'
 import ipinfoRoutes from './routes/ipinfoRoutes'
+import bankDetailsRoutes from './routes/bankDetailsRoutes'
 import * as helper from './common/helper'
 
 const app = express()
@@ -42,9 +43,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(express.json({ limit: '50mb' }))
 
 app.use(cors())
-app.options('*', cors())
+// app.options('*', cors())
 app.use(cookieParser(env.COOKIE_SECRET))
 app.use(allowedMethods)
+
+// Serve static files from the CDN directory
+app.use('/cdn', express.static(env.CDN_ROOT || '/var/www/cdn'))
 
 app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)
@@ -56,6 +60,7 @@ app.use('/', stripeRoutes)
 app.use('/', countryRoutes)
 app.use('/', paypalRoutes)
 app.use('/', ipinfoRoutes)
+app.use('/', bankDetailsRoutes)
 
 i18n.locale = env.DEFAULT_LANGUAGE
 

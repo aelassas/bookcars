@@ -19,7 +19,6 @@ interface RightButtonProps {
   onRightIconComponentPress?: () => void
 }
 
-// eslint-disable-next-line react/display-name
 export const RightButton: React.FC<RightButtonProps> = memo(
   ({
     inputHeight,

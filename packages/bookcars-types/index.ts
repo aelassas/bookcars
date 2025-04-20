@@ -15,14 +15,17 @@ export enum CarType {
   Electric = 'electric',
   Hybrid = 'hybrid',
   PlugInHybrid = 'plugInHybrid',
-  Unknown = 'unknown'
+  Unknown = 'unknown',
 }
 
 export enum CarRange {
-  Mini = 'mini',
-  Midi = 'midi',
-  Maxi = 'maxi',
+  Mini = 'mini', // car
+  Midi = 'midi', // suv
+  Maxi = 'maxi', // van
   Scooter = 'scooter',
+  Bus = 'bus',
+  Truck = 'truck',
+  Caravan = 'caravan',
 }
 
 export enum CarMultimedia {
@@ -34,14 +37,14 @@ export enum CarMultimedia {
 
 export enum GearboxType {
   Manual = 'manual',
-  Automatic = 'automatic'
+  Automatic = 'automatic',
 }
 
 export enum FuelPolicy {
   LikeForLike = 'likeForlike',
   FreeTank = 'freeTank',
   FullToFull = 'fullToFull',
-  FullToEmpty = 'FullToEmpty'
+  FullToEmpty = 'FullToEmpty',
 }
 
 export enum BookingStatus {
@@ -50,17 +53,17 @@ export enum BookingStatus {
   Deposit = 'deposit',
   Paid = 'paid',
   Reserved = 'reserved',
-  Cancelled = 'cancelled'
+  Cancelled = 'cancelled',
 }
 
 export enum Mileage {
   Limited = 'limited',
-  Unlimited = 'unlimited'
+  Unlimited = 'unlimited',
 }
 
 export enum Availablity {
   Available = 'available',
-  Unavailable = 'unavailable'
+  Unavailable = 'unavailable',
 }
 
 export enum RecordType {
@@ -172,9 +175,13 @@ export interface UpdateSupplierPayload {
   payLater: boolean
   licenseRequired: boolean
   minimumRentalDays?: number
+  priceChangeRate?: number
+  supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface CreateCarPayload {
+  loggedUser: string
   name: string
   supplier: string
   minimumAge: number
@@ -189,7 +196,6 @@ export interface CreateCarPayload {
   discountedWeeklyPrice: number | null
   monthlyPrice: number | null
   discountedMonthlyPrice: number | null
-
   // date based price
   isDateBasedPrice: boolean
   dateBasedPrices: DateBasedPrice[]
@@ -282,6 +288,9 @@ export interface CreateUserPayload {
   licenseRequired?: boolean
   minimumRentalDays?: number
   license?: string
+  priceChangeRate?: number
+  supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -383,6 +392,9 @@ export interface User {
   licenseRequired?: boolean
   license?: string | null
   minimumRentalDays?: number
+  priceChangeRate?: number
+  supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 export interface Option {
@@ -496,6 +508,7 @@ export interface Notification {
   user: string
   message: string
   booking?: string
+  car?: string
   isRead?: boolean
   checked?: boolean
   createdAt?: Date
@@ -566,6 +579,24 @@ export interface SendEmailPayload {
 export interface Response<T> {
   status: number
   data: T
+}
+
+export interface BankDetails {
+  _id: string
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
+}
+
+export interface UpsertBankDetailsPayload {
+  _id?: string
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
 }
 
 // 

@@ -134,6 +134,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     type: bookcarsTypes.UserType.Supplier,
     avatar: 'avatar.jpg',
     minimumRentalDays: 2,
+    notifyAdminOnNewCar: true,
   }
   const supplier = new User(body)
   await supplier.save()

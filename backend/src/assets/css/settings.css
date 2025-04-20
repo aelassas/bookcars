@@ -28,7 +28,6 @@ div.settings {
 @media only screen and (width <=960px) {
   .settings-form {
     width: 360px;
-    height: 720px;
     padding: 30px;
   }
 
@@ -38,7 +37,6 @@ div.settings {
 
   .settings-net {
     width: 360px;
-    height: 200px;
     padding: 30px;
   }
 }
@@ -48,7 +46,6 @@ div.settings {
 @media only screen and (width >=960px) {
   .settings-form {
     width: 550px;
-    height: 640px;
     padding: 30px;
   }
 
@@ -58,7 +55,6 @@ div.settings {
 
   .settings-net {
     width: 550px;
-    height: 200px;
     padding: 30px;
   }
 }

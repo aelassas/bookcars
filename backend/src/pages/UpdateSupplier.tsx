@@ -50,6 +50,9 @@ const UpdateSupplier = () => {
   const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -95,8 +98,16 @@ const UpdateSupplier = () => {
     await validateFullName(e.target.value)
   }
 
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
+  }
+
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,6 +197,12 @@ const UpdateSupplier = () => {
             const _supplier = await SupplierService.getSupplier(id)
 
             if (_supplier) {
+              if (!(_user.type === bookcarsTypes.UserType.Admin || _user._id === _supplier._id)) {
+                setLoading(false)
+                setNoMatch(true)
+                return
+              }
+
               setSupplier(_supplier)
               setEmail(_supplier.email || '')
               setAvatar(_supplier.avatar || '')
@@ -196,6 +213,9 @@ const UpdateSupplier = () => {
               setPayLater(_supplier.payLater || false)
               setLicenseRequired(_supplier.licenseRequired || false)
               setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
+              setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
+              setSupplierCarLimit(_supplier.supplierCarLimit?.toString() || '')
+              setNotifyAdminOnNewCar(!!_supplier.notifyAdminOnNewCar)
               setVisible(true)
               setLoading(false)
             } else {
@@ -252,7 +272,10 @@ const UpdateSupplier = () => {
         bio,
         payLater,
         licenseRequired,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar,
       }
 
       const res = await SupplierService.update(data)
@@ -341,6 +364,34 @@ const UpdateSupplier = () => {
               </div>
 
               <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={notifyAdminOnNewCar}
+                      disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                      onChange={(e) => {
+                        setNotifyAdminOnNewCar(e.target.checked)
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                <Input
+                  type="text"
+                  onChange={handleSupplierCarLimitChange}
+                  autoComplete="off"
+                  slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                  value={supplierCarLimit}
+                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                 <Input
                   type="text"
@@ -350,6 +401,19 @@ const UpdateSupplier = () => {
                   value={minimumRentalDays}
                 />
               </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                <Input
+                  type="text"
+                  onChange={handlePriceChangeRateChange}
+                  autoComplete="off"
+                  slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }}
+                  value={priceChangeRate}
+                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                />
+              </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
                 <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />

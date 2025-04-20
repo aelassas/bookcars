@@ -248,10 +248,11 @@ export const formatPrice = (price: number, currency: string, language: string) =
  * @param {bookcarsTypes.Car} car
  * @param {Date} from
  * @param {Date} to
+ * @param {number} priceChangeRate
  * @param {?bookcarsTypes.CarOptions} [options]
  * @returns {number}
  */
-export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
+export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, priceChangeRate: number, options?: bookcarsTypes.CarOptions) => {
   let totalPrice = 0
   const totalDays = days(from, to)
 
@@ -376,6 +377,8 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     }
   }
 
+  totalPrice += totalPrice * (priceChangeRate / 100)
+
   return totalPrice
 }
 
@@ -457,6 +460,9 @@ export const getAllRanges = () => [
   bookcarsTypes.CarRange.Midi,
   bookcarsTypes.CarRange.Maxi,
   bookcarsTypes.CarRange.Scooter,
+  bookcarsTypes.CarRange.Bus,
+  bookcarsTypes.CarRange.Truck,
+  bookcarsTypes.CarRange.Caravan,
 ]
 
 /**

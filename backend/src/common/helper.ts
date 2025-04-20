@@ -4,8 +4,8 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
-import * as CarService from '@/services/CarService'
 import env from '@/config/env.config'
+import * as UserService from '@/services/UserService'
 
 /**
  * Get language.
@@ -31,8 +31,8 @@ export const info = (message: string) => {
  * @param {?string} [message]
  */
 export const error = (err?: unknown, message?: string) => {
-  if (err && console && console.error) {
-    console.error(err)
+  if (err && console?.log) {
+    console.log(err)
   }
   if (message) {
     toast.error(message)
@@ -511,68 +511,7 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
 ]
 
 /**
- * Get price.
- *
- * @async
- * @param {bookcarsTypes.Booking} booking
- * @param {(bookcarsTypes.Car | undefined | null)} car
- * @param {(price: number) => void} onSucess
- * @param {(err: unknown) => void} onError
- * @returns {void, onError: (err: unknown) => void) => any}
- */
-export const price = async (
-  booking: bookcarsTypes.Booking,
-  car: bookcarsTypes.Car | undefined | null,
-  onSucess: (_price: number) => void,
-  onError: (err: unknown) => void
-) => {
-  const totalDays = (date1: Date, date2: Date) => Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
-
-  try {
-    if (!car) {
-      car = await CarService.getCar(booking.car as string)
-    }
-
-    if (car) {
-      const from = new Date(booking.from)
-      const to = new Date(booking.to)
-      const days = totalDays(from, to)
-
-      let _price = bookcarsHelper.calculateTotalPrice(car, from, to)
-      if (booking.cancellation && car.cancellation > 0) {
-        _price += car.cancellation
-      }
-      if (booking.amendments && car.amendments > 0) {
-        _price += car.amendments
-      }
-      if (booking.theftProtection && car.theftProtection > 0) {
-        _price += car.theftProtection * days
-      }
-      if (booking.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-        _price += car.collisionDamageWaiver * days
-      }
-      if (booking.fullInsurance && car.fullInsurance > 0) {
-        _price += car.fullInsurance * days
-      }
-      if (booking.additionalDriver && car.additionalDriver > 0) {
-        _price += car.additionalDriver * days
-      }
-
-      if (onSucess) {
-        onSucess(_price)
-      }
-    } else if (onError) {
-      onError(`Car ${booking.car} not found.`)
-    }
-  } catch (err) {
-    if (onError) {
-      onError(err)
-    }
-  }
-}
-
-/**
- * Get all user type;s.
+ * Get all user types.
  *
  * @returns {{}}
  */
@@ -811,7 +750,35 @@ export const getCarRange = (range: bookcarsTypes.CarRange) => {
     case bookcarsTypes.CarRange.Scooter:
       return strings.CAR_RANGE_SCOOTER
 
+    case bookcarsTypes.CarRange.Bus:
+      return strings.CAR_RANGE_BUS
+
+    case bookcarsTypes.CarRange.Truck:
+      return strings.CAR_RANGE_TRUCK
+
+    case bookcarsTypes.CarRange.Caravan:
+      return strings.CAR_RANGE_CARAVAN
+
     default:
       return ''
+  }
+}
+
+/**
+ * Verify reCAPTCHA token.
+ *
+ * @async
+ * @param {string} token
+ * @returns {Promise<boolean>}
+ */
+export const verifyReCaptcha = async (token: string): Promise<boolean> => {
+  try {
+    const ip = await UserService.getIP()
+    const status = await UserService.verifyRecaptcha(token, ip)
+    const valid = status === 200
+    return valid
+  } catch (err) {
+    error(err)
+    return false
   }
 }

@@ -162,7 +162,7 @@ const CreateBooking = () => {
     return true
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!car || !from || !to || !status) {
@@ -210,7 +210,7 @@ const CreateBooking = () => {
       additionalDriver: additionalDriverSet,
     }
 
-    let _additionalDriver: bookcarsTypes.AdditionalDriver
+    let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
     if (additionalDriverSet) {
       if (!addtionalDriverBirthDate) {
         helper.error()
@@ -225,30 +225,33 @@ const CreateBooking = () => {
       }
     }
 
-    helper.price(
-      booking,
-      null,
-      async (price) => {
-        try {
-          booking.price = price
+    // use bookcarsHelper.calculatePrice
+    const options: bookcarsTypes.CarOptions = {
+      cancellation,
+      amendments,
+      theftProtection,
+      collisionDamageWaiver,
+      fullInsurance,
+      additionalDriver,
+    }
 
-          const _booking = await BookingService.create({
-            booking,
-            additionalDriver: _additionalDriver,
-          })
-          if (_booking && _booking._id) {
-            navigate('/')
-          } else {
-            helper.error()
-          }
-        } catch (err) {
-          helper.error(err)
-        }
-      },
-      (err) => {
-        helper.error(err)
-      },
-    )
+    try {
+      const price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
+      booking.price = price
+
+      const _booking = await BookingService.create({
+        booking,
+        additionalDriver: _additionalDriver,
+      })
+
+      if (_booking && _booking._id) {
+        navigate('/')
+      } else {
+        helper.error()
+      }
+    } catch (err) {
+      helper.error(err)
+    }
   }
 
   const onLoad = (user?: bookcarsTypes.User) => {

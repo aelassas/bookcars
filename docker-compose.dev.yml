@@ -1,0 +1,85 @@
+services:
+  mongo:
+    image: mongo:latest
+    command: mongod --quiet --logpath /dev/null
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - 27018:27017
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8084:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - mongo
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile.dev
+    env_file: ./api/.env.docker.development
+    restart: always
+    ports:
+      - 4002:4002
+    depends_on:
+      - mongo
+    volumes:
+      - cdn:/var/www/cdn/bookcars
+      - ./api:/bookcars/api
+      - api_node_modules:/bookcars/api/node_modules
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile.dev
+    env_file: ./backend/.env.docker.development
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - 3001:3001
+    volumes:
+      - ./backend:/bookcars/backend
+      - backend_node_modules:/bookcars/backend/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile.dev
+    env_file: ./frontend/.env.docker.development
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - 8080:8080
+      - 8443:443
+    volumes:
+      - ./frontend:/bookcars/frontend
+      - frontend_node_modules:/bookcars/frontend/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+volumes:
+  cdn:
+  api_node_modules:
+  backend_node_modules:
+  frontend_node_modules:
+  mongodb_data:
+  mongodb_config:

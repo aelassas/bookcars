@@ -1,6 +1,6 @@
 import React from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import useStore from '../../hooks/useStore'
 
 interface AuxProps {

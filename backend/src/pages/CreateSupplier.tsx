@@ -24,11 +24,14 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import ContractList from '@/components/ContractList'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-supplier.css'
 
 const CreateSupplier = () => {
   const navigate = useNavigate()
+
+  const { user } = useUserContext() as UserContextType
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -47,6 +50,9 @@ const CreateSupplier = () => {
   const [licenseRequired, setLicenseRequired] = useState(false)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -124,8 +130,16 @@ const CreateSupplier = () => {
     await validateEmail(e.target.value)
   }
 
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
+  }
+
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,8 +205,8 @@ const CreateSupplier = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setVisible(true)
     }
   }
@@ -234,7 +248,10 @@ const CreateSupplier = () => {
         payLater,
         licenseRequired,
         contracts,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined
+        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar,
       }
 
       const status = await UserService.create(data)
@@ -343,8 +360,34 @@ const CreateSupplier = () => {
             </div>
 
             <FormControl fullWidth margin="dense">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={notifyAdminOnNewCar}
+                    disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                    onChange={(e) => {
+                      setNotifyAdminOnNewCar(e.target.checked)
+                    }}
+                    color="primary"
+                  />
+                )}
+                label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+              <Input type="text" onChange={handleSupplierCarLimitChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
               <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+              <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }} />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

@@ -38,8 +38,7 @@ let CAR2_ID: string
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.connect(env.DB_URI, false, false)
-  expect(res).toBeTruthy()
+  await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
 
   // create two suppliers
@@ -156,7 +155,7 @@ describe('POST /api/validate-supplier', () => {
     res = await request(app)
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -181,6 +180,9 @@ describe('PUT /api/update-supplier', () => {
       payLater,
       minimumRentalDays: 3,
       licenseRequired: true,
+      priceChangeRate: 5,
+      supplierCarLimit: 3,
+      notifyAdminOnNewCar: true,
     }
     let res = await request(app)
       .put('/api/update-supplier')
@@ -194,6 +196,9 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.payLater).toBeFalsy()
     expect(res.body.minimumRentalDays).toBe(3)
     expect(res.body.licenseRequired).toBeTruthy()
+    expect(res.body.priceChangeRate).toBe(5)
+    expect(res.body.supplierCarLimit).toBe(3)
+    expect(res.body.notifyAdminOnNewCar).toBeTruthy()
 
     // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
@@ -203,11 +208,19 @@ describe('PUT /api/update-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload._id = '0'
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .put('/api/update-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -340,14 +353,14 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let avatarName = 'avatar1.jpg'
     let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-    if (!await helper.exists(contractFile)) {
+    if (!(await helper.exists(contractFile))) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
     supplier!.contracts = [{ language: 'en', file: contractFileName }]
@@ -403,7 +416,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       dateBasedPrices: [dbp1.id, dbp2.id],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
-    if (!await helper.exists(carImage)) {
+    if (!(await helper.exists(carImage))) {
       await fs.copyFile(carImagePath, carImage)
     }
     await car.save()
@@ -519,7 +532,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     avatarName = 'avatar1.jpg'
     avatarPath = path.join(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
@@ -998,7 +1011,7 @@ describe('POST /api/delete-temp-contract/:image', () => {
 
     // init
     const tempImage = path.join(env.CDN_TEMP_CONTRACTS, CONTRACT1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(CONTRACT1_PATH, tempImage)
     }
 

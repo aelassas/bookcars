@@ -302,7 +302,7 @@ const Checkout = () => {
         }
       }
 
-      if (reCaptchaLoaded && !recaptchaToken) {
+      if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
         setRecaptchaError(true)
         return
       }
@@ -517,8 +517,10 @@ const Checkout = () => {
         return
       }
 
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to))
-      const _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
+      const priceChangeRate = _car.supplier.priceChangeRate || 0
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to, priceChangeRate))
+      let _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
+      _depositPrice += _depositPrice * (priceChangeRate / 100)
 
       const included = (val: number) => val === 0
 
@@ -585,6 +587,7 @@ const Checkout = () => {
                       to={to}
                       language={language}
                       clientSecret={clientSecret}
+                      payPalLoaded={payPalLoaded}
                       onPriceChange={(value) => setPrice(value)}
                       onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
                       onCancellationChange={(value) => setCancellation(value)}
@@ -742,6 +745,7 @@ const Checkout = () => {
                               setLicenseRequired(false)
                               setLicense(null)
                             }}
+                            hideDelete={!!clientSecret || payPalLoaded}
                           />
                         </div>
                       </div>
@@ -847,8 +851,8 @@ const Checkout = () => {
                               <FormControlLabel
                                 value="payLater"
                                 control={<Radio />}
-                                disabled={!!clientSecret}
-                                className={clientSecret ? 'payment-radio-disabled' : ''}
+                                disabled={!!clientSecret || payPalLoaded}
+                                className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                 label={(
                                   <span className="payment-button">
                                     <span>{strings.PAY_LATER}</span>
@@ -861,8 +865,8 @@ const Checkout = () => {
                                   <FormControlLabel
                                     value="payDeposit"
                                     control={<Radio />}
-                                    disabled={!!clientSecret}
-                                    className={clientSecret ? 'payment-radio-disabled' : ''}
+                                    disabled={!!clientSecret || payPalLoaded}
+                                    className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                     label={(
                                       <span className="payment-button">
                                         <span>{strings.PAY_DEPOSIT}</span>
@@ -875,8 +879,8 @@ const Checkout = () => {
                               <FormControlLabel
                                 value="payOnline"
                                 control={<Radio />}
-                                disabled={!!clientSecret}
-                                className={clientSecret ? 'payment-radio-disabled' : ''}
+                                disabled={!!clientSecret || payPalLoaded}
+                                className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
                                 label={(
                                   <span className="payment-button">
                                     <span>{strings.PAY_ONLINE}</span>
@@ -949,9 +953,10 @@ const Checkout = () => {
                                 const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
                                 return orderId
                               }}
-                              onApprove={async (data) => {
+                              onApprove={async (data, actions) => {
                                 try {
                                   setPayPalProcessing(true)
+                                  await actions.order?.capture()
                                   const { orderID } = data
                                   const status = await PayPalService.checkOrder(bookingId!, orderID)
 
@@ -969,6 +974,12 @@ const Checkout = () => {
                               }}
                               onInit={() => {
                                 setPayPalInit(true)
+                              }}
+                              onCancel={() => {
+                                setPayPalProcessing(false)
+                              }}
+                              onError={() => {
+                                setPayPalProcessing(false)
                               }}
                             />
                           </div>

@@ -10,9 +10,6 @@ import {
 import {
   Tooltip,
   IconButton,
-  Card,
-  CardContent,
-  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -61,7 +58,6 @@ const BookingList = ({
   filter: bookingFilter,
   car: bookingCar,
   user: bookingUser,
-  loading: bookingLoading,
   hideDates,
   hideCarColumn,
   hideSupplierColumn,
@@ -87,8 +83,7 @@ const BookingList = ({
     pageSize: env.BOOKINGS_PAGE_SIZE,
     page: 0,
   })
-  const [init, setInit] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [openCancelDialog, setOpenCancelDialog] = useState(false)
   const [cancelRequestSent, setCancelRequestSent] = useState(false)
   const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
@@ -157,7 +152,6 @@ const BookingList = ({
       helper.error(err)
     } finally {
       setLoading(false)
-      setInit(false)
     }
   }
 
@@ -385,18 +379,7 @@ const BookingList = ({
   return (
     <div className="bs-list">
       {user
-        && (rows.length === 0 ? (
-          !init
-          && !loading
-          && !bookingLoading
-          && (
-            <Card variant="outlined" className="empty-list">
-              <CardContent>
-                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-              </CardContent>
-            </Card>
-          )
-        ) : env.isMobile ? (
+        && (env.isMobile ? (
           <>
             {rows.map((booking) => {
               const _bookingCar = booking.car as bookcarsTypes.Car

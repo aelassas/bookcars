@@ -37,10 +37,14 @@ export const validate = async (req: Request, res: Response) => {
       type: bookcarsTypes.UserType.Supplier,
       fullName: { $regex: new RegExp(`^${keyword}$`), $options: options },
     })
-    return user ? res.sendStatus(204) : res.sendStatus(200)
+    if (user) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
   } catch (err) {
     logger.error(`[supplier.validate] ${i18n.t('DB_ERROR')} ${fullName}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -72,6 +76,9 @@ export const update = async (req: Request, res: Response) => {
         payLater,
         licenseRequired,
         minimumRentalDays,
+        priceChangeRate,
+        supplierCarLimit,
+        notifyAdminOnNewCar,
       } = body
       supplier.fullName = fullName
       supplier.phone = phone
@@ -80,9 +87,12 @@ export const update = async (req: Request, res: Response) => {
       supplier.payLater = payLater
       supplier.licenseRequired = licenseRequired
       supplier.minimumRentalDays = minimumRentalDays
+      supplier.priceChangeRate = priceChangeRate
+      supplier.supplierCarLimit = supplierCarLimit
+      supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
 
       await supplier.save()
-      return res.json({
+      res.json({
         _id,
         fullName: supplier.fullName,
         phone: supplier.phone,
@@ -93,13 +103,17 @@ export const update = async (req: Request, res: Response) => {
         contracts: supplier.contracts,
         minimumRentalDays: supplier.minimumRentalDays,
         licenseRequired: supplier.licenseRequired,
+        priceChangeRate: supplier.priceChangeRate,
+        supplierCarLimit: supplier.supplierCarLimit,
+        notifyAdminOnNewCar: supplier.notifyAdminOnNewCar,
       })
+      return
     }
     logger.error('[supplier.update] Supplier not found:', _id)
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[supplier.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -158,12 +172,13 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         }
       }
     } else {
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
-    return res.sendStatus(200)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[supplier.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -184,7 +199,8 @@ export const getSupplier = async (req: Request, res: Response) => {
 
     if (!user) {
       logger.error('[supplier.getSupplier] Supplier not found:', id)
-      return res.sendStatus(204)
+      res.sendStatus(204)
+      return
     }
     const {
       _id,
@@ -198,9 +214,12 @@ export const getSupplier = async (req: Request, res: Response) => {
       contracts,
       licenseRequired,
       minimumRentalDays,
+      priceChangeRate,
+      supplierCarLimit,
+      notifyAdminOnNewCar,
     } = user
 
-    return res.json({
+    res.json({
       _id,
       email,
       fullName,
@@ -212,10 +231,13 @@ export const getSupplier = async (req: Request, res: Response) => {
       contracts,
       licenseRequired,
       minimumRentalDays,
+      priceChangeRate,
+      supplierCarLimit,
+      notifyAdminOnNewCar,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -263,10 +285,10 @@ export const getSuppliers = async (req: Request, res: Response) => {
       return { _id, fullName, avatar }
     })
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -294,10 +316,10 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
       return { _id, fullName, avatar }
     })
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[supplier.getAllSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -330,9 +352,11 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { locations: pickupLocation },
-        { available: true }, { type: { $in: carType } },
+        { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
         { fuelPolicy: { $in: fuelPolicy } },
+        { available: true },
+        { fullyBooked: { $in: [false, null] } },
       ],
     }
 
@@ -354,7 +378,8 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([])
+        res.json([])
+        return
       }
     }
 
@@ -412,6 +437,52 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
         {
           $match: $supplierMatch,
         },
+
+        // begining of supplierCarLimit -----------------------------------
+        {
+          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
+          $addFields: {
+            maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use a fallback if supplierCarLimit is undefined
+          },
+        },
+        {
+          // Add a custom stage to limit cars per supplier
+          $group: {
+            _id: '$supplier._id', // Group by supplier
+            supplierData: { $first: '$supplier' },
+            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
+            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
+          },
+        },
+        {
+          // Limit cars based on maxAllowedCars for each supplier
+          $project: {
+            supplier: '$supplierData',
+            cars: {
+              $cond: {
+                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
+                then: [], // Return an empty array (no cars)
+                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
+              },
+            },
+          },
+        },
+        {
+          // Flatten the grouped result and apply sorting
+          $unwind: '$cars',
+        },
+        {
+          // Ensure unique cars by grouping by car ID
+          $group: {
+            _id: '$cars._id',
+            car: { $first: '$cars' },
+          },
+        },
+        {
+          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
+        },
+        // end of supplierCarLimit -----------------------------------
+
         {
           $group: {
             _id: '$supplier._id',
@@ -424,10 +495,10 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -491,7 +562,8 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        return res.json([])
+        res.json([])
+        return
       }
     }
 
@@ -505,7 +577,8 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       } else if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Unavailable) {
         $match.$and!.push({ available: false })
       } else if (availability.length === 0) {
-        return res.json([])
+        res.json([])
+        return
       }
     }
 
@@ -564,10 +637,10 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[supplier.getBackendSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -598,10 +671,10 @@ export const createContract = async (req: Request, res: Response) => {
     const filepath = path.join(env.CDN_TEMP_CONTRACTS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
-    return res.json(filename)
+    res.json(filename)
   } catch (err) {
     logger.error(`[supplier.createContract] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('ERROR') + err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -653,13 +726,14 @@ export const updateContract = async (req: Request, res: Response) => {
         contract.file = filename
       }
       await supplier.save()
-      return res.json(filename)
+      res.json(filename)
+      return
     }
 
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[supplier.updateContract] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -695,12 +769,13 @@ export const deleteContract = async (req: Request, res: Response) => {
       }
 
       await supplier.save()
-      return res.sendStatus(200)
+      res.sendStatus(200)
+      return
     }
-    return res.sendStatus(204)
+    res.sendStatus(204)
   } catch (err) {
     logger.error(`[supplier.deleteContract] ${i18n.t('DB_ERROR')} ${id}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

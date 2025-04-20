@@ -61,6 +61,9 @@ const UpdateUser = () => {
   const [payLater, setPayLater] = useState(false)
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
+  const [priceChangeRate, setPriceChangeRate] = useState('')
+  const [supplierCarLimit, setSupplierCarLimit] = useState('')
+  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -116,8 +119,16 @@ const UpdateUser = () => {
     }
   }
 
+  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSupplierCarLimit(e.target.value)
+  }
+
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumRentalDays(e.target.value)
+  }
+
+  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceChangeRate(e.target.value)
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,6 +230,16 @@ const UpdateUser = () => {
             const _user = await UserService.getUser(id)
 
             if (_user) {
+              if (!(
+                _loggedUser.type === bookcarsTypes.UserType.Admin
+                || (_user.type === bookcarsTypes.UserType.Supplier && _loggedUser._id === _user._id)
+                || (_user.type === bookcarsTypes.UserType.User && _loggedUser._id === _user.supplier)
+              )) {
+                setLoading(false)
+                setNoMatch(true)
+                return
+              }
+
               setLoggedUser(_loggedUser)
               setUser(_user)
               setAdmin(helper.admin(_loggedUser))
@@ -233,6 +254,9 @@ const UpdateUser = () => {
               setPayLater(_user.payLater || false)
               setLicenseRequired(_user.licenseRequired || false)
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
+              setPriceChangeRate(_user.priceChangeRate?.toString() || '')
+              setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
+              setNotifyAdminOnNewCar(!!_user.notifyAdminOnNewCar)
               setVisible(true)
               setLoading(false)
             } else {
@@ -302,6 +326,9 @@ const UpdateUser = () => {
         avatar,
         birthDate,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
+        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
+        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -442,6 +469,34 @@ const UpdateUser = () => {
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={notifyAdminOnNewCar}
+                          disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
+                          onChange={(e) => {
+                            setNotifyAdminOnNewCar(e.target.checked)
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                    <Input
+                      type="text"
+                      onChange={handleSupplierCarLimitChange}
+                      autoComplete="off"
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
+                      value={supplierCarLimit}
+                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                     <Input
                       type="text"
@@ -449,6 +504,18 @@ const UpdateUser = () => {
                       autoComplete="off"
                       slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
                       value={minimumRentalDays}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
+                    <Input
+                      type="text"
+                      onChange={handlePriceChangeRateChange}
+                      autoComplete="off"
+                      slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }}
+                      value={priceChangeRate}
+                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                     />
                   </FormControl>
                 </>
@@ -487,7 +554,7 @@ const UpdateUser = () => {
               )}
 
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${user._id}`)}>
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${user._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
 

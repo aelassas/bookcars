@@ -20,6 +20,7 @@
 .env.test.local
 .env.*production*
 .env.docker
+.env.docker.development
 
 npm-debug.log*
 yarn-debug.log*
@@ -28,3 +29,4 @@ yarn-error.log*
 *.tsbuildinfo
 vite.config.d.ts
 vite.config.js
+.cache/

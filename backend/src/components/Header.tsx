@@ -32,6 +32,8 @@ import {
   ExitToApp as SignoutIcon,
   Flag as CountriesIcon,
   CalendarMonth as SchedulerIcon,
+  AccountBalance as BankDetailsIcon,
+  MonetizationOn as PricingIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
@@ -39,6 +41,7 @@ import env from '@/config/env.config'
 import { strings } from '@/lang/header'
 import { strings as commonStrings } from '@/lang/common'
 import * as UserService from '@/services/UserService'
+import * as BankDetailsService from '@/services/BankDetailsService'
 import * as NotificationService from '@/services/NotificationService'
 import Avatar from './Avatar'
 import * as langHelper from '@/common/langHelper'
@@ -70,6 +73,7 @@ const Header = ({
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [loading, setLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [bankDetails, setBankDetails] = useState<bookcarsTypes.BankDetails | null>(null)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -246,8 +250,12 @@ const Header = ({
       if (!hidden) {
         if (currentUser) {
           const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id as string)
-          setIsSignedIn(true)
           setNotificationCount(notificationCounter.count)
+
+          const _bankDetails = await BankDetailsService.getBankDetails()
+          setBankDetails(_bankDetails)
+
+          setIsSignedIn(true)
           setIsLoaded(true)
         } else {
           setIsLoaded(true)
@@ -405,6 +413,26 @@ const Header = ({
                   <ListItemIcon><UsersIcon /></ListItemIcon>
                   <ListItemText primary={strings.USERS} />
                 </ListItem>
+                <ListItem
+                  onClick={() => {
+                    navigate('/pricing')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><PricingIcon /></ListItemIcon>
+                  <ListItemText primary={strings.PRICING} />
+                </ListItem>
+                {bankDetails?.showBankDetailsPage && (
+                  <ListItem
+                    onClick={() => {
+                      navigate('/bank-details')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><BankDetailsIcon /></ListItemIcon>
+                    <ListItemText primary={strings.BANK_DETAILS} />
+                  </ListItem>
+                )}
                 <ListItem
                   onClick={() => {
                     navigate('/about')

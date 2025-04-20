@@ -138,7 +138,6 @@ const CreateLocation = () => {
                 variant="standard"
                 onChange={(countries: bookcarsTypes.Option[]) => {
                   setCountry(countries.length > 0 ? countries[0] as bookcarsTypes.Country : null)
-                  console.log(countries[0])
                 }}
                 value={country}
                 required

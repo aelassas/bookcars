@@ -211,6 +211,13 @@ export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
 export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
 
 /**
+ * CDN root folder path.
+ *
+ * @type {string}
+ */
+export const CDN_ROOT = __env__('BC_CDN_ROOT', false, '/var/www/cdn')
+
+/**
  * Users' cdn folder path.
  *
  * @type {string}
@@ -443,6 +450,9 @@ export interface User extends Document {
   license?: string | null
   minimumRentalDays?: number
   expireAt?: Date
+  priceChangeRate?: number
+  supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 /**
@@ -471,8 +481,11 @@ export interface UserInfo {
   type?: string
   blacklisted?: boolean
   payLater?: boolean
-  licenseRequired?: boolean,
+  licenseRequired?: boolean
   license?: string
+  priceChangeRate?: number
+  supplierCarLimit?: number
+  notifyAdminOnNewCar?: boolean
 }
 
 /**
@@ -749,6 +762,7 @@ export interface Notification extends Document {
   user: Types.ObjectId
   message: string
   booking: Types.ObjectId
+  car: Types.ObjectId
   isRead?: boolean
 }
 
@@ -790,4 +804,20 @@ export interface Token extends Document {
   user: Types.ObjectId
   token: string
   expireAt?: Date
+}
+
+/**
+ * BankDetails Document.
+ *
+ * @export
+ * @interface BankDetails
+ * @typedef {BankDetails}
+ * @extends {Document}
+ */
+export interface BankDetails extends Document {
+  accountHolder: string
+  bankName: string
+  iban: string
+  swiftBic: string
+  showBankDetailsPage: boolean
 }
