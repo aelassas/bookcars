@@ -30,7 +30,7 @@ services:
     build:
       context: .
       dockerfile: ./api/Dockerfile.dev
-    env_file: ./api/.env.docker.development
+    env_file: ./api/.env.docker
     restart: always
     ports:
       - 4002:4002
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile.dev
-    env_file: ./backend/.env.docker.development
+    env_file: ./backend/.env.docker
     restart: always
     depends_on:
       - api
@@ -62,7 +62,7 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile.dev
-    env_file: ./frontend/.env.docker.development
+    env_file: ./frontend/.env.docker
     restart: always
     depends_on:
       - api
