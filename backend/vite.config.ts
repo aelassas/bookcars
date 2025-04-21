@@ -42,7 +42,7 @@ export default ({ mode }: { mode: string }) => {
       port: Number.parseInt(process.env.VITE_PORT || '3001', 10),
       watch: {
         usePolling: true,
-        interval: 100,
+        interval: 500,
       },
       hmr: {
         protocol: 'ws',
