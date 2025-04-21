@@ -1,5 +1,5 @@
 services:
-  mongo:
+  bc-mongo:
     image: mongo:latest
     command: mongod --quiet --logpath /dev/null
     restart: always
@@ -13,7 +13,7 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
 
-  mongo-express:
+  bc-mongo-express:
     image: mongo-express:latest
     restart: always
     ports:
@@ -21,13 +21,13 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SERVER: bc-mongo
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
-      - mongo
+      - bc-mongo
 
-  api:
+  bc-api:
     build: 
       context: .
       dockerfile: ./api/Dockerfile
@@ -36,25 +36,25 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - mongo
+      - bc-mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
 
-  backend:
+  bc-backend:
     build: 
       context: .
       dockerfile: ./backend/Dockerfile
     depends_on:
-      - api
+      - bc-api
     ports:
       - 3001:3001
 
-  frontend:
+  bc-frontend:
     build: 
       context: .
       dockerfile: ./frontend/Dockerfile
     depends_on:
-      - api
+      - bc-api
     ports:
       - 8080:80
       - 8443:443
