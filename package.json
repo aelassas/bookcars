@@ -1,14 +1,14 @@
 {
   "name": "bookcars",
   "version": "6.8.0",
-  "description": "Car Rental Platform with Mobile App",
+  "description": "Car Rental Booking System",
   "main": "pre-commit.js",
   "type": "module",
   "scripts": {
     "pre-commit": "node pre-commit.js",
     "prepare": "husky install"
   },
-  "author": "",
+  "author": "Akram El Assas",
   "license": "MIT",
   "devDependencies": {
     "chalk": "^5.4.1",
