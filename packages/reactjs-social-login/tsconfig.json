@@ -17,6 +17,7 @@
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "composite": true,
+    "noEmitOnError": true,
     "baseUrl": "./src",
     "typeRoots": ["dist/src/index.d.ts"],
   },
