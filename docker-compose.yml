@@ -15,15 +15,18 @@ services:
 
   bc-mongo-express:
     image: mongo-express:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - 8084:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_SERVER: bc-mongo
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@bc-mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - bc-mongo
 
