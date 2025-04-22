@@ -37,6 +37,7 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - api_logs:/wexcommerce/api/logs
 
   bc-backend:
     build: 
@@ -63,3 +64,4 @@ volumes:
   cdn:
   mongodb_data:
   mongodb_config:
+  api_logs:
