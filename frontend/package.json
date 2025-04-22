@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "fix": "eslint --fix .",
     "lint": "eslint .",
-    "type-check": "tsc --build --verbose --noEmit",
+    "type-check": "tsc --noEmit",
     "ncu": "ncu -u",
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix"
