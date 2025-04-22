@@ -1,5 +1,5 @@
 services:
-  bc-mongo:
+  mongo:
     image: mongo:latest
     command: mongod --quiet --logpath /dev/null
     restart: always
@@ -12,22 +12,17 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
 
-  bc-mongo-express:
+  mongo-express:
     image: mongo-express:latest
-    restart: unless-stopped
+    restart: always
     ports:
       - 8084:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@bc-mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
-    healthcheck:
-      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     depends_on:
-      - bc-mongo
+      - mongo
 
   bc-dev-api:
     build:
@@ -38,11 +33,11 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - bc-mongo
+      - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./api:/bookcars/api
-      - api_node_modules:/bookcars/api/node_modules
+      - /bookcars/api/node_modules
 
   bc-dev-backend:
     build:
@@ -56,7 +51,7 @@ services:
       - 3001:3001
     volumes:
       - ./backend:/bookcars/backend
-      - backend_node_modules:/bookcars/backend/node_modules
+      - /bookcars/backend/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
@@ -74,15 +69,12 @@ services:
       - 8443:443
     volumes:
       - ./frontend:/bookcars/frontend
-      - frontend_node_modules:/bookcars/frontend/node_modules
+      - /bookcars/frontend/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
 
 volumes:
   cdn:
-  api_node_modules:
-  backend_node_modules:
-  frontend_node_modules:
   mongodb_data:
   mongodb_config:
