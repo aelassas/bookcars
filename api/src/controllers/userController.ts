@@ -105,7 +105,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
           <p style="font-size: 16px; color: #555;">
             ${i18n.t('HELLO')} ${user.fullName},<br><br>
             ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-            <a href="${activationLink} target="_blank">${activationLink}</a><br><br>
+            <a href="${activationLink}" target="_blank">${activationLink}</a><br><br>
             ${i18n.t('REGARDS')}<br>
           </p>
         </div>`,
