@@ -1,5 +1,5 @@
 services:
-  bc-mongo:
+  mongo:
     image: mongo:latest
     command: mongod --quiet --logpath /dev/null
     restart: always
@@ -13,22 +13,17 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
 
-  bc-mongo-express:
+  mongo-express:
     image: mongo-express:latest
-    restart: unless-stopped
+    restart: always
     ports:
       - 8084:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@bc-mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
-    healthcheck:
-      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     depends_on:
-      - bc-mongo
+      - mongo
 
   bc-api:
     build: 
@@ -39,7 +34,7 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - bc-mongo
+      - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
 
