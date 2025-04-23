@@ -53,9 +53,9 @@ import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 
-if (env.isProduction) {
-  disableDevTools()
-}
+// if (env.isProduction) {
+//   disableDevTools()
+// }
 
 let language = env.DEFAULT_LANGUAGE
 const user = JSON.parse(localStorage.getItem('bc-fe-user') ?? 'null')

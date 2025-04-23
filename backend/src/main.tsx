@@ -17,9 +17,9 @@ import App from '@/App'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 
-if (import.meta.env.VITE_NODE_ENV === 'production') {
-  disableDevTools()
-}
+// if (import.meta.env.VITE_NODE_ENV === 'production') {
+//   disableDevTools()
+// }
 
 let language = env.DEFAULT_LANGUAGE
 const user = JSON.parse(localStorage.getItem('bc-be-user') ?? 'null')
