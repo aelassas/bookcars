@@ -14,7 +14,7 @@ export default ({ mode }: { mode: string }) => {
         babel: {
           plugins: [
             ['@babel/plugin-transform-runtime'],
-            // ['babel-plugin-react-compiler', { optimize: true }],
+            ['babel-plugin-react-compiler', { optimize: true }],
           ]
         }
       }),
