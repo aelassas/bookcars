@@ -9,7 +9,7 @@
     "build": "rimraf dist && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node dist/src",
     "test": "rimraf coverage && npm run build && cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --coverage --no-cache",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-location .eslintcache",
     "type-check": "tsc --noEmit",
     "ncu": "ncu -u",
     "script:db": "npm run build && node dist/scripts/db.js"
