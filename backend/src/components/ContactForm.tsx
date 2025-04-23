@@ -123,10 +123,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
     }
   }
 
-  if (!env.RECAPTCHA_ENABLED) {
-    return null
-  }
-
   return (
     <Paper className={`${className ? `${className} ` : ''}contact-form`} elevation={10}>
       <h1 className="contact-form-title">
