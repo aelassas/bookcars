@@ -14,7 +14,7 @@
     "dev:docker": "npm run ts:docker-build && vite",
     "preview": "vite preview",
     "fix": "eslint --fix .",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-location .eslintcache",
     "type-check": "tsc --noEmit",
     "ncu": "ncu -u",
     "stylelint": "stylelint \"src/**/*.css\"",
