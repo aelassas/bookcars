@@ -10,12 +10,11 @@ keywords:
   - car rental
   - booking system
   - aggregator
-  - web application
-  - mobile app
   - react
   - react native
   - mongodb
   - stripe
   - paypal
+  - bookcars
 url: "https://github.com/aelassas/bookcars"
 type: software
