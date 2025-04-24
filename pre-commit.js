@@ -25,9 +25,9 @@ const runStep = (folder, step) => {
   return new Promise((resolve, reject) => {
     console.log(chalk.blue(getMessage(folder, `🔍 Running ${step.name}...`)))
 
-    const child = exec(step.command, { cwd: folder, stdio: 'pipe' }, (error, stdout, stderr) => {
-       // Handling stdout
-       if (stdout) {
+    exec(step.command, { cwd: folder, stdio: 'pipe' }, (error, stdout, stderr) => {
+      // Handling stdout
+      if (stdout) {
         process.stdout.write(stdout) // Ensure stdout is printed to console in real-time
       }
 
@@ -44,15 +44,6 @@ const runStep = (folder, step) => {
         resolve()
       }
     })
-
-    // // Listen for stdout and stderr streams using 'data' event
-    // child.stdout.on('data', (data) => {
-    //   process.stdout.write(data)  // Directly write stdout data to the parent process's stdout
-    // })
-
-    // child.stderr.on('data', (data) => {
-    //   process.stderr.write(data)  // Directly write stderr data to the parent process's stderr
-    // })
   })
 }
 
