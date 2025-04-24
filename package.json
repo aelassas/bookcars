@@ -21,6 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/aelassas/bookcars.git"
   },
+  "funding": "https://github.com/sponsors/aelassas",
   "author": "Akram El Assas",
   "license": "MIT",
   "type": "module",
@@ -31,6 +32,6 @@
   },
   "devDependencies": {
     "chalk": "^5.4.1",
-    "husky": "^8.0.0"
+    "husky": "^9.1.7"
   }
 }
