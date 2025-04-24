@@ -1,4 +1,4 @@
-import child_process from 'child_process'
+import { exec } from 'child_process'
 import chalk from 'chalk'
 
 const label = 'pre-commit'
@@ -25,7 +25,14 @@ const runStep = (folder, step) => {
   return new Promise((resolve, reject) => {
     console.log(chalk.blue(getMessage(folder, `🔍 Running ${step.name}...`)))
 
-    child_process.exec(step.command, { cwd: folder, stdio: 'inherit' }, (error, stdout, stderr) => {
+    exec(step.command, { cwd: folder, stdio: 'pipe' }, (error, stdout, stderr) => {
+      if (stdout) {
+        console.log(stdout) // print stdout to console
+      }
+      if (stderr) {
+        console.log(stderr) // print stderr to console
+      }
+
       if (error) {
         console.error(chalk.red(getMessage(folder, `❌ ${step.name} failed.`)))
         reject(error)
@@ -37,22 +44,23 @@ const runStep = (folder, step) => {
   })
 }
 
-const tasks = []
+try {
+  const tasks = []
 
-for (const folder of folders) {
-  for (const step of steps) {
-    tasks.push(runStep(folder, step))
+  for (const folder of folders) {
+    for (const step of steps) {
+      tasks.push(runStep(folder, step))
+    }
   }
-}
 
-Promise.all(tasks)
-  .then(() => {
-    console.log(chalk.greenBright('\n✅ All checks passed. Proceeding with commit.'))
-    console.timeEnd(label)
-    process.exit(0)
-  })
-  .catch(() => {
-    console.log(chalk.redBright('\n🚫 Commit aborted due to pre-commit errors.'))
-    console.timeEnd(label)
-    process.exit(1)
-  })
+  // Wait for all tasks to complete, and if any fails, it will throw an error
+  await Promise.all(tasks)
+
+  console.log(chalk.greenBright('\n✅ All checks passed. Proceeding with commit.'))
+  console.timeEnd(label)
+  process.exit(0)
+} catch (err) {
+  console.log(chalk.redBright('\n🚫 Commit aborted due to pre-commit errors.'))
+  console.timeEnd(label)
+  process.exit(1)
+}
