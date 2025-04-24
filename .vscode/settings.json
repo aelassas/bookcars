@@ -8,8 +8,9 @@
   "eslint.run": "onType",
   "eslint.workingDirectories": [
     { "directory": "api", "changeProcessCWD": true, "pattern": "**/*.{js,ts}" },
-    { "directory": "backoffice", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
+    { "directory": "backend", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
     { "directory": "frontend", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
     { "directory": "mobile", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
   ],
+  "files.insertFinalNewline": true
 }

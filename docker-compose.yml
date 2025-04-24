@@ -1,6 +1,31 @@
-version: "3.8"
 services:
-  api:
+  mongo:
+    image: mongo:latest
+    command: mongod --quiet --logpath /dev/null
+    restart: always
+    environment:
+      # Provide your credentials here
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - 27018:27017
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8084:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - mongo
+
+  bc-api:
     build: 
       context: .
       dockerfile: ./api/Dockerfile
@@ -12,38 +37,31 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - api_logs:/wexcommerce/api/logs
 
-  mongo:
-    image: mongo:latest
-    command: mongod --quiet --logpath /dev/null
-    restart: always
-    environment:
-      # Provide your credentials here
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: PASSWORD
-    ports:
-      - 27017:27017
-
-  backoffice:
+  bc-backend:
     build: 
       context: .
-      dockerfile: ./backoffice/Dockerfile
+      dockerfile: ./backend/Dockerfile
     depends_on:
-      - api
+      - bc-api
     ports:
       - 3001:3001
 
-  frontend:
+  bc-frontend:
     build: 
       context: .
       dockerfile: ./frontend/Dockerfile
     depends_on:
-      - api
+      - bc-api
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
 
 volumes:
   cdn:
+  mongodb_data:
+  mongodb_config:
+  api_logs:

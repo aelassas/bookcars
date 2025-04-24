@@ -141,11 +141,11 @@ export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, si
 export const FRONTEND_AUTH_COOKIE_NAME = 'bc-x-access-token-frontend'
 
 /**
- * Backoffice authentication cookie name.
+ * backend authentication cookie name.
  *
  * @type {"bc-x-access-token-frontend"}
  */
-export const BACKOFFICE_AUTH_COOKIE_NAME = 'bc-x-access-token-backoffice'
+export const BACKEND_AUTH_COOKIE_NAME = 'bc-x-access-token-backend'
 
 /**
  * Mobile App and unit tests authentication header name.
@@ -209,6 +209,13 @@ export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
  * @type {string}
  */
 export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
+
+/**
+ * CDN root folder path.
+ *
+ * @type {string}
+ */
+export const CDN_ROOT = __env__('BC_CDN_ROOT', false, '/var/www/cdn')
 
 /**
  * Users' cdn folder path.
@@ -281,11 +288,11 @@ export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
 export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
 
 /**
- * Backoffice host.
+ * backend host.
  *
  * @type {string}
  */
-export const BACKOFFICE_HOST = __env__('BC_BACKOFFICE_HOST', true)
+export const BACKEND_HOST = __env__('BC_BACKEND_HOST', true)
 
 /**
  * Frontend host.

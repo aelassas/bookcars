@@ -2,8 +2,13 @@
   "expo": {
     "jsEngine": "hermes",
     "newArchEnabled": true,
+<<<<<<< HEAD
     "name": "SiCarro",
     "version": "6.5.0",
+=======
+    "name": "BookCars",
+    "version": "6.8.0",
+>>>>>>> main
     "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
@@ -14,7 +19,7 @@
       "image": "./assets/splash.png"
     },
     "android": {
-      "versionCode": 650,
+      "versionCode": 680,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
@@ -24,7 +29,7 @@
       "package": "com.bookcars"
     },
     "ios": {
-      "buildNumber": "6.5.0",
+      "buildNumber": "6.8.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       "bundleIdentifier": "com.bookcars"

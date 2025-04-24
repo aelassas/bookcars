@@ -71,7 +71,7 @@ describe('POST /api/sign-up', () => {
   it('should create a user', async () => {
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
 
@@ -168,17 +168,17 @@ describe('POST /api/create-user', () => {
 
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     const tempLicense = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!await helper.exists(tempLicense)) {
+    if (!(await helper.exists(tempLicense))) {
       await fs.copyFile(LICENSE1_PATH, tempLicense)
     }
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, contractFileName)
-    if (!await helper.exists(contractFile)) {
+    if (!(await helper.exists(contractFile))) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
     const contracts = [
@@ -381,7 +381,7 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
 
     // test success (token not valid)
     res = await request(app)
-      .get(`/api/check-token/${bookcarsTypes.AppType.Backoffice}/${USER1_ID}/${USER1_EMAIL}/${token}`)
+      .get(`/api/check-token/${bookcarsTypes.AppType.Backend}/${USER1_ID}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(204)
 
     // test success (token not found)
@@ -443,10 +443,17 @@ describe('POST /api/activate', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload.userId = '0'
+    res = await request(app)
+      .post('/api/activate')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .post('/api/activate')
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
   })
 })
 
@@ -508,7 +515,7 @@ describe('POST /api/resend/:type/:email/:reset', () => {
     // test success (reset)
     reset = false
     res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Backoffice}/${ADMIN_EMAIL}/${reset}`)
+      .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${ADMIN_EMAIL}/${reset}`)
     expect(res.statusCode).toBe(200)
     user = await User.findById(ADMIN_ID)
     expect(user).not.toBeNull()
@@ -516,7 +523,7 @@ describe('POST /api/resend/:type/:email/:reset', () => {
 
     // test failure (forbiden)
     res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Backoffice}/${USER1_EMAIL}/${reset}`)
+      .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${USER1_EMAIL}/${reset}`)
     expect(res.statusCode).toBe(403)
 
     // test success (user not found)
@@ -643,7 +650,7 @@ describe('POST /api/sign-in/:type', () => {
     // test success (not authorized)
     payload.password = USER1_PASSWORD
     res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.Backoffice}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .send(payload)
     expect(res.statusCode).toBe(204)
 
@@ -757,7 +764,7 @@ describe('POST /api/social-sign-in/:type', () => {
     // test failure (no payload)
     res = await request(app)
       .post('/api/social-sign-in')
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
   })
 })
 
@@ -1256,7 +1263,7 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
 
     // test success
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!await helper.exists(tempAvatar)) {
+    if (!(await helper.exists(tempAvatar))) {
       await fs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     let res = await request(app)
@@ -1635,7 +1642,7 @@ describe('POST /api/delete-temp-license/:image', () => {
   it('should delete a temporary license', async () => {
     // init
     const tempImage = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(LICENSE1_PATH, tempImage)
     }
 
@@ -1681,7 +1688,7 @@ describe('POST /api/delete-users', () => {
     const user2 = await User.findById(USER2_ID)
     const licenseFilename = `${user2!.id}.pdf`
     const license = path.join(env.CDN_LICENSES, licenseFilename)
-    if (!await helper.exists(license)) {
+    if (!(await helper.exists(license))) {
       await fs.copyFile(LICENSE1_PATH, license)
     }
     user2!.license = licenseFilename
@@ -1712,7 +1719,7 @@ describe('POST /api/delete-users', () => {
     const imageName = 'bmw-x1.jpg'
     const imagePath = path.join(__dirname, `./img/${imageName}`)
     const image = path.join(env.CDN_CARS, imageName)
-    if (!await helper.exists(image)) {
+    if (!(await helper.exists(image))) {
       await fs.copyFile(imagePath, image)
     }
     let car = new Car({

@@ -5,7 +5,7 @@ export enum UserType {
 }
 
 export enum AppType {
-  Backoffice = 'backoffice',
+  Backend = 'backend',
   Frontend = 'frontend',
 }
 

@@ -10,3 +10,4 @@ cdn
 
 /**/.env
 
+/node_modules

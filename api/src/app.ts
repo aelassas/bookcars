@@ -43,9 +43,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(express.json({ limit: '50mb' }))
 
 app.use(cors())
-app.options('*', cors())
+// app.options('*', cors())
 app.use(cookieParser(env.COOKIE_SECRET))
 app.use(allowedMethods)
+
+// Serve static files from the CDN directory
+app.use('/cdn', express.static(env.CDN_ROOT))
 
 app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)

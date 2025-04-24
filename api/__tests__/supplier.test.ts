@@ -155,7 +155,7 @@ describe('POST /api/validate-supplier', () => {
     res = await request(app)
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -208,11 +208,19 @@ describe('PUT /api/update-supplier', () => {
       .send(payload)
     expect(res.statusCode).toBe(204)
 
+    // test failure (wrong id)
+    payload._id = '0'
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+
     // test failure (no payload)
     res = await request(app)
       .put('/api/update-supplier')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })
@@ -345,14 +353,14 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let avatarName = 'avatar1.jpg'
     let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-    if (!await helper.exists(contractFile)) {
+    if (!(await helper.exists(contractFile))) {
       await fs.copyFile(CONTRACT1_PATH, contractFile)
     }
     supplier!.contracts = [{ language: 'en', file: contractFileName }]
@@ -408,7 +416,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       dateBasedPrices: [dbp1.id, dbp2.id],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
-    if (!await helper.exists(carImage)) {
+    if (!(await helper.exists(carImage))) {
       await fs.copyFile(carImagePath, carImage)
     }
     await car.save()
@@ -524,7 +532,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     avatarName = 'avatar1.jpg'
     avatarPath = path.join(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
-    if (!await helper.exists(avatar)) {
+    if (!(await helper.exists(avatar))) {
       await fs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
@@ -663,8 +671,8 @@ describe('POST /api/frontend-suppliers', () => {
   })
 })
 
-describe('POST /api/backoffice-suppliers', () => {
-  it('should return backoffice suppliers', async () => {
+describe('POST /api/backend-suppliers', () => {
+  it('should return backend suppliers', async () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success (full filter)
@@ -687,7 +695,7 @@ describe('POST /api/backoffice-suppliers', () => {
       ranges: [bookcarsTypes.CarRange.Midi],
     }
     let res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -695,7 +703,7 @@ describe('POST /api/backoffice-suppliers', () => {
 
     // test failure (no payload)
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -719,7 +727,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (carSpecs, seats)
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -728,7 +736,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (no mileage)
     payload.mileage = []
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -738,7 +746,7 @@ describe('POST /api/backoffice-suppliers', () => {
     payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
     payload.deposit = 1200
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -747,7 +755,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (seats)
     payload.seats = 3
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -757,7 +765,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available]
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -766,7 +774,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -775,7 +783,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -785,7 +793,7 @@ describe('POST /api/backoffice-suppliers', () => {
     // test success (no availability)
     payload.availability = []
     res = await request(app)
-      .post('/api/backoffice-suppliers')
+      .post('/api/backend-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -1003,7 +1011,7 @@ describe('POST /api/delete-temp-contract/:image', () => {
 
     // init
     const tempImage = path.join(env.CDN_TEMP_CONTRACTS, CONTRACT1)
-    if (!await helper.exists(tempImage)) {
+    if (!(await helper.exists(tempImage))) {
       await fs.copyFile(CONTRACT1_PATH, tempImage)
     }
 

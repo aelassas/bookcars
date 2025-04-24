@@ -14,9 +14,9 @@ export default ({ mode }: { mode: string }) => {
         babel: {
           plugins: [
             ['@babel/plugin-transform-runtime'],
-            // ['babel-plugin-react-compiler', { optimize: true }],
-          ]
-        }
+            ['babel-plugin-react-compiler', { optimize: true }],
+          ],
+        },
       }),
       createHtmlPlugin({
         inject: {
@@ -41,6 +41,16 @@ export default ({ mode }: { mode: string }) => {
     server: {
       host: '0.0.0.0',
       port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
+      watch: {
+        usePolling: true,
+        interval: 500,
+      },
+      hmr: {
+        protocol: 'ws',
+        host: process.env.VITE_HMR_HOST || 'localhost',
+        port: Number.parseInt(process.env.VITE_HMR_PORT || '8080', 10),
+        clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '8080', 10),
+      },
     },
 
     build: {
@@ -70,8 +80,8 @@ export default ({ mode }: { mode: string }) => {
           comments: false, // Remove comments
         },
         mangle: {
-          properties: false // Don't rename properties (safer)
-        }
+          properties: false, // Don't rename properties (safer)
+        },
       },
 
       // Control chunk size

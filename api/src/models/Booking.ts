@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
+import * as logger from '../common/logger'
 
 export const BOOKING_EXPIRE_AT_INDEX_NAME = 'expireAt'
 
@@ -122,6 +123,26 @@ const bookingSchema = new Schema<env.Booking>(
   },
 )
 
+// Common filter for every query
+bookingSchema.index({ 'supplier._id': 1, status: 1, expireAt: 1 })
+
+// Optional filters (can combine with the above depending on frequency)
+bookingSchema.index({ 'driver._id': 1 })
+bookingSchema.index({ 'car._id': 1 })
+bookingSchema.index({ from: 1, to: 1 }) // For date range filtering
+bookingSchema.index({ 'pickupLocation._id': 1 })
+bookingSchema.index({ 'dropOffLocation._id': 1 })
+
+// If keyword is used often with regex, and performance is an issue:
+bookingSchema.index({ 'supplier.fullName': 1 }) // Consider text index if full-text search is needed
+bookingSchema.index({ 'driver.fullName': 1 })
+bookingSchema.index({ 'car.name': 1 })
+
 const Booking = model<env.Booking>('Booking', bookingSchema)
+
+// Create indexes manually and handle potential errors
+Booking.syncIndexes().catch((err) => {
+  logger.error('Error creating Booking indexes:', err)
+})
 
 export default Booking

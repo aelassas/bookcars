@@ -16,6 +16,7 @@ npm-debug.log*
 .env.development
 .env.docker
 .env.*production*
+.env.docker.development
 
 # eslint
 .eslintcache
@@ -25,3 +26,5 @@ npm-debug.log*
 
 # logs
 /logs
+
+.eslintcache

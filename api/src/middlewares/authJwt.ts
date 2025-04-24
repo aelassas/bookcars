@@ -16,11 +16,11 @@ import User from '../models/User'
  */
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   let token: string
-  const isBackoffice = authHelper.isBackoffice(req)
+  const isBackend = authHelper.isBackend(req)
   const isFrontend = authHelper.isFrontend(req)
 
-  if (isBackoffice) {
-    token = req.signedCookies[env.BACKOFFICE_AUTH_COOKIE_NAME] as string // backoffice
+  if (isBackend) {
+    token = req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
   } else if (isFrontend) {
     token = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
   } else {
@@ -38,7 +38,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         ],
       }
 
-      if (isBackoffice) {
+      if (isBackend) {
         $match.$and?.push({ type: { $in: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier] } })
       } else if (isFrontend) {
         $match.$and?.push({ type: bookcarsTypes.UserType.User })

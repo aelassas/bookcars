@@ -42,7 +42,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Location, country, parking spots and map features
 * Booking management
-* [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backoffice-scheduler.png?raw=true)
+* [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * Payment management
 * Customer management
 * Multiple login options (Google, Facebook, Apple, Email)
@@ -81,7 +81,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-6.4.png">
+<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-6.7.png">
 
 #### How to install the Mobile App on Android
 
@@ -93,7 +93,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-6.4.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-6.7.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
@@ -113,6 +113,7 @@ You can install the Android App by downloading the APK and installing it on any 
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
    2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
 9. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+10. [Run from Source (Docker)](https://github.com/aelassas/bookcars/wiki/Run-from-Source-(Docker))
 10. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
     1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
