@@ -3,4 +3,4 @@
 
 echo "🔧 Running lint and type-check on all projects..."
 
-node pre-commit.js
+npm run pre-commit
