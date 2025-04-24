@@ -4,13 +4,13 @@
   "description": "Car Rental Booking System",
   "keywords": [
     "react",
-    "paypal",
     "react-native",
     "mongodb",
     "stripe",
-    "aggregator",
+    "paypal",
     "car-rental",
     "car-rental-system",
+    "aggregator",
     "bookcars"
   ],
   "homepage": "https://github.com/aelassas/bookcars#readme",
