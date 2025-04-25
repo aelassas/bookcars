@@ -28,7 +28,6 @@ const config = [
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
       'react-refresh': reactRefreshPlugin,
-      // 'react-compiler': reactCompilerPlugin,
     },
     rules: {
       'semi': ['error', 'never'],
@@ -72,7 +71,7 @@ const config = [
       'no-multi-spaces': 'error',
       'padded-blocks': ['error', 'never'],
       'no-irregular-whitespace': 'error',
-      // 'react-compiler/react-compiler': 'error',
+      'react-compiler/react-compiler': 'error',
     },
   }
 ]

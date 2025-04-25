@@ -95,7 +95,7 @@ const BookingList = ({
     }
   }, [paginationModel])
 
-  const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _car?: string) => {
     try {
       const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
@@ -106,7 +106,7 @@ const BookingList = ({
           suppliers,
           statuses,
           filter: filter || undefined,
-          car,
+          car: _car || car,
           user: (_user && _user._id) || undefined,
         }
 
@@ -169,11 +169,19 @@ const BookingList = ({
 
   useEffect(() => {
     setCar(bookingCar || '')
-  }, [bookingCar])
+
+    if (bookingCar) {
+      fetchData(page, user, bookingCar)
+    }
+  }, [bookingCar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setUser(bookingUser)
-  }, [bookingUser])
+
+    if(bookingUser){
+      fetchData(page, bookingUser, car)
+    }
+  }, [bookingUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (suppliers && statuses && user) {
