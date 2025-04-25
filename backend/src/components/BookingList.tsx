@@ -92,7 +92,6 @@ const BookingList = ({
     pageSize: env.BOOKINGS_PAGE_SIZE,
     page: 0,
   })
-  const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -102,7 +101,7 @@ const BookingList = ({
     }
   }, [paginationModel])
 
-  const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _car?: string) => {
     try {
       const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
@@ -112,7 +111,7 @@ const BookingList = ({
           suppliers,
           statuses,
           filter: filter || undefined,
-          car,
+          car: _car || car,
           user: (_user && _user._id) || undefined,
         }
 
@@ -154,7 +153,6 @@ const BookingList = ({
       helper.error(err)
     } finally {
       setLoading(false)
-      setInit(false)
     }
   }
 
@@ -172,7 +170,11 @@ const BookingList = ({
 
   useEffect(() => {
     setCar(bookingCar || '')
-  }, [bookingCar])
+
+    if (bookingCar) {
+      fetchData(page, user, bookingCar)
+    }
+  }, [bookingCar]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setOffset(bookingOffset || 0)
@@ -180,7 +182,11 @@ const BookingList = ({
 
   useEffect(() => {
     setUser(bookingUser)
-  }, [bookingUser])
+
+    if (bookingUser) {
+      fetchData(page, bookingUser, car)
+    }
+  }, [bookingUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (suppliers && statuses && loggedUser) {
@@ -263,11 +269,11 @@ const BookingList = ({
                   <EditIcon />
                 </IconButton>
               </Tooltip>
-              {/* <Tooltip title={commonStrings.DELETE}>
+              <Tooltip title={commonStrings.DELETE}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </Tooltip> */}
+              </Tooltip>
             </div>
           )
         },
@@ -282,7 +288,7 @@ const BookingList = ({
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            {/* <Tooltip title={strings.DELETE_SELECTION}>
+            <Tooltip title={strings.DELETE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setopenDeleteDialog(true)
@@ -290,7 +296,7 @@ const BookingList = ({
               >
                 <DeleteIcon />
               </IconButton>
-            </Tooltip> */}
+            </Tooltip>
           </div>
         ) : (
           <></>
@@ -595,7 +601,7 @@ const BookingList = ({
                     >
                       {commonStrings.UPDATE}
                     </Button>
-                    {/* <Button
+                    <Button
                       variant="contained"
                       className="btn-secondary"
                       size="small"
@@ -604,7 +610,7 @@ const BookingList = ({
                       onClick={handleDelete}
                     >
                       {commonStrings.DELETE}
-                    </Button> */}
+                    </Button>
                   </div>
                 </div>
               )
