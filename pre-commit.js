@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs';
+import path from 'path';
 
 const execAsync = promisify(exec);
 
@@ -11,26 +12,13 @@ console.log('🚀 Starting pre-commit checks...');
 
 const folders = ['api', 'backend', 'frontend', 'mobile'];
 
-const steps = [
-  {
-    name: 'ESLint',
-    command: 'npm run lint',
-  },
-  {
-    name: 'TypeScript',
-    command: 'npm run type-check',
-  },
-];
-
-// Map folder to Docker container names
 const containerMap = {
   api: 'bc-dev-api',
   backend: 'bc-dev-backend',
   frontend: 'bc-dev-frontend',
-  mobile: null, // No container for mobile
+  mobile: null,
 };
 
-// Detect if we are already inside Docker
 function isInsideDocker() {
   try {
     const cgroup = fs.readFileSync('/proc/1/cgroup', 'utf8');
@@ -47,41 +35,125 @@ if (insideDocker) {
 
 const getMessage = (folder, message) => `[${folder}] ${message}`;
 
-const runStep = (folder, step) => {
+async function getChangedFiles() {
+  try {
+    const { stdout } = await execAsync('git diff --cached --name-only');
+    return stdout.trim().split('\n').filter(Boolean);
+  } catch (error) {
+    console.error('❌ Failed to get changed files:', error);
+    return [];
+  }
+}
+
+function groupFilesByFolder(files) {
+  const projectFiles = {};
+
+  for (const folder of folders) {
+    projectFiles[folder] = [];
+  }
+
+  for (const file of files) {
+    for (const folder of folders) {
+      if (file.startsWith(folder + '/')) {
+        const relativePath = file.substring(folder.length + 1);
+        projectFiles[folder].push(relativePath);
+        break;
+      }
+    }
+  }
+
+  return projectFiles;
+}
+
+const runLintStep = (folder, files) => {
   return new Promise(async (resolve, reject) => {
-    console.log(getMessage(folder, `🔍 Running ${step.name}...`));
+    if (files.length === 0) {
+      resolve();
+      return;
+    }
+
+    console.log(getMessage(folder, `🔍 Running ESLint on ${files.length} file(s)...`));
 
     const cwd = folder;
+    const lintTargets = files.filter(f => f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.js') || f.endsWith('.jsx'));
+
+    if (lintTargets.length === 0) {
+      console.log(getMessage(folder, `ℹ️ No lintable files.`));
+      resolve();
+      return;
+    }
+
     let fallbackToDocker = !insideDocker;
 
     try {
-      await execAsync(step.command, { cwd });
-      console.log(getMessage(folder, `✅ ${step.name} passed.`));
+      await execAsync(`eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache`, { cwd });
+      console.log(getMessage(folder, `✅ ESLint passed.`));
       resolve();
     } catch (error) {
       if (!fallbackToDocker) {
-        console.log(getMessage(folder, `⚠️ Local ${step.name} failed, and fallback disabled (inside Docker). Skipping.`));
-        resolve(); // Do not reject inside Docker
+        console.log(getMessage(folder, `⚠️ ESLint failed locally, but fallback disabled (inside Docker). Skipping.`));
+        resolve();
         return;
       }
 
       const container = containerMap[folder];
       if (!container) {
-        console.log(getMessage(folder, `⚠️ No Docker container configured for ${step.name}. Skipping.`));
-        resolve(); // No container, skip gracefully
+        console.log(getMessage(folder, `⚠️ No Docker container configured. Skipping ESLint fallback.`));
+        resolve();
         return;
       }
 
-      console.log(getMessage(folder, `⚠️ Local ${step.name} failed, trying Docker fallback...`));
+      console.log(getMessage(folder, `⚠️ Local ESLint failed, trying Docker fallback...`));
 
       try {
         await execAsync(
-          `docker compose -f docker-compose.yml exec -T ${container} sh -c "cd /bookcars/${folder} && ${step.command}"`
+          `docker compose -f docker-compose.yml exec -T ${container} sh -c "cd /bookcars/${folder} && npx eslint ${lintTargets.join(' ')} --cache-location .eslintcache"`
         );
-        console.log(getMessage(folder, `✅ ${step.name} passed (in Docker).`));
+        console.log(getMessage(folder, `✅ ESLint passed (in Docker).`));
         resolve();
       } catch (dockerError) {
-        console.log(getMessage(folder, `❌ ${step.name} failed in Docker too.`));
+        console.log(getMessage(folder, `❌ ESLint failed in Docker too.`));
+        reject(dockerError);
+      }
+    }
+  });
+};
+
+const runTypeCheckStep = (folder) => {
+  return new Promise(async (resolve, reject) => {
+    console.log(getMessage(folder, `🔍 Running TypeScript check...`));
+
+    const cwd = folder;
+    let fallbackToDocker = !insideDocker;
+
+    try {
+      await execAsync('npm run type-check', { cwd });
+      console.log(getMessage(folder, `✅ TypeScript check passed.`));
+      resolve();
+    } catch (error) {
+      if (!fallbackToDocker) {
+        console.log(getMessage(folder, `⚠️ TypeScript check failed locally, but fallback disabled (inside Docker). Skipping.`));
+        resolve();
+        return;
+      }
+
+      const container = containerMap[folder];
+      if (!container) {
+        console.log(getMessage(folder, `⚠️ No Docker container configured. Skipping TypeScript fallback.`));
+        resolve();
+        return;
+      }
+
+      console.log(getMessage(folder, `⚠️ Local TypeScript check failed, trying Docker fallback...`));
+
+      try {
+        await execAsync(
+          `docker compose -f docker-compose.yml exec -T ${container} sh -c "cd /bookcars/${folder} && npm run type-check"`
+        );
+        console.log(getMessage(folder, `✅ TypeScript check passed (in Docker).`));
+        resolve();
+      } catch (dockerError) {
+        console.log(getMessage(folder, `❌ TypeScript check failed in Docker too.`));
         reject(dockerError);
       }
     }
@@ -90,6 +162,9 @@ const runStep = (folder, step) => {
 
 (async () => {
   try {
+    const changedFiles = await getChangedFiles();
+    const projectFiles = groupFilesByFolder(changedFiles);
+
     const tasks = [];
 
     for (const folder of folders) {
@@ -97,8 +172,14 @@ const runStep = (folder, step) => {
         console.log(`⚠️ Skipping missing folder: ${folder}`);
         continue;
       }
-      for (const step of steps) {
-        tasks.push(runStep(folder, step));
+
+      const files = projectFiles[folder];
+
+      if (files.length > 0) {
+        tasks.push(runLintStep(folder, files));    // Only lint if files changed
+        tasks.push(runTypeCheckStep(folder));       // Only type-check if files changed
+      } else {
+        console.log(getMessage(folder, 'ℹ️ No changed files. Skipping.'));
       }
     }
 
