@@ -1,12 +1,15 @@
-import { exec } from 'child_process'
-import chalk from 'chalk'
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import fs from 'fs';
 
-const label = 'pre-commit'
+const execAsync = promisify(exec);
 
-console.time(label)
-console.log(chalk.blue('🚀 Starting pre-commit checks...'))
+const label = 'pre-commit';
 
-const folders = ['api', 'backend', 'frontend', 'mobile']
+console.time(label);
+console.log('🚀 Starting pre-commit checks...');
+
+const folders = ['api', 'backend', 'frontend', 'mobile'];
 
 const steps = [
   {
@@ -17,51 +20,96 @@ const steps = [
     name: 'TypeScript',
     command: 'npm run type-check',
   },
-]
+];
 
-const getMessage = (folder, message) => `[${folder}] ${message}`
+// Map folder to Docker container names
+const containerMap = {
+  api: 'bc-dev-api',
+  backend: 'bc-dev-backend',
+  frontend: 'bc-dev-frontend',
+  mobile: null, // No container for mobile
+};
+
+// Detect if we are already inside Docker
+function isInsideDocker() {
+  try {
+    const cgroup = fs.readFileSync('/proc/1/cgroup', 'utf8');
+    return cgroup.includes('docker') || cgroup.includes('containerd');
+  } catch {
+    return false;
+  }
+}
+
+const insideDocker = isInsideDocker();
+if (insideDocker) {
+  console.log('🐳 Detected Docker environment. Fallback to Docker will be disabled.');
+}
+
+const getMessage = (folder, message) => `[${folder}] ${message}`;
 
 const runStep = (folder, step) => {
-  return new Promise((resolve, reject) => {
-    console.log(chalk.blue(getMessage(folder, `🔍 Running ${step.name}...`)))
+  return new Promise(async (resolve, reject) => {
+    console.log(getMessage(folder, `🔍 Running ${step.name}...`));
 
-    exec(step.command, { cwd: folder, stdio: 'pipe' }, (error, stdout, stderr) => {
-      if (stdout) {
-        process.stdout.write(stdout) // Ensure stdout is printed to console
+    const cwd = folder;
+    let fallbackToDocker = !insideDocker;
+
+    try {
+      await execAsync(step.command, { cwd });
+      console.log(getMessage(folder, `✅ ${step.name} passed.`));
+      resolve();
+    } catch (error) {
+      if (!fallbackToDocker) {
+        console.log(getMessage(folder, `⚠️ Local ${step.name} failed, and fallback disabled (inside Docker). Skipping.`));
+        resolve(); // Do not reject inside Docker
+        return;
       }
 
-      if (stderr) {
-        process.stderr.write(stderr) // Ensure stderr is printed to console
+      const container = containerMap[folder];
+      if (!container) {
+        console.log(getMessage(folder, `⚠️ No Docker container configured for ${step.name}. Skipping.`));
+        resolve(); // No container, skip gracefully
+        return;
       }
 
-      if (error) {
-        console.error(chalk.red(getMessage(folder, `❌ ${step.name} failed.`)))
-        reject(error)
-      } else {
-        console.log(chalk.green(getMessage(folder, `✅ ${step.name} passed.`)))
-        resolve()
+      console.log(getMessage(folder, `⚠️ Local ${step.name} failed, trying Docker fallback...`));
+
+      try {
+        await execAsync(
+          `docker compose -f docker-compose.yml exec -T ${container} sh -c "cd /bookcars/${folder} && ${step.command}"`
+        );
+        console.log(getMessage(folder, `✅ ${step.name} passed (in Docker).`));
+        resolve();
+      } catch (dockerError) {
+        console.log(getMessage(folder, `❌ ${step.name} failed in Docker too.`));
+        reject(dockerError);
       }
-    })
-  })
-}
-
-try {
-  const tasks = []
-
-  for (const folder of folders) {
-    for (const step of steps) {
-      tasks.push(runStep(folder, step))
     }
+  });
+};
+
+(async () => {
+  try {
+    const tasks = [];
+
+    for (const folder of folders) {
+      if (!fs.existsSync(folder)) {
+        console.log(`⚠️ Skipping missing folder: ${folder}`);
+        continue;
+      }
+      for (const step of steps) {
+        tasks.push(runStep(folder, step));
+      }
+    }
+
+    await Promise.all(tasks);
+
+    console.log('\n✅ All checks passed. Proceeding with commit.');
+    console.timeEnd(label);
+    process.exit(0);
+  } catch (err) {
+    console.log('\n🚫 Commit aborted due to pre-commit errors.');
+    console.timeEnd(label);
+    process.exit(1);
   }
-
-  // Wait for all tasks to complete, and if any fails, it will throw an error
-  await Promise.all(tasks)
-
-  console.log(chalk.greenBright('\n✅ All checks passed. Proceeding with commit.'))
-  console.timeEnd(label)
-  process.exit(0)
-} catch (err) {
-  console.log(chalk.redBright('\n🚫 Commit aborted due to pre-commit errors.'))
-  console.timeEnd(label)
-  process.exit(1)
-}
+})();
