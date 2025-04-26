@@ -513,9 +513,9 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
  * @async
  * @param {Request} req
  * @param {Response} res
- * @returns {unknown}
+ * @returns {Promise<void>}
  */
-export const getBackendSuppliers = async (req: Request, res: Response) => {
+export const getBackendSuppliers = async (req: Request, res: Response): Promise<void> => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const {
@@ -645,7 +645,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     res.json(data)
   } catch (err) {
     logger.error(`[supplier.getBackendSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

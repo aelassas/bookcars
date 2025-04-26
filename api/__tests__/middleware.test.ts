@@ -38,7 +38,7 @@ describe('POST /api/sign-in/backend', () => {
       password: testHelper.PASSWORD,
     }
     let res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.backend}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
     const cookies = res.headers['set-cookie'] as unknown as string[]
@@ -47,7 +47,7 @@ describe('POST /api/sign-in/backend', () => {
 
     // test success (backend auth with origin)
     res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.backend}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
       .set('Origin', env.BACKEND_HOST)
       .send(payload)
     expect(res.statusCode).toBe(200)

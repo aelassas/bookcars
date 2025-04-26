@@ -179,7 +179,8 @@ export const bulkCreate = async (req: Request, res: Response) => {
   const { locations } = req.body
 
   if (!locations || !Array.isArray(locations)) {
-    return res.status(400).send('Invalid locations data')
+    res.status(400).send('Invalid locations data')
+    return
   }
 
   const results = {
@@ -258,10 +259,10 @@ export const bulkCreate = async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(200).json(results)
+    res.json(results)
   } catch (err) {
-    logger.error(`[location.bulkCreate] ${i18n.t('DB_ERROR')}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[location.bulkCreate] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

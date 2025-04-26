@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"fullName":{"$numberInt":"1"}},"name":"fullName_1","background":true},{"v":{"$numberInt":"2"},"key":{"email":{"$numberInt":"1"}},"name":"email_1","background":true}],"uuid":"44d2098ff1f34ba1a538d2987182571d","collectionName":"AdditionalDriver","type":"collection"}
