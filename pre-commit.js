@@ -15,7 +15,7 @@ const containerMap = {
   api: 'bc-dev-api',
   backend: 'bc-dev-backend',
   frontend: 'bc-dev-frontend',
-  mobile: null, // Mobile has no Docker container
+  mobile: null, // Mobile does not have a container
 };
 
 const dockerComposeFile = 'docker-compose.dev.yml';
@@ -38,6 +38,17 @@ async function isDockerRunning() {
   }
 }
 
+async function isContainerRunning(containerName) {
+  try {
+    const { stdout } = await execAsync(
+      `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`
+    );
+    return stdout.trim().includes(containerName);
+  } catch {
+    return false;
+  }
+}
+
 function getMessage(folder, message) {
   return `[${folder}] ${message}`;
 }
@@ -53,7 +64,7 @@ async function getChangedFiles() {
 }
 
 function groupFilesByFolder(files) {
-  const projectFiles = Object.fromEntries(folders.map(f => [f, []]));
+  const projectFiles = Object.fromEntries(folders.map((f) => [f, []]));
 
   for (const file of files) {
     for (const folder of folders) {
@@ -68,88 +79,90 @@ function groupFilesByFolder(files) {
   return projectFiles;
 }
 
-async function runLintStep(folder, files, fallbackToDocker) {
+async function runCommand(command, cwd) {
+  try {
+    const { stdout, stderr } = await execAsync(command, { cwd });
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (error) {
+    if (error.stdout) console.log(error.stdout);
+    if (error.stderr) console.error(error.stderr);
+    throw error;
+  }
+}
+
+async function runLintStep(folder, files, runInDocker) {
   if (files.length === 0) return;
 
   console.log(getMessage(folder, `🔍 Running ESLint on ${files.length} file(s)...`));
-  const cwd = folder;
-  const lintTargets = files.filter(f => f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.js') || f.endsWith('.jsx'));
+
+  const lintTargets = files.filter((f) =>
+    f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.js') || f.endsWith('.jsx')
+  );
 
   if (lintTargets.length === 0) {
     console.log(getMessage(folder, `ℹ️ No lintable files.`));
     return;
   }
 
-  try {
-    await execAsync(`eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache`, { cwd });
-    console.log(getMessage(folder, `✅ ESLint passed.`));
-  } catch {
-    if (!fallbackToDocker) {
-      console.log(getMessage(folder, `⚠️ ESLint failed locally, and no Docker fallback available.`));
-      return;
-    }
+  const container = containerMap[folder];
 
-    const container = containerMap[folder];
-    if (!container) {
-      console.log(getMessage(folder, `⚠️ No Docker container configured. Skipping ESLint fallback.`));
-      return;
-    }
-
-    console.log(getMessage(folder, `⚠️ Local ESLint failed. Trying Docker fallback...`));
-    try {
-      await execAsync(
-        `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npx eslint ${lintTargets.join(' ')} --cache-location .eslintcache"`
-      );
-      console.log(getMessage(folder, `✅ ESLint passed (in Docker).`));
-    } catch (dockerError) {
-      console.log(getMessage(folder, `❌ ESLint failed in Docker too.`));
-      throw dockerError;
-    }
+  if (runInDocker && container) {
+    await runCommand(
+      `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npx eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache"`,
+      process.cwd()
+    );
+  } else {
+    await runCommand(
+      `npx eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache`,
+      folder
+    );
   }
+
+  console.log(getMessage(folder, `✅ ESLint passed.`));
 }
 
-async function runTypeCheckStep(folder, fallbackToDocker) {
+async function runTypeCheckStep(folder, runInDocker) {
   console.log(getMessage(folder, `🔍 Running TypeScript check...`));
-  const cwd = folder;
 
-  try {
-    await execAsync('npm run type-check', { cwd });
-    console.log(getMessage(folder, `✅ TypeScript check passed.`));
-  } catch {
-    if (!fallbackToDocker) {
-      console.log(getMessage(folder, `⚠️ TypeScript check failed locally, and no Docker fallback available.`));
-      return;
-    }
+  const container = containerMap[folder];
 
-    const container = containerMap[folder];
-    if (!container) {
-      console.log(getMessage(folder, `⚠️ No Docker container configured. Skipping TypeScript fallback.`));
-      return;
-    }
-
-    console.log(getMessage(folder, `⚠️ Local TypeScript check failed. Trying Docker fallback...`));
-    try {
-      await execAsync(
-        `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npm run type-check"`
-      );
-      console.log(getMessage(folder, `✅ TypeScript check passed (in Docker).`));
-    } catch (dockerError) {
-      console.log(getMessage(folder, `❌ TypeScript check failed in Docker too.`));
-      throw dockerError;
-    }
+  if (runInDocker && container) {
+    await runCommand(
+      `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npm run type-check"`,
+      process.cwd()
+    );
+  } else {
+    await runCommand('npm run type-check', folder);
   }
+
+  console.log(getMessage(folder, `✅ TypeScript check passed.`));
 }
 
 (async () => {
   try {
     const insideDocker = await isInsideDocker();
     const dockerRunning = await isDockerRunning();
-    const fallbackToDocker = !insideDocker && dockerRunning;
+
+    let runInDocker = false;
 
     if (insideDocker) {
-      console.log('🐳 Detected Docker environment. Docker fallback disabled.');
-    } else if (!dockerRunning) {
-      console.log('⚠️ Docker is not running. Docker fallback disabled.');
+      console.log('🐳 Inside Docker environment. Running checks locally.');
+    } else if (dockerRunning) {
+      const containersNeeded = Object.values(containerMap).filter(Boolean);
+      const runningContainers = await Promise.all(
+        containersNeeded.map(isContainerRunning)
+      );
+      const allContainersRunning = runningContainers.every(Boolean);
+
+      if (allContainersRunning) {
+        console.log('🐳 Docker and containers are running. Running checks inside Docker.');
+        runInDocker = true;
+      } else {
+        console.log('⚠️ Docker is running, but some containers are not. Running checks locally.');
+      }
+    } else {
+      console.log('⚠️ Docker is not running. Running checks locally.');
     }
 
     const changedFiles = await getChangedFiles();
@@ -166,8 +179,8 @@ async function runTypeCheckStep(folder, fallbackToDocker) {
       const files = projectFiles[folder];
 
       if (files.length > 0) {
-        tasks.push(runLintStep(folder, files, fallbackToDocker));
-        tasks.push(runTypeCheckStep(folder, fallbackToDocker));
+        tasks.push(runLintStep(folder, files, runInDocker));
+        tasks.push(runTypeCheckStep(folder, runInDocker));
       } else {
         console.log(getMessage(folder, 'ℹ️ No changed files. Skipping.'));
       }
@@ -179,7 +192,7 @@ async function runTypeCheckStep(folder, fallbackToDocker) {
     console.timeEnd(label);
     process.exit(0);
   } catch (err) {
-    console.log('\n🚫 Commit aborted due to pre-commit errors.');
+    console.error('\n🚫 Commit aborted due to pre-commit errors.');
     console.timeEnd(label);
     process.exit(1);
   }
