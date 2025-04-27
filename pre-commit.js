@@ -155,7 +155,7 @@ async function runTypeCheckStep(folder, runInDocker) {
     let runInDocker = false
 
     if (insideDocker) {
-      console.log('🐳 Inside Docker environment. Running checks locally.')
+      console.log('🐳 Inside Docker environment. Running checks locally...')
     } else if (dockerRunning) {
       const containersNeeded = Object.values(containerMap).filter(Boolean)
       const runningContainers = await Promise.all(
@@ -164,13 +164,13 @@ async function runTypeCheckStep(folder, runInDocker) {
       const allContainersRunning = runningContainers.every(Boolean)
 
       if (allContainersRunning) {
-        console.log('🐳 Docker and containers are running. Running checks inside Docker.')
+        console.log('🐳 Docker and containers are running. Running checks inside Docker...')
         runInDocker = true
       } else {
-        console.log('⚠️  Docker is running, but some containers are not. Running checks locally.')
+        console.log('⚠️  Docker is running, but some containers are not. Running checks locally...')
       }
     } else {
-      console.log('⚠️  Docker is not running. Running checks locally.')
+      console.log('⚠️  Docker is not running. Running checks locally...')
     }
 
     const changedFiles = await getChangedFiles()
