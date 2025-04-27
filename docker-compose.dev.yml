@@ -38,7 +38,7 @@ services:
       - cdn:/var/www/cdn/bookcars
       - ./api:/bookcars/api
       - /bookcars/api/node_modules
-      - api_logs:/wexcommerce/api/logs
+      - api_logs:/bookcars/api/logs
 
   bc-dev-backend:
     build:
