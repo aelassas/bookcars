@@ -1,6 +1,7 @@
-import { exec } from 'child_process'
-import { promisify } from 'util'
-import fs from 'fs'
+import { exec } from 'node:child_process'
+import { promisify } from 'node:util'
+import fs from 'node:fs'
+import asyncFs from 'node:fs/promises'
 
 const execAsync = promisify(exec)
 
@@ -21,7 +22,7 @@ const dockerComposeFile = 'docker-compose.dev.yml'
 
 async function isInsideDocker() {
   try {
-    const cgroup = await fs.promises.readFile('/proc/1/cgroup', 'utf8')
+    const cgroup = await asyncFs.readFile('/proc/1/cgroup', 'utf8')
     return cgroup.includes('docker') || cgroup.includes('containerd')
   } catch {
     return false
@@ -166,10 +167,10 @@ async function runTypeCheckStep(folder, runInDocker) {
         console.log('🐳 Docker and containers are running. Running checks inside Docker.')
         runInDocker = true
       } else {
-        console.log('⚠️ Docker is running, but some containers are not. Running checks locally.')
+        console.log('⚠️  Docker is running, but some containers are not. Running checks locally.')
       }
     } else {
-      console.log('⚠️ Docker is not running. Running checks locally.')
+      console.log('⚠️  Docker is not running. Running checks locally.')
     }
 
     const changedFiles = await getChangedFiles()
@@ -179,7 +180,7 @@ async function runTypeCheckStep(folder, runInDocker) {
 
     for (const folder of folders) {
       if (!fs.existsSync(folder)) {
-        console.log(`⚠️ Skipping missing folder: ${folder}`)
+        console.log(`⚠️  Skipping missing folder: ${folder}`)
         continue
       }
 
