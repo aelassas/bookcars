@@ -45,12 +45,8 @@ function logError(message, ...args) {
 }
 
 function logFolderError(folder, message, ...args) {
-  error(formatMessage(folder, message), ...args)
+  logError(formatMessage(folder, message), ...args)
 }
-
-const label = 'pre-commit'
-console.time(label)
-log('🚀 Starting pre-commit checks...')
 
 async function isInsideDocker() {
   try {
@@ -73,7 +69,7 @@ async function isDockerRunning() {
 async function isContainerRunning(containerName) {
   try {
     const { stdout } = await execAsync(
-      `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`
+      `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`,
     )
     return stdout.trim().includes(containerName)
   } catch {
@@ -93,59 +89,64 @@ async function getChangedFiles() {
 
 function groupFilesByFolder(files) {
   const projectFiles = Object.fromEntries(folders.map((folder) => [folder, []]))
+  const folderSet = new Set(folders) // create a quick lookup
 
   for (const file of files) {
-    for (const folder of folders) {
-      if (file.startsWith(`${folder}/`)) {
-        const relativePath = file.substring(folder.length + 1)
-        projectFiles[folder].push(relativePath)
-        break
-      }
+    const [folder, ...rest] = file.split('/')
+    if (folderSet.has(folder)) {
+      projectFiles[folder].push(rest.join('/'))
     }
   }
 
   return projectFiles
 }
 
-async function runCommand(command, cwd) {
+async function run(command, options = {}) {
   try {
-    const { stdout, stderr } = await execAsync(command, { cwd })
-    if (stdout) process.stdout.write(stdout)
-    if (stderr) process.stderr.write(stderr)
+    const { stdout, stderr } = await execAsync(command, options)
+    if (stdout) {
+      process.stdout.write(stdout)
+    }
+    if (stderr) {
+      process.stderr.write(stderr)
+    }
   } catch (err) {
-    if (err.stdout) process.stdout.write(err.stdout)
-    if (err.stderr) process.stderr.write(err.stderr)
+    if (err.stdout) {
+      process.stdout.write(err.stdout)
+    }
+    if (err.stderr) {
+      process.stderr.write(err.stderr)
+    }
     throw err
   }
 }
 
-async function runLintStep(folder, files, runInDocker) {
-  if (files.length === 0) return
+async function runInContext(folder, cmd, runInDocker) {
+  const container = containerMap[folder]
+  if (runInDocker && container) {
+    const dockerCmd = `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && ${cmd}"`
+    return run(dockerCmd, { cwd: process.cwd() })
+  }
+  return run(cmd, { cwd: folder })
+}
+
+async function lint(folder, files, runInDocker) {
+  if (files.length === 0) {
+    return
+  }
 
   logFolder(folder, `🔍 Running ESLint on ${files.length} file(s)...`)
 
   // Filter files to include only TypeScript and JavaScript files (.ts, .tsx, .js, .jsx)
-  const lintTargets = files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file))
+  const targets = files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file))
 
-  if (lintTargets.length === 0) {
+  if (targets.length === 0) {
     logFolder(folder, `ℹ️ No lintable files.`)
     return
   }
 
-  const container = containerMap[folder]
-
   try {
-    if (runInDocker && container) {
-      await runCommand(
-        `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npx eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache"`,
-        process.cwd()
-      )
-    } else {
-      await runCommand(
-        `npx eslint ${lintTargets.join(' ')} --cache --cache-location .eslintcache`,
-        folder
-      )
-    }
+    await runInContext(folder, `npx eslint ${targets.join(' ')} --cache --cache-location .eslintcache`, runInDocker)
     logFolder(folder, `✅ ESLint passed.`)
   } catch (err) {
     logFolderError(folder, `❌ ESLint failed.`)
@@ -153,20 +154,11 @@ async function runLintStep(folder, files, runInDocker) {
   }
 }
 
-async function runTypeCheckStep(folder, runInDocker) {
+async function typeCheck(folder, runInDocker) {
   logFolder(folder, `🔍 Running TypeScript check...`)
 
-  const container = containerMap[folder]
-
   try {
-    if (runInDocker && container) {
-      await runCommand(
-        `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && npm run type-check"`,
-        process.cwd()
-      )
-    } else {
-      await runCommand('npm run type-check', folder)
-    }
+    await runInContext(folder, `npm run type-check`, runInDocker)
     logFolder(folder, `✅ TypeScript check passed.`)
   } catch (err) {
     logFolderError(folder, `❌ TypeScript check failed.`)
@@ -174,7 +166,11 @@ async function runTypeCheckStep(folder, runInDocker) {
   }
 }
 
-(async () => {
+async function runPreCommitChecks() {
+  const label = 'pre-commit'
+  console.time(label)
+  log('🚀 Starting pre-commit checks...')
+
   try {
     const insideDocker = await isInsideDocker()
     const dockerRunning = await isDockerRunning()
@@ -185,17 +181,14 @@ async function runTypeCheckStep(folder, runInDocker) {
       log('🐳 Inside Docker environment. Running checks locally...')
     } else if (dockerRunning) {
       const containersNeeded = Object.values(containerMap).filter(Boolean)
-      const runningContainers = await Promise.all(
-        containersNeeded.map(isContainerRunning)
-      )
-      const allContainersRunning = runningContainers.every(Boolean)
+      const runningContainers = await Promise.all(containersNeeded.map(isContainerRunning))
+      runInDocker = runningContainers.every(Boolean)
 
-      if (allContainersRunning) {
-        log('🐳 Docker and containers are running. Running checks inside Docker...')
-        runInDocker = true
-      } else {
-        log('⚠️ Docker is running, but some containers are not. Running checks locally...')
-      }
+      log(
+        runInDocker
+          ? '🐳 Docker and containers are running. Running checks inside Docker...'
+          : '⚠️ Docker is running, but some containers are not. Running checks locally...'
+      )
     } else {
       log('⚠️ Docker is not running. Running checks locally...')
     }
@@ -213,12 +206,13 @@ async function runTypeCheckStep(folder, runInDocker) {
 
       const files = projectFiles[folder]
 
-      if (files.length > 0) {
-        tasks.push(runLintStep(folder, files, runInDocker))
-        tasks.push(runTypeCheckStep(folder, runInDocker))
-      } else {
+      if (files.length === 0) {
         logFolder(folder, 'ℹ️ No changed files. Skipping.')
+        continue
       }
+
+      tasks.push(lint(folder, files, runInDocker))
+      tasks.push(typeCheck(folder, runInDocker))
     }
 
     // Wait for all tasks to complete, and if any fails, it will throw an error
@@ -232,4 +226,6 @@ async function runTypeCheckStep(folder, runInDocker) {
     console.timeEnd(label)
     process.exit(1)
   }
-})()
+}
+
+runPreCommitChecks()
