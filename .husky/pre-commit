@@ -1,6 +1,3 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-echo "🔧 Running lint and type-check on all projects..."
 
 npm run pre-commit
