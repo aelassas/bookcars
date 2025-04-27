@@ -4,5 +4,6 @@
     ],
     "ext": "ts",
     "ignore": [],
-    "exec": "tsx --experimental-specifier-resolution=node ./src"
+    "exec": "tsx --experimental-specifier-resolution=node ./src",
+    "legacyWatch": true
 }

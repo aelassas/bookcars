@@ -98,3 +98,5 @@ ios/
 **/*-firebase-*.json
 **/*.jks
 *.tsbuildinfo
+
+.eslintcache

@@ -94,17 +94,21 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     // Send email
     i18n.locale = user.language
 
+    const activationLink = `http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}`
+
     const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
-        `<p>
-    ${i18n.t('HELLO')}${user.fullName},<br><br>
-    ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-    http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-    ${i18n.t('REGARDS')}<br>
-    </p>`,
+        `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <p style="font-size: 16px; color: #555;">
+            ${i18n.t('HELLO')} ${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            <a href="${activationLink}" target="_blank">${activationLink}</a><br><br>
+            ${i18n.t('REGARDS')}<br>
+          </p>
+        </div>`,
     }
     await mailHelper.sendMail(mailOptions)
     res.sendStatus(200)
@@ -378,22 +382,25 @@ export const resend = async (req: Request, res: Response) => {
 
       const reset = req.params.reset === 'true'
 
+      const activationOrResetLink = `${helper.joinURL(
+        user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
+        reset ? 'reset-password' : 'activate',
+      )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}`
+
       const mailOptions: nodemailer.SendMailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
         subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
         html:
-          `<p>
-          ${i18n.t('HELLO')}${user.fullName},<br><br>  
-          ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
-          ${helper.joinURL(
-            user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
-            reset ? 'reset-password' : 'activate',
-          )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${i18n.t('REGARDS')}<br>
-          </p>`,
+          `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+            <p style="font-size: 16px; color: #555;">
+              ${i18n.t('HELLO')} ${user.fullName},<br><br>  
+              ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
+              <a href="${activationOrResetLink}" target="_blank">${activationOrResetLink}</a><br><br>
+              ${i18n.t('REGARDS')}<br>
+            </p>
+          </div>`,
       }
-
       await mailHelper.sendMail(mailOptions)
       res.sendStatus(200)
       return
@@ -924,17 +931,22 @@ export const resendLink = async (req: Request, res: Response) => {
 
     // Send email
     i18n.locale = user.language
+
+    const activateLink = `http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}`
+
     const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
-        `<p>
-        ${i18n.t('HELLO')}${user.fullName},<br><br>
-        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-        http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${i18n.t('REGARDS')}<br>
-        </p>`,
+        `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <p style="font-size: 16px; color: #555;">
+            ${i18n.t('HELLO')} ${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            <a href="${activateLink}" target="_blank">${activateLink}</a><br><br>
+            ${i18n.t('REGARDS')}<br>
+          </p>
+        </div>`,
     }
 
     await mailHelper.sendMail(mailOptions)

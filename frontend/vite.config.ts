@@ -14,7 +14,7 @@ export default ({ mode }: { mode: string }) => {
         babel: {
           plugins: [
             ['@babel/plugin-transform-runtime'],
-            // ['babel-plugin-react-compiler', { optimize: true }],
+            ['babel-plugin-react-compiler', { optimize: true }],
           ],
         },
       }),
@@ -40,10 +40,10 @@ export default ({ mode }: { mode: string }) => {
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '8080', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
       watch: {
         usePolling: true,
-        interval: 100,
+        interval: 500,
       },
       hmr: {
         protocol: 'ws',
