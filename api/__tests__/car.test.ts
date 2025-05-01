@@ -2,7 +2,7 @@ import 'dotenv/config'
 import request from 'supertest'
 import url from 'url'
 import path from 'path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -77,8 +77,8 @@ describe('POST /api/create-car', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!(await helper.exists(tempImage))) {
-      await fs.copyFile(IMAGE1_PATH, tempImage)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(IMAGE1_PATH, tempImage)
     }
     const payload: bookcarsTypes.CreateCarPayload = {
       loggedUser: SUPPLIER1_ID,
@@ -157,8 +157,8 @@ describe('POST /api/create-car', () => {
     CAR1_ID = res.body._id
 
     // test success date based price
-    if (!(await helper.exists(tempImage))) {
-      await fs.copyFile(IMAGE1_PATH, tempImage)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(IMAGE1_PATH, tempImage)
     }
     const startDate1 = new Date()
     const endDate1 = new Date(startDate1)
@@ -413,13 +413,13 @@ describe('POST /api/delete-car-image/:id', () => {
     // test success
     const car = await Car.findById(CAR1_ID)
     const image = path.join(env.CDN_CARS, car?.image as string)
-    let imageExists = await helper.exists(image)
+    let imageExists = await helper.pathExists(image)
     expect(imageExists).toBeTruthy()
     let res = await request(app)
       .post(`/api/delete-car-image/${CAR1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    imageExists = await helper.exists(image)
+    imageExists = await helper.pathExists(image)
     expect(imageExists).toBeFalsy()
 
     // test success (no image)
@@ -466,9 +466,9 @@ describe('POST /api/create-car-image', () => {
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const filePath = path.join(env.CDN_TEMP_CARS, filename)
-    const imageExists = await helper.exists(filePath)
+    const imageExists = await helper.pathExists(filePath)
     expect(imageExists).toBeTruthy()
-    await fs.unlink(filePath)
+    await asyncFs.unlink(filePath)
 
     // test failure (image file not attached)
     res = await request(app)
@@ -491,7 +491,7 @@ describe('POST /api/update-car-image/:id', () => {
       .attach('image', IMAGE2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    const imageExists = await helper.exists(path.join(env.CDN_CARS, filename))
+    const imageExists = await helper.pathExists(path.join(env.CDN_CARS, filename))
     expect(imageExists).toBeTruthy()
     const car = await Car.findById(CAR1_ID)
     expect(car).not.toBeNull()
@@ -545,14 +545,14 @@ describe('POST /api/delete-temp-car-image/:image', () => {
 
     // test success
     const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-    if (!(await helper.exists(tempImage))) {
-      await fs.copyFile(IMAGE1_PATH, tempImage)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(IMAGE1_PATH, tempImage)
     }
     let res = await request(app)
       .post(`/api/delete-temp-car-image/${IMAGE1}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    const tempImageExists = await helper.exists(tempImage)
+    const tempImageExists = await helper.pathExists(tempImage)
     expect(tempImageExists).toBeFalsy()
 
     // test failure (image not found)
