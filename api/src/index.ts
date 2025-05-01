@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import process from 'node:process'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import http from 'node:http'
 import https, { ServerOptions } from 'node:https'
 import * as env from './config/env.config'
@@ -13,8 +13,8 @@ if ((await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) && (awa
 
   if (env.HTTPS) {
     https.globalAgent.maxSockets = Number.POSITIVE_INFINITY
-    const privateKey = await fs.readFile(env.PRIVATE_KEY, 'utf8')
-    const certificate = await fs.readFile(env.CERTIFICATE, 'utf8')
+    const privateKey = await asyncFs.readFile(env.PRIVATE_KEY, 'utf8')
+    const certificate = await asyncFs.readFile(env.CERTIFICATE, 'utf8')
     const credentials: ServerOptions = { key: privateKey, cert: certificate }
     server = https.createServer(credentials, app)
 
