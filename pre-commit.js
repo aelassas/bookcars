@@ -108,7 +108,7 @@ const run = async (command, options = {}) => {
   try {
     const { stdout, stderr } = await execAsync(command, {
       ...options,
-      maxBuffer: 10 * 1024 * 1024  // Increase buffer to 10MB
+      maxBuffer: 10 * 1024 * 1024 // Increase buffer to 10MB
     })
 
     if (stdout) {
