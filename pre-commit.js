@@ -93,11 +93,36 @@ const isContainerRunning = async (containerName) => {
   }
 }
 
+const getChangedFiles = async () => {
+  try {
+    const { stdout } = await execAsync('git diff --cached --name-only')
+    return stdout.trim().split('\n').filter(Boolean)
+  } catch (err) {
+    logError('❌ Failed to get changed files:', err)
+    return []
+  }
+}
+
+const groupFilesByFolder = (files) => {
+  const folders = Object.values(config.projects).map((project) => project.folder)
+  const projectFiles = Object.fromEntries(folders.map((folder) => [folder, []]))
+  const folderSet = new Set(folders) // Create a quick lookup
+
+  for (const file of files) {
+    const [folder, ...rest] = file.split('/')
+    if (folderSet.has(folder)) {
+      projectFiles[folder].push(rest.join('/'))
+    }
+  }
+
+  return projectFiles
+}
+
 const getChangedFilesInProject = async (project) => {
   try {
     const { folder } = project
     const { stdout } = await execAsync(`git diff --cached --name-only ${folder}/`)
-    return stdout.trim().split('\n').filter(Boolean).map(file => file.replace(`${folder}/`, ''))
+    return stdout.trim().split('\n').filter(Boolean).map((file) => file.replace(`${folder}/`, ''))
   } catch (err) {
     logProjectError(project, '❌ Failed to get changed files:', err)
     return []
@@ -135,20 +160,19 @@ const escapeShellArg = (arg) => {
 const runInContext = async (project, cmd, runInDocker) => {
   const { folder, container } = project
 
-  // Sanitize the folder to prevent directory traversal or invalid names
-  const safeFolder = escapeShellArg(folder)
-  const safeCmd = escapeShellArg(cmd)
+  const safeFolder = escapeShellArg(folder) // Sanitize the folder to prevent directory traversal or invalid names
+  const safeCmd = escapeShellArg(cmd) // Sanitize the command to prevent injection attacks
 
   if (runInDocker && container) {
-    // Construct the Docker command with sanitized inputs
     const dockerCmd = `docker compose -f ${config.dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${safeFolder} && ${safeCmd}"`
-
     return run(dockerCmd, { cwd: process.cwd() })
   }
   return run(safeCmd, { cwd: safeFolder })
 }
 
-const filterFiles = (files, regex) => files.filter(file => regex.test(file))
+const filterFiles = (files, regex) => {
+  return files.filter((file) => regex.test(file))
+}
 
 const lint = async (project, files, runInDocker) => {
   if (files.length === 0) {
@@ -264,8 +288,8 @@ const main = async () => {
       log('🐳 Inside Docker environment. Running checks locally...')
     } else if (dockerRunning) {
       const containersNeeded = Object.values(config.projects)
-        .filter((project) => project.container)  // Only projects with a container defined
-        .map((project) => project.container)  // Extract container names
+        .filter((project) => project.container)
+        .map((project) => project.container)
       const runningContainers = await Promise.all(containersNeeded.map(isContainerRunning))
       runInDocker = runningContainers.every(Boolean)
 
@@ -278,27 +302,30 @@ const main = async () => {
       log('⚠️ Docker is not running. Running checks locally...')
     }
 
+    const changedfiles = await getChangedFiles()
+    const projectFiles = groupFilesByFolder(changedfiles)
     const tasks = []
 
     for (const [projectName, project] of Object.entries(config.projects)) {
-      if (!('folder' in project)) {
-        logProjectError({ folder: projectName }, '❌ Missing folder config. Skipping.')
+      const { folder, checks } = project
+
+      if (!folder) {
+        logProject({ folder: projectName }, '⚠️ Missing folder config. Skipping.')
         continue
       }
 
       if (!('container' in project)) {
-        logProjectError(project, '❌ Missing container config. Skipping.')
+        logProject(project, '⚠️ Missing container config. Skipping.')
         continue
       }
-
-      const { folder, checks } = project
 
       if (!(await pathExists(folder))) {
-        log(`⚠️ Skipping missing folder: ${folder}`)
+        logProject(project,`⚠️ Folder not found. Skipping.`)
         continue
       }
 
-      const files = await getChangedFilesInProject(project) // Get only relevant changed files
+      const files = projectFiles[folder]
+      // const files = await getChangedFilesInProject(project) // This is slow
 
       if (files.length === 0) {
         logProject(project, 'ℹ️ No changed files. Skipping.')
@@ -310,22 +337,22 @@ const main = async () => {
         continue
       }
 
-      const folderChecks = []
+      const folderTasks = []
 
       if (checks.includes('lint')) {
-        folderChecks.push(lint(project, files, runInDocker))
+        folderTasks.push(lint(project, files, runInDocker))
       }
 
       if (checks.includes('typeCheck')) {
-        folderChecks.push(typeCheck(project, files, runInDocker))
+        folderTasks.push(typeCheck(project, files, runInDocker))
       }
 
       if (checks.includes('sizeCheck')) {
-        folderChecks.push(checkFileSize(project, files))
+        folderTasks.push(checkFileSize(project, files))
       }
 
       // Run checks in parallel per folder
-      tasks.push(Promise.all(folderChecks))
+      tasks.push(Promise.all(folderTasks))
     }
 
     // Wait for all tasks to complete, and if any fails, it will throw an error
