@@ -315,7 +315,7 @@ const main = async () => {
       }
 
       if (!(await pathExists(folder))) {
-        logProject(project, `⚠️ Folder not found. Skipping.`)
+        logProject(project, '⚠️ Folder not found. Skipping.')
         continue
       }
 
