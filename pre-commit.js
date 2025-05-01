@@ -314,13 +314,8 @@ const main = async () => {
         continue
       }
 
-      if (!('container' in project)) {
-        logProject(project, '⚠️ Missing container config. Skipping.')
-        continue
-      }
-
       if (!(await pathExists(folder))) {
-        logProject(project,`⚠️ Folder not found. Skipping.`)
+        logProject(project, `⚠️ Folder not found. Skipping.`)
         continue
       }
 
