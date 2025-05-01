@@ -93,8 +93,7 @@ const docker = {
         `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`,
         { timeout: config.timeout },
       )
-      const isRunning = stdout.trim().includes(containerName)
-      return isRunning
+      return stdout.trim().includes(containerName)
     } catch {
       return false
     }
@@ -387,22 +386,22 @@ const main = async () => {
         continue
       }
 
-      const folderTasks = []
+      const projectTasks = []
 
       if (projectChecks.includes('lint')) {
-        folderTasks.push(checks.lint(project, files, runInDocker))
+        projectTasks.push(checks.lint(project, files, runInDocker))
       }
 
       if (projectChecks.includes('typeCheck')) {
-        folderTasks.push(checks.typeCheck(project, files, runInDocker))
+        projectTasks.push(checks.typeCheck(project, files, runInDocker))
       }
 
       if (projectChecks.includes('sizeCheck')) {
-        folderTasks.push(checks.sizeCheck(project, files))
+        projectTasks.push(checks.sizeCheck(project, files))
       }
 
       // Run checks in parallel per project
-      tasks.push(Promise.all(folderTasks))
+      tasks.push(Promise.all(projectTasks))
     }
 
     // Wait for all tasks to complete, and if any fails, it will throw an error
