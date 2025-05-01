@@ -1,13 +1,15 @@
 import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
+import path from 'node:path'
 import fs from 'node:fs'
 import asyncFs from 'node:fs/promises'
+import chalk from 'chalk'
 
 const execAsync = promisify(exec)
 
 const folders = ['api', 'backend', 'frontend', 'mobile']
 
-const containerMap = {
+const containers = {
   api: 'bc-dev-api',
   backend: 'bc-dev-backend',
   frontend: 'bc-dev-frontend',
@@ -16,7 +18,13 @@ const containerMap = {
 
 const dockerComposeFile = 'docker-compose.dev.yml'
 
-function fixMessage(message) {
+const config = {
+  maxFileSizeKB: 5 * 1024, // 5MB file size limit
+  lintFilter: /\.(ts|tsx|js|jsx)$/, // Lint only TypeScript and JavaScript files (.ts, .tsx, .js, .jsx)
+  typeCheckFilter: /\.(ts|tsx)$/, // Type-check only TypeScript files (.ts, .tsx)
+}
+
+const fixMessage = (message) => {
   const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
   if (isVSCodeTerminal) {
     message = message.replace(/(ℹ️|⚠️)/g, '$1 ')
@@ -24,27 +32,27 @@ function fixMessage(message) {
   return message
 }
 
-function formatMessage(folder, message) {
-  return `[${folder}] ${message}`
+const formatMessage = (folder, message) => {
+  return `[${chalk.cyan(folder)}] ${message}`
 }
 
-function log(message) {
+const log = (message) => {
   console.log(fixMessage(message))
 }
 
-function logFolder(folder, message) {
+const logFolder = (folder, message) => {
   log(formatMessage(folder, message))
 }
 
-function logError(message, ...args) {
-  console.error(fixMessage(message), ...args)
+const logError = (message, ...args) => {
+  console.error(chalk.red(fixMessage(message)), ...args)
 }
 
-function logFolderError(folder, message, ...args) {
+const logFolderError = (folder, message, ...args) => {
   logError(formatMessage(folder, message), ...args)
 }
 
-async function isInsideDocker() {
+const isInsideDocker = async () => {
   try {
     const cgroup = await asyncFs.readFile('/proc/1/cgroup', 'utf8')
     return cgroup.includes('docker') || cgroup.includes('containerd')
@@ -53,7 +61,7 @@ async function isInsideDocker() {
   }
 }
 
-async function isDockerRunning() {
+const isDockerRunning = async () => {
   try {
     await execAsync('docker info')
     return true
@@ -62,7 +70,7 @@ async function isDockerRunning() {
   }
 }
 
-async function isContainerRunning(containerName) {
+const isContainerRunning = async (containerName) => {
   try {
     const { stdout } = await execAsync(
       `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`,
@@ -73,7 +81,7 @@ async function isContainerRunning(containerName) {
   }
 }
 
-async function getChangedFiles() {
+const getChangedFiles = async () => {
   try {
     const { stdout } = await execAsync('git diff --cached --name-only')
     return stdout.trim().split('\n').filter(Boolean)
@@ -83,7 +91,7 @@ async function getChangedFiles() {
   }
 }
 
-function groupFilesByFolder(files) {
+const groupFilesByFolder = (files) => {
   const projectFiles = Object.fromEntries(folders.map((folder) => [folder, []]))
   const folderSet = new Set(folders) // create a quick lookup
 
@@ -97,9 +105,13 @@ function groupFilesByFolder(files) {
   return projectFiles
 }
 
-async function run(command, options = {}) {
+const run = async (command, options = {}) => {
   try {
-    const { stdout, stderr } = await execAsync(command, options)
+    const { stdout, stderr } = await execAsync(command, {
+      ...options,
+      maxBuffer: 10 * 1024 * 1024  // Increase buffer to 10MB
+    })
+
     if (stdout) {
       process.stdout.write(stdout)
     }
@@ -117,8 +129,8 @@ async function run(command, options = {}) {
   }
 }
 
-async function runInContext(folder, cmd, runInDocker) {
-  const container = containerMap[folder]
+const runInContext = async (folder, cmd, runInDocker) => {
+  const container = containers[folder]
   if (runInDocker && container) {
     const dockerCmd = `docker compose -f ${dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${folder} && ${cmd}"`
     return run(dockerCmd, { cwd: process.cwd() })
@@ -126,15 +138,14 @@ async function runInContext(folder, cmd, runInDocker) {
   return run(cmd, { cwd: folder })
 }
 
-async function lint(folder, files, runInDocker) {
+const lint = async (folder, files, runInDocker) => {
   if (files.length === 0) {
     return
   }
 
   logFolder(folder, `🔍 Running ESLint on ${files.length} file(s)...`)
 
-  // Filter files to include only TypeScript and JavaScript files (.ts, .tsx, .js, .jsx)
-  const targets = files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file))
+  const targets = files.filter((file) => config.lintFilter.test(file))
 
   if (targets.length === 0) {
     logFolder(folder, `ℹ️ No lintable files.`)
@@ -143,22 +154,21 @@ async function lint(folder, files, runInDocker) {
 
   try {
     await runInContext(folder, `npx eslint ${targets.join(' ')} --cache --cache-location .eslintcache`, runInDocker)
-    logFolder(folder, `✅ ESLint passed.`)
+    logFolder(folder, `${chalk.green('✅ ESLint passed.')}`)
   } catch (err) {
     logFolderError(folder, `❌ ESLint failed.`)
     throw err
   }
 }
 
-async function typeCheck(folder, files, runInDocker) {
+const typeCheck = async (folder, files, runInDocker) => {
   if (files.length === 0) {
     return
   }
 
   logFolder(folder, `🔍 Running TypeScript check...`)
 
-  // Filter files to include only TypeScript files (.ts, .tsx)
-  const targets = files.filter((file) => /\.(ts|tsx)$/.test(file))
+  const targets = files.filter((file) => config.typeCheckFilter.test(file))
 
   if (targets.length === 0) {
     logFolder(folder, `ℹ️ No TypeScript files to check.`)
@@ -167,14 +177,56 @@ async function typeCheck(folder, files, runInDocker) {
 
   try {
     await runInContext(folder, `npm run type-check`, runInDocker)
-    logFolder(folder, `✅ TypeScript check passed.`)
+    logFolder(folder, `${chalk.green('✅ TypeScript check passed.')}`)
   } catch (err) {
     logFolderError(folder, `❌ TypeScript check failed.`)
     throw err
   }
 }
 
-; (async function () {
+const getFileStats = async (filePath) => {
+  try {
+    const stats = await asyncFs.stat(filePath)
+    return stats
+  } catch (err) {
+    return null
+  }
+}
+
+const checkFileSize = async (folder, files) => {
+  if (files.length === 0) {
+    return
+  }
+
+  logFolder(folder, `📏 Checking file sizes...`)
+
+  const oversizedFiles = []
+  const checkPromises = files.map(async (file) => {
+    const filePath = path.join(folder, file)
+    const stats = await getFileStats(filePath)
+
+    if (stats) {
+      const sizeKB = stats.size / 1024
+      if (sizeKB > config.maxFileSizeKB) {
+        oversizedFiles.push({ file, sizeKB: sizeKB.toFixed(2) })
+      }
+    }
+  })
+
+  await Promise.all(checkPromises)
+
+  if (oversizedFiles.length > 0) {
+    logFolderError(folder, `❌ Found ${oversizedFiles.length} files exceeding size limit (${config.maxFileSizeKB}KB):`)
+    for (const { file, sizeKB } of oversizedFiles) {
+      logFolderError(folder, `  - ${file} (${sizeKB}KB)`)
+    }
+    throw new Error(`Oversized files detected in ${folder}`)
+  }
+
+  logFolder(folder, `${chalk.green('✅ All files are within size limits.')}`)
+}
+
+const main = async () => {
   const label = 'pre-commit'
   console.time(label)
   log('🚀 Starting pre-commit checks...')
@@ -188,7 +240,7 @@ async function typeCheck(folder, files, runInDocker) {
     if (insideDocker) {
       log('🐳 Inside Docker environment. Running checks locally...')
     } else if (dockerRunning) {
-      const containersNeeded = Object.values(containerMap).filter(Boolean)
+      const containersNeeded = Object.values(containers).filter(Boolean)
       const runningContainers = await Promise.all(containersNeeded.map(isContainerRunning))
       runInDocker = runningContainers.every(Boolean)
 
@@ -219,11 +271,12 @@ async function typeCheck(folder, files, runInDocker) {
         continue
       }
 
-      // Run lint and type-check in parallel per folder
+      // Run checks in parallel per folder
       tasks.push(
         Promise.all([
           lint(folder, files, runInDocker),
           typeCheck(folder, files, runInDocker),
+          checkFileSize(folder, files),
         ])
       )
     }
@@ -231,7 +284,7 @@ async function typeCheck(folder, files, runInDocker) {
     // Wait for all tasks to complete, and if any fails, it will throw an error
     await Promise.all(tasks)
 
-    log('\n✅ All checks passed. Proceeding with commit.')
+    log(`\n${chalk.green('✅ All checks passed. Proceeding with commit.')}`)
     console.timeEnd(label)
     process.exit(0)
   } catch (err) {
@@ -239,5 +292,6 @@ async function typeCheck(folder, files, runInDocker) {
     console.timeEnd(label)
     process.exit(1)
   }
-}())
+}
 
+main() // Run pre-commit checks
