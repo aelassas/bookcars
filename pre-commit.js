@@ -224,7 +224,7 @@ const getFileStats = async (filePath) => {
   try {
     const stats = await asyncFs.stat(filePath)
     return stats
-  } catch (err) {
+  } catch {
     return null
   }
 }
@@ -233,7 +233,7 @@ const pathExists = async (filePath) => {
   try {
     await asyncFs.access(filePath, constants.F_OK)
     return true
-  } catch (err) {
+  } catch {
     return false
   }
 }
@@ -356,8 +356,7 @@ const main = async () => {
     log(`\n${chalk.green('✅ All checks passed. Proceeding with commit.')}`)
     console.timeEnd(label)
     process.exit(0)
-  } catch (err) {
-    console.error(err)
+  } catch {
     logError('\n🚫 Commit aborted due to pre-commit errors.')
     console.timeEnd(label)
     process.exit(1)
