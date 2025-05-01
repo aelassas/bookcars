@@ -245,7 +245,6 @@ const checks = {
     logger.logProject(project, `🔍 Running ESLint on ${targets.length} file(s)...`)
 
     try {
-      // Join targets into a single string to avoid command line length issues
       await cmd.runInContext(
         project,
         `npx eslint ${targets.join(' ')} --cache --cache-location .eslintcache --quiet`,
@@ -273,7 +272,6 @@ const checks = {
     logger.logProject(project, `🔍 Running TypeScript check...`)
 
     try {
-      // Always run type-check, but we could optimize by only checking affected files
       await cmd.runInContext(
         project,
         `npm run type-check`,
