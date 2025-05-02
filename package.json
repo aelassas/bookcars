@@ -28,7 +28,7 @@
   "main": "pre-commit.js",
   "scripts": {
     "pre-commit": "node pre-commit.js",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "chalk": "^5.4.1",
