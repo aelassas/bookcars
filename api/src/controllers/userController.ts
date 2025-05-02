@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import bcrypt from 'bcrypt'
 import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -67,11 +67,11 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
 
     if (body.avatar) {
       const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await helper.exists(avatar)) {
+      if (await helper.pathExists(avatar)) {
         const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
         const newPath = path.join(env.CDN_USERS, filename)
 
-        await fs.rename(avatar, newPath)
+        await asyncFs.rename(avatar, newPath)
         user.avatar = filename
         await user.save()
       }
@@ -94,17 +94,21 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     // Send email
     i18n.locale = user.language
 
+    const activationLink = `http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}`
+
     const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
-        `<p>
-    ${i18n.t('HELLO')}${user.fullName},<br><br>
-    ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-    http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-    ${i18n.t('REGARDS')}<br>
-    </p>`,
+        `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <p style="font-size: 16px; color: #555;">
+            ${i18n.t('HELLO')} ${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            <a href="${activationLink}" target="_blank">${activationLink}</a><br><br>
+            ${i18n.t('REGARDS')}<br>
+          </p>
+        </div>`,
     }
     await mailHelper.sendMail(mailOptions)
     res.sendStatus(200)
@@ -181,11 +185,11 @@ export const create = async (req: Request, res: Response) => {
         if (contract.language && contract.file) {
           const tempFile = path.join(env.CDN_TEMP_CONTRACTS, contract.file)
 
-          if (await helper.exists(tempFile)) {
+          if (await helper.pathExists(tempFile)) {
             const filename = `${user.id}_${contract.language}${path.extname(tempFile)}`
             const newPath = path.join(env.CDN_CONTRACTS, filename)
 
-            await fs.rename(tempFile, newPath)
+            await asyncFs.rename(tempFile, newPath)
             finalContracts.push({ language: contract.language, file: filename })
           }
         }
@@ -197,11 +201,11 @@ export const create = async (req: Request, res: Response) => {
     // avatar
     if (body.avatar) {
       const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await helper.exists(avatar)) {
+      if (await helper.pathExists(avatar)) {
         const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
         const newPath = path.join(env.CDN_USERS, filename)
 
-        await fs.rename(avatar, newPath)
+        await asyncFs.rename(avatar, newPath)
         user.avatar = filename
         await user.save()
       }
@@ -210,11 +214,11 @@ export const create = async (req: Request, res: Response) => {
     // license
     if (body.license && user.type === bookcarsTypes.UserType.User) {
       const license = path.join(env.CDN_TEMP_LICENSES, body.license)
-      if (await helper.exists(license)) {
+      if (await helper.pathExists(license)) {
         const filename = `${user._id}${path.extname(body.license)}`
         const newPath = path.join(env.CDN_LICENSES, filename)
 
-        await fs.rename(license, newPath)
+        await asyncFs.rename(license, newPath)
         user.license = filename
         await user.save()
       }
@@ -378,22 +382,25 @@ export const resend = async (req: Request, res: Response) => {
 
       const reset = req.params.reset === 'true'
 
+      const activationOrResetLink = `${helper.joinURL(
+        user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
+        reset ? 'reset-password' : 'activate',
+      )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}`
+
       const mailOptions: nodemailer.SendMailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
         subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
         html:
-          `<p>
-          ${i18n.t('HELLO')}${user.fullName},<br><br>  
-          ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
-          ${helper.joinURL(
-            user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
-            reset ? 'reset-password' : 'activate',
-          )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${i18n.t('REGARDS')}<br>
-          </p>`,
+          `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+            <p style="font-size: 16px; color: #555;">
+              ${i18n.t('HELLO')} ${user.fullName},<br><br>  
+              ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
+              <a href="${activationOrResetLink}" target="_blank">${activationOrResetLink}</a><br><br>
+              ${i18n.t('REGARDS')}<br>
+            </p>
+          </div>`,
       }
-
       await mailHelper.sendMail(mailOptions)
       res.sendStatus(200)
       return
@@ -924,17 +931,22 @@ export const resendLink = async (req: Request, res: Response) => {
 
     // Send email
     i18n.locale = user.language
+
+    const activateLink = `http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}`
+
     const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
-        `<p>
-        ${i18n.t('HELLO')}${user.fullName},<br><br>
-        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-        http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${i18n.t('REGARDS')}<br>
-        </p>`,
+        `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <p style="font-size: 16px; color: #555;">
+            ${i18n.t('HELLO')} ${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            <a href="${activateLink}" target="_blank">${activateLink}</a><br><br>
+            ${i18n.t('REGARDS')}<br>
+          </p>
+        </div>`,
     }
 
     await mailHelper.sendMail(mailOptions)
@@ -1164,7 +1176,7 @@ export const createAvatar = async (req: Request, res: Response) => {
     const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_USERS, filename)
 
-    await fs.writeFile(filepath, req.file.buffer)
+    await asyncFs.writeFile(filepath, req.file.buffer)
     res.json(filename)
   } catch (err) {
     logger.error(`[user.createAvatar] ${i18n.t('DB_ERROR')}`, err)
@@ -1198,15 +1210,15 @@ export const updateAvatar = async (req: Request, res: Response) => {
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
 
-        if (await helper.exists(avatar)) {
-          await fs.unlink(avatar)
+        if (await helper.pathExists(avatar)) {
+          await asyncFs.unlink(avatar)
         }
       }
 
       const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
       const filepath = path.join(env.CDN_USERS, filename)
 
-      await fs.writeFile(filepath, req.file.buffer)
+      await asyncFs.writeFile(filepath, req.file.buffer)
       user.avatar = filename
       await user.save()
       res.json(filename)
@@ -1239,8 +1251,8 @@ export const deleteAvatar = async (req: Request, res: Response) => {
     if (user) {
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
-        if (await helper.exists(avatar)) {
-          await fs.unlink(avatar)
+        if (await helper.pathExists(avatar)) {
+          await asyncFs.unlink(avatar)
         }
       }
       user.avatar = undefined
@@ -1272,11 +1284,11 @@ export const deleteTempAvatar = async (req: Request, res: Response) => {
 
   try {
     const avatarFile = path.join(env.CDN_TEMP_USERS, avatar)
-    if (!(await helper.exists(avatarFile))) {
+    if (!(await helper.pathExists(avatarFile))) {
       throw new Error(`[user.deleteTempAvatar] temp avatar ${avatarFile} not found`)
     }
 
-    await fs.unlink(avatarFile)
+    await asyncFs.unlink(avatarFile)
 
     res.sendStatus(200)
   } catch (err) {
@@ -1495,8 +1507,8 @@ export const deleteUsers = async (req: Request, res: Response) => {
 
         if (user.avatar) {
           const avatar = path.join(env.CDN_USERS, user.avatar)
-          if (await helper.exists(avatar)) {
-            await fs.unlink(avatar)
+          if (await helper.pathExists(avatar)) {
+            await asyncFs.unlink(avatar)
           }
         }
 
@@ -1504,8 +1516,8 @@ export const deleteUsers = async (req: Request, res: Response) => {
           for (const contract of user.contracts) {
             if (contract.file) {
               const file = path.join(env.CDN_CONTRACTS, contract.file)
-              if (await helper.exists(file)) {
-                await fs.unlink(file)
+              if (await helper.pathExists(file)) {
+                await asyncFs.unlink(file)
               }
             }
           }
@@ -1513,8 +1525,8 @@ export const deleteUsers = async (req: Request, res: Response) => {
 
         if (user.license) {
           const file = path.join(env.CDN_LICENSES, user.license)
-          if (await helper.exists(file)) {
-            await fs.unlink(file)
+          if (await helper.pathExists(file)) {
+            await asyncFs.unlink(file)
           }
         }
 
@@ -1527,8 +1539,8 @@ export const deleteUsers = async (req: Request, res: Response) => {
           for (const car of cars) {
             if (car.image) {
               const image = path.join(env.CDN_CARS, car.image)
-              if (await helper.exists(image)) {
-                await fs.unlink(image)
+              if (await helper.pathExists(image)) {
+                await asyncFs.unlink(image)
               }
             }
           }
@@ -1665,7 +1677,7 @@ export const createLicense = async (req: Request, res: Response) => {
     const filename = `${nanoid()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_LICENSES, filename)
 
-    await fs.writeFile(filepath, req.file.buffer)
+    await asyncFs.writeFile(filepath, req.file.buffer)
     res.json(filename)
   } catch (err) {
     logger.error(`[user.createLicense] ${i18n.t('DB_ERROR')}`, err)
@@ -1702,15 +1714,15 @@ export const updateLicense = async (req: Request, res: Response) => {
     if (user) {
       if (user.license) {
         const licenseFile = path.join(env.CDN_LICENSES, user.license)
-        if (await helper.exists(licenseFile)) {
-          await fs.unlink(licenseFile)
+        if (await helper.pathExists(licenseFile)) {
+          await asyncFs.unlink(licenseFile)
         }
       }
 
       const filename = `${user.id}${path.extname(file.originalname)}`
       const filepath = path.join(env.CDN_LICENSES, filename)
 
-      await fs.writeFile(filepath, file.buffer)
+      await asyncFs.writeFile(filepath, file.buffer)
 
       user.license = filename
       await user.save()
@@ -1747,8 +1759,8 @@ export const deleteLicense = async (req: Request, res: Response) => {
     if (user) {
       if (user.license) {
         const licenseFile = path.join(env.CDN_LICENSES, user.license)
-        if (await helper.exists(licenseFile)) {
-          await fs.unlink(licenseFile)
+        if (await helper.pathExists(licenseFile)) {
+          await asyncFs.unlink(licenseFile)
         }
         user.license = null
       }
@@ -1781,8 +1793,8 @@ export const deleteTempLicense = async (req: Request, res: Response) => {
       throw new Error('Filename not valid')
     }
     const licenseFile = path.join(env.CDN_TEMP_LICENSES, file)
-    if (await helper.exists(licenseFile)) {
-      await fs.unlink(licenseFile)
+    if (await helper.pathExists(licenseFile)) {
+      await asyncFs.unlink(licenseFile)
     }
 
     res.sendStatus(200)

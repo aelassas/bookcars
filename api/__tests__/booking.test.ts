@@ -2,7 +2,7 @@ import 'dotenv/config'
 import request from 'supertest'
 import url from 'url'
 import path from 'path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
@@ -65,8 +65,8 @@ beforeAll(async () => {
 
   const contractFileName = `${SUPPLIER_ID}_en.pdf`
   const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-  if (!(await helper.exists(contractFile))) {
-    await fs.copyFile(CONTRACT1_PATH, contractFile)
+  if (!(await helper.pathExists(contractFile))) {
+    await asyncFs.copyFile(CONTRACT1_PATH, contractFile)
   }
   const supplier = await User.findById(SUPPLIER_ID)
   supplier!.contracts = [{ language: 'en', file: contractFileName }]
@@ -154,8 +154,8 @@ afterAll(async () => {
   for (const driver of drivers) {
     if (driver.license) {
       const license = path.join(env.CDN_LICENSES, driver.license)
-      if (await helper.exists(license)) {
-        await fs.unlink(license)
+      if (await helper.pathExists(license)) {
+        await asyncFs.unlink(license)
       }
     }
     await driver.deleteOne()
@@ -579,8 +579,8 @@ describe('POST /api/checkout', () => {
     // test success (license)
     payload.driver.email = testHelper.GetRandomEmail()
     let license = path.join(env.CDN_TEMP_LICENSES, LICENSE)
-    if (!(await helper.exists(license))) {
-      await fs.copyFile(LICENSE_PATH, license)
+    if (!(await helper.pathExists(license))) {
+      await asyncFs.copyFile(LICENSE_PATH, license)
     }
     payload.driver.license = LICENSE
     res = await request(app)
@@ -606,8 +606,8 @@ describe('POST /api/checkout', () => {
     }
     expect(driver3?.license).toBeTruthy()
     license = path.join(env.CDN_LICENSES, driver3!.license!)
-    expect(await helper.exists(license)).toBeTruthy()
-    await fs.unlink(license)
+    expect(await helper.pathExists(license)).toBeTruthy()
+    await asyncFs.unlink(license)
     await booking?.deleteOne()
     await token?.deleteOne()
     await driver3!.deleteOne()
@@ -668,8 +668,8 @@ describe('POST /api/checkout', () => {
 
     // test success (license file found)
     license = path.join(env.CDN_LICENSES, LICENSE)
-    if (!(await helper.exists(license))) {
-      await fs.copyFile(LICENSE_PATH, license)
+    if (!(await helper.pathExists(license))) {
+      await asyncFs.copyFile(LICENSE_PATH, license)
     }
     driver!.license = LICENSE
     await driver!.save()

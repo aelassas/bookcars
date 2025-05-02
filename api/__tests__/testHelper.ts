@@ -149,7 +149,7 @@ export const deleteSupplier = async (id: string) => {
     for (const contract of supplier!.contracts) {
       if (contract.file) {
         const filename = path.join(env.CDN_CONTRACTS, contract.file)
-        if (await helper.exists(filename)) {
+        if (await helper.pathExists(filename)) {
           await fs.unlink(filename)
         }
       }

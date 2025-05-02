@@ -4,7 +4,7 @@ import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
 import nodemailer from 'nodemailer'
 import path from 'node:path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
@@ -171,7 +171,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
 
   if (contractFile) {
     const file = path.join(env.CDN_CONTRACTS, contractFile)
-    if (await helper.exists(file)) {
+    if (await helper.pathExists(file)) {
       mailOptions.attachments = [{ path: file }]
     }
   }
@@ -210,7 +210,7 @@ export const checkout = async (req: Request, res: Response) => {
       if (supplier.licenseRequired && !license) {
         throw new Error("Driver's license required")
       }
-      if (supplier.licenseRequired && !(await helper.exists(path.join(env.CDN_TEMP_LICENSES, license!)))) {
+      if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_TEMP_LICENSES, license!)))) {
         throw new Error("Driver's license file not found")
       }
       driver.verified = false
@@ -226,7 +226,7 @@ export const checkout = async (req: Request, res: Response) => {
         const tempLicense = path.join(env.CDN_TEMP_LICENSES, license)
         const filename = `${user.id}${path.extname(tempLicense)}`
         const filepath = path.join(env.CDN_LICENSES, filename)
-        await fs.rename(tempLicense, filepath)
+        await asyncFs.rename(tempLicense, filepath)
         user.license = filename
         await user.save()
       }
@@ -260,7 +260,7 @@ export const checkout = async (req: Request, res: Response) => {
     if (supplier.licenseRequired && !user!.license) {
       throw new Error("Driver's license required")
     }
-    if (supplier.licenseRequired && !(await helper.exists(path.join(env.CDN_LICENSES, user!.license!)))) {
+    if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_LICENSES, user!.license!)))) {
       throw new Error("Driver's license file not found")
     }
 
