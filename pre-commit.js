@@ -223,7 +223,7 @@ const processFiles = {
       }
     }
 
-    // Convert map to object for compatibility with the rest of the code
+    // Convert map to object
     return Object.fromEntries(folderMap)
   },
 
