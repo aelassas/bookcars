@@ -3,6 +3,8 @@ import { promisify } from 'node:util'
 import path from 'node:path'
 import { constants } from 'node:fs'
 import asyncFs from 'node:fs/promises'
+import os from 'node:os'
+import pLimit from 'p-limit'
 import chalk from 'chalk'
 
 const execAsync = promisify(exec)
@@ -34,7 +36,8 @@ const config = {
   timeout: 2000, // Timeout for Docker commands in milliseconds
   dockerComposeFile: 'docker-compose.dev.yml',
   maxFileSizeKB: 5 * 1024, // 5MB file size limit
-  batchSize: 50, // Number of files to process in a batch for size check
+  batchSize: 50, // Number of files to process in a batch for ESLint and size checks
+  concurrencyLimit: Math.min(6, Math.max(2, Math.floor(os.cpus().length / 2))), // Adaptive concurrency limit for ESLint batches
   lintFilter: /\.(ts|tsx|js|jsx)$/,
   typeCheckFilter: /\.(ts|tsx)$/,
 }
@@ -237,21 +240,36 @@ const checks = {
     const targets = processFiles.filterFiles(files, config.lintFilter)
 
     if (targets.length === 0) {
-      logger.logProject(project, `ℹ️ No lintable files.`)
+      logger.logProject(project, 'ℹ️ No lintable files.')
       return
     }
 
-    logger.logProject(project, `🔍 Running ESLint on ${targets.length} file(s)...`)
+    logger.logProject(project, `🔍 Running ESLint on ${targets.length} file(s) with concurrency ${config.concurrencyLimit}...`)
+
+    // Split into file batches to handle command line length limits
+    const batches = []
+    for (let i = 0; i < targets.length; i += config.batchSize) {
+      batches.push(targets.slice(i, i + config.batchSize))
+    }
+
+    const limit = pLimit(config.concurrencyLimit)
+
+    const tasks = batches.map((batch, index) =>
+      limit(async () => {
+        logger.logProject(project, `🧪 Linting batch ${index + 1} of ${batches.length}...`)
+        await cmd.runInContext(
+          project,
+          `npx eslint ${batch.join(' ')} --cache --cache-location .eslintcache --quiet`,
+          runInDocker
+        )
+      })
+    )
 
     try {
-      await cmd.runInContext(
-        project,
-        `npx eslint ${targets.join(' ')} --cache --cache-location .eslintcache --quiet`,
-        runInDocker,
-      )
+      await Promise.all(tasks)
       logger.logProject(project, `${chalk.green('✅ ESLint passed.')}`)
     } catch (err) {
-      logger.logProjectError(project, `❌ ESLint failed.`)
+      logger.logProjectError(project, '❌ ESLint failed.')
       throw err
     }
   },
