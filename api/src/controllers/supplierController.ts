@@ -262,8 +262,30 @@ export const getSuppliers = async (req: Request, res: Response) => {
         {
           $match: {
             type: bookcarsTypes.UserType.Supplier,
-            avatar: { $ne: null },
             fullName: { $regex: keyword, $options: options },
+          },
+        },
+        {
+          $lookup: {
+            from: 'Car',
+            let: { supplierId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$supplier', '$$supplierId'] },
+                },
+              },
+            ],
+            as: 'car',
+          },
+        },
+        { $unwind: { path: '$car', preserveNullAndEmptyArrays: false } },
+        {
+          $group: {
+            _id: '$_id',
+            fullName: { $first: '$fullName' },
+            avatar: { $first: '$avatar' },
+            carCount: { $sum: 1 },
           },
         },
         {
@@ -280,15 +302,15 @@ export const getSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    data[0].resultData = data[0].resultData.map((supplier: env.User) => {
-      const { _id, fullName, avatar } = supplier
-      return { _id, fullName, avatar }
+    data[0].resultData = data[0].resultData.map((supplier: env.User & { carCount: number }) => {
+      const { _id, fullName, avatar, carCount } = supplier
+      return { _id, fullName, avatar, carCount }
     })
 
-    res.json(data)
+    return res.json(data)
   } catch (err) {
     logger.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

@@ -55,6 +55,11 @@ section.supplier-list article .supplier-item .supplier-item-title {
   white-space: nowrap;
 }
 
+section.supplier-list article .supplier-item .supplier-item-subtitle {
+  margin-left: 5px;
+  color: #676767;
+}
+
 section.supplier-list article .supplier-actions {
   min-width: 120px;
 }
