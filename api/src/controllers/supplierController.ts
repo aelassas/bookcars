@@ -262,6 +262,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         {
           $match: {
             type: bookcarsTypes.UserType.Supplier,
+            avatar: { $ne: null },
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -307,10 +308,10 @@ export const getSuppliers = async (req: Request, res: Response) => {
       return { _id, fullName, avatar, carCount }
     })
 
-    return res.json(data)
+    res.json(data)
   } catch (err) {
     logger.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    return res.status(400).send(i18n.t('DB_ERROR') + err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
