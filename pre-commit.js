@@ -361,9 +361,7 @@ const main = async () => {
       const containersNeeded = Object.values(config.projects)
         .filter((project) => project.container)
         .map((project) => project.container)
-      const runningContainers = await Promise.all(
-        containersNeeded.map((container) => docker.isContainerRunning(container))
-      )
+      const runningContainers = await Promise.all(containersNeeded.map(docker.isContainerRunning))
 
       runInDocker = runningContainers.every(Boolean)
 
