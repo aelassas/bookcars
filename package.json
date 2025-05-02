@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "chalk": "^5.4.1",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "p-limit": "^6.2.0"
   }
 }
