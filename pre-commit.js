@@ -163,47 +163,50 @@ const fs = {
 // Command execution
 const cmd = (() => {
   const _escapeShellArg = (arg) => {
-    return arg.replace(/(["'\\$`!])/g, '\\$1')
+    return arg.replace(/(["'\\$`!])/g, '\\$1') // Escape special characters for shell to prevent injection
+  }
+
+  const _run = async (command, options = {}) => {
+    try {
+      const { stdout, stderr } = await execAsync(
+        command,
+        {
+          ...options,
+          maxBuffer: 10 * 1024 * 1024, // 10MB buffer
+        },
+      )
+
+      if (stdout) {
+        process.stdout.write(stdout)
+      }
+      if (stderr) {
+        process.stderr.write(stderr)
+      }
+    } catch (err) {
+      if (err.stdout) {
+        process.stdout.write(err.stdout)
+      }
+      if (err.stderr) {
+        process.stderr.write(err.stderr)
+      }
+      throw err
+    }
   }
 
   return {
-    async run(command, options = {}) {
-      try {
-        const { stdout, stderr } = await execAsync(command, {
-          ...options,
-          maxBuffer: 10 * 1024 * 1024, // 10MB buffer
-        })
-
-        if (stdout) {
-          process.stdout.write(stdout)
-        }
-        if (stderr) {
-          process.stderr.write(stderr)
-        }
-      } catch (err) {
-        if (err.stdout) {
-          process.stdout.write(err.stdout)
-        }
-        if (err.stderr) {
-          process.stderr.write(err.stderr)
-        }
-        throw err
-      }
-    },
-
     async runInContext(project, command, runInDocker) {
       const { folder, container } = project
-      const safeFolder = _escapeShellArg(folder)
-      const safeCmd = _escapeShellArg(command)
+      const safeFolder = _escapeShellArg(folder) // Escape folder for shell to prevent injection
+      const safeCmd = _escapeShellArg(command) // Escape command for shell to prevent injection
 
       if (runInDocker && container) {
-        return cmd.run(
+        return _run(
           `docker compose -f ${config.dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${safeFolder} && ${safeCmd}"`,
           { cwd: process.cwd() },
         )
       }
 
-      return cmd.run(safeCmd, { cwd: safeFolder })
+      return _run(safeCmd, { cwd: safeFolder })
     }
   }
 })()
