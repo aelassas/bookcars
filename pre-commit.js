@@ -38,41 +38,40 @@ const config = {
   maxFileSizeKB: 5 * 1024, // 5MB file size limit
   batchSize: 50, // Number of files to process in a batch for ESLint and size checks
   concurrencyLimit: Math.min(6, Math.max(2, Math.floor(os.cpus().length / 2))), // Adaptive concurrency limit for ESLint batches
-  lintFilter: /\.(ts|tsx|js|jsx)$/,
-  typeCheckFilter: /\.(ts|tsx)$/,
+  lintFilter: /\.(ts|tsx|js|jsx)$/, // Lint only TypeScript and JavaScript files (.ts, .tsx, .js, .jsx)
+  typeCheckFilter: /\.(ts|tsx)$/, // Type check only TypeScript files (.ts, .tsx)
 }
 
 // Logger utilities
-const logger = {
-  fixMessage: (message) => {
+const logger = (() => {
+  const _fixMessage = (message) => {
     const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
     return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
-  },
-
-  formatMessage: (folder, message) => {
-    return `[${chalk.cyan(folder)}] ${message}`
-  },
-
-  log: (message) => {
-    console.log(logger.fixMessage(message))
-  },
-
-  logProject: (project, message) => {
-    logger.log(logger.formatMessage(project.folder, message))
-  },
-
-  logError: (message, ...args) => {
-    console.error(chalk.red(logger.fixMessage(message)), ...args)
-  },
-
-  logProjectError: (project, message, ...args) => {
-    logger.logError(logger.formatMessage(project.folder, message), ...args)
   }
-}
+
+  const _formatMessage = (folder, message) => {
+    return `[${chalk.cyan(folder)}] ${message}`
+  }
+
+  return {
+    log(message) {
+      console.log(_fixMessage(message))
+    },
+    logProject(project, message) {
+      console.log(_fixMessage(_formatMessage(project.folder, message)))
+    },
+    logError(message, ...args) {
+      console.error(chalk.red(_fixMessage(message)), ...args)
+    },
+    logProjectError(project, message, ...args) {
+      console.error(chalk.red(_fixMessage(_formatMessage(project.folder, message))), ...args)
+    }
+  }
+})()
 
 // Docker environment detection
 const docker = {
-  isInsideDocker: async () => {
+  async isInsideDocker() {
     try {
       const cgroup = await asyncFs.readFile('/proc/1/cgroup', 'utf8')
       return cgroup.includes('docker') || cgroup.includes('containerd')
@@ -81,7 +80,7 @@ const docker = {
     }
   },
 
-  isDockerRunning: async () => {
+  async isDockerRunning() {
     try {
       await execAsync('docker info', { timeout: config.timeout })
       return true
@@ -90,7 +89,7 @@ const docker = {
     }
   },
 
-  isContainerRunning: async (containerName) => {
+  async isContainerRunning(containerName) {
     try {
       const { stdout } = await execAsync(
         `docker ps --filter "name=${containerName}" --filter "status=running" --format "{{.Names}}"`,
@@ -106,7 +105,7 @@ const docker = {
 // Git operations
 const git = {
   // Get all staged files at once, more efficient than multiple git calls
-  getChangedFiles: async () => {
+  async getChangedFiles() {
     try {
       const { stdout } = await execAsync('git diff --cached --name-only')
       return stdout.trim().split('\n').filter(Boolean)
@@ -115,7 +114,7 @@ const git = {
       return []
     }
   },
-  getChangedFilesInProject: async (project) => {
+  async getChangedFilesInProject(project) {
     try {
       const { folder } = project
       const { stdout } = await execAsync(`git diff --cached --name-only ${folder}/`)
@@ -129,7 +128,7 @@ const git = {
 
 // File system operations
 const fs = {
-  pathExists: async (filePath) => {
+  async pathExists(filePath) {
     try {
       await asyncFs.access(filePath, constants.F_OK)
       return true
@@ -138,7 +137,7 @@ const fs = {
     }
   },
 
-  getFileStats: async (filePath) => {
+  async getFileStats(filePath) {
     try {
       const stats = await asyncFs.stat(filePath)
       return stats
@@ -148,7 +147,7 @@ const fs = {
   },
 
   // Process files in parallel batches
-  processBatch: async (files, processor, batchSize = config.batchSize) => {
+  async processBatch(files, processor, batchSize = config.batchSize) {
     const results = []
 
     for (let i = 0; i < files.length; i += batchSize) {
@@ -163,11 +162,11 @@ const fs = {
 
 // Command execution
 const cmd = {
-  escapeShellArg: (arg) => {
+  escapeShellArg(arg) {
     return arg.replace(/(["'\\$`!])/g, '\\$1')
   },
 
-  run: async (command, options = {}) => {
+  async run(command, options = {}) {
     try {
       const { stdout, stderr } = await execAsync(command, {
         ...options,
@@ -191,7 +190,7 @@ const cmd = {
     }
   },
 
-  runInContext: async (project, command, runInDocker) => {
+  async runInContext(project, command, runInDocker) {
     const { folder, container } = project
     const safeFolder = cmd.escapeShellArg(folder)
     const safeCmd = cmd.escapeShellArg(command)
@@ -209,17 +208,28 @@ const cmd = {
 
 // Process files by project
 const processFiles = {
-  groupFilesByFolder: (files) => {
+  groupFilesByFolder(files) {
     // Create lookup map for faster folder checks
     const folderMap = new Map()
-    for (const project of Object.values(config.projects)) {
-      folderMap.set(project.folder, [])
+
+    for (const { folder } of Object.values(config.projects)) {
+      folderMap.set(folder, [])
     }
 
+    // Single-pass processing with minimal operations
     for (const file of files) {
-      const [folder, ...rest] = file.split('/')
+      const slashIndex = file.indexOf('/')
+
+      // Skip files without a folder structure
+      if (slashIndex === -1) {
+        continue
+      }
+
+      const folder = file.slice(0, slashIndex)
+
+      // Only process folders we care about
       if (folderMap.has(folder)) {
-        folderMap.get(folder).push(rest.join('/'))
+        folderMap.get(folder).push(file.slice(slashIndex + 1))
       }
     }
 
@@ -227,14 +237,14 @@ const processFiles = {
     return Object.fromEntries(folderMap)
   },
 
-  filterFiles: (files, regex) => {
+  filterFiles(files, regex) {
     return files.filter((file) => regex.test(file))
   }
 }
 
 // Check implementations
 const checks = {
-  lint: async (project, files, runInDocker) => {
+  async lint(project, files, runInDocker) {
     if (files.length === 0) {
       return
     }
@@ -276,7 +286,7 @@ const checks = {
     }
   },
 
-  typeCheck: async (project, files, runInDocker) => {
+  async typeCheck(project, files, runInDocker) {
     if (files.length === 0) {
       return
     }
@@ -303,7 +313,7 @@ const checks = {
     }
   },
 
-  sizeCheck: async (project, files) => {
+  async sizeCheck(project, files) {
     if (files.length === 0) {
       return
     }
