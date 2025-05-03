@@ -36,7 +36,7 @@ const config = {
   timeout: 2000, // Timeout for Docker commands in milliseconds
   dockerComposeFile: 'docker-compose.dev.yml',
   maxFileSizeKB: 5 * 1024, // 5MB file size limit
-  batchSize: 50, // Number of files to process in a batch for ESLint and size checks
+  batchSize: 75, // Number of files to process in a batch for ESLint and size checks
   concurrencyLimit: Math.min(6, Math.max(2, Math.floor(os.cpus().length / 2))), // Adaptive concurrency limit for ESLint batches
   lintFilter: /\.(ts|tsx|js|jsx)$/, // Lint only TypeScript and JavaScript files (.ts, .tsx, .js, .jsx)
   typeCheckFilter: /\.(ts|tsx)$/, // Type check only TypeScript files (.ts, .tsx)
@@ -161,50 +161,52 @@ const fs = {
 }
 
 // Command execution
-const cmd = {
-  escapeShellArg(arg) {
+const cmd = (() => {
+  const _escapeShellArg = (arg) => {
     return arg.replace(/(["'\\$`!])/g, '\\$1')
-  },
-
-  async run(command, options = {}) {
-    try {
-      const { stdout, stderr } = await execAsync(command, {
-        ...options,
-        maxBuffer: 10 * 1024 * 1024, // 10MB buffer
-      })
-
-      if (stdout) {
-        process.stdout.write(stdout)
-      }
-      if (stderr) {
-        process.stderr.write(stderr)
-      }
-    } catch (err) {
-      if (err.stdout) {
-        process.stdout.write(err.stdout)
-      }
-      if (err.stderr) {
-        process.stderr.write(err.stderr)
-      }
-      throw err
-    }
-  },
-
-  async runInContext(project, command, runInDocker) {
-    const { folder, container } = project
-    const safeFolder = cmd.escapeShellArg(folder)
-    const safeCmd = cmd.escapeShellArg(command)
-
-    if (runInDocker && container) {
-      return cmd.run(
-        `docker compose -f ${config.dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${safeFolder} && ${safeCmd}"`,
-        { cwd: process.cwd() },
-      )
-    }
-
-    return cmd.run(safeCmd, { cwd: safeFolder })
   }
-}
+
+  return {
+    async run(command, options = {}) {
+      try {
+        const { stdout, stderr } = await execAsync(command, {
+          ...options,
+          maxBuffer: 10 * 1024 * 1024, // 10MB buffer
+        })
+
+        if (stdout) {
+          process.stdout.write(stdout)
+        }
+        if (stderr) {
+          process.stderr.write(stderr)
+        }
+      } catch (err) {
+        if (err.stdout) {
+          process.stdout.write(err.stdout)
+        }
+        if (err.stderr) {
+          process.stderr.write(err.stderr)
+        }
+        throw err
+      }
+    },
+
+    async runInContext(project, command, runInDocker) {
+      const { folder, container } = project
+      const safeFolder = _escapeShellArg(folder)
+      const safeCmd = _escapeShellArg(command)
+
+      if (runInDocker && container) {
+        return cmd.run(
+          `docker compose -f ${config.dockerComposeFile} exec -T ${container} sh -c "cd /bookcars/${safeFolder} && ${safeCmd}"`,
+          { cwd: process.cwd() },
+        )
+      }
+
+      return cmd.run(safeCmd, { cwd: safeFolder })
+    }
+  }
+})()
 
 // Process files by project
 const processFiles = {
@@ -303,7 +305,7 @@ const checks = {
     try {
       await cmd.runInContext(
         project,
-        `npm run type-check`,
+        'npx tsc --noEmit --incremental --pretty',
         runInDocker,
       )
       logger.logProject(project, `${chalk.green('✅ TypeScript check passed.')}`)
