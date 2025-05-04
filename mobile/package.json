@@ -19,7 +19,7 @@
     "build:ios:preview": "cross-env EAS_NO_VCS=1 npm run ts:build && eas build --profile preview --platform android",
     "lint": "eslint .",
     "fix": "eslint --fix .",
-    "ncu": "ncu -u -x react,@types/react,react-native,@react-navigation/drawer,@react-navigation/native,@react-navigation/native-stack,@react-navigation/stack && npm i --force && npm prune && expo install --fix",
+    "ncu": "ncu -u -x react-native,@react-navigation/drawer,@react-navigation/native,@react-navigation/native-stack,@react-navigation/stack && npm i --force && npm prune && expo install --fix",
     "prebuild": "expo prebuild",
     "prebuild:clean": "expo prebuild --clean"
   },
