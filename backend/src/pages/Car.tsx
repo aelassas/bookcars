@@ -185,7 +185,8 @@ const Car = () => {
                   mode="update"
                   record={car}
                   size="large"
-                  readonly={!edit}
+                  // readonly={!edit}
+                  readonly
                   hideDelete
                   onBeforeUpload={handleBeforeUpload}
                   onChange={handleImageChange}
