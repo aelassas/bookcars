@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider, RouteObject, Outlet } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import env from '@/config/env.config'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { UserProvider } from '@/context/UserContext'
@@ -56,7 +56,7 @@ const AppLayout = () => (
   </GlobalProvider>
 )
 
-const routes: RouteObject[] = [
+const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
@@ -86,9 +86,7 @@ const routes: RouteObject[] = [
       { path: '*', element: <NoMatch /> }
     ]
   }
-]
-
-const router = createBrowserRouter(routes)
+])
 
 const App = () => <RouterProvider router={router} />
 
