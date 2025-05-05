@@ -2,7 +2,7 @@ import 'dotenv/config'
 import request from 'supertest'
 import url from 'url'
 import path from 'path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -353,15 +353,15 @@ describe('DELETE /api/delete-supplier/:id', () => {
     let avatarName = 'avatar1.jpg'
     let avatarPath = path.join(__dirname, `./img/${avatarName}`)
     let avatar = path.join(env.CDN_USERS, avatarName)
-    if (!(await helper.exists(avatar))) {
-      await fs.copyFile(avatarPath, avatar)
+    if (!(await helper.pathExists(avatar))) {
+      await asyncFs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_CONTRACTS, contractFileName)
-    if (!(await helper.exists(contractFile))) {
-      await fs.copyFile(CONTRACT1_PATH, contractFile)
+    if (!(await helper.pathExists(contractFile))) {
+      await asyncFs.copyFile(CONTRACT1_PATH, contractFile)
     }
     supplier!.contracts = [{ language: 'en', file: contractFileName }]
 
@@ -416,8 +416,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
       dateBasedPrices: [dbp1.id, dbp2.id],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
-    if (!(await helper.exists(carImage))) {
-      await fs.copyFile(carImagePath, carImage)
+    if (!(await helper.pathExists(carImage))) {
+      await asyncFs.copyFile(carImagePath, carImage)
     }
     await car.save()
     const additionalDriver = new AdditionalDriver({
@@ -452,8 +452,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(res.statusCode).toBe(200)
     supplier = await User.findById(supplierId)
     expect(supplier).toBeNull()
-    expect(await helper.exists(avatar)).toBeFalsy()
-    expect(await helper.exists(contractFile)).toBeFalsy()
+    expect(await helper.pathExists(avatar)).toBeFalsy()
+    expect(await helper.pathExists(contractFile)).toBeFalsy()
     await testHelper.deleteLocation(locationId)
     const dateBasedPrices = await DateBasedPrice.find({ _id: { $in: [dbp1.id, dbp2.id] } })
     expect(dateBasedPrices.length).toBe(0)
@@ -532,8 +532,8 @@ describe('DELETE /api/delete-supplier/:id', () => {
     avatarName = 'avatar1.jpg'
     avatarPath = path.join(__dirname, `./img/${avatarName}`)
     avatar = path.join(env.CDN_USERS, avatarName)
-    if (!(await helper.exists(avatar))) {
-      await fs.copyFile(avatarPath, avatar)
+    if (!(await helper.pathExists(avatar))) {
+      await asyncFs.copyFile(avatarPath, avatar)
     }
     supplier!.avatar = avatarName
     await supplier?.save()
@@ -815,9 +815,9 @@ describe('POST /api/create-contract', () => {
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const filePath = path.join(env.CDN_TEMP_CONTRACTS, filename)
-    const contractExists = await helper.exists(filePath)
+    const contractExists = await helper.pathExists(filePath)
     expect(contractExists).toBeTruthy()
-    await fs.unlink(filePath)
+    await asyncFs.unlink(filePath)
 
     // test failure (file not sent)
     res = await request(app)
@@ -827,13 +827,13 @@ describe('POST /api/create-contract', () => {
 
     // test failure (filename not valid)
     const invalidContract = path.join(env.CDN_TEMP_CONTRACTS, `${nanoid()}`)
-    await fs.copyFile(CONTRACT1_PATH, invalidContract)
+    await asyncFs.copyFile(CONTRACT1_PATH, invalidContract)
     res = await request(app)
       .post('/api/create-contract/en')
       .set(env.X_ACCESS_TOKEN, token)
       .attach('file', invalidContract)
     expect(res.statusCode).toBe(400)
-    await fs.unlink(invalidContract)
+    await asyncFs.unlink(invalidContract)
 
     // test failure (language not valid)
     res = await request(app)
@@ -859,7 +859,7 @@ describe('POST /api/update-contract/:id', () => {
     expect(res.statusCode).toBe(200)
     let filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
     supplier = await User.findById(SUPPLIER1_ID)
     expect(supplier).toBeTruthy()
     expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBe(filename)
@@ -872,7 +872,7 @@ describe('POST /api/update-contract/:id', () => {
     expect(res.statusCode).toBe(200)
     filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
     supplier = await User.findById(SUPPLIER1_ID)
     expect(filename).toBe(supplier?.contracts?.find((c) => c.language === 'en')?.file)
 
@@ -886,7 +886,7 @@ describe('POST /api/update-contract/:id', () => {
     expect(res.statusCode).toBe(200)
     filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_CONTRACTS, filename))).toBeTruthy()
     supplier = await User.findById(SUPPLIER1_ID)
     expect(filename).toBe(supplier?.contracts?.find((c) => c.language === 'en')?.file)
     supplier!.contracts!.find((c) => c.language === 'en')!.file = filename
@@ -900,13 +900,13 @@ describe('POST /api/update-contract/:id', () => {
 
     // test failure (filename not valid)
     const invalidContract = path.join(env.CDN_TEMP_CONTRACTS, `${nanoid()}`)
-    await fs.copyFile(CONTRACT1_PATH, invalidContract)
+    await asyncFs.copyFile(CONTRACT1_PATH, invalidContract)
     res = await request(app)
       .post(`/api/update-contract/${SUPPLIER1_ID}/en`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('file', invalidContract)
     expect(res.statusCode).toBe(400)
-    await fs.unlink(invalidContract)
+    await asyncFs.unlink(invalidContract)
 
     // test failure (supplier not found)
     res = await request(app)
@@ -942,13 +942,13 @@ describe('POST /api/delete-contract/:id', () => {
     expect(supplier).toBeTruthy()
     expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeTruthy()
     const filename = supplier?.contracts?.find((c) => c.language === 'en')?.file as string
-    let imageExists = await helper.exists(path.join(env.CDN_CONTRACTS, filename))
+    let imageExists = await helper.pathExists(path.join(env.CDN_CONTRACTS, filename))
     expect(imageExists).toBeTruthy()
     let res = await request(app)
       .post(`/api/delete-contract/${SUPPLIER1_ID}/en`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    imageExists = await helper.exists(path.join(env.CDN_CONTRACTS, filename))
+    imageExists = await helper.pathExists(path.join(env.CDN_CONTRACTS, filename))
     expect(imageExists).toBeFalsy()
     supplier = await User.findById(SUPPLIER1_ID)
     expect(supplier?.contracts?.find((c) => c.language === 'en')?.file).toBeFalsy()
@@ -1011,8 +1011,8 @@ describe('POST /api/delete-temp-contract/:image', () => {
 
     // init
     const tempImage = path.join(env.CDN_TEMP_CONTRACTS, CONTRACT1)
-    if (!(await helper.exists(tempImage))) {
-      await fs.copyFile(CONTRACT1_PATH, tempImage)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(CONTRACT1_PATH, tempImage)
     }
 
     // test success (temp file exists)
@@ -1020,7 +1020,7 @@ describe('POST /api/delete-temp-contract/:image', () => {
       .post(`/api/delete-temp-contract/${CONTRACT1}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    const tempImageExists = await helper.exists(tempImage)
+    const tempImageExists = await helper.pathExists(tempImage)
     expect(tempImageExists).toBeFalsy()
 
     // test success (temp file not found)

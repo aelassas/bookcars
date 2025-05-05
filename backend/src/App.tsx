@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
@@ -103,5 +103,52 @@ const App = () => (
     </GlobalProvider>
   </BrowserRouter>
 )
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Bookings /> },
+      { path: 'sign-in', element: <SignIn /> },
+      { path: 'activate', element: <Activate /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
+      { path: 'sign-up', element: <SignUp /> },
+      { path: 'suppliers', element: <Suppliers /> },
+      { path: 'supplier', element: <Supplier /> },
+      { path: 'create-supplier', element: <CreateSupplier /> },
+      { path: 'update-supplier', element: <UpdateSupplier /> },
+      { path: 'locations', element: <Locations /> },
+      { path: 'create-location', element: <CreateLocation /> },
+      { path: 'update-location', element: <UpdateLocation /> },
+      { path: 'cars', element: <Cars /> },
+      { path: 'car', element: <Car /> },
+      { path: 'create-car', element: <CreateCar /> },
+      { path: 'update-car', element: <UpdateCar /> },
+      { path: 'update-booking', element: <UpdateBooking /> },
+      { path: 'create-booking', element: <CreateBooking /> },
+      { path: 'users', element: <Users /> },
+      { path: 'user', element: <User /> },
+      { path: 'create-user', element: <CreateUser /> },
+      { path: 'update-user', element: <UpdateUser /> },
+      { path: 'settings', element: <Settings /> },
+      { path: 'notifications', element: <Notifications /> },
+      { path: 'change-password', element: <ChangePassword /> },
+      { path: 'about', element: <About /> },
+      { path: 'tos', element: <ToS /> },
+      { path: 'contact', element: <Contact /> },
+      { path: 'countries', element: <Countries /> },
+      { path: 'create-country', element: <CreateCountry /> },
+      { path: 'update-country', element: <UpdateCountry /> },
+      { path: 'scheduler', element: <Scheduler /> },
+      { path: 'bank-details', element: <BankDetails /> },
+      { path: 'pricing', element: <Pricing /> },
+      { path: '*', element: <NoMatch /> }
+    ]
+  }
+])
+
+const App = () => <RouterProvider router={router} />
 
 export default App
