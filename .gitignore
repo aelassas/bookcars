@@ -5,3 +5,5 @@
 /**/*.ca.pem
 /**/.DS_Store
 /node_modules
+/cdn
+/cdn/*
