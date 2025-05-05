@@ -11,3 +11,5 @@ cdn
 /**/.env
 
 /node_modules
+/cdn
+/cdn/*
