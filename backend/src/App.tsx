@@ -11,7 +11,7 @@ const SignIn = lazy(() => import('@/pages/SignIn'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
-//const SignUp = lazy(() => import('@/pages/SignUp'))
+/*const SignUp = lazy(() => import('@/pages/SignUp'))*/
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Supplier = lazy(() => import('@/pages/Supplier'))
 const CreateSupplier = lazy(() => import('@/pages/CreateSupplier'))
@@ -61,7 +61,7 @@ const App = () => (
                 <Route path="/activate" element={<Activate />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                {/* <Route path="/sign-up" element={<SignUp />} /> */}
+                {/*<Route path="/sign-up" element={<SignUp />} />*/}
                 <Route path="/" element={<Bookings />} />
                 <Route path="/suppliers" element={<Suppliers />} />
                 <Route path="/supplier" element={<Supplier />} />

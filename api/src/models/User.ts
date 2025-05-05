@@ -84,13 +84,11 @@ const userSchema = new Schema<env.User>(
       type: String,
       trim: true,
     },
-    locationCoordinates: {
-      lat: {
-        type: Number,
-      },
-      lng: {
-        type: Number,
-      },
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
     },
     type: {
       type: String,

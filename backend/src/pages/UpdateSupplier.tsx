@@ -26,7 +26,6 @@ import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
 import ContractList from '@/components/ContractList'
-import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/update-supplier.css'
 
@@ -38,7 +37,6 @@ const UpdateSupplier = () => {
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
-  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number, lng: number }>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -55,6 +53,45 @@ const UpdateSupplier = () => {
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
   const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+
+  const autocompleteInput = useRef<HTMLInputElement>(null)
+  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
+  
+  useEffect(() => {
+    // Load Google Maps script
+    if (!scriptLoaded) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        setScriptLoaded(true)
+      }
+      document.head.appendChild(script)
+      
+      return () => {
+        document.head.removeChild(script)
+      }
+    }
+    
+    // Initialize autocomplete when script is loaded
+    if (scriptLoaded && autocompleteInput.current) {
+      // Use type assertion to help TypeScript understand this is available at runtime
+      const google = (window as any).google;
+      if (google?.maps?.places) {
+        const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current)
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace()
+          if (place.geometry && place.geometry.location) {
+            setLocation(place.formatted_address || '')
+            setLatitude(place.geometry.location.lat())
+            setLongitude(place.geometry.location.lng())
+          }
+        })
+      }
+    }
+  }, [scriptLoaded, autocompleteInput])
 
   const autocompleteInput = useRef<HTMLInputElement>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
@@ -175,9 +212,13 @@ const UpdateSupplier = () => {
     validatePhone(e.target.value)
   }
 
-  const handleLocationChange = (newLocation: { address: string, coordinates?: { lat: number, lng: number } }) => {
-    setLocation(newLocation.address)
-    setLocationCoordinates(newLocation.coordinates)
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(e.target.value)
+    // When manually typing, we clear coordinates until a place is selected
+    if (e.target.value === '') {
+      setLatitude(undefined)
+      setLongitude(undefined)
+    }
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,7 +292,6 @@ const UpdateSupplier = () => {
               setFullName(_supplier.fullName || '')
               setPhone(_supplier.phone || '')
               setLocation(_supplier.location || '')
-              setLocationCoordinates(_supplier.locationCoordinates)
               setBio(_supplier.bio || '')
               setPayLater(_supplier.payLater || false)
               setLicenseRequired(_supplier.licenseRequired || false)
@@ -312,7 +352,6 @@ const UpdateSupplier = () => {
         fullName,
         phone,
         location,
-        locationCoordinates,
         bio,
         payLater,
         licenseRequired,
@@ -464,10 +503,19 @@ const UpdateSupplier = () => {
                 <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
-                <LocationPicker 
-                  value={location}
-                  onChange={handleLocationChange}
+                <InputLabel>{commonStrings.LOCATION}</InputLabel>
+                <Input 
+                  type="text" 
+                  onChange={handleLocationChange} 
+                  autoComplete="off" 
+                  value={location} 
+                  inputRef={autocompleteInput}
                 />
+                {latitude !== undefined && longitude !== undefined && (
+                  <FormHelperText>
+                    {`Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`}
+                  </FormHelperText>
+                )}
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>

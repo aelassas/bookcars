@@ -19,10 +19,6 @@ sudo rm -rf /var/www/demo/backend
 sudo mkdir -p /var/www/demo/backend
 sudo cp -rf build/* /var/www/demo/backend
 
-sudo rm -rf /var/www/bookcars/backend
-sudo mkdir -p /var/www/bookcars/backend
-sudo cp -rf build/* /var/www/bookcars/backend
-
 sudo rm -rf /var/cache/nginx
 sudo systemctl restart nginx
 sudo systemctl status nginx --no-pager

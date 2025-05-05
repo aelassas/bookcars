@@ -441,10 +441,8 @@ export interface User extends Document {
   avatar?: string
   bio?: string
   location?: string
-  locationCoordinates?: {
-    lat: number
-    lng: number
-  }
+  latitude?: number
+  longitude?: number
   type?: bookcarsTypes.UserType
   blacklisted?: boolean
   payLater?: boolean
@@ -482,10 +480,8 @@ export interface UserInfo {
   avatar?: string
   bio?: string
   location?: string
-  locationCoordinates?: {
-    lat: number
-    lng: number
-  }
+  latitude?: number
+  longitude?: number
   type?: string
   blacklisted?: boolean
   payLater?: boolean
