@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use BookCars in your research or projects, please cite it using the following metadata."
-title: "BookCars: A Car Rental Booking System"
+message: "If you use SiCarro in your research or projects, please cite it using the following metadata."
+title: "SiCarro: A Car Rental Booking System"
 authors:
   - name: "Akram El Assas"
 year: 2025

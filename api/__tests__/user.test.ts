@@ -2,7 +2,7 @@ import 'dotenv/config'
 import request from 'supertest'
 import url from 'url'
 import path from 'path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
@@ -71,8 +71,8 @@ describe('POST /api/sign-up', () => {
   it('should create a user', async () => {
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!(await helper.exists(tempAvatar))) {
-      await fs.copyFile(AVATAR1_PATH, tempAvatar)
+    if (!(await helper.pathExists(tempAvatar))) {
+      await asyncFs.copyFile(AVATAR1_PATH, tempAvatar)
     }
 
     // test success (with avatar)
@@ -168,18 +168,18 @@ describe('POST /api/create-user', () => {
 
     // init
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!(await helper.exists(tempAvatar))) {
-      await fs.copyFile(AVATAR1_PATH, tempAvatar)
+    if (!(await helper.pathExists(tempAvatar))) {
+      await asyncFs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     const tempLicense = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!(await helper.exists(tempLicense))) {
-      await fs.copyFile(LICENSE1_PATH, tempLicense)
+    if (!(await helper.pathExists(tempLicense))) {
+      await asyncFs.copyFile(LICENSE1_PATH, tempLicense)
     }
 
     const contractFileName = `${nanoid()}.pdf`
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, contractFileName)
-    if (!(await helper.exists(contractFile))) {
-      await fs.copyFile(CONTRACT1_PATH, contractFile)
+    if (!(await helper.pathExists(contractFile))) {
+      await asyncFs.copyFile(CONTRACT1_PATH, contractFile)
     }
     const contracts = [
       { language: 'en', file: contractFileName },
@@ -218,7 +218,7 @@ describe('POST /api/create-user', () => {
     expect(user?.bio).toBe(payload.bio)
     const contractFileResult = user?.contracts?.find((c) => c.language === 'en')?.file
     expect(contractFileResult).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_CONTRACTS, contractFileResult!))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_CONTRACTS, contractFileResult!))).toBeTruthy()
     let userToken = await Token.findOne({ user: USER2_ID })
     expect(userToken).not.toBeNull()
     expect(userToken?.token.length).toBeGreaterThan(0)
@@ -1125,9 +1125,9 @@ describe('POST /api/create-avatar', () => {
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const filePath = path.join(env.CDN_TEMP_USERS, filename)
-    const avatarExists = await helper.exists(filePath)
+    const avatarExists = await helper.pathExists(filePath)
     expect(avatarExists).toBeTruthy()
-    await fs.unlink(filePath)
+    await asyncFs.unlink(filePath)
 
     // test failure (image not attached)
     res = await request(app)
@@ -1150,7 +1150,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
-    let avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
+    let avatarExists = await helper.pathExists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
     const user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
@@ -1165,7 +1165,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
-    avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
+    avatarExists = await helper.pathExists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
     // test success (avatar not set)
@@ -1176,7 +1176,7 @@ describe('POST /api/update-avatar/:userId', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .attach('image', AVATAR2_PATH)
     expect(res.statusCode).toBe(200)
-    avatarExists = await helper.exists(path.join(env.CDN_USERS, filename))
+    avatarExists = await helper.pathExists(path.join(env.CDN_USERS, filename))
     expect(avatarExists).toBeTruthy()
 
     // test failure (avatar not attached)
@@ -1213,13 +1213,13 @@ describe('POST /api/delete-avatar/:userId', () => {
     expect(user?.avatar).toBeDefined()
     expect(user?.avatar).not.toBeNull()
     const filePath = path.join(env.CDN_USERS, user?.avatar as string)
-    let avatarExists = await helper.exists(filePath)
+    let avatarExists = await helper.pathExists(filePath)
     expect(avatarExists).toBeTruthy()
     let res = await request(app)
       .post(`/api/delete-avatar/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    avatarExists = await helper.exists(filePath)
+    avatarExists = await helper.pathExists(filePath)
     expect(avatarExists).toBeFalsy()
     user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
@@ -1263,14 +1263,14 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
 
     // test success
     const tempAvatar = path.join(env.CDN_TEMP_USERS, AVATAR1)
-    if (!(await helper.exists(tempAvatar))) {
-      await fs.copyFile(AVATAR1_PATH, tempAvatar)
+    if (!(await helper.pathExists(tempAvatar))) {
+      await asyncFs.copyFile(AVATAR1_PATH, tempAvatar)
     }
     let res = await request(app)
       .post(`/api/delete-temp-avatar/${AVATAR1}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    const tempImageExists = await helper.exists(tempAvatar)
+    const tempImageExists = await helper.pathExists(tempAvatar)
     expect(tempImageExists).toBeFalsy()
 
     // test failure (avatar file not found)
@@ -1472,9 +1472,9 @@ describe('POST /api/create-license', () => {
     expect(res.statusCode).toBe(200)
     const filename = res.body as string
     const filePath = path.join(env.CDN_TEMP_LICENSES, filename)
-    const licenseExists = await helper.exists(filePath)
+    const licenseExists = await helper.pathExists(filePath)
     expect(licenseExists).toBeTruthy()
-    await fs.unlink(filePath)
+    await asyncFs.unlink(filePath)
 
     // test failure (file not sent)
     res = await request(app)
@@ -1483,12 +1483,12 @@ describe('POST /api/create-license', () => {
 
     // test failure (filename not valid)
     const invalidContract = path.join(env.CDN_TEMP_LICENSES, `${nanoid()}`)
-    await fs.copyFile(LICENSE1_PATH, invalidContract)
+    await asyncFs.copyFile(LICENSE1_PATH, invalidContract)
     res = await request(app)
       .post('/api/create-license')
       .attach('file', invalidContract)
     expect(res.statusCode).toBe(400)
-    await fs.unlink(invalidContract)
+    await asyncFs.unlink(invalidContract)
   })
 })
 
@@ -1505,7 +1505,7 @@ describe('POST /api/update-license/:id', () => {
     expect(res.statusCode).toBe(200)
     let filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
     user = await User.findById(USER1_ID)
     expect(user).toBeTruthy()
     expect(user?.license).toBe(filename)
@@ -1518,7 +1518,7 @@ describe('POST /api/update-license/:id', () => {
     expect(res.statusCode).toBe(200)
     filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
     user = await User.findById(USER1_ID)
     expect(filename).toBe(user?.license)
 
@@ -1532,7 +1532,7 @@ describe('POST /api/update-license/:id', () => {
     expect(res.statusCode).toBe(200)
     filename = res.body as string
     expect(filename).toBeTruthy()
-    expect(await helper.exists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
+    expect(await helper.pathExists(path.join(env.CDN_LICENSES, filename))).toBeTruthy()
     user = await User.findById(USER1_ID)
     expect(filename).toBe(user?.license)
     user!.license = filename
@@ -1546,13 +1546,13 @@ describe('POST /api/update-license/:id', () => {
 
     // test failure (filename not valid)
     const invalidContract = path.join(env.CDN_TEMP_LICENSES, `${nanoid()}`)
-    await fs.copyFile(LICENSE1_PATH, invalidContract)
+    await asyncFs.copyFile(LICENSE1_PATH, invalidContract)
     res = await request(app)
       .post(`/api/update-license/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
       .attach('file', invalidContract)
     expect(res.statusCode).toBe(400)
-    await fs.unlink(invalidContract)
+    await asyncFs.unlink(invalidContract)
 
     // test failure (user not found)
     res = await request(app)
@@ -1581,13 +1581,13 @@ describe('POST /api/delete-license/:id', () => {
     expect(user).toBeTruthy()
     expect(user?.license).toBeTruthy()
     const filename = user?.license as string
-    let imageExists = await helper.exists(path.join(env.CDN_LICENSES, filename))
+    let imageExists = await helper.pathExists(path.join(env.CDN_LICENSES, filename))
     expect(imageExists).toBeTruthy()
     let res = await request(app)
       .post(`/api/delete-license/${USER1_ID}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
-    imageExists = await helper.exists(path.join(env.CDN_LICENSES, filename))
+    imageExists = await helper.pathExists(path.join(env.CDN_LICENSES, filename))
     expect(imageExists).toBeFalsy()
     user = await User.findById(USER1_ID)
     expect(user?.license).toBeFalsy()
@@ -1642,15 +1642,15 @@ describe('POST /api/delete-temp-license/:image', () => {
   it('should delete a temporary license', async () => {
     // init
     const tempImage = path.join(env.CDN_TEMP_LICENSES, LICENSE1)
-    if (!(await helper.exists(tempImage))) {
-      await fs.copyFile(LICENSE1_PATH, tempImage)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(LICENSE1_PATH, tempImage)
     }
 
     // test success (temp file exists)
     let res = await request(app)
       .post(`/api/delete-temp-license/${LICENSE1}`)
     expect(res.statusCode).toBe(200)
-    const tempImageExists = await helper.exists(tempImage)
+    const tempImageExists = await helper.pathExists(tempImage)
     expect(tempImageExists).toBeFalsy()
 
     // test success (temp file not found)
@@ -1688,8 +1688,8 @@ describe('POST /api/delete-users', () => {
     const user2 = await User.findById(USER2_ID)
     const licenseFilename = `${user2!.id}.pdf`
     const license = path.join(env.CDN_LICENSES, licenseFilename)
-    if (!(await helper.exists(license))) {
-      await fs.copyFile(LICENSE1_PATH, license)
+    if (!(await helper.pathExists(license))) {
+      await asyncFs.copyFile(LICENSE1_PATH, license)
     }
     user2!.license = licenseFilename
     await user2?.save()
@@ -1719,8 +1719,8 @@ describe('POST /api/delete-users', () => {
     const imageName = 'bmw-x1.jpg'
     const imagePath = path.join(__dirname, `./img/${imageName}`)
     const image = path.join(env.CDN_CARS, imageName)
-    if (!(await helper.exists(image))) {
-      await fs.copyFile(imagePath, image)
+    if (!(await helper.pathExists(image))) {
+      await asyncFs.copyFile(imagePath, image)
     }
     let car = new Car({
       name: 'BMW X1',
@@ -1837,7 +1837,7 @@ describe('POST /api/delete-users', () => {
     expect(c).toBeNull()
     const s = await User.findById(supplierId)
     expect(s).toBeNull()
-    expect(await helper.exists(image)).toBeFalsy()
+    expect(await helper.pathExists(image)).toBeFalsy()
     testHelper.deleteLocation(locationId)
 
     // test failure (no payload)

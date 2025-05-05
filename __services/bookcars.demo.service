@@ -1,5 +1,5 @@
 [Unit]
-Description=BookCars Demo API
+Description=SiCarro API
 Wants=mongod.service
 After=mongod.service
 

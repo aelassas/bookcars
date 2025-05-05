@@ -4,4 +4,12 @@
 /**/*.pem-chain
 /**/*.ca.pem
 /**/.DS_Store
+
+cdn
+.cursor
+
+/**/.env
+
 /node_modules
+/cdn
+/cdn/*

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 start_time=$(date +%s)
-echo "Deploying BookCars API..."
+echo "Deploying SiCarro API..."
 
 cd /opt/demo
 git pull
@@ -21,7 +21,7 @@ sudo systemctl status bookcars --no-pager
 finish_time=$(date +%s)
 elapsed_time=$((finish_time - start_time))
 ((sec=elapsed_time%60, elapsed_time/=60, min=elapsed_time%60))
-timestamp=$(printf "BookCars API deployed in %d minutes and %d seconds." $min $sec)
+timestamp=$(printf "SiCarro API deployed in %d minutes and %d seconds." $min $sec)
 echo "$timestamp"
 
 #$SHEL

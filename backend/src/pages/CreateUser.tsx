@@ -31,6 +31,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
 import DriverLicense from '@/components/DriverLicense'
+import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/create-user.css'
 
@@ -42,6 +43,7 @@ const CreateUser = () => {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number, lng: number }>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [emailError, setEmailError] = useState(false)
@@ -208,8 +210,9 @@ const CreateUser = () => {
     return true
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
+  const handleLocationChange = (newLocation: { address: string, coordinates?: { lat: number, lng: number } }) => {
+    setLocation(newLocation.address)
+    setLocationCoordinates(newLocation.coordinates)
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,6 +324,10 @@ const CreateUser = () => {
         data.licenseRequired = licenseRequired
       }
 
+      if (locationCoordinates) {
+        data.locationCoordinates = locationCoordinates
+      }
+
       const status = await UserService.create(data)
 
       if (status === 200) {
@@ -428,8 +435,7 @@ const CreateUser = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" />
+                <LocationPicker value={location} onChange={handleLocationChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">

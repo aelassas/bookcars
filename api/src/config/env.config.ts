@@ -40,7 +40,7 @@ export const LANGUAGES = [
  *
  * @type {string}
  */
-export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
+export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'SiCarro')
 
 /**
  * Server Port. Default is 4002.
@@ -141,7 +141,7 @@ export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, si
 export const FRONTEND_AUTH_COOKIE_NAME = 'bc-x-access-token-frontend'
 
 /**
- * Backend authentication cookie name.
+ * backend authentication cookie name.
  *
  * @type {"bc-x-access-token-frontend"}
  */
@@ -288,7 +288,7 @@ export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
 export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
 
 /**
- * Backend host.
+ * backend host.
  *
  * @type {string}
  */
@@ -441,8 +441,10 @@ export interface User extends Document {
   avatar?: string
   bio?: string
   location?: string
-  latitude?: number
-  longitude?: number
+  locationCoordinates?: {
+    lat: number
+    lng: number
+  }
   type?: bookcarsTypes.UserType
   blacklisted?: boolean
   payLater?: boolean
@@ -480,8 +482,10 @@ export interface UserInfo {
   avatar?: string
   bio?: string
   location?: string
-  latitude?: number
-  longitude?: number
+  locationCoordinates?: {
+    lat: number
+    lng: number
+  }
   type?: string
   blacklisted?: boolean
   payLater?: boolean

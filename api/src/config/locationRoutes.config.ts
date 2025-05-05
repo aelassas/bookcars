@@ -1,6 +1,7 @@
 const routes = {
   validate: '/api/validate-location',
   create: '/api/create-location',
+  bulkCreate: '/api/bulk-create-locations',
   update: '/api/update-location/:id',
   delete: '/api/delete-location/:id',
   getLocation: '/api/location/:id/:language',

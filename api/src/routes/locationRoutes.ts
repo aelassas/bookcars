@@ -8,6 +8,7 @@ const routes = express.Router()
 
 routes.route(routeNames.validate).post(authJwt.verifyToken, locationController.validate)
 routes.route(routeNames.create).post(authJwt.verifyToken, locationController.create)
+routes.route(routeNames.bulkCreate).post(authJwt.verifyToken, locationController.bulkCreate)
 routes.route(routeNames.update).put(authJwt.verifyToken, locationController.update)
 routes.route(routeNames.delete).delete(authJwt.verifyToken, locationController.deleteLocation)
 routes.route(routeNames.getLocation).get(locationController.getLocation)

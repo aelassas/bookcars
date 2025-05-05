@@ -9,6 +9,11 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'Pas de lieux.',
     LOCATION: 'lieu',
     LOCATIONS: 'lieux',
+    BULK_LOCATIONS: 'Lieux en masse',
+    LANGUAGE: 'Langue',
+    COUNTRY: 'Pays',
+    UNAVAILABLE: 'Indisponible',
+    LOCATION_DELETED: 'Lieu supprimé',
   },
   en: {
     NEW_LOCATION: 'New location',
@@ -17,6 +22,11 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'No locations.',
     LOCATION: 'location',
     LOCATIONS: 'locations',
+    BULK_LOCATIONS: 'Bulk Locations',
+    LANGUAGE: 'Language',
+    COUNTRY: 'Country',
+    UNAVAILABLE: 'Unavailable',
+    LOCATION_DELETED: 'Location deleted',
   },
   es: {
     NEW_LOCATION: 'Nuevo lugar',
@@ -25,6 +35,11 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'No hay lugares.',
     LOCATION: 'lugar',
     LOCATIONS: 'lugares',
+    BULK_LOCATIONS: 'Lugares en masa',
+    LANGUAGE: 'Idioma',
+    COUNTRY: 'País',
+    UNAVAILABLE: 'No disponible',
+    LOCATION_DELETED: 'Lugar eliminado',
   },
 })
 

@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import path from 'node:path'
 import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -51,11 +51,11 @@ export const create = async (req: Request, res: Response) => {
 
     const image = path.join(env.CDN_TEMP_CARS, body.image)
 
-    if (await helper.exists(image)) {
+    if (await helper.pathExists(image)) {
       const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
       const newPath = path.join(env.CDN_CARS, filename)
 
-      await fs.rename(image, newPath)
+      await asyncFs.rename(image, newPath)
       car.image = filename
       await car.save()
     } else {
@@ -325,8 +325,8 @@ export const deleteCar = async (req: Request, res: Response) => {
 
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
-          await fs.unlink(image)
+        if (await helper.pathExists(image)) {
+          await asyncFs.unlink(image)
         }
       }
       await Booking.deleteMany({ car: car._id })
@@ -359,7 +359,7 @@ export const createImage = async (req: Request, res: Response) => {
     const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${nanoid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
-    await fs.writeFile(filepath, req.file.buffer)
+    await asyncFs.writeFile(filepath, req.file.buffer)
     res.json(filename)
   } catch (err) {
     logger.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
@@ -394,15 +394,15 @@ export const updateImage = async (req: Request, res: Response) => {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
-          await fs.unlink(image)
+        if (await helper.pathExists(image)) {
+          await asyncFs.unlink(image)
         }
       }
 
       const filename = `${car._id}_${Date.now()}${path.extname(file.originalname)}`
       const filepath = path.join(env.CDN_CARS, filename)
 
-      await fs.writeFile(filepath, file.buffer)
+      await asyncFs.writeFile(filepath, file.buffer)
       car.image = filename
       await car.save()
       res.json(filename)
@@ -435,8 +435,8 @@ export const deleteImage = async (req: Request, res: Response) => {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
-          await fs.unlink(image)
+        if (await helper.pathExists(image)) {
+          await asyncFs.unlink(image)
         }
       }
       car.image = null
@@ -467,11 +467,11 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (!(await helper.exists(imageFile))) {
+    if (!(await helper.pathExists(imageFile))) {
       throw new Error(`[car.deleteTempImage] temp image ${imageFile} not found`)
     }
 
-    await fs.unlink(imageFile)
+    await asyncFs.unlink(imageFile)
 
     res.sendStatus(200)
   } catch (err) {

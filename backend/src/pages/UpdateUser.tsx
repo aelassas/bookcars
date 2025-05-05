@@ -33,6 +33,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
 import DriverLicense from '@/components/DriverLicense'
+import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/update-user.css'
 
@@ -48,6 +49,7 @@ const UpdateUser = () => {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number, lng: number }>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -168,8 +170,9 @@ const UpdateUser = () => {
     return true
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
+  const handleLocationChange = (newLocation: { address: string, coordinates?: { lat: number, lng: number } }) => {
+    setLocation(newLocation.address)
+    setLocationCoordinates(newLocation.coordinates)
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -249,6 +252,7 @@ const UpdateUser = () => {
               setFullName(_user.fullName || '')
               setPhone(_user.phone || '')
               setLocation(_user.location || '')
+              setLocationCoordinates(_user.locationCoordinates)
               setBio(_user.bio || '')
               setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
               setPayLater(_user.payLater || false)
@@ -329,6 +333,10 @@ const UpdateUser = () => {
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
         notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
+      }
+
+      if (locationCoordinates) {
+        data.locationCoordinates = locationCoordinates
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -533,8 +541,7 @@ const UpdateUser = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <LocationPicker value={location} onChange={handleLocationChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">

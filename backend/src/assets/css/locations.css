@@ -4,7 +4,7 @@ div.locations {
   transform: translate3d(0, 0, 0);
 }
 
-div.locations .search {
+div.locations div.search {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -14,11 +14,35 @@ div.locations .info-box {
   background-color: #fff;
 }
 
+div.locations div.col-1 .location-count {
+  margin-top: 10px;
+}
+
+div.locations .new-location {
+  text-transform: none;
+}
+
+div.locations .location-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+div.locations .bulk-locations {
+  text-transform: none;
+  margin-top: 10px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
   div.locations {
     flex-direction: column;
+    flex: 0 1 auto;
+  }
+
+  div.locations .sc-search {
+    width: 80%;
   }
 
   div.locations div.col-1 {
@@ -33,20 +57,12 @@ div.locations .info-box {
     max-width: 480px;
   }
 
-  div.locations .sc-search {
-    width: 80%;
-  }
-
-  div.locations .new-location {
-    margin: 20px 5px 5px 0;
-    width: 100%;
-  }
-
   div.locations div.col-2 {
-    display: flex;
-    flex-direction: column;
     margin-top: 3px;
     padding: 1px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -58,24 +74,18 @@ div.locations .info-box {
   }
 
   div.locations div.col-1 {
-    float: left;
     width: 300px;
     margin-left: 20px;
   }
 
   div.locations div.col-2 {
     display: flex;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     flex: 1;
   }
 
-  div.locations .search {
+  div.locations div.search {
     margin-top: 15px;
-  }
-
-  div.locations .new-location {
-    margin: 10px 5px 0 0;
-    width: 100%;
   }
 }

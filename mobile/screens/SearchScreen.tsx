@@ -253,7 +253,7 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
                 <View style={styles.title}>
                   <View style={styles.bookcars}>
                     <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_1')}</Text>
-                    <Text style={styles.titleBookCars}>{i18n.t('BOOKCARS')}</Text>
+                    <Text style={styles.titleSiCarro}>{i18n.t('BOOKCARS')}</Text>
                     <Text style={styles.titleText}>{i18n.t('SEARCH_TITLE_2')}</Text>
                   </View>
                   {carCount > 0 && (
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 18,
   },
-  titleBookCars: {
+  titleSiCarro: {
     color: '#212121',
     fontSize: 18,
     fontWeight: '600',
