@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Input,
   InputLabel,
@@ -36,6 +36,8 @@ const CreateSupplier = () => {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
+  const [latitude, setLatitude] = useState<number | undefined>()
+  const [longitude, setLongitude] = useState<number | undefined>()
   const [bio, setBio] = useState('')
   const [error, setError] = useState(false)
   const [emailError, setEmailError] = useState(false)
@@ -53,6 +55,45 @@ const CreateSupplier = () => {
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
   const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+
+  const autocompleteInput = useRef<HTMLInputElement>(null)
+  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
+  
+  useEffect(() => {
+    // Load Google Maps script
+    if (!scriptLoaded) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        setScriptLoaded(true)
+      }
+      document.head.appendChild(script)
+      
+      return () => {
+        document.head.removeChild(script)
+      }
+    }
+    
+    // Initialize autocomplete when script is loaded
+    if (scriptLoaded && autocompleteInput.current) {
+      // Use type assertion to help TypeScript understand this is available at runtime
+      const google = (window as any).google;
+      if (google?.maps?.places) {
+        const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current)
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace()
+          if (place.geometry && place.geometry.location) {
+            setLocation(place.formatted_address || '')
+            setLatitude(place.geometry.location.lat())
+            setLongitude(place.geometry.location.lng())
+          }
+        })
+      }
+    }
+  }, [scriptLoaded, autocompleteInput])
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -168,6 +209,11 @@ const CreateSupplier = () => {
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value)
+    // When manually typing, we clear coordinates until a place is selected
+    if (e.target.value === '') {
+      setLatitude(undefined)
+      setLongitude(undefined)
+    }
   }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -241,6 +287,8 @@ const CreateSupplier = () => {
         fullName,
         phone,
         location,
+        latitude,
+        longitude,
         bio,
         language: UserService.getLanguage(),
         type: bookcarsTypes.RecordType.Supplier,
@@ -398,7 +446,17 @@ const CreateSupplier = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input type="text" onChange={handleLocationChange} autoComplete="off" />
+              <Input 
+                type="text" 
+                onChange={handleLocationChange} 
+                autoComplete="off" 
+                inputRef={autocompleteInput}
+              />
+              {latitude !== undefined && longitude !== undefined && (
+                <FormHelperText>
+                  {`Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`}
+                </FormHelperText>
+              )}
             </FormControl>
 
             <FormControl fullWidth margin="dense">

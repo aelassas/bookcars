@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-tail -f /opt/bookcars/api/logs/all.log
+tail -f /opt/demo/api/logs/all.log

@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 if [ "$1" == "all" ]; then
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-api.sh
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-backend.sh
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-frontend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-api.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-backend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-frontend.sh
 elif [ "$1" == "ui" ]; then
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-backend.sh
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-frontend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-backend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-frontend.sh
 elif [ "$1" == "api" ]; then
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-api.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-api.sh
 elif [ "$1" == "backend" ]; then
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-backend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-backend.sh
 elif [ "$1" == "frontend" ]; then
-  /bin/bash /opt/bookcars/__scripts/bc-deploy-frontend.sh
+  /bin/bash /opt/demo/__scripts/bc-deploy-frontend.sh
 else
-  echo "Usage: bc-deploy all|ui|api|backend|frontend"
+  echo "Usage: bc-deploy-demo all|ui|api|backend|frontend"
 fi

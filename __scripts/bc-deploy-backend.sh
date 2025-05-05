@@ -3,27 +3,27 @@
 start_time=$(date +%s)
 echo "Deploying BookCars backend..."
 
-cd /opt/bookcars
+cd /opt/demo
 git pull
-sudo chmod +x -R /opt/bookcars/__scripts
+sudo chmod +x -R /opt/demo/__scripts
 
-/bin/bash /opt/bookcars/__scripts/free-mem.sh
+/bin/bash /opt/demo/__scripts/free-mem.sh
 
-cd /opt/bookcars/backend
+cd /opt/demo/backend
 sudo rm -rf build
 
 npm install --force
 npm run build
 
-sudo rm -rf /var/www/bookcars/backend
-sudo mkdir -p /var/www/bookcars/backend
-sudo cp -rf build/* /var/www/bookcars/backend
+sudo rm -rf /var/www/demo/backend
+sudo mkdir -p /var/www/demo/backend
+sudo cp -rf build/* /var/www/demo/backend
 
 sudo rm -rf /var/cache/nginx
 sudo systemctl restart nginx
 sudo systemctl status nginx --no-pager
 
-/bin/bash /opt/bookcars/__scripts/free-mem.sh
+/bin/bash /opt/demo/__scripts/free-mem.sh
 
 finish_time=$(date +%s)
 elapsed_time=$((finish_time - start_time))
