@@ -59,7 +59,7 @@ const CreateSupplier = () => {
 
   const autocompleteInput = useRef<HTMLInputElement>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
-  const GOOGLE_MAPS_API_KEY = import.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
+  const GOOGLE_MAPS_API_KEY = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
   
   useEffect(() => {
     // Load Google Maps script
