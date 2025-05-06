@@ -11,7 +11,7 @@ const SignIn = lazy(() => import('@/pages/SignIn'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
-/*const SignUp = lazy(() => import('@/pages/SignUp'))*/
+const SignUp = lazy(() => import('@/pages/SignUp'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Supplier = lazy(() => import('@/pages/Supplier'))
 const CreateSupplier = lazy(() => import('@/pages/CreateSupplier'))
@@ -45,64 +45,24 @@ const Scheduler = lazy(() => import('@/pages/Scheduler'))
 const BankDetails = lazy(() => import('@/pages/BankDetails'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
 
-const App = () => (
-  <BrowserRouter>
+// AppLayout component to wrap routes with common layout
+const AppLayout = () => {
+  return (
     <GlobalProvider>
       <UserProvider>
         <RecaptchaProvider>
           <ScrollToTop />
-
           <div className="app">
             <Suspense fallback={<NProgressIndicator />}>
               <Header />
-
-              <Routes>
-                <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/activate" element={<Activate />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                {/*<Route path="/sign-up" element={<SignUp />} />*/}
-                <Route path="/" element={<Bookings />} />
-                <Route path="/suppliers" element={<Suppliers />} />
-                <Route path="/supplier" element={<Supplier />} />
-                <Route path="/create-supplier" element={<CreateSupplier />} />
-                <Route path="/update-supplier" element={<UpdateSupplier />} />
-                <Route path="/locations" element={<Locations />} />
-                <Route path="/create-location" element={<CreateLocation />} />
-                <Route path="/bulk-locations" element={<BulkLocations />} />
-                <Route path="/update-location" element={<UpdateLocation />} />
-                <Route path="/cars" element={<Cars />} />
-                <Route path="/car" element={<Car />} />
-                <Route path="/create-car" element={<CreateCar />} />
-                <Route path="/update-car" element={<UpdateCar />} />
-                <Route path="/update-booking" element={<UpdateBooking />} />
-                <Route path="/create-booking" element={<CreateBooking />} />
-                <Route path="/users" element={<Users />} />
-                <Route path="/user" element={<User />} />
-                <Route path="/create-user" element={<CreateUser />} />
-                <Route path="/update-user" element={<UpdateUser />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/tos" element={<ToS />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/countries" element={<Countries />} />
-                <Route path="/create-country" element={<CreateCountry />} />
-                <Route path="/update-country" element={<UpdateCountry />} />
-                <Route path="/scheduler" element={<Scheduler />} />
-                <Route path="/bank-details" element={<BankDetails />} />
-                <Route path="/pricing" element={<Pricing />} />
-
-                <Route path="*" element={<NoMatch />} />
-              </Routes>
+              <Outlet />
             </Suspense>
           </div>
         </RecaptchaProvider>
       </UserProvider>
     </GlobalProvider>
-  </BrowserRouter>
-)
+  )
+}
 
 const router = createBrowserRouter([
   {
@@ -121,6 +81,7 @@ const router = createBrowserRouter([
       { path: 'update-supplier', element: <UpdateSupplier /> },
       { path: 'locations', element: <Locations /> },
       { path: 'create-location', element: <CreateLocation /> },
+      { path: 'bulk-locations', element: <BulkLocations /> },
       { path: 'update-location', element: <UpdateLocation /> },
       { path: 'cars', element: <Cars /> },
       { path: 'car', element: <Car /> },

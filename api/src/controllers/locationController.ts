@@ -13,6 +13,7 @@ import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
 import ParkingSpot from '../models/ParkingSpot'
 import * as logger from '../common/logger'
+import fs from 'node:fs/promises'
 
 /**
  * Validate a Location name with language code.
@@ -204,7 +205,7 @@ export const bulkCreate = async (req: Request, res: Response) => {
         if (image) {
           const _image = path.join(env.CDN_TEMP_LOCATIONS, image)
 
-          if (!await helper.exists(_image)) {
+          if (!await helper.pathExists(_image)) {
             throw new Error(`Location image not found: ${_image}`)
           }
         }

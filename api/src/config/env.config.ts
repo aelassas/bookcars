@@ -443,6 +443,7 @@ export interface User extends Document {
   location?: string
   latitude?: number
   longitude?: number
+  locationCoordinates?: { lat: number, lng: number }
   type?: bookcarsTypes.UserType
   blacklisted?: boolean
   payLater?: boolean
@@ -482,6 +483,7 @@ export interface UserInfo {
   location?: string
   latitude?: number
   longitude?: number
+  locationCoordinates?: { lat: number, lng: number }
   type?: string
   blacklisted?: boolean
   payLater?: boolean
