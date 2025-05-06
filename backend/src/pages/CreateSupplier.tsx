@@ -25,7 +25,6 @@ import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import ContractList from '@/components/ContractList'
 import { UserContextType, useUserContext } from '@/context/UserContext'
-import LocationPicker from '@/components/LocationPicker'
 
 import '@/assets/css/create-supplier.css'
 
@@ -59,7 +58,7 @@ const CreateSupplier = () => {
 
   const autocompleteInput = useRef<HTMLInputElement>(null)
   const [scriptLoaded, setScriptLoaded] = useState(false)
-  const GOOGLE_MAPS_API_KEY = import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   
   useEffect(() => {
     // Load Google Maps script
@@ -70,6 +69,10 @@ const CreateSupplier = () => {
       script.defer = true
       script.onload = () => {
         setScriptLoaded(true)
+        console.log('Google Maps script loaded successfully')
+      }
+      script.onerror = (error) => {
+        console.error('Google Maps script failed to load:', error)
       }
       document.head.appendChild(script)
       
@@ -77,24 +80,92 @@ const CreateSupplier = () => {
         document.head.removeChild(script)
       }
     }
+  }, [GOOGLE_MAPS_API_KEY])
+  
+  // Manual initialization function for Google Places
+  const initializeGooglePlaces = () => {
+    if (!autocompleteInput.current) {
+      return
+    }
     
-    // Initialize autocomplete when script is loaded
-    if (scriptLoaded && autocompleteInput.current) {
-      // Use type assertion to help TypeScript understand this is available at runtime
-      const google = (window as any).google;
-      if (google?.maps?.places) {
-        const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current)
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace()
+    try {
+      const google = (window as any).google
+      if (!google || !google.maps || !google.maps.places) {
+        console.error('Google Maps Places API not available')
+        return
+      }
+      
+      console.log('Initializing Google Places Autocomplete')
+      
+      // Destroy existing autocomplete if any
+      const existingAutocomplete = autocompleteInput.current.getAttribute('data-autocomplete-initialized')
+      if (existingAutocomplete === 'true') {
+        // Just create new instance
+        console.log('Refreshing autocomplete instance')
+      }
+      
+      // Create new autocomplete instance
+      const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current, {
+        types: ['geocode'],
+        fields: ['address_components', 'formatted_address', 'geometry', 'name']
+      })
+      
+      // Mark the input as initialized
+      autocompleteInput.current.setAttribute('data-autocomplete-initialized', 'true')
+      
+      // Prevent form submission on enter key
+      autocompleteInput.current.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+        }
+      })
+      
+      // Set up place changed listener
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace()
+        console.log('Place selected:', place)
+        
+        if (place && place.formatted_address) {
+          setLocation(place.formatted_address)
+          
           if (place.geometry && place.geometry.location) {
-            setLocation(place.formatted_address || '')
             setLatitude(place.geometry.location.lat())
             setLongitude(place.geometry.location.lng())
+            console.log(`Coordinates set: ${place.geometry.location.lat()}, ${place.geometry.location.lng()}`)
           }
-        })
-      }
+        }
+      })
+      
+      console.log('Google Places Autocomplete initialized successfully')
+    } catch (error) {
+      console.error('Error initializing autocomplete:', error)
     }
-  }, [scriptLoaded, autocompleteInput])
+  }
+  
+  useEffect(() => {
+    // Initialize autocomplete when script is loaded
+    if (scriptLoaded) {
+      // Add a small delay to ensure the Google API is fully loaded
+      const timer = setTimeout(() => {
+        initializeGooglePlaces()
+      }, 500)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [scriptLoaded])
+  
+  // Also reinitialize when the input ref changes
+  useEffect(() => {
+    if (scriptLoaded && autocompleteInput.current) {
+      initializeGooglePlaces()
+    }
+  }, [autocompleteInput.current])
+  
+  // Override the default location change handler to not reset coordinates with manual input
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(e.target.value)
+    // We don't clear coordinates here to allow manual input but keep selected coordinates
+  }
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -208,10 +279,6 @@ const CreateSupplier = () => {
     validatePhone(e.target.value)
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
   const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value)
   }
@@ -294,6 +361,8 @@ const CreateSupplier = () => {
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
         notifyAdminOnNewCar,
+        latitude,
+        longitude
       }
 
       const status = await UserService.create(data)
@@ -440,7 +509,12 @@ const CreateSupplier = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input type="text" onChange={handleLocationChange} autoComplete="off" />
+              <Input 
+                type="text" 
+                onChange={handleLocationChange} 
+                autoComplete="off" 
+                inputRef={autocompleteInput}
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
