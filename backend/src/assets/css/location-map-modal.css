@@ -1,0 +1,76 @@
+.location-map-modal .map-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px !important;
+  position: relative;
+}
+
+.location-map-modal .mui-dialog-paper {
+  overflow: hidden;
+}
+
+.location-map-modal .mui-dialog-content-root {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.location-instruction {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(255 255 255 / 90%);
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
+  max-width: 80%;
+  text-align: center;
+  z-index: 1000;
+}
+
+/* Make sure Google Maps controls are visible but minimal */
+.gm-style-cc,
+.gm-style .gm-style-cc {
+  z-index: 1000 !important;
+}
+
+/* Hide any additional Google Maps UI elements we don't want */
+.gm-fullscreen-control,
+.gm-svpc {
+  display: none !important;
+}
+
+/* Ensure map has proper dimensions */
+.location-map-modal .mui-dialog-content-root > div {
+  min-height: 400px !important;
+}
+
+.location-hint-popin {
+  position: absolute;
+  left: 75%;
+  Top: 24px;
+  transform: translateX(-50%);
+  background: #ff9800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 14px 24px 14px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+  font-size: 1rem;
+  z-index: 2000;
+  min-width: 420px;
+  max-width: 90%;
+  font-weight: 500;
+}
+
+.location-hint-popin .mui-svg-icon-root {
+  color: #fff;
+}
+
+.location-hint-popin .mui-icon-button-root {
+  color: #fff;
+  margin-left: 12px;
+  padding: 4px;
+} 

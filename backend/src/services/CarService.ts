@@ -8,14 +8,21 @@ import * as UserService from './UserService'
  * @param {bookcarsTypes.CreateCarPayload} data
  * @returns {Promise<bookcarsTypes.Car>}
  */
-export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTypes.Car> =>
-  axiosInstance
+export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTypes.Car> => {
+  // If locationDetails exists, log it to see it was passed correctly
+  if (data.locationDetails && data.locationDetails.length > 0) {
+    console.log('Location details received:', data.locationDetails)
+    // We would later modify the backend to handle these coordinates properly
+  }
+  
+  return axiosInstance
     .post(
       '/api/create-car',
       data,
       { withCredentials: true }
     )
     .then((res) => res.data)
+}
 
 /**
  * Update a Car.

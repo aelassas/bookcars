@@ -98,6 +98,8 @@ const strings = new LocalizedStrings({
     PARTIAL_SUCCESS: 'Succès partiel',
     BULK_LOCATIONS: 'Lieux en masse',
     ERROR: 'Erreur',
+    LOCATIONS_HINT: 'Cliquez pour déplacer le marqueur à l\'emplacement exact',
+    MAX_LOCATIONS_REACHED: 'Maximum de 3 lieux autorisés.',
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -194,6 +196,8 @@ const strings = new LocalizedStrings({
     PARTIAL_SUCCESS: 'Partial success',
     BULK_LOCATIONS: 'Bulk Locations',
     ERROR: 'Error',
+    LOCATIONS_HINT: 'Click to move the marker for exact location',
+    MAX_LOCATIONS_REACHED: 'Maximum of 3 locations allowed.',
   },
   es: {
     GENERIC_ERROR: 'Se ha producido un error no controlado.',
@@ -290,6 +294,8 @@ const strings = new LocalizedStrings({
     PARTIAL_SUCCESS: 'Éxito parcial',
     BULK_LOCATIONS: 'Lugares en masa',
     ERROR: 'Error',
+    LOCATIONS_HINT: 'Haga clic para mover el marcador a la ubicación exacta',
+    MAX_LOCATIONS_REACHED: 'Máximo de 3 ubicaciones permitidas.',
   },
 })
 

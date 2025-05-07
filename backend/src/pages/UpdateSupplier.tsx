@@ -107,7 +107,8 @@ const UpdateSupplier = () => {
       // Create new autocomplete instance
       const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current, {
         types: ['geocode'],
-        fields: ['address_components', 'formatted_address', 'geometry', 'name']
+        fields: ['address_components', 'formatted_address', 'geometry', 'name'],
+        componentRestrictions: { country: 'sv' }
       })
       
       // Mark the input as initialized
