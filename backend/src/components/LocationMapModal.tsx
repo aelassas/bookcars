@@ -33,7 +33,6 @@ const LocationMapModal = ({
   // Reset map instance when modal closes
   useEffect(() => {
     if (!open && mapInitialized) {
-      console.log('Modal closed, cleaning up map instance')
       cleanupMap()
     }
     if (open) {

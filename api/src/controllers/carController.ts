@@ -36,7 +36,7 @@ export const create = async (req: Request, res: Response) => {
     }
 
     // date based price
-    const { dateBasedPrices, ...carFields } = body
+    const { dateBasedPrices, locationCoordinates, ...carFields } = body
     const dateBasedPriceIds: string[] = []
     if (body.isDateBasedPrice) {
       for (const dateBasePrice of dateBasedPrices) {
@@ -46,7 +46,23 @@ export const create = async (req: Request, res: Response) => {
       }
     }
 
-    const car = new Car({ ...carFields, dateBasedPrices: dateBasedPriceIds })
+    // Check if locations is empty but we have locationCoordinates
+    const finalCarFields = { ...carFields };
+    if ((!finalCarFields.locations || finalCarFields.locations.length === 0) && 
+        locationCoordinates && locationCoordinates.length > 0) {
+      // Create a placeholder location ID to satisfy the schema
+      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id)); // MongoDB ObjectId placeholder
+    }
+
+    // Create car object with all the basic fields
+    const car = new Car({ ...finalCarFields, dateBasedPrices: dateBasedPriceIds })
+    
+    // Add location coordinates if they exist
+    if (locationCoordinates && locationCoordinates.length > 0) {
+      // Store the coordinates in the car document for future use
+      car.locationCoordinates = locationCoordinates;
+    }
+    
     await car.save()
 
     const image = path.join(env.CDN_TEMP_CARS, body.image)

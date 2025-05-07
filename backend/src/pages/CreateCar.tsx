@@ -109,10 +109,6 @@ const CreateCar = () => {
       script.defer = true
       script.onload = () => {
         setScriptLoaded(true)
-        console.log('Google Maps script loaded successfully')
-      }
-      script.onerror = (error) => {
-        console.error('Google Maps script failed to load:', error)
       }
       document.head.appendChild(script)
       
@@ -134,9 +130,7 @@ const CreateCar = () => {
         console.error('Google Maps Places API not available')
         return
       }
-      
-      console.log('Initializing Google Places Autocomplete')
-      
+            
       // Destroy existing autocomplete if any
       const existingAutocomplete = autocompleteInput.current.getAttribute('data-autocomplete-initialized')
       if (existingAutocomplete === 'true') {
@@ -163,7 +157,6 @@ const CreateCar = () => {
       // Set up place changed listener
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace()
-        console.log('Place selected:', place)
         
         if (place && place.formatted_address && place.geometry && place.geometry.location) {
           // Store the selected place in state
@@ -174,7 +167,6 @@ const CreateCar = () => {
           const lng = place.geometry.location.lng()
           
           setTempCoordinates({ lat, lng })
-          console.log(`Setting coordinates for modal: ${lat}, ${lng}`)
           
           // Open the map modal for coordinate confirmation
           setLocationModalOpen(true)
@@ -183,7 +175,6 @@ const CreateCar = () => {
         }
       })
       
-      console.log('Google Places Autocomplete initialized successfully')
     } catch (error) {
       console.error('Error initializing autocomplete:', error)
     }
@@ -214,9 +205,7 @@ const CreateCar = () => {
   
   // Handler for confirming exact location from the map modal
   const handleLocationConfirm = (coordinates: { lat: number, lng: number }) => {
-    if (selectedPlace && selectedPlace.formatted_address) {
-      console.log('Confirmed location with precise coordinates:', coordinates)
-      
+    if (selectedPlace && selectedPlace.formatted_address) {      
       // Check if we've already reached the maximum of 3 locations
       if (selectedLocations.length >= 3) {
         helper.error(commonStrings.MAX_LOCATIONS_REACHED)
@@ -453,12 +442,14 @@ const CreateCar = () => {
         return
       }
 
+      // We're going to send an empty array for locations and rely on locationCoordinates
+      // The backend has been updated to handle this case
       const data: bookcarsTypes.CreateCarPayload = {
         loggedUser: user!._id!,
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: locations.map((location) => location._id),
+        locations: [], // Send empty array as the backend will handle this
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
@@ -491,8 +482,12 @@ const CreateCar = () => {
         co2: Number(co2) || undefined,
         isDateBasedPrice,
         dateBasedPrices,
-        // Also include the full location data with coordinates
-        locationDetails: selectedLocations
+        // Include the full location data with coordinates
+        locationCoordinates: selectedLocations.map((loc) => ({
+          name: loc.name,
+          latitude: loc.latitude,
+          longitude: loc.longitude
+        }))
       }
 
       const car = await CarService.create(data)

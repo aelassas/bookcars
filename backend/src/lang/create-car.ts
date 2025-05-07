@@ -34,6 +34,7 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Déjà réservée',
     IS_DATE_BASED_PRICE: 'Prix basé sur des dates',
     DATE_BASED_PRICES: 'Prix par dates',
+    LOCATION_HELPER_TEXT: 'Cherchez une adresse et ajoutez jusqu\'à 3 emplacements avec des coordonnées précises.',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -66,6 +67,7 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Fully Booked',
     IS_DATE_BASED_PRICE: 'Date Based Prices',
     DATE_BASED_PRICES: 'Date Based Prices',
+    LOCATION_HELPER_TEXT: 'Search for an address and add up to 3 locations with precise coordinates.',
   },
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
@@ -98,6 +100,7 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Ya Reservado',
     IS_DATE_BASED_PRICE: 'Precio basado en fechas',
     DATE_BASED_PRICES: 'Precios por fechas',
+    LOCATION_HELPER_TEXT: 'Busque una dirección y agregue hasta 3 ubicaciones con coordenadas precisas.',
   },
 })
 

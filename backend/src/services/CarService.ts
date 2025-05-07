@@ -9,10 +9,9 @@ import * as UserService from './UserService'
  * @returns {Promise<bookcarsTypes.Car>}
  */
 export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTypes.Car> => {
-  // If locationDetails exists, log it to see it was passed correctly
-  if (data.locationDetails && data.locationDetails.length > 0) {
-    console.log('Location details received:', data.locationDetails)
-    // We would later modify the backend to handle these coordinates properly
+  // Log location coordinates if they exist
+  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
+    console.log('Location coordinates being sent to server:', data.locationCoordinates)
   }
   
   return axiosInstance

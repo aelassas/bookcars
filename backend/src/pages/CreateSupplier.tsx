@@ -69,11 +69,8 @@ const CreateSupplier = () => {
       script.defer = true
       script.onload = () => {
         setScriptLoaded(true)
-        console.log('Google Maps script loaded successfully')
       }
-      script.onerror = (error) => {
-        console.error('Google Maps script failed to load:', error)
-      }
+      
       document.head.appendChild(script)
       
       return () => {
@@ -94,15 +91,9 @@ const CreateSupplier = () => {
         console.error('Google Maps Places API not available')
         return
       }
-      
-      console.log('Initializing Google Places Autocomplete')
-      
+            
       // Destroy existing autocomplete if any
       const existingAutocomplete = autocompleteInput.current.getAttribute('data-autocomplete-initialized')
-      if (existingAutocomplete === 'true') {
-        // Just create new instance
-        console.log('Refreshing autocomplete instance')
-      }
       
       // Create new autocomplete instance
       const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current, {
@@ -124,7 +115,6 @@ const CreateSupplier = () => {
       // Set up place changed listener
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace()
-        console.log('Place selected:', place)
         
         if (place && place.formatted_address) {
           setLocation(place.formatted_address)
@@ -132,12 +122,9 @@ const CreateSupplier = () => {
           if (place.geometry && place.geometry.location) {
             setLatitude(place.geometry.location.lat())
             setLongitude(place.geometry.location.lng())
-            console.log(`Coordinates set: ${place.geometry.location.lat()}, ${place.geometry.location.lng()}`)
           }
         }
       })
-      
-      console.log('Google Places Autocomplete initialized successfully')
     } catch (error) {
       console.error('Error initializing autocomplete:', error)
     }

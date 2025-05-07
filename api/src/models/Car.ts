@@ -26,7 +26,18 @@ const carSchema = new Schema<env.Car>(
     locations: {
       type: [Schema.Types.ObjectId],
       ref: 'Location',
-      validate: (value: any): boolean => Array.isArray(value) && value.length > 0,
+      validate: {
+        validator: function(value: any) {
+          // Make locations field optional if locationCoordinates exist
+          if (this.locationCoordinates && this.locationCoordinates.length > 0) {
+            return true; // Skip validation if we have location coordinates
+          }
+          return Array.isArray(value) && value.length > 0;
+        },
+        message: 'At least one location or location coordinates are required'
+      },
+      // Make it not required at all - the validation above will take care of checking
+      required: false
     },
 
     // --------- price fields ---------
@@ -195,6 +206,14 @@ const carSchema = new Schema<env.Car>(
     },
     co2: {
       type: Number,
+    },
+    locationCoordinates: {
+      type: [{
+        name: { type: String, required: true },
+        latitude: { type: Number, required: true },
+        longitude: { type: Number, required: true }
+      }],
+      default: undefined
     },
   },
   {

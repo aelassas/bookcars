@@ -225,7 +225,7 @@ export interface CreateCarPayload {
   multimedia: string[]
   rating?: number
   co2?: number
-  locationDetails?: Array<{ name: string, latitude: number, longitude: number }>
+  locationCoordinates?: Array<{ name: string, latitude: number, longitude: number }>
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
