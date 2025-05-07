@@ -107,7 +107,7 @@ const git = {
   // Get all staged files at once, more efficient than multiple git calls
   async getChangedFiles() {
     try {
-      const { stdout } = await execAsync('git diff --cached --name-only')
+      const { stdout } = await execAsync('git diff --cached --name-only --diff-filter=ACM')
       return stdout.trim().split('\n').filter(Boolean)
     } catch (err) {
       logger.logError('❌ Failed to get changed files:', err.message)
@@ -117,7 +117,7 @@ const git = {
   async getChangedFilesInProject(project) {
     try {
       const { folder } = project
-      const { stdout } = await execAsync(`git diff --cached --name-only ${folder}/`)
+      const { stdout } = await execAsync(`git diff --cached --name-only --diff-filter=ACM ${folder}/`)
       return stdout.trim().split('\n').filter(Boolean).map((file) => file.replace(`${folder}/`, ''))
     } catch (err) {
       logProjectError(project, '❌ Failed to get changed files:', err)
