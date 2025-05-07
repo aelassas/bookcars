@@ -6,6 +6,7 @@ import * as UserService from '@/services/UserService'
 import * as helper from '@/common/helper'
 import { useAnalytics } from '@/common/useAnalytics'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import Unauthorized from '@/components/Unauthorized'
 
 interface LayoutProps {
   strict?: boolean
@@ -20,20 +21,19 @@ const Layout = ({
 }: LayoutProps) => {
   useAnalytics()
 
-  const { user, userLoaded } = useUserContext() as UserContextType
+  const { user, userLoaded, unauthorized } = useUserContext() as UserContextType
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (userLoaded) {
-      if (!user && strict) {
-        // UserService.signout(false, true)
-        UserService.signout(true, false)
-      } else {
-        setLoading(false)
+    const currentUser = UserService.getCurrentUser()
 
-        if (onLoad) {
-          onLoad(user || undefined)
-        }
+    if (!currentUser && strict) {
+      UserService.signout(true, false)
+    } else if (userLoaded) {
+      setLoading(false)
+
+      if (onLoad) {
+        onLoad(user || undefined)
       }
     }
   }, [user, userLoaded, strict]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -59,18 +59,23 @@ const Layout = ({
 
   return (
     <>
-      {(!user && !loading) || (user && user.verified) ? (
-        <div className="content">{children}</div>
-      ) : (
-        !loading && (
-          <div className="validate-email">
-            <span>{strings.VALIDATE_EMAIL}</span>
-            <Button type="button" variant="contained" className="btn-primary btn-resend" onClick={handleResend}>
-              {strings.RESEND}
-            </Button>
-          </div>
+      {
+        !(unauthorized && strict) && (
+          (!user && !loading) || (user && user.verified) ? (
+            <div className="content">{children}</div>
+          ) : (
+            !loading && (
+              <div className="validate-email">
+                <span>{strings.VALIDATE_EMAIL}</span>
+                <Button type="button" variant="contained" className="btn-primary btn-resend" onClick={handleResend}>
+                  {strings.RESEND}
+                </Button>
+              </div>
+            )
+          )
         )
-      )}
+      }
+      {unauthorized && strict && <Unauthorized />}
     </>
   )
 }
