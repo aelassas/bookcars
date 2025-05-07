@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
 import env from '@/config/env.config'
-import { GlobalProvider } from '@/context/GlobalContext'
+import { NotificationProvider } from '@/context/NotificationContext'
 import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { PayPalProvider } from '@/context/PayPalContext'
@@ -38,23 +38,32 @@ const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 
-const AppLayout = () => (
-  <GlobalProvider>
-    <UserProvider>
-      <RecaptchaProvider>
-        <PayPalProvider>
-          <ScrollToTop />
-          <div className="app">
-            <Suspense fallback={<NProgressIndicator />}>
-              <Header />
-              <Outlet />
-            </Suspense>
-          </div>
-        </PayPalProvider>
-      </RecaptchaProvider>
+const AppLayout = () => {
+  const location = useLocation()
+  const [refreshKey, setRefreshKey] = useState(0) // refreshKey to check user and notifications when navigating between routes
+
+  useEffect(() => {
+    setRefreshKey((prev) => prev + 1)
+  }, [location.pathname])
+
+  return (
+    <UserProvider refreshKey={refreshKey}>
+      <NotificationProvider refreshKey={refreshKey}>
+        <RecaptchaProvider>
+          <PayPalProvider>
+            <ScrollToTop />
+            <div className="app">
+              <Suspense fallback={<NProgressIndicator />}>
+                <Header />
+                <Outlet />
+              </Suspense>
+            </div>
+          </PayPalProvider>
+        </RecaptchaProvider>
+      </NotificationProvider>
     </UserProvider>
-  </GlobalProvider>
-)
+  )
+}
 
 const router = createBrowserRouter([
   {

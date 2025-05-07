@@ -34,7 +34,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
       const $match: mongoose.FilterQuery<bookcarsTypes.User> = {
         $and: [
           { _id: sessionData?.id },
-          { blacklisted: false },
+          // { blacklisted: false },
         ],
       }
 
