@@ -13,12 +13,12 @@ export interface NotificationContextType {
 const NotificationContext = createContext<NotificationContextType | null>(null)
 
 // Create a provider
-interface GlobalProviderProps {
+interface NotificationProviderProps {
   children: ReactNode
   refreshKey?: number
 }
 
-export const NotificationProvider = ({ children, refreshKey }: GlobalProviderProps) => {
+export const NotificationProvider = ({ children, refreshKey }: NotificationProviderProps) => {
   const { userLoaded } = useUserContext() as UserContextType
   const [notificationCount, setNotificationCount] = useState(0)
   const value = useMemo(() => ({ notificationCount, setNotificationCount }), [notificationCount])
