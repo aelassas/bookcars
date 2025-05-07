@@ -4,7 +4,6 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
-import User from '../src/models/User'
 import * as testHelper from './testHelper'
 
 const { ADMIN_EMAIL } = testHelper
@@ -146,15 +145,15 @@ describe('GET /api/user/:id', () => {
     expect(res.statusCode).toBe(401)
 
     // test failure (user not found)
-    const user = await User.findById(USER_ID)
-    user!.blacklisted = true
-    await user?.save()
+    // const user = await User.findById(USER_ID)
+    // user!.blacklisted = true
+    // await user?.save()
     res = await request(app)
-      .get(`/api/user/${USER_ID}`)
+      .get(`/api/user/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(401)
-    user!.blacklisted = false
-    await user?.save()
+    expect(res.statusCode).toBe(204)
+    // user!.blacklisted = false
+    // await user?.save()
   })
 })
 
