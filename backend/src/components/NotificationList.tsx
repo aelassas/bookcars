@@ -31,7 +31,7 @@ import * as NotificationService from '@/services/NotificationService'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 import Backdrop from '@/components/SimpleBackdrop'
-import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
+import { useNotificationContext, NotificationContextType } from '@/context/NotificationContext'
 
 import '@/assets/css/notification-list.css'
 
@@ -41,7 +41,7 @@ interface NotificationListProps {
 
 const NotificationList = ({ user }: NotificationListProps) => {
   const navigate = useNavigate()
-  const { setNotificationCount } = useGlobalContext() as GlobalContextType
+  const { setNotificationCount } = useNotificationContext() as NotificationContextType
 
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -191,7 +191,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                         </IconButton>
                       </Tooltip>
                     )}
-                    {/* <Tooltip title={strings.DELETE_ALL}>
+                    <Tooltip title={strings.DELETE_ALL}>
                       <IconButton
                         onClick={() => {
                           setSelectedRows(checkedRows)
@@ -200,7 +200,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                       >
                         <DeleteIcon />
                       </IconButton>
-                    </Tooltip> */}
+                    </Tooltip>
                   </div>
                 )}
               </div>
@@ -242,6 +242,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                                     const url = row.booking ? `/update-booking?b=${row.booking}` : `/update-car?cr=${row.car}`
                                     navigate(url)
                                   }
+
                                   if (!row.isRead) {
                                     const status = await NotificationService.markAsRead(user._id, [row._id])
 
@@ -323,7 +324,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                             </IconButton>
                           </Tooltip>
                         )}
-                        {/* <Tooltip title={commonStrings.DELETE}>
+                        <Tooltip title={commonStrings.DELETE}>
                           <IconButton
                             onClick={() => {
                               setSelectedRows([row])
@@ -332,7 +333,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                           >
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip> */}
+                        </Tooltip>
                       </div>
                     </div>
                   </div>

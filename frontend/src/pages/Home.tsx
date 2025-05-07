@@ -91,6 +91,18 @@ const Home = () => {
     setTabValue(newValue)
   }
 
+  const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      const video = entry.target as HTMLVideoElement
+      if (entry.isIntersecting) {
+        video.muted = true
+        video.play()
+      } else {
+        video.pause()
+      }
+    })
+  }
+
   const onLoad = async () => {
     if (!env.HIDE_SUPPLIERS) {
       let _suppliers = await SupplierService.getAllSuppliers()
@@ -104,12 +116,12 @@ const Home = () => {
     const _locations = await LocationService.getLocationsWithPosition()
     setLocations(_locations)
 
+    const observer = new IntersectionObserver(handleIntersection)
     const video = document.getElementById('cover') as HTMLVideoElement
     if (video) {
-      video.muted = true
-      video.play()
+      observer.observe(video)
     } else {
-      console.error('Cover video tag not loaded')
+      console.error('Cover video not found')
     }
   }
 

@@ -1,6 +1,6 @@
-import React, { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
-import { GlobalProvider } from '@/context/GlobalContext'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
+import { NotificationProvider } from '@/context/NotificationContext'
 import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -44,21 +44,31 @@ const Scheduler = lazy(() => import('@/pages/Scheduler'))
 const BankDetails = lazy(() => import('@/pages/BankDetails'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
 
-const AppLayout = () => (
-  <GlobalProvider>
-    <UserProvider>
-      <RecaptchaProvider>
-        <ScrollToTop />
-        <div className="app">
-          <Suspense fallback={<NProgressIndicator />}>
-            <Header />
-            <Outlet />
-          </Suspense>
-        </div>
-      </RecaptchaProvider>
+const AppLayout = () => {
+  const location = useLocation()
+  const [refreshKey, setRefreshKey] = useState(0) // refreshKey to check user and notifications when navigating between routes
+
+  useEffect(() => {
+    setRefreshKey((prev) => prev + 1)
+  }, [location.pathname])
+
+  return (
+    <UserProvider refreshKey={refreshKey}>
+      <NotificationProvider refreshKey={refreshKey}>
+        <RecaptchaProvider>
+          <ScrollToTop />
+          <div className="app">
+            <Suspense fallback={<NProgressIndicator />}>
+              <Header />
+              <Outlet />
+            </Suspense>
+          </div>
+        </RecaptchaProvider>
+      </NotificationProvider>
     </UserProvider>
-  </GlobalProvider>
-)
+  )
+}
+
 
 const router = createBrowserRouter([
   {

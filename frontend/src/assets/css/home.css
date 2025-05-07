@@ -34,6 +34,8 @@ div.home div.home-content video {
   height: 100%;
   width: 100%;
   object-fit: cover;
+  z-index: 2;
+  position: relative;
 }
 
 div.home div.home-content div.video-background {
@@ -47,6 +49,7 @@ div.home div.home-content div.video-background {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 50%;
+  z-index: 1;
 }
 
 /* div.home div.home-content div.video-background img {

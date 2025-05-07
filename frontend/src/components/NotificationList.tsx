@@ -31,7 +31,7 @@ import * as NotificationService from '@/services/NotificationService'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 import Backdrop from '@/components/SimpleBackdrop'
-import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
+import { useNotificationContext, NotificationContextType } from '@/context/NotificationContext'
 
 import '@/assets/css/notification-list.css'
 
@@ -41,7 +41,7 @@ interface NotificationListProps {
 
 const NotificationList = ({ user }: NotificationListProps) => {
   const navigate = useNavigate()
-  const { setNotificationCount } = useGlobalContext() as GlobalContextType
+  const { setNotificationCount } = useNotificationContext() as NotificationContextType
 
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
