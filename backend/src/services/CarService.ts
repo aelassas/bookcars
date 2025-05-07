@@ -29,14 +29,20 @@ export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTy
  * @param {bookcarsTypes.UpdateCarPayload} data
  * @returns {Promise<number>}
  */
-export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
-  axiosInstance
+export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> => {
+  // Log location coordinates if they exist
+  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
+    console.log('Location coordinates being sent to update:', data.locationCoordinates)
+  }
+  
+  return axiosInstance
     .put(
       '/api/update-car',
       data,
       { withCredentials: true }
     )
     .then((res) => res.status)
+}
 
 /**
  * Check if a Car is related to a booking.

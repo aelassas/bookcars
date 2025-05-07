@@ -49,19 +49,21 @@ div.create-car {
 
 .selected-locations {
   margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .selected-location-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background-color: #f5f5f5;
-  padding: 5px 10px;
-  border-radius: 5px;
+  align-items: center;
+  padding: 8px;
   margin-bottom: 5px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
 }
 
 .selected-location-item span {
-  flex-grow: 1;
-  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

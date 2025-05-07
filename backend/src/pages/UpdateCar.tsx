@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Input,
@@ -36,8 +36,10 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import MultimediaList from '@/components/MultimediaList'
 import CarRangeList from '@/components/CarRangeList'
 import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
+import LocationMapModal from '@/components/LocationMapModal'
 
 import '@/assets/css/create-car.css'
+import '@/assets/css/location-map-modal.css'
 
 const UpdateCar = () => {
   const navigate = useNavigate()
@@ -54,6 +56,8 @@ const UpdateCar = () => {
   const [name, setName] = useState('')
   const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
+  const [locationInput, setLocationInput] = useState('')
+  const [selectedLocations, setSelectedLocations] = useState<{ name: string, latitude: number, longitude: number }[]>([])
   const [range, setRange] = useState('')
   const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
   const [rating, setRating] = useState('')
@@ -88,6 +92,16 @@ const UpdateCar = () => {
   const [deposit, setDeposit] = useState('')
   const [isDateBasedPrice, setIsDateBasedPrice] = useState(false)
   const [dateBasedPrices, setDateBasedPrices] = useState<bookcarsTypes.DateBasedPrice[]>([])
+
+  // Location modal state
+  const [locationModalOpen, setLocationModalOpen] = useState(false)
+  const [selectedPlace, setSelectedPlace] = useState<{formatted_address?: string, geometry?: {location?: {lat: () => number, lng: () => number}}} | null>(null)
+  const [tempCoordinates, setTempCoordinates] = useState<{ lat: number, lng: number }>({ lat: 13.6929, lng: -89.2182 }) // San Salvador coordinates as default
+  const [currentPlaceName, setCurrentPlaceName] = useState('')
+
+  const autocompleteInput = useRef<HTMLInputElement>(null)
+  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
   const handleBeforeUpload = () => {
     setLoading(true)
@@ -260,13 +274,19 @@ const UpdateCar = () => {
         return
       }
 
+      if (selectedLocations.length === 0) {
+        helper.error(commonStrings.FORM_ERROR)
+        setFormError(true)
+        return
+      }
+
       const data: bookcarsTypes.UpdateCarPayload = {
         loggedUser: user!._id!,
         _id: car._id,
         name,
         supplier: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: locations.map((l) => l._id),
+        locations: [], // Send empty array as the backend will handle this
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
@@ -299,6 +319,12 @@ const UpdateCar = () => {
         fullyBooked,
         isDateBasedPrice,
         dateBasedPrices,
+        // Include the full location data with coordinates
+        locationCoordinates: selectedLocations.map((loc) => ({
+          name: loc.name,
+          latitude: loc.latitude,
+          longitude: loc.longitude
+        }))
       }
 
       const status = await CarService.update(data)
@@ -342,6 +368,8 @@ const UpdateCar = () => {
               setName(_car.name)
               setSupplier(_supplier)
               setMinimumAge(_car.minimumAge.toString())
+              
+              // Handle locations
               const lcs: bookcarsTypes.Option[] = []
               for (const loc of _car.locations) {
                 const { _id, name: _name } = loc
@@ -349,6 +377,16 @@ const UpdateCar = () => {
                 lcs.push(lc)
               }
               setLocations(lcs)
+              
+              // Handle location coordinates if present
+              if (_car.locationCoordinates && _car.locationCoordinates.length > 0) {
+                setSelectedLocations(_car.locationCoordinates.map(loc => ({
+                  name: loc.name,
+                  latitude: loc.latitude,
+                  longitude: loc.longitude
+                })))
+              }
+              
               setDailyPrice(getPriceAsString(_car.dailyPrice))
               setDiscountedDailyPrice(getPriceAsString(_car.discountedDailyPrice))
               setBiWeeklyPrice(getPriceAsString(_car.biWeeklyPrice))
@@ -409,6 +447,169 @@ const UpdateCar = () => {
 
   const admin = user && user.type === bookcarsTypes.RecordType.Admin
 
+  useEffect(() => {
+    // Load Google Maps script
+    if (!scriptLoaded) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        setScriptLoaded(true)
+      }
+      script.onerror = (error) => {
+        console.error('Google Maps script failed to load:', error)
+      }
+      document.head.appendChild(script)
+      
+      return () => {
+        document.head.removeChild(script)
+      }
+    }
+  }, [GOOGLE_MAPS_API_KEY])
+  
+  // Manual initialization function for Google Places
+  const initializeGooglePlaces = () => {
+    if (!autocompleteInput.current) {
+      return
+    }
+    
+    try {
+      const google = (window as any).google
+      if (!google || !google.maps || !google.maps.places) {
+        console.error('Google Maps Places API not available')
+        return
+      }
+      
+      // Destroy existing autocomplete if any
+      const existingAutocomplete = autocompleteInput.current.getAttribute('data-autocomplete-initialized')
+      if (existingAutocomplete === 'true') {
+        // Refreshing autocomplete instance
+      }
+      
+      // Create new autocomplete instance
+      const autocomplete = new google.maps.places.Autocomplete(autocompleteInput.current, {
+        types: ['geocode'],
+        fields: ['address_components', 'formatted_address', 'geometry', 'name'],
+        componentRestrictions: { country: 'sv' } // 'sv' is the country code for El Salvador
+      })
+      
+      // Mark the input as initialized
+      autocompleteInput.current.setAttribute('data-autocomplete-initialized', 'true')
+      
+      // Prevent form submission on enter key
+      autocompleteInput.current.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+        }
+      })
+      
+      // Set up place changed listener
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace()
+        
+        if (place && place.formatted_address && place.geometry && place.geometry.location) {
+          // Store the selected place in state
+          setSelectedPlace(place)
+          
+          // Set temporary coordinates for the modal with proper values 
+          const lat = place.geometry.location.lat()
+          const lng = place.geometry.location.lng()
+          
+          setTempCoordinates({ lat, lng })
+          
+          // Open the map modal for coordinate confirmation
+          setLocationModalOpen(true)
+        } else {
+          console.error('Selected place has no geometry or formatted address')
+        }
+      })
+      
+    } catch (error) {
+      console.error('Error initializing autocomplete:', error)
+    }
+  }
+  
+  useEffect(() => {
+    // Initialize autocomplete when script is loaded
+    if (scriptLoaded) {
+      // Add a small delay to ensure the Google API is fully loaded
+      const timer = setTimeout(() => {
+        initializeGooglePlaces()
+      }, 500)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [scriptLoaded])
+  
+  // Also reinitialize when the input ref changes
+  useEffect(() => {
+    if (scriptLoaded && autocompleteInput.current) {
+      initializeGooglePlaces()
+    }
+  }, [autocompleteInput.current])
+
+  const handleLocationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocationInput(e.target.value)
+  }
+  
+  // Handler for confirming exact location from the map modal
+  const handleLocationConfirm = (coordinates: { lat: number, lng: number }) => {
+    if (selectedPlace && selectedPlace.formatted_address) {
+      // Check if we've already reached the maximum of 3 locations
+      if (selectedLocations.length >= 3) {
+        helper.error(commonStrings.MAX_LOCATIONS_REACHED)
+        return
+      }
+      
+      // Use the most up-to-date place name from the modal
+      const locationName = currentPlaceName || selectedPlace.formatted_address
+      
+      const newLocation = {
+        name: locationName,
+        latitude: coordinates.lat,
+        longitude: coordinates.lng
+      }
+      
+      // Add to selected locations array
+      setSelectedLocations([...selectedLocations, newLocation])
+      setLocationInput('') // Clear input after selection
+      
+      // Generate a pseudo-ID for the location
+      const locationId = `place_${Date.now()}`
+      
+      // Add to locations array in the format expected by the form submission
+      setLocations([...locations, { 
+        _id: locationId, 
+        name: locationName 
+      }])
+      
+      // Clear selected place
+      setSelectedPlace(null)
+    }
+  }
+  
+  // Handler for closing the location modal
+  const handleLocationModalClose = () => {
+    setLocationModalOpen(false)
+    // We don't clear selectedPlace here to preserve the data for handleLocationConfirm
+  }
+
+  // Handler for receiving the updated place name from the modal
+  const handlePlaceNameUpdate = (name: string) => {
+    setCurrentPlaceName(name)
+  }
+
+  const handleRemoveLocation = (index: number) => {
+    const newSelectedLocations = [...selectedLocations]
+    newSelectedLocations.splice(index, 1)
+    setSelectedLocations(newSelectedLocations)
+    
+    const newLocations = [...locations]
+    newLocations.splice(index, 1)
+    setLocations(newLocations)
+  }
+
   return (
     <Layout onLoad={onLoad} strict>
       {!error && !noMatch && (
@@ -466,8 +667,49 @@ const UpdateCar = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <LocationSelectList label={strings.LOCATIONS} multiple required variant="standard" value={locations} onChange={handleLocationsChange} />
+                <InputLabel className="required" sx={{ left: -14 }}>{commonStrings.PICK_UP_LOCATION}</InputLabel>
+                <Input
+                  type="text"
+                  fullWidth
+                  value={locationInput}
+                  onChange={handleLocationInputChange}
+                  placeholder={commonStrings.SEARCH_LOCATION}
+                  inputRef={autocompleteInput}
+                  required={selectedLocations.length === 0}
+                  autoComplete="off"
+                />
+                <FormHelperText>
+                  {strings.LOCATION_HELPER_TEXT}
+                </FormHelperText>
               </FormControl>
+
+              {selectedLocations.length > 0 && (
+                <div className="selected-locations">
+                  {selectedLocations.map((loc, index) => (
+                    <div key={index} className="selected-location-item">
+                      <span>{loc.name}</span>
+                      <Button 
+                        variant="text" 
+                        color="primary" 
+                        size="small"
+                        onClick={() => handleRemoveLocation(index)}
+                      >
+                        {commonStrings.DELETE}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Map Modal */}
+              <LocationMapModal
+                open={locationModalOpen}
+                onClose={handleLocationModalClose}
+                placeName={selectedPlace?.formatted_address || ''}
+                initialCoordinates={tempCoordinates}
+                onConfirm={handleLocationConfirm}
+                onPlaceNameUpdate={handlePlaceNameUpdate}
+              />
 
               <FormControl fullWidth margin="dense">
                 <TextField

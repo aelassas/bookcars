@@ -176,6 +176,7 @@ export const update = async (req: Request, res: Response) => {
         comingSoon,
         type,
         locations,
+        locationCoordinates,
         dailyPrice,
         discountedDailyPrice,
         biWeeklyPrice,
@@ -207,7 +208,21 @@ export const update = async (req: Request, res: Response) => {
 
       car.supplier = new mongoose.Types.ObjectId(supplier)
       car.minimumAge = minimumAge
-      car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
+      
+      // Check if locations is empty but we have locationCoordinates
+      if ((!locations || locations.length === 0) && 
+          locationCoordinates && locationCoordinates.length > 0) {
+        // Create a placeholder location ID to satisfy the schema
+        car.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id));
+      } else {
+        car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
+      }
+      
+      // Update location coordinates if present
+      if (locationCoordinates && locationCoordinates.length > 0) {
+        car.locationCoordinates = locationCoordinates;
+      }
+      
       car.name = name
       car.available = available
       car.fullyBooked = fullyBooked
