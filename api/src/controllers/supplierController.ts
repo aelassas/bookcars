@@ -91,7 +91,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.priceChangeRate = priceChangeRate
       supplier.supplierCarLimit = supplierCarLimit
       supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
-      supplier.blacklisted = blacklisted
+      supplier.blacklisted = !!blacklisted
 
       await supplier.save()
       res.json({
