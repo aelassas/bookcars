@@ -255,6 +255,8 @@ export interface GetCarsPayload {
   days?: number
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
+  coordinates?: { latitude: number, longitude: number }
+  radius?: number // Search radius in kilometers
 }
 
 export interface SignUpPayload {
@@ -504,6 +506,7 @@ export interface Car {
   rating?: number
   trips: number
   co2?: number
+  distance?: number // Distance in kilometers from search coordinates
   [propKey: string]: any
 }
 

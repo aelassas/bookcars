@@ -289,6 +289,12 @@ const Car = ({
               <Text style={styles.distanceText}>{`${distance} ${i18n.t('FROM_YOU')}`}</Text>
             </View>
           )}
+          {car.distance && (
+            <View style={styles.distance}>
+              <Image style={styles.distanceImage} source={require('@/assets/distance-icon.png')} />
+              <Text style={styles.distanceText}>{`${car.distance.toFixed(1)} km ${i18n.t('FROM_YOU')}`}</Text>
+            </View>
+          )}
         </>
       )}
 

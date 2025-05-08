@@ -92,6 +92,14 @@ const Search = () => {
           seats,
           days: bookcarsHelper.days(from, to),
         }
+
+        // Add coordinates for coordinate-based search if available in the state
+        const { state } = location
+        if (state && state.coordinates && state.radius) {
+          payload.coordinates = state.coordinates
+          payload.radius = state.radius
+        }
+
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
       }
@@ -169,6 +177,7 @@ const Search = () => {
     const { dropOffLocationId } = state
     const { from: _from } = state
     const { to: _to } = state
+    const { coordinates, radius } = state
 
     if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setLoading(false)
@@ -213,6 +222,13 @@ const Search = () => {
         seats,
         days: bookcarsHelper.days(from, to),
       }
+
+      // Add coordinates for coordinate-based search if available in the state
+      if (coordinates && radius) {
+        payload.coordinates = coordinates
+        payload.radius = radius
+      }
+
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
 

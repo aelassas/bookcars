@@ -172,6 +172,12 @@ const Car = ({
               <Badge backgroundColor="#D8EDF9" color="#000" text={`${distance} ${strings.FROM_YOU}`} />
             </div>
           )}
+          {car.distance && (
+            <div className="distance">
+              <img alt="Distance" src={DistanceIcon} />
+              <Badge backgroundColor="#D8EDF9" color="#000" text={`${car.distance.toFixed(1)} km ${strings.FROM_YOU}`} />
+            </div>
+          )}
         </div>
       )}
       <article>

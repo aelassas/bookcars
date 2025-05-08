@@ -415,6 +415,15 @@ const SearchForm = ({
       return
     }
 
+    // Add coordinates to navigation state if available
+    const coords = pickupCoordinates ? {
+      coordinates: {
+        latitude: pickupCoordinates.latitude,
+        longitude: pickupCoordinates.longitude
+      },
+      radius: 25 // Default radius of 25 km
+    } : {}
+
     setTimeout(navigate, 0, '/search', {
       state: {
         pickupLocationId: pickupLocation,
@@ -425,6 +434,7 @@ const SearchForm = ({
         // Add coordinates to navigation state
         pickupCoordinates,
         dropOffCoordinates: sameLocation ? pickupCoordinates : dropOffCoordinates,
+        ...coords
       },
     })
   }

@@ -17,6 +17,7 @@ interface GooglePlacesAutocompleteProps {
   bounds?: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral;
   error?: boolean;
   helperText?: string;
+  onCoordinatesChange?: (coordinates: { latitude: number; longitude: number }) => void;
 }
 
 declare global {
@@ -26,119 +27,160 @@ declare global {
   }
 }
 
-const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
-  label,
-  value = '',
-  required = false,
-  variant = 'outlined',
-  onChange,
-  onError,
-  placeholder = '',
-  disabled = false,
-  types = [],
-  strictBounds = false,
-  bounds,
-  error = false,
-  helperText = '',
-}) => {
-  const [inputValue, setInputValue] = useState(value);
-  const [initialized, setInitialized] = useState(false);
-  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+const GooglePlacesAutocomplete = ({ 
+  label, 
+  required, 
+  error, 
+  helperText, 
+  value, 
+  onChange, 
+  placeholder, 
+  onCoordinatesChange 
+}: GooglePlacesAutocompleteProps) => {
+  const [inputValue, setInputValue] = useState(value || '')
+  const [options, setOptions] = useState<google.maps.places.AutocompletePrediction[]>([])
+  const [loading, setLoading] = useState(false)
+  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null)
+  const placesService = useRef<google.maps.places.PlacesService | null>(null)
+  const mounted = useRef(true)
+  const apiKey = import.meta.env.VITE_BC_GOOGLE_MAPS_API_KEY
 
-  // Get the API key directly from import.meta.env
-  const apiKey = import.meta.env.VITE_BC_GOOGLE_MAPS_API_KEY;
-
-  // Initialize the Google Maps script
+  // Initialize Google Maps services when script is loaded
   useEffect(() => {
-    if (!window.google) {
-      const script = document.createElement('script');
-      // Use the API key from import.meta.env
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initGooglePlacesAutocomplete`;
-      script.async = true;
-      script.defer = true;
-      
-      window.initGooglePlacesAutocomplete = () => {
-        setInitialized(true);
-      };
-      
-      document.head.appendChild(script);
+    if (!window.google || !window.google.maps || !window.google.maps.places) {
+      // Load Google Maps script if not already loaded
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        if (mounted.current) {
+          autocompleteService.current = new google.maps.places.AutocompleteService()
+          
+          // Create a div for PlacesService (required)
+          const placesDiv = document.createElement('div')
+          placesDiv.style.display = 'none'
+          document.body.appendChild(placesDiv)
+          placesService.current = new google.maps.places.PlacesService(placesDiv)
+        }
+      }
+      document.head.appendChild(script)
       
       return () => {
-        document.head.removeChild(script);
-        // Safely delete the property only if it exists
-        if (window.initGooglePlacesAutocomplete) {
-          window.initGooglePlacesAutocomplete = undefined;
-        }
-      };
-    } else {
-      setInitialized(true);
-    }
-  }, [apiKey]);
-
-  // Initialize Autocomplete once Google Maps is loaded
-  useEffect(() => {
-    if (initialized && inputRef.current) {
-      try {
-        const options: google.maps.places.AutocompleteOptions = {
-          fields: ['address_components', 'formatted_address', 'geometry', 'name', 'place_id'],
-          strictBounds,
-          types,
-          componentRestrictions: { country: 'sv' }, // Restrict results to El Salvador (sv is country code)
-        };
-        
-        if (bounds) {
-          options.bounds = bounds;
-        }
-        
-        const autocompleteInstance = new google.maps.places.Autocomplete(
-          inputRef.current,
-          options
-        );
-        
-        // Add place_changed event listener
-        autocompleteInstance.addListener('place_changed', () => {
-          const place = autocompleteInstance.getPlace();
-          
-          if (!place.geometry) {
-            // User entered the name of a place that was not suggested
-            if (onError) {
-              onError(new Error('No details available for the selected place'));
-            }
-            return;
-          }
-          
-          setInputValue(place.formatted_address || '');
-          onChange(place);
-        });
-        
-        setAutocomplete(autocompleteInstance);
-      } catch (err) {
-        console.error('Error initializing Google Places Autocomplete:', err);
-        if (onError) {
-          onError(err instanceof Error ? err : new Error('Failed to initialize Google Places Autocomplete'));
+        mounted.current = false
+        if (script.parentNode) {
+          script.parentNode.removeChild(script)
         }
       }
+    } else {
+      autocompleteService.current = new google.maps.places.AutocompleteService()
+      
+      // Create a div for PlacesService (required)
+      const placesDiv = document.createElement('div')
+      placesDiv.style.display = 'none'
+      document.body.appendChild(placesDiv)
+      placesService.current = new google.maps.places.PlacesService(placesDiv)
+      
+      return () => {
+        mounted.current = false
+      }
+    }
+  }, [apiKey])
+
+  // Handle fetching place details and coordinates
+  const fetchPlaceDetails = async (placeId: string) => {
+    if (!placesService.current) return
+
+    return new Promise<google.maps.places.PlaceResult>((resolve, reject) => {
+      placesService.current?.getDetails(
+        {
+          placeId,
+          fields: ['geometry', 'formatted_address', 'name']
+        },
+        (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+            resolve(place)
+          } else {
+            reject(new Error(`Place details request failed: ${status}`))
+          }
+        }
+      )
+    })
+  }
+
+  // Handle input changes and fetch autocomplete predictions
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value
+    setInputValue(newValue)
+    
+    if (!newValue) {
+      setOptions([])
+      
+      // Call onChange with null/empty values when the input is cleared
+      if (onChange) {
+        onChange({
+          value: '',
+          coordinates: null
+        })
+      }
+      return
     }
     
-    return () => {
-      if (autocomplete) {
-        google.maps.event.clearInstanceListeners(autocomplete);
-      }
-    };
-  }, [initialized, bounds, strictBounds, types, onChange, onError]);
-
-  // Update input value when value prop changes
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    if (e.target.value === '') {
-      onChange(null);
+    if (autocompleteService.current) {
+      setLoading(true)
+      
+      autocompleteService.current.getPlacePredictions(
+        {
+          input: newValue,
+          componentRestrictions: { country: 'sv' } // El Salvador
+        },
+        (predictions, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+            setOptions(predictions)
+          } else {
+            setOptions([])
+          }
+          setLoading(false)
+        }
+      )
     }
-  };
+  }
+
+  // Handle option selection
+  const handleOptionSelect = async (option: google.maps.places.AutocompletePrediction) => {
+    try {
+      setLoading(true)
+      const place = await fetchPlaceDetails(option.place_id)
+      
+      if (place && place.geometry && place.geometry.location) {
+        const coordinates = {
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng()
+        }
+        
+        // Update input value and notify parent components
+        setInputValue(place.formatted_address || option.description)
+        
+        if (onChange) {
+          onChange({
+            value: place.formatted_address || option.description,
+            placeId: option.place_id,
+            coordinates
+          })
+        }
+        
+        // Notify about coordinate changes if callback provided
+        if (onCoordinatesChange) {
+          onCoordinatesChange(coordinates)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching place details:', error)
+    } finally {
+      setLoading(false)
+      setOptions([])
+    }
+  }
 
   return (
     <FormControl fullWidth error={error}>
@@ -146,11 +188,8 @@ const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
         label={label}
         value={inputValue}
         onChange={handleInputChange}
-        inputRef={inputRef}
-        required={required}
-        variant={variant}
         placeholder={placeholder}
-        disabled={disabled || !initialized}
+        disabled={!mounted.current}
         fullWidth
         error={error}
       />

@@ -3,83 +3,80 @@
  */
 
 import { Location } from '@/models/Location';
+import * as bookcarsHelper from ':bookcars-helper'
+import * as UserService from '@/services/UserService'
 
 /**
- * Calculate distance between two coordinates in kilometers
+ * Calculate distance between two coordinates using Haversine formula
+ * 
+ * @param lat1 - Latitude of first coordinate
+ * @param lon1 - Longitude of first coordinate
+ * @param lat2 - Latitude of second coordinate
+ * @param lon2 - Longitude of second coordinate
+ * @returns Distance in kilometers
  */
-export const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number => {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-};
+export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  return bookcarsHelper.distance(lat1, lon1, lat2, lon2, 'K')
+}
+
+/**
+ * Format distance value for display
+ * 
+ * @param distance - Distance value in kilometers
+ * @returns Formatted distance string with unit
+ */
+export const formatDistance = (distance: number): string => {
+  return bookcarsHelper.formatDistance(distance, UserService.getLanguage())
+}
+
+/**
+ * Format address parts into a readable string
+ * 
+ * @param address - Address object with components
+ * @returns Formatted address string
+ */
+export const formatAddress = (address: any): string => {
+  if (!address) return ''
+  
+  const parts = []
+  
+  // Add specific address components as needed
+  if (address.street_number) parts.push(address.street_number)
+  if (address.route) parts.push(address.route)
+  if (address.locality) parts.push(address.locality)
+  if (address.administrative_area_level_1) parts.push(address.administrative_area_level_1)
+  if (address.postal_code) parts.push(address.postal_code)
+  if (address.country) parts.push(address.country)
+  
+  return parts.join(', ')
+}
+
+/**
+ * Extract address components from Google Places result
+ * 
+ * @param place - Google Places result
+ * @returns Object with address components
+ */
+export const extractAddressComponents = (place: any): Record<string, string> => {
+  if (!place || !place.address_components) return {}
+  
+  const addressComponents: Record<string, string> = {}
+  
+  place.address_components.forEach((component: any) => {
+    const type = component.types[0]
+    if (type) {
+      addressComponents[type] = component.long_name
+    }
+  })
+  
+  return addressComponents
+}
 
 /**
  * Convert degrees to radians
  */
 const deg2rad = (deg: number): number => {
   return deg * (Math.PI / 180);
-};
-
-/**
- * Format address components from Google Places API
- */
-export const formatAddress = (place: google.maps.places.PlaceResult): string => {
-  if (place.formatted_address) {
-    return place.formatted_address;
-  }
-
-  // If formatted_address not available, build from components
-  if (place.address_components) {
-    const components: string[] = [];
-    
-    // Extract street number and route
-    const streetNumber = place.address_components.find((component: google.maps.AddressComponent) => 
-      component.types.includes('street_number')
-    )?.long_name;
-    
-    const route = place.address_components.find((component: google.maps.AddressComponent) => 
-      component.types.includes('route')
-    )?.long_name;
-    
-    if (streetNumber && route) {
-      components.push(`${streetNumber} ${route}`);
-    } else if (route) {
-      components.push(route);
-    }
-    
-    // Add locality (city)
-    const locality = place.address_components.find((component: google.maps.AddressComponent) => 
-      component.types.includes('locality')
-    )?.long_name;
-    
-    if (locality) {
-      components.push(locality);
-    }
-    
-    // Add country
-    const country = place.address_components.find((component: google.maps.AddressComponent) => 
-      component.types.includes('country')
-    )?.long_name;
-    
-    if (country) {
-      components.push(country);
-    }
-    
-    return components.join(', ');
-  }
-  
-  return place.name || '';
 };
 
 /**
@@ -119,4 +116,41 @@ export const getAddressFromCoordinates = async (
       }
     });
   });
-}; 
+};
+
+/**
+ * Calculate distance from search coordinates to car locations
+ * 
+ * @param searchCoordinates - Coordinates used in the search
+ * @param car - Car object with location coordinates
+ * @returns Distance in kilometers to the nearest car location
+ */
+export const getCarDistance = (
+  searchCoordinates: { latitude: number, longitude: number },
+  car: any
+): number | null => {
+  if (!searchCoordinates || !car) return null
+  
+  // If car has a pre-calculated distance from the API, use that
+  if (car.distance) {
+    return car.distance
+  }
+  
+  // If car has location coordinates, calculate the minimum distance to any location
+  if (car.locationCoordinates && car.locationCoordinates.length > 0) {
+    // Calculate distance to each location and return the minimum
+    const distances = car.locationCoordinates.map((location: any) => 
+      calculateDistance(
+        searchCoordinates.latitude,
+        searchCoordinates.longitude,
+        location.latitude,
+        location.longitude
+      )
+    )
+    
+    return Math.min(...distances)
+  }
+  
+  // If no coordinates, can't calculate distance
+  return null
+} 
