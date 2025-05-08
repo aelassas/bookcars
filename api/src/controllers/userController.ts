@@ -1013,7 +1013,7 @@ export const update = async (req: Request, res: Response) => {
     user.priceChangeRate = priceChangeRate
     user.supplierCarLimit = supplierCarLimit
     user.notifyAdminOnNewCar = notifyAdminOnNewCar
-    user.blacklisted = blacklisted
+    user.blacklisted = !!blacklisted
     if (type) {
       user.type = type as bookcarsTypes.UserType
     }
