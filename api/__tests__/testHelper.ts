@@ -135,6 +135,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     avatar: 'avatar.jpg',
     minimumRentalDays: 2,
     notifyAdminOnNewCar: true,
+    blacklisted: false,
   }
   const supplier = new User(body)
   await supplier.save()
