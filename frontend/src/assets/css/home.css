@@ -34,8 +34,8 @@ div.home div.home-content video {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  z-index: 2;
   position: relative;
+  z-index: 2;
 }
 
 div.home div.home-content div.video-background {
@@ -44,7 +44,6 @@ div.home div.home-content div.video-background {
   width: 100%;
   top: 0;
   left: 0;
-  /* background-image: url('/cover.png'); */
   background-image: url('/cover.webp');
   background-repeat: no-repeat;
   background-size: cover;
