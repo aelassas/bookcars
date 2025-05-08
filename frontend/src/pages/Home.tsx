@@ -151,9 +151,6 @@ const Home = () => {
             {!videoLoaded && (
               <div className="video-background" />
             )}
-            {/* <div className="video-background">
-              <img src="cover.png" alt="" />
-            </div> */}
           </div>
 
           <div className="home-title">{strings.TITLE}</div>
