@@ -53,6 +53,7 @@ const UpdateSupplier = () => {
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
   const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+  const [blacklisted, setBlacklisted] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -216,6 +217,7 @@ const UpdateSupplier = () => {
               setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
               setSupplierCarLimit(_supplier.supplierCarLimit?.toString() || '')
               setNotifyAdminOnNewCar(!!_supplier.notifyAdminOnNewCar)
+              setBlacklisted(!!_supplier.blacklisted)
               setVisible(true)
               setLoading(false)
             } else {
@@ -276,6 +278,7 @@ const UpdateSupplier = () => {
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
         notifyAdminOnNewCar,
+        blacklisted,
       }
 
       const res = await SupplierService.update(data)
@@ -326,6 +329,22 @@ const UpdateSupplier = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                 <Input id="email" type="text" value={email} disabled />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={blacklisted}
+                      onChange={(e) => {
+                        setBlacklisted(e.target.checked)
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  label={commonStrings.BLACKLISTED}
+                  title={commonStrings.BLACKLISTED_TOOLTIP}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
