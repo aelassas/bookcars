@@ -942,7 +942,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
+                  // $expr: { $eq: ['$_id', '$$userId'] },
+                  $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
                 },
               },
             ],

@@ -64,6 +64,7 @@ const UpdateUser = () => {
   const [priceChangeRate, setPriceChangeRate] = useState('')
   const [supplierCarLimit, setSupplierCarLimit] = useState('')
   const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+  const [blacklisted, setBlacklisted] = useState(false)
 
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
@@ -257,6 +258,7 @@ const UpdateUser = () => {
               setPriceChangeRate(_user.priceChangeRate?.toString() || '')
               setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
               setNotifyAdminOnNewCar(!!_user.notifyAdminOnNewCar)
+              setBlacklisted(!!_user.blacklisted)
               setVisible(true)
               setLoading(false)
             } else {
@@ -329,6 +331,7 @@ const UpdateUser = () => {
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
         supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
         notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
+        blacklisted,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -410,6 +413,22 @@ const UpdateUser = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                 <Input id="email" type="text" value={email} disabled />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={blacklisted}
+                      onChange={(e) => {
+                        setBlacklisted(e.target.checked)
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  label={commonStrings.BLACKLISTED}
+                  title={commonStrings.BLACKLISTED_TOOLTIP}
+                />
               </FormControl>
 
               {driver && (

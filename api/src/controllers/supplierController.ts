@@ -79,6 +79,7 @@ export const update = async (req: Request, res: Response) => {
         priceChangeRate,
         supplierCarLimit,
         notifyAdminOnNewCar,
+        blacklisted,
       } = body
       supplier.fullName = fullName
       supplier.phone = phone
@@ -90,6 +91,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.priceChangeRate = priceChangeRate
       supplier.supplierCarLimit = supplierCarLimit
       supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
+      supplier.blacklisted = blacklisted
 
       await supplier.save()
       res.json({
@@ -106,6 +108,7 @@ export const update = async (req: Request, res: Response) => {
         priceChangeRate: supplier.priceChangeRate,
         supplierCarLimit: supplier.supplierCarLimit,
         notifyAdminOnNewCar: supplier.notifyAdminOnNewCar,
+        blacklisted: supplier.blacklisted,
       })
       return
     }
@@ -217,6 +220,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       priceChangeRate,
       supplierCarLimit,
       notifyAdminOnNewCar,
+      blacklisted,
     } = user
 
     res.json({
@@ -234,6 +238,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       priceChangeRate,
       supplierCarLimit,
       notifyAdminOnNewCar,
+      blacklisted,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
@@ -449,7 +454,8 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
+                  // $expr: { $eq: ['$_id', '$$userId'] },
+                  $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
                 },
               },
             ],
