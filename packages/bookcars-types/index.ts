@@ -178,6 +178,7 @@ export interface UpdateSupplierPayload {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  blacklisted?: boolean
 }
 
 export interface CreateCarPayload {
