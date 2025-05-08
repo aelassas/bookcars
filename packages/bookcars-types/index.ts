@@ -436,6 +436,10 @@ export interface Location {
   values?: LocationValue[]
   image?: string
   parkingSpots?: ParkingSpot[]
+  coordinates?: {
+    latitude: number
+    longitude: number
+  }
 }
 
 export interface Country {
