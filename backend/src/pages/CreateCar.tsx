@@ -447,7 +447,7 @@ const CreateCar = () => {
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: selectedLocations.length > 0 ? locations.map(l => l._id) : ['000000000000000000000000'], // Use placeholder ID when empty
+        locations: locations.map(l => l._id),
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
