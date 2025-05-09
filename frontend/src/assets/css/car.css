@@ -33,9 +33,6 @@ div.car-container article span.fully-booked {
 }
 
 div.car-container div.car-header {
-  padding: 10px 0;
-  border-bottom: #d9d8d9 2px solid;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

@@ -46,7 +46,6 @@ interface CarProps {
   from: Date
   to: Date
   pickupLocationName?: string
-  distance?: string
   hideSupplier?: boolean
   sizeAuto?: boolean
   hidePrice?: boolean
@@ -60,7 +59,6 @@ const Car = ({
   from,
   to,
   pickupLocationName,
-  distance,
   hideSupplier,
   sizeAuto,
   hidePrice,
@@ -162,20 +160,14 @@ const Car = ({
     <div key={car._id} className="car-container">
       {pickupLocationName && (
         <div className="car-header">
-          <div className="location">
-            <LocationIcon />
-            <span className="location-name">{pickupLocationName}</span>
-          </div>
-          {distance && (
+          {car.distance !== undefined && (
             <div className="distance">
               <img alt="Distance" src={DistanceIcon} />
-              <Badge backgroundColor="#D8EDF9" color="#000" text={`${distance} ${strings.FROM_YOU}`} />
-            </div>
-          )}
-          {car.distance && (
-            <div className="distance">
-              <img alt="Distance" src={DistanceIcon} />
-              <Badge backgroundColor="#D8EDF9" color="#000" text={`${car.distance.toFixed(1)} km ${strings.FROM_YOU}`} />
+              <Badge 
+                backgroundColor="#D8EDF9" 
+                color="#000" 
+                text={`${car.formattedDistance || car.distance.toFixed(1) + ' km'} ${strings.FROM_SEARCH}`} 
+              />
             </div>
           )}
         </div>

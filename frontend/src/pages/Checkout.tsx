@@ -64,7 +64,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import '@/assets/css/checkout.css'
 
 //
-// Make sure to call `loadStripe` outside of a component’s render to avoid
+// Make sure to call `loadStripe` outside of a component's render to avoid
 // recreating the `Stripe` object on every render.
 //
 const stripePromise = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe ? loadStripe(env.STRIPE_PUBLISHABLE_KEY) : null
@@ -1063,8 +1063,8 @@ const Checkout = () => {
         {payPalProcessing && <Backdrop text={strings.CHECKING} />}
 
         <MapDialog
-          pickupLocation={pickupLocation}
-          openMapDialog={openMapDialog}
+          location={pickupLocation}
+          open={openMapDialog}
           onClose={() => setOpenMapDialog(false)}
         />
       </Layout>

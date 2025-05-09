@@ -250,3 +250,4 @@ const LocationRefinementModal: React.FC<LocationRefinementModalProps> = ({
 };
 
 export default LocationRefinementModal; 
+ 

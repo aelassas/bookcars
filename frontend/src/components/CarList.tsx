@@ -42,10 +42,10 @@ interface CarListProps {
   multimedia?: string[]
   rating?: number
   seats?: number
-  distance?: string
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+  coordinates?: { latitude: number, longitude: number }
 }
 
 const CarList = ({
@@ -73,10 +73,10 @@ const CarList = ({
   multimedia,
   rating,
   seats,
-  distance,
   includeAlreadyBookedCars,
   includeComingSoonCars,
   onLoad,
+  coordinates,
 }: CarListProps) => {
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -85,6 +85,8 @@ const CarList = ({
   const [rowCount, setRowCount] = useState(0)
   const [totalRecords, setTotalRecords] = useState(0)
   const [page, setPage] = useState(1)
+  const [noMatch, setNoMatch] = useState(false)
+  const [language, setLanguage] = useState('en')
 
   useEffect(() => {
     if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile) {
@@ -119,8 +121,15 @@ const CarList = ({
     _rating?: number,
     _seats?: number,
   ) => {
+    if (!from || !to || (!_pickupLocation && !coordinates)) {
+      return
+    }
+
+    setLoading(true)
+    setNoMatch(false)
+    setRows([])
     try {
-      setLoading(true)
+      setLanguage(env.DEFAULT_LANGUAGE)
 
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: _suppliers ?? [],
@@ -139,7 +148,16 @@ const CarList = ({
         includeAlreadyBookedCars,
         includeComingSoonCars,
       }
-
+      
+      if (coordinates) {
+        payload.coordinates = coordinates
+        if (_pickupLocation === '000000000000000000000000') {
+          delete payload.pickupLocation
+        }
+      }
+      
+      console.log('CarList fetchData payload:', payload);
+      
       const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
@@ -169,6 +187,7 @@ const CarList = ({
         onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
+      console.error('Error fetching cars:', err)
       helper.error(err)
     } finally {
       setLoading(false)
@@ -253,7 +272,6 @@ const CarList = ({
                   from={from as Date}
                   to={to as Date}
                   pickupLocationName={pickupLocationName}
-                  distance={distance}
                   hideSupplier={hideSupplier}
                   sizeAuto={sizeAuto}
                   hidePrice={hidePrice}

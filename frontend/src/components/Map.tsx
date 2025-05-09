@@ -1,5 +1,5 @@
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState, useMemo } from 'react'
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents, Circle } from 'react-leaflet'
 import L, { LatLngExpression } from 'leaflet'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
@@ -67,29 +67,46 @@ const ZoomControlledLayer = ({ zoom, minZoom, children }: ZoomControlledLayerPro
 interface MapProps {
   title?: string
   position?: LatLngExpression
+  location?: { latitude: number, longitude: number } | bookcarsTypes.Location
   initialZoom?: number
+  zoom?: number
   locations?: bookcarsTypes.Location[]
   parkingSpots?: bookcarsTypes.ParkingSpot[]
   className?: string
   children?: ReactNode
+  radius?: number
   onSelelectPickUpLocation?: (locationId: string) => void
   // onSelelectDropOffLocation?: (locationId: string) => void
 }
 
 const Map = ({
   title,
-  position = new L.LatLng(31.792305849269, -7.080168000000015),
+  position,
+  location,
   initialZoom,
+  zoom: mapZoom,
   locations,
   parkingSpots,
   className,
   children,
+  radius,
   onSelelectPickUpLocation,
   // onSelelectDropOffLocation,
 }: MapProps) => {
-  const _initialZoom = initialZoom || 5.5
+  const _initialZoom = initialZoom || mapZoom || 5.5
   const [zoom, setZoom] = useState(_initialZoom)
   const map = useRef<L.Map>(null)
+  
+  // Use location prop to determine position if provided
+  const mapPosition = useMemo(() => {
+    if (location) {
+      if ('latitude' in location && 'longitude' in location && location.latitude && location.longitude) {
+        return new L.LatLng(location.latitude, location.longitude);
+      }
+    }
+    
+    return position || new L.LatLng(31.792305849269, -7.080168000000015);
+  }, [location, position]);
 
   useEffect(() => {
     if (map.current) {
@@ -187,7 +204,7 @@ const Map = ({
     <>
       {title && <h1 className="title">{title}</h1>}
       <MapContainer
-        center={position}
+        center={mapPosition}
         zoom={_initialZoom}
         className={`${className ? `${className} ` : ''}map`}
         ref={map}
@@ -197,6 +214,21 @@ const Map = ({
           url={tileURL}
         />
         <ZoomTracker setZoom={setZoom} />
+        
+        {/* Display radius circle if radius is provided */}
+        {location && 'latitude' in location && location.latitude && location.longitude && radius && (
+          <Circle 
+            center={[location.latitude, location.longitude]} 
+            radius={radius * 1000} 
+            pathOptions={{ 
+              fillColor: '#3f51b5',
+              fillOpacity: 0.1,
+              color: '#3f51b5',
+              weight: 1
+            }} 
+          />
+        )}
+        
         <ZoomControlledLayer zoom={zoom} minZoom={7.5}>
           {
             getMarkers(zoomMarkers)

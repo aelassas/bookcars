@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button } from '@mui/material'
-import { Tune as FiltersIcon } from '@mui/icons-material'
+import { Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { 
+  Tune as FiltersIcon,
+  ExpandMore as ExpandMoreIcon,
+  LocationOn as LocationIcon
+} from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/search'
@@ -59,6 +63,10 @@ const Search = () => {
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  // Add state for coordinates
+  const [searchCoordinates, setSearchCoordinates] = useState<{ latitude: number, longitude: number } | null>(null)
+  const [searchAddress, setSearchAddress] = useState<string>('')
+  const [searchRadius, setSearchRadius] = useState<number>(25) // Default radius of 25km
   // const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
@@ -93,11 +101,15 @@ const Search = () => {
           days: bookcarsHelper.days(from, to),
         }
 
-        // Add coordinates for coordinate-based search if available in the state
-        const { state } = location
-        if (state && state.coordinates && state.radius) {
-          payload.coordinates = state.coordinates
-          payload.radius = state.radius
+        // Add coordinates for coordinate-based search if available
+        if (searchCoordinates && searchRadius) {
+          payload.coordinates = searchCoordinates
+          payload.radius = searchRadius
+          
+          // Important: If we have coordinates, we shouldn't send the invalid location ID
+          if (pickupLocation._id === '000000000000000000000000') {
+            delete payload.pickupLocation
+          }
         }
 
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
@@ -108,7 +120,7 @@ const Search = () => {
     if (from && to) {
       updateSuppliers()
     }
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to, searchCoordinates, searchRadius])
 
   const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
     if (suppliers.length < allSuppliers.length) {
@@ -169,6 +181,7 @@ const Search = () => {
   const onLoad = async (user?: bookcarsTypes.User) => {
     const { state } = location
     if (!state) {
+      console.log('Search failed: No state provided in location');
       setNoMatch(true)
       return
     }
@@ -177,36 +190,110 @@ const Search = () => {
     const { dropOffLocationId } = state
     const { from: _from } = state
     const { to: _to } = state
-    const { coordinates, radius } = state
+    const { pickupCoordinates, radius } = state
 
-    if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
+    console.log('Search state:', {
+      pickupLocationId,
+      dropOffLocationId,
+      from: _from,
+      to: _to,
+      pickupCoordinates,
+      radius
+    });
+
+    if (!_from || !_to) {
+      console.log('Search failed: Missing from or to dates');
       setLoading(false)
       setNoMatch(true)
       return
     }
 
-    let _pickupLocation
-    let _dropOffLocation
     try {
-      _pickupLocation = await LocationService.getLocation(pickupLocationId)
-
-      if (!_pickupLocation) {
-        setLoading(false)
-        setNoMatch(true)
-        return
+      let _pickupLocation;
+      let _dropOffLocation;
+      
+      // Check if we have coordinate-based search
+      if (pickupCoordinates && pickupCoordinates.latitude && pickupCoordinates.longitude) {
+        // For coordinate-based search, we don't strictly need location IDs
+        console.log('Using coordinate-based search', pickupCoordinates);
+        
+        // Set coordinates information
+        setSearchCoordinates({
+          latitude: pickupCoordinates.latitude,
+          longitude: pickupCoordinates.longitude
+        });
+        setSearchAddress(pickupCoordinates.address || '');
+        if (radius) {
+          setSearchRadius(radius);
+        }
+        
+        // Create placeholder location object if needed
+        if (pickupLocationId && pickupLocationId.startsWith('place_')) {
+          _pickupLocation = {
+            _id: '000000000000000000000000', // Use a different placeholder ID that won't be sent to API
+            name: pickupCoordinates.address,
+            coordinates: {
+              latitude: pickupCoordinates.latitude,
+              longitude: pickupCoordinates.longitude
+            }
+          };
+          
+          if (dropOffLocationId === pickupLocationId) {
+            _dropOffLocation = _pickupLocation;
+          } else if (state.dropOffCoordinates) {
+            _dropOffLocation = {
+              _id: '000000000000000000000000', // Use a different placeholder ID that won't be sent to API
+              name: state.dropOffCoordinates.address,
+              coordinates: {
+                latitude: state.dropOffCoordinates.latitude,
+                longitude: state.dropOffCoordinates.longitude
+              }
+            };
+          }
+          
+          console.log('Created placeholder locations:', { 
+            pickup: _pickupLocation, 
+            dropOff: _dropOffLocation 
+          });
+        }
+      }
+      
+      // If no coordinate data or we have real location IDs, fetch from database
+      if (!_pickupLocation && pickupLocationId) {
+        console.log('Fetching pickup location from database:', pickupLocationId);
+        _pickupLocation = await LocationService.getLocation(pickupLocationId);
       }
 
-      if (dropOffLocationId !== pickupLocationId) {
-        _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
-      } else {
-        _dropOffLocation = _pickupLocation
+      if (!_pickupLocation) {
+        console.log('Search failed: Could not determine pickup location');
+        setLoading(false);
+        setNoMatch(true);
+        return;
       }
 
       if (!_dropOffLocation) {
-        setLoading(false)
-        setNoMatch(true)
-        return
+        if (dropOffLocationId !== pickupLocationId) {
+          console.log('Fetching dropoff location from database:', dropOffLocationId);
+          _dropOffLocation = await LocationService.getLocation(dropOffLocationId);
+        } else {
+          _dropOffLocation = _pickupLocation;
+        }
       }
+
+      if (!_dropOffLocation) {
+        console.log('Search failed: Could not determine drop-off location');
+        setLoading(false);
+        setNoMatch(true);
+        return;
+      }
+
+      console.log('Locations resolved successfully:', {
+        pickup: _pickupLocation,
+        dropoff: _dropOffLocation
+      });
+
+      const days = bookcarsHelper.days(_from, _to);
+      console.log('Calculated rental days:', days);
 
       const payload: bookcarsTypes.GetCarsPayload = {
         pickupLocation: _pickupLocation._id,
@@ -220,150 +307,173 @@ const Search = () => {
         multimedia,
         rating,
         seats,
-        days: bookcarsHelper.days(from, to),
+        days,
+        suppliers: allSuppliersIds.length > 0 ? allSuppliersIds : [], // Use all available suppliers if we have them
       }
 
-      // Add coordinates for coordinate-based search if available in the state
-      if (coordinates && radius) {
-        payload.coordinates = coordinates
+      // Add coordinates for coordinate-based search if available
+      if (pickupCoordinates && radius) {
+        payload.coordinates = {
+          latitude: pickupCoordinates.latitude,
+          longitude: pickupCoordinates.longitude
+        }
         payload.radius = radius
+        
+        // Important: If we have coordinates, we shouldn't send the invalid location ID
+        if (_pickupLocation._id === '000000000000000000000000') {
+          delete payload.pickupLocation
+        }
       }
 
-      const _suppliers = await SupplierService.getFrontendSuppliers(payload)
-      const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+      // Debug log the payload
+      console.log('API Search payload:', JSON.stringify(payload, null, 2))
 
-      setPickupLocation(_pickupLocation)
-      setDropOffLocation(_dropOffLocation)
-      setFrom(_from)
-      setTo(_to)
-      setSuppliers(_suppliers)
-      setSupplierIds(_supplierIds)
+      try {
+        console.log('Calling SupplierService.getFrontendSuppliers...');
+        const _suppliers = await SupplierService.getFrontendSuppliers(payload)
+        console.log('Received suppliers:', _suppliers);
+        
+        const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+        console.log('Flattened supplier IDs:', _supplierIds);
 
-      const { ranges: _ranges } = state
-      if (_ranges) {
-        setRanges(_ranges)
+        setPickupLocation(_pickupLocation)
+        setDropOffLocation(_dropOffLocation)
+        setFrom(_from)
+        setTo(_to)
+        setSuppliers(_suppliers)
+        setSupplierIds(_supplierIds)
+
+        const { ranges: _ranges } = state
+        if (_ranges) {
+          setRanges(_ranges)
+        }
+
+        setLoading(false)
+        if (!user || (user && user.verified)) {
+          setVisible(true)
+        }
+      } catch (error) {
+        // Type-safe error handling
+        const err = error as any
+        console.error('Error fetching suppliers:', err?.response?.data || err)
+        setLoading(false)
+        setVisible(true) // Still show the search UI even if suppliers fetch fails
       }
-
-      // if (_pickupLocation.latitude && _pickupLocation.longitude) {
-      //   const l = await helper.getLocation()
-      //   if (l) {
-      //     const d = bookcarsHelper.distance(_pickupLocation.latitude, _pickupLocation.longitude, l[0], l[1], 'K')
-      //     setDistance(bookcarsHelper.formatDistance(d, UserService.getLanguage()))
-      //   }
-      // }
-
+    } catch (error) {
+      // Type-safe error handling
+      const err = error as any
+      console.error('General error in search process:', err?.response?.data || err)
+      helper.error(error, 'Failed to get location')
       setLoading(false)
-      if (!user || (user && user.verified)) {
-        setVisible(true)
-      }
-    } catch (err) {
-      helper.error(err)
+      setVisible(true) // Still show the search UI even on error
     }
   }
 
   return (
-    <>
-      <Layout onLoad={onLoad} strict={false}>
-        {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
-          <div className="search">
-            <div className="col-1">
-              {!loading && (
-                <>
-                  {((pickupLocation.latitude && pickupLocation.longitude)
-                    || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
-                      <Map
-                        position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
-                        initialZoom={10}
-                        locations={[pickupLocation]}
-                        parkingSpots={pickupLocation.parkingSpots}
-                        className="map"
-                      >
-                        <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
-                      </Map>
-                    )}
+    <Layout onLoad={onLoad} strict={false}>
+      {visible && (
+        <div className="search">
+          {/* Left column with map and filters */}
+          <div className="col-1">
+            {!env.isMobile && (pickupLocation || searchCoordinates) && (
+                <Map
+                  location={searchCoordinates || pickupLocation}
+                  zoom={13}
+                  radius={searchRadius}
+                  className="map"
+                  initialZoom={10}
 
-                  <CarFilter
-                    className="filter"
-                    pickupLocation={pickupLocation}
-                    dropOffLocation={dropOffLocation}
-                    from={from}
-                    to={to}
-                    collapse
-                    onSubmit={handleCarFilterSubmit}
-                  />
-
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    startIcon={<FiltersIcon />}
-                    disableElevation
-                    fullWidth
-                    className="btn btn-filters"
-                    onClick={() => setShowFilters((prev) => !prev)}
-                  >
-                    {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
-                  </Button>
-
-                  {
-                    showFilters && (
-                      <>
-                        {!env.HIDE_SUPPLIERS && <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />}
-                        <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
-                        <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
-                        <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
-                        <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
-                        <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
-                        <CarType className="filter" onChange={handleCarTypeFilterChange} />
-                        <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
-                        <MileageFilter className="filter" onChange={handleMileageFilterChange} />
-                        <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
-                        <DepositFilter className="filter" onChange={handleDepositFilterChange} />
-                      </>
-                    )
-                  }
-                </>
-              )}
-            </div>
-            <div className="col-2">
-              <CarList
-                carSpecs={carSpecs}
-                suppliers={supplierIds}
-                carType={carType}
-                gearbox={gearbox}
-                mileage={mileage}
-                fuelPolicy={fuelPolicy}
-                deposit={deposit}
-                pickupLocation={pickupLocation._id}
-                dropOffLocation={dropOffLocation._id}
-                // pickupLocationName={pickupLocation.name}
-                loading={loading}
+                />
+            )}
+            {pickupLocation && dropOffLocation && from && to && (
+              <CarFilter
+                className="filter"
+                pickupLocation={pickupLocation}
+                dropOffLocation={dropOffLocation}
                 from={from}
                 to={to}
-                ranges={ranges}
-                multimedia={multimedia}
-                rating={rating}
-                seats={seats}
-                // distance={distance}
-                // onLoad={() => setLoadingPage(false)}
-                hideSupplier={env.HIDE_SUPPLIERS}
-                // includeAlreadyBookedCars
-                includeComingSoonCars
+                collapse
+                onSubmit={handleCarFilterSubmit}
               />
-            </div>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<FiltersIcon />}
+              disableElevation
+              fullWidth
+              className="btn btn-filters"
+              onClick={() => setShowFilters((prev) => !prev)}
+            >
+              {showFilters ? strings.HILE_FILTERS : strings.SHOW_FILTERS}
+            </Button>
+              {
+                showFilters && (
+                  <>
+                    {!env.HIDE_SUPPLIERS && <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />}
+                    <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
+                    <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
+                    <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
+                    <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
+                    <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
+                    <CarType className="filter" onChange={handleCarTypeFilterChange} />
+                    <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
+                    <MileageFilter className="filter" onChange={handleMileageFilterChange} />
+                    <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
+                    <DepositFilter className="filter" onChange={handleDepositFilterChange} />
+                  </>
+                )
+              }
           </div>
-        )}
 
-        <MapDialog
-          pickupLocation={pickupLocation}
-          openMapDialog={openMapDialog}
-          onClose={() => setOpenMapDialog(false)}
-        />
+          {/* Right column with car list */}
+          <div className="col-2">
+            <CarList
+              className="car-list"
+              from={from}
+              to={to}
+              suppliers={supplierIds}
+              pickupLocation={pickupLocation?._id}
+              dropOffLocation={dropOffLocation?._id}
+              pickupLocationName={searchAddress || pickupLocation?.name}
+              carSpecs={carSpecs}
+              carType={carType}
+              gearbox={gearbox}
+              mileage={mileage}
+              fuelPolicy={fuelPolicy}
+              deposit={deposit}
+              ranges={ranges}
+              multimedia={multimedia}
+              rating={rating}
+              seats={seats}
+              coordinates={searchCoordinates || undefined}
+              includeAlreadyBookedCars={false}
+              includeComingSoonCars={false}
+            />
+            
+            {env.isMobile && (
+              <ViewOnMapButton
+                onClick={() => {
+                  setOpenMapDialog(true)
+                }}
+              />
+            )}
+          </div>
 
-        {noMatch && <NoMatch hideHeader />}
-      </Layout>
+          <MapDialog
+            open={openMapDialog}
+            zoom={13}
+            location={searchCoordinates || pickupLocation}
+            radius={searchRadius}
+            onClose={() => {
+              setOpenMapDialog(false)
+            }}
+          />
+        </div>
+      )}
 
-      {/* {loadingPage && !noMatch && <Progress />} */}
-    </>
+      {noMatch && <NoMatch hideHeader />}
+    </Layout>
   )
 }
 

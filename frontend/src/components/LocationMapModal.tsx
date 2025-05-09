@@ -12,6 +12,13 @@ interface LocationMapModalProps {
   onPlaceNameUpdate?: (name: string) => void
 }
 
+// Extend the window interface to include Google Maps API
+declare global {
+  interface Window {
+    google: typeof google;
+  }
+}
+
 const LocationMapModal = ({
   open,
   onClose,
@@ -70,9 +77,23 @@ const LocationMapModal = ({
   const resizeMap = () => {
     if (mapInstance.current && window.google && window.google.maps) {
       try {
-        window.google.maps.event.trigger(mapInstance.current, 'resize')
+        // Force a redraw by changing the zoom
+        const currentMap = mapInstance.current;
+        
+        setTimeout(() => {
+          if (currentMap) {
+            // Just set the zoom twice to force a refresh
+            const defaultZoom = 17;
+            currentMap.setZoom(defaultZoom - 1);
+            setTimeout(() => {
+              if (currentMap) {
+                currentMap.setZoom(defaultZoom);
+              }
+            }, 10);
+          }
+        }, 10);
       } catch (error) {
-        console.error('Error triggering resize event:', error)
+        console.error('Error resizing map:', error)
       }
     }
   }
@@ -194,9 +215,7 @@ const LocationMapModal = ({
         streetViewControl: false,
         fullscreenControl: false,
         zoomControl: true,
-        rotateControl: false,
-        scaleControl: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: 'roadmap'
       })
 
       // Create a draggable marker
@@ -360,3 +379,4 @@ const LocationMapModal = ({
 }
 
 export default LocationMapModal 
+ 

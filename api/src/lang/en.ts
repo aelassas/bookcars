@@ -48,4 +48,5 @@ export const en = {
   LOCATION_IMAGE_NOT_FOUND: 'Location image not found',
   NEW_CAR_NOTIFICATION_PART1: 'The supplier ',
   NEW_CAR_NOTIFICATION_PART2: ' created a new car.',
+  COORDINATES_REQUIRED: 'Coordinates are required for coordinate-based search.',
 }

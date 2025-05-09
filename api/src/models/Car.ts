@@ -236,6 +236,8 @@ carSchema.index({ range: 1 })
 carSchema.index({ multimedia: 1 })
 carSchema.index({ dailyPrice: 1, _id: 1 })
 carSchema.index({ dateBasedPrices: 1 })
+// Add geospatial index for coordinate-based searches
+carSchema.index({ 'locationCoordinates.latitude': 1, 'locationCoordinates.longitude': 1 })
 
 const Car = model<env.Car>('Car', carSchema)
 

@@ -22,7 +22,7 @@ import * as UserService from '@/services/UserService'
 import * as LocationService from '@/services/LocationService'
 import DateTimePicker from '@/components/DateTimePicker'
 import LocationMapModal from '@/components/LocationMapModal'
-import * as LocationUtils from '@/utils/LocationUtils'
+import { nanoid } from 'nanoid'
 
 import '@/assets/css/search-form.css'
 
@@ -53,11 +53,9 @@ const SearchForm = ({
   _minDate = addHours(_minDate, env.MIN_PICK_UP_HOURS)
 
   const [pickupLocation, setPickupLocation] = useState('')
-  const [selectedPickupLocation, setSelectedPickupLocation] = useState<bookcarsTypes.Location | undefined>(undefined)
   // New state for pickup coordinates
   const [pickupCoordinates, setPickupCoordinates] = useState<LocationCoordinates | null>(null)
   const [dropOffLocation, setDropOffLocation] = useState('')
-  const [selectedDropOffLocation, setSelectedDropOffLocation] = useState<bookcarsTypes.Location | undefined>(undefined)
   // New state for dropoff coordinates
   const [dropOffCoordinates, setDropOffCoordinates] = useState<LocationCoordinates | null>(null)
   const [minDate, setMinDate] = useState(_minDate)
@@ -66,7 +64,7 @@ const SearchForm = ({
   const [sameLocation, setSameLocation] = useState(true)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
-  const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
+  const [ranges, setRanges] = useState<bookcarsTypes.CarRange[]>(bookcarsHelper.getAllRanges())
   const [minPickupHoursError, setMinPickupHoursError] = useState(false)
   const [minRentalHoursError, setMinRentalHoursError] = useState(false)
   // Error states for location validation
@@ -219,7 +217,6 @@ const SearchForm = ({
     const init = async () => {
       if (__pickupLocation) {
         const location = await LocationService.getLocation(__pickupLocation)
-        setSelectedPickupLocation(location)
         setPickupLocation(__pickupLocation)
         
         // Set coordinates based on location data if available
@@ -259,7 +256,6 @@ const SearchForm = ({
     const init = async () => {
       if (__dropOffLocation) {
         const location = await LocationService.getLocation(__dropOffLocation)
-        setSelectedDropOffLocation(location)
         setDropOffLocation(__dropOffLocation)
         
         // Set coordinates based on location data if available
@@ -411,30 +407,44 @@ const SearchForm = ({
     setPickupLocationError(!pickupLocationValid)
     setDropOffLocationError(!dropOffLocationValid && !sameLocation)
 
+    // Log validation issues for debugging
+    console.log('Form validation:', {
+      pickupLocationValid,
+      dropOffLocationValid,
+      hasFrom: !!from,
+      hasTo: !!to,
+      fromError,
+      toError,
+      minPickupHoursError,
+      minRentalHoursError,
+      pickupCoordinates
+    })
+
     if (!pickupLocationValid || !dropOffLocationValid || !from || !to || fromError || toError || minPickupHoursError || minRentalHoursError) {
+      console.log('Form validation failed, not submitting')
       return
     }
 
-    // Add coordinates to navigation state if available
-    const coords = pickupCoordinates ? {
-      coordinates: {
-        latitude: pickupCoordinates.latitude,
-        longitude: pickupCoordinates.longitude
-      },
-      radius: 25 // Default radius of 25 km
-    } : {}
+    console.log('Form submitting with data:', {
+      pickupLocation,
+      dropOffLocation,
+      pickupCoordinates,
+      dropOffCoordinates,
+      from,
+      to
+    })
 
     setTimeout(navigate, 0, '/search', {
       state: {
-        pickupLocationId: pickupLocation,
-        dropOffLocationId: dropOffLocation,
+        pickupLocationId: pickupLocation || `place_${pickupCoordinates?.placeId || nanoid(8)}`,
+        dropOffLocationId: dropOffLocation || (sameLocation 
+          ? (pickupLocation || `place_${pickupCoordinates?.placeId || nanoid(8)}`) 
+          : `place_${dropOffCoordinates ? dropOffCoordinates.placeId || nanoid(8) : nanoid(8)}`),
         from,
         to,
-        ranges,
-        // Add coordinates to navigation state
         pickupCoordinates,
         dropOffCoordinates: sameLocation ? pickupCoordinates : dropOffCoordinates,
-        ...coords
+        radius: 25 // Default radius of 25km
       },
     })
   }

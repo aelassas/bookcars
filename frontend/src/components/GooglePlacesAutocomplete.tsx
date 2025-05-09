@@ -1,14 +1,69 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TextField, FormControl, FormHelperText } from '@mui/material';
 import env from '@/config/env.config';
+import '@/assets/css/google-places-autocomplete.css';
 
-// Define TypeScript interfaces for props and Google Places API objects
+// Define TypeScript interfaces for Google Maps API types
+declare global {
+  namespace google.maps.places {
+    interface AutocompletePrediction {
+      description: string;
+      place_id: string;
+      structured_formatting?: {
+        main_text: string;
+        secondary_text: string;
+      };
+    }
+
+    class AutocompleteService {
+      getPlacePredictions(
+        request: AutocompletionRequest,
+        callback: (
+          predictions: AutocompletePrediction[] | null,
+          status: PlacesServiceStatus
+        ) => void
+      ): void;
+    }
+
+    class PlacesService {
+      constructor(attrContainer: HTMLDivElement);
+      getDetails(
+        request: PlaceDetailsRequest,
+        callback: (result: PlaceResult | null, status: PlacesServiceStatus) => void
+      ): void;
+    }
+
+    interface PlaceDetailsRequest {
+      placeId: string;
+      fields: string[];
+    }
+
+    interface AutocompletionRequest {
+      input: string;
+      componentRestrictions?: {
+        country: string | string[];
+      };
+    }
+
+    enum PlacesServiceStatus {
+      OK = "OK",
+      ZERO_RESULTS = "ZERO_RESULTS",
+      OVER_QUERY_LIMIT = "OVER_QUERY_LIMIT",
+      REQUEST_DENIED = "REQUEST_DENIED",
+      INVALID_REQUEST = "INVALID_REQUEST",
+      UNKNOWN_ERROR = "UNKNOWN_ERROR",
+      NOT_FOUND = "NOT_FOUND"
+    }
+  }
+}
+
+// Define TypeScript interfaces for props and result types
 interface GooglePlacesAutocompleteProps {
   label: string;
   value?: string;
   required?: boolean;
   variant?: 'standard' | 'outlined' | 'filled';
-  onChange: (place: google.maps.places.PlaceResult | null) => void;
+  onChange: (place: PlaceResult) => void;
   onError?: (error: Error) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -20,21 +75,30 @@ interface GooglePlacesAutocompleteProps {
   onCoordinatesChange?: (coordinates: { latitude: number; longitude: number }) => void;
 }
 
-declare global {
-  interface Window {
-    initGooglePlacesAutocomplete?: () => void;
-    google: any;
-  }
+// Custom PlaceResult interface to match what we're returning
+interface PlaceResult {
+  value?: string;
+  placeId?: string;
+  formatted_address?: string;
+  geometry?: {
+    location?: {
+      lat(): number;
+      lng(): number;
+    }
+  };
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  } | null;
 }
 
 const GooglePlacesAutocomplete = ({ 
   label, 
-  required, 
-  error, 
-  helperText, 
   value, 
   onChange, 
   placeholder, 
+  error, 
+  helperText,
   onCoordinatesChange 
 }: GooglePlacesAutocompleteProps) => {
   const [inputValue, setInputValue] = useState(value || '')
@@ -88,10 +152,12 @@ const GooglePlacesAutocomplete = ({
   }, [apiKey])
 
   // Handle fetching place details and coordinates
-  const fetchPlaceDetails = async (placeId: string) => {
-    if (!placesService.current) return
+  const fetchPlaceDetails = async (placeId: string): Promise<PlaceResult> => {
+    if (!placesService.current) {
+      throw new Error('Places service not initialized')
+    }
 
-    return new Promise<google.maps.places.PlaceResult>((resolve, reject) => {
+    return new Promise<PlaceResult>((resolve, reject) => {
       placesService.current?.getDetails(
         {
           placeId,
@@ -99,7 +165,7 @@ const GooglePlacesAutocomplete = ({
         },
         (place, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-            resolve(place)
+            resolve(place as PlaceResult)
           } else {
             reject(new Error(`Place details request failed: ${status}`))
           }
@@ -121,7 +187,7 @@ const GooglePlacesAutocomplete = ({
         onChange({
           value: '',
           coordinates: null
-        })
+        } as PlaceResult)
       }
       return
     }
@@ -165,8 +231,9 @@ const GooglePlacesAutocomplete = ({
           onChange({
             value: place.formatted_address || option.description,
             placeId: option.place_id,
+            geometry: place.geometry,
             coordinates
-          })
+          } as PlaceResult)
         }
         
         // Notify about coordinate changes if callback provided
@@ -194,8 +261,23 @@ const GooglePlacesAutocomplete = ({
         error={error}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      
+      {options.length > 0 && (
+        <div className="autocomplete-dropdown">
+          {options.map((option) => (
+            <div 
+              key={option.place_id} 
+              className="autocomplete-item"
+              onClick={() => handleOptionSelect(option)}
+            >
+              {option.description}
+            </div>
+          ))}
+        </div>
+      )}
     </FormControl>
   );
 };
 
 export default GooglePlacesAutocomplete;
+ 

@@ -279,3 +279,70 @@ export const validateAccessToken = async (socialSignInType: bookcarsTypes.Social
  * @returns {string}
  */
 export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 100).toFixed(2)
+
+/**
+ * Calculate distance between two coordinates using the Haversine formula.
+ *
+ * @param {number} lat1 - Latitude of the first point
+ * @param {number} lon1 - Longitude of the first point
+ * @param {number} lat2 - Latitude of the second point
+ * @param {number} lon2 - Longitude of the second point
+ * @param {string} unit - Unit of measurement ('K' for kilometers, 'M' for miles, 'N' for nautical miles)
+ * @returns {number} Distance between the two points in the specified unit
+ */
+export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number, unit: 'K' | 'M' | 'N' = 'K'): number => {
+  if ((lat1 === lat2) && (lon1 === lon2)) {
+    return 0;
+  }
+  
+  // Convert latitude and longitude from degrees to radians
+  const radLat1 = Math.PI * lat1 / 180;
+  const radLon1 = Math.PI * lon1 / 180;
+  const radLat2 = Math.PI * lat2 / 180;
+  const radLon2 = Math.PI * lon2 / 180;
+  
+  // Calculate differences
+  const radLatDiff = radLat2 - radLat1;
+  const radLonDiff = radLon2 - radLon1;
+  
+  // Haversine formula
+  let dist = Math.sin(radLatDiff/2) * Math.sin(radLatDiff/2) +
+             Math.cos(radLat1) * Math.cos(radLat2) * 
+             Math.sin(radLonDiff/2) * Math.sin(radLonDiff/2);
+  
+  dist = 2 * Math.atan2(Math.sqrt(dist), Math.sqrt(1-dist));
+  
+  // Earth's radius in kilometers
+  const earthRadius = 6371;
+  dist = earthRadius * dist;
+  
+  // Convert to requested unit
+  if (unit === "M") { // Miles
+    dist = dist * 0.621371;
+  } else if (unit === "N") { // Nautical miles
+    dist = dist * 0.539957;
+  }
+  // Default is kilometers (unit === 'K')
+  
+  return dist;
+};
+
+/**
+ * Format distance into a user-friendly string.
+ *
+ * @param {number} distance - Distance value
+ * @param {string} unit - Unit of measurement ('K' for kilometers, 'M' for miles)
+ * @returns {string} Formatted distance string
+ */
+export const formatDistance = (distance: number, unit: 'K' | 'M' = 'K'): string => {
+  if (distance < 0.1) {
+    // Convert to meters if less than 100 meters
+    return `${Math.round(distance * 1000)} ${unit === 'K' ? 'm' : 'ft'}`;
+  } else if (distance < 10) {
+    // Show one decimal place if less than 10 km/miles
+    return `${distance.toFixed(1)} ${unit === 'K' ? 'km' : 'mi'}`;
+  } else {
+    // Round to nearest integer if 10 or more km/miles
+    return `${Math.round(distance)} ${unit === 'K' ? 'km' : 'mi'}`;
+  }
+};

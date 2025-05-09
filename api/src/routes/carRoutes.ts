@@ -18,5 +18,6 @@ routes.route(routeNames.getCar).get(carController.getCar)
 routes.route(routeNames.getCars).post(authJwt.verifyToken, carController.getCars)
 routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, carController.getBookingCars)
 routes.route(routeNames.getFrontendCars).post(carController.getFrontendCars)
+routes.route(routeNames.searchCarsByCoordinates).post(carController.searchCarsByCoordinates)
 
 export default routes

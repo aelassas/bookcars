@@ -8,21 +8,25 @@ import Map from '@/components/Map'
 import '@/assets/css/map-dialog.css'
 
 interface MapDialogProps {
-  pickupLocation?: bookcarsTypes.Location
-  openMapDialog: boolean
+  location?: bookcarsTypes.Location | { latitude: number, longitude: number }
+  open?: boolean
+  zoom?: number
+  radius?: number
   onClose: () => void
 }
 
 const MapDialog = ({
-  pickupLocation,
-  openMapDialog: openMapDialogProp,
+  location,
+  open: openProp = false,
+  zoom = 10,
+  radius,
   onClose,
 }: MapDialogProps) => {
-  const [openMapDialog, setOpenMapDialog] = useState(openMapDialogProp)
+  const [openMapDialog, setOpenMapDialog] = useState(openProp)
 
   useEffect(() => {
-    setOpenMapDialog(openMapDialogProp)
-  }, [openMapDialogProp])
+    setOpenMapDialog(openProp)
+  }, [openProp])
 
   const close = useCallback(() => {
     setOpenMapDialog(false)
@@ -75,12 +79,11 @@ const MapDialog = ({
         </Box>
       </DialogTitle>
       <DialogContent className="map-dialog-content">
-        {pickupLocation && (
+        {location && (
           <Map
-            position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
-            initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
-            locations={[pickupLocation]}
-            parkingSpots={pickupLocation.parkingSpots}
+            location={location}
+            zoom={zoom}
+            radius={radius}
             className="map"
           />
         )}
