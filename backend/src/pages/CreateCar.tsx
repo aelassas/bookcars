@@ -226,14 +226,8 @@ const CreateCar = () => {
       setSelectedLocations([...selectedLocations, newLocation])
       setLocationInput('') // Clear input after selection
       
-      // Generate a pseudo-ID for the location
-      const locationId = `place_${Date.now()}`
-      
-      // Add to locations array in the format expected by the form submission
-      setLocations([...locations, { 
-        _id: locationId, 
-        name: locationName 
-      }])
+      // We're now handling locations directly via locationCoordinates,
+      // so we don't need to maintain a separate locations array with custom IDs
       
       // Clear selected place
       setSelectedPlace(null)
@@ -447,7 +441,7 @@ const CreateCar = () => {
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: locations.map(l => l._id),
+        locations: locations.filter(l => l._id && typeof l._id === 'string' && l._id.length === 24).map(l => l._id), // Only send valid MongoDB ObjectIds
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
@@ -487,6 +481,8 @@ const CreateCar = () => {
           longitude: loc.longitude
         }))
       }
+
+      console.log('Submitting car creation:', data);
 
       const car = await CarService.create(data)
 

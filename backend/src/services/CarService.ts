@@ -9,9 +9,22 @@ import * as UserService from './UserService'
  * @returns {Promise<bookcarsTypes.Car>}
  */
 export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTypes.Car> => {
-  // Log location coordinates if they exist
-  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
-    console.log('Location coordinates being sent to server:', data.locationCoordinates)
+  // Debug logging
+  console.log('Creating car with data:', data)
+  console.log('Locations:', data.locations)
+  console.log('Location coordinates:', data.locationCoordinates)
+  
+  // Filter out any custom location IDs (those that don't match MongoDB ObjectID format)
+  // MongoDB ObjectIDs are 24-character hex strings
+  if (data.locations) {
+    data.locations = data.locations.filter(id => 
+      typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id)
+    );
+    
+    // If we have no valid locations but have coordinates, set locations to empty array
+    if (data.locations.length === 0 && data.locationCoordinates && data.locationCoordinates.length > 0) {
+      data.locations = [];
+    }
   }
   
   return axiosInstance
@@ -30,9 +43,22 @@ export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTy
  * @returns {Promise<number>}
  */
 export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> => {
-  // Log location coordinates if they exist
-  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
-    console.log('Location coordinates being sent to update:', data.locationCoordinates)
+  // Debug logging
+  console.log('Updating car with data:', data)
+  console.log('Locations:', data.locations)
+  console.log('Location coordinates:', data.locationCoordinates)
+  
+  // Filter out any custom location IDs (those that don't match MongoDB ObjectID format)
+  // MongoDB ObjectIDs are 24-character hex strings
+  if (data.locations) {
+    data.locations = data.locations.filter(id => 
+      typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id)
+    );
+    
+    // If we have no valid locations but have coordinates, set locations to empty array
+    if (data.locations.length === 0 && data.locationCoordinates && data.locationCoordinates.length > 0) {
+      data.locations = [];
+    }
   }
   
   return axiosInstance
