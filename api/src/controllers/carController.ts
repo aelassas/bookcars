@@ -52,6 +52,15 @@ export const create = async (req: Request, res: Response) => {
         locationCoordinates && locationCoordinates.length > 0) {
       // Create a placeholder location ID to satisfy the schema
       finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id)); // MongoDB ObjectId placeholder
+      console.log('Using placeholder location ID with coordinates for new car');
+    } else if (finalCarFields.locations && finalCarFields.locations.length > 0) {
+      // Ensure all location IDs are valid ObjectIds
+      finalCarFields.locations = finalCarFields.locations.map(id => new mongoose.Types.ObjectId(id));
+      console.log('Using provided location IDs for new car:', finalCarFields.locations);
+    } else {
+      // No locations or coordinates - this shouldn't happen due to validation
+      console.warn('No locations or locationCoordinates provided for new car');
+      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id));
     }
 
     // Create car object with all the basic fields
@@ -217,8 +226,15 @@ export const update = async (req: Request, res: Response) => {
           locationCoordinates && locationCoordinates.length > 0) {
         // Create a placeholder location ID to satisfy the schema
         car.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id));
+        console.log('Using placeholder location ID with coordinates');
+      } else if (locations && locations.length > 0) {
+        // Normal case: we have real locations
+        car.locations = locations.map((l) => new mongoose.Types.ObjectId(l));
+        console.log('Using provided location IDs:', locations);
       } else {
-        car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
+        // Neither locations nor locationCoordinates - this shouldn't happen due to validation
+        console.warn('No locations or locationCoordinates provided');
+        car.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id));
       }
       
       // Update location coordinates if present

@@ -14,16 +14,27 @@ export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTy
   console.log('Locations:', data.locations)
   console.log('Location coordinates:', data.locationCoordinates)
   
+  // If we have locationCoordinates but no valid locations, add a placeholder location
+  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
+    // Make sure we have at least one location ID
+    if (!data.locations || !Array.isArray(data.locations) || data.locations.length === 0) {
+      // Use the placeholder ID that MongoDB will accept
+      data.locations = ['000000000000000000000000']
+      console.log('Added placeholder location ID for validation')
+    }
+  }
+  
   // Filter out any custom location IDs (those that don't match MongoDB ObjectID format)
   // MongoDB ObjectIDs are 24-character hex strings
-  if (data.locations) {
+  if (data.locations && Array.isArray(data.locations)) {
     data.locations = data.locations.filter(id => 
       typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id)
-    );
+    )
     
-    // If we have no valid locations but have coordinates, set locations to empty array
+    // If we filtered out all locations but have coordinates, ensure we have a placeholder
     if (data.locations.length === 0 && data.locationCoordinates && data.locationCoordinates.length > 0) {
-      data.locations = [];
+      data.locations = ['000000000000000000000000']
+      console.log('Added placeholder location ID after filtering')
     }
   }
   
@@ -48,16 +59,27 @@ export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
   console.log('Locations:', data.locations)
   console.log('Location coordinates:', data.locationCoordinates)
   
+  // If we have locationCoordinates but no valid locations, add a placeholder location
+  if (data.locationCoordinates && data.locationCoordinates.length > 0) {
+    // Make sure we have at least one location ID
+    if (!data.locations || !Array.isArray(data.locations) || data.locations.length === 0) {
+      // Use the placeholder ID that MongoDB will accept
+      data.locations = ['000000000000000000000000']
+      console.log('Added placeholder location ID for validation')
+    }
+  }
+  
   // Filter out any custom location IDs (those that don't match MongoDB ObjectID format)
   // MongoDB ObjectIDs are 24-character hex strings
-  if (data.locations) {
+  if (data.locations && Array.isArray(data.locations)) {
     data.locations = data.locations.filter(id => 
       typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id)
-    );
+    )
     
-    // If we have no valid locations but have coordinates, set locations to empty array
+    // If we filtered out all locations but have coordinates, ensure we have a placeholder
     if (data.locations.length === 0 && data.locationCoordinates && data.locationCoordinates.length > 0) {
-      data.locations = [];
+      data.locations = ['000000000000000000000000']
+      console.log('Added placeholder location ID after filtering')
     }
   }
   

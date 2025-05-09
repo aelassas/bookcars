@@ -280,13 +280,29 @@ const UpdateCar = () => {
         return
       }
 
+      // Check if any valid location IDs exist
+      const validLocationIds = locations
+        .filter(l => l._id && typeof l._id === 'string' && l._id.length === 24)
+        .map(l => l._id)
+        
+      console.log('Selected locations:', selectedLocations)
+      console.log('Locations array:', locations)
+      console.log('Valid location IDs:', validLocationIds)
+      
+      // If using coordinates but no valid locations, use a placeholder
+      const finalLocationIds = validLocationIds.length > 0 
+        ? validLocationIds 
+        : (selectedLocations.length > 0 ? ['000000000000000000000000'] : [])
+        
+      console.log('Final location IDs being used:', finalLocationIds)
+
       const data: bookcarsTypes.UpdateCarPayload = {
         loggedUser: user!._id!,
         _id: car._id,
         name,
         supplier: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: locations.filter(l => l._id && typeof l._id === 'string' && l._id.length === 24).map(l => l._id), // Only send valid MongoDB ObjectIds
+        locations: finalLocationIds, // Use the final IDs with fallback
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
