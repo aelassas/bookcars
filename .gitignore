@@ -13,3 +13,5 @@ cdn
 /node_modules
 /cdn
 /cdn/*
+
+implementation-plan.md

@@ -380,7 +380,7 @@ const UpdateCar = () => {
               
               // Handle location coordinates if present
               if (_car.locationCoordinates && _car.locationCoordinates.length > 0) {
-                setSelectedLocations(_car.locationCoordinates.map(loc => ({
+                setSelectedLocations(_car.locationCoordinates.map((loc: { name: any; latitude: any; longitude: any }) => ({
                   name: loc.name,
                   latitude: loc.latitude,
                   longitude: loc.longitude
