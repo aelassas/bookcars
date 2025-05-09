@@ -47,20 +47,20 @@ export const create = async (req: Request, res: Response) => {
     }
 
     // Check if locations is empty but we have locationCoordinates
-    const finalCarFields = { ...carFields };
+    const finalCarFields: any = { ...carFields }
     if ((!finalCarFields.locations || finalCarFields.locations.length === 0) && 
         locationCoordinates && locationCoordinates.length > 0) {
       // Create a placeholder location ID to satisfy the schema
-      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id)); // MongoDB ObjectId placeholder
-      console.log('Using placeholder location ID with coordinates for new car');
+      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id)) // MongoDB ObjectId placeholder
+      console.log('Using placeholder location ID with coordinates for new car')
     } else if (finalCarFields.locations && finalCarFields.locations.length > 0) {
       // Ensure all location IDs are valid ObjectIds
-      finalCarFields.locations = finalCarFields.locations.map(id => new mongoose.Types.ObjectId(id));
-      console.log('Using provided location IDs for new car:', finalCarFields.locations);
+      finalCarFields.locations = finalCarFields.locations.map((id: string) => new mongoose.Types.ObjectId(id))
+      console.log('Using provided location IDs for new car:', finalCarFields.locations)
     } else {
       // No locations or coordinates - this shouldn't happen due to validation
-      console.warn('No locations or locationCoordinates provided for new car');
-      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id));
+      console.warn('No locations or locationCoordinates provided for new car')
+      finalCarFields.locations = ['000000000000000000000000'].map(id => new mongoose.Types.ObjectId(id))
     }
 
     // Create car object with all the basic fields
@@ -69,7 +69,7 @@ export const create = async (req: Request, res: Response) => {
     // Add location coordinates if they exist
     if (locationCoordinates && locationCoordinates.length > 0) {
       // Store the coordinates in the car document for future use
-      car.locationCoordinates = locationCoordinates;
+      car.locationCoordinates = locationCoordinates
     }
     
     await car.save()
@@ -1057,13 +1057,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
-    let $supplierMatch: mongoose.FilterQuery<any> = {}
-    if (days) {
-      $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
-    }
+    let data
 
-    let data;
-    
     if (coordinates && radius) {
       // Perform coordinate-based search with distance calculation
       data = await Car.aggregate([
@@ -1075,9 +1070,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
           $addFields: {
             distance: {
               $function: {
-                body: function(lat1, lon1, lat2, lon2) {
+                body: function(lat1: number, lon1: number, lat2: number, lon2: number) {
                   // Call the helper.calculateDistance function
-                  return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K');
+                  return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K')
                 },
                 args: [
                   '$locationCoordinates.latitude',
@@ -1378,7 +1373,8 @@ export const searchCarsByCoordinates = async (req: Request, res: Response) => {
 
     // Validate coordinates
     if (!coordinates || !coordinates.latitude || !coordinates.longitude) {
-      return res.status(400).send(i18n.t('COORDINATES_REQUIRED'))
+      res.status(400).send(i18n.t('COORDINATES_REQUIRED'))
+      return
     }
 
     // Build match query
@@ -1494,9 +1490,9 @@ export const searchCarsByCoordinates = async (req: Request, res: Response) => {
         $addFields: {
           distance: {
             $function: {
-              body: function(lat1, lon1, lat2, lon2) {
-                // Use the helper function for distance calculation
-                return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K');
+              body: function(lat1: number, lon1: number, lat2: number, lon2: number) {
+                // Call the helper.calculateDistance function
+                return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K')
               },
               args: [
                 '$locationCoordinates.latitude',
