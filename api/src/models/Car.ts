@@ -213,7 +213,7 @@ const carSchema = new Schema<env.Car>(
         latitude: { type: Number, required: true },
         longitude: { type: Number, required: true }
       }],
-      default: undefined
+      default: []
     },
   },
   {

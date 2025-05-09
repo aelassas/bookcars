@@ -206,6 +206,9 @@ export const update = async (req: Request, res: Response) => {
         dateBasedPrices,
       } = body
 
+      console.log('Updating car:', _id);
+      console.log('LocationCoordinates received:', locationCoordinates);
+
       car.supplier = new mongoose.Types.ObjectId(supplier)
       car.minimumAge = minimumAge
       
@@ -221,6 +224,11 @@ export const update = async (req: Request, res: Response) => {
       // Update location coordinates if present
       if (locationCoordinates && locationCoordinates.length > 0) {
         car.locationCoordinates = locationCoordinates;
+        // Explicitly set field to ensure it's included in the update
+        car.set('locationCoordinates', locationCoordinates);
+        console.log('Setting car.locationCoordinates to:', locationCoordinates);
+      } else {
+        console.log('No locationCoordinates provided');
       }
       
       car.name = name
@@ -288,10 +296,69 @@ export const update = async (req: Request, res: Response) => {
         }
       }
 
-      await car.save()
-
-      res.json(car)
-      return
+      try {
+        console.log('Car before save:', car);
+        console.log('Car locationCoordinates before save:', car.locationCoordinates);
+        
+        // Force update with $set to ensure locationCoordinates is included
+        const updateResult = await Car.updateOne(
+          { _id: car._id },
+          { 
+            $set: {
+              supplier: car.supplier,
+              minimumAge: car.minimumAge,
+              locations: car.locations,
+              locationCoordinates: locationCoordinates || [],
+              name: car.name,
+              available: car.available,
+              fullyBooked: car.fullyBooked,
+              comingSoon: car.comingSoon,
+              type: car.type,
+              dailyPrice: car.dailyPrice,
+              discountedDailyPrice: car.discountedDailyPrice,
+              biWeeklyPrice: car.biWeeklyPrice,
+              discountedBiWeeklyPrice: car.discountedBiWeeklyPrice,
+              weeklyPrice: car.weeklyPrice,
+              discountedWeeklyPrice: car.discountedWeeklyPrice,
+              monthlyPrice: car.monthlyPrice,
+              discountedMonthlyPrice: car.discountedMonthlyPrice,
+              deposit: car.deposit,
+              seats: car.seats,
+              doors: car.doors,
+              aircon: car.aircon,
+              gearbox: car.gearbox,
+              fuelPolicy: car.fuelPolicy,
+              mileage: car.mileage,
+              cancellation: car.cancellation,
+              amendments: car.amendments,
+              theftProtection: car.theftProtection,
+              collisionDamageWaiver: car.collisionDamageWaiver,
+              fullInsurance: car.fullInsurance,
+              additionalDriver: car.additionalDriver,
+              range: car.range,
+              multimedia: car.multimedia,
+              rating: car.rating,
+              co2: car.co2,
+              isDateBasedPrice: car.isDateBasedPrice,
+              dateBasedPrices: car.dateBasedPrices
+            }
+          }
+        );
+        
+        console.log('Update result:', updateResult);
+        
+        // Load the updated car
+        const updatedCar = await Car.findById(car._id);
+        console.log('Updated car:', updatedCar);
+        console.log('Location coordinates after update:', updatedCar?.locationCoordinates);
+        
+        res.json(updatedCar);
+      } catch (saveErr) {
+        console.error('Error saving car:', saveErr);
+        throw saveErr;
+      }
+      
+      return;
     }
 
     logger.error('[car.update] Car not found:', _id)
