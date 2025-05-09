@@ -442,14 +442,12 @@ const CreateCar = () => {
         return
       }
 
-      // We're going to send an empty array for locations and rely on locationCoordinates
-      // The backend has been updated to handle this case
       const data: bookcarsTypes.CreateCarPayload = {
         loggedUser: user!._id!,
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: [], // Send empty array as the backend will handle this
+        locations: selectedLocations.length > 0 ? locations.map(l => l._id) : ['000000000000000000000000'], // Use placeholder ID when empty
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),

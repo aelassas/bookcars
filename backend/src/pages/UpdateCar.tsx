@@ -286,7 +286,7 @@ const UpdateCar = () => {
         name,
         supplier: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
-        locations: [], // Send empty array as the backend will handle this
+        locations: selectedLocations.length > 0 ? locations.map(l => l._id) : ['000000000000000000000000'], // Use placeholder ID when empty
         dailyPrice: Number(dailyPrice),
         discountedDailyPrice: getPrice(discountedDailyPrice),
         biWeeklyPrice: getPrice(biWeeklyPrice),
