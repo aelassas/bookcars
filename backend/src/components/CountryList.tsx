@@ -31,6 +31,7 @@ import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
 import { UserContextType, useUserContext } from '@/context/UserContext'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/country-list.css'
 
@@ -269,6 +270,8 @@ const CountryList = ({
             </Button>
           </DialogActions>
         </Dialog>
+
+        {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager

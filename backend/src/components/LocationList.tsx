@@ -30,6 +30,7 @@ import * as helper from '@/common/helper'
 import Pager from './Pager'
 import Avatar from './Avatar'
 import { UserContextType, useUserContext } from '@/context/UserContext'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/location-list.css'
 
@@ -279,6 +280,8 @@ const LocationList = ({
             </Button>
           </DialogActions>
         </Dialog>
+
+        {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager
