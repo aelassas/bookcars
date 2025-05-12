@@ -6,7 +6,11 @@ import {
   InputLabel,
   Input,
   Button,
+  FormHelperText,
 } from '@mui/material'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/sign-in'
@@ -15,37 +19,49 @@ import Header from '@/components/Header'
 import Error from '@/components/Error'
 import * as langHelper from '@/common/langHelper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import env from '@/config/env.config'
 
 import '@/assets/css/signin.css'
+
+const schema = z.object({
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
+  stayConnected: z.boolean().optional()
+})
+
+type FormFields = z.infer<typeof schema>
 
 const SignIn = () => {
   const navigate = useNavigate()
 
   const { setUser, setUserLoaded } = useUserContext() as UserContextType
-
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [blacklisted, setBlacklisted] = useState(false)
-  const [stayConnected, setStayConnected] = useState(false)
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    clearErrors,
+  } = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+    defaultValues: {
+      stayConnected: false,
+    },
+  })
+
+  const signinError = () => {
+    setError('root', { message: strings.ERROR_IN_SIGN_IN })
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
+  const onSubmit = async ({ email, password, stayConnected }: FormFields) => {
     try {
-      e.preventDefault()
-
       const data: bookcarsTypes.SignInPayload = {
         email,
         password,
-        stayConnected,
+        stayConnected: stayConnected,
       }
 
       const res = await UserService.signin(data)
@@ -53,11 +69,8 @@ const SignIn = () => {
       if (res.status === 200) {
         if (res.data.blacklisted) {
           await UserService.signout(false)
-          setError(false)
-          setBlacklisted(true)
+          setError('root', { message: strings.IS_BLACKLISTED })
         } else {
-          setError(false)
-
           const user = await UserService.getUser(res.data._id)
           setUser(user)
           setUserLoaded(true)
@@ -77,18 +90,10 @@ const SignIn = () => {
           }
         }
       } else {
-        setError(true)
-        setBlacklisted(false)
+        signinError()
       }
     } catch {
-      setError(true)
-      setBlacklisted(false)
-    }
-  }
-
-  const handlePasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
+      signinError()
     }
   }
 
@@ -125,18 +130,39 @@ const SignIn = () => {
   return (
     <div>
       <Header />
+
       {visible && (
         <div className="signin">
-          <Paper className="signin-form" elevation={10}>
-            <form onSubmit={handleSubmit}>
+          <Paper className={`signin-form ${visible ? '' : 'hidden'}`} elevation={10}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" error={!!errors.email}>
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" name="Email" onChange={handleEmailChange} autoComplete="email" required />
+                <Input
+                  {...register('email')}
+                  onChange={(e) => {
+                    clearErrors()
+                    // Without the next line, if the field is auto-filled by the browser, react-form does not know it
+                    setValue('email', e.target.value)
+                  }}
+                  autoComplete="email"
+                  required
+                />
+                <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
               </FormControl>
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" error={!!errors.password}>
                 <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
-                <Input id="password" name="Password" onChange={handlePasswordChange} onKeyDown={handlePasswordKeyDown} autoComplete="password" type="password" required />
+                <Input
+                  {...register('password')}
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('password', e.target.value)
+                  }}
+                  type="password"
+                  autoComplete="password"
+                  required
+                />
+                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
               </FormControl>
 
               <div className="stay-connected">
@@ -144,7 +170,7 @@ const SignIn = () => {
                   id="stay-connected"
                   type="checkbox"
                   onChange={(e) => {
-                    setStayConnected(e.currentTarget.checked)
+                    setValue('stayConnected', e.currentTarget.checked)
                   }}
                 />
                 <label
@@ -159,13 +185,12 @@ const SignIn = () => {
               </div>
 
               <div className="signin-buttons">
-                <Button type="submit" variant="contained" size="small" className="btn-primary">
+                <Button type="submit" variant="contained" size="small" className="btn-primary" disabled={isSubmitting}>
                   {strings.SIGN_IN}
                 </Button>
               </div>
               <div className="form-error">
-                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
+                {errors.root && <Error message={errors.root.message!} />}
               </div>
             </form>
           </Paper>

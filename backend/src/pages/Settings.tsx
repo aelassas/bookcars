@@ -11,6 +11,9 @@ import {
   Paper
 } from '@mui/material'
 import validator from 'validator'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -22,8 +25,19 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import BankDetailsForm from '@/components/BankDetailsForm'
 
 import '@/assets/css/settings.css'
+
+const schema = z.object({
+  fullName: z.string().min(1),
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  phone: z.string().refine((value) => !value || validator.isMobilePhone(value), { message: commonStrings.PHONE_NOT_VALID }).optional(),
+  location: z.string().optional(),
+  bio: z.string().optional(),
+})
+
+type FormFields = z.infer<typeof schema>
 
 const Settings = () => {
   const navigate = useNavigate()
@@ -31,53 +45,17 @@ const Settings = () => {
   const { user, setUser } = useUserContext() as UserContextType
 
   const [admin, setAdmin] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const [bankDetailsId, setBankDetailsId] = useState('')
-  const [accountHolder, setAccountHolder] = useState('')
-  const [bankName, setBankName] = useState('')
-  const [iban, setIban] = useState('')
-  const [swiftBic, setSwiftBic] = useState('')
-  const [showBankDetailsPage, setShowBankDetailsPage] = useState(true)
+  const [bankDetails, setBankDetails] = useState<bookcarsTypes.BankDetails | null>(null)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-  }
+  const { register, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit'
+  })
 
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBio(e.target.value)
-  }
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -118,29 +96,21 @@ const Settings = () => {
     setLoading(false)
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
       if (!user) {
-        helper.error()
         return
       }
 
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
-        return
+      const payload: bookcarsTypes.UpdateUserPayload = {
+        _id: user._id!,
+        fullName: data.fullName,
+        phone: data.phone || '',
+        location: data.location || '',
+        bio: data.bio || '',
       }
 
-      const data: bookcarsTypes.UpdateUserPayload = {
-        _id: user._id as string,
-        fullName,
-        phone,
-        location,
-        bio,
-      }
-
-      const status = await UserService.updateUser(data)
+      const status = await UserService.updateUser(payload)
 
       if (status === 200) {
         helper.info(strings.SETTINGS_UPDATED)
@@ -152,50 +122,21 @@ const Settings = () => {
     }
   }
 
-  const handleBankDetailsSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault()
-
-      const payload: bookcarsTypes.UpsertBankDetailsPayload = {
-        _id: bankDetailsId || undefined,
-        accountHolder,
-        bankName,
-        iban,
-        swiftBic,
-        showBankDetailsPage,
-      }
-
-      const { status, data } = await BankDetailsService.upsertBankDetails(payload)
-
-      if (status === 200) {
-        helper.info(strings.SETTINGS_UPDATED)
-        setBankDetailsId(data._id)
-      } else {
-        helper.error()
-      }
-    } catch (err) {
-      helper.error(err)
-    }
-  }
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
       setAdmin(helper.admin(_user))
-      setFullName(_user.fullName)
-      setPhone(_user.phone || '')
-      setLocation(_user.location || '')
-      setBio(_user.bio || '')
+      setValue('email', _user.email!)
+      setValue('fullName', _user.fullName)
+      setValue('phone', _user.phone || '')
+      setValue('location', _user.location || '')
+      setValue('bio', _user.bio || '')
       setEnableEmailNotifications(_user.enableEmailNotifications || false)
 
       const bankDetails = await BankDetailsService.getBankDetails()
       if (bankDetails) {
-        setBankDetailsId(bankDetails._id)
-        setAccountHolder(bankDetails.accountHolder)
-        setBankName(bankDetails.bankName)
-        setIban(bankDetails.iban)
-        setSwiftBic(bankDetails.swiftBic)
-        setShowBankDetailsPage(bankDetails.showBankDetailsPage)
+        setBankDetails(bankDetails)
       }
 
       setVisible(true)
@@ -209,14 +150,13 @@ const Settings = () => {
         <div className="settings">
 
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Avatar
                 type={user.type}
                 mode="update"
                 record={user}
                 size="large"
-                // readonly={false}
-                readonly
+                readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 hideDelete={!admin}
@@ -225,30 +165,30 @@ const Settings = () => {
               />
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" required onChange={handleFullNameChange} autoComplete="off" value={fullName} />
+                <Input {...register('fullName')} type="text" required autoComplete="off" />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" value={user.email} disabled />
+                <Input {...register('email')} type="text" disabled />
               </FormControl>
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" error={!!errors.phone}>
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input id="phone" type="text" error={!phoneValid} onChange={handlePhoneChange} autoComplete="off" value={phone} />
-                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                <Input {...register('phone')} type="text" autoComplete="off" onChange={() => clearErrors()} />
+                <FormHelperText>{errors.phone?.message || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <Input {...register('location')} type="text" autoComplete="off" />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
+                <Input {...register('bio')} type="text" autoComplete="off" />
               </FormControl>
               <div className="buttons">
                 <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate('/change-password')}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
@@ -259,11 +199,7 @@ const Settings = () => {
           </Paper>
 
           <Paper className="settings-net settings-net-wrapper" elevation={10}>
-            <h1 className="settings-form-title">
-              {' '}
-              {strings.NETWORK_SETTINGS}
-              {' '}
-            </h1>
+            <h1 className="settings-form-title">{strings.NETWORK_SETTINGS}</h1>
             <FormControl component="fieldset">
               <FormControlLabel
                 control={(
@@ -278,62 +214,14 @@ const Settings = () => {
           </Paper>
 
           {user.type === bookcarsTypes.UserType.Admin && (
-            <Paper className="settings-form settings-form-wrapper" elevation={10}>
-              <form onSubmit={handleBankDetailsSubmit}>
-                <h1 className="settings-form-title">
-                  {' '}
-                  {strings.BANK_DETAILS}
-                  {' '}
-                </h1>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{strings.ACCOUNT_HOLDER}</InputLabel>
-                  <Input type="text" required onChange={(e) => setAccountHolder(e.target.value)} autoComplete="off" value={accountHolder} />
-                </FormControl>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{strings.BANK_NAME}</InputLabel>
-                  <Input type="text" required onChange={(e) => setBankName(e.target.value)} autoComplete="off" value={bankName} />
-                </FormControl>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{strings.IBAN}</InputLabel>
-                  <Input type="text" required onChange={(e) => setIban(e.target.value)} autoComplete="off" value={iban} />
-                </FormControl>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{strings.SWIFT_BIC}</InputLabel>
-                  <Input type="text" required onChange={(e) => setSwiftBic(e.target.value)} autoComplete="off" value={swiftBic} />
-                </FormControl>
-
-                <FormControl component="fieldset">
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={showBankDetailsPage}
-                        onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
-                          setShowBankDetailsPage(e.target.checked)
-                        }}
-                      />
-                    )}
-                    label={strings.SHOW_BANK_DETAILS_PAGE}
-                  />
-                </FormControl>
-
-                <div className="buttons">
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
-                    {commonStrings.SAVE}
-                  </Button>
-                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
-                    {commonStrings.CANCEL}
-                  </Button>
-                </div>
-              </form>
-            </Paper>
+            <BankDetailsForm
+              bankDetails={bankDetails}
+              onSubmit={(data) => setBankDetails(data)}
+            />
           )}
-
         </div>
       )}
+
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )

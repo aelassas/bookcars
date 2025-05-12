@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -7,7 +8,9 @@ import {
   Button,
   Paper,
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
@@ -20,8 +23,20 @@ import { useUserContext, UserContextType } from '@/context/UserContext'
 import NoMatch from './NoMatch'
 import * as helper from '@/common/helper'
 import Footer from '@/components/Footer'
+import env from '@/config/env.config'
+import Error from './Error'
 
 import '@/assets/css/activate.css'
+
+const schema = z.object({
+  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: commonStrings.PASSWORDS_DONT_MATCH
+})
+
+type FormFields = z.infer<typeof schema>
 
 const Activate = () => {
   const navigate = useNavigate()
@@ -33,45 +48,16 @@ const Activate = () => {
   const [visible, setVisible] = useState(false)
   const [resend, setResend] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [passwordError, setPasswordError] = useState(false)
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-  const [passwordLengthError, setPasswordLengthError] = useState(false)
   const [reset, setReset] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-    setConfirmPasswordError(false)
-  }
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+  })
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value)
-    setConfirmPasswordError(false)
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
+  const onSubmit = async ({ password }: FormFields) => {
     try {
-      e.preventDefault()
-
-      if (password.length < 6) {
-        setPasswordLengthError(true)
-        setConfirmPasswordError(false)
-        setPasswordError(false)
-        return
-      }
-      setPasswordLengthError(false)
-      setPasswordError(false)
-
-      if (password !== confirmPassword) {
-        setConfirmPasswordError(true)
-        setPasswordError(false)
-        return
-      }
-      setConfirmPasswordError(false)
-      setPasswordError(false)
-
       const data: bookcarsTypes.ActivatePayload = { userId, token, password }
 
       const status = await UserService.activate(data)
@@ -99,12 +85,6 @@ const Activate = () => {
       }
     } catch (err) {
       helper.error(err)
-    }
-  }
-
-  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
     }
   }
 
@@ -151,8 +131,9 @@ const Activate = () => {
             } else {
               setNoMatch(true)
             }
-          } catch {
-            setNoMatch(true)
+          } catch (err) {
+            console.error(err)
+            setError('root', {})
           }
         } else {
           setNoMatch(true)
@@ -185,37 +166,31 @@ const Activate = () => {
         <div className="activate">
           <Paper className="activate-form" elevation={10}>
             <h1>{reset ? rpStrings.RESET_PASSWORD_HEADING : strings.ACTIVATE_HEADING}</h1>
-            <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required" error={passwordError}>
-                  {cpStrings.NEW_PASSWORD}
-                </InputLabel>
-                <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required autoComplete="new-password" />
-                <FormHelperText error={passwordError}>{(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth margin="dense" error={confirmPasswordError}>
-                <InputLabel error={confirmPasswordError} className="required">
-                  {commonStrings.CONFIRM_PASSWORD}
-                </InputLabel>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl fullWidth margin="dense" error={!!errors.password}>
+                <InputLabel className="required">{cpStrings.NEW_PASSWORD}</InputLabel>
                 <Input
-                  onChange={handleConfirmPasswordChange}
-                  onKeyDown={handleConfirmPasswordKeyDown}
-                  error={confirmPasswordError || passwordLengthError}
+                  {...register('password')}
                   type="password"
-                  value={confirmPassword}
                   required
                   autoComplete="new-password"
+                  onChange={() => clearErrors()}
                 />
-                <FormHelperText error={confirmPasswordError || passwordLengthError}>
-                  {
-                    (confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH)
-                    || (passwordLengthError && commonStrings.PASSWORD_ERROR)
-                    || ''
-                  }
-                </FormHelperText>
+                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
+                <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
+                <Input
+                  {...register('confirmPassword')}
+                  type="password"
+                  required
+                  autoComplete="new-password"
+                  onChange={() => clearErrors()}
+                />
+                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained">
+                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disabled={isSubmitting}>
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
                 <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
@@ -229,6 +204,8 @@ const Activate = () => {
       {!isAuthenticated && noMatch && <NoMatch hideHeader />}
 
       {(resend || visible) && <Footer />}
+
+      {errors.root && <Error />}
     </Layout>
   )
 }

@@ -804,14 +804,24 @@ export const deletePushToken = async (req: Request, res: Response) => {
  */
 export const validateEmail = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.ValidateEmailPayload } = req
-  const { email } = body
+  const { email, appType } = body
 
   try {
     if (!helper.isValidEmail(email)) {
       throw new Error('body.email is not valid')
     }
 
-    const exists = await User.exists({ email })
+    const _appType = appType || bookcarsTypes.AppType.Frontend
+    const types = _appType === bookcarsTypes.AppType.Frontend
+      ? [bookcarsTypes.UserType.User, bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier]
+      : [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier]
+
+    const exists = await User.exists(
+      {
+        email,
+        type: { $in: types }
+      }
+    )
 
     if (exists) {
       res.sendStatus(204)

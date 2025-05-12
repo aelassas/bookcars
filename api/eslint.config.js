@@ -44,6 +44,10 @@ const config = [
       'brace-style': ['error', '1tbs'],
       'curly': 'error',
       'quotes': ['error', 'single', { 'avoidEscape': true }],
+      'no-multiple-empty-lines': 'error',
+      'no-multi-spaces': 'error',
+      'padded-blocks': ['error', 'never'],
+      'no-irregular-whitespace': 'error',
 
       // Import plugin rules
       'import/no-unresolved': 'off',
@@ -59,6 +63,7 @@ const config = [
 
       // TypeScript rules
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
 
       // jest rules
       'jest/no-conditional-expect': 'off',

@@ -12,8 +12,10 @@ import {
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
-import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import * as helper from '@/common/helper'
 import { strings as commonStrings } from '@/lang/common'
@@ -30,6 +32,24 @@ import Footer from '@/components/Footer'
 
 import '@/assets/css/signup.css'
 
+const schema = z.object({
+  fullName: z.string().min(1),
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  phone: z.string().refine(validator.isMobilePhone, { message: commonStrings.PHONE_NOT_VALID }),
+  birthDate: z.date().refine((value) => {
+    const sub = intervalToDuration({ start: value, end: new Date() }).years ?? 0
+    return sub >= env.MINIMUM_AGE
+  }, { message: commonStrings.BIRTH_DATE_NOT_VALID }),
+  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
+  confirmPassword: z.string(),
+  tos: z.boolean().refine((value) => value, { message: commonStrings.TOS_ERROR })
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: commonStrings.PASSWORDS_DONT_MATCH,
+})
+
+type FormFields = z.infer<typeof schema>
+
 const SignUp = () => {
   const navigate = useNavigate()
 
@@ -37,163 +57,19 @@ const SignUp = () => {
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [birthDate, setBirthDate] = useState<Date>()
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState(false)
   const [recaptchaError, setRecaptchaError] = useState(false)
-  const [passwordError, setPasswordError] = useState(false)
-  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false)
-  const [emailError, setEmailError] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [emailValid, setEmailValid] = useState(true)
-  const [tosChecked, setTosChecked] = useState(false)
-  const [tosError, setTosError] = useState(false)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [phone, setPhone] = useState('')
-  const [birthDateValid, setBirthDateValid] = useState(true)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-  }
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors, setValue } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit'
+  })
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-
-    if (!e.target.value) {
-      setEmailError(false)
-      setEmailValid(true)
-    }
-  }
-
-  const validateEmail = async (_email?: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        try {
-          const status = await UserService.validateEmail({ email: _email })
-          if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          setError(false)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
-    } else {
-      setEmailError(false)
-      setEmailValid(true)
-      return false
-    }
-  }
-
-  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateEmail(e.target.value)
-  }
-
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const handlePhoneBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    validatePhone(e.target.value)
-  }
-
-  const validateBirthDate = (date?: Date) => {
-    if (date && bookcarsHelper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
-
-      setBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setBirthDateValid(true)
-    return true
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-    setPasswordsDontMatch(false)
-  }
-
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value)
-    setPasswordsDontMatch(false)
-  }
-
-  const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTosChecked(e.target.checked)
-
-    if (e.target.checked) {
-      setTosError(false)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
-      const _emailValid = await validateEmail(email)
-      if (!_emailValid) {
-        return
-      }
-
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
-        return
-      }
-
-      const _birthDateValid = validateBirthDate(birthDate)
-      if (!birthDate || !_birthDateValid) {
-        return
-      }
-
-      if (password.length < 6) {
-        setPasswordError(true)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(false)
-        setTosError(false)
-        return
-      }
-
-      if (password !== confirmPassword) {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(true)
-        setError(false)
-        setTosError(false)
+      const emailStatus = await UserService.validateEmail({ email: data.email })
+      if (emailStatus !== 200) {
+        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
         return
       }
 
@@ -210,32 +86,21 @@ const SignUp = () => {
         return
       }
 
-      if (!tosChecked) {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(false)
-        setTosError(true)
-        return
+      const payload: bookcarsTypes.SignUpPayload = {
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        fullName: data.fullName,
+        birthDate: data.birthDate,
+        language: UserService.getLanguage()
       }
 
-      setLoading(true)
-
-      const data: bookcarsTypes.SignUpPayload = {
-        email,
-        phone,
-        password,
-        fullName,
-        birthDate,
-        language: UserService.getLanguage(),
-      }
-
-      const status = await UserService.signup(data)
+      const status = await UserService.signup(payload)
 
       if (status === 200) {
         const signInResult = await UserService.signin({
-          email,
-          password,
+          email: data.email,
+          password: data.password,
         })
 
         if (signInResult.status === 200) {
@@ -243,29 +108,11 @@ const SignUp = () => {
           setUser(user)
           setUserLoaded(true)
           navigate(`/${window.location.search}`)
-        } else {
-          setPasswordError(false)
-          setRecaptchaError(false)
-          setPasswordsDontMatch(false)
-          setError(true)
-          setTosError(false)
         }
-      } else {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(true)
-        setTosError(false)
       }
     } catch (err) {
       console.error(err)
-      setPasswordError(false)
-      setRecaptchaError(false)
-      setPasswordsDontMatch(false)
-      setError(true)
-      setTosError(false)
-    } finally {
-      setLoading(false)
+      setError('root', { message: strings.SIGN_UP_ERROR })
     }
   }
 
@@ -280,146 +127,160 @@ const SignUp = () => {
 
   return (
     <Layout strict={false} onLoad={onLoad}>
-      {visible && (
-        <>
-          <div className="signup">
-            <Paper className="signup-form" elevation={10}>
-              <h1 className="signup-form-title">
-                {' '}
-                {strings.SIGN_UP_HEADING}
-                {' '}
-              </h1>
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                    <OutlinedInput type="text" label={commonStrings.FULL_NAME} value={fullName} required onChange={handleFullNameChange} autoComplete="off" />
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                    <OutlinedInput
-                      type="text"
-                      label={commonStrings.EMAIL}
-                      error={!emailValid || emailError}
-                      value={email}
-                      onBlur={handleEmailBlur}
-                      onChange={handleEmailChange}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!emailValid || emailError}>
-                      {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                      {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                    <OutlinedInput
-                      type="text"
-                      label={commonStrings.PHONE}
-                      error={!phoneValid}
-                      value={phone}
-                      onBlur={handlePhoneBlur}
-                      onChange={handlePhoneChange}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <DatePicker
-                      label={commonStrings.BIRTH_DATE}
-                      value={birthDate}
-                      variant="outlined"
-                      required
-                      onChange={(_birthDate) => {
-                        if (_birthDate) {
-                          const _birthDateValid = validateBirthDate(_birthDate)
+      <div className="signup">
+        <Paper className={`signup-form ${visible ? '' : 'hidden'}`} elevation={10}>
+          <h1 className="signup-form-title">{strings.SIGN_UP_HEADING}</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <FormControl fullWidth margin="dense" error={!!errors.fullName}>
+                <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                <OutlinedInput
+                  type="text"
+                  {...register('fullName')}
+                  label={commonStrings.FULL_NAME}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('fullName', e.target.value)
+                  }}
+                  required
+                />
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.email}>
+                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                <OutlinedInput
+                  type="text"
+                  {...register('email')}
+                  label={commonStrings.EMAIL}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('email', e.target.value)
+                  }}
+                  required
+                />
+                <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.phone}>
+                <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                <OutlinedInput
+                  type="text"
+                  {...register('phone')}
+                  label={commonStrings.PHONE}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('phone', e.target.value)
+                  }}
+                  required
+                />
+                <FormHelperText error={!!errors.phone}>{errors.phone?.message || ''}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.birthDate}>
+                <DatePicker
+                  label={commonStrings.BIRTH_DATE}
+                  variant="outlined"
+                  required
+                  onChange={(birthDate) => {
+                    if (birthDate) {
+                      clearErrors()
+                      setValue('birthDate', birthDate)
+                    }
+                  }}
+                  language={language}
+                />
 
-                          setBirthDate(_birthDate)
-                          setBirthDateValid(_birthDateValid)
-                        }
-                      }}
-                      language={language}
-                    />
-                    <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
-                    <OutlinedInput
-                      label={commonStrings.PASSWORD}
-                      value={password}
-                      onChange={handlePasswordChange}
-                      required
-                      type="password"
-                      inputProps={{
-                        autoComplete: 'new-password',
-                        form: {
-                          autoComplete: 'off',
-                        },
-                      }}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                    <OutlinedInput
-                      label={commonStrings.CONFIRM_PASSWORD}
-                      value={confirmPassword}
-                      onChange={handleConfirmPasswordChange}
-                      required
-                      type="password"
-                      inputProps={{
-                        autoComplete: 'new-password',
-                        form: {
-                          autoComplete: 'off',
-                        },
-                      }}
-                    />
-                  </FormControl>
+                <FormHelperText error={!!errors.birthDate}>{errors.birthDate?.message || ''}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.password}>
+                <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
+                <OutlinedInput
+                  {...register('password')}
+                  type="password"
+                  label={commonStrings.PASSWORD}
+                  inputProps={{
+                    autoComplete: 'new-password',
+                    form: {
+                      autoComplete: 'off',
+                    },
+                  }}
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('password', e.target.value)
+                  }}
+                  required
+                />
+                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
+                <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
+                <OutlinedInput
+                  {...register('confirmPassword')}
+                  type="password"
+                  label={commonStrings.CONFIRM_PASSWORD}
+                  inputProps={{
+                    autoComplete: 'new-password',
+                    form: {
+                      autoComplete: 'off',
+                    },
+                  }}
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('confirmPassword', e.target.value)
+                  }}
+                  required
+                />
+                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
+              </FormControl>
 
-                  <div className="signup-tos">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td aria-label="tos">
-                            <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
-                          </td>
-                          <td>
-                            <Link href="/tos" target="_blank" rel="noreferrer">
-                              {commonStrings.TOS}
-                            </Link>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+              <div className="signup-tos">
+                <table>
+                  <tbody>
+                    <tr>
+                      <td aria-label="tos">
+                        <Checkbox
+                          {...register('tos')}
+                          color="primary"
+                          onChange={() => clearErrors()}
+                        />
+                      </td>
+                      <td>
+                        <Link href="/tos" target="_blank" rel="noreferrer">
+                          {commonStrings.TOS}
+                        </Link>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2}>
+                        <FormHelperText error={!!errors.tos}>{errors.tos?.message || ''}</FormHelperText>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                  <SocialLogin redirectToHomepage />
+              <SocialLogin redirectToHomepage />
 
-                  <div className="buttons">
-                    <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
-                      {strings.SIGN_UP}
-                    </Button>
-                    <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
-                      {commonStrings.CANCEL}
-                    </Button>
-                  </div>
-                </div>
-                <div className="form-error">
-                  {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-                  {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                  {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                  {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                  {error && <Error message={strings.SIGN_UP_ERROR} />}
-                </div>
-              </form>
-            </Paper>
-          </div>
+              <div className="buttons">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                  {strings.SIGN_UP}
+                </Button>
+                <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                  {commonStrings.CANCEL}
+                </Button>
+              </div>
+            </div>
+            <div className="form-error">
+              {errors.root && <Error message={errors.root.message!} />}
+              {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+            </div>
+          </form>
+        </Paper>
+      </div>
 
-          <Footer />
-        </>
-      )}
-      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+      <Footer />
+
+      {isSubmitting && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )
 }

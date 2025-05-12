@@ -7,7 +7,7 @@ import reactCompilerPlugin from 'eslint-plugin-react-compiler'
 
 const config = [
   { ...reactPlugin.configs.flat.recommended, settings: { react: { version: 'detect' } } },
-  reactCompilerPlugin.configs.recommended, 
+  reactCompilerPlugin.configs.recommended,
   {
     ignores: [
       'node_modules/',
@@ -28,7 +28,6 @@ const config = [
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
       'react-refresh': reactRefreshPlugin,
-      // 'react-compiler': reactCompilerPlugin,
     },
     rules: {
       'semi': ['error', 'never'],
@@ -67,7 +66,12 @@ const config = [
       'import/no-extraneous-dependencies': 'off',
       'quotes': ['error', 'single', { 'avoidEscape': true }],
       'jsx-quotes': ['error', 'prefer-double'],
-      // 'react-compiler/react-compiler': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-multiple-empty-lines': 'error',
+      'no-multi-spaces': 'error',
+      'padded-blocks': ['error', 'never'],
+      'no-irregular-whitespace': 'error',
+      'react-compiler/react-compiler': 'error',
     },
   }
 ]

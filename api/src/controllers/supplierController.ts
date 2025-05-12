@@ -285,13 +285,13 @@ export const getSuppliers = async (req: Request, res: Response) => {
             as: 'car',
           },
         },
-        { $unwind: { path: '$car', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$car', preserveNullAndEmptyArrays: true } },
         {
           $group: {
             _id: '$_id',
             fullName: { $first: '$fullName' },
             avatar: { $first: '$avatar' },
-            carCount: { $sum: 1 },
+            carCount: { $sum: { $cond: [{ $ifNull: ['$car', false] }, 1, 0] } },
           },
         },
         {

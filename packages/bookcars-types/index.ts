@@ -314,6 +314,7 @@ export interface ActivatePayload {
 
 export interface ValidateEmailPayload {
   email: string
+  appType?: AppType
 }
 
 export enum SocialSignInType {

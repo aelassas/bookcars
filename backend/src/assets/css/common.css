@@ -12,6 +12,10 @@
   background: #1a1a1a !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .buttons button {
   margin-right: 15px;
   margin-left: 0 !important;

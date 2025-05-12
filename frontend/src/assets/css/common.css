@@ -26,6 +26,10 @@
   color: #fff !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* .btn-secondary {
   background-color: #999 !important;
   color: #fff !important;

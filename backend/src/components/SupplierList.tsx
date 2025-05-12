@@ -192,7 +192,7 @@ const SupplierList = ({
               </CardContent>
             </Card>
           )
-          : rows.map((supplier, _index) => {
+          : rows.map((supplier, index) => {
             const edit = admin || (user && user._id === supplier._id)
             const canDelete = admin
 
@@ -204,18 +204,19 @@ const SupplierList = ({
                   </div>
                   <span className="supplier-item-title">{supplier.fullName}</span>
                   {
-                    supplier.carCount && supplier.carCount > 0 && (
-                      <span className="supplier-item-subtitle">{`${supplier.carCount} ${supplier.carCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>)
+                    supplier.carCount != undefined ? (
+                      <span className="supplier-item-subtitle">{`${supplier.carCount} ${supplier.carCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>
+                    ) : null
                   }
                 </div>
                 <div className="supplier-actions">
-                  {/* {canDelete && (
+                  {canDelete && (
                     <Tooltip title={commonStrings.DELETE}>
-                      <IconButton data-id={supplier._id} data-index={_index} onClick={handleDelete}>
+                      <IconButton data-id={supplier._id} data-index={index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                  )} */}
+                  )}
                   {edit && (
                     <Tooltip title={commonStrings.UPDATE}>
                       <IconButton onClick={() => navigate(`/update-supplier?c=${supplier._id}`)}>
