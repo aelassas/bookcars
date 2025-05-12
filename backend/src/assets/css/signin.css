@@ -55,7 +55,6 @@ div.signin div.forgot-password {
     justify-content: center;
     display: flex;
     width: 350px;
-    height: 390px;
     border: 1px solid rgb(0 0 0 / 12%);
     padding: 15px;
   }
@@ -69,7 +68,6 @@ div.signin div.forgot-password {
     justify-content: center;
     display: flex;
     width: 380px;
-    height: 390px;
     border: 1px solid rgb(0 0 0 / 12%);
     padding: 15px;
   }

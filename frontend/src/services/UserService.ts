@@ -487,7 +487,7 @@ export const setStayConnected = (value: boolean) => {
  * @returns {boolean}
  */
 export const getStayConnected = () => {
-  const value = JSON.parse(localStorage.getItem('bc-fe-stay-connected') ?? 'false')
+  const value = JSON.parse(localStorage.getItem('bc-fe-stay-connected') || 'false')
   return value as boolean
 }
 

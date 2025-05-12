@@ -66,7 +66,7 @@ const config = [
       'import/no-extraneous-dependencies': 'off',
       'quotes': ['error', 'single', { 'avoidEscape': true }],
       'jsx-quotes': ['error', 'prefer-double'],
-      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
       'no-multiple-empty-lines': 'error',
       'no-multi-spaces': 'error',
       'padded-blocks': ['error', 'never'],

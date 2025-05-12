@@ -608,3 +608,16 @@ export const sendEmail = (payload: bookcarsTypes.SendEmailPayload): Promise<numb
       payload,
     )
     .then((res) => res.status)
+
+/**
+* Check if password exists.
+*
+* @param {string} id
+* @returns {Promise<bookcarsTypes.User|null>}
+*/
+export const hasPassword = (id: string): Promise<number> => axiosInstance
+  .get(
+    `/api/has-password/${encodeURIComponent(id)}`,
+    { withCredentials: true }
+  )
+  .then((res) => res.status)

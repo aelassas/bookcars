@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Button,
   FormControl,
@@ -7,7 +7,9 @@ import {
   OutlinedInput,
   CircularProgress,
 } from '@mui/material'
-import validator from 'validator'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
@@ -18,37 +20,22 @@ import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaCo
 
 import '@/assets/css/newsletter-form.css'
 
+const schema = z.object({
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID })
+})
+
+type FormFields = z.infer<typeof schema>
+
 const NewsletterForm = () => {
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
-  const [email, setEmail] = useState('')
-  const [emailValid, setEmailValid] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting }, clearErrors } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit'
+  })
 
-  const validateEmail = (_email: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        setEmailValid(true)
-        return true
-      }
-
-      setEmailValid(false)
-      return false
-    }
-
-    setEmailValid(true)
-    return false
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async ({ email }: FormFields) => {
     try {
-      e.preventDefault()
-      setSubmitting(true)
-
-      if (!validateEmail(email)) {
-        return
-      }
-
       let recaptchaToken = ''
       if (reCaptchaLoaded) {
         recaptchaToken = await generateReCaptchaToken()
@@ -62,7 +49,6 @@ const NewsletterForm = () => {
         return
       }
 
-
       const payload: bookcarsTypes.SendEmailPayload = {
         from: email,
         to: env.CONTACT_EMAIL,
@@ -73,51 +59,42 @@ const NewsletterForm = () => {
       const status = await UserService.sendEmail(payload)
 
       if (status === 200) {
-        setEmail('')
+        reset()
         helper.info(strings.SUCCESS)
       } else {
         helper.error()
       }
     } catch (err) {
       helper.error(err)
-    } finally {
-      setSubmitting(false)
     }
   }
 
   return (
-    <form className="newsletter-form" onSubmit={handleSubmit}>
+    <form className="newsletter-form" onSubmit={handleSubmit(onSubmit)}>
       <h1>{strings.TITLE}</h1>
       <p>{strings.SUB_TITLE}</p>
 
       <div className="form">
-        <FormControl fullWidth margin="normal" size="small" className="input">
+        <FormControl fullWidth margin="normal" size="small" className="input" error={!!errors.email}>
           <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
           <OutlinedInput
             type="text"
+            {...register('email')}
             label={commonStrings.EMAIL}
             size="small"
-            error={!emailValid}
             required
             autoComplete="off"
-            value={email}
             inputProps={{
               'aria-label': 'email',
             }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setEmail(e.target.value)
-
-              if (!e.target.value) {
-                setEmailValid(true)
-              }
-            }}
+            onChange={() => clearErrors()}
           />
-          <FormHelperText error={!emailValid}>{(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+          <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
         </FormControl>
 
-        <Button type="submit" variant="contained" className="btn-primary btn" aria-label="Subscribe">
+        <Button type="submit" variant="contained" className="btn-primary btn" aria-label="Subscribe" disabled={isSubmitting}>
           {
-            submitting
+            isSubmitting
               ? <CircularProgress color="inherit" size={24} />
               : strings.SUBSCRIBE
           }
