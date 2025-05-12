@@ -5,8 +5,12 @@ import {
   InputLabel,
   Input,
   Button,
+  FormHelperText,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as suStrings } from '@/lang/sign-up'
@@ -17,31 +21,41 @@ import Error from '@/components/Error'
 import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
 import Footer from '@/components/Footer'
+import env from '@/config/env.config'
 
 import '@/assets/css/signin.css'
+
+const schema = z.object({
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR })
+})
+
+type FormFields = z.infer<typeof schema>
 
 const SignIn = () => {
   const navigate = useNavigate()
 
   const { setUser, setUserLoaded } = useUserContext() as UserContextType
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [blacklisted, setBlacklisted] = useState(false)
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    clearErrors,
+  } = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+  })
+
+  const signinError = () => {
+    setError('root', { message: strings.ERROR_IN_SIGN_IN })
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
+  const onSubmit = async ({ email, password }: FormFields) => {
     try {
-      e.preventDefault()
-
       const data: bookcarsTypes.SignInPayload = {
         email,
         password,
@@ -53,28 +67,17 @@ const SignIn = () => {
       if (res.status === 200) {
         if (res.data.blacklisted) {
           await UserService.signout(false)
-          setError(false)
-          setBlacklisted(true)
+          setError('root', { message: strings.IS_BLACKLISTED })
         } else {
-          setError(false)
-
           const user = await UserService.getUser(res.data._id)
           setUser(user)
           setUserLoaded(true)
         }
       } else {
-        setError(true)
-        setBlacklisted(false)
+        signinError()
       }
     } catch {
-      setError(true)
-      setBlacklisted(false)
-    }
-  }
-
-  const handlePasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
+      signinError()
     }
   }
 
@@ -109,61 +112,76 @@ const SignIn = () => {
 
   return (
     <Layout strict={false} onLoad={onLoad}>
-      {visible && (
-        <>
-          <div className="signin">
-            <Paper className="signin-form" elevation={10}>
-              <form onSubmit={handleSubmit}>
-                <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel>{commonStrings.EMAIL}</InputLabel>
-                  <Input type="text" onChange={handleEmailChange} autoComplete="email" required />
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel>{commonStrings.PASSWORD}</InputLabel>
-                  <Input onChange={handlePasswordChange} onKeyDown={handlePasswordKeyDown} autoComplete="password" type="password" required />
-                </FormControl>
 
-                <div className="stay-connected">
-                  <input
-                    id="stay-connected"
-                    type="checkbox"
-                    onChange={(e) => {
-                      UserService.setStayConnected(e.currentTarget.checked)
-                    }}
-                  />
-                  <label
-                    htmlFor="stay-connected"
-                  >
-                    {strings.STAY_CONNECTED}
-                  </label>
-                </div>
+      <div className="signin">
+        <Paper className={`signin-form ${visible ? '' : 'hidden'}`} elevation={10}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
+            <FormControl fullWidth margin="dense" error={!!errors.email}>
+              <InputLabel>{commonStrings.EMAIL}</InputLabel>
+              <Input
+                {...register('email')}
+                onChange={(e) => {
+                  clearErrors()
+                  // Without the next line, if the field is auto-filled by the browser, react-form does not know it
+                  setValue('email', e.target.value)
+                }}
+                autoComplete="email"
+                required
+              />
+              <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
+            </FormControl>
+            <FormControl fullWidth margin="dense" error={!!errors.password}>
+              <InputLabel>{commonStrings.PASSWORD}</InputLabel>
+              <Input
+                {...register('password')}
+                onChange={(e) => {
+                  clearErrors()
+                  setValue('password', e.target.value)
+                }}
+                type="password"
+                autoComplete="password"
+                required
+              />
+              <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
+            </FormControl>
 
-                <div className="forgot-password-wrapper">
-                  <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
-                </div>
+            <div className="stay-connected">
+              <input
+                id="stay-connected"
+                type="checkbox"
+                onChange={(e) => UserService.setStayConnected(e.currentTarget.checked)}
+              />
+              <label
+                htmlFor="stay-connected"
+              >
+                {strings.STAY_CONNECTED}
+              </label>
+            </div>
 
-                <SocialLogin />
+            <div className="forgot-password-wrapper">
+              <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
+            </div>
 
-                <div className="signin-buttons">
-                  <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
-                    {suStrings.SIGN_UP}
-                  </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom">
-                    {strings.SIGN_IN}
-                  </Button>
-                </div>
-                <div className="form-error">
-                  {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                  {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
-                </div>
-              </form>
-            </Paper>
-          </div>
+            <SocialLogin />
 
-          <Footer />
-        </>
-      )}
+            <div className="signin-buttons">
+              <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
+                {suStrings.SIGN_UP}
+              </Button>
+              <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" disabled={isSubmitting}>
+                {strings.SIGN_IN}
+              </Button>
+            </div>
+            <div className="form-error">
+              {errors.root && <Error message={errors.root.message!} />}
+            </div>
+          </form>
+        </Paper>
+      </div>
+
+      <Footer />
+
     </Layout>
   )
 }

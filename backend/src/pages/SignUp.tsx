@@ -7,8 +7,10 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/sign-up'
@@ -16,123 +18,56 @@ import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
-import * as helper from '@/common/helper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import env from '@/config/env.config'
 
 import '@/assets/css/signup.css'
+
+const schema = z.object({
+  fullName: z.string().min(1),
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: commonStrings.PASSWORDS_DONT_MATCH,
+})
+
+type FormFields = z.infer<typeof schema>
 
 const SignUp = () => {
   const navigate = useNavigate()
 
   const { setUser, setUserLoaded } = useUserContext() as UserContextType
 
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState(false)
-  const [passwordError, setPasswordError] = useState(false)
-  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false)
-  const [emailError, setEmailError] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [emailValid, setEmailValid] = useState(true)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-  }
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors, setValue } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit'
+  })
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-
-    if (!e.target.value) {
-      setEmailError(false)
-      setEmailValid(true)
-    }
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value)
-  }
-
-  const validateEmail = async (_email?: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        try {
-          const status = await UserService.validateEmail({ email: _email })
-          if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          setError(false)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
-    } else {
-      setEmailError(false)
-      setEmailValid(true)
-      return false
-    }
-  }
-
-  const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateEmail(e.target.value)
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
-      const _emailValid = await validateEmail(email)
-      if (!_emailValid) {
+      const emailStatus = await UserService.validateEmail({ email: data.email })
+      if (emailStatus !== 200) {
+        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
         return
       }
 
-      if (password.length < 6) {
-        setPasswordError(true)
-        setPasswordsDontMatch(false)
-        setError(false)
-        return
-      }
-
-      if (password !== confirmPassword) {
-        setPasswordError(false)
-        setPasswordsDontMatch(true)
-        setError(false)
-        return
-      }
-
-      setLoading(true)
-
-      const data: bookcarsTypes.SignUpPayload = {
-        email,
-        password,
-        fullName,
+      const payload: bookcarsTypes.SignUpPayload = {
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
         language: UserService.getLanguage(),
       }
 
-      const status = await UserService.signup(data)
+      const status = await UserService.signup(payload)
 
       if (status === 200) {
         const signInResult = await UserService.signin({
-          email,
-          password,
+          email: data.email,
+          password: data.password,
         })
 
         if (signInResult.status === 200) {
@@ -140,23 +75,11 @@ const SignUp = () => {
           setUser(user)
           setUserLoaded(true)
           navigate(`/${window.location.search}`)
-        } else {
-          setPasswordError(false)
-          setPasswordsDontMatch(false)
-          setError(true)
         }
-      } else {
-        setPasswordError(false)
       }
-
-      setPasswordsDontMatch(false)
     } catch (err) {
       console.error(err)
-      setPasswordError(false)
-      setPasswordsDontMatch(false)
-      setError(true)
-    } finally {
-      setLoading(false)
+      setError('root', { message: strings.SIGN_UP_ERROR })
     }
   }
 
@@ -177,27 +100,39 @@ const SignUp = () => {
             {strings.SIGN_UP_HEADING}
             {' '}
           </h1>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="full-name">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" name="FullName" required onChange={handleFullNameChange} autoComplete="off" />
+                <Input
+                  type="text"
+                  {...register('fullName')}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('fullName', e.target.value)
+                  }}
+                  required
+                />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" error={!emailValid || emailError} name="Email" onBlur={handleBlur} onChange={handleEmailChange} required autoComplete="off" />
-                <FormHelperText error={!emailValid || emailError}>
-                  {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                  {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                </FormHelperText>
+                <Input
+                  type="text"
+                  {...register('email')}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('email', e.target.value)
+                  }}
+                  required
+                />
+                <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
                 <Input
-                  id="password"
-                  name="Password"
-                  onChange={handlePasswordChange}
-                  required
+                  {...register('password')}
                   type="password"
                   inputProps={{
                     autoComplete: 'new-password',
@@ -205,16 +140,18 @@ const SignUp = () => {
                       autoComplete: 'off',
                     },
                   }}
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('password', e.target.value)
+                  }}
+                  required
                 />
+                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="confirm-password">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                 <Input
-                  id="confirm-password"
-                  name="ConfirmPassword"
-                  onChange={handleConfirmPasswordChange}
-                  autoComplete="password"
-                  required
+                  {...register('confirmPassword')}
                   type="password"
                   inputProps={{
                     autoComplete: 'new-password',
@@ -222,10 +159,16 @@ const SignUp = () => {
                       autoComplete: 'off',
                     },
                   }}
+                  onChange={(e) => {
+                    clearErrors()
+                    setValue('confirmPassword', e.target.value)
+                  }}
+                  required
                 />
+                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {strings.SIGN_UP}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
@@ -235,14 +178,12 @@ const SignUp = () => {
               </div>
             </div>
             <div className="form-error">
-              {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-              {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-              {error && <Error message={strings.SIGN_UP_ERROR} />}
+              {errors.root && <Error message={errors.root.message!} />}
             </div>
           </form>
         </Paper>
       </div>
-      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+      {isSubmitting && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )
 }
