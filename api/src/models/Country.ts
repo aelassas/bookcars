@@ -10,6 +10,10 @@ const countrySchema = new Schema<env.Country>(
       required: [true, "can't be blank"],
       validate: (value: any): boolean => Array.isArray(value),
     },
+    supplier: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

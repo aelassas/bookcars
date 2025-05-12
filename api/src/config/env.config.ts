@@ -686,6 +686,7 @@ export interface LocationValue extends Document {
 export interface Country extends Document {
   values: Types.ObjectId[]
   name?: string
+  supplier?: Types.ObjectId
 }
 
 /**
@@ -717,6 +718,7 @@ export interface Location extends Document {
   name?: string
   image?: string | null
   parkingSpots?: Types.ObjectId[] | null
+  supplier?: Types.ObjectId
 }
 
 /**

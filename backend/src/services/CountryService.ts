@@ -23,7 +23,7 @@ export const validate = (data: bookcarsTypes.ValidateCountryPayload): Promise<nu
  * @param {bookcarsTypes.CountryName[]} data
  * @returns {Promise<number>}
  */
-export const create = (data: bookcarsTypes.CountryName[]): Promise<number> =>
+export const create = (data: bookcarsTypes.UpsertCountryPayload): Promise<number> =>
   axiosInstance
     .post(
       '/api/create-country',

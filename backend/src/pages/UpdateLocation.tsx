@@ -6,7 +6,8 @@ import {
   FormControl,
   FormHelperText,
   Button,
-  Paper
+  Paper,
+  FormLabel
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -14,6 +15,7 @@ import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as clStrings } from '@/lang/create-location'
 import { strings } from '@/lang/update-location'
+import { strings as suppliersStrings } from '@/lang/suppliers'
 import * as LocationService from '@/services/LocationService'
 import NoMatch from './NoMatch'
 import Error from './Error'
@@ -24,12 +26,14 @@ import CountrySelectList from '@/components/CountrySelectList'
 import Avatar from '@/components/Avatar'
 import PositionInput from '@/components/PositionInput'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
+import SupplierBadge from '@/components/SupplierBadge'
 
 import '@/assets/css/update-location.css'
 
 const UpdateLocation = () => {
   const navigate = useNavigate()
 
+  const [user, setUser] = useState<bookcarsTypes.User>()
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
@@ -133,9 +137,10 @@ const UpdateLocation = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setLoading(true)
+      setUser(_user)
 
       const params = new URLSearchParams(window.location.search)
       if (params.has('loc')) {
@@ -143,6 +148,12 @@ const UpdateLocation = () => {
         if (id && id !== '') {
           try {
             const _location = await LocationService.getLocation(id)
+
+            if (!helper.admin(_user) && _user._id !== _location.supplier?._id) {
+              setLoading(false)
+              setNoMatch(true)
+              return
+            }
 
             if (_location && _location.values) {
               env._LANGUAGES.forEach((lang) => {
@@ -207,6 +218,13 @@ const UpdateLocation = () => {
                 color="disabled"
                 className="avatar-ctn"
               />
+
+              {helper.admin(user) && location.supplier && (
+                <FormControl fullWidth margin="dense">
+                  <FormLabel>{suppliersStrings.SUPPLIER}</FormLabel>
+                  <SupplierBadge supplier={location.supplier} />
+                </FormControl>
+              )}
 
               <FormControl fullWidth margin="dense">
                 <CountrySelectList

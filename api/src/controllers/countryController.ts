@@ -76,8 +76,8 @@ export const validate = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const create = async (req: Request, res: Response) => {
-  const { body }: { body: bookcarsTypes.CountryName[] } = req
-  const names = body
+  const { body }: { body: bookcarsTypes.UpsertCountryPayload } = req
+  const { names, supplier } = body
 
   try {
     const values: string[] = []
@@ -90,7 +90,7 @@ export const create = async (req: Request, res: Response) => {
       values.push(countryValue.id)
     }
 
-    const country = new Country({ values })
+    const country = new Country({ values, supplier })
     await country.save()
     res.send(country)
   } catch (err) {
@@ -186,10 +186,18 @@ export const getCountry = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const country = await Country.findById(id).populate<{ values: env.LocationValue[] }>('values').lean()
+    const country = await Country
+      .findById(id)
+      .populate<{ values: env.LocationValue[] }>('values')
+      .populate<{ supplier: env.UserInfo }>('supplier')
+      .lean()
 
     if (country) {
       const name = (country.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
+      if (country.supplier) {
+        const { _id, fullName, avatar } = country.supplier
+        country.supplier = { _id, fullName, avatar }
+      }
       const c = { ...country, name }
       res.json(c)
       return

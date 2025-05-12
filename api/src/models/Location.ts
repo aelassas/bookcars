@@ -29,6 +29,10 @@ const locationSchema = new Schema<env.Location>(
       type: [Schema.Types.ObjectId],
       ref: 'ParkingSpot',
     },
+    supplier: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

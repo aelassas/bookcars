@@ -378,12 +378,20 @@ export const getCancellation = (cancellation: number, language: string) => {
 }
 
 /**
- * Check whether a user is and administrator or not.
+ * Check whether a user is and admin or not.
  *
  * @param {?bookcarsTypes.User} [user]
  * @returns {boolean}
  */
-export const admin = (user?: bookcarsTypes.User): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) ?? false
+export const admin = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) || false
+
+/**
+ * Check whether a user is a supplier or not.
+ *
+ * @param {?bookcarsTypes.User} [user]
+ * @returns {boolean}
+ */
+export const supplier = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Supplier) || false
 
 /**
  * Get booking status label.
