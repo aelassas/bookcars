@@ -26,6 +26,7 @@ const IMAGE1_PATH = path.join(__dirname, `./img/${IMAGE1}`)
 const IMAGE2 = 'location2.jpg'
 const IMAGE2_PATH = path.join(__dirname, `./img/${IMAGE2}`)
 
+let SUPPLIER_ID: string
 let LOCATION_ID: string
 
 let LOCATION_NAMES: bookcarsTypes.LocationName[] = [
@@ -52,6 +53,8 @@ beforeAll(async () => {
   await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
 
+  const supplierName = nanoid()
+  SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
   const countryValue1 = new LocationValue({ language: 'en', value: 'Country 1' })
   await countryValue1.save()
   countryValue1Id = countryValue1.id
@@ -67,6 +70,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
+  await testHelper.deleteSupplier(SUPPLIER_ID)
   await LocationValue.deleteMany({ _id: { $in: [countryValue1Id, countryValue2Id] } })
   await Country.deleteOne({ _id: countryId })
 
@@ -138,6 +142,7 @@ describe('POST /api/create-location', () => {
       latitude: 28.0268755,
       longitude: 1.6528399999999976,
       image: 'unknown.jpg',
+      supplier: SUPPLIER_ID,
     }
     let res = await request(app)
       .post('/api/create-location')
@@ -191,6 +196,13 @@ describe('POST /api/create-location', () => {
     expect(res.body?.longitude).toBe(payload.longitude)
     expect(res.body?.parkingSpots?.length).toBe(3)
     LOCATION_ID = res.body?._id
+
+    // test failure (wrong payload)
+    res = await request(app)
+      .post('/api/create-location')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send({})
+    expect(res.statusCode).toBe(400)
 
     // test failure (no payload)
     res = await request(app)
