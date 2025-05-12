@@ -151,7 +151,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
               navigate('/')
             }}
           >
-            {' '}
             {commonStrings.CANCEL}
           </Button>
         </div>

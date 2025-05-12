@@ -269,11 +269,7 @@ const CreateBooking = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-booking">
         <Paper className="booking-form booking-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="booking-form-title">
-            {' '}
-            {strings.NEW_BOOKING_HEADING}
-            {' '}
-          </h1>
+          <h1 className="booking-form-title">{strings.NEW_BOOKING_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             {!isSupplier && (
               <FormControl fullWidth margin="dense">

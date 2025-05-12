@@ -367,11 +367,7 @@ const UpdateUser = () => {
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
-            <h1 className="user-form-title">
-              {' '}
-              {strings.UPDATE_USER_HEADING}
-              {' '}
-            </h1>
+            <h1 className="user-form-title">{strings.UPDATE_USER_HEADING}</h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={type}
