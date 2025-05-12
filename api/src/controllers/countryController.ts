@@ -249,6 +249,30 @@ export const getCountries = async (req: Request, res: Response) => {
         },
         { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
         { $addFields: { name: '$value.value' } },
+
+        {
+          $lookup: {
+            from: 'User',
+            let: { supplier: '$supplier' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$supplier'] },
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  fullName: 1,
+                  avatar: 1,
+                },
+              }
+            ],
+            as: 'supplier',
+          },
+        },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: true } },
+
         {
           $facet: {
             resultData: [{ $sort: { name: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
