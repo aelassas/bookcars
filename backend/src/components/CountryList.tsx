@@ -221,7 +221,7 @@ const CountryList = ({
                 className="country-list-item"
                 key={country._id}
                 secondaryAction={
-                  (helper.admin(user) || country.supplier === user?._id) && (
+                  (helper.admin(user) || country.supplier?._id === user?._id) && (
                     <div>
                       <Tooltip title={commonStrings.UPDATE}>
                         <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>

@@ -946,6 +946,14 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                   $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
                 },
               },
+              {
+                $project: {
+                  _id: 1,
+                  fullName: 1,
+                  avatar: 1,
+                  priceChangeRate: 1,
+                },
+              }
             ],
             as: 'supplier',
           },
@@ -1066,11 +1074,6 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
-
-    for (const car of data[0].resultData) {
-      const { _id, fullName, avatar, priceChangeRate } = car.supplier
-      car.supplier = { _id, fullName, avatar, priceChangeRate }
-    }
 
     res.json(data)
   } catch (err) {
