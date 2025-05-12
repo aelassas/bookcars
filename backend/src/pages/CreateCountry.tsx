@@ -16,12 +16,14 @@ import { strings } from '@/lang/create-country'
 import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-country.css'
 
 const CreateCountry = () => {
   const navigate = useNavigate()
 
+  const { user } = useUserContext() as UserContextType
   const [visible, setVisible] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.CountryName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])
@@ -49,7 +51,11 @@ const CreateCountry = () => {
       setNameErrors(_nameErrors)
 
       if (isValid) {
-        const status = await CountryService.create(names)
+        const payload: bookcarsTypes.UpsertCountryPayload = {
+          names,
+          supplier: helper.supplier(user) ? user?._id : undefined,
+        }
+        const status = await CountryService.create(payload)
 
         if (status === 200) {
           const _names = bookcarsHelper.clone(names) as bookcarsTypes.CountryName[]

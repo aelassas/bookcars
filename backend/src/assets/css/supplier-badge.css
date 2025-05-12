@@ -1,0 +1,37 @@
+div.supplier-badge {
+    display: flex;
+    align-items: center;
+    color: rgb(0 0 0 / 60%);
+    font-size: 1em;
+    line-height: 1em;
+    max-width: 200px;
+  }
+  
+  div.supplier-badge span.supplier-badge-logo {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 32px;
+    margin-top: 5px;
+  }
+  
+  div.supplier-badge span.supplier-badge-logo img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  div.supplier-badge a.supplier-badge-info {
+    color: #0064c8;
+    font-size: 0.9em;
+    /* line-height: 1em; */
+    white-space: nowrap;
+    margin-left: 5px;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
+  }

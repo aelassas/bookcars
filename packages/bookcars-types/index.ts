@@ -164,6 +164,7 @@ export interface UpsertLocationPayload {
   names: LocationName[]
   image?: string | null
   parkingSpots?: ParkingSpot[]
+  supplier?: string
 }
 
 export interface UpdateSupplierPayload {
@@ -428,16 +429,23 @@ export interface Location {
   values?: LocationValue[]
   image?: string
   parkingSpots?: ParkingSpot[]
+  supplier?: User
 }
 
 export interface Country {
   _id: string
   name?: string
   values?: LocationValue[]
+  supplier?: User
 }
 
 export interface CountryInfo extends Country {
   locations?: Location[]
+}
+
+export interface UpsertCountryPayload {
+  names: CountryName[]
+  supplier?: string
 }
 
 export interface DateBasedPrice {

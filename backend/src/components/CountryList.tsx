@@ -30,6 +30,7 @@ import { strings } from '@/lang/countries'
 import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/country-list.css'
 
@@ -46,6 +47,7 @@ const CountryList = ({
 }: CountryListProps) => {
   const navigate = useNavigate()
 
+  const { user } = useUserContext() as UserContextType
   const [keyword, setKeyword] = useState(countryKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -214,24 +216,26 @@ const CountryList = ({
           )
         ) : (
           <List className="country-list-items">
-            {rows.map((country, _index) => (
+            {rows.map((country, index) => (
               <ListItem
                 className="country-list-item"
                 key={country._id}
-                secondaryAction={(
-                  <div>
-                    <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    {/* <Tooltip title={commonStrings.DELETE}>
-                      <IconButton edge="end" data-id={country._id} data-index={_index} onClick={handleDelete}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip> */}
-                  </div>
-                )}
+                secondaryAction={
+                  (helper.admin(user) || country.supplier === user?._id) && (
+                    <div>
+                      <Tooltip title={commonStrings.UPDATE}>
+                        <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      {/* <Tooltip title={commonStrings.DELETE}>
+                        <IconButton edge="end" data-id={country._id} data-index={index} onClick={handleDelete}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip> */}
+                    </div>
+                  )
+                }
               >
                 <ListItemAvatar>
                   <Avatar>

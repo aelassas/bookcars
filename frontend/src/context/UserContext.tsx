@@ -20,7 +20,7 @@ interface UserProviderProps {
   refreshKey?: number
 }
 
-export const UserProvider: React.FC<UserProviderProps> = ({ children, refreshKey = 0 }) => {
+export const UserProvider: React.FC<UserProviderProps> = ({ children, refreshKey }) => {
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [userLoaded, setUserLoaded] = useState(false)
   const [unauthorized, setUnauthorized] = useState(false)
@@ -76,6 +76,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children, refreshKey
     if (prevRefreshKey.current !== refreshKey) {
       checkUser()
       prevRefreshKey.current = refreshKey // Update the ref to the current refreshKey
+    }
+  }, [refreshKey, checkUser])
+
+  useEffect(() => {
+    if (refreshKey === undefined) {
+      checkUser()
     }
   }, [refreshKey, checkUser])
 

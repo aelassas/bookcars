@@ -33,8 +33,9 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/cars'
 import * as helper from '@/common/helper'
 import * as CarService from '@/services/CarService'
-import Pager from './Pager'
-import SimpleBackdrop from './SimpleBackdrop'
+import Pager from '@/components/Pager'
+import SimpleBackdrop from '@/components/SimpleBackdrop'
+import SupplierBadge from '@/components/SupplierBadge'
 
 import DoorsIcon from '@/assets/img/car-door.png'
 import RatingIcon from '@/assets/img/rating-icon.png'
@@ -434,14 +435,7 @@ const CarList = ({
                         )}
                       </div>
                       {!hideSupplier && (
-                        <div className="car-supplier" title={car.supplier.fullName}>
-                          <span className="car-supplier-logo">
-                            <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
-                          </span>
-                          <a href={`/supplier?c=${car.supplier._id}`} className="car-supplier-info">
-                            {car.supplier.fullName}
-                          </a>
-                        </div>
+                        <SupplierBadge supplier={car.supplier} />
                       )}
                     </div>
                   </div>
