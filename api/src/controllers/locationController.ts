@@ -468,6 +468,30 @@ export const getLocations = async (req: Request, res: Response) => {
           },
         },
         { $unwind: { path: '$country', preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: 'User',
+            let: { supplier: '$supplier' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$supplier'] },
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  fullName: 1,
+                  avatar: 1,
+                },
+              }
+            ],
+            as: 'supplier',
+          },
+        },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: true } },
+
         {
           $project: {
             parkingSpots: 0,

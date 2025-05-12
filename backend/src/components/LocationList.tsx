@@ -220,7 +220,7 @@ const LocationList = ({
                 className="location-list-item"
                 key={location._id}
                 secondaryAction={
-                  (helper.admin(user) || location.supplier === user?._id) && (
+                  (helper.admin(user) || location.supplier?._id === user?._id) && (
                     <div>
                       <Tooltip title={commonStrings.UPDATE}>
                         <IconButton edge="end" onClick={() => navigate(`/update-location?loc=${location._id}`)}>
