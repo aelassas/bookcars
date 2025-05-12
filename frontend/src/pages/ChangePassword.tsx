@@ -106,11 +106,7 @@ const ChangePassword = () => {
         <>
           <div className="password-reset">
             <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
-              <h1 className="password-reset-form-title">
-                {' '}
-                {strings.CHANGE_PASSWORD_HEADING}
-                {' '}
-              </h1>
+              <h1 className="password-reset-form-title">{strings.CHANGE_PASSWORD_HEADING}</h1>
               <form className="form" onSubmit={handleSubmit(onSubmit)}>
                 {hasPassword && (
                   <FormControl fullWidth margin="dense" error={!!errors.currentPassword}>

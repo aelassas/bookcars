@@ -81,11 +81,7 @@ const CreateCountry = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-country">
         <Paper className="country-form country-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="country-form-title">
-            {' '}
-            {strings.NEW_COUNTRY_HEADING}
-            {' '}
-          </h1>
+          <h1 className="country-form-title">{strings.NEW_COUNTRY_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             {env._LANGUAGES.map((language, index) => (
               <FormControl key={language.code} fullWidth margin="dense">

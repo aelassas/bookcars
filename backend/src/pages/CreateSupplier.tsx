@@ -270,11 +270,7 @@ const CreateSupplier = () => {
     <Layout onLoad={onLoad} strict admin>
       <div className="create-supplier">
         <Paper className="supplier-form" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="supplier-form-title">
-            {' '}
-            {strings.CREATE_SUPPLIER_HEADING}
-            {' '}
-          </h1>
+          <h1 className="supplier-form-title">{strings.CREATE_SUPPLIER_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Supplier}

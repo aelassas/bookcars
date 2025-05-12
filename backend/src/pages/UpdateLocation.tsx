@@ -201,11 +201,7 @@ const UpdateLocation = () => {
       {!error && !noMatch && location && location.values && (
         <div className="update-location">
           <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="location-form-title">
-              {' '}
-              {strings.UPDATE_LOCATION}
-              {' '}
-            </h1>
+            <h1 className="location-form-title">{strings.UPDATE_LOCATION}</h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={bookcarsTypes.RecordType.Location}

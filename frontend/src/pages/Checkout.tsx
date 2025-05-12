@@ -551,16 +551,13 @@ const Checkout = () => {
           <>
             <div className="checkout">
               <Paper className="checkout-form" elevation={10}>
-                <h1 className="checkout-form-title">
-                  {' '}
-                  {strings.BOOKING_HEADING}
-                  {' '}
-                </h1>
+                <h1 className="checkout-form-title">{strings.BOOKING_HEADING}</h1>
                 <form onSubmit={handleSubmit}>
                   <div>
-
-                    {((pickupLocation.latitude && pickupLocation.longitude)
-                      || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
+                    {(
+                      (pickupLocation.latitude && pickupLocation.longitude)
+                      || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)
+                    ) && (
                         <Map
                           position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
                           initialZoom={10}

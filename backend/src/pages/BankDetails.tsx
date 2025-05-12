@@ -31,11 +31,7 @@ const BankDetails = () => {
 
         {bankDetails && !noMatch && (
           <Paper className="bank-details-form bank-details-form-wrapper" elevation={10}>
-            <h1 className="bank-details-form-title">
-              {' '}
-              {strings.BANK_DETAILS}
-              {' '}
-            </h1>
+            <h1 className="bank-details-form-title">{strings.BANK_DETAILS}</h1>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{strings.ACCOUNT_HOLDER}</InputLabel>

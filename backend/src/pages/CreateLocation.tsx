@@ -116,11 +116,7 @@ const CreateLocation = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-location">
         <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="location-form-title">
-            {' '}
-            {strings.NEW_LOCATION_HEADING}
-            {' '}
-          </h1>
+          <h1 className="location-form-title">{strings.NEW_LOCATION_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Location}
