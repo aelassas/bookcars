@@ -43,6 +43,12 @@ export const NotificationProvider = ({ children, refreshKey }: NotificationProvi
     }
   }, [userLoaded, refreshKey, checkNotifications])
 
+  useEffect(() => {
+    if (refreshKey === undefined) {
+      checkNotifications()
+    }
+  }, [refreshKey, checkNotifications])
+
   return (
     <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>
   )

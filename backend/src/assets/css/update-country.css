@@ -24,7 +24,6 @@ div.update-country {
 @media only screen and (width <=960px) {
   .country-form {
     width: 360px;
-    height: 460px;
     padding: 30px;
   }
 }
@@ -34,7 +33,6 @@ div.update-country {
 @media only screen and (width >=960px) {
   .country-form {
     width: 550px;
-    height: 380px;
     padding: 30px;
   }
 }
