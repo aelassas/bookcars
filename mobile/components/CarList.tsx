@@ -241,7 +241,7 @@ const CarList = ({
               {
                 footerComponent || (fetch
                   ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-                  : <></>)
+                  : null)
               }
             </View>
           }
@@ -251,7 +251,7 @@ const CarList = ({
                 <Text>{i18n.t('EMPTY_CAR_LIST')}</Text>
               </View>
             )
-              : <></>
+              : null
           }
           refreshing={loading}
           refreshControl={
