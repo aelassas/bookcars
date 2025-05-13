@@ -132,6 +132,7 @@ You can install the Android App by downloading the APK and installing it on any 
 16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
+19. [Release Notes](https://github.com/aelassas/bookcars/releases)
 
 ## Support
 
