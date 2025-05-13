@@ -6,14 +6,6 @@
     "version": "7.1.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
-    "cli": {
-      "appVersionSource": "remote"
-    },
-    "build": {
-      "production": {
-        "autoIncrement": true
-      }
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
