@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "private": true,
-  "version": "7.1.0",
+  "version": "7.2.0",
   "type": "module",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../backend",
