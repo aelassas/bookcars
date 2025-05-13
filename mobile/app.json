@@ -9,6 +9,11 @@
     "cli": {
       "appVersionSource": "remote"
     },
+    "build": {
+      "production": {
+        "autoIncrement": true
+      }
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
