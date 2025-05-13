@@ -84,7 +84,6 @@
     "eslint": "^9.26.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "npm-check-updates": "^18.0.1",
     "typescript": "~5.8.3"
   },
   "private": true
