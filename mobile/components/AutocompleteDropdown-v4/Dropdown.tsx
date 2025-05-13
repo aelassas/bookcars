@@ -1,4 +1,3 @@
- 
 import React, { memo, useMemo } from 'react'
 import type { ListRenderItem } from 'react-native'
 import { StyleSheet, FlatList, View, useColorScheme } from 'react-native'
@@ -6,6 +5,7 @@ import * as Animatable from 'react-native-animatable'
 import { fadeInDownShort, fadeInUpShort } from './helpers'
 import { theme } from './theme'
 import type { AutocompleteDropdownItem, IAutocompleteDropdownProps } from './types'
+import { JSX } from 'react/jsx-runtime'
 
 interface DropdownProps extends Omit<IAutocompleteDropdownProps, 'renderItem' | 'ref'> {
   ListEmptyComponent: JSX.Element

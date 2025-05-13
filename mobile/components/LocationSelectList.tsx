@@ -186,7 +186,7 @@ const LocationSelectList = ({
         closeOnBlur
         clearOnFocus={false}
         closeOnSubmit
-        EmptyResultComponent={<></>}
+        EmptyResultComponent={<View></View>}
         debounce={200}
         suggestionsListMaxHeight={Dimensions.get('window').height * 0.3}
       />

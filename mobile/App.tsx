@@ -18,9 +18,10 @@ import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDr
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowList: true,
   }),
 })
 
@@ -32,8 +33,8 @@ SplashScreen.preventAutoHideAsync()
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
 
-  const responseListener = useRef<Notifications.EventSubscription>()
-  const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)
+  const responseListener = useRef<Notifications.EventSubscription | null>(null)
+  const navigationRef = useRef<NavigationContainerRef<StackParams> | null>(null)
 
   useEffect(() => {
     const register = async () => {
@@ -63,9 +64,9 @@ const App = () => {
 
           if (data.booking) {
             if (data.user && data.notification) {
-              await NotificationService.markAsRead(data.user, [data.notification])
+              await NotificationService.markAsRead(data.user as string, [data.notification as string])
             }
-            navigationRef.current.navigate('Booking', { id: data.booking })
+            navigationRef.current.navigate('Booking', { id: data.booking as string })
           } else {
             navigationRef.current.navigate('Notifications', {})
           }
@@ -76,7 +77,7 @@ const App = () => {
     })
 
     return () => {
-      Notifications.removeNotificationSubscription(responseListener.current!)
+      responseListener.current?.remove()
     }
   }, [])
 

@@ -1,8 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "module": "ESNext",
     "strict": true,
+    "jsx": "react-native",
     "typeRoots": [
       "./types"
     ],

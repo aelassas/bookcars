@@ -48,7 +48,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
   const wrapperRef = useRef<View>(null)
   const activeControllerRef = useRef<IAutocompleteDropdownRef | null>(null)
   const controllerRefs = useRef<IAutocompleteDropdownRef[]>([])
-  const positionTrackingIntervalRef = useRef<NodeJS.Timeout>()
+  const positionTrackingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (!inputMeasurements?.height) {
@@ -87,7 +87,6 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
         }
         setInputMeasurements((prev) =>
           (JSON.stringify(prev) === JSON.stringify(currentMeasurement) ? prev : currentMeasurement),)
-         
         showAfterCalculation && setShow(true)
       })
     })
@@ -113,11 +112,15 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
         })
       }, 16)
     } else {
-      clearInterval(positionTrackingIntervalRef.current)
+      if (positionTrackingIntervalRef.current) {
+        clearInterval(positionTrackingIntervalRef.current)
+      }
     }
 
     return () => {
-      clearInterval(positionTrackingIntervalRef.current)
+      if (positionTrackingIntervalRef.current) {
+        clearInterval(positionTrackingIntervalRef.current)
+      }
     }
   }, [recalculatePosition, opacity, show])
 
