@@ -142,7 +142,7 @@ const Layout = ({
             <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
             <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
           </View>
-        ))) || <></>}
+        ))) || null}
     </View>
   )
 }

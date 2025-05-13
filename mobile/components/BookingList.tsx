@@ -181,7 +181,7 @@ const BookingList = ({
             {
               fetch && !openCancelDialog
                 ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-                : <></>
+                : null
             }
           </View>
         }
@@ -191,7 +191,7 @@ const BookingList = ({
               <Text style={styles.text}>{deleted ? i18n.t('BOOKING_DELETED') : i18n.t('EMPTY_BOOKING_LIST')}</Text>
             </View>
           )
-            : <></>
+            : null
         }
         refreshing={loading}
         refreshControl={
