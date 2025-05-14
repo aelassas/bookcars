@@ -12,6 +12,7 @@ import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
 import Accordion from './Accordion'
 import { schema, FormFields, LocationField } from '@/models/SearchForm'
+import * as LocationService from '@/services/LocationService'
 
 import '@/assets/css/car-filter.css'
 
@@ -126,18 +127,26 @@ const CarFilter = ({
     }
   }
 
-  const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    const _pickupLocation = (values.length > 0 && values[0]) as LocationField || null
+  const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {
+    const pickupLocationId = (values.length > 0 && values[0]._id) || ''
+    if (pickupLocationId) {
+      const _pickupLocation = await LocationService.getLocation(pickupLocationId) as LocationField
 
-    setValue('pickupLocation', _pickupLocation)
+      setValue('pickupLocation', _pickupLocation)
 
-    if (sameLocation) {
-      setValue('dropOffLocation', _pickupLocation)
+      if (sameLocation) {
+        setValue('dropOffLocation', _pickupLocation)
+      }
     }
   }
 
-  const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setValue('dropOffLocation', (values.length > 0 && values[0]) as LocationField || null)
+  const handleDropOffLocationChange = async (values: bookcarsTypes.Option[]) => {
+    const dropOffLocationId = (values.length > 0 && values[0]._id) || ''
+    if (dropOffLocationId) {
+      const _dropOffLocation = await LocationService.getLocation(dropOffLocationId) as LocationField
+
+      setValue('dropOffLocation', _dropOffLocation)
+    }
   }
 
   const onSubmitForm = (data: FormFields) => {
