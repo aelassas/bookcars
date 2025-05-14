@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
@@ -54,10 +54,12 @@ const Settings = () => {
   const [loading, setLoading] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue, watch } = useForm<FormFields>({
+  const { register, control, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
     resolver: zodResolver(schema),
-    mode: 'onSubmit'
+    mode: 'onSubmit',
   })
+
+  const birthDate = useWatch({ control, name: 'birthDate' })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -173,7 +175,7 @@ const Settings = () => {
                     label={commonStrings.BIRTH_DATE}
                     variant="standard"
                     required
-                    value={watch('birthDate') || null}
+                    value={birthDate || null}
                     onChange={(birthDate) => {
                       if (birthDate) {
                         clearErrors()
@@ -196,8 +198,7 @@ const Settings = () => {
                   <Button
                     variant="contained"
                     className="btn-primary btn-margin btn-margin-bottom"
-                    // disabled={isSubmitting}
-                    disabled
+                    disabled={isSubmitting}
                     onClick={(e) => {
                       e.preventDefault()
                       navigate('/change-password')
@@ -205,7 +206,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
                     {commonStrings.SAVE}
                   </Button>
                   <Button

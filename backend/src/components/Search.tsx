@@ -1,9 +1,18 @@
-import React, { useState, useRef } from 'react'
-import { IconButton, TextField } from '@mui/material'
+import React, { useRef } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { IconButton, TextField, InputAdornment } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import { strings as commonStrings } from '@/lang/common'
 
 import '@/assets/css/search.css'
+
+const schema = z.object({
+  keyword: z.string().optional()
+})
+
+type FormFields = z.infer<typeof schema>
 
 interface SearchProps {
   className?: string
@@ -14,53 +23,45 @@ const Search = ({
   className,
   onSubmit
 }: SearchProps) => {
-  const [keyword, setKeyword] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
+  const { register, handleSubmit, setValue, control } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+  })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
-    e.preventDefault()
+  const keyword = useWatch({ control, name: 'keyword' })
 
+  const handleFormSubmit = (data: FormFields) => {
     if (onSubmit) {
-      onSubmit(keyword)
-    }
-  }
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
+      onSubmit(data.keyword || '')
     }
   }
 
   return (
     <div className={className}>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
         <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
         <TextField
           inputRef={inputRef}
           variant="standard"
-          value={keyword}
-          onKeyDown={handleSearchKeyDown}
-          onChange={handleSearchChange}
+          {...register('keyword')}
           placeholder={commonStrings.SEARCH_PLACEHOLDER}
           slotProps={{
             input: {
               endAdornment: keyword ? (
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    setKeyword('')
-                    inputRef.current?.focus()
-                  }}
-                >
-                  <ClearIcon style={{ width: 20, height: 20 }} />
-                </IconButton>
-              ) : (
-                <></>
-              ),
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setValue('keyword', '')
+                      inputRef.current?.focus()
+                    }}
+                  >
+                    <ClearIcon style={{ width: 20, height: 20 }} />
+                  </IconButton>
+                </InputAdornment>
+              ) : null
             }
           }}
           className="sc-search"
