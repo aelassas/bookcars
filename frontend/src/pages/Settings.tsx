@@ -150,8 +150,7 @@ const Settings = () => {
                   loggedUser={user}
                   user={user}
                   size="large"
-                  // readonly={false}
-                  readonly
+                  readonly={false}
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   color="disabled"
@@ -167,7 +166,7 @@ const Settings = () => {
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.phone}>
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors()} />
+                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors('phone')} />
                   <FormHelperText>{errors.phone?.message || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.birthDate}>
@@ -178,8 +177,8 @@ const Settings = () => {
                     value={birthDate || undefined}
                     onChange={(birthDate) => {
                       if (birthDate) {
-                        clearErrors()
-                        setValue('birthDate', birthDate)
+                        clearErrors('birthDate')
+                        setValue('birthDate', birthDate, { shouldValidate: true })
                       }
                     }}
                     language={user.language}
@@ -206,7 +205,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
                     {commonStrings.SAVE}
                   </Button>
                   <Button

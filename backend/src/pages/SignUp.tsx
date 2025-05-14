@@ -95,11 +95,7 @@ const SignUp = () => {
     <Layout strict={false} onLoad={onLoad}>
       <div className="signup">
         <Paper className="signup-form" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="signup-form-title">
-            {' '}
-            {strings.SIGN_UP_HEADING}
-            {' '}
-          </h1>
+          <h1 className="signup-form-title">{strings.SIGN_UP_HEADING}</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <FormControl fullWidth margin="dense">
@@ -109,7 +105,6 @@ const SignUp = () => {
                   {...register('fullName')}
                   autoComplete="off"
                   onChange={(e) => {
-                    clearErrors()
                     setValue('fullName', e.target.value)
                   }}
                   required
@@ -122,7 +117,7 @@ const SignUp = () => {
                   {...register('email')}
                   autoComplete="off"
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('email')
                     setValue('email', e.target.value)
                   }}
                   required
@@ -141,7 +136,7 @@ const SignUp = () => {
                     },
                   }}
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('password')
                     setValue('password', e.target.value)
                   }}
                   required
@@ -160,7 +155,7 @@ const SignUp = () => {
                     },
                   }}
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('confirmPassword')
                     setValue('confirmPassword', e.target.value)
                   }}
                   required
@@ -172,7 +167,6 @@ const SignUp = () => {
                   {strings.SIGN_UP}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
-                  {' '}
                   {commonStrings.CANCEL}
                 </Button>
               </div>

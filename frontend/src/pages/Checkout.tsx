@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   OutlinedInput,
@@ -21,8 +21,7 @@ import {
   Payment as LicenseIcon,
   AssignmentTurnedIn as ChecklistIcon,
 } from '@mui/icons-material'
-import validator from 'validator'
-import { format, intervalToDuration } from 'date-fns'
+import { format } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import {
   EmbeddedCheckoutProvider,
@@ -30,6 +29,10 @@ import {
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { PayPalButtons } from '@paypal/react-paypal-js'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import validator from 'validator'
+import { createSchema, FormFields } from '@/models/Checkout'
 import CarList from '@/components/CarList'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -85,46 +88,17 @@ const Checkout = () => {
   const [authenticated, setAuthenticated] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [noMatch, setNoMatch] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [birthDate, setBirthDate] = useState<Date>()
-  const [birthDateValid, setBirthDateValid] = useState(true)
-  const [emailValid, setEmailValid] = useState(true)
-  const [emailRegitered, setEmailRegitered] = useState(false)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [tosChecked, setTosChecked] = useState(false)
-  const [tosError, setTosError] = useState(false)
-  const [error, setError] = useState(false)
-  const [price, setPrice] = useState(0)
-  const [depositPrice, setDepositPrice] = useState(0)
+  const [emailRegistered, setEmailRegistered] = useState(false)
   const [emailInfo, setEmailInfo] = useState(true)
   const [phoneInfo, setPhoneInfo] = useState(true)
-
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-
+  const [price, setPrice] = useState(0)
+  const [depositPrice, setDepositPrice] = useState(0)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loadingPage, setLoadingPage] = useState(true)
-  const [addiontalDriverFullName, setAddiontalDriverFullName] = useState('')
-  const [addiontalDriverEmail, setAddiontalDriverEmail] = useState('')
-  const [addiontalDriverPhone, setAddiontalDriverPhone] = useState('')
-  const [addiontalDriverBirthDate, setAddiontalDriverBirthDate] = useState<Date>()
-  const [addiontalDriverEmailValid, setAddiontalDriverEmailValid] = useState(true)
-  const [addiontalDriverPhoneValid, setAddiontalDriverPhoneValid] = useState(true)
-  const [addiontalDriverBirthDateValid, setAddiontalDriverBirthDateValid] = useState(true)
-  const [payLater, setPayLater] = useState(false)
-  const [payDeposit, setPayDeposit] = useState(false)
   const [recaptchaError, setRecaptchaError] = useState(false)
-
-  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const adRequired = true
-
+  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [bookingId, setBookingId] = useState<string>()
@@ -137,6 +111,11 @@ const Checkout = () => {
   const [payPalInit, setPayPalInit] = useState(false)
   const [payPalProcessing, setPayPalProcessing] = useState(false)
 
+  const birthDateRef = useRef<HTMLInputElement | null>(null)
+  const additionalDriverBirthDateRef = useRef<HTMLInputElement | null>(null)
+  const additionalDriverEmailRef = useRef<HTMLInputElement | null>(null)
+  const additionalDriverPhoneRef = useRef<HTMLInputElement | null>(null)
+
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
@@ -144,152 +123,45 @@ const Checkout = () => {
   const days = bookcarsHelper.days(from, to)
   const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-  }
+  const schema = createSchema(car)
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-
-    if (!e.target.value) {
-      setEmailRegitered(false)
-      setEmailValid(true)
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    clearErrors,
+    setFocus,
+    trigger,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    shouldUnregister: false,
+    defaultValues: {
+      additionalDriverEmail: '',
+      additionalDriverPhone: '',
     }
+  })
+
+  const {
+    additionalDriver,
+    additionalDriverEmail,
+    additionalDriverPhone,
+    payLater,
+    payDeposit,
+  } = useWatch({ control })
+
+  const validateEmail = (email: string) => {
+    return validator.isEmail(email)
   }
 
-  const validateEmail = async (_email?: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        try {
-          const status = await UserService.validateEmail({ email: _email })
-          if (status === 200) {
-            setEmailRegitered(false)
-            setEmailValid(true)
-            setEmailInfo(true)
-            return true
-          }
-          setEmailRegitered(true)
-          setEmailValid(true)
-          setError(false)
-          setEmailInfo(false)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailRegitered(false)
-          setEmailValid(true)
-          setEmailInfo(true)
-          return false
-        }
-      } else {
-        setEmailRegitered(false)
-        setEmailValid(false)
-        setEmailInfo(true)
-        return false
-      }
-    } else {
-      setEmailRegitered(false)
-      setEmailValid(true)
-      setEmailInfo(true)
-      return false
-    }
+  const validatePhone = (phone: string) => {
+    return validator.isMobilePhone(phone)
   }
 
-  // additionalDriver
-  const _validateEmail = (_email?: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        setAddiontalDriverEmailValid(true)
-        return true
-      }
-      setAddiontalDriverEmailValid(false)
-      return false
-    }
-    setAddiontalDriverEmailValid(true)
-    return false
-  }
-
-  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateEmail(e.target.value)
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-      setPhoneInfo(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-    setPhoneInfo(true)
-
-    return true
-  }
-
-  // additionalDriver
-  const _validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setAddiontalDriverPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setAddiontalDriverPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validatePhone(e.target.value)
-  }
-
-  const validateBirthDate = (date?: Date) => {
-    if (car && date && bookcarsHelper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= car.minimumAge
-
-      setBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setBirthDateValid(true)
-    return true
-  }
-
-  // additionalDriver
-  const _validateBirthDate = (date?: Date) => {
-    if (car && date && bookcarsHelper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= car.minimumAge
-
-      setAddiontalDriverBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setAddiontalDriverBirthDateValid(true)
-    return true
-  }
-
-  const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTosChecked(e.target.checked)
-
-    if (e.target.checked) {
-      setTosError(false)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
         helper.error()
         return
@@ -309,40 +181,14 @@ const Checkout = () => {
       }
 
       if (!authenticated) {
-        const _emailValid = await validateEmail(email)
-        if (!_emailValid) {
-          return
-        }
-
-        const _phoneValid = validatePhone(phone)
-        if (!_phoneValid) {
-          return
-        }
-
-        const _birthDateValid = validateBirthDate(birthDate)
-        if (!_birthDateValid) {
-          return
-        }
-
-        if (!tosChecked) {
-          setTosError(true)
-          return
-        }
-      }
-
-      if (adManuallyChecked && additionalDriver) {
-        const _emailValid = _validateEmail(addiontalDriverEmail)
-        if (!_emailValid) {
-          return
-        }
-
-        const _phoneValid = _validatePhone(addiontalDriverPhone)
-        if (!_phoneValid) {
-          return
-        }
-
-        const _birthDateValid = _validateBirthDate(addiontalDriverBirthDate)
-        if (!_birthDateValid) {
+        // check email
+        const status = await UserService.validateEmail({ email: data.email! })
+        if (status === 200) {
+          setEmailRegistered(false)
+          setEmailInfo(true)
+        } else {
+          setEmailRegistered(true)
+          setEmailInfo(false)
           return
         }
       }
@@ -360,10 +206,10 @@ const Checkout = () => {
 
       if (!authenticated) {
         driver = {
-          email,
-          phone,
-          fullName,
-          birthDate,
+          email: data.email,
+          phone: data.phone,
+          fullName: data.fullName!,
+          birthDate: data.birthDate,
           language: UserService.getLanguage(),
           license: license || undefined,
         }
@@ -380,21 +226,21 @@ const Checkout = () => {
         from,
         to,
         status: bookcarsTypes.BookingStatus.Pending,
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
+        cancellation: data.cancellation,
+        amendments: data.amendments,
+        theftProtection: data.theftProtection,
+        collisionDamageWaiver: data.collisionDamageWaiver,
+        fullInsurance: data.fullInsurance,
         additionalDriver,
         price: basePrice,
       }
 
-      if (adRequired && additionalDriver && addiontalDriverBirthDate) {
+      if (adRequired && additionalDriver && data.additionalDriverBirthDate) {
         _additionalDriver = {
-          fullName: addiontalDriverFullName,
-          email: addiontalDriverEmail,
-          phone: addiontalDriverPhone,
-          birthDate: addiontalDriverBirthDate,
+          fullName: data.additionalDriverFullName!,
+          email: data.additionalDriverEmail!,
+          phone: data.additionalDriverPhone!,
+          birthDate: data.additionalDriverBirthDate,
         }
       }
 
@@ -433,7 +279,7 @@ const Checkout = () => {
         driver,
         booking,
         additionalDriver: _additionalDriver,
-        payLater,
+        payLater: !!data.payLater,
         sessionId: _sessionId,
         customerId: _customerId,
         payPal: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal,
@@ -456,6 +302,24 @@ const Checkout = () => {
       helper.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const onError = () => {
+    const firstErrorField = Object.keys(errors)[0] as keyof FormFields
+    if (firstErrorField) {
+      if (firstErrorField === 'birthDate' && birthDateRef.current) {
+        birthDateRef.current.focus()
+      }
+      if (firstErrorField === 'additionalDriverBirthDate' && additionalDriverBirthDateRef.current) {
+        additionalDriverBirthDateRef.current.focus()
+      } else if (firstErrorField === 'additionalDriverEmail' && additionalDriverEmailRef.current) {
+        additionalDriverEmailRef.current.focus()
+      } else if (firstErrorField === 'additionalDriverPhone' && additionalDriverPhoneRef.current) {
+        additionalDriverPhoneRef.current.focus()
+      } else {
+        setFocus(firstErrorField)
+      }
     }
   }
 
@@ -532,11 +396,11 @@ const Checkout = () => {
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
-      setCancellation(included(_car.cancellation))
-      setAmendments(included(_car.amendments))
-      setTheftProtection(included(_car.theftProtection))
-      setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
-      setFullInsurance(included(_car.fullInsurance))
+      setValue('cancellation', included(_car.cancellation))
+      setValue('amendments', included(_car.amendments))
+      setValue('theftProtection', included(_car.theftProtection))
+      setValue('collisionDamageWaiver', included(_car.collisionDamageWaiver))
+      setValue('fullInsurance', included(_car.fullInsurance))
       setLicense(_user?.license || null)
       setVisible(true)
     } catch (err) {
@@ -551,16 +415,13 @@ const Checkout = () => {
           <>
             <div className="checkout">
               <Paper className="checkout-form" elevation={10}>
-                <h1 className="checkout-form-title">
-                  {' '}
-                  {strings.BOOKING_HEADING}
-                  {' '}
-                </h1>
-                <form onSubmit={handleSubmit}>
+                <h1 className="checkout-form-title">{strings.BOOKING_HEADING}</h1>
+                <form onSubmit={handleSubmit(onSubmit, onError)}>
                   <div>
-
-                    {((pickupLocation.latitude && pickupLocation.longitude)
-                      || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
+                    {(
+                      (pickupLocation.latitude && pickupLocation.longitude)
+                      || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)
+                    ) && (
                         <Map
                           position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
                           initialZoom={10}
@@ -591,12 +452,12 @@ const Checkout = () => {
                       payPalLoaded={payPalLoaded}
                       onPriceChange={(value) => setPrice(value)}
                       onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
-                      onCancellationChange={(value) => setCancellation(value)}
-                      onAmendmentsChange={(value) => setAmendments(value)}
-                      onTheftProtectionChange={(value) => setTheftProtection(value)}
-                      onCollisionDamageWaiverChange={(value) => setCollisionDamageWaiver(value)}
-                      onFullInsuranceChange={(value) => setFullInsurance(value)}
-                      onAdditionalDriverChange={(value) => setAdditionalDriver(value)}
+                      onCancellationChange={(value) => setValue('cancellation', value)}
+                      onAmendmentsChange={(value) => setValue('amendments', value)}
+                      onTheftProtectionChange={(value) => setValue('theftProtection', value)}
+                      onCollisionDamageWaiverChange={(value) => setValue('collisionDamageWaiver', value)}
+                      onFullInsuranceChange={(value) => setValue('fullInsurance', value)}
+                      onAdditionalDriverChange={(value) => setValue('additionalDriver', value)}
                     />
 
                     <div className="checkout-details-container">
@@ -650,22 +511,47 @@ const Checkout = () => {
                         <div className="driver-details-form">
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                            <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleFullNameChange} autoComplete="off" />
+                            <OutlinedInput
+                              {...register('fullName')}
+                              type="text"
+                              label={commonStrings.FULL_NAME}
+                              required
+                              error={!!errors.fullName}
+                              autoComplete="off"
+                            />
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                             <OutlinedInput
+                              {...register('email', {
+                                onBlur: async (e) => {
+                                  const email = e.target.value
+
+                                  if (validateEmail(email)) {
+                                    const status = await UserService.validateEmail({ email })
+                                    if (status === 200) {
+                                      setEmailRegistered(false)
+                                      setEmailInfo(true)
+                                    } else {
+                                      setEmailRegistered(true)
+                                      setEmailInfo(false)
+                                    }
+                                  } else {
+                                    setEmailRegistered(false)
+                                    setEmailInfo(false)
+                                  }
+                                }
+                              })}
                               type="text"
                               label={commonStrings.EMAIL}
-                              error={!emailValid || emailRegitered}
-                              onBlur={handleEmailBlur}
-                              onChange={handleEmailChange}
+                              error={!!errors.email || emailRegistered}
                               required
                               autoComplete="off"
+                              onChange={() => clearErrors('email')}
                             />
-                            <FormHelperText error={!emailValid || emailRegitered}>
-                              {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                              {(emailRegitered && (
+                            <FormHelperText error={!!errors.email || emailRegistered}>
+                              {(errors.email && errors.email.message) || ''}
+                              {(emailRegistered && (
                                 <span>
                                   <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
                                   <span> </span>
@@ -673,33 +559,51 @@ const Checkout = () => {
                                 </span>
                               ))
                                 || ''}
-                              {(emailInfo && emailValid && strings.EMAIL_INFO) || ''}
+                              {(emailInfo && !errors.email && strings.EMAIL_INFO) || ''}
                             </FormHelperText>
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                            <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
-                            <FormHelperText error={!phoneValid}>
-                              {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                            <OutlinedInput
+                              {...register('phone', {
+                                onBlur: (e) => {
+                                  const phone = e.target.value
+
+                                  setPhoneInfo(validatePhone(phone))
+                                }
+                              })}
+                              type="text"
+                              label={commonStrings.PHONE}
+                              error={!!errors.phone}
+                              required
+                              autoComplete="off"
+                              onChange={() => clearErrors('phone')}
+                            />
+                            <FormHelperText error={!!errors.phone}>
+                              {(errors.phone && errors.phone.message) || ''}
                               {(phoneInfo && strings.PHONE_INFO) || ''}
                             </FormHelperText>
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <DatePicker
+                              {...register('birthDate')}
+                              ref={birthDateRef}
                               label={commonStrings.BIRTH_DATE}
                               variant="outlined"
                               required
                               onChange={(_birthDate) => {
+                                clearErrors('birthDate')
                                 if (_birthDate) {
-                                  const _birthDateValid = validateBirthDate(_birthDate)
-
-                                  setBirthDate(_birthDate)
-                                  setBirthDateValid(_birthDateValid)
+                                  setValue('birthDate', _birthDate, { shouldValidate: true })
+                                } else {
+                                  setValue('birthDate', undefined, { shouldValidate: true })
                                 }
                               }}
                               language={language}
                             />
-                            <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                            <FormHelperText error={!!errors.birthDate}>
+                              {(errors.birthDate && errors.birthDate.message) || ''}
+                            </FormHelperText>
                           </FormControl>
 
                           <div className="checkout-tos">
@@ -707,12 +611,25 @@ const Checkout = () => {
                               <tbody>
                                 <tr>
                                   <td aria-label="tos">
-                                    <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
+                                    <Checkbox
+                                      {...register('tos')}
+                                      onChange={(e) => {
+                                        if (e.target.checked) {
+                                          clearErrors('tos')
+                                        }
+                                      }}
+                                      color="primary"
+                                    />
                                   </td>
                                   <td>
                                     <Link href="/tos" target="_blank" rel="noreferrer">
                                       {commonStrings.TOS}
                                     </Link>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colSpan={2}>
+                                    <FormHelperText error={!!errors.tos}>{errors.tos?.message || ''}</FormHelperText>
                                   </td>
                                 </tr>
                               </tbody>
@@ -762,73 +679,78 @@ const Checkout = () => {
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                             <OutlinedInput
+                              {...register('additionalDriverFullName')}
                               type="text"
                               label={commonStrings.FULL_NAME}
                               required={adRequired}
-                              onChange={(e) => {
-                                setAddiontalDriverFullName(e.target.value)
-                              }}
                               autoComplete="off"
                             />
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                             <OutlinedInput
+                              // {...register('additionalDriverEmail')}
+                              inputRef={additionalDriverEmailRef}
+                              value={additionalDriverEmail}
                               type="text"
                               label={commonStrings.EMAIL}
-                              error={!addiontalDriverEmailValid}
-                              onBlur={(e) => {
-                                _validateEmail(e.target.value)
-                              }}
-                              onChange={(e) => {
-                                setAddiontalDriverEmail(e.target.value)
-
-                                if (!e.target.value) {
-                                  setAddiontalDriverEmailValid(true)
-                                }
-                              }}
+                              error={!!errors.additionalDriverEmail}
                               required={adRequired}
                               autoComplete="off"
+                              onChange={(e) => {
+                                clearErrors('additionalDriverEmail')
+                                setValue('additionalDriverEmail', e.target.value)
+                              }}
+                              onBlur={() => {
+                                trigger('additionalDriverEmail')
+                              }}
                             />
-                            <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                            <FormHelperText error={!!errors.additionalDriverEmail}>
+                              {(errors.additionalDriverEmail && errors.additionalDriverEmail.message) || ''}
+                            </FormHelperText>
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                             <OutlinedInput
+                              // {...register('additionalDriverPhone')}
+                              inputRef={additionalDriverPhoneRef}
+                              value={additionalDriverPhone}
                               type="text"
                               label={commonStrings.PHONE}
-                              error={!addiontalDriverPhoneValid}
-                              onBlur={(e) => {
-                                _validatePhone(e.target.value)
-                              }}
-                              onChange={(e) => {
-                                setAddiontalDriverPhone(e.target.value)
-
-                                if (!e.target.value) {
-                                  setAddiontalDriverPhoneValid(true)
-                                }
-                              }}
+                              error={!!errors.additionalDriverPhone}
                               required={adRequired}
                               autoComplete="off"
+                              onChange={(e) => {
+                                clearErrors('additionalDriverPhone')
+                                setValue('additionalDriverPhone', e.target.value)
+                              }}
+                              onBlur={() => {
+                                trigger('additionalDriverPhone')
+                              }}
                             />
-                            <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                            <FormHelperText error={!!errors.additionalDriverPhone}>
+                              {(errors.additionalDriverPhone && errors.additionalDriverPhone.message) || ''}
+                            </FormHelperText>
                           </FormControl>
                           <FormControl fullWidth margin="dense">
                             <DatePicker
+                              {...register('additionalDriverBirthDate')}
+                              ref={additionalDriverBirthDateRef}
                               label={commonStrings.BIRTH_DATE}
                               variant="outlined"
                               required={adRequired}
                               onChange={(_birthDate) => {
                                 if (_birthDate) {
-                                  const _birthDateValid = _validateBirthDate(_birthDate)
-
-                                  setAddiontalDriverBirthDate(_birthDate)
-                                  setAddiontalDriverBirthDateValid(_birthDateValid)
+                                  setValue('additionalDriverBirthDate', _birthDate, { shouldValidate: true })
+                                } else {
+                                  setValue('additionalDriverBirthDate', undefined, { shouldValidate: true })
                                 }
                               }}
                               language={language}
                             />
-                            <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                            <FormHelperText error={!!errors.additionalDriverBirthDate}>
+                              {(errors.additionalDriverBirthDate && errors.additionalDriverBirthDate.message) || ''}
+                            </FormHelperText>
                           </FormControl>
                         </div>
                       </div>
@@ -844,9 +766,9 @@ const Checkout = () => {
                           <FormControl>
                             <RadioGroup
                               defaultValue="payOnline"
-                              onChange={(event) => {
-                                setPayLater(event.target.value === 'payLater')
-                                setPayDeposit(event.target.value === 'payDeposit')
+                              onChange={(e) => {
+                                setValue('payLater', e.target.value === 'payLater')
+                                setValue('payDeposit', e.target.value === 'payDeposit')
                               }}
                             >
                               <FormControlLabel
@@ -1035,8 +957,6 @@ const Checkout = () => {
                     </div>
                   </div>
                   <div className="form-error">
-                    {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                    {error && <Error message={commonStrings.GENERIC_ERROR} />}
                     {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
                     {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
                     {licenseRequired && <Error message={strings.LICENSE_REQUIRED} />}
