@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, FormControl, FormControlLabel, Input, InputLabel, Paper, Switch } from '@mui/material'
@@ -29,10 +29,12 @@ interface BankDetailsFormProps {
 const BankDetailsForm = ({ bankDetails, onSubmit: onFormSubmit }: BankDetailsFormProps) => {
     const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: { isSubmitting }, setValue, watch } = useForm<FormFields>({
+    const { register, control, handleSubmit, formState: { isSubmitting }, setValue } = useForm<FormFields>({
         resolver: zodResolver(schema),
-        mode: 'onSubmit'
+        mode: 'onSubmit',
     })
+
+    const showBankDetailsPage = useWatch({ control, name: 'showBankDetailsPage' })
 
     useEffect(() => {
         if (bankDetails) {
@@ -99,7 +101,7 @@ const BankDetailsForm = ({ bankDetails, onSubmit: onFormSubmit }: BankDetailsFor
                     <FormControlLabel
                         control={(
                             <Switch
-                                checked={watch('showBankDetailsPage') ?? false}
+                                checked={showBankDetailsPage || false}
                                 onChange={(e) => setValue('showBankDetailsPage', e.target.checked)}
                             />
                         )}
