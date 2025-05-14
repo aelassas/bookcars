@@ -204,8 +204,7 @@ const SupplierList = ({
                   </div>
                   <span className="supplier-item-title">{supplier.fullName}</span>
                   {
-                    supplier.carCount && supplier.carCount > 0 && (
-                      <span className="supplier-item-subtitle">{`${supplier.carCount} ${supplier.carCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>)
+                      <span className="supplier-item-subtitle">{`${supplier.carCount ?? 0} ${(supplier.carCount ?? 0) > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>
                   }
                 </div>
                 <div className="supplier-actions">

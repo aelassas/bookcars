@@ -291,7 +291,15 @@ export const getSuppliers = async (req: Request, res: Response) => {
             _id: '$_id',
             fullName: { $first: '$fullName' },
             avatar: { $first: '$avatar' },
-            carCount: { $sum: 1 },
+            carCount: { 
+              $sum: { 
+                $cond: [
+                  { $ifNull: ['$car', false] }, 
+                  1, 
+                  0
+                ] 
+              }
+            },
           },
         },
         {
@@ -461,7 +469,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
     }
 
-    let data;
+    let data
     
     if (coordinates && radius) {
       // Perform coordinate-based search with distance calculation
@@ -600,7 +608,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
           },
         },
         { $sort: { fullName: 1 } },
-      ]);
+      ])
     } else {
       // Standard location-based search
       data = await Car.aggregate(
@@ -681,7 +689,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
           { $sort: { fullName: 1 } },
         ],
         { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
-      );
+      )
     }
     
     res.json(data)
