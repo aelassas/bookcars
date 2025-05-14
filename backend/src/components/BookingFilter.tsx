@@ -1,10 +1,8 @@
-import React, { useState, useRef } from 'react'
-import {
-  FormControl,
-  TextField,
-  Button,
-  IconButton
-} from '@mui/material'
+import React, { useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { IconButton, TextField, FormControl, Button } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -15,6 +13,16 @@ import DatePicker from './DatePicker'
 import Accordion from '@/components/Accordion'
 
 import '@/assets/css/booking-filter.css'
+
+const schema = z.object({
+  from: z.date().optional(),
+  to: z.date().optional(),
+  pickupLocation: z.string().optional(),
+  dropOffLocation: z.string().optional(),
+  keyword: z.string().optional(),
+})
+
+type FormFields = z.infer<typeof schema>
 
 interface BookingFilterProps {
   collapse?: boolean
@@ -29,63 +37,57 @@ const BookingFilter = ({
   language,
   onSubmit
 }: BookingFilterProps) => {
-  const [from, setFrom] = useState<Date>()
-  const [to, setTo] = useState<Date>()
-  const [pickupLocation, setPickupLocation] = useState('')
-  const [dropOffLocation, setDropOffLocation] = useState('')
-  const [keyword, setKeyword] = useState('')
-  const [minDate, setMinDate] = useState<Date>()
-
   const inputRef = useRef<HTMLInputElement>(null)
+  const { control, register, handleSubmit, setValue } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+  })
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
+  const { from, to, keyword } = useWatch({ control })
 
-  const handlePickupLocationChange = (locations: bookcarsTypes.Option[]) => {
-    setPickupLocation(locations.length > 0 ? locations[0]._id : '')
-  }
+  const [minDate, setMinDate] = useState<Date | undefined>(undefined)
 
-  const handleDropOffLocationChange = (locations: bookcarsTypes.Option[]) => {
-    setDropOffLocation(locations.length > 0 ? locations[0]._id : '')
-  }
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
-    e.preventDefault()
-
+  const handleFormSubmit = (data: FormFields) => {
     let filter: bookcarsTypes.Filter | null = {
-      from,
-      to,
-      pickupLocation,
-      dropOffLocation,
-      keyword
+      from: data.from,
+      to: data.to,
+      pickupLocation: data.pickupLocation,
+      dropOffLocation: data.dropOffLocation,
+      keyword: data.keyword,
     }
 
-    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) {
+    if (
+      !data.from &&
+      !data.to &&
+      !data.pickupLocation &&
+      !data.dropOffLocation &&
+      !data.keyword
+    ) {
       filter = null
     }
+
     if (onSubmit) {
       onSubmit(bookcarsHelper.clone(filter))
     }
   }
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
   return (
-    <Accordion title={commonStrings.SEARCH} collapse={collapse} className={`${className ? `${className} ` : ''}booking-filter`}>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+    <Accordion
+      title={commonStrings.SEARCH}
+      collapse={collapse}
+      className={`${className ? `${className} ` : ''}booking-filter`}
+    >
+      <form autoComplete="off" onSubmit={handleSubmit(handleFormSubmit)}>
         <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
         <FormControl fullWidth margin="dense">
           <DatePicker
+            {...register('from')}
             label={commonStrings.FROM}
+            value={from}
             onChange={(date) => {
               if (date) {
                 if (to && to.getTime() <= date.getTime()) {
-                  setTo(undefined)
+                  setValue('to', undefined)
                 }
 
                 const _minDate = new Date(date)
@@ -95,46 +97,45 @@ const BookingFilter = ({
                 setMinDate(undefined)
               }
 
-              setFrom(date || undefined)
+              setValue('from', date || undefined)
             }}
             language={language}
             variant="standard"
-            value={from}
+
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <DatePicker
+            {...register('to')}
             label={commonStrings.TO}
             minDate={minDate}
-            onChange={(date) => {
-              setTo(date || undefined)
-            }}
+            value={to}
+            onChange={(date) => setValue('to', date || undefined)}
             language={language}
             variant="standard"
-            value={to}
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <LocationSelectList
             label={strings.PICK_UP_LOCATION}
             variant="standard"
-            onChange={handlePickupLocationChange}
+            onChange={(locations) => setValue('pickupLocation', locations.length > 0 ? locations[0]._id : '')}
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <LocationSelectList
             label={strings.DROP_OFF_LOCATION}
             variant="standard"
-            onChange={handleDropOffLocationChange}
+            onChange={(locations) => setValue('dropOffLocation', locations.length > 0 ? locations[0]._id : '')}
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <TextField
+            {...register('keyword')}
             inputRef={inputRef}
             variant="standard"
-            value={keyword}
-            onKeyDown={handleSearchKeyDown}
-            onChange={handleSearchChange}
+            value={keyword || ''}
+            onChange={(e) => setValue('keyword', e.target.value)}
             placeholder={commonStrings.SEARCH_PLACEHOLDER}
             slotProps={{
               input: {
@@ -142,7 +143,7 @@ const BookingFilter = ({
                   <IconButton
                     size="small"
                     onClick={() => {
-                      setKeyword('')
+                      setValue('keyword', '')
                       inputRef.current?.focus()
                     }}
                   >
