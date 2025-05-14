@@ -12,7 +12,7 @@ const validateBirthDate = (car?: bookcarsTypes.Car, date?: Date) => {
     }
     const now = new Date()
     const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-    return sub >= (car?.minimumAge || 0)
+    return sub >= car.minimumAge
 }
 
 const baseSchema = z.object({

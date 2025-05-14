@@ -48,9 +48,9 @@ export const schema = z.object({
     const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
 
     if (from) {
-        const minPickupTime = from.getTime() - Date.now()
+        const pickupTime = from.getTime() - Date.now()
 
-        if (minPickupTime < minPickupDuration) {
+        if (pickupTime < minPickupDuration) {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['from'],
