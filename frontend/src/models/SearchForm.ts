@@ -2,26 +2,35 @@ import { z } from 'zod'
 import env from '@/config/env.config'
 import { strings } from '@/lang/search-form'
 
+const locationValueSchema = z.object({
+    _id: z.string(),
+    language: z.string(),
+    value: z.string(),
+})
+
+const parkingSpotSchema = z.object({
+    _id: z.string(),
+    longitude: z.number(),
+    latitude: z.number(),
+    name: z.string(),
+    values: z.array(locationValueSchema),
+})
+
+const countrySchema = z.object({
+    _id: z.string(),
+    values: z.array(locationValueSchema),
+    name: z.string(),
+})
+
 const locationSchema = z.object({
     _id: z.string(),
-    country: z.object({
-        _id: z.string(),
-        name: z.string(),
-    }).optional(),
+    country: countrySchema,
+    values: z.array(locationValueSchema),
+    name: z.string(),
+    image: z.string().optional(),
     longitude: z.number().optional(),
     latitude: z.number().optional(),
-    name: z.string().optional(),
-    image: z.string().optional(),
-    parkingSpots: z.array(z.object({
-        _id: z.string(),
-        name: z.string(),
-        longitude: z.number(),
-        latitude: z.number(),
-    })).optional(),
-    supplier: z.object({
-        _id: z.string(),
-        fullName: z.string(),
-    }).optional(),
+    parkingSpots: z.array(parkingSpotSchema).optional(),
 })
 
 export type LocationField = z.infer<typeof locationSchema>
