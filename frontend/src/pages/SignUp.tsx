@@ -33,9 +33,9 @@ import Footer from '@/components/Footer'
 import '@/assets/css/signup.css'
 
 const schema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
-  phone: z.string().refine(validator.isMobilePhone, { message: commonStrings.PHONE_NOT_VALID }),
+  fullName: z.string(),
+  email: z.string().refine((value) => !value || validator.isEmail(value), { message: commonStrings.EMAIL_NOT_VALID }),
+  phone: z.string().refine((value) => !value || validator.isMobilePhone(value), { message: commonStrings.PHONE_NOT_VALID }),
   birthDate: z.date().refine((value) => {
     const sub = intervalToDuration({ start: value, end: new Date() }).years ?? 0
     return sub >= env.MINIMUM_AGE
@@ -139,10 +139,6 @@ const SignUp = () => {
                   {...register('fullName')}
                   label={commonStrings.FULL_NAME}
                   autoComplete="off"
-                  onChange={(e) => {
-                    clearErrors()
-                    setValue('fullName', e.target.value)
-                  }}
                   required
                 />
               </FormControl>
@@ -153,9 +149,8 @@ const SignUp = () => {
                   {...register('email')}
                   label={commonStrings.EMAIL}
                   autoComplete="off"
-                  onChange={(e) => {
-                    clearErrors()
-                    setValue('email', e.target.value)
+                  onChange={() => {
+                    clearErrors('email')
                   }}
                   required
                 />
@@ -168,9 +163,8 @@ const SignUp = () => {
                   {...register('phone')}
                   label={commonStrings.PHONE}
                   autoComplete="off"
-                  onChange={(e) => {
-                    clearErrors()
-                    setValue('phone', e.target.value)
+                  onChange={() => {
+                    clearErrors('phone')
                   }}
                   required
                 />
@@ -183,8 +177,8 @@ const SignUp = () => {
                   required
                   onChange={(birthDate) => {
                     if (birthDate) {
-                      clearErrors()
-                      setValue('birthDate', birthDate)
+                      clearErrors('birthDate')
+                      setValue('birthDate', birthDate, { shouldValidate: true })
                     }
                   }}
                   language={language}
@@ -204,9 +198,8 @@ const SignUp = () => {
                       autoComplete: 'off',
                     },
                   }}
-                  onChange={(e) => {
-                    clearErrors()
-                    setValue('password', e.target.value)
+                  onChange={() => {
+                    clearErrors('password')
                   }}
                   required
                 />
@@ -224,9 +217,8 @@ const SignUp = () => {
                       autoComplete: 'off',
                     },
                   }}
-                  onChange={(e) => {
-                    clearErrors()
-                    setValue('confirmPassword', e.target.value)
+                  onChange={() => {
+                    clearErrors('confirmPassword')
                   }}
                   required
                 />
@@ -241,7 +233,7 @@ const SignUp = () => {
                         <Checkbox
                           {...register('tos')}
                           color="primary"
-                          onChange={() => clearErrors()}
+                          onChange={() => clearErrors('tos')}
                         />
                       </td>
                       <td>

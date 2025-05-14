@@ -166,7 +166,7 @@ const Settings = () => {
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.phone}>
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors()} />
+                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors('phone')} />
                   <FormHelperText>{errors.phone?.message || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.birthDate}>
@@ -177,8 +177,8 @@ const Settings = () => {
                     value={birthDate || undefined}
                     onChange={(birthDate) => {
                       if (birthDate) {
-                        clearErrors()
-                        setValue('birthDate', birthDate)
+                        clearErrors('birthDate')
+                        setValue('birthDate', birthDate, { shouldValidate: true })
                       }
                     }}
                     language={user.language}

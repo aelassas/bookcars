@@ -105,7 +105,6 @@ const SignUp = () => {
                   {...register('fullName')}
                   autoComplete="off"
                   onChange={(e) => {
-                    clearErrors()
                     setValue('fullName', e.target.value)
                   }}
                   required
@@ -118,7 +117,7 @@ const SignUp = () => {
                   {...register('email')}
                   autoComplete="off"
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('email')
                     setValue('email', e.target.value)
                   }}
                   required
@@ -137,7 +136,7 @@ const SignUp = () => {
                     },
                   }}
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('password')
                     setValue('password', e.target.value)
                   }}
                   required
@@ -156,7 +155,7 @@ const SignUp = () => {
                     },
                   }}
                   onChange={(e) => {
-                    clearErrors()
+                    clearErrors('confirmPassword')
                     setValue('confirmPassword', e.target.value)
                   }}
                   required

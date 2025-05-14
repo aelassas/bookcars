@@ -216,7 +216,7 @@ const CarFilter = ({
             required
             onChange={(date) => {
               if (date) {
-                setValue('from', date)
+                setValue('from', date, { shouldValidate: true })
               } else {
                 setValue('from', null)
                 setMinDate(_minDate)
@@ -236,7 +236,7 @@ const CarFilter = ({
             required
             onChange={(date) => {
               if (date) {
-                setValue('to', date)
+                setValue('to', date, { shouldValidate: true })
               } else {
                 setValue('to', null)
               }
