@@ -59,7 +59,7 @@ const Settings = () => {
     mode: 'onSubmit',
   })
 
-  const birthDate = useWatch({ control, name: 'birthDate' })
+  const { birthDate } = useWatch({ control })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -174,7 +174,7 @@ const Settings = () => {
                     label={commonStrings.BIRTH_DATE}
                     variant="standard"
                     required
-                    value={birthDate || null}
+                    value={birthDate || undefined}
                     onChange={(birthDate) => {
                       if (birthDate) {
                         clearErrors()

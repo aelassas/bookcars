@@ -30,7 +30,7 @@ const Search = ({
     mode: 'onSubmit',
   })
 
-  const keyword = useWatch({ control, name: 'keyword' })
+  const { keyword } = useWatch({ control })
 
   const handleFormSubmit = (data: FormFields) => {
     if (onSubmit) {
