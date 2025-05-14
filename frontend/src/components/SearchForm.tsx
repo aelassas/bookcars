@@ -162,11 +162,11 @@ const SearchForm = ({
   }, [__ranges])
 
   const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {
-    const _pickupLocation = (values.length > 0 && values[0]._id) || ''
-    setPickupLocationId(_pickupLocation)
+    const _pickupLocationId = (values.length > 0 && values[0]._id) || ''
+    setPickupLocationId(_pickupLocationId)
 
-    if (_pickupLocation) {
-      const location = await LocationService.getLocation(_pickupLocation) as LocationField
+    if (_pickupLocationId) {
+      const location = await LocationService.getLocation(_pickupLocationId) as LocationField
       setValue('pickupLocation', location)
       if (sameLocation) {
         setValue('dropOffLocation', location)
@@ -176,7 +176,7 @@ const SearchForm = ({
     }
 
     if (sameLocation) {
-      setDropOffLocationId(_pickupLocation)
+      setDropOffLocationId(_pickupLocationId)
     }
   }
 
@@ -192,11 +192,11 @@ const SearchForm = ({
   }
 
   const handleDropOffLocationChange = async (values: bookcarsTypes.Option[]) => {
-    const _dropOffLocation = (values.length > 0 && values[0]._id) || ''
-    setDropOffLocationId(_dropOffLocation)
+    const _dropOffLocationId = (values.length > 0 && values[0]._id) || ''
+    setDropOffLocationId(_dropOffLocationId)
 
-    if (_dropOffLocation) {
-      const location = await LocationService.getLocation(_dropOffLocation) as LocationField
+    if (_dropOffLocationId) {
+      const location = await LocationService.getLocation(_dropOffLocationId) as LocationField
       setValue('dropOffLocation', location)
     } else {
       setValue('dropOffLocation', null)
