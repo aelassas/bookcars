@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Input,
   InputLabel,
@@ -10,8 +11,9 @@ import {
   Switch
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
-import { useNavigate } from 'react-router-dom'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { schema, FormFields } from '@/models/SupplierForm'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -32,147 +34,47 @@ const CreateSupplier = () => {
   const navigate = useNavigate()
 
   const { user } = useUserContext() as UserContextType
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
-  const [error, setError] = useState(false)
-  const [emailError, setEmailError] = useState(false)
+
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [fullNameError, setFullNameError] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
   const [avatar, setAvatar] = useState('')
   const [avatarError, setAvatarError] = useState(false)
-  const [emailValid, setEmailValid] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(false)
-  const [licenseRequired, setLicenseRequired] = useState(false)
   const [contracts, setContracts] = useState<bookcarsTypes.Contract[]>([])
-  const [minimumRentalDays, setMinimumRentalDays] = useState('')
-  const [priceChangeRate, setPriceChangeRate] = useState('')
-  const [supplierCarLimit, setSupplierCarLimit] = useState('')
-  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    setFocus,
+    formState: { errors, isSubmitting },
+    trigger,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+      bio: '',
+      payLater: false,
+      licenseRequired: false,
+      minimumRentalDays: '',
+      priceChangeRate: '',
+      supplierCarLimit: '',
+      notifyAdminOnNewCar: false
+    },
+  })
 
-    if (!e.target.value) {
-      setFullNameError(false)
-    }
-  }
-
-  const validateFullName = async (_fullName: string) => {
-    if (_fullName) {
-      try {
-        const status = await SupplierService.validate({ fullName: _fullName })
-
-        if (status === 200) {
-          setFullNameError(false)
-          return true
-        }
-        setFullNameError(true)
-        return false
-      } catch (err) {
-        helper.error(err)
-        return true
-      }
-    } else {
-      setFullNameError(false)
-      return false
-    }
-  }
-
-  const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateFullName(e.target.value)
-  }
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-
-    if (!e.target.value) {
-      setEmailError(false)
-      setEmailValid(true)
-    }
-  }
-
-  const validateEmail = async (_email?: string) => {
-    if (_email) {
-      if (validator.isEmail(_email)) {
-        try {
-          const status = await UserService.validateEmail({ email: _email })
-
-          if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          return false
-        } catch (err) {
-          helper.error(err)
-          return true
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
-    } else {
-      setEmailError(false)
-      setEmailValid(true)
-      return false
-    }
-  }
-
-  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateEmail(e.target.value)
-  }
-
-  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupplierCarLimit(e.target.value)
-  }
-
-  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinimumRentalDays(e.target.value)
-  }
-
-  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPriceChangeRate(e.target.value)
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validatePhone(e.target.value)
-  }
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBio(e.target.value)
-  }
+  const {
+    payLater,
+    licenseRequired,
+    notifyAdminOnNewCar,
+  } = useWatch({ control })
 
   const onBeforeUpload = () => {
     setLoading(true)
@@ -211,58 +113,64 @@ const CreateSupplier = () => {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
+      let status = await SupplierService.validate({ fullName: data.fullName })
 
-      const _emailValid = await validateEmail(email)
-      if (!_emailValid) {
+      if (status !== 200) {
+        setError('fullName', { message: strings.INVALID_SUPPLIER_NAME })
+        setFocus('fullName')
         return
       }
 
-      const fullNameValid = await validateFullName(fullName)
-      if (!fullNameValid) {
-        return
-      }
+      status = await UserService.validateEmail({ email: data.email })
 
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
+      if (status !== 200) {
+        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
+        setFocus('email')
         return
       }
 
       if (!avatar) {
         setAvatarError(true)
-        setError(false)
+        setSubmitError(false)
         return
       }
 
-      const data: bookcarsTypes.CreateUserPayload = {
-        email,
-        fullName,
-        phone,
-        location,
-        bio,
+      const payload: bookcarsTypes.CreateUserPayload = {
+        email: data.email,
+        fullName: data.fullName,
+        phone: data.phone!,
+        location: data.location!,
+        bio: data.bio!,
         language: UserService.getLanguage(),
         type: bookcarsTypes.RecordType.Supplier,
         avatar,
-        payLater,
-        licenseRequired,
+        payLater: data.payLater,
+        licenseRequired: data.licenseRequired,
         contracts,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
-        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
-        notifyAdminOnNewCar,
+        minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
+        priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
+        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: data.notifyAdminOnNewCar,
       }
 
-      const status = await UserService.create(data)
+      status = await UserService.create(payload)
 
       if (status === 200) {
         navigate('/suppliers')
       } else {
-        setError(true)
+        setSubmitError(true)
       }
     } catch (err) {
       helper.error(err)
+    }
+  }
+
+  const onError = () => {
+    const firstErrorField = Object.keys(errors)[0] as keyof FormFields
+    if (firstErrorField) {
+      setFocus(firstErrorField)
     }
   }
 
@@ -270,12 +178,8 @@ const CreateSupplier = () => {
     <Layout onLoad={onLoad} strict admin>
       <div className="create-supplier">
         <Paper className="supplier-form" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="supplier-form-title">
-            {' '}
-            {strings.CREATE_SUPPLIER_HEADING}
-            {' '}
-          </h1>
-          <form onSubmit={handleSubmit}>
+          <h1 className="supplier-form-title">{strings.CREATE_SUPPLIER_HEADING}</h1>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
             <Avatar
               type={bookcarsTypes.RecordType.Supplier}
               mode="create"
@@ -296,31 +200,28 @@ const CreateSupplier = () => {
             <FormControl fullWidth margin="dense">
               <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
               <Input
-                id="full-name"
+                {...register('fullName')}
                 type="text"
-                error={fullNameError}
+                error={!!errors.fullName}
                 required
-                onBlur={handleFullNameBlur}
-                onChange={handleFullNameChange}
                 autoComplete="off"
               />
-              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
+              <FormHelperText error={!!errors.fullName}>
+                {errors.fullName?.message || ''}
+              </FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
               <Input
-                id="email"
+                {...register('email')}
                 type="text"
-                error={!emailValid || emailError}
-                onBlur={handleEmailBlur}
-                onChange={handleEmailChange}
                 autoComplete="off"
                 required
+                error={!!errors.email}
               />
-              <FormHelperText error={!emailValid || emailError}>
-                {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+              <FormHelperText error={!!errors.email}>
+                {errors.email?.message || ''}
               </FormHelperText>
             </FormControl>
 
@@ -328,9 +229,10 @@ const CreateSupplier = () => {
               <FormControlLabel
                 control={(
                   <Switch
+                    {...register('payLater')}
                     checked={payLater}
                     onChange={(e) => {
-                      setPayLater(e.target.checked)
+                      setValue('payLater', e.target.checked)
                     }}
                     color="primary"
                   />
@@ -343,9 +245,10 @@ const CreateSupplier = () => {
               <FormControlLabel
                 control={(
                   <Switch
+                    {...register('licenseRequired')}
                     checked={licenseRequired}
                     onChange={(e) => {
-                      setLicenseRequired(e.target.checked)
+                      setValue('licenseRequired', e.target.checked)
                     }}
                     color="primary"
                   />
@@ -363,10 +266,11 @@ const CreateSupplier = () => {
               <FormControlLabel
                 control={(
                   <Switch
+                    {...register('notifyAdminOnNewCar')}
                     checked={notifyAdminOnNewCar}
                     disabled={user?.type === bookcarsTypes.UserType.Supplier}
                     onChange={(e) => {
-                      setNotifyAdminOnNewCar(e.target.checked)
+                      setValue('notifyAdminOnNewCar', e.target.checked)
                     }}
                     color="primary"
                   />
@@ -377,33 +281,77 @@ const CreateSupplier = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
-              <Input type="text" onChange={handleSupplierCarLimitChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+              <Input
+                {...register('supplierCarLimit')}
+                type="text"
+                autoComplete="off"
+                error={!!errors.supplierCarLimit}
+                onChange={() => clearErrors('supplierCarLimit')}
+              />
+              <FormHelperText error={!!errors.supplierCarLimit}>
+                {errors.supplierCarLimit?.message || ''}
+              </FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
-              <Input type="text" onChange={handleMinimumRentalDaysChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }} />
+              <Input
+                {...register('minimumRentalDays')}
+                type="text"
+                autoComplete="off"
+                error={!!errors.minimumRentalDays}
+                onChange={() => clearErrors('minimumRentalDays')}
+              />
+              <FormHelperText error={!!errors.minimumRentalDays}>
+                {errors.minimumRentalDays?.message || ''}
+              </FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
-              <Input type="text" onChange={handlePriceChangeRateChange} autoComplete="off" slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }} />
+              <Input
+                {...register('priceChangeRate')}
+                type="text"
+                autoComplete="off"
+                error={!!errors.priceChangeRate}
+                onChange={() => clearErrors('priceChangeRate')}
+              />
+              <FormHelperText error={!!errors.priceChangeRate}>
+                {errors.priceChangeRate?.message || ''}
+              </FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.PHONE}</InputLabel>
-              <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" error={!phoneValid} />
-              <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+              <Input
+                {...register('phone', {
+                  onBlur: () => trigger('phone'),
+                })}
+                type="text"
+                autoComplete="off"
+                error={!!errors.phone}
+                onChange={() => clearErrors('phone')}
+              />
+              <FormHelperText error={!!errors.phone}>
+                {errors.phone?.message || ''}
+              </FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input type="text" onChange={handleLocationChange} autoComplete="off" />
+              <Input
+                {...register('location')}
+                type="text"
+                autoComplete="off"
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.BIO}</InputLabel>
-              <Input type="text" onChange={handleBioChange} autoComplete="off" />
+              <Input
+                {...register('bio')}
+                type="text"
+                autoComplete="off" />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
@@ -427,7 +375,7 @@ const CreateSupplier = () => {
             </FormControl>
 
             <div className="buttons">
-              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                 {commonStrings.CREATE}
               </Button>
               <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={handleCancel}>
@@ -436,12 +384,13 @@ const CreateSupplier = () => {
             </div>
 
             <div className="form-error">
-              {error && <Error message={commonStrings.GENERIC_ERROR} />}
+              {submitError && <Error message={commonStrings.GENERIC_ERROR} />}
               {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
             </div>
           </form>
         </Paper>
       </div>
+
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )
