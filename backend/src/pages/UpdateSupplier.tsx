@@ -11,13 +11,15 @@ import {
   Switch
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { schema, FormFields } from '@/models/SupplierForm'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as ccStrings } from '@/lang/create-supplier'
+import { strings as csStrings } from '@/lang/create-supplier'
 import * as SupplierService from '@/services/SupplierService'
 import * as UserService from '@/services/UserService'
 import * as helper from '@/common/helper'
@@ -34,114 +36,48 @@ const UpdateSupplier = () => {
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [supplier, setSupplier] = useState<bookcarsTypes.User>()
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
-  const [error, setError] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [fullNameError, setFullNameError] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [avatar, setAvatar] = useState('')
   const [avatarError, setAvatarError] = useState(false)
-  const [email, setEmail] = useState('')
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(false)
-  const [licenseRequired, setLicenseRequired] = useState(true)
-  const [minimumRentalDays, setMinimumRentalDays] = useState('')
-  const [priceChangeRate, setPriceChangeRate] = useState('')
-  const [supplierCarLimit, setSupplierCarLimit] = useState('')
-  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
-  const [blacklisted, setBlacklisted] = useState(false)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    setFocus,
+    formState: { errors, isSubmitting },
+    trigger,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+      bio: '',
+      blacklisted: false,
+      payLater: false,
+      licenseRequired: false,
+      minimumRentalDays: '',
+      priceChangeRate: '',
+      supplierCarLimit: '',
+      notifyAdminOnNewCar: false
+    },
+  })
 
-    if (!e.target.value) {
-      setFullNameError(false)
-    }
-  }
-
-  const validateFullName = async (_fullName: string) => {
-    if (supplier && _fullName) {
-      if (supplier.fullName !== _fullName) {
-        try {
-          const status = await SupplierService.validate({ fullName: _fullName })
-
-          if (status === 200) {
-            setFullNameError(false)
-            return true
-          }
-          setFullNameError(true)
-          setAvatarError(false)
-          setError(false)
-          return false
-        } catch (err) {
-          helper.error(err)
-          return true
-        }
-      } else {
-        setFullNameError(false)
-        setAvatarError(false)
-        setError(false)
-        return true
-      }
-    } else {
-      setFullNameError(true)
-      setAvatarError(false)
-      setError(false)
-      return false
-    }
-  }
-
-  const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await validateFullName(e.target.value)
-  }
-
-  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupplierCarLimit(e.target.value)
-  }
-
-  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinimumRentalDays(e.target.value)
-  }
-
-  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPriceChangeRate(e.target.value)
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validatePhone(e.target.value)
-  }
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBio(e.target.value)
-  }
+  const {
+    payLater,
+    licenseRequired,
+    notifyAdminOnNewCar,
+    blacklisted,
+  } = useWatch({ control })
 
   const onBeforeUpload = () => {
     setLoading(true)
@@ -205,19 +141,19 @@ const UpdateSupplier = () => {
               }
 
               setSupplier(_supplier)
-              setEmail(_supplier.email || '')
+              setValue('email', _supplier.email || '')
               setAvatar(_supplier.avatar || '')
-              setFullName(_supplier.fullName || '')
-              setPhone(_supplier.phone || '')
-              setLocation(_supplier.location || '')
-              setBio(_supplier.bio || '')
-              setPayLater(_supplier.payLater || false)
-              setLicenseRequired(_supplier.licenseRequired || false)
-              setMinimumRentalDays(_supplier.minimumRentalDays?.toString() || '')
-              setPriceChangeRate(_supplier.priceChangeRate?.toString() || '')
-              setSupplierCarLimit(_supplier.supplierCarLimit?.toString() || '')
-              setNotifyAdminOnNewCar(!!_supplier.notifyAdminOnNewCar)
-              setBlacklisted(!!_supplier.blacklisted)
+              setValue('fullName', _supplier.fullName || '')
+              setValue('phone', _supplier.phone || '')
+              setValue('location', _supplier.location || '')
+              setValue('bio', _supplier.bio || '')
+              setValue('payLater', !!_supplier.payLater)
+              setValue('licenseRequired', !!_supplier.licenseRequired)
+              setValue('minimumRentalDays', _supplier.minimumRentalDays?.toString() || '')
+              setValue('priceChangeRate', _supplier.priceChangeRate?.toString() || '')
+              setValue('supplierCarLimit', _supplier.supplierCarLimit?.toString() || '')
+              setValue('notifyAdminOnNewCar', !!_supplier.notifyAdminOnNewCar)
+              setValue('blacklisted', !!_supplier.blacklisted)
               setVisible(true)
               setLoading(false)
             } else {
@@ -227,7 +163,7 @@ const UpdateSupplier = () => {
           } catch (err) {
             helper.error(err)
             setLoading(false)
-            setError(true)
+            setSubmitError(true)
             setVisible(false)
           }
         } else {
@@ -241,47 +177,45 @@ const UpdateSupplier = () => {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
-      const fullNameValid = await validateFullName(fullName)
-      if (!fullNameValid) {
-        return
-      }
-
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
-        return
-      }
-
-      if (!avatar) {
-        setAvatarError(true)
-        setError(false)
-        return
-      }
-
       if (!supplier) {
         helper.error()
         return
       }
 
-      const data: bookcarsTypes.UpdateSupplierPayload = {
-        _id: supplier._id as string,
-        fullName,
-        phone,
-        location,
-        bio,
-        payLater,
-        licenseRequired,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
-        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
-        notifyAdminOnNewCar,
-        blacklisted,
+      if (supplier.fullName !== data.fullName) {
+        const status = await SupplierService.validate({ fullName: data.fullName })
+
+        if (status !== 200) {
+          setError('fullName', { message: csStrings.INVALID_SUPPLIER_NAME })
+          setFocus('fullName')
+          return
+        }
       }
 
-      const res = await SupplierService.update(data)
+      if (!avatar) {
+        setAvatarError(true)
+        setSubmitError(false)
+        return
+      }
+
+      const payload: bookcarsTypes.UpdateSupplierPayload = {
+        _id: supplier._id as string,
+        fullName: data.fullName,
+        phone: data.phone!,
+        location: data.location!,
+        bio: data.bio!,
+        payLater: !!data.payLater,
+        licenseRequired: !!data.licenseRequired,
+        minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
+        priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
+        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
+        notifyAdminOnNewCar: data.notifyAdminOnNewCar,
+        blacklisted: !!data.blacklisted,
+      }
+
+      const res = await SupplierService.update(payload)
 
       if (res.status === 200) {
         setSupplier(res.data)
@@ -294,6 +228,13 @@ const UpdateSupplier = () => {
     }
   }
 
+  const onError = () => {
+    const firstErrorField = Object.keys(errors)[0] as keyof FormFields
+    if (firstErrorField) {
+      setFocus(firstErrorField)
+    }
+  }
+
   const admin = helper.admin(user)
 
   return (
@@ -301,7 +242,7 @@ const UpdateSupplier = () => {
       {visible && (
         <div className="update-supplier">
           <Paper className="supplier-form-update" elevation={10}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit, onError)}>
               <Avatar
                 type={bookcarsTypes.RecordType.Supplier}
                 mode="update"
@@ -317,27 +258,41 @@ const UpdateSupplier = () => {
 
               <div className="info">
                 <InfoIcon />
-                <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
+                <span>{csStrings.RECOMMENDED_IMAGE_SIZE}</span>
               </div>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" value={fullName} />
-                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
+                <Input
+                  {...register('fullName')}
+                  type="text"
+                  error={!!errors.fullName}
+                  required
+                  autoComplete="off"
+                />
+                <FormHelperText error={!!errors.fullName}>
+                  {errors.fullName?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" value={email} disabled />
+                <Input
+                  {...register('email')}
+                  type="text"
+                  autoComplete="off"
+                  disabled
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={(
                     <Switch
+                      {...register('blacklisted')}
                       checked={blacklisted}
                       onChange={(e) => {
-                        setBlacklisted(e.target.checked)
+                        setValue('blacklisted', e.target.checked)
                       }}
                       color="primary"
                     />
@@ -351,9 +306,10 @@ const UpdateSupplier = () => {
                 <FormControlLabel
                   control={(
                     <Switch
+                      {...register('payLater')}
                       checked={payLater}
                       onChange={(e) => {
-                        setPayLater(e.target.checked)
+                        setValue('payLater', e.target.checked)
                       }}
                       color="primary"
                     />
@@ -366,9 +322,10 @@ const UpdateSupplier = () => {
                 <FormControlLabel
                   control={(
                     <Switch
+                      {...register('licenseRequired')}
                       checked={licenseRequired}
                       onChange={(e) => {
-                        setLicenseRequired(e.target.checked)
+                        setValue('licenseRequired', e.target.checked)
                       }}
                       color="primary"
                     />
@@ -386,10 +343,11 @@ const UpdateSupplier = () => {
                 <FormControlLabel
                   control={(
                     <Switch
+                      {...register('notifyAdminOnNewCar')}
                       checked={notifyAdminOnNewCar}
                       disabled={user?.type === bookcarsTypes.UserType.Supplier}
                       onChange={(e) => {
-                        setNotifyAdminOnNewCar(e.target.checked)
+                        setValue('notifyAdminOnNewCar', e.target.checked)
                       }}
                       color="primary"
                     />
@@ -401,51 +359,78 @@ const UpdateSupplier = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
                 <Input
+                  {...register('supplierCarLimit')}
                   type="text"
-                  onChange={handleSupplierCarLimitChange}
                   autoComplete="off"
-                  slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
-                  value={supplierCarLimit}
-                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                  error={!!errors.supplierCarLimit}
+                  onChange={() => clearErrors('supplierCarLimit')}
                 />
+                <FormHelperText error={!!errors.supplierCarLimit}>
+                  {errors.supplierCarLimit?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                 <Input
+                  {...register('minimumRentalDays')}
                   type="text"
-                  onChange={handleMinimumRentalDaysChange}
                   autoComplete="off"
-                  slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
-                  value={minimumRentalDays}
+                  error={!!errors.minimumRentalDays}
+                  onChange={() => clearErrors('minimumRentalDays')}
                 />
+                <FormHelperText error={!!errors.minimumRentalDays}>
+                  {errors.minimumRentalDays?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
                 <Input
+                  {...register('priceChangeRate')}
                   type="text"
-                  onChange={handlePriceChangeRateChange}
                   autoComplete="off"
-                  slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }}
-                  value={priceChangeRate}
-                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
+                  error={!!errors.priceChangeRate}
+                  onChange={() => clearErrors('priceChangeRate')}
                 />
+                <FormHelperText error={!!errors.priceChangeRate}>
+                  {errors.priceChangeRate?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
-                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                <Input
+                  {...register('phone', {
+                    onBlur: () => trigger('phone'),
+                  })}
+                  type="text"
+                  autoComplete="off"
+                  error={!!errors.phone}
+                  onChange={() => clearErrors('phone')}
+                />
+                <FormHelperText error={!!errors.phone}>
+                  {errors.phone?.message || ''}
+                </FormHelperText>
               </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <Input
+                  {...register('location')}
+                  type="text"
+                  autoComplete="off"
+                />
               </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
+                <Input
+                  {...register('bio')}
+                  type="text"
+                  autoComplete="off" />
               </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <ContractList supplier={supplier} />
               </FormControl>
@@ -464,7 +449,7 @@ const UpdateSupplier = () => {
                 <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${supplier && supplier._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/suppliers')}>
@@ -473,7 +458,7 @@ const UpdateSupplier = () => {
               </div>
 
               <div className="form-error">
-                {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                {submitError && <Error message={commonStrings.GENERIC_ERROR} />}
                 {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
