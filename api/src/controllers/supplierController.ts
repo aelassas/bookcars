@@ -285,7 +285,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
             as: 'car',
           },
         },
-        { $unwind: { path: '$car', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$car', preserveNullAndEmptyArrays: true } },
         {
           $group: {
             _id: '$_id',
