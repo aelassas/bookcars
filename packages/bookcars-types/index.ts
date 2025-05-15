@@ -213,11 +213,12 @@ export interface CreateDressPayload {
   comingSoon?: boolean
   type: string
   size: string
-  aircon: boolean
+  customizable?: boolean
   image?: string
   color: string
   length: number
   material: string
+  wearCount?: number
   cancellation: number
   amendments: number
   range: string
@@ -233,7 +234,7 @@ export interface UpdateDressPayload extends CreateDressPayload {
 
 
 export interface DressSpecs {
-  aircon?: boolean,
+  customizable?: boolean,
   designerMade?: boolean,
   customSize?: boolean,
 }
@@ -488,11 +489,12 @@ export interface Dress {
   comingSoon?: boolean
   type: DressType
   size: DressSize
-  aircon: boolean
+  customizable?: boolean
   image?: string
   color: string
   length: number
   material: DressMaterial
+  wearCount?: number
   cancellation: number
   amendments: number
   range: string
@@ -623,6 +625,13 @@ export interface StatusFilterItem {
 }
 
 export interface DressFilter {
+  pickupLocation: Location
+  dropOffLocation: Location
+  from: Date
+  to: Date
+}
+
+export interface CarFilter {
   pickupLocation: Location
   dropOffLocation: Location
   from: Date

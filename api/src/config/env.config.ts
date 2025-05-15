@@ -308,7 +308,7 @@ export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', true)
  *
  * @type {string}
  */
-export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'en')
+export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'ar')
 
 /**
  * Default Minimum age for rental. Default is 21 years.
@@ -418,7 +418,7 @@ export const IPINFO_API_KEY = __env__('BC_IPINFO_API_KEY', false)
  *
  * @type {string}
  */
-export const IPINFO_DEFAULT_COUNTRY = __env__('BC_IPINFO_DEFAULT_COUNTRY', false, 'US')
+export const IPINFO_DEFAULT_COUNTRY = __env__('BC_IPINFO_DEFAULT_COUNTRY', false, 'IL')
 
 /**
  * User Document.
@@ -584,6 +584,7 @@ export interface Dress extends Document {
   comingSoon?: boolean
   type: bookcarsTypes.DressType
   size: bookcarsTypes.DressSize
+  customizable: boolean
 
   image: string | null
   color: string
@@ -618,6 +619,7 @@ export interface DressInfo {
   available: boolean
   type: bookcarsTypes.DressType
   size: bookcarsTypes.DressSize
+  customizable?: boolean
 
   image?: string
   color: string

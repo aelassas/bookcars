@@ -25,6 +25,11 @@ const LANGUAGES: Language[] = [
     countryCode: 'es',
     label: 'Español',
   },
+  {
+    code: 'ar',
+    countryCode: 'sa',
+    label: 'العربية',
+  },
 ]
 
 type Currency = { code: string, symbol: string }
@@ -52,6 +57,10 @@ const CURRENCIES: Currency[] = [
     code: 'AUD',
     symbol: '$',
   },
+  {
+    code: 'ILS',
+    symbol: '₪',
+  },
 ]
 
 const getPaymentGateway = () => {
@@ -59,6 +68,10 @@ const getPaymentGateway = () => {
 
   if (paymentGateway === 'PAYPAL') {
     return bookcarsTypes.PaymentGateway.PayPal
+  }
+
+  if (paymentGateway === 'VISA') {
+    return bookcarsTypes.PaymentGateway.Visa
   }
 
   // Default is Stripe
@@ -96,21 +109,23 @@ const env = {
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
   isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
 
-  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'BookCars'),
+  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'BookDresses'),
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
-  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
-  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
+  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'ar'),
+  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'ILS'),
   CURRENCIES,
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
+  DRESSES_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_DRESSES_PAGE_SIZE), 10) || 15,
   BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
   BOOKINGS_MOBILE_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE), 10) || 10,
   CDN_USERS: String(import.meta.env.VITE_BC_CDN_USERS),
   CDN_CARS: String(import.meta.env.VITE_BC_CDN_CARS),
+  CDN_DRESSES: String(import.meta.env.VITE_BC_CDN_DRESSES),
   CDN_LOCATIONS: String(import.meta.env.VITE_BC_CDN_LOCATIONS),
   CDN_LICENSES: String(import.meta.env.VITE_BC_CDN_LICENSES),
   CDN_TEMP_LICENSES: String(import.meta.env.VITE_BC_CDN_TEMP_LICENSES),
@@ -120,8 +135,12 @@ const env = {
   SUPPLIER_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_HEIGHT), 10) || 30,
   CAR_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_CAR_IMAGE_WIDTH), 10) || 300,
   CAR_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_CAR_IMAGE_HEIGHT), 10) || 200,
+  DRESS_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_DRESS_IMAGE_WIDTH), 10) || 300,
+  DRESS_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_DRESS_IMAGE_HEIGHT), 10) || 200,
   CAR_OPTION_IMAGE_HEIGHT: 85,
+  DRESS_OPTION_IMAGE_HEIGHT: 85,
   SELECTED_CAR_OPTION_IMAGE_HEIGHT: 30,
+  SELECTED_DRESS_OPTION_IMAGE_HEIGHT: 30,
   RECAPTCHA_ENABLED: (import.meta.env.VITE_BC_RECAPTCHA_ENABLED && import.meta.env.VITE_BC_RECAPTCHA_ENABLED.toLowerCase()) === 'true',
   RECAPTCHA_SITE_KEY: String(import.meta.env.VITE_BC_RECAPTCHA_SITE_KEY),
   MINIMUM_AGE: Number.parseInt(String(import.meta.env.VITE_BC_MINIMUM_AGE), 10) || 21,

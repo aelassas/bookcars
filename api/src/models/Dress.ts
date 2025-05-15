@@ -101,6 +101,10 @@ const dressSchema = new Schema<env.Dress>(
       enum: [bookcarsTypes.DressSize.Small, bookcarsTypes.DressSize.Medium, bookcarsTypes.DressSize.Large, bookcarsTypes.DressSize.ExtraLarge],
       required: [true, "can't be blank"],
     },
+    customizable: {
+      type: Boolean,
+      default: false,
+    },
 
     image: {
       type: String,
@@ -185,6 +189,7 @@ dressSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -
 dressSchema.index({ available: 1, size: 1, deposit: 1 })
 dressSchema.index({ color: 1, length: 1 })
 dressSchema.index({ material: 1 })
+dressSchema.index({ wearCount: 1 })
 dressSchema.index({ locations: 1, available: 1, fullyBooked: 1 })
 dressSchema.index({ comingSoon: 1 })
 dressSchema.index({ range: 1 })
