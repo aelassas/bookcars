@@ -32,7 +32,7 @@ export const __env__ = (name: string, required?: boolean, defaultValue?: string)
 export const LANGUAGES = [
   'en',
   'fr',
-  'es',
+  'ar',
 ]
 
 /**
@@ -40,7 +40,7 @@ export const LANGUAGES = [
  *
  * @type {string}
  */
-export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
+export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookDresses')
 
 /**
  * Server Port. Default is 4002.
@@ -231,19 +231,7 @@ export const CDN_USERS = __env__('BC_CDN_USERS', true)
  */
 export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', true)
 
-/**
- * Cars' cdn folder path.
- *
- * @type {string}
- */
-export const CDN_CARS = __env__('BC_CDN_CARS', true)
 
-/**
- * Cars' temp cdn folder path.
- *
- * @type {string}
- */
-export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
 
 /**
  * Dresses' cdn folder path.
@@ -415,7 +403,7 @@ export const RECAPTCHA_SECRET = __env__('BC_RECAPTCHA_SECRET', false)
  *
  * @type {string}
  */
-export const TIMEZONE = __env__('BC_TIMEZONE', false, 'UTC')
+export const TIMEZONE = __env__('BC_TIMEZONE', false, 'Asia/Jerusalem')
 
 /**
  * ipinfo.io API key.
@@ -465,8 +453,8 @@ export interface User extends Document {
   minimumRentalDays?: number
   expireAt?: Date
   priceChangeRate?: number
-  supplierCarLimit?: number
-  notifyAdminOnNewCar?: boolean
+  supplierDressLimit?: number
+  notifyAdminOnNewDress?: boolean
 }
 
 /**
@@ -498,8 +486,8 @@ export interface UserInfo {
   licenseRequired?: boolean
   license?: string
   priceChangeRate?: number
-  supplierCarLimit?: number
-  notifyAdminOnNewCar?: boolean
+  supplierDressLimit?: number
+  notifyAdminOnNewDress?: boolean
 }
 
 /**
@@ -527,7 +515,6 @@ export interface AdditionalDriver {
 export interface Booking extends Document {
   _id: Types.ObjectId
   supplier: Types.ObjectId
-  car?: Types.ObjectId
   dress?: Types.ObjectId
   driver: Types.ObjectId
   pickupLocation: Types.ObjectId
@@ -537,9 +524,6 @@ export interface Booking extends Document {
   status: bookcarsTypes.BookingStatus
   cancellation?: boolean
   amendments?: boolean
-  theftProtection?: boolean
-  collisionDamageWaiver?: boolean
-  fullInsurance?: boolean
   additionalDriver?: boolean
   _additionalDriver?: Types.ObjectId
   cancelRequest?: boolean
@@ -566,56 +550,7 @@ export interface DateBasedPrice extends Document {
   dailyPrice: number
 }
 
-/**
- * Car Document.
- *
- * @export
- * @interface Car
- * @typedef {Car}
- * @extends {Document}
- */
-export interface Car extends Document {
-  name: string
-  supplier: Types.ObjectId
-  minimumAge: number
-  locations: Types.ObjectId[]
 
-  dailyPrice: number
-  discountedDailyPrice: number | null
-  biWeeklyPrice: number | null
-  discountedBiWeeklyPrice: number | null
-  weeklyPrice: number | null
-  discountedWeeklyPrice: number | null
-  monthlyPrice: number | null
-  discountedMonthlyPrice: number | null
-
-  isDateBasedPrice: boolean
-  dateBasedPrices: Types.ObjectId[]
-
-  deposit: number
-  available: boolean
-  fullyBooked?: boolean
-  comingSoon?: boolean
-  type: bookcarsTypes.CarType
-  gearbox: bookcarsTypes.GearboxType
-  aircon: boolean
-  image: string | null
-  seats: number
-  doors: number
-  fuelPolicy: bookcarsTypes.FuelPolicy
-  mileage: number
-  cancellation: number
-  amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
-  range: string
-  multimedia: string[]
-  rating?: number
-  trips: number
-  co2?: number
-}
 
 /**
  * Dress Document.
@@ -649,18 +584,13 @@ export interface Dress extends Document {
   comingSoon?: boolean
   type: bookcarsTypes.DressType
   size: bookcarsTypes.DressSize
-  aircon: boolean
+
   image: string | null
   color: string
   length: number
   material: bookcarsTypes.DressMaterial
-  mileage: number
   cancellation: number
   amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
   range: string
   accessories: string[]
   rating?: number
@@ -668,37 +598,7 @@ export interface Dress extends Document {
   designerName?: string
 }
 
-/**
- * CarInfo.
- *
- * @export
- * @interface CarInfo
- * @typedef {CarInfo}
- */
-export interface CarInfo {
-  _id?: Types.ObjectId
-  name: string
-  supplier: UserInfo
-  minimumAge: number
-  locations: Types.ObjectId[]
-  price: number
-  deposit: number
-  available: boolean
-  type: bookcarsTypes.CarType
-  gearbox: bookcarsTypes.GearboxType
-  aircon: boolean
-  image?: string
-  seats: number
-  doors: number
-  fuelPolicy: bookcarsTypes.FuelPolicy
-  mileage: number
-  cancellation: number
-  amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
-}
+
 
 /**
  * DressInfo.
@@ -718,18 +618,13 @@ export interface DressInfo {
   available: boolean
   type: bookcarsTypes.DressType
   size: bookcarsTypes.DressSize
-  aircon: boolean
+
   image?: string
   color: string
   length: number
   material: bookcarsTypes.DressMaterial
-  mileage: number
   cancellation: number
   amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
   designerName?: string
 }
 
@@ -743,7 +638,6 @@ export interface DressInfo {
 export interface BookingInfo {
   _id?: Types.ObjectId
   supplier: UserInfo
-  car?: Car
   dress?: Dress
   driver: UserInfo
   pickupLocation: Types.ObjectId
@@ -753,9 +647,6 @@ export interface BookingInfo {
   status: bookcarsTypes.BookingStatus
   cancellation?: boolean
   amendments?: boolean
-  theftProtection?: boolean
-  collisionDamageWaiver?: boolean
-  fullInsurance?: boolean
   additionalDriver?: boolean
   _additionalDriver?: Types.ObjectId
   cancelRequest?: boolean
@@ -864,7 +755,6 @@ export interface Notification extends Document {
   user: Types.ObjectId
   message: string
   booking: Types.ObjectId
-  car?: Types.ObjectId
   dress?: Types.ObjectId
   isRead?: boolean
 }

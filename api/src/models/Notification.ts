@@ -18,9 +18,9 @@ const notificationSchema = new Schema<env.Notification>(
       type: Schema.Types.ObjectId,
       ref: 'Booking',
     },
-    car: {
+    dress: {
       type: Schema.Types.ObjectId,
-      ref: 'Car',
+      ref: 'Dress',
     },
     isRead: {
       type: Boolean,

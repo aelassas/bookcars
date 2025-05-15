@@ -3,7 +3,7 @@
 <!--
 [![docs](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki)
 [![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net:3002/)
-[![loc](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml) 
+[![loc](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-brightgreen?logo=jest)](https://github.com/jestjs/jest)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/aelassas/bookcars/pulls)
 [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars)
@@ -13,41 +13,39 @@
 https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 -->
 
-## BookCars
+## BookDresses
 
-BookCars is a highly customizable, scalable, and cost-efficient solution for car rental businesses. Its robust feature set and open-source nature make it a sustainable choice for long-term growth in the rental industry.
+BookDresses is a highly customizable, scalable, and cost-efficient solution for wedding dress rental businesses. Its robust feature set and open-source nature make it a sustainable choice for long-term growth in the rental industry.
 
-BookCars integrates Stripe and PayPal [payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways). You can choose either to use Stripe or PayPal for payments. If [Stripe](https://stripe.com/global) isn't available in your country, simply check if [PayPal](https://www.paypal.com/us/webapps/mpp/country-worldwide) is supported and use it as an alternative for smooth and secure payments.
+BookDresses integrates Stripe, PayPal, and Visa [payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways). You can choose to use Stripe, PayPal, or Visa for payments. If [Stripe](https://stripe.com/global) isn't available in your country, simply check if [PayPal](https://www.paypal.com/us/webapps/mpp/country-worldwide) is supported and use it as an alternative for smooth and secure payments.
 
-With BookCars, you can deploy your own customizable car rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates Stripe and PayPal for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single or multi-supplier operations looking for a scalable and cost-effective solution. You can deploy it for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
-<!--
-BookCars is free and open source. You can customize it as you want and deploy it yourself by following the [documentation](https://github.com/aelassas/bookcars/wiki). If you want me to customize it and deploy it for you, contact me by email. You can find my email in my [GitHub profile page](https://github.com/aelassas). You need to be logged in to GitHub to view my email. I can deploy the platform to the cloud for you, configure your DNS, emailing, webmail and all related tasks.
--->
-BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
+With BookDresses, you can deploy your own customizable wedding dress rental marketplace at minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). The platform integrates multiple payment gateways for secure payments and can be efficiently hosted on a 1GB RAM droplet, making it an ideal choice for single or multi-supplier operations looking for a scalable and cost-effective solution. You can deploy it for under $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-From the admin dashboard, admins can create and manage suppliers, cars, countries, locations, parking spots, customers, bookings and payments.
+BookDresses is designed to work with multiple suppliers. Suppliers can manage their dress collections and bookings from the admin dashboard. BookDresses can also work with a single supplier and can be used as a wedding dress rental aggregator.
 
-When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleets and bookings.
+From the admin dashboard, admins can create and manage suppliers, dresses, countries, locations, customers, bookings and payments.
 
-Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their dress collections and bookings.
+
+Customers can sign up from the frontend or the mobile app, search for available dresses based on pickup and drop-off points and time, choose a dress and complete the checkout process.
 
 ## Features
 
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 * Ready for one or multiple suppliers
-* Car fleet management
+* Dress collection management
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Location, country, parking spots and map features
 * Booking management
-* [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
+* [Dress scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * Payment management
 * Customer management
 * Multiple login options (Google, Facebook, Apple, Email)
 * Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit)
-* Multiple language support (English, French, Spanish)
+* Multiple language support (English, French, Arabic)
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
 * [Multiple Payment Gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)

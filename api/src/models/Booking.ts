@@ -13,10 +13,10 @@ const bookingSchema = new Schema<env.Booking>(
       ref: 'User',
       index: true,
     },
-    car: {
+    dress: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
-      ref: 'Car',
+      ref: 'Dress',
     },
     driver: {
       type: Schema.Types.ObjectId,
@@ -62,18 +62,7 @@ const bookingSchema = new Schema<env.Booking>(
       type: Boolean,
       default: false,
     },
-    theftProtection: {
-      type: Boolean,
-      default: false,
-    },
-    collisionDamageWaiver: {
-      type: Boolean,
-      default: false,
-    },
-    fullInsurance: {
-      type: Boolean,
-      default: false,
-    },
+
     additionalDriver: {
       type: Boolean,
       default: false,
@@ -128,7 +117,7 @@ bookingSchema.index({ 'supplier._id': 1, status: 1, expireAt: 1 })
 
 // Optional filters (can combine with the above depending on frequency)
 bookingSchema.index({ 'driver._id': 1 })
-bookingSchema.index({ 'car._id': 1 })
+bookingSchema.index({ 'dress._id': 1 })
 bookingSchema.index({ from: 1, to: 1 }) // For date range filtering
 bookingSchema.index({ 'pickupLocation._id': 1 })
 bookingSchema.index({ 'dropOffLocation._id': 1 })
@@ -136,7 +125,7 @@ bookingSchema.index({ 'dropOffLocation._id': 1 })
 // If keyword is used often with regex, and performance is an issue:
 bookingSchema.index({ 'supplier.fullName': 1 }) // Consider text index if full-text search is needed
 bookingSchema.index({ 'driver.fullName': 1 })
-bookingSchema.index({ 'car.name': 1 })
+bookingSchema.index({ 'dress.name': 1 })
 
 const Booking = model<env.Booking>('Booking', bookingSchema)
 

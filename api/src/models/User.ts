@@ -128,10 +128,10 @@ const userSchema = new Schema<env.User>(
     priceChangeRate: {
       type: Number,
     },
-    supplierCarLimit: {
+    supplierDressLimit: {
       type: Number,
     },
-    notifyAdminOnNewCar: {
+    notifyAdminOnNewDress: {
       type: Boolean,
     },
     expireAt: {
