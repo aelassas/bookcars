@@ -1,5 +1,5 @@
 interface CheckoutParams {
-  car: string,
+  dress: string,
   pickupLocation: string,
   dropOffLocation: string,
   from: number,
@@ -18,7 +18,7 @@ type StackParams = {
   Bookings: {
     d?: number
   }
-  Cars: {
+  Dresses: {
     d?: number
     pickupLocation: string
     dropOffLocation: string

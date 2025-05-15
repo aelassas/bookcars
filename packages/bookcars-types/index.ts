@@ -61,10 +61,7 @@ export enum BookingStatus {
   Cancelled = 'cancelled',
 }
 
-export enum Mileage {
-  Limited = 'limited',
-  Unlimited = 'unlimited',
-}
+
 
 export enum Availablity {
   Available = 'available',
@@ -640,9 +637,6 @@ export type DressFilterSubmitEvent = (filter: DressFilter) => void
 export interface DressOptions {
   cancellation?: boolean
   amendments?: boolean
-  theftProtection?: boolean
-  collisionDamageWaiver?: boolean
-  fullInsurance?: boolean
   additionalDriver?: boolean
   accessories?: boolean
 }

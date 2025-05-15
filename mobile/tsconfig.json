@@ -1,5 +1,5 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
@@ -19,5 +19,5 @@
   "references": [
     { "path": "../packages/bookcars-types" },
     { "path": "../packages/bookcars-helper" }
-  ]  
+  ]
 }

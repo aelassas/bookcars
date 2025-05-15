@@ -41,233 +41,13 @@ export const error = (err?: unknown, message?: string) => {
   }
 }
 
-/**
- * Get car type label.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getCarType = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL
 
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE
 
-    default:
-      return ''
-  }
-}
 
-/**
- * Get short car type label.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getCarTypeShort = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL_SHORT
 
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE_SHORT
 
-    case bookcarsTypes.CarType.Electric:
-      return strings.ELECTRIC_SHORT
 
-    case bookcarsTypes.CarType.Hybrid:
-      return strings.HYBRID_SHORT
 
-    case bookcarsTypes.CarType.PlugInHybrid:
-      return strings.PLUG_IN_HYBRID_SHORT
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get gearbox type label.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getGearboxType = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL
-
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get short gearbox type label.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getGearboxTypeShort = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL_SHORT
-
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC_SHORT
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get fuel policy label.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getFuelPolicy = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.FuelPolicy.LikeForLike:
-      return strings.FUEL_POLICY_LIKE_FOR_LIKE
-
-    case bookcarsTypes.FuelPolicy.FreeTank:
-      return strings.FUEL_POLICY_FREE_TANK
-
-    case bookcarsTypes.FuelPolicy.FullToFull:
-      return strings.FUEL_POLICY_FULL_TO_FULL
-
-    case bookcarsTypes.FuelPolicy.FullToEmpty:
-      return strings.FUEL_POLICY_FULL_TO_EMPTY
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get car type tooltip.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getCarTypeTooltip = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL_TOOLTIP
-
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE_TOOLTIP
-
-    case bookcarsTypes.CarType.Electric:
-      return strings.ELECTRIC_TOOLTIP
-
-    case bookcarsTypes.CarType.Hybrid:
-      return strings.HYBRID_TOOLTIP
-
-    case bookcarsTypes.CarType.PlugInHybrid:
-      return strings.PLUG_IN_HYBRID_TOOLTIP
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get gearbox tooltip.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getGearboxTooltip = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL_TOOLTIP
-
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC_TOOLTIP
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get seats tooltip.
- *
- * @param {number} seats
- * @returns {string}
- */
-export const getSeatsTooltip = (seats: number) => `${strings.SEATS_TOOLTIP_1}${seats} ${strings.SEATS_TOOLTIP_2}`
-
-/**
- * Get doors tooltip.
- *
- * @param {number} doors
- * @returns {string}
- */
-export const getDoorsTooltip = (doors: number) => `${strings.DOORS_TOOLTIP_1}${doors} ${strings.DOORS_TOOLTIP_2}`
-
-/**
- * Get fuel policy tooltip.
- *
- * @param {string} fuelPolicy
- * @returns {string}
- */
-export const getFuelPolicyTooltip = (fuelPolicy: string) => {
-  switch (fuelPolicy) {
-    case bookcarsTypes.FuelPolicy.LikeForLike:
-      return strings.FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP
-
-    case bookcarsTypes.FuelPolicy.FreeTank:
-      return strings.FUEL_POLICY_FREE_TANK_TOOLTIP
-
-    case bookcarsTypes.FuelPolicy.FullToFull:
-      return strings.FUEL_POLICY_FULL_TO_FULL_TOOLTIP
-
-    case bookcarsTypes.FuelPolicy.FullToEmpty:
-      return strings.FUEL_POLICY_FULL_TO_EMPTY_TOOLTIP
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get mileage label.
- *
- * @param {number} mileage
- * @param {string} language
- * @returns {string}
- */
-export const getMileage = (mileage: number, language: string) => {
-  if (mileage === -1) {
-    return strings.UNLIMITED
-  }
-  return `${bookcarsHelper.formatNumber(mileage, language)} ${strings.MILEAGE_UNIT}`
-}
-
-/**
- * Get mileage tooltip.
- *
- * @param {number} mileage
- * @param {string} language
- * @returns {string}
- */
-export const getMileageTooltip = (mileage: number, language: string) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (mileage === -1) {
-    return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
-  }
-  return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage, language)} ${strings.MILEAGE_UNIT}`
-}
 
 /**
  * Get additional driver label.
@@ -289,65 +69,7 @@ export const getAdditionalDriver = async (additionalDriver: number, language: st
   return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
-/**
- * Get full insurance label.
- *
- * @param {number} fullInsurance
- * @param {string} language
- * @returns {string}
- */
-export const getFullInsurance = async (fullInsurance: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
 
-  if (fullInsurance === -1) {
-    return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } if (fullInsurance === 0) {
-    return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _fullInsurance = await PaymentService.convertPrice(fullInsurance)
-  _fullInsurance += _fullInsurance * (priceChangeRate / 100)
-  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
-}
-
-/**
- * Get collision damage waiver label.
- *
- * @param {number} collisionDamageWaiver
- * @param {string} language
- * @returns {string}
- */
-export const getCollisionDamageWaiver = async (collisionDamageWaiver: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (collisionDamageWaiver === -1) {
-    return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } if (collisionDamageWaiver === 0) {
-    return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _collisionDamageWaiver = await PaymentService.convertPrice(collisionDamageWaiver)
-  _collisionDamageWaiver += _collisionDamageWaiver * (priceChangeRate / 100)
-  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
-}
-
-/**
- * Get theft protection label.
- *
- * @param {number} theftProtection
- * @param {string} language
- * @returns {string}
- */
-export const getTheftProtection = async (theftProtection: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (theftProtection === -1) {
-    return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } if (theftProtection === 0) {
-    return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _theftProtection = await PaymentService.convertPrice(theftProtection)
-  _theftProtection += _theftProtection * (priceChangeRate / 100)
-  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
-}
 
 /**
  * Get amendments label.
@@ -510,71 +232,7 @@ export const getAmendmentsOption = async (amendments: number, language: string, 
   return `+ ${bookcarsHelper.formatPrice(_amendments, commonStrings.CURRENCY, language)}`
 }
 
-/**
- * Get theft protection option label.
- *
- * @param {number} theftProtection
- * @param {number} days
- * @param {string} language
- * @param {number} priceChangeRate
- * @returns {string}
- */
-export const getTheftProtectionOption = async (theftProtection: number, days: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
 
-  if (theftProtection === -1) {
-    return strings.UNAVAILABLE
-  } if (theftProtection === 0) {
-    return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _theftProtection = await PaymentService.convertPrice(theftProtection)
-  _theftProtection += _theftProtection * (priceChangeRate / 100)
-  return `+ ${bookcarsHelper.formatPrice(_theftProtection * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
-}
-
-/**
- * Get collision damage waiver option label.
- *
- * @param {number} collisionDamageWaiver
- * @param {number} days
- * @param {string} language
- * @param {number} priceChangeRate
- * @returns {string}
- */
-export const getCollisionDamageWaiverOption = async (collisionDamageWaiver: number, days: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (collisionDamageWaiver === -1) {
-    return strings.UNAVAILABLE
-  } if (collisionDamageWaiver === 0) {
-    return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _collisionDamageWaiver = await PaymentService.convertPrice(collisionDamageWaiver)
-  _collisionDamageWaiver += _collisionDamageWaiver * (priceChangeRate / 100)
-  return `+ ${bookcarsHelper.formatPrice(_collisionDamageWaiver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
-}
-
-/**
- * Get full insurance option label.
- *
- * @param {number} fullInsurance
- * @param {number} days
- * @param {string} language
- * @param {number} priceChangeRate
- * @returns {string}
- */
-export const getFullInsuranceOption = async (fullInsurance: number, days: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (fullInsurance === -1) {
-    return strings.UNAVAILABLE
-  } if (fullInsurance === 0) {
-    return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-  let _fullInsurance = await PaymentService.convertPrice(fullInsurance)
-  _fullInsurance += _fullInsurance * (priceChangeRate / 100)
-  return `+ ${bookcarsHelper.formatPrice(_fullInsurance * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(_fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
-}
 
 /**
  * Get additional driver option label.
@@ -606,14 +264,14 @@ export const getBirthDateError = (minimumAge: number) =>
   `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`
 
 /**
- * Check whether a car option is available or not.
+ * Check whether a dress option is available or not.
  *
- * @param {(bookcarsTypes.Car | undefined)} car
+ * @param {(bookcarsTypes.Dress | undefined)} dress
  * @param {string} option
  * @returns {boolean}
  */
-export const carOptionAvailable = (car: bookcarsTypes.Car | undefined, option: string) =>
-  car && option in car && (car[option] as number) > -1
+export const dressOptionAvailable = (dress: bookcarsTypes.Dress | undefined, option: string) =>
+  dress && option in dress && (dress[option] as number) > -1
 
 /**
  * Return [latitude, longitude] of user.
@@ -689,33 +347,33 @@ export const verifyReCaptcha = async (token: string): Promise<boolean> => {
 }
 
 /**
- * Get car range label.
+ * Get dress range label.
  *
  * @param {string} range
  * @returns {string}
  */
-export const getCarRange = (range: bookcarsTypes.CarRange) => {
+export const getDressRange = (range: bookcarsTypes.DressRange) => {
   switch (range) {
-    case bookcarsTypes.CarRange.Mini:
-      return strings.CAR_RANGE_MINI
+    case bookcarsTypes.DressRange.Mini:
+      return strings.DRESS_RANGE_MINI
 
-    case bookcarsTypes.CarRange.Midi:
-      return strings.CAR_RANGE_MIDI
+    case bookcarsTypes.DressRange.Midi:
+      return strings.DRESS_RANGE_MIDI
 
-    case bookcarsTypes.CarRange.Maxi:
-      return strings.CAR_RANGE_MAXI
+    case bookcarsTypes.DressRange.Maxi:
+      return strings.DRESS_RANGE_MAXI
 
-    case bookcarsTypes.CarRange.Scooter:
-      return strings.CAR_RANGE_SCOOTER
+    case bookcarsTypes.DressRange.Bridal:
+      return strings.DRESS_RANGE_BRIDAL
 
-    case bookcarsTypes.CarRange.Bus:
-      return strings.CAR_RANGE_BUS
+    case bookcarsTypes.DressRange.Evening:
+      return strings.DRESS_RANGE_EVENING
 
-    case bookcarsTypes.CarRange.Truck:
-      return strings.CAR_RANGE_TRUCK
+    case bookcarsTypes.DressRange.Cocktail:
+      return strings.DRESS_RANGE_COCKTAIL
 
-    case bookcarsTypes.CarRange.Caravan:
-      return strings.CAR_RANGE_CARAVAN
+    case bookcarsTypes.DressRange.Casual:
+      return strings.DRESS_RANGE_CASUAL
 
     default:
       return ''
