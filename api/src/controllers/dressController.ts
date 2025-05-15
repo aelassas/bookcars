@@ -4,7 +4,6 @@ import path from 'path'
 import mongoose from 'mongoose'
 import Dress from '../models/Dress'
 import * as helper from '../common/helper'
-import * as dressHelper from '../common/dressHelper'
 import * as env from '../config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 

@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { strings } from '@/lang/cars'
+import { strings } from '@/lang/dresses'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import * as PaymentService from '@/services/PaymentService'
@@ -50,23 +50,70 @@ export const error = (err?: unknown, message?: string) => {
 
 
 /**
- * Get additional driver label.
+ * Get dress type label.
  *
- * @param {number} additionalDriver
- * @param {string} language
+ * @param {string} type
  * @returns {string}
  */
-export const getAdditionalDriver = async (additionalDriver: number, language: string, priceChangeRate: number) => {
-  const fr = bookcarsHelper.isFrench(language)
-
-  if (additionalDriver === -1) {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } if (additionalDriver === 0) {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
+export const getDressType = (type: string) => {
+  switch (type) {
+    case bookcarsTypes.DressType.Traditional:
+      return strings.TRADITIONAL
+    case bookcarsTypes.DressType.Modern:
+      return strings.MODERN
+    case bookcarsTypes.DressType.Designer:
+      return strings.DESIGNER
+    case bookcarsTypes.DressType.Vintage:
+      return strings.VINTAGE
+    case bookcarsTypes.DressType.Casual:
+      return strings.CASUAL
+    default:
+      return ''
   }
-  let _additionalDriver = await PaymentService.convertPrice(additionalDriver)
-  _additionalDriver += _additionalDriver * (priceChangeRate / 100)
-  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(_additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+}
+
+/**
+ * Get dress size label.
+ *
+ * @param {string} size
+ * @returns {string}
+ */
+export const getDressSize = (size: string) => {
+  switch (size) {
+    case bookcarsTypes.DressSize.Small:
+      return strings.SIZE_SMALL
+    case bookcarsTypes.DressSize.Medium:
+      return strings.SIZE_MEDIUM
+    case bookcarsTypes.DressSize.Large:
+      return strings.SIZE_LARGE
+    case bookcarsTypes.DressSize.ExtraLarge:
+      return strings.SIZE_EXTRA_LARGE
+    default:
+      return ''
+  }
+}
+
+/**
+ * Get dress material label.
+ *
+ * @param {string} material
+ * @returns {string}
+ */
+export const getDressMaterial = (material: string) => {
+  switch (material) {
+    case bookcarsTypes.DressMaterial.Silk:
+      return strings.MATERIAL_SILK
+    case bookcarsTypes.DressMaterial.Cotton:
+      return strings.MATERIAL_COTTON
+    case bookcarsTypes.DressMaterial.Lace:
+      return strings.MATERIAL_LACE
+    case bookcarsTypes.DressMaterial.Satin:
+      return strings.MATERIAL_SATIN
+    case bookcarsTypes.DressMaterial.Chiffon:
+      return strings.MATERIAL_CHIFFON
+    default:
+      return ''
+  }
 }
 
 

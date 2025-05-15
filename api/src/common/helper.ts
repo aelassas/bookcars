@@ -1,5 +1,6 @@
 import { constants } from 'node:fs'
 import asyncFs from 'node:fs/promises'
+import fs from 'fs'
 import path from 'node:path'
 import mongoose from 'mongoose'
 import validator from 'validator'
@@ -7,6 +8,7 @@ import Stripe from 'stripe'
 import { nanoid } from 'nanoid'
 import axios from 'axios'
 import * as bookcarsTypes from ':bookcars-types'
+import * as env from '../config/env.config'
 
 /**
  * Convert string to boolean.
@@ -279,3 +281,45 @@ export const validateAccessToken = async (socialSignInType: bookcarsTypes.Social
  * @returns {string}
  */
 export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 100).toFixed(2)
+
+/**
+ * Generate a unique filename for a dress image.
+ *
+ * @param {string} originalname
+ * @returns {string}
+ */
+export const generateUniqueFilename = (originalname: string): string => {
+  const timestamp = new Date().getTime()
+  const ext = path.extname(originalname)
+  return `dress_${timestamp}${ext}`
+}
+
+/**
+ * Move a dress image from temp to permanent storage.
+ *
+ * @param {string} filename
+ * @returns {Promise<void>}
+ */
+export const moveDressImage = async (filename: string): Promise<void> => {
+  const tempPath = path.join(env.CDN_TEMP_DRESSES, filename)
+  const destPath = path.join(env.CDN_DRESSES, filename)
+
+  if (fs.existsSync(tempPath)) {
+    await fs.promises.copyFile(tempPath, destPath)
+    await fs.promises.unlink(tempPath)
+  }
+}
+
+/**
+ * Delete a dress image.
+ *
+ * @param {string} filename
+ * @returns {Promise<void>}
+ */
+export const deleteDressImage = async (filename: string): Promise<void> => {
+  const imagePath = path.join(env.CDN_DRESSES, filename)
+
+  if (fs.existsSync(imagePath)) {
+    await fs.promises.unlink(imagePath)
+  }
+}
