@@ -246,6 +246,20 @@ export const CDN_CARS = __env__('BC_CDN_CARS', true)
 export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
 
 /**
+ * Dresses' cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_DRESSES = __env__('BC_CDN_DRESSES', true)
+
+/**
+ * Dresses' temp cdn folder path.
+ *
+ * @type {string}
+ */
+export const CDN_TEMP_DRESSES = __env__('BC_CDN_TEMP_DRESSES', true)
+
+/**
  * Locations' cdn folder path.
  *
  * @type {string}
@@ -513,7 +527,8 @@ export interface AdditionalDriver {
 export interface Booking extends Document {
   _id: Types.ObjectId
   supplier: Types.ObjectId
-  car: Types.ObjectId
+  car?: Types.ObjectId
+  dress?: Types.ObjectId
   driver: Types.ObjectId
   pickupLocation: Types.ObjectId
   dropOffLocation: Types.ObjectId
@@ -538,11 +553,11 @@ export interface Booking extends Document {
 }
 
 /**
- * Car Document.
+ * DateBasedPrice Document.
  *
  * @export
- * @interface Car
- * @typedef {Car}
+ * @interface DateBasedPrice
+ * @typedef {DateBasedPrice}
  * @extends {Document}
  */
 export interface DateBasedPrice extends Document {
@@ -603,6 +618,57 @@ export interface Car extends Document {
 }
 
 /**
+ * Dress Document.
+ *
+ * @export
+ * @interface Dress
+ * @typedef {Dress}
+ * @extends {Document}
+ */
+export interface Dress extends Document {
+  name: string
+  supplier: Types.ObjectId
+  minimumAge: number
+  locations: Types.ObjectId[]
+
+  dailyPrice: number
+  discountedDailyPrice: number | null
+  biWeeklyPrice: number | null
+  discountedBiWeeklyPrice: number | null
+  weeklyPrice: number | null
+  discountedWeeklyPrice: number | null
+  monthlyPrice: number | null
+  discountedMonthlyPrice: number | null
+
+  isDateBasedPrice: boolean
+  dateBasedPrices: Types.ObjectId[]
+
+  deposit: number
+  available: boolean
+  fullyBooked?: boolean
+  comingSoon?: boolean
+  type: bookcarsTypes.DressType
+  size: bookcarsTypes.DressSize
+  aircon: boolean
+  image: string | null
+  color: string
+  length: number
+  material: bookcarsTypes.DressMaterial
+  mileage: number
+  cancellation: number
+  amendments: number
+  theftProtection: number
+  collisionDamageWaiver: number
+  fullInsurance: number
+  additionalDriver: number
+  range: string
+  accessories: string[]
+  rating?: number
+  rentals: number
+  designerName?: string
+}
+
+/**
  * CarInfo.
  *
  * @export
@@ -635,6 +701,39 @@ export interface CarInfo {
 }
 
 /**
+ * DressInfo.
+ *
+ * @export
+ * @interface DressInfo
+ * @typedef {DressInfo}
+ */
+export interface DressInfo {
+  _id?: Types.ObjectId
+  name: string
+  supplier: UserInfo
+  minimumAge: number
+  locations: Types.ObjectId[]
+  price: number
+  deposit: number
+  available: boolean
+  type: bookcarsTypes.DressType
+  size: bookcarsTypes.DressSize
+  aircon: boolean
+  image?: string
+  color: string
+  length: number
+  material: bookcarsTypes.DressMaterial
+  mileage: number
+  cancellation: number
+  amendments: number
+  theftProtection: number
+  collisionDamageWaiver: number
+  fullInsurance: number
+  additionalDriver: number
+  designerName?: string
+}
+
+/**
  * BookingInfo.
  *
  * @export
@@ -644,7 +743,8 @@ export interface CarInfo {
 export interface BookingInfo {
   _id?: Types.ObjectId
   supplier: UserInfo
-  car: Car
+  car?: Car
+  dress?: Dress
   driver: UserInfo
   pickupLocation: Types.ObjectId
   dropOffLocation: Types.ObjectId
@@ -764,7 +864,8 @@ export interface Notification extends Document {
   user: Types.ObjectId
   message: string
   booking: Types.ObjectId
-  car: Types.ObjectId
+  car?: Types.ObjectId
+  dress?: Types.ObjectId
   isRead?: boolean
 }
 

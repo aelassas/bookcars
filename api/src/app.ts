@@ -11,7 +11,8 @@ import supplierRoutes from './routes/supplierRoutes'
 import bookingRoutes from './routes/bookingRoutes'
 import locationRoutes from './routes/locationRoutes'
 import notificationRoutes from './routes/notificationRoutes'
-import carRoutes from './routes/carRoutes'
+
+import dressRoutes from './routes/dressRoutes'
 import userRoutes from './routes/userRoutes'
 import stripeRoutes from './routes/stripeRoutes'
 import countryRoutes from './routes/countryRoutes'
@@ -54,7 +55,8 @@ app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)
 app.use('/', locationRoutes)
 app.use('/', notificationRoutes)
-app.use('/', carRoutes)
+
+app.use('/', dressRoutes)
 app.use('/', userRoutes)
 app.use('/', stripeRoutes)
 app.use('/', countryRoutes)
@@ -66,8 +68,9 @@ i18n.locale = env.DEFAULT_LANGUAGE
 
 await helper.mkdir(env.CDN_USERS)
 await helper.mkdir(env.CDN_TEMP_USERS)
-await helper.mkdir(env.CDN_CARS)
-await helper.mkdir(env.CDN_TEMP_CARS)
+
+await helper.mkdir(env.CDN_DRESSES)
+await helper.mkdir(env.CDN_TEMP_DRESSES)
 await helper.mkdir(env.CDN_LOCATIONS)
 await helper.mkdir(env.CDN_TEMP_LOCATIONS)
 await helper.mkdir(env.CDN_CONTRACTS)

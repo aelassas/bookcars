@@ -9,43 +9,48 @@ export enum AppType {
   Frontend = 'frontend',
 }
 
-export enum CarType {
-  Diesel = 'diesel',
-  Gasoline = 'gasoline',
-  Electric = 'electric',
-  Hybrid = 'hybrid',
-  PlugInHybrid = 'plugInHybrid',
+export enum DressType {
+  Traditional = 'traditional',
+  Modern = 'modern',
+  Designer = 'designer',
+  Vintage = 'vintage',
+  Casual = 'casual',
   Unknown = 'unknown',
 }
 
-export enum CarRange {
-  Mini = 'mini', // car
-  Midi = 'midi', // suv
-  Maxi = 'maxi', // van
-  Scooter = 'scooter',
-  Bus = 'bus',
-  Truck = 'truck',
-  Caravan = 'caravan',
+export enum DressRange {
+  Mini = 'mini',
+  Midi = 'midi',
+  Maxi = 'maxi',
+  Bridal = 'bridal',
+  Evening = 'evening',
+  Cocktail = 'cocktail',
+  Casual = 'casual',
 }
 
-export enum CarMultimedia {
-  Touchscreen = 'touchscreen',
-  Bluetooth = 'bluetooth',
-  AndroidAuto = 'androidAuto',
-  AppleCarPlay = 'appleCarPlay',
+export enum DressAccessories {
+  Veil = 'veil',
+  Jewelry = 'jewelry',
+  Shoes = 'shoes',
+  Headpiece = 'headpiece',
 }
 
-export enum GearboxType {
-  Manual = 'manual',
-  Automatic = 'automatic',
+export enum DressSize {
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
+  ExtraLarge = 'extraLarge',
 }
 
-export enum FuelPolicy {
-  LikeForLike = 'likeForlike',
-  FreeTank = 'freeTank',
-  FullToFull = 'fullToFull',
-  FullToEmpty = 'FullToEmpty',
+export enum DressMaterial {
+  Silk = 'silk',
+  Cotton = 'cotton',
+  Lace = 'lace',
+  Satin = 'satin',
+  Chiffon = 'chiffon',
 }
+
+
 
 export enum BookingStatus {
   Void = 'void',
@@ -70,7 +75,7 @@ export enum RecordType {
   Admin = 'admin',
   Supplier = 'supplier',
   User = 'user',
-  Car = 'car',
+  Dress = 'dress',
   Location = 'location',
   Country = 'country',
 }
@@ -78,12 +83,13 @@ export enum RecordType {
 export enum PaymentGateway {
   PayPal = 'payPal',
   Stripe = 'stripe',
+  Visa = 'visa',
 }
 
 export interface Booking {
   _id?: string
   supplier: string | User
-  car: string | Car
+  dress?: string | Dress
   driver?: string | User
   pickupLocation: string | Location
   dropOffLocation: string | Location
@@ -92,10 +98,6 @@ export interface Booking {
   status: BookingStatus
   cancellation?: boolean
   amendments?: boolean
-  theftProtection?: boolean
-  collisionDamageWaiver?: boolean
-  fullInsurance?: boolean
-  additionalDriver?: boolean
   _additionalDriver?: string | AdditionalDriver
   cancelRequest?: boolean
   price?: number
@@ -116,6 +118,7 @@ export interface CheckoutPayload {
   paymentIntentId?: string
   customerId?: string
   payPal?: boolean
+  visa?: boolean
 }
 
 export interface Filter {
@@ -131,7 +134,7 @@ export interface GetBookingsPayload {
   suppliers: string[]
   statuses: string[]
   user?: string
-  car?: string
+  dress?: string
   filter?: Filter
 }
 
@@ -177,12 +180,14 @@ export interface UpdateSupplierPayload {
   licenseRequired: boolean
   minimumRentalDays?: number
   priceChangeRate?: number
-  supplierCarLimit?: number
-  notifyAdminOnNewCar?: boolean
+  supplierDressLimit?: number
+  notifyAdminOnNewDress?: boolean
   blacklisted?: boolean
 }
 
-export interface CreateCarPayload {
+
+
+export interface CreateDressPayload {
   loggedUser: string
   name: string
   supplier: string
@@ -207,52 +212,50 @@ export interface CreateCarPayload {
   fullyBooked?: boolean
   comingSoon?: boolean
   type: string
-  gearbox: string
+  size: string
   aircon: boolean
   image?: string
-  seats: number
-  doors: number
-  fuelPolicy: string
-  mileage: number
+  color: string
+  length: number
+  material: string
   cancellation: number
   amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
   range: string
-  multimedia: string[]
+  accessories: string[]
   rating?: number
-  co2?: number
+  designerName?: string
 }
 
-export interface UpdateCarPayload extends CreateCarPayload {
+export interface UpdateDressPayload extends CreateDressPayload {
   _id: string
 }
 
-export interface CarSpecs {
+
+
+export interface DressSpecs {
   aircon?: boolean,
-  moreThanFourDoors?: boolean,
-  moreThanFiveSeats?: boolean,
+  designerMade?: boolean,
+  customSize?: boolean,
 }
 
-export interface GetCarsPayload {
+
+
+export interface GetDressesPayload {
   suppliers?: string[]
-  carSpecs?: CarSpecs
-  carType?: string[]
-  gearbox?: string[]
-  mileage?: string[]
-  fuelPolicy?: string[]
+  dressSpecs?: DressSpecs
+  dressType?: string[]
+  dressSize?: string[]
+  material?: string[]
   deposit?: number
   availability?: string[]
   pickupLocation?: string
   ranges?: string[]
-  multimedia?: string[]
+  accessories?: string[]
   rating?: number
-  seats?: number
+  color?: string
   days?: number
-  includeAlreadyBookedCars?: boolean
-  includeComingSoonCars?: boolean
+  includeAlreadyBookedDresses?: boolean
+  includeComingSoonDresses?: boolean
 }
 
 export interface SignUpPayload {
@@ -291,8 +294,8 @@ export interface CreateUserPayload {
   minimumRentalDays?: number
   license?: string
   priceChangeRate?: number
-  supplierCarLimit?: number
-  notifyAdminOnNewCar?: boolean
+  supplierDressLimit?: number
+  notifyAdminOnNewDress?: boolean
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -390,14 +393,14 @@ export interface User {
   accessToken?: string
   checked?: boolean
   customerId?: string
-  carCount?: number
+  dressCount?: number
   contracts?: Contract[]
   licenseRequired?: boolean
   license?: string | null
   minimumRentalDays?: number
   priceChangeRate?: number
-  supplierCarLimit?: number
-  notifyAdminOnNewCar?: boolean
+  supplierDressLimit?: number
+  notifyAdminOnNewDress?: boolean
 }
 
 export interface Option {
@@ -456,7 +459,9 @@ export interface DateBasedPrice {
 }
 
 
-export interface Car {
+
+
+export interface Dress {
   _id: string
   name: string
   supplier: User
@@ -481,25 +486,20 @@ export interface Car {
   available: boolean
   fullyBooked?: boolean
   comingSoon?: boolean
-  type: CarType
-  gearbox: GearboxType
+  type: DressType
+  size: DressSize
   aircon: boolean
   image?: string
-  seats: number
-  doors: number
-  fuelPolicy: FuelPolicy
-  mileage: number
+  color: string
+  length: number
+  material: DressMaterial
   cancellation: number
   amendments: number
-  theftProtection: number
-  collisionDamageWaiver: number
-  fullInsurance: number
-  additionalDriver: number
   range: string
-  multimedia: CarMultimedia[] | undefined
+  accessories: DressAccessories[] | undefined
   rating?: number
-  trips: number
-  co2?: number
+  rentals: number
+  designerName?: string
   [propKey: string]: any
 }
 
@@ -508,7 +508,9 @@ export interface Data<T> {
   rowCount: number
 }
 
-export interface GetBookingCarsPayload {
+
+
+export interface GetBookingDressesPayload {
   supplier: string
   pickupLocation: string
 }
@@ -518,7 +520,7 @@ export interface Notification {
   user: string
   message: string
   booking?: string
-  car?: string
+  dress?: string
   isRead?: boolean
   checked?: boolean
   createdAt?: Date
@@ -609,7 +611,7 @@ export interface UpsertBankDetailsPayload {
   showBankDetailsPage: boolean
 }
 
-// 
+//
 // React types
 //
 export type DataEvent<T> = (data?: Data<T>) => void
@@ -620,7 +622,7 @@ export interface StatusFilterItem {
   checked?: boolean
 }
 
-export interface CarFilter {
+export interface DressFilter {
   pickupLocation: Location
   dropOffLocation: Location
   from: Date
@@ -629,6 +631,8 @@ export interface CarFilter {
 
 export type CarFilterSubmitEvent = (filter: CarFilter) => void
 
+export type DressFilterSubmitEvent = (filter: DressFilter) => void
+
 export interface CarOptions {
   cancellation?: boolean
   amendments?: boolean
@@ -636,4 +640,14 @@ export interface CarOptions {
   collisionDamageWaiver?: boolean
   fullInsurance?: boolean
   additionalDriver?: boolean
+}
+
+export interface DressOptions {
+  cancellation?: boolean
+  amendments?: boolean
+  theftProtection?: boolean
+  collisionDamageWaiver?: boolean
+  fullInsurance?: boolean
+  additionalDriver?: boolean
+  accessories?: boolean
 }
