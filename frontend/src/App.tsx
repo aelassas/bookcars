@@ -8,6 +8,7 @@ import { PayPalProvider } from '@/context/PayPalContext'
 import { init as initGA } from '@/common/ga4'
 import ScrollToTop from '@/components/ScrollToTop'
 import NProgressIndicator from '@/components/NProgressIndicator'
+import * as UserService from '@/services/UserService'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
@@ -41,6 +42,16 @@ const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 const AppLayout = () => {
   const location = useLocation()
   const [refreshKey, setRefreshKey] = useState(0) // refreshKey to check user and notifications when navigating between routes
+  const [isRTL, setIsRTL] = useState(false)
+
+  useEffect(() => {
+    // Set document direction based on language
+    const language = UserService.getLanguage()
+    const rtl = language === 'ar'
+    setIsRTL(rtl)
+    document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr')
+    document.body.setAttribute('dir', rtl ? 'rtl' : 'ltr')
+  }, [])
 
   useEffect(() => {
     setRefreshKey((prev) => prev + 1)

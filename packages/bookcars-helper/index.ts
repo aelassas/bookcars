@@ -245,18 +245,18 @@ export const formatPrice = (price: number, currency: string, language: string) =
 /**
  * Calculate total price.
  *
- * @param {bookcarsTypes.Car} car
+ * @param {bookcarsTypes.Dress} dress
  * @param {Date} from
  * @param {Date} to
  * @param {number} priceChangeRate
- * @param {?bookcarsTypes.CarOptions} [options]
+ * @param {?bookcarsTypes.DressOptions} [options]
  * @returns {number}
  */
-export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, priceChangeRate: number, options?: bookcarsTypes.CarOptions) => {
+export const calculateTotalPrice = (dress: bookcarsTypes.Dress, from: Date, to: Date, priceChangeRate: number, options?: bookcarsTypes.DressOptions) => {
   let totalPrice = 0
   const totalDays = days(from, to)
 
-  if (car.isDateBasedPrice) {
+  if (dress.isDateBasedPrice) {
     let currentDate = new Date(from)
 
     // Reset time to 00:00:00 before loop
@@ -265,10 +265,10 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     // Loop until the last day is reached
     let currentDay = 1
     while (currentDay <= totalDays) {
-      let applicableRate = (car.discountedDailyPrice || car.dailyPrice)
+      let applicableRate = (dress.discountedDailyPrice || dress.dailyPrice)
 
       // Check if a custom rate applies
-      for (const dateBasedPrice of car.dateBasedPrices) {
+      for (const dateBasedPrice of dress.dateBasedPrices) {
         // Ensure startDate and endDate are also normalized
         const _startDate = new Date(dateBasedPrice.startDate!)
         _startDate.setHours(0, 0, 0, 0)
@@ -290,66 +290,66 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     let remainingDays = totalDays
 
     if (remainingDays >= 30) { // higher than one month
-      if (car.discountedMonthlyPrice || car.monthlyPrice) {
-        totalPrice = (car.discountedMonthlyPrice || car.monthlyPrice)! * (Math.floor(totalDays / 30))
+      if (dress.discountedMonthlyPrice || dress.monthlyPrice) {
+        totalPrice = (dress.discountedMonthlyPrice || dress.monthlyPrice)! * (Math.floor(totalDays / 30))
         remainingDays = totalDays % 30
       }
 
       if (remainingDays >= 7) {
-        if (car.discountedWeeklyPrice || car.weeklyPrice) {
-          totalPrice += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        if (dress.discountedWeeklyPrice || dress.weeklyPrice) {
+          totalPrice += (dress.discountedWeeklyPrice || dress.weeklyPrice)! * (Math.floor(remainingDays / 7))
           remainingDays = remainingDays % 7
         }
 
         if (remainingDays >= 3) {
-          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          if ((dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)) {
+            totalPrice += (dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
             remainingDays = remainingDays % 3
           }
 
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         } else {
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         }
       } else {
         if (remainingDays >= 3) {
-          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          if ((dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)) {
+            totalPrice += (dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
             remainingDays = remainingDays % 3
           }
 
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         } else {
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         }
       }
     } else { // lower than one month
       if (remainingDays >= 7) {
-        if (car.discountedWeeklyPrice || car.weeklyPrice) {
-          totalPrice += (car.discountedWeeklyPrice || car.weeklyPrice)! * (Math.floor(remainingDays / 7))
+        if (dress.discountedWeeklyPrice || dress.weeklyPrice) {
+          totalPrice += (dress.discountedWeeklyPrice || dress.weeklyPrice)! * (Math.floor(remainingDays / 7))
           remainingDays = remainingDays % 7
         }
 
         if (remainingDays >= 3) {
-          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          if ((dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)) {
+            totalPrice += (dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
             remainingDays = remainingDays % 3
           }
 
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         } else {
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         }
       } else {
         if (remainingDays >= 3) {
-          if ((car.discountedBiWeeklyPrice || car.biWeeklyPrice)) {
-            totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
+          if ((dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)) {
+            totalPrice += (dress.discountedBiWeeklyPrice || dress.biWeeklyPrice)! * (Math.floor(remainingDays / 3))
             remainingDays = remainingDays % 3
           }
 
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         } else {
-          totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
+          totalPrice += (dress.discountedDailyPrice || dress.dailyPrice) * remainingDays
         }
       }
     }
@@ -357,23 +357,23 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
 
   // add extra options
   if (options) {
-    if (options.cancellation && car.cancellation > 0) {
-      totalPrice += car.cancellation
+    if (options.cancellation && dress.cancellation > 0) {
+      totalPrice += dress.cancellation
     }
-    if (options.amendments && car.amendments > 0) {
-      totalPrice += car.amendments
+    if (options.amendments && dress.amendments > 0) {
+      totalPrice += dress.amendments
     }
-    if (options.theftProtection && car.theftProtection > 0) {
-      totalPrice += car.theftProtection * totalDays
+    if (options.theftProtection && dress.theftProtection > 0) {
+      totalPrice += dress.theftProtection * totalDays
     }
-    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-      totalPrice += car.collisionDamageWaiver * totalDays
+    if (options.collisionDamageWaiver && dress.collisionDamageWaiver > 0) {
+      totalPrice += dress.collisionDamageWaiver * totalDays
     }
-    if (options.fullInsurance && car.fullInsurance > 0) {
-      totalPrice += car.fullInsurance * totalDays
+    if (options.fullInsurance && dress.fullInsurance > 0) {
+      totalPrice += dress.fullInsurance * totalDays
     }
-    if (options.additionalDriver && car.additionalDriver > 0) {
-      totalPrice += car.additionalDriver * totalDays
+    if (options.additionalDriver && dress.additionalDriver > 0) {
+      totalPrice += dress.additionalDriver * totalDays
     }
   }
 
@@ -423,17 +423,17 @@ export const checkCurrency = (currency: string) => currencies.findIndex((c) => c
 export const isFrench = (language?: string) => language === 'fr'
 
 /**
- * Return all car types.
+ * Return all dress types.
  *
- * @returns {bookcarsTypes.CarType[]}
+ * @returns {bookcarsTypes.DressType[]}
  */
-export const getAllCarTypes = () => [
-  bookcarsTypes.CarType.Diesel,
-  bookcarsTypes.CarType.Gasoline,
-  bookcarsTypes.CarType.Electric,
-  bookcarsTypes.CarType.Hybrid,
-  bookcarsTypes.CarType.PlugInHybrid,
-  bookcarsTypes.CarType.Unknown
+export const getAllDressTypes = () => [
+  bookcarsTypes.DressType.Traditional,
+  bookcarsTypes.DressType.Modern,
+  bookcarsTypes.DressType.Designer,
+  bookcarsTypes.DressType.Vintage,
+  bookcarsTypes.DressType.Casual,
+  bookcarsTypes.DressType.Unknown
 ]
 
 /**
@@ -451,42 +451,43 @@ export const shuffle = (array: any[]) => {
 }
 
 /**
- * Return all car ranges.
+ * Return all dress ranges.
  *
- * @returns {bookcarsTypes.CarRange[]}
+ * @returns {bookcarsTypes.DressRange[]}
  */
 export const getAllRanges = () => [
-  bookcarsTypes.CarRange.Mini,
-  bookcarsTypes.CarRange.Midi,
-  bookcarsTypes.CarRange.Maxi,
-  bookcarsTypes.CarRange.Scooter,
-  bookcarsTypes.CarRange.Bus,
-  bookcarsTypes.CarRange.Truck,
-  bookcarsTypes.CarRange.Caravan,
+  bookcarsTypes.DressRange.Mini,
+  bookcarsTypes.DressRange.Midi,
+  bookcarsTypes.DressRange.Maxi,
+  bookcarsTypes.DressRange.Bridal,
+  bookcarsTypes.DressRange.Evening,
+  bookcarsTypes.DressRange.Cocktail,
+  bookcarsTypes.DressRange.Casual,
 ]
 
 /**
- * Return all multimedia types.
+ * Return all dress accessories.
  *
- * @returns {bookcarsTypes.CarMultimedia[]}
+ * @returns {bookcarsTypes.DressAccessories[]}
  */
-export const getAllMultimedias = () => [
-  bookcarsTypes.CarMultimedia.Touchscreen,
-  bookcarsTypes.CarMultimedia.Bluetooth,
-  bookcarsTypes.CarMultimedia.AndroidAuto,
-  bookcarsTypes.CarMultimedia.AppleCarPlay,
+export const getAllAccessories = () => [
+  bookcarsTypes.DressAccessories.Veil,
+  bookcarsTypes.DressAccessories.Jewelry,
+  bookcarsTypes.DressAccessories.Shoes,
+  bookcarsTypes.DressAccessories.Headpiece,
 ]
 
 /**
- * Return all fuel policies.
+ * Return all dress materials.
  *
- * @returns {bookcarsTypes.FuelPolicy[]}
+ * @returns {bookcarsTypes.DressMaterial[]}
  */
-export const getAllFuelPolicies = () => [
-  bookcarsTypes.FuelPolicy.FreeTank,
-  bookcarsTypes.FuelPolicy.LikeForLike,
-  bookcarsTypes.FuelPolicy.FullToFull,
-  bookcarsTypes.FuelPolicy.FullToEmpty,
+export const getAllMaterials = () => [
+  bookcarsTypes.DressMaterial.Silk,
+  bookcarsTypes.DressMaterial.Cotton,
+  bookcarsTypes.DressMaterial.Lace,
+  bookcarsTypes.DressMaterial.Satin,
+  bookcarsTypes.DressMaterial.Chiffon,
 ]
 
 /**
@@ -598,9 +599,9 @@ export const delay = (milliseconds: number) => new Promise((resolve) => {
 /**
  * Truncates a string.
  *
- * @param {string} str 
- * @param {number} maxLength 
- * @returns {string} 
+ * @param {string} str
+ * @param {number} maxLength
+ * @returns {string}
  */
 export const truncateString = (str: string, maxLength: number) => {
   if (str.length <= maxLength) {

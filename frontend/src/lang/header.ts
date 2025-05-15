@@ -50,6 +50,22 @@ const strings = new LocalizedStrings({
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
   },
+  ar: {
+    SIGN_IN: 'تسجيل الدخول',
+    HOME: 'الرئيسية',
+    BOOKINGS: 'الحجوزات',
+    ABOUT: 'حول',
+    TOS: 'شروط الخدمة',
+    CONTACT: 'اتصل بنا',
+    LANGUAGE: 'اللغة',
+    SETTINGS: 'الإعدادات',
+    SIGN_OUT: 'تسجيل الخروج',
+    SUPPLIERS: 'الموردين',
+    LOCATIONS: 'المواقع',
+    PRIVACY_POLICY: 'سياسة الخصوصية',
+    FAQ: 'الأسئلة الشائعة',
+    COOKIE_POLICY: 'سياسة ملفات تعريف الارتباط',
+  },
 })
 
 langHelper.setLanguage(strings)

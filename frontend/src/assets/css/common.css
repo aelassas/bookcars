@@ -4,6 +4,41 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+/* RTL Support for Arabic */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .buttons button {
+  margin-left: 15px;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .btn-margin {
+  margin-left: 10px !important;
+  margin-right: 0 !important;
+}
+
+[dir="rtl"] .avatar-action-icon {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+[dir="rtl"] .info span {
+  margin-right: 5px;
+  margin-left: 0;
+}
+
+[dir="rtl"] .dialog-actions {
+  margin-left: 5px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .d-adornment {
+  margin-left: -13px;
+  margin-right: 0;
+}
+
 .grecaptcha-badge {
   visibility: hidden !important;
 }

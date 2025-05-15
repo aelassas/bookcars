@@ -53,6 +53,22 @@ const strings = new LocalizedStrings({
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
   },
+  ar: {
+    COPYRIGHT_PART1,
+    COPYRIGHT_PART2: '. جميع الحقوق محفوظة.',
+    CORPORATE: 'الشركة',
+    ABOUT: 'من نحن',
+    TOS: 'شروط الخدمة',
+    RENT: 'استئجار فستان',
+    SUPPLIERS: 'الموردين',
+    LOCATIONS: 'المواقع',
+    SUPPORT: 'الدعم',
+    CONTACT: 'اتصل بنا',
+    SECURE_PAYMENT: `دفع آمن 100% مع ${env.WEBSITE_NAME}`,
+    PRIVACY_POLICY: 'سياسة الخصوصية',
+    FAQ: 'الأسئلة الشائعة',
+    COOKIE_POLICY: 'سياسة ملفات تعريف الارتباط',
+  },
 })
 
 langHelper.setLanguage(strings)

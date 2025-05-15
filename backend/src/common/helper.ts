@@ -42,18 +42,30 @@ export const error = (err?: unknown, message?: string) => {
 }
 
 /**
- * Get car type label.
+ * Get dress type label.
  *
  * @param {string} type
  * @returns {string}
  */
-export const getCarType = (type: string) => {
+export const getDressType = (type: string) => {
   switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL
+    case bookcarsTypes.DressType.Traditional:
+      return strings.TRADITIONAL
 
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE
+    case bookcarsTypes.DressType.Modern:
+      return strings.MODERN
+
+    case bookcarsTypes.DressType.Designer:
+      return strings.DESIGNER
+
+    case bookcarsTypes.DressType.Vintage:
+      return strings.VINTAGE
+
+    case bookcarsTypes.DressType.Casual:
+      return strings.CASUAL
+
+    case bookcarsTypes.DressType.Unknown:
+      return strings.UNKNOWN
 
     default:
       return ''
@@ -61,27 +73,30 @@ export const getCarType = (type: string) => {
 }
 
 /**
- * Get short car type label.
+ * Get short dress type label.
  *
  * @param {string} type
  * @returns {string}
  */
-export const getCarTypeShort = (type: string) => {
+export const getDressTypeShort = (type: string) => {
   switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL_SHORT
+    case bookcarsTypes.DressType.Traditional:
+      return strings.TRADITIONAL_SHORT
 
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE_SHORT
+    case bookcarsTypes.DressType.Modern:
+      return strings.MODERN_SHORT
 
-    case bookcarsTypes.CarType.Electric:
-      return strings.ELECTRIC_SHORT
+    case bookcarsTypes.DressType.Designer:
+      return strings.DESIGNER_SHORT
 
-    case bookcarsTypes.CarType.Hybrid:
-      return strings.HYBRID_SHORT
+    case bookcarsTypes.DressType.Vintage:
+      return strings.VINTAGE_SHORT
 
-    case bookcarsTypes.CarType.PlugInHybrid:
-      return strings.PLUG_IN_HYBRID_SHORT
+    case bookcarsTypes.DressType.Casual:
+      return strings.CASUAL_SHORT
+
+    case bookcarsTypes.DressType.Unknown:
+      return strings.UNKNOWN_SHORT
 
     default:
       return ''
@@ -89,18 +104,24 @@ export const getCarTypeShort = (type: string) => {
 }
 
 /**
- * Get gearbox type label.
+ * Get dress size label.
  *
- * @param {string} type
+ * @param {string} size
  * @returns {string}
  */
-export const getGearboxType = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL
+export const getDressSize = (size: string) => {
+  switch (size) {
+    case bookcarsTypes.DressSize.Small:
+      return strings.SMALL
 
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC
+    case bookcarsTypes.DressSize.Medium:
+      return strings.MEDIUM
+
+    case bookcarsTypes.DressSize.Large:
+      return strings.LARGE
+
+    case bookcarsTypes.DressSize.ExtraLarge:
+      return strings.EXTRA_LARGE
 
     default:
       return ''
@@ -108,18 +129,60 @@ export const getGearboxType = (type: string) => {
 }
 
 /**
- * Get short gearbox type label.
+ * Get dress material label.
+ *
+ * @param {string} material
+ * @returns {string}
+ */
+export const getDressMaterial = (material: string) => {
+  switch (material) {
+    case bookcarsTypes.DressMaterial.Silk:
+      return strings.SILK
+
+    case bookcarsTypes.DressMaterial.Cotton:
+      return strings.COTTON
+
+    case bookcarsTypes.DressMaterial.Lace:
+      return strings.LACE
+
+    case bookcarsTypes.DressMaterial.Satin:
+      return strings.SATIN
+
+    case bookcarsTypes.DressMaterial.Chiffon:
+      return strings.CHIFFON
+
+    default:
+      return ''
+  }
+}
+
+
+
+/**
+ * Get dress type tooltip.
  *
  * @param {string} type
  * @returns {string}
  */
-export const getGearboxTypeShort = (type: string) => {
+export const getDressTypeTooltip = (type: string) => {
   switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL_SHORT
+    case bookcarsTypes.DressType.Traditional:
+      return strings.TRADITIONAL_TOOLTIP
 
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC_SHORT
+    case bookcarsTypes.DressType.Modern:
+      return strings.MODERN_TOOLTIP
+
+    case bookcarsTypes.DressType.Designer:
+      return strings.DESIGNER_TOOLTIP
+
+    case bookcarsTypes.DressType.Vintage:
+      return strings.VINTAGE_TOOLTIP
+
+    case bookcarsTypes.DressType.Casual:
+      return strings.CASUAL_TOOLTIP
+
+    case bookcarsTypes.DressType.Unknown:
+      return strings.UNKNOWN_TOOLTIP
 
     default:
       return ''
@@ -127,71 +190,24 @@ export const getGearboxTypeShort = (type: string) => {
 }
 
 /**
- * Get fuel policy label.
+ * Get dress size tooltip.
  *
- * @param {string} type
+ * @param {string} size
  * @returns {string}
  */
-export const getFuelPolicy = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.FuelPolicy.LikeForLike:
-      return strings.FUEL_POLICY_LIKE_FOR_LIKE
+export const getDressSizeTooltip = (size: string) => {
+  switch (size) {
+    case bookcarsTypes.DressSize.Small:
+      return strings.SMALL_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FreeTank:
-      return strings.FUEL_POLICY_FREE_TANK
+    case bookcarsTypes.DressSize.Medium:
+      return strings.MEDIUM_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FullToFull:
-      return strings.FUEL_POLICY_FULL_TO_FULL
+    case bookcarsTypes.DressSize.Large:
+      return strings.LARGE_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FullToEmpty:
-      return strings.FUEL_POLICY_FULL_TO_EMPTY
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get car type tooltip.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getCarTypeTooltip = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.CarType.Diesel:
-      return strings.DIESEL_TOOLTIP
-
-    case bookcarsTypes.CarType.Gasoline:
-      return strings.GASOLINE_TOOLTIP
-
-    case bookcarsTypes.CarType.Electric:
-      return strings.ELECTRIC_TOOLTIP
-
-    case bookcarsTypes.CarType.Hybrid:
-      return strings.HYBRID_TOOLTIP
-
-    case bookcarsTypes.CarType.PlugInHybrid:
-      return strings.PLUG_IN_HYBRID_TOOLTIP
-
-    default:
-      return ''
-  }
-}
-
-/**
- * Get gearbox tooltip.
- *
- * @param {string} type
- * @returns {string}
- */
-export const getGearboxTooltip = (type: string) => {
-  switch (type) {
-    case bookcarsTypes.GearboxType.Manual:
-      return strings.GEARBOX_MANUAL_TOOLTIP
-
-    case bookcarsTypes.GearboxType.Automatic:
-      return strings.GEARBOX_AUTOMATIC_TOOLTIP
+    case bookcarsTypes.DressSize.ExtraLarge:
+      return strings.EXTRA_LARGE_TOOLTIP
 
     default:
       return ''
@@ -215,24 +231,27 @@ export const getSeatsTooltip = (seats: number) => `${strings.SEATS_TOOLTIP_1}${s
 export const getDoorsTooltip = (doors: number) => `${strings.DOORS_TOOLTIP_1}${doors} ${strings.DOORS_TOOLTIP_2}`
 
 /**
- * Get fuel policy tooltip.
+ * Get dress material tooltip.
  *
- * @param {string} fuelPolicy
+ * @param {string} material
  * @returns {string}
  */
-export const getFuelPolicyTooltip = (fuelPolicy: string) => {
-  switch (fuelPolicy) {
-    case bookcarsTypes.FuelPolicy.LikeForLike:
-      return strings.FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP
+export const getDressMaterialTooltip = (material: string) => {
+  switch (material) {
+    case bookcarsTypes.DressMaterial.Silk:
+      return strings.SILK_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FreeTank:
-      return strings.FUEL_POLICY_FREE_TANK_TOOLTIP
+    case bookcarsTypes.DressMaterial.Cotton:
+      return strings.COTTON_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FullToFull:
-      return strings.FUEL_POLICY_FULL_TO_FULL_TOOLTIP
+    case bookcarsTypes.DressMaterial.Lace:
+      return strings.LACE_TOOLTIP
 
-    case bookcarsTypes.FuelPolicy.FullToEmpty:
-      return strings.FUEL_POLICY_FULL_TO_EMPTY_TOOLTIP
+    case bookcarsTypes.DressMaterial.Satin:
+      return strings.SATIN_TOOLTIP
+
+    case bookcarsTypes.DressMaterial.Chiffon:
+      return strings.CHIFFON_TOOLTIP
 
     default:
       return ''
@@ -703,14 +722,14 @@ export const getBirthDateError = (minimumAge: number) =>
   `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`
 
 /**
- * Check whether a car option is available or not.
+ * Check whether a dress option is available or not.
  *
- * @param {(bookcarsTypes.Car | undefined)} car
+ * @param {(bookcarsTypes.Dress | undefined)} dress
  * @param {string} option
  * @returns {boolean}
  */
-export const carOptionAvailable = (car: bookcarsTypes.Car | undefined, option: string) =>
-  car && option in car && (car[option] as number) > -1
+export const dressOptionAvailable = (dress: bookcarsTypes.Dress | undefined, option: string) =>
+  dress && option in dress && (dress[option] as number) > -1
 
 /**
  * Validate URL string.
@@ -739,33 +758,33 @@ export const downloadURI = (uri: string, name: string = '') => {
 }
 
 /**
- * Get car range label.
+ * Get dress range label.
  *
  * @param {string} range
  * @returns {string}
  */
-export const getCarRange = (range: bookcarsTypes.CarRange) => {
+export const getDressRange = (range: bookcarsTypes.DressRange) => {
   switch (range) {
-    case bookcarsTypes.CarRange.Mini:
-      return strings.CAR_RANGE_MINI
+    case bookcarsTypes.DressRange.Mini:
+      return strings.DRESS_RANGE_MINI
 
-    case bookcarsTypes.CarRange.Midi:
-      return strings.CAR_RANGE_MIDI
+    case bookcarsTypes.DressRange.Midi:
+      return strings.DRESS_RANGE_MIDI
 
-    case bookcarsTypes.CarRange.Maxi:
-      return strings.CAR_RANGE_MAXI
+    case bookcarsTypes.DressRange.Maxi:
+      return strings.DRESS_RANGE_MAXI
 
-    case bookcarsTypes.CarRange.Scooter:
-      return strings.CAR_RANGE_SCOOTER
+    case bookcarsTypes.DressRange.Bridal:
+      return strings.DRESS_RANGE_BRIDAL
 
-    case bookcarsTypes.CarRange.Bus:
-      return strings.CAR_RANGE_BUS
+    case bookcarsTypes.DressRange.Evening:
+      return strings.DRESS_RANGE_EVENING
 
-    case bookcarsTypes.CarRange.Truck:
-      return strings.CAR_RANGE_TRUCK
+    case bookcarsTypes.DressRange.Cocktail:
+      return strings.DRESS_RANGE_COCKTAIL
 
-    case bookcarsTypes.CarRange.Caravan:
-      return strings.CAR_RANGE_CARAVAN
+    case bookcarsTypes.DressRange.Casual:
+      return strings.DRESS_RANGE_CASUAL
 
     default:
       return ''

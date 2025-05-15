@@ -24,6 +24,13 @@ const strings = new LocalizedStrings({
     MIN_PICK_UP_HOURS_ERROR: `La hora de recogida del vehículo debe ser al menos ${env.MIN_PICK_UP_HOURS} hora${env.MIN_PICK_UP_HOURS > 1 ? 's' : ''} en el futuro`,
     MIN_RENTAL_HOURS_ERROR: `Debe haber al menos ${env.MIN_RENTAL_HOURS} hora${env.MIN_RENTAL_HOURS > 1 ? 's' : ''} entre la recogida y la devolución del vehículo`,
   },
+  ar: {
+    PICK_UP_DATE: 'تاريخ الاستلام',
+    DROP_OFF_DATE: 'تاريخ التسليم',
+    DROP_OFF: 'إعادة إلى نفس الموقع',
+    MIN_PICK_UP_HOURS_ERROR: `يجب أن يكون وقت الاستلام بعد ${env.MIN_PICK_UP_HOURS} ساعة على الأقل من الآن`,
+    MIN_RENTAL_HOURS_ERROR: `يجب أن يكون هناك ${env.MIN_RENTAL_HOURS} ساعة على الأقل بين الاستلام والتسليم`,
+  },
 })
 
 langHelper.setLanguage(strings)

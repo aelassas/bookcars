@@ -631,25 +631,11 @@ export interface DressFilter {
   to: Date
 }
 
-export interface CarFilter {
-  pickupLocation: Location
-  dropOffLocation: Location
-  from: Date
-  to: Date
-}
 
-export type CarFilterSubmitEvent = (filter: CarFilter) => void
 
 export type DressFilterSubmitEvent = (filter: DressFilter) => void
 
-export interface CarOptions {
-  cancellation?: boolean
-  amendments?: boolean
-  theftProtection?: boolean
-  collisionDamageWaiver?: boolean
-  fullInsurance?: boolean
-  additionalDriver?: boolean
-}
+
 
 export interface DressOptions {
   cancellation?: boolean

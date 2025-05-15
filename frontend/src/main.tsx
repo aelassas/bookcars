@@ -116,6 +116,11 @@ if (lang) {
   const updateLang = (_lang: string) => {
     UserService.setLanguage(_lang)
 
+    // Set document direction based on language
+    const rtl = _lang === 'ar'
+    document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr')
+    document.body.setAttribute('dir', rtl ? 'rtl' : 'ltr')
+
     activateStrings.setLanguage(_lang)
     bookingStrings.setLanguage(_lang)
     bookingCarListStrings.setLanguage(_lang)
@@ -169,6 +174,12 @@ if (lang) {
 language = UserService.getLanguage()
 const isFr = language === 'fr'
 const isEs = language === 'es'
+const isAr = language === 'ar'
+
+// Set document direction based on language
+const rtl = isAr
+document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr')
+document.body.setAttribute('dir', rtl ? 'rtl' : 'ltr')
 
 const theme = createTheme(
   {
