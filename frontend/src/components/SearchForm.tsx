@@ -51,7 +51,7 @@ const SearchForm = ({
     handleSubmit,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     clearErrors,
   } = useForm<FormFields>({
@@ -279,7 +279,7 @@ const SearchForm = ({
         />
         <FormHelperText error={!!errors.to}>{errors.to?.message}</FormHelperText>
       </FormControl>
-      <Button type="submit" variant="contained" className="btn-search">
+      <Button type="submit" variant="contained" className="btn-search" disabled={isSubmitting}>
         {commonStrings.SEARCH}
       </Button>
       {onCancel && (
