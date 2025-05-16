@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "rimraf ./tsconfig.tsbuildinfo ./index.js ./index.d.ts ./check.js ./check.d.ts && tsc --build --verbose",
-    "check": "npm run build && node check.js"
+    "check": "npm run build && node check.js",
+    "lint": "eslint ."
   },
   "author": "Akram El Assas",
   "license": "ISC",
@@ -16,6 +17,9 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"
   }

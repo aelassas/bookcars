@@ -283,7 +283,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
 
       totalPrice += applicableRate
       currentDate.setDate(currentDate.getDate() + 1)
-      currentDate.setHours(0, 0, 0, 0); // Ensure time is reset
+      currentDate.setHours(0, 0, 0, 0) // Ensure time is reset
       currentDay += 1
     }
   } else {
