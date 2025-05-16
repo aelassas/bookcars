@@ -8,7 +8,6 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
@@ -17,14 +16,9 @@ import { strings } from '@/lang/newsletter-form'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
 import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
+import { schema, FormFields } from '@/models/NewsletterForm'
 
 import '@/assets/css/newsletter-form.css'
-
-const schema = z.object({
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID })
-})
-
-type FormFields = z.infer<typeof schema>
 
 const NewsletterForm = () => {
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
