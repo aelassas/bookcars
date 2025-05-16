@@ -523,31 +523,36 @@ const Checkout = () => {
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                             <OutlinedInput
-                              {...register('email', {
-                                onBlur: async (e) => {
-                                  const email = e.target.value
-
-                                  if (validateEmail(email)) {
-                                    const status = await UserService.validateEmail({ email })
-                                    if (status === 200) {
-                                      setEmailRegistered(false)
-                                      setEmailInfo(true)
-                                    } else {
-                                      setEmailRegistered(true)
-                                      setEmailInfo(false)
-                                    }
-                                  } else {
-                                    setEmailRegistered(false)
-                                    setEmailInfo(false)
-                                  }
-                                }
-                              })}
+                              // {...register('email')}
                               type="text"
                               label={commonStrings.EMAIL}
                               error={!!errors.email || emailRegistered}
                               required
                               autoComplete="off"
-                              onChange={() => clearErrors('email')}
+                              onChange={(e) => {
+                                clearErrors('email')
+                                setEmailRegistered(false)
+                                setEmailInfo(false)
+                                setValue('email', e.target.value)
+                              }}
+                              onBlur={async (e) => {
+                                trigger('email')
+                                const email = e.target.value
+
+                                if (validateEmail(email)) {
+                                  const status = await UserService.validateEmail({ email })
+                                  if (status === 200) {
+                                    setEmailRegistered(false)
+                                    setEmailInfo(true)
+                                  } else {
+                                    setEmailRegistered(true)
+                                    setEmailInfo(false)
+                                  }
+                                } else {
+                                  setEmailRegistered(false)
+                                  setEmailInfo(false)
+                                }
+                              }}
                             />
                             <FormHelperText error={!!errors.email || emailRegistered}>
                               {(errors.email && errors.email.message) || ''}
@@ -565,19 +570,21 @@ const Checkout = () => {
                           <FormControl fullWidth margin="dense">
                             <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                             <OutlinedInput
-                              {...register('phone', {
-                                onBlur: (e) => {
-                                  const phone = e.target.value
-
-                                  setPhoneInfo(validatePhone(phone))
-                                }
-                              })}
+                              // {...register('phone')}
                               type="text"
                               label={commonStrings.PHONE}
                               error={!!errors.phone}
                               required
                               autoComplete="off"
-                              onChange={() => clearErrors('phone')}
+                              onChange={(e) => {
+                                clearErrors('phone')
+                                setPhoneInfo(false)
+                                setValue('phone', e.target.value)
+                              }}
+                              onBlur={(e) => {
+                                trigger('phone')
+                                setPhoneInfo(validatePhone(e.target.value))
+                              }}
                             />
                             <FormHelperText error={!!errors.phone}>
                               {(errors.phone && errors.phone.message) || ''}
