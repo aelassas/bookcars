@@ -69,6 +69,9 @@ const Search = () => {
   const [searchRadius, setSearchRadius] = useState<number>(25) // Default radius of 25km
   // const [loadingPage, setLoadingPage] = useState(true)
 
+  // Add state for coordinates from CarFilter
+  const [pickupCoordinatesFromFilter, setPickupCoordinatesFromFilter] = useState<{ latitude: number, longitude: number, address: string } | null>(null)
+
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
@@ -101,13 +104,17 @@ const Search = () => {
           days: bookcarsHelper.days(from, to),
         }
 
-        // Add coordinates for coordinate-based search if available
-        if (searchCoordinates && searchRadius) {
-          payload.coordinates = searchCoordinates
+        // Add coordinates for coordinate-based search if available 
+        // Updated to check for coordinates from filter as well
+        if ((searchCoordinates || pickupCoordinatesFromFilter) && searchRadius) {
+          payload.coordinates = searchCoordinates || {
+            latitude: pickupCoordinatesFromFilter!.latitude,
+            longitude: pickupCoordinatesFromFilter!.longitude
+          }
           payload.radius = searchRadius
           
           // Important: If we have coordinates, we shouldn't send the invalid location ID
-          if (pickupLocation._id === '000000000000000000000000') {
+          if (pickupLocation._id === '000000000000000000000000' || pickupLocation._id.startsWith('place_')) {
             delete payload.pickupLocation
           }
         }
@@ -120,7 +127,7 @@ const Search = () => {
     if (from && to) {
       updateSuppliers()
     }
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to, searchCoordinates, searchRadius])
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to, searchCoordinates, pickupCoordinatesFromFilter, searchRadius])
 
   const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
     if (suppliers.length < allSuppliers.length) {
@@ -132,6 +139,21 @@ const Search = () => {
     setDropOffLocation(filter.dropOffLocation)
     setFrom(filter.from)
     setTo(filter.to)
+    
+    // Handle coordinates if available in the filter
+    // @ts-ignore - accessing custom properties from the filter
+    if (filter.pickupCoordinates) {
+      // @ts-ignore - accessing custom properties from the filter
+      setPickupCoordinatesFromFilter(filter.pickupCoordinates)
+      setSearchCoordinates({
+        // @ts-ignore - accessing custom properties from the filter
+        latitude: filter.pickupCoordinates.latitude,
+        // @ts-ignore - accessing custom properties from the filter
+        longitude: filter.pickupCoordinates.longitude
+      })
+      // @ts-ignore - accessing custom properties from the filter
+      setSearchAddress(filter.pickupCoordinates.address || '')
+    }
   }
 
   const handleSupplierFilterChange = (newSuppliers: string[]) => {
@@ -383,7 +405,9 @@ const Search = () => {
                   className="map"
                   initialZoom={10}
 
-                />
+                >
+                   <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
+                </Map>
             )}
             {pickupLocation && dropOffLocation && from && to && (
               <CarFilter
@@ -451,14 +475,6 @@ const Search = () => {
               includeAlreadyBookedCars={false}
               includeComingSoonCars={false}
             />
-            
-            {env.isMobile && (
-              <ViewOnMapButton
-                onClick={() => {
-                  setOpenMapDialog(true)
-                }}
-              />
-            )}
           </div>
 
           <MapDialog
@@ -470,6 +486,7 @@ const Search = () => {
               setOpenMapDialog(false)
             }}
           />
+          
         </div>
       )}
 
