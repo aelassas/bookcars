@@ -10,9 +10,7 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import validator from 'validator'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -26,18 +24,9 @@ import Avatar from '@/components/Avatar'
 import * as helper from '@/common/helper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import BankDetailsForm from '@/components/BankDetailsForm'
+import { schema, FormFields } from '@/models/SettingsForm'
 
 import '@/assets/css/settings.css'
-
-const schema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
-  phone: z.string().refine((value) => !value || validator.isMobilePhone(value), { message: commonStrings.PHONE_NOT_VALID }).optional(),
-  location: z.string().optional(),
-  bio: z.string().optional(),
-})
-
-type FormFields = z.infer<typeof schema>
 
 const Settings = () => {
   const navigate = useNavigate()
@@ -156,7 +145,8 @@ const Settings = () => {
                 mode="update"
                 record={user}
                 size="large"
-                readonly={false}
+                // readonly={false}
+                readonly
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 hideDelete={!admin}
@@ -188,7 +178,7 @@ const Settings = () => {
                 <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate('/change-password')}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled>
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>

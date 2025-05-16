@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
@@ -11,14 +10,9 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/reset-password'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
+import { schema, FormFields } from '@/models/ForgotPasswordForm'
 
 import '@/assets/css/forgot-password.css'
-
-const schema = z.object({
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID })
-})
-
-type FormFields = z.infer<typeof schema>
 
 const ForgotPassword = () => {
   const navigate = useNavigate()

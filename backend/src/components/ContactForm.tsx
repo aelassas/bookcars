@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
@@ -18,18 +17,10 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/contact-form'
 import * as UserService from '@/services/UserService'
 import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
-
 import * as helper from '@/common/helper'
+import { schema, FormFields } from '@/models/ContactForm'
 
 import '@/assets/css/contact-form.css'
-
-const schema = z.object({
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
-  subject: z.string(),
-  message: z.string(),
-})
-
-type FormFields = z.infer<typeof schema>
 
 interface ContactFormProps {
   user?: bookcarsTypes.User
@@ -151,7 +142,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
               navigate('/')
             }}
           >
-            {' '}
             {commonStrings.CANCEL}
           </Button>
         </div>
