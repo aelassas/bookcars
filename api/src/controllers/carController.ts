@@ -968,6 +968,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       radius,
     } = body
 
+    console.log('getFrontendCars - Request params:', req.params);
+    console.log('getFrontendCars - Request body:', JSON.stringify(body, null, 2));
+
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { supplier: { $in: suppliers } },
@@ -977,8 +980,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       ],
     }
 
-    // Add pickup location filter if provided
-    if (body.pickupLocation) {
+    // Add pickup location filter if provided and not using coordinates
+    if (body.pickupLocation && (!coordinates || !radius)) {
       const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
       $match.$and!.push({ locations: pickupLocation })
     }
@@ -1024,7 +1027,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
       } else if (mileage.length === 0) {
-        res.json([{ resultData: [], pageInfo: [] }])
+        res.json([{ resultData: [], pageInfo: [{ totalRecords: 0 }] }])
         return
       }
     }
@@ -1057,282 +1060,165 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
-    let data
+    console.log('MongoDB query filter:', JSON.stringify($match, null, 2));
+
+    let data;
 
     if (coordinates && radius) {
-      // Perform coordinate-based search with distance calculation
-      data = await Car.aggregate([
-        { $match },
-        // Unwind locationCoordinates to calculate distance for each location
-        { $unwind: '$locationCoordinates' },
-        // Add distance field to each car
-        {
-          $addFields: {
-            distance: {
-              $function: {
-                body: function(lat1: number, lon1: number, lat2: number, lon2: number) {
-                  // Call the helper.calculateDistance function
-                  return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K')
-                },
-                args: [
-                  '$locationCoordinates.latitude',
-                  '$locationCoordinates.longitude',
-                  coordinates.latitude,
-                  coordinates.longitude
-                ],
-                lang: 'js'
-              }
-            }
-          }
-        },
-        // Filter based on radius
-        { $match: { distance: { $lte: radius } } },
-        // Now group back by car ID to eliminate duplicates
-        {
-          $group: {
-            _id: '$_id',
-            // Keep only the minimum distance if a car has multiple locations
-            minDistance: { $min: '$distance' },
-            // Preserve all other fields
-            doc: { $first: '$$ROOT' }
-          }
-        },
-        // Reconstruct the document
-        {
-          $replaceRoot: {
-            newRoot: {
-              $mergeObjects: ['$doc', { distance: '$minDistance' }]
-            }
-          }
-        },
+      try {
+        // Simplified approach: first get all cars that match basic criteria
+        const allMatchingCars = await Car.find($match)
+          .populate('supplier')
+          .populate('dateBasedPrices')
+          .lean();
+        
+        console.log(`Found ${allMatchingCars.length} cars matching basic criteria`);
+        
+        // Then filter by distance manually
+        const carsWithDistance = allMatchingCars
+          .filter(car => Array.isArray(car.locationCoordinates) && car.locationCoordinates.length > 0)
+          .map(car => {
+            // Calculate minimum distance from car to search point
+            const distances = car.locationCoordinates.map(loc => {
+              return helper.calculateDistance(
+                loc.latitude, 
+                loc.longitude, 
+                coordinates.latitude, 
+                coordinates.longitude,
+                'K'
+              );
+            });
+            const minDistance = Math.min(...distances);
+            return { ...car, distance: minDistance };
+          })
+          .filter(car => car.distance <= radius);
+        
+        console.log(`${carsWithDistance.length} cars within ${radius}km radius`);
+        
         // Sort by distance
-        { $sort: { distance: 1 } },
-        // Lookup supplier data
-        {
-          $lookup: {
-            from: 'User',
-            let: { userId: '$supplier' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
+        carsWithDistance.sort((a, b) => a.distance - b.distance);
+        
+        // Apply supplier minimum days filter
+        const filteredCars = days
+          ? carsWithDistance.filter(car => 
+              !car.supplier.minimumRentalDays || car.supplier.minimumRentalDays <= days
+            )
+          : carsWithDistance;
+        
+        console.log(`${filteredCars.length} cars after supplier days filter`);
+        
+        // Set data for pagination
+        data = filteredCars;
+        
+        try {
+          // Apply pagination
+          console.log(`Data length before slice: ${data.length}`);
+          const resultData = data.length > 0 ? data.slice((page - 1) * size, ((page - 1) * size) + size) : [];
+          console.log(`Result data length after slice: ${resultData.length}`);
+          
+          const pageInfo = [{
+            totalRecords: data.length
+          }];
+          
+          // Format the supplier data
+          for (const car of resultData) {
+            if (car.supplier) {
+              const { _id, fullName, avatar, priceChangeRate } = car.supplier;
+              car.supplier = { _id, fullName, avatar, priceChangeRate };
+            }
+          }
+          
+          res.json([{ resultData, pageInfo }]);
+          return;
+        } catch (formatError) {
+          console.error('Data formatting error:', formatError);
+          logger.error('[car.getFrontendCars] Data Formatting Error:', formatError);
+          throw formatError;
+        }
+      } catch (aggError) {
+        console.error('Coordinate search error:', aggError);
+        logger.error('[car.getFrontendCars] Coordinate Search Error:', aggError);
+        throw aggError;
+      }
+    } else {
+      try {
+        // Use traditional location-based search
+        data = await Car.aggregate([
+          { $match },
+          {
+            $lookup: {
+              from: 'User',
+              let: { userId: '$supplier' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $eq: ['$_id', '$$userId'] },
+                  },
                 },
-              },
-            ],
-            as: 'supplier',
-          },
-        },
-        {
-          $unwind: {
-            path: '$supplier',
-            preserveNullAndEmptyArrays: false,
-          },
-        },
-        // Match based on supplier minimum rental days if days are specified
-        {
-          $match: days 
-            ? { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
-            : {},
-        },
-        // Lookup date-based prices
-        {
-          $lookup: {
-            from: 'DateBasedPrice',
-            let: { dateBasedPrices: '$dateBasedPrices' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $in: ['$_id', '$$dateBasedPrices'] },
-                },
-              },
-            ],
-            as: 'dateBasedPrices',
-          },
-        },
-        // Beginning of supplierCarLimit logic
-        {
-          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
-          $addFields: {
-            maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use fallback if undefined
-          },
-        },
-        {
-          // Add a custom stage to limit cars per supplier
-          $group: {
-            _id: '$supplier._id', // Group by supplier
-            supplierData: { $first: '$supplier' },
-            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
-            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
-          },
-        },
-        {
-          // Limit cars based on maxAllowedCars for each supplier
-          $project: {
-            supplier: '$supplierData',
-            cars: {
-              $cond: {
-                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
-                then: [], // Return an empty array (no cars)
-                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
-              },
+              ],
+              as: 'supplier',
             },
           },
-        },
-        {
-          // Flatten the grouped result and apply sorting
-          $unwind: '$cars',
-        },
-        {
-          // Ensure unique cars by grouping by car ID
-          $group: {
-            _id: '$cars._id',
-            car: { $first: '$cars' },
-          },
-        },
-        {
-          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
-        },
-        {
-          // Sort the cars before pagination
-          $sort: { dailyPrice: 1, _id: 1 },
-        },
-        {
-          $facet: {
-            resultData: [
-              { $skip: (page - 1) * size }, // Skip results based on page
-              { $limit: size }, // Limit to the page size
-            ],
-            pageInfo: [
-              {
-                $count: 'totalRecords', // Count total number of cars (before pagination)
-              },
-            ],
-          },
-        },
-        // End of supplierCarLimit logic
-      ])
-    } else {
-      // Use the existing aggregation pipeline for traditional location-based search
-      data = await Car.aggregate(
-      [
-        { $match },
-        {
-          $lookup: {
-            from: 'User',
-            let: { userId: '$supplier' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
-                },
-              },
-            ],
-            as: 'supplier',
-          },
-        },
           {
             $unwind: {
               path: '$supplier',
               preserveNullAndEmptyArrays: false,
             },
           },
-          // Match based on supplier minimum rental days if days are specified
-        {
-            $match: days 
+          {
+            $match: days
               ? { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
               : {},
-        },
-          // Lookup date-based prices
-        {
-          $lookup: {
-            from: 'DateBasedPrice',
-            let: { dateBasedPrices: '$dateBasedPrices' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $in: ['$_id', '$$dateBasedPrices'] },
+          },
+          {
+            $lookup: {
+              from: 'DateBasedPrice',
+              let: { dateBasedPrices: '$dateBasedPrices' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $in: ['$_id', '$$dateBasedPrices'] },
+                  },
                 },
-              },
-            ],
-            as: 'dateBasedPrices',
-          },
-        },
-          // Beginning of supplierCarLimit logic
-        {
-          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
-          $addFields: {
-              maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use fallback if undefined
-          },
-        },
-        {
-          // Add a custom stage to limit cars per supplier
-          $group: {
-            _id: '$supplier._id', // Group by supplier
-            supplierData: { $first: '$supplier' },
-            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
-            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
-          },
-        },
-        {
-          // Limit cars based on maxAllowedCars for each supplier
-          $project: {
-            supplier: '$supplierData',
-            cars: {
-              $cond: {
-                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
-                then: [], // Return an empty array (no cars)
-                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
-              },
+              ],
+              as: 'dateBasedPrices',
             },
           },
-        },
-        {
-          // Flatten the grouped result and apply sorting
-          $unwind: '$cars',
-        },
-        {
-          // Ensure unique cars by grouping by car ID
-          $group: {
-            _id: '$cars._id',
-            car: { $first: '$cars' },
-          },
-        },
-        {
-          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
-        },
-        {
           // Sort the cars before pagination
-          $sort: { dailyPrice: 1, _id: 1 },
-        },
-        {
-          $facet: {
-            resultData: [
-              { $skip: (page - 1) * size }, // Skip results based on page
-              { $limit: size }, // Limit to the page size
-            ],
-            pageInfo: [
-              {
-                $count: 'totalRecords', // Count total number of cars (before pagination)
-              },
-            ],
-          },
-        },
-          // End of supplierCarLimit logic
-      ],
-      { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
-    )
-
-      // Format the supplier data in the result
-      for (const car of data[0]?.resultData || []) {
-      const { _id, fullName, avatar, priceChangeRate } = car.supplier
-      car.supplier = { _id, fullName, avatar, priceChangeRate }
+          { $sort: { dailyPrice: 1, _id: 1 } },
+        ]);
+      } catch (aggError) {
+        console.error('Aggregation error in traditional search:', aggError);
+        logger.error('[car.getFrontendCars] Traditional Search Error:', aggError);
+        throw aggError;
+      }
+      
+      try {
+        // Apply pagination
+        const resultData = data.length > 0 ? data.slice((page - 1) * size, ((page - 1) * size) + size) : [];
+        const pageInfo = [{
+          totalRecords: data.length
+        }];
+        
+        // Format the supplier data
+        for (const car of resultData) {
+          if (car.supplier) {
+            const { _id, fullName, avatar, priceChangeRate } = car.supplier;
+            car.supplier = { _id, fullName, avatar, priceChangeRate };
+          }
+        }
+        
+        res.json([{ resultData, pageInfo }]);
+      } catch (formatError) {
+        console.error('Data formatting error in traditional search:', formatError);
+        logger.error('[car.getFrontendCars] Traditional Data Formatting Error:', formatError);
+        throw formatError;
       }
     }
-
-    res.json(data)
   } catch (err) {
-    logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    console.error('getFrontendCars general error:', err);
+    logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.params)}`, err)
+    res.status(500).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1485,22 +1371,31 @@ export const searchCarsByCoordinates = async (req: Request, res: Response) => {
       { $match },
       // Unwind locationCoordinates to calculate distance for each location
       { $unwind: '$locationCoordinates' },
-      // Add distance field to each car
+      // Now add distance calculation - replacing $function with standard MongoDB operators
       {
         $addFields: {
           distance: {
-            $function: {
-              body: function(lat1: number, lon1: number, lat2: number, lon2: number) {
-                // Call the helper.calculateDistance function
-                return helper.calculateDistance(lat1, lon1, lat2, lon2, 'K')
-              },
-              args: [
-                '$locationCoordinates.latitude',
-                '$locationCoordinates.longitude',
-                coordinates.latitude,
-                coordinates.longitude
-              ],
-              lang: 'js'
+            $sqrt: {
+              $add: [
+                {
+                  $pow: [
+                    { $multiply: [
+                      111.12, 
+                      { $subtract: [coordinates.latitude, '$locationCoordinates.latitude'] }
+                    ]},
+                    2
+                  ]
+                },
+                {
+                  $pow: [
+                    { $multiply: [
+                      111.12 * Math.cos(coordinates.latitude * Math.PI / 180),
+                      { $subtract: [coordinates.longitude, '$locationCoordinates.longitude'] }
+                    ]},
+                    2
+                  ]
+                }
+              ]
             }
           }
         }

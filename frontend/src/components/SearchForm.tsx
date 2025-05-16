@@ -180,7 +180,6 @@ const SearchForm = ({
           }
         }
       })
-      
     } catch (error) {
       console.error('Error initializing autocomplete:', error)
     }

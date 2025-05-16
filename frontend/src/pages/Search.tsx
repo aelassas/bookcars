@@ -181,7 +181,7 @@ const Search = () => {
   const onLoad = async (user?: bookcarsTypes.User) => {
     const { state } = location
     if (!state) {
-      console.log('Search failed: No state provided in location');
+      console.log('Search failed: No state provided in location')
       setNoMatch(true)
       return
     }
@@ -199,32 +199,32 @@ const Search = () => {
       to: _to,
       pickupCoordinates,
       radius
-    });
+    })
 
     if (!_from || !_to) {
-      console.log('Search failed: Missing from or to dates');
+      console.log('Search failed: Missing from or to dates')
       setLoading(false)
       setNoMatch(true)
       return
     }
 
     try {
-      let _pickupLocation;
-      let _dropOffLocation;
+      let _pickupLocation
+      let _dropOffLocation
       
       // Check if we have coordinate-based search
       if (pickupCoordinates && pickupCoordinates.latitude && pickupCoordinates.longitude) {
         // For coordinate-based search, we don't strictly need location IDs
-        console.log('Using coordinate-based search', pickupCoordinates);
+        console.log('Using coordinate-based search', pickupCoordinates)
         
         // Set coordinates information
         setSearchCoordinates({
           latitude: pickupCoordinates.latitude,
           longitude: pickupCoordinates.longitude
-        });
-        setSearchAddress(pickupCoordinates.address || '');
+        })
+        setSearchAddress(pickupCoordinates.address || '')
         if (radius) {
-          setSearchRadius(radius);
+          setSearchRadius(radius)
         }
         
         // Create placeholder location object if needed
@@ -236,10 +236,10 @@ const Search = () => {
               latitude: pickupCoordinates.latitude,
               longitude: pickupCoordinates.longitude
             }
-          };
+          }
           
           if (dropOffLocationId === pickupLocationId) {
-            _dropOffLocation = _pickupLocation;
+            _dropOffLocation = _pickupLocation
           } else if (state.dropOffCoordinates) {
             _dropOffLocation = {
               _id: '000000000000000000000000', // Use a different placeholder ID that won't be sent to API
@@ -248,52 +248,52 @@ const Search = () => {
                 latitude: state.dropOffCoordinates.latitude,
                 longitude: state.dropOffCoordinates.longitude
               }
-            };
+            }
           }
           
           console.log('Created placeholder locations:', { 
             pickup: _pickupLocation, 
             dropOff: _dropOffLocation 
-          });
+          })
         }
       }
       
       // If no coordinate data or we have real location IDs, fetch from database
       if (!_pickupLocation && pickupLocationId) {
-        console.log('Fetching pickup location from database:', pickupLocationId);
-        _pickupLocation = await LocationService.getLocation(pickupLocationId);
+        console.log('Fetching pickup location from database:', pickupLocationId)
+        _pickupLocation = await LocationService.getLocation(pickupLocationId)
       }
 
       if (!_pickupLocation) {
-        console.log('Search failed: Could not determine pickup location');
-        setLoading(false);
-        setNoMatch(true);
-        return;
+        console.log('Search failed: Could not determine pickup location')
+        setLoading(false)
+        setNoMatch(true)
+        return
       }
 
       if (!_dropOffLocation) {
         if (dropOffLocationId !== pickupLocationId) {
-          console.log('Fetching dropoff location from database:', dropOffLocationId);
-          _dropOffLocation = await LocationService.getLocation(dropOffLocationId);
+          console.log('Fetching dropoff location from database:', dropOffLocationId)
+          _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
         } else {
-          _dropOffLocation = _pickupLocation;
+          _dropOffLocation = _pickupLocation
         }
       }
 
       if (!_dropOffLocation) {
-        console.log('Search failed: Could not determine drop-off location');
-        setLoading(false);
-        setNoMatch(true);
-        return;
+        console.log('Search failed: Could not determine drop-off location')
+        setLoading(false)
+        setNoMatch(true)
+        return
       }
 
       console.log('Locations resolved successfully:', {
         pickup: _pickupLocation,
         dropoff: _dropOffLocation
-      });
+      })
 
-      const days = bookcarsHelper.days(_from, _to);
-      console.log('Calculated rental days:', days);
+      const days = bookcarsHelper.days(_from, _to)
+      console.log('Calculated rental days:', days)
 
       const payload: bookcarsTypes.GetCarsPayload = {
         pickupLocation: _pickupLocation._id,
@@ -329,12 +329,12 @@ const Search = () => {
       console.log('API Search payload:', JSON.stringify(payload, null, 2))
 
       try {
-        console.log('Calling SupplierService.getFrontendSuppliers...');
+        console.log('Calling SupplierService.getFrontendSuppliers...')
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
-        console.log('Received suppliers:', _suppliers);
+        console.log('Received suppliers:', _suppliers)
         
         const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
-        console.log('Flattened supplier IDs:', _supplierIds);
+        console.log('Flattened supplier IDs:', _supplierIds)
 
         setPickupLocation(_pickupLocation)
         setDropOffLocation(_dropOffLocation)
@@ -447,6 +447,7 @@ const Search = () => {
               rating={rating}
               seats={seats}
               coordinates={searchCoordinates || undefined}
+              radius={searchRadius}
               includeAlreadyBookedCars={false}
               includeComingSoonCars={false}
             />

@@ -46,6 +46,7 @@ interface CarListProps {
   includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
   coordinates?: { latitude: number, longitude: number }
+  radius?: number
 }
 
 const CarList = ({
@@ -77,6 +78,7 @@ const CarList = ({
   includeComingSoonCars,
   onLoad,
   coordinates,
+  radius,
 }: CarListProps) => {
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -151,6 +153,7 @@ const CarList = ({
       
       if (coordinates) {
         payload.coordinates = coordinates
+        payload.radius = radius || 25
         if (_pickupLocation === '000000000000000000000000') {
           delete payload.pickupLocation
         }
