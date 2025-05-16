@@ -9,7 +9,6 @@ import {
   Button
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
@@ -18,20 +17,9 @@ import { strings } from '@/lang/change-password'
 import * as UserService from '@/services/UserService'
 import Footer from '@/components/Footer'
 import * as helper from '@/common/helper'
-import env from '@/config/env.config'
+import { schema, FormFields } from '@/models/ChangePasswordForm'
 
 import '@/assets/css/change-password.css'
-
-const schema = z.object({
-  currentPassword: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }).optional(),
-  newPassword: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  path: ['confirmPassword'],
-  message: commonStrings.PASSWORDS_DONT_MATCH
-})
-
-type FormFields = z.infer<typeof schema>
 
 const ChangePassword = () => {
   const navigate = useNavigate()
@@ -106,11 +94,7 @@ const ChangePassword = () => {
         <>
           <div className="password-reset">
             <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
-              <h1 className="password-reset-form-title">
-                {' '}
-                {strings.CHANGE_PASSWORD_HEADING}
-                {' '}
-              </h1>
+              <h1 className="password-reset-form-title">{strings.CHANGE_PASSWORD_HEADING}</h1>
               <form className="form" onSubmit={handleSubmit(onSubmit)}>
                 {hasPassword && (
                   <FormControl fullWidth margin="dense" error={!!errors.currentPassword}>

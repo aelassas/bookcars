@@ -10,14 +10,10 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
 import { useForm, useWatch } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '@/config/env.config'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/settings'
@@ -29,22 +25,9 @@ import * as helper from '@/common/helper'
 import DriverLicense from '@/components/DriverLicense'
 import Footer from '@/components/Footer'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import { schema, FormFields } from '@/models/SettingsForm'
 
 import '@/assets/css/settings.css'
-
-const schema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
-  phone: z.string().refine(validator.isMobilePhone, { message: commonStrings.PHONE_NOT_VALID }),
-  birthDate: z.date().refine((value) => {
-    const sub = intervalToDuration({ start: value, end: new Date() }).years ?? 0
-    return sub >= env.MINIMUM_AGE
-  }, { message: commonStrings.BIRTH_DATE_NOT_VALID }),
-  location: z.string().optional(),
-  bio: z.string().optional(),
-})
-
-type FormFields = z.infer<typeof schema>
 
 const Settings = () => {
   const navigate = useNavigate()
@@ -150,7 +133,8 @@ const Settings = () => {
                   loggedUser={user}
                   user={user}
                   size="large"
-                  readonly={false}
+                  // readonly={false}
+                  readonly
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   color="disabled"
@@ -205,7 +189,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
                     {commonStrings.SAVE}
                   </Button>
                   <Button

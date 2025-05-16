@@ -9,7 +9,6 @@ import {
   Paper
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
@@ -22,19 +21,9 @@ import * as helper from '@/common/helper'
 import Error from './Error'
 import NoMatch from './NoMatch'
 import Footer from '@/components/Footer'
-import env from '@/config/env.config'
+import { schema, FormFields } from '@/models/ResetPasswordForm'
 
 import '@/assets/css/reset-password.css'
-
-const schema = z.object({
-  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ['confirmPassword'],
-  message: commonStrings.PASSWORDS_DONT_MATCH
-})
-
-type FormFields = z.infer<typeof schema>
 
 const ResetPassword = () => {
   const navigate = useNavigate()
