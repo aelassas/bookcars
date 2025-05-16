@@ -28,7 +28,7 @@ const BookingFilter = ({
   onSubmit
 }: BookingFilterProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const { control, register, handleSubmit, setValue } = useForm<FormFields>({
+  const { control, register, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   })
@@ -149,7 +149,7 @@ const BookingFilter = ({
             className="bf-search"
           />
         </FormControl>
-        <Button type="submit" variant="contained" className="btn-primary btn-search" fullWidth>
+        <Button type="submit" variant="contained" className="btn-primary btn-search" fullWidth disabled={isSubmitting}>
           {commonStrings.SEARCH}
         </Button>
       </form>
