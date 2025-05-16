@@ -9,7 +9,6 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
@@ -19,21 +18,9 @@ import Layout from '@/components/Layout'
 import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import { useUserContext, UserContextType } from '@/context/UserContext'
-import env from '@/config/env.config'
+import { schema, FormFields } from '@/models/SignUpForm'
 
 import '@/assets/css/signup.css'
-
-const schema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
-  password: z.string().min(env.PASSWORD_MIN_LENGTH, { message: commonStrings.PASSWORD_ERROR }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ['confirmPassword'],
-  message: commonStrings.PASSWORDS_DONT_MATCH,
-})
-
-type FormFields = z.infer<typeof schema>
 
 const SignUp = () => {
   const navigate = useNavigate()

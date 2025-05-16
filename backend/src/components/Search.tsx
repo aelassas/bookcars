@@ -1,18 +1,12 @@
 import React, { useRef } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconButton, TextField, InputAdornment } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import { strings as commonStrings } from '@/lang/common'
+import { schema, FormFields } from '@/models/SearchForm'
 
 import '@/assets/css/search.css'
-
-const schema = z.object({
-  keyword: z.string().optional()
-})
-
-type FormFields = z.infer<typeof schema>
 
 interface SearchProps {
   className?: string
