@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconButton, TextField, FormControl, Button } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
@@ -11,18 +10,9 @@ import { strings } from '@/lang/booking-filter'
 import LocationSelectList from './LocationSelectList'
 import DatePicker from './DatePicker'
 import Accordion from '@/components/Accordion'
+import { schema, FormFields } from '@/models/BookingFilterForm'
 
 import '@/assets/css/booking-filter.css'
-
-const schema = z.object({
-  from: z.date().optional(),
-  to: z.date().optional(),
-  pickupLocation: z.string().optional(),
-  dropOffLocation: z.string().optional(),
-  keyword: z.string().optional(),
-})
-
-type FormFields = z.infer<typeof schema>
 
 interface BookingFilterProps {
   collapse?: boolean
