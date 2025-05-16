@@ -48,7 +48,7 @@ const CarFilter = ({
     handleSubmit,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     clearErrors,
   } = useForm<FormFields>({
@@ -246,7 +246,7 @@ const CarFilter = ({
           <FormHelperText error={!!errors.to}>{errors.to?.message}</FormHelperText>
         </FormControl>
         <FormControl fullWidth className="fc-search">
-          <Button type="submit" variant="contained" className="btn-primary btn-search">
+          <Button type="submit" variant="contained" className="btn-primary btn-search" disabled={isSubmitting}>
             {commonStrings.SEARCH}
           </Button>
         </FormControl>

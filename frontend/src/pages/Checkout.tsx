@@ -94,7 +94,6 @@ const Checkout = () => {
   const [price, setPrice] = useState(0)
   const [depositPrice, setDepositPrice] = useState(0)
   const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [loadingPage, setLoadingPage] = useState(true)
   const [recaptchaError, setRecaptchaError] = useState(false)
   const adRequired = true
@@ -130,7 +129,7 @@ const Checkout = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     clearErrors,
     setFocus,
     trigger,
@@ -198,7 +197,6 @@ const Checkout = () => {
         return
       }
 
-      setLoading(true)
       setPaymentFailed(false)
 
       let driver: bookcarsTypes.User | undefined
@@ -286,7 +284,6 @@ const Checkout = () => {
       }
 
       const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
-      setLoading(false)
 
       if (status === 200) {
         if (payLater) {
@@ -300,8 +297,6 @@ const Checkout = () => {
       }
     } catch (err) {
       helper.error(err)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -925,10 +920,10 @@ const Checkout = () => {
                             variant="contained"
                             className="btn-checkout btn-margin-bottom"
                             aria-label="Checkout"
-                            disabled={loading || (payPalLoaded && !payPalInit)}
+                            disabled={isSubmitting || (payPalLoaded && !payPalInit)}
                           >
                             {
-                              (loading || (payPalLoaded && !payPalInit))
+                              (isSubmitting || (payPalLoaded && !payPalInit))
                                 ? <CircularProgress color="inherit" size={24} />
                                 : strings.BOOK
                             }
