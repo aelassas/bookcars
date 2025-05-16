@@ -68,9 +68,15 @@ const Search = () => {
   const [searchAddress, setSearchAddress] = useState<string>('')
   const [searchRadius, setSearchRadius] = useState<number>(25) // Default radius of 25km
   // const [loadingPage, setLoadingPage] = useState(true)
+  
+  // Add state for car results
+  const [carResults, setCarResults] = useState<bookcarsTypes.Car[]>([])
 
   // Add state for coordinates from CarFilter
   const [pickupCoordinatesFromFilter, setPickupCoordinatesFromFilter] = useState<{ latitude: number, longitude: number, address: string } | null>(null)
+
+  // Add state for selected car
+  const [selectedCarId, setSelectedCarId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -198,6 +204,12 @@ const Search = () => {
 
   const handleDepositFilterChange = (value: number) => {
     setDeposit(value)
+  }
+  
+  // Handler for car list data
+  const handleCarListLoad = (data: bookcarsTypes.DataEvent<bookcarsTypes.Car>) => {
+    console.log('Car data loaded:', data.rows);
+    setCarResults(data.rows);
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
@@ -391,6 +403,12 @@ const Search = () => {
     }
   }
 
+  // Add handler for marker click
+  const handleMarkerClick = (carId: string) => {
+    setSelectedCarId(carId)
+    setOpenMapDialog(true)
+  }
+
   return (
     <Layout onLoad={onLoad} strict={false}>
       {visible && (
@@ -403,8 +421,9 @@ const Search = () => {
                   zoom={13}
                   radius={searchRadius}
                   className="map"
-                  initialZoom={10}
-
+                  initialZoom={9}
+                  cars={carResults}
+                  onMarkerClick={handleMarkerClick}
                 >
                    <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
                 </Map>
@@ -474,6 +493,7 @@ const Search = () => {
               radius={searchRadius}
               includeAlreadyBookedCars={false}
               includeComingSoonCars={false}
+              onLoad={handleCarListLoad}
             />
           </div>
 
@@ -482,6 +502,8 @@ const Search = () => {
             zoom={13}
             location={searchCoordinates || pickupLocation}
             radius={searchRadius}
+            cars={carResults}
+            selectedCarId={selectedCarId}
             onClose={() => {
               setOpenMapDialog(false)
             }}

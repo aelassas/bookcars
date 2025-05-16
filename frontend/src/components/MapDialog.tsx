@@ -12,6 +12,8 @@ interface MapDialogProps {
   open?: boolean
   zoom?: number
   radius?: number
+  cars?: bookcarsTypes.Car[]
+  selectedCarId?: string | null
   onClose: () => void
 }
 
@@ -20,6 +22,8 @@ const MapDialog = ({
   open: openProp = false,
   zoom = 10,
   radius,
+  cars,
+  selectedCarId,
   onClose,
 }: MapDialogProps) => {
   const [openMapDialog, setOpenMapDialog] = useState(openProp)
@@ -85,6 +89,8 @@ const MapDialog = ({
             zoom={zoom}
             radius={radius}
             className="map"
+            cars={cars}
+            selectedCarId={selectedCarId}
           />
         )}
       </DialogContent>
