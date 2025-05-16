@@ -13,7 +13,6 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { schema, FormFields } from '@/models/SupplierForm'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -28,6 +27,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
 import ContractList from '@/components/ContractList'
+import { schema, FormFields } from '@/models/SupplierForm'
 
 import '@/assets/css/update-supplier.css'
 
