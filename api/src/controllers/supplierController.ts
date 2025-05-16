@@ -12,7 +12,7 @@ import NotificationCounter from '../models/NotificationCounter'
 import Notification from '../models/Notification'
 import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
-import Car from '../models/Car'
+import Dress from '../models/Dress'
 import DateBasedPrice from '../models/DateBasedPrice'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
@@ -77,8 +77,8 @@ export const update = async (req: Request, res: Response) => {
         licenseRequired,
         minimumRentalDays,
         priceChangeRate,
-        supplierCarLimit,
-        notifyAdminOnNewCar,
+        supplierDressLimit,
+        notifyAdminOnNewDress,
         blacklisted,
       } = body
       supplier.fullName = fullName
@@ -89,8 +89,8 @@ export const update = async (req: Request, res: Response) => {
       supplier.licenseRequired = licenseRequired
       supplier.minimumRentalDays = minimumRentalDays
       supplier.priceChangeRate = priceChangeRate
-      supplier.supplierCarLimit = supplierCarLimit
-      supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
+      supplier.supplierDressLimit = supplierDressLimit
+      supplier.notifyAdminOnNewDress = notifyAdminOnNewDress
       supplier.blacklisted = !!blacklisted
 
       await supplier.save()
@@ -106,8 +106,8 @@ export const update = async (req: Request, res: Response) => {
         minimumRentalDays: supplier.minimumRentalDays,
         licenseRequired: supplier.licenseRequired,
         priceChangeRate: supplier.priceChangeRate,
-        supplierCarLimit: supplier.supplierCarLimit,
-        notifyAdminOnNewCar: supplier.notifyAdminOnNewCar,
+        supplierDressLimit: supplier.supplierDressLimit,
+        notifyAdminOnNewDress: supplier.notifyAdminOnNewDress,
         blacklisted: supplier.blacklisted,
       })
       return
@@ -160,15 +160,15 @@ export const deleteSupplier = async (req: Request, res: Response) => {
       const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
       await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
       await Booking.deleteMany({ supplier: id })
-      const cars = await Car.find({ supplier: id })
-      await Car.deleteMany({ supplier: id })
-      for (const car of cars) {
-        if (car.dateBasedPrices?.length > 0) {
-          await DateBasedPrice.deleteMany({ _id: { $in: car.dateBasedPrices } })
+      const dresses = await Dress.find({ supplier: id })
+      await Dress.deleteMany({ supplier: id })
+      for (const dress of dresses) {
+        if (dress.dateBasedPrices?.length > 0) {
+          await DateBasedPrice.deleteMany({ _id: { $in: dress.dateBasedPrices } })
         }
 
-        if (car.image) {
-          const image = path.join(env.CDN_CARS, car.image)
+        if (dress.image) {
+          const image = path.join(env.CDN_DRESSES, dress.image)
           if (await helper.pathExists(image)) {
             await asyncFs.unlink(image)
           }
@@ -218,8 +218,8 @@ export const getSupplier = async (req: Request, res: Response) => {
       licenseRequired,
       minimumRentalDays,
       priceChangeRate,
-      supplierCarLimit,
-      notifyAdminOnNewCar,
+      supplierDressLimit,
+      notifyAdminOnNewDress,
       blacklisted,
     } = user
 
@@ -236,8 +236,8 @@ export const getSupplier = async (req: Request, res: Response) => {
       licenseRequired,
       minimumRentalDays,
       priceChangeRate,
-      supplierCarLimit,
-      notifyAdminOnNewCar,
+      supplierDressLimit,
+      notifyAdminOnNewDress,
       blacklisted,
     })
   } catch (err) {
@@ -273,7 +273,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
         },
         {
           $lookup: {
-            from: 'Car',
+            from: 'Dress',
             let: { supplierId: '$_id' },
             pipeline: [
               {
@@ -282,16 +282,16 @@ export const getSuppliers = async (req: Request, res: Response) => {
                 },
               },
             ],
-            as: 'car',
+            as: 'dress',
           },
         },
-        { $unwind: { path: '$car', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$dress', preserveNullAndEmptyArrays: true } },
         {
           $group: {
             _id: '$_id',
             fullName: { $first: '$fullName' },
             avatar: { $first: '$avatar' },
-            carCount: { $sum: { $cond: [{ $ifNull: ['$car', false] }, 1, 0] } },
+            dressCount: { $sum: { $cond: [{ $ifNull: ['$dress', false] }, 1, 0] } },
           },
         },
         {
@@ -308,9 +308,9 @@ export const getSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    data[0].resultData = data[0].resultData.map((supplier: env.User & { carCount: number }) => {
-      const { _id, fullName, avatar, carCount } = supplier
-      return { _id, fullName, avatar, carCount }
+    data[0].resultData = data[0].resultData.map((supplier: env.User & { dressCount: number }) => {
+      const { _id, fullName, avatar, dressCount } = supplier
+      return { _id, fullName, avatar, dressCount }
     })
 
     res.json(data)
@@ -361,15 +361,15 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
  */
 export const getFrontendSuppliers = async (req: Request, res: Response) => {
   try {
-    const { body }: { body: bookcarsTypes.GetCarsPayload } = req
+    const { body }: { body: bookcarsTypes.GetDressesPayload } = req
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const {
-      carType,
-      gearbox,
+      dressType,
+      size,
       mileage,
       fuelPolicy,
       deposit,
-      carSpecs,
+      dressSpecs,
       ranges,
       multimedia,
       rating,
@@ -377,34 +377,34 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       days,
     } = body
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Dress> = {
       $and: [
         { locations: pickupLocation },
-        { type: { $in: carType } },
-        { gearbox: { $in: gearbox } },
+        { type: { $in: dressType } },
+        { size: { $in: size } },
         { fuelPolicy: { $in: fuelPolicy } },
         { available: true },
         { fullyBooked: { $in: [false, null] } },
       ],
     }
 
-    if (carSpecs) {
-      if (carSpecs.aircon) {
-        $match.$and!.push({ aircon: true })
+    if (dressSpecs) {
+      if (dressSpecs.premium) {
+        $match.$and!.push({ premium: true })
       }
-      if (carSpecs.moreThanFourDoors) {
-        $match.$and!.push({ doors: { $gt: 4 } })
+      if (dressSpecs.longDress) {
+        $match.$and!.push({ length: { $gt: 150 } })
       }
-      if (carSpecs.moreThanFiveSeats) {
-        $match.$and!.push({ seats: { $gt: 5 } })
+      if (dressSpecs.embroidered) {
+        $match.$and!.push({ embroidered: true })
       }
     }
 
     if (mileage) {
-      if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
-        $match.$and!.push({ mileage: { $gt: -1 } })
-      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
-        $match.$and!.push({ mileage: -1 })
+      if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
+        $match.$and!.push({ rentalTerm: { $gt: -1 } })
+      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
+        $match.$and!.push({ rentalTerm: -1 })
       } else if (mileage.length === 0) {
         res.json([])
         return
@@ -444,7 +444,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
     }
 
-    const data = await Car.aggregate(
+    const data = await Dress.aggregate(
       [
         { $match },
         {
@@ -467,57 +467,57 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
           $match: $supplierMatch,
         },
 
-        // begining of supplierCarLimit -----------------------------------
+        // beginning of supplierDressLimit -----------------------------------
         {
-          // Add the "supplierCarLimit" field from the supplier to limit the number of cars per supplier
+          // Add the "supplierDressLimit" field from the supplier to limit the number of dresses per supplier
           $addFields: {
-            maxAllowedCars: { $ifNull: ['$supplier.supplierCarLimit', Number.MAX_SAFE_INTEGER] }, // Use a fallback if supplierCarLimit is undefined
+            maxAllowedDresses: { $ifNull: ['$supplier.supplierDressLimit', Number.MAX_SAFE_INTEGER] }, // Use a fallback if supplierDressLimit is undefined
           },
         },
         {
-          // Add a custom stage to limit cars per supplier
+          // Add a custom stage to limit dresses per supplier
           $group: {
             _id: '$supplier._id', // Group by supplier
             supplierData: { $first: '$supplier' },
-            cars: { $push: '$$ROOT' }, // Push all cars of the supplier into an array
-            maxAllowedCars: { $first: '$maxAllowedCars' }, // Retain maxAllowedCars for each supplier
+            dresses: { $push: '$$ROOT' }, // Push all dresses of the supplier into an array
+            maxAllowedDresses: { $first: '$maxAllowedDresses' }, // Retain maxAllowedDresses for each supplier
           },
         },
         {
-          // Limit cars based on maxAllowedCars for each supplier
+          // Limit dresses based on maxAllowedDresses for each supplier
           $project: {
             supplier: '$supplierData',
-            cars: {
+            dresses: {
               $cond: {
-                if: { $eq: ['$maxAllowedCars', 0] }, // If maxAllowedCars is 0
-                then: [], // Return an empty array (no cars)
-                else: { $slice: ['$cars', 0, { $min: [{ $size: '$cars' }, '$maxAllowedCars'] }] }, // Otherwise, limit normally
+                if: { $eq: ['$maxAllowedDresses', 0] }, // If maxAllowedDresses is 0
+                then: [], // Return an empty array (no dresses)
+                else: { $slice: ['$dresses', 0, { $min: [{ $size: '$dresses' }, '$maxAllowedDresses'] }] }, // Otherwise, limit normally
               },
             },
           },
         },
         {
           // Flatten the grouped result and apply sorting
-          $unwind: '$cars',
+          $unwind: '$dresses',
         },
         {
-          // Ensure unique cars by grouping by car ID
+          // Ensure unique dresses by grouping by dress ID
           $group: {
-            _id: '$cars._id',
-            car: { $first: '$cars' },
+            _id: '$dresses._id',
+            dress: { $first: '$dresses' },
           },
         },
         {
-          $replaceRoot: { newRoot: '$car' }, // Replace the root document with the unique car object
+          $replaceRoot: { newRoot: '$dress' }, // Replace the root document with the unique dress object
         },
-        // end of supplierCarLimit -----------------------------------
+        // end of supplierDressLimit -----------------------------------
 
         {
           $group: {
             _id: '$supplier._id',
             fullName: { $first: '$supplier.fullName' },
             avatar: { $first: '$supplier.avatar' },
-            carCount: { $sum: 1 },
+            dressCount: { $sum: 1 },
           },
         },
         { $sort: { fullName: 1 } },
@@ -541,15 +541,15 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
  */
 export const getBackendSuppliers = async (req: Request, res: Response) => {
   try {
-    const { body }: { body: bookcarsTypes.GetCarsPayload } = req
+    const { body }: { body: bookcarsTypes.GetDressesPayload } = req
     const {
-      carType,
-      gearbox,
+      dressType,
+      size,
       mileage,
       deposit,
       availability,
       fuelPolicy,
-      carSpecs,
+      dressSpecs,
       ranges,
       multimedia,
       rating,
@@ -558,38 +558,38 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.FilterQuery<bookcarsTypes.Dress> = {
       $and: [
         { name: { $regex: keyword, $options: options } },
         { fuelPolicy: { $in: fuelPolicy } },
       ],
     }
 
-    if (carSpecs) {
-      if (carSpecs.aircon) {
-        $match.$and!.push({ aircon: true })
+    if (dressSpecs) {
+      if (dressSpecs.premium) {
+        $match.$and!.push({ premium: true })
       }
-      if (carSpecs.moreThanFourDoors) {
-        $match.$and!.push({ doors: { $gt: 4 } })
+      if (dressSpecs.longDress) {
+        $match.$and!.push({ length: { $gt: 150 } })
       }
-      if (carSpecs.moreThanFiveSeats) {
-        $match.$and!.push({ seats: { $gt: 5 } })
+      if (dressSpecs.embroidered) {
+        $match.$and!.push({ embroidered: true })
       }
     }
 
-    if (carType) {
-      $match.$and!.push({ type: { $in: carType } })
+    if (dressType) {
+      $match.$and!.push({ type: { $in: dressType } })
     }
 
-    if (gearbox) {
-      $match.$and!.push({ gearbox: { $in: gearbox } })
+    if (size) {
+      $match.$and!.push({ size: { $in: size } })
     }
 
     if (mileage) {
-      if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
-        $match.$and!.push({ mileage: { $gt: -1 } })
-      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
-        $match.$and!.push({ mileage: -1 })
+      if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
+        $match.$and!.push({ rentalTerm: { $gt: -1 } })
+      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
+        $match.$and!.push({ rentalTerm: -1 })
       } else if (mileage.length === 0) {
         res.json([])
         return
@@ -635,7 +635,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       }
     }
 
-    const data = await Car.aggregate(
+    const data = await Dress.aggregate(
       [
         { $match },
         {
@@ -658,7 +658,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
             _id: '$supplier._id',
             fullName: { $first: '$supplier.fullName' },
             avatar: { $first: '$supplier.avatar' },
-            carCount: { $sum: 1 },
+            dressCount: { $sum: 1 },
           },
         },
         { $sort: { fullName: 1 } },

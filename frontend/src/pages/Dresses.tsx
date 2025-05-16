@@ -17,6 +17,7 @@ import DressSizeFilter from '../components/DressSizeFilter'
 import DressStyleFilter from '../components/DressStyleFilter'
 import DepositFilter from '../components/DepositFilter'
 import AvailabilityFilter from '../components/AvailabilityFilter'
+import RentalsCountFilter from '../components/RentalsCountFilter'
 import SearchBox from '../components/SearchBox'
 import * as helper from '../common/helper'
 import { strings } from '../lang/dresses'
@@ -31,6 +32,7 @@ const Dresses: React.FC = () => {
   const [dressStyle, setDressStyle] = useState('')
   const [deposit, setDeposit] = useState('')
   const [availability, setAvailability] = useState('')
+  const [rentalsCount, setRentalsCount] = useState('')
   const [keyword, setKeyword] = useState('')
   const [suppliers, setSuppliers] = useState<any[]>([])
   const [reload, setReload] = useState(false)
@@ -64,6 +66,11 @@ const Dresses: React.FC = () => {
 
   const handleAvailabilityFilterChange = (value: string) => {
     setAvailability(value)
+    setReload(true)
+  }
+
+  const handleRentalsCountFilterChange = (value: string) => {
+    setRentalsCount(value)
     setReload(true)
   }
 
@@ -139,6 +146,10 @@ const Dresses: React.FC = () => {
                   className="dress-filter"
                   onChange={handleDepositFilterChange}
                 />
+                <RentalsCountFilter
+                  className="dress-filter"
+                  onChange={handleRentalsCountFilterChange}
+                />
                 {admin && (
                   <AvailabilityFilter
                     className="dress-filter"
@@ -156,6 +167,7 @@ const Dresses: React.FC = () => {
                 dressStyle={dressStyle}
                 deposit={deposit}
                 availability={availability}
+                rentalsCount={rentalsCount}
                 keyword={keyword}
                 loading={loading}
                 onLoad={handleDressListLoad}

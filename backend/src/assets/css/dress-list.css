@@ -1,0 +1,179 @@
+section.dress-list {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+section.dress-list article {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+  background: #fbfbfb;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+section.dress-list article div.dress {
+  width: 300px;
+  height: 200px;
+  position: relative;
+}
+
+section.dress-list article div.dress img.dress-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+section.dress-list article div.dress div.dress-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+section.dress-list article div.dress div.dress-footer div.dress-footer-row1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+section.dress-list article div.dress div.dress-footer div.rating {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  align-items: center;
+}
+
+section.dress-list article div.dress div.dress-footer div.rating span.value {
+  color: #fff;
+  font-weight: 500;
+}
+
+section.dress-list article div.dress div.dress-footer div.rating img {
+  width: 15px;
+  height: 15px;
+}
+
+section.dress-list article div.dress div.dress-footer div.rating span.rentals {
+  color: #fff;
+  font-size: 12px;
+}
+
+section.dress-list article div.dress-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+section.dress-list article div.dress-info div.dress-info-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+section.dress-list article div.dress-info div.dress-info-header div.name {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+section.dress-list article div.dress-info div.dress-info-header div.name h2 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+section.dress-list article div.dress-info div.dress-info-header div.price {
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #1f9201;
+}
+
+section.dress-list article div.dress-info ul.dress-info-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 5px;
+  list-style-type: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+section.dress-list article div.dress-info ul.dress-info-list li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+section.dress-list article div.dress-info ul.dress-info-list li div.dress-info-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+}
+
+section.dress-list article div.dress-info ul.extras-list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  list-style-type: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+section.dress-list article div.dress-info ul.extras-list li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+section.dress-list article div.dress-info ul.extras-list li div.dress-info-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+}
+
+section.dress-list article div.dress-info ul.extras-list li div.dress-info-list-item svg.available {
+  color: #1f9201;
+}
+
+section.dress-list article div.dress-info ul.extras-list li div.dress-info-list-item svg.unavailable {
+  color: #c00;
+}
+
+section.dress-list article div.dress-info ul.extras-list li div.dress-info-list-item svg.extra-info {
+  color: #1976d2;
+}
+
+section.dress-list article div.dress-info div.action {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  margin-top: auto;
+}
+
+section.dress-list div.empty-list {
+  text-align: center;
+  margin-top: 50px;
+}
+
+@media only screen and (max-width: 960px) {
+  section.dress-list article {
+    flex-direction: column;
+  }
+
+  section.dress-list article div.dress {
+    width: 100%;
+  }
+}

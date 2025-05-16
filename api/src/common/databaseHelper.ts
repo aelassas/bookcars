@@ -2,7 +2,6 @@ import mongoose, { ConnectOptions, Model } from 'mongoose'
 import * as env from '../config/env.config'
 import * as logger from './logger'
 import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../models/Booking'
-import Car from '../models/Car'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Notification from '../models/Notification'
@@ -284,7 +283,6 @@ export const initialize = async (): Promise<boolean> => {
   try {
     if (mongoose.connection.readyState) {
       await createCollection<env.Booking>(Booking)
-      await createCollection<env.Car>(Car)
       await createCollection<env.LocationValue>(LocationValue)
       await createCollection<env.Country>(Country)
       await createCollection<env.ParkingSpot>(ParkingSpot)

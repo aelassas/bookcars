@@ -1,0 +1,159 @@
+section.dress-list {
+  width: 100%;
+  max-width: 1000px;
+}
+
+section.dress-list div.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+section.dress-list div.title div.bookcars {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.2em;
+}
+
+section.dress-list div.title div.bookcars span.title-bookcars {
+  font-weight: 700;
+  margin: 0 5px;
+}
+
+section.dress-list div.title div.dress-count {
+  font-size: 0.9em;
+  color: #777;
+}
+
+section.dress-list div.empty-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+section.dress-list article {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+section.dress-list article div.dress {
+  position: relative;
+  width: 100%;
+}
+
+section.dress-list article div.dress img.dress-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+section.dress-list article div.dress-footer {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+section.dress-list article div.dress-footer-row1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+section.dress-list article div.dress-footer-row1 div.rating {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+section.dress-list article div.dress-footer-row1 div.rating span.value {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+section.dress-list article div.dress-footer-row1 div.rating img {
+  width: 16px;
+  height: 16px;
+}
+
+section.dress-list article div.dress-footer-row1 div.rating span.rentals {
+  margin-left: 5px;
+  font-size: 0.8em;
+  color: #666;
+}
+
+section.dress-list article div.dress-footer h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+section.dress-list article div.dress-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+section.dress-list article div.dress-footer ul li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 15px;
+  margin-bottom: 10px;
+}
+
+section.dress-list article div.dress-footer ul li img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+section.dress-list article div.dress-footer ul li span {
+  font-size: 0.9em;
+}
+
+section.dress-list article div.action {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+section.dress-list article div.action button {
+  margin-left: 5px;
+}
+
+section.dress-list div.pager {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Device width is less than or equal to 960px */
+@media only screen and (width <= 960px) {
+  section.dress-list {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  section.dress-list article div.dress-footer ul {
+    flex-direction: column;
+  }
+
+  section.dress-list article div.dress-footer ul li {
+    margin-right: 0;
+  }
+}

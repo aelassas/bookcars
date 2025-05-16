@@ -33,6 +33,8 @@ import {
   QuestionAnswer as FaqIcon,
   PersonOutline as SignUpIcon,
   Cookie as CookiePolicyIcon,
+  Checkroom as DressIcon,
+  Analytics as AnalyticsIcon,
 } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { CircleFlag } from 'react-circle-flags'
@@ -382,6 +384,28 @@ const Header = ({
                     <ListItemIcon><SupplierIcon /></ListItemIcon>
                     <ListItemText primary={strings.SUPPLIERS} />
                   </ListItem>
+                )}
+                {isSignedIn && currentUser?.type === bookcarsTypes.UserType.Admin && (
+                  <>
+                    <ListItem
+                      onClick={() => {
+                        navigate('/dresses')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><DressIcon /></ListItemIcon>
+                      <ListItemText primary={strings.DRESSES || 'Dresses'} />
+                    </ListItem>
+                    <ListItem
+                      onClick={() => {
+                        navigate('/dress-analytics')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><AnalyticsIcon /></ListItemIcon>
+                      <ListItemText primary={strings.DRESS_ANALYTICS || 'Dress Analytics'} />
+                    </ListItem>
+                  </>
                 )}
                 <ListItem
                   onClick={() => {

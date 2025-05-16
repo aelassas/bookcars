@@ -40,7 +40,8 @@ const CreateDress: React.FC = () => {
     deposit: 0,
     minimumAge: env.MINIMUM_AGE,
     available: true,
-    locations: []
+    locations: [],
+    rentals: 0
   })
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -51,7 +52,7 @@ const CreateDress: React.FC = () => {
   useEffect(() => {
     const currentUser = helper.getUser()
     setUser(currentUser)
-    
+
     if (currentUser && !helper.admin(currentUser)) {
       setFormData(prev => ({
         ...prev,
@@ -107,7 +108,7 @@ const CreateDress: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
       setImage(file)
-      
+
       const reader = new FileReader()
       reader.onload = (event) => {
         if (event.target) {
@@ -120,23 +121,23 @@ const CreateDress: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
       setLoading(true)
       setError(null)
-      
+
       // Validate form data
-      if (!formData.name || !formData.type || !formData.size || !formData.style || !formData.color || 
+      if (!formData.name || !formData.type || !formData.size || !formData.style || !formData.color ||
           !formData.supplier || !formData.locations || formData.locations.length === 0) {
         setError(commonStrings.REQUIRED_FIELDS)
         setLoading(false)
         return
       }
-      
+
       // Create dress
       const result = await DressService.createDress(formData as Dress)
       const dressId = result.data._id
-      
+
       // Upload image if selected
       if (image) {
         const formData = new FormData()
@@ -144,7 +145,7 @@ const CreateDress: React.FC = () => {
         formData.append('id', dressId)
         await DressService.uploadDressImage(formData)
       }
-      
+
       setSuccess(true)
       setTimeout(() => {
         navigate('/dresses')
@@ -164,7 +165,7 @@ const CreateDress: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             {strings.CREATE_DRESS}
           </Typography>
-          
+
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -181,7 +182,7 @@ const CreateDress: React.FC = () => {
                   />
                 </Box>
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="name"
@@ -192,7 +193,7 @@ const CreateDress: React.FC = () => {
                   required
                 />
               </Grid>
-              
+
               {helper.admin(user) && (
                 <Grid item xs={12} sm={6}>
                   <SupplierSelectList
@@ -202,7 +203,7 @@ const CreateDress: React.FC = () => {
                   />
                 </Grid>
               )}
-              
+
               <Grid item xs={12} sm={6}>
                 <DressTypeList
                   label={strings.DRESS_TYPE}
@@ -210,7 +211,7 @@ const CreateDress: React.FC = () => {
                   onChange={handleTypeChange}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <DressSizeList
                   label={strings.DRESS_SIZE}
@@ -218,7 +219,7 @@ const CreateDress: React.FC = () => {
                   onChange={handleSizeChange}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <DressStyleList
                   label={strings.DRESS_STYLE}
@@ -226,7 +227,7 @@ const CreateDress: React.FC = () => {
                   onChange={handleStyleChange}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="color"
@@ -237,7 +238,7 @@ const CreateDress: React.FC = () => {
                   required
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="price"
@@ -252,7 +253,7 @@ const CreateDress: React.FC = () => {
                   }}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="deposit"
@@ -267,7 +268,7 @@ const CreateDress: React.FC = () => {
                   }}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="minimumAge"
@@ -282,7 +283,7 @@ const CreateDress: React.FC = () => {
                   }}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <LocationSelectList
                   label={strings.LOCATIONS}
@@ -291,7 +292,7 @@ const CreateDress: React.FC = () => {
                   onChange={handleLocationsChange}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
@@ -305,7 +306,7 @@ const CreateDress: React.FC = () => {
                   label={strings.AVAILABLE}
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="flex-end" gap={2}>
                   <Button
@@ -324,4 +325,13 @@ const CreateDress: React.FC = () => {
                     {commonStrings.CREATE}
                   </Button>
                 </Box>
-              </Gri
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Container>
+    </Layout>
+  )
+}
+
+export default CreateDress

@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.27.1",
+    "@types/node": "^22.15.18",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "babel-plugin-react-compiler": "^19.1.0-rc.1",

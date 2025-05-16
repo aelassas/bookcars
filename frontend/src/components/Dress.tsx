@@ -56,64 +56,70 @@ const Dress: React.FC<DressProps> = ({
         <Typography variant="h5" component="div">
           {dress.name}
         </Typography>
-        
+
         {!hideSupplier && dress.supplier && (
           <Typography variant="body2" color="text.secondary">
             {strings.SUPPLIER}: {typeof dress.supplier === 'object' ? dress.supplier.fullName : ''}
           </Typography>
         )}
-        
+
+        {dress.rentals !== undefined && dress.rentals > 0 && (
+          <Typography variant="body2" color="text.secondary">
+            {strings.RENTALS_COUNT || 'Rentals'}: {dress.rentals}
+          </Typography>
+        )}
+
         <Box sx={{ mt: 2 }}>
           <Grid container spacing={1}>
             <Grid item>
-              <Chip 
-                label={strings[`${dress.type.toUpperCase()}`] || dress.type} 
-                color="primary" 
-                size="small" 
+              <Chip
+                label={strings[`${dress.type.toUpperCase()}`] || dress.type}
+                color="primary"
+                size="small"
               />
             </Grid>
             <Grid item>
-              <Chip 
-                label={strings[`SIZE_${dress.size}`] || dress.size} 
-                color="secondary" 
-                size="small" 
+              <Chip
+                label={strings[`SIZE_${dress.size}`] || dress.size}
+                color="secondary"
+                size="small"
               />
             </Grid>
             <Grid item>
-              <Chip 
-                label={strings[`STYLE_${dress.style.toUpperCase()}`] || dress.style} 
-                variant="outlined" 
-                size="small" 
+              <Chip
+                label={strings[`STYLE_${dress.style.toUpperCase()}`] || dress.style}
+                variant="outlined"
+                size="small"
               />
             </Grid>
             <Grid item>
-              <Chip 
-                label={dress.color} 
-                variant="outlined" 
-                size="small" 
+              <Chip
+                label={dress.color}
+                variant="outlined"
+                size="small"
               />
             </Grid>
           </Grid>
         </Box>
-        
+
         {!hidePrice && (
           <Typography variant="h6" color="text.primary" sx={{ mt: 2 }}>
             ${dress.price} / {strings.DAY}
           </Typography>
         )}
-        
+
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <Button 
-            variant="outlined" 
+          <Button
+            variant="outlined"
             onClick={handleView}
           >
             {strings.VIEW_DETAILS}
           </Button>
-          
+
           {from && to && locationId && dress.available && (
-            <Button 
-              variant="contained" 
-              color="primary" 
+            <Button
+              variant="contained"
+              color="primary"
               onClick={handleRent}
             >
               {strings.RENT_NOW}

@@ -8,6 +8,7 @@ import {
 } from '@mui/material'
 import { DressSize } from ':bookcars-types'
 import { strings } from '../lang/dresses'
+import { strings as commonStrings } from '../lang/common'
 
 interface DressSizeFilterProps {
   onChange: (value: string) => void
@@ -31,11 +32,14 @@ const DressSizeFilter: React.FC<DressSizeFilterProps> = ({ onChange, className }
         label={strings.DRESS_SIZE}
         onChange={handleChange}
       >
-        <MenuItem value="">{strings.ALL}</MenuItem>
-        <MenuItem value={DressSize.XS}>{strings.SIZE_XS}</MenuItem>
-        <MenuItem value={DressSize.S}>{strings.SIZE_S}</MenuItem>
-        <MenuItem value={DressSize.M}>{strings.SIZE_M}</MenuItem>
-        <MenuItem value={DressSize.L}>{strings.SIZE_L}</MenuItem>
-        <MenuItem value={DressSize.XL}>{strings.SIZE_XL}</MenuItem>
-        <MenuItem value={DressSize.XXL}>{strings.SIZE_XXL}</MenuItem>
-        <MenuItem value={Dress
+        <MenuItem value="">{commonStrings.ALL}</MenuItem>
+        <MenuItem value={DressSize.Small}>{strings.SIZE_S}</MenuItem>
+        <MenuItem value={DressSize.Medium}>{strings.SIZE_M}</MenuItem>
+        <MenuItem value={DressSize.Large}>{strings.SIZE_L}</MenuItem>
+        <MenuItem value={DressSize.ExtraLarge}>{strings.SIZE_XL}</MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
+
+export default DressSizeFilter

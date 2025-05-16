@@ -17,6 +17,8 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Politique de Confidentialité',
     FAQ: 'FAQ',
     COOKIE_POLICY: 'Politique de cookies',
+    DRESSES: 'Robes',
+    DRESS_ANALYTICS: 'Analytique des Robes',
   },
   en: {
     SIGN_IN: 'Sign in',
@@ -33,6 +35,8 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Privacy Policy',
     FAQ: 'FAQ',
     COOKIE_POLICY: 'Cookie Policy',
+    DRESSES: 'Dresses',
+    DRESS_ANALYTICS: 'Dress Analytics',
   },
   es: {
     SIGN_IN: 'Iniciar sesión',
@@ -49,6 +53,8 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Política de Privacidad',
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
+    DRESSES: 'Vestidos',
+    DRESS_ANALYTICS: 'Análisis de Vestidos',
   },
   ar: {
     SIGN_IN: 'تسجيل الدخول',
@@ -65,6 +71,8 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'سياسة الخصوصية',
     FAQ: 'الأسئلة الشائعة',
     COOKIE_POLICY: 'سياسة ملفات تعريف الارتباط',
+    DRESSES: 'الفساتين',
+    DRESS_ANALYTICS: 'تحليلات الفساتين',
   },
 })
 

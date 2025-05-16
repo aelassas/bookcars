@@ -1,0 +1,92 @@
+div.create-dress {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+div.create-dress div.dress-form {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+div.create-dress div.dress-form-wrapper {
+  padding: 20px;
+}
+
+div.create-dress div.dress-form h1.dress-form-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+div.create-dress div.dress-form div.avatar-ctn {
+  margin-bottom: 20px;
+  width: 100%;
+  height: 300px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+div.create-dress div.dress-form div.avatar-ctn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+div.create-dress div.dress-form div.info {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  align-items: center;
+  margin-bottom: 20px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+div.create-dress div.dress-form div.info svg {
+  font-size: 1.1em;
+}
+
+div.create-dress div.dress-form div.info span {
+  font-size: 0.9em;
+}
+
+div.create-dress div.dress-form div.checkbox-fc {
+  margin-top: 10px;
+}
+
+div.create-dress div.dress-form div.checkbox-fc label.checkbox-fcl {
+  margin-left: 0;
+}
+
+div.create-dress div.dress-form div.buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 10px;
+}
+
+div.create-dress div.dress-form div.buttons button.btn-margin-bottom {
+  margin-bottom: 10px;
+}
+
+div.create-dress div.dress-form div.form-error {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 960px) {
+  div.create-dress div.dress-form {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

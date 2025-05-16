@@ -1,0 +1,155 @@
+div.dress {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+div.dress div.col-1 {
+  padding: 20px 0 20px 20px;
+  width: 350px;
+  overflow: auto;
+}
+
+div.dress div.col-1 section.dress-sec {
+  background: #fbfbfb;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+div.dress div.col-1 section.dress-sec div.name {
+  margin-bottom: 20px;
+}
+
+div.dress div.col-1 section.dress-sec div.name h2 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.avatar-ctn {
+  width: 100%;
+  height: 200px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.avatar-ctn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.dress-supplier {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  align-items: center;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.dress-supplier span.dress-supplier-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.dress-supplier span.dress-supplier-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-img div.dress-supplier span.dress-supplier-info {
+  color: #fff;
+  font-weight: 500;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list li div.dress-info-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list li.dress-available div.dress-info-list-item svg {
+  color: #1f9201;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list li.dress-unavailable div.dress-info-list-item svg {
+  color: #c00;
+}
+
+div.dress div.col-1 section.dress-sec div.dress-info ul.dress-info-list li.dress-customizable div.dress-info-list-item svg.available {
+  color: #1f9201;
+}
+
+div.dress div.col-1 section.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 10px;
+}
+
+div.dress div.col-1 section.buttons button.btn-margin {
+  margin-right: 10px;
+}
+
+div.dress div.col-1 section.buttons button.btn-margin-bottom {
+  margin-bottom: 10px;
+}
+
+div.dress div.col-2 {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+div.dress div.col-2 div.booking-list {
+  height: 100%;
+}
+
+@media only screen and (max-width: 960px) {
+  div.dress {
+    flex-direction: column;
+  }
+
+  div.dress div.col-1 {
+    width: auto;
+    padding: 20px 20px 0 20px;
+  }
+
+  div.dress div.col-2 {
+    padding: 20px;
+  }
+}

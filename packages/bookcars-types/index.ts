@@ -50,6 +50,10 @@ export enum DressMaterial {
   Chiffon = 'chiffon',
 }
 
+export enum RentalTerm {
+  Limited = 'limited',
+  Unlimited = 'unlimited',
+}
 
 
 export enum BookingStatus {
@@ -82,6 +86,9 @@ export enum PaymentGateway {
   Stripe = 'stripe',
   Visa = 'visa',
 }
+
+// All car-related enums and interfaces have been removed
+// Only dress-related types are kept
 
 export interface Booking {
   _id?: string
@@ -215,7 +222,7 @@ export interface CreateDressPayload {
   color: string
   length: number
   material: string
-  wearCount?: number
+  rentals?: number
   cancellation: number
   amendments: number
   range: string
@@ -234,14 +241,16 @@ export interface DressSpecs {
   customizable?: boolean,
   designerMade?: boolean,
   customSize?: boolean,
+  premium?: boolean,
+  longDress?: boolean,
+  embroidered?: boolean,
 }
-
-
 
 export interface GetDressesPayload {
   suppliers?: string[]
   dressSpecs?: DressSpecs
   dressType?: string[]
+  size?: string[]
   dressSize?: string[]
   material?: string[]
   deposit?: number
@@ -491,7 +500,6 @@ export interface Dress {
   color: string
   length: number
   material: DressMaterial
-  wearCount?: number
   cancellation: number
   amendments: number
   range: string
@@ -637,6 +645,5 @@ export type DressFilterSubmitEvent = (filter: DressFilter) => void
 export interface DressOptions {
   cancellation?: boolean
   amendments?: boolean
-  additionalDriver?: boolean
   accessories?: boolean
 }

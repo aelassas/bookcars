@@ -189,7 +189,7 @@ dressSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -
 dressSchema.index({ available: 1, size: 1, deposit: 1 })
 dressSchema.index({ color: 1, length: 1 })
 dressSchema.index({ material: 1 })
-dressSchema.index({ wearCount: 1 })
+dressSchema.index({ rentals: 1 })
 dressSchema.index({ locations: 1, available: 1, fullyBooked: 1 })
 dressSchema.index({ comingSoon: 1 })
 dressSchema.index({ range: 1 })
@@ -203,3 +203,5 @@ const Dress = model<env.Dress>('Dress', dressSchema)
 Dress.syncIndexes().catch((err) => {
   logger.error('Error creating Dress indexes:', err)
 })
+
+export default Dress

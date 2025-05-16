@@ -1,0 +1,21 @@
+div.dress-scheduler-filter {
+  margin-top: 20px;
+}
+
+div.dress-scheduler-filter div.bf-search {
+  margin-bottom: 20px;
+}
+
+div.dress-scheduler-filter div.bf-search svg.d-adornment-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+div.dress-scheduler-filter button.btn-search {
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 960px) {
+  div.dress-scheduler-filter {
+    margin-top: 0;
+  }
+}

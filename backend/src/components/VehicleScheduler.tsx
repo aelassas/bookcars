@@ -73,7 +73,7 @@ const VehicleScheduler = (
 
     const events = bookings.map((booking): ProcessedEvent => ({
       event_id: booking._id as string,
-      title: `${(booking.car as bookcarsTypes.Car).name} / ${(booking.supplier as bookcarsTypes.User).fullName} / ${helper.getBookingStatus(booking.status)}`,
+      title: `${(booking.dress as bookcarsTypes.Dress)?.name || 'Unknown Dress'} / ${(booking.supplier as bookcarsTypes.User).fullName} / ${helper.getBookingStatus(booking.status)}`,
       start: new Date(booking.from),
       end: new Date(booking.to),
       color: helper.getBookingStatusBackgroundColor(booking.status),

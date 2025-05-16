@@ -363,17 +363,10 @@ export const calculateTotalPrice = (dress: bookcarsTypes.Dress, from: Date, to: 
     if (options.amendments && dress.amendments > 0) {
       totalPrice += dress.amendments
     }
-    if (options.theftProtection && dress.theftProtection > 0) {
-      totalPrice += dress.theftProtection * totalDays
-    }
-    if (options.collisionDamageWaiver && dress.collisionDamageWaiver > 0) {
-      totalPrice += dress.collisionDamageWaiver * totalDays
-    }
-    if (options.fullInsurance && dress.fullInsurance > 0) {
-      totalPrice += dress.fullInsurance * totalDays
-    }
-    if (options.additionalDriver && dress.additionalDriver > 0) {
-      totalPrice += dress.additionalDriver * totalDays
+    // Car-specific options removed
+    if (options.accessories && dress.accessories && dress.accessories.length > 0) {
+      // Add a flat fee for accessories
+      totalPrice += 15 * totalDays
     }
   }
 
@@ -475,6 +468,47 @@ export const getAllAccessories = () => [
   bookcarsTypes.DressAccessories.Jewelry,
   bookcarsTypes.DressAccessories.Shoes,
   bookcarsTypes.DressAccessories.Headpiece,
+]
+
+/**
+ * Return all car types.
+ *
+ * @returns {bookcarsTypes.CarType[]}
+ */
+export const getAllCarTypes = () => [
+  bookcarsTypes.CarType.Diesel,
+  bookcarsTypes.CarType.Gasoline,
+  bookcarsTypes.CarType.Electric,
+  bookcarsTypes.CarType.Hybrid,
+  bookcarsTypes.CarType.PlugInHybrid,
+  bookcarsTypes.CarType.Unknown,
+]
+
+/**
+ * Return all car multimedia options.
+ *
+ * @returns {bookcarsTypes.CarMultimedia[]}
+ */
+export const getAllMultimedias = () => [
+  bookcarsTypes.CarMultimedia.AndroidAuto,
+  bookcarsTypes.CarMultimedia.AppleCarPlay,
+  bookcarsTypes.CarMultimedia.BluetoothConnection,
+  bookcarsTypes.CarMultimedia.CdPlayer,
+  bookcarsTypes.CarMultimedia.ParkingSensors,
+  bookcarsTypes.CarMultimedia.RearviewCamera,
+  bookcarsTypes.CarMultimedia.UsbConnection,
+]
+
+/**
+ * Return all fuel policies.
+ *
+ * @returns {bookcarsTypes.FuelPolicy[]}
+ */
+export const getAllFuelPolicies = () => [
+  bookcarsTypes.FuelPolicy.LikeForLike,
+  bookcarsTypes.FuelPolicy.FreeTank,
+  bookcarsTypes.FuelPolicy.FullToFull,
+  bookcarsTypes.FuelPolicy.FullToEmpty,
 ]
 
 /**

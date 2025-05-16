@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import Dress from '../models/Dress'
 import * as helper from '../common/helper'
 import * as env from '../config/env.config'
-import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsTypes from '../../../packages/bookcars-types'
 
 /**
  * Get all dresses.
@@ -47,7 +47,7 @@ export const getDresses = async (req: Request, res: Response): Promise<void> => 
 
     const result = await Dress.paginate(query, options)
     res.json(result)
-  } catch (err) {
+  } catch (err: any) {
     console.error(`[dressController.getDresses] ${err}`)
     res.status(500).json({ error: err.message })
   }
@@ -73,7 +73,7 @@ export const getDress = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.json(dress)
-  } catch (err) {
+  } catch (err: any) {
     console.error(`[dressController.getDress] ${err}`)
     res.status(500).json({ error: err.message })
   }
@@ -118,6 +118,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       range,
       accessories,
       rating,
+      rentals,
       designerName
     } = req.body
 
@@ -151,14 +152,15 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       range,
       accessories,
       rating,
+      rentals,
       designerName
     })
 
     await dress.save()
     res.json(dress)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.create] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -193,7 +195,6 @@ export const update = async (req: Request, res: Response): Promise<void> => {
       comingSoon,
       type,
       size,
-
       color,
       length,
       material,
@@ -202,6 +203,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
       range,
       accessories,
       rating,
+      rentals,
       designerName
     } = req.body
 
@@ -237,6 +239,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
         range,
         accessories,
         rating,
+        rentals,
         designerName
       },
       { new: true }
@@ -248,9 +251,9 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.json(dress)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.update] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -272,9 +275,9 @@ export const deleteDress = async (req: Request, res: Response): Promise<void> =>
     }
 
     res.sendStatus(200)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.deleteDress] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -385,7 +388,7 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
       await fs.promises.unlink(imagePath)
     }
 
-    dress.image = undefined
+    dress.image = null
     await dress.save()
 
     res.sendStatus(200)
@@ -509,8 +512,6 @@ export const getFrontendDresses = async (req: Request, res: Response): Promise<v
         query.available = false
       }
     }
-
-
 
     if (payload.material && payload.material.length > 0) {
       query.material = { $in: payload.material }

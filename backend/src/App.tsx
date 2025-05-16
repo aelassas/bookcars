@@ -23,6 +23,10 @@ const Cars = lazy(() => import('@/pages/Cars'))
 const Car = lazy(() => import('@/pages/Car'))
 const CreateCar = lazy(() => import('@/pages/CreateCar'))
 const UpdateCar = lazy(() => import('@/pages/UpdateCar'))
+const Dresses = lazy(() => import('@/pages/Dresses'))
+const Dress = lazy(() => import('@/pages/Dress'))
+const CreateDress = lazy(() => import('@/pages/CreateDress'))
+const UpdateDress = lazy(() => import('@/pages/UpdateDress'))
 const Bookings = lazy(() => import('@/pages/Bookings'))
 const UpdateBooking = lazy(() => import('@/pages/UpdateBooking'))
 const CreateBooking = lazy(() => import('@/pages/CreateBooking'))
@@ -91,6 +95,10 @@ const router = createBrowserRouter([
       { path: 'car', element: <Car /> },
       { path: 'create-car', element: <CreateCar /> },
       { path: 'update-car', element: <UpdateCar /> },
+      { path: 'dresses', element: <Dresses /> },
+      { path: 'dress', element: <Dress /> },
+      { path: 'create-dress', element: <CreateDress /> },
+      { path: 'update-dress', element: <UpdateDress /> },
       { path: 'update-booking', element: <UpdateBooking /> },
       { path: 'create-booking', element: <CreateBooking /> },
       { path: 'users', element: <Users /> },

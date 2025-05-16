@@ -10,7 +10,7 @@ import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
-import Car from '../models/Car'
+import Dress from '../models/Dress'
 import ParkingSpot from '../models/ParkingSpot'
 import * as logger from '../common/logger'
 

@@ -1,0 +1,226 @@
+div.dress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+div.dress-container article .btn-book {
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  height: 42px;
+  margin: 0;
+  white-space: nowrap;
+  padding: 0 20px;
+}
+
+div.dress-container article span.coming-soon,
+div.dress-container article span.fully-booked {
+  font-size: 12px;
+  font-weight: bold;
+  display: table-row;
+  text-align: right;
+}
+
+div.dress-container article span.coming-soon {
+  color: #FD3446;
+}
+
+div.dress-container article span.fully-booked {
+  color: #FD3446;
+}
+
+div.dress-container div.dress-header {
+  padding: 10px 0;
+  border-bottom: #d9d8d9 2px solid;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+div.dress-container div.dress-header div.location {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.dress-container div.dress-header div.location span.location-name {
+  margin-left: 5px;
+}
+
+div.dress-container div.dress-header div.distance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.dress-container div.dress-header div.distance img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+div.dress-container article {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+div.dress-container article div.dress {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+div.dress-container article div.dress .dress-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+div.dress-container article div.dress-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+div.dress-container article div.dress-supplier {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+div.dress-container article div.dress-supplier span.dress-supplier-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.dress-container article div.dress-supplier span.dress-supplier-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+div.dress-container article div.dress-supplier span.dress-supplier-info {
+  color: #333;
+  display: inline-block;
+  font-size: 0.9em;
+  line-height: 1em;
+  white-space: nowrap;
+  margin-left: 5px;
+}
+
+div.dress-container article div.dress-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+div.dress-container article div.dress-footer div.rating {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.dress-container article div.dress-footer div.rating span.value {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+div.dress-container article div.dress-footer div.rating img {
+  width: 16px;
+  height: 16px;
+}
+
+div.dress-container article div.dress-footer div.rating span.rentals {
+  margin-left: 5px;
+  font-size: 0.8em;
+  color: #666;
+}
+
+div.dress-container article div.dress-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 15px;
+}
+
+div.dress-container article div.dress-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+div.dress-container article div.dress-info ul li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+div.dress-container article div.dress-info ul li span.dress-info-label {
+  font-weight: 500;
+  margin-right: 10px;
+  min-width: 100px;
+}
+
+div.dress-container article div.action {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (width <=960px) {
+  div.dress-container {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  div.dress-container article {
+    flex-direction: column;
+    align-items: flex-start;
+    width: calc(100% - 20px);
+  }
+
+  div.dress-container div.dress-header {
+    width: calc(100% - 20px);
+  }
+
+  div.dress-container article div.dress .dress-footer {
+    margin-bottom: 20px;
+  }
+
+  section.dress-list article div.dress-info {
+    width: 100%;
+  }
+}

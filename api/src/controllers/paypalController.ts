@@ -6,7 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import Booking from '../models/Booking'
 import User from '../models/User'
-import Car from '../models/Car'
+import Dress from '../models/Dress'
 import * as bookingController from './bookingController'
 import * as ipinfoHelper from '../common/ipinfoHelper'
 
@@ -81,15 +81,15 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
       await booking.save()
 
-      const car = await Car.findById(booking.car)
-      if (!car) {
-        throw new Error(`Car ${booking.car} not found`)
+      const dress = await Dress.findById(booking.dress)
+      if (!dress) {
+        throw new Error(`Dress ${booking.dress} not found`)
       }
-      // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
-      //   car.fullyBooked = true
+      // if (env.MARK_DRESS_AS_FULLY_BOOKED_ON_CHECKOUT) {
+      //   dress.fullyBooked = true
       // }
-      car.trips += 1
-      await car.save()
+      dress.rentals += 1
+      await dress.save()
 
       const supplier = await User.findById(booking.supplier)
       if (!supplier) {

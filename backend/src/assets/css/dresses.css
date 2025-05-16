@@ -1,0 +1,72 @@
+div.dresses {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+div.dresses div.col-1 {
+  padding: 20px 0 20px 20px;
+  width: 300px;
+  overflow: auto;
+}
+
+div.dresses div.col-1 div.col-1-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+div.dresses div.col-1 div.dress-search {
+  width: 100%;
+}
+
+div.dresses div.col-1 div.dress-search div.search-box {
+  width: 100%;
+}
+
+div.dresses div.col-1 button.new-dress {
+  width: 100%;
+}
+
+div.dresses div.col-1 div.dress-filters {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+div.dresses div.col-1 div.dress-filter {
+  width: 100%;
+}
+
+div.dresses div.col-2 {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+div.dresses div.col-2 div.col-2-container {
+  height: 100%;
+}
+
+div.dresses div.col-2 div.dress-list {
+  height: 100%;
+}
+
+@media only screen and (max-width: 960px) {
+  div.dresses {
+    flex-direction: column;
+  }
+
+  div.dresses div.col-1 {
+    width: auto;
+    padding: 20px 20px 0 20px;
+  }
+
+  div.dresses div.col-2 {
+    padding: 20px;
+  }
+}

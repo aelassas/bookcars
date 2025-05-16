@@ -10,7 +10,7 @@ import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
 import User from '../models/User'
 import Token from '../models/Token'
-import Car from '../models/Car'
+import Dress from '../models/Dress'
 import Location from '../models/Location'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
@@ -122,9 +122,9 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
   }
   const from = booking.from.toLocaleString(locale, options)
   const to = booking.to.toLocaleString(locale, options)
-  const car = await Car.findById(booking.car).populate<{ supplier: env.User }>('supplier')
-  if (!car) {
-    logger.info(`Car ${booking.car} not found`)
+  const dress = await Dress.findById(booking.dress).populate<{ supplier: env.User }>('supplier')
+  if (!dress) {
+    logger.info(`Dress ${booking.dress} not found`)
     return false
   }
   const pickupLocation = await Location.findById(booking.pickupLocation).populate<{ values: env.LocationValue[] }>('values')
@@ -158,11 +158,11 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
         ${i18n.t('HELLO')}${user.fullName},<br><br>
         ${!payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
         + '<br><br>' : ''}
-        ${i18n.t('BOOKING_CONFIRMED_PART3')}${car.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
+        ${i18n.t('BOOKING_CONFIRMED_PART3')}${dress.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
       + `${from} ${i18n.t('BOOKING_CONFIRMED_PART6')}`
-      + `${car.name}${i18n.t('BOOKING_CONFIRMED_PART7')}`
+      + `${dress.name}${i18n.t('BOOKING_CONFIRMED_PART7')}`
       + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART8')}<br><br>`
-      + `${i18n.t('BOOKING_CONFIRMED_PART9')}${car.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
+      + `${i18n.t('BOOKING_CONFIRMED_PART9')}${dress.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
       + `${to} ${i18n.t('BOOKING_CONFIRMED_PART12')}`
       + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART13')}<br><br>${i18n.t('BOOKING_CONFIRMED_PART14')}${env.FRONTEND_HOST}<br><br>
         ${i18n.t('REGARDS')}<br>
@@ -332,18 +332,18 @@ export const checkout = async (req: Request, res: Response) => {
     await booking.save()
 
     if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
-      const car = await Car.findById(booking.car)
-      if (!car) {
-        throw new Error(`Car ${booking.car} not found`)
+      const dress = await Dress.findById(booking.dress)
+      if (!dress) {
+        throw new Error(`Dress ${booking.dress} not found`)
       }
-      car.trips += 1
-      await car.save()
+      dress.rentals += 1
+      await dress.save()
     }
 
     if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
-      // Mark car as fully booked
-      // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
-      //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
+      // Mark dress as fully booked
+      // if (env.MARK_DRESS_AS_FULLY_BOOKED_ON_CHECKOUT) {
+      //   await Dress.updateOne({ _id: booking.dress }, { fullyBooked: false })
       // }
 
       // Send confirmation email to customer
@@ -619,6 +619,14 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     for (const booking of bookings) {
       if (booking.status !== status) {
+        // Increment rentals count when booking status changes to Paid
+        if (status === bookcarsTypes.BookingStatus.Paid && booking.dress) {
+          const dress = await Dress.findById(booking.dress)
+          if (dress) {
+            dress.rentals = (dress.rentals || 0) + 1
+            await dress.save()
+          }
+        }
         await notifyDriver(booking)
       }
     }

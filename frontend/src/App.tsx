@@ -38,6 +38,11 @@ const Locations = lazy(() => import('@/pages/Locations'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
+const Dresses = lazy(() => import('@/pages/Dresses'))
+const Dress = lazy(() => import('@/pages/Dress'))
+const CreateDress = lazy(() => import('@/pages/CreateDress'))
+const UpdateDress = lazy(() => import('@/pages/UpdateDress'))
+const DressAnalytics = lazy(() => import('@/pages/DressAnalytics'))
 
 const AppLayout = () => {
   const location = useLocation()
@@ -102,6 +107,11 @@ const router = createBrowserRouter([
       { path: 'locations', element: <Locations /> },
       { path: 'faq', element: <Faq /> },
       { path: 'cookie-policy', element: <CookiePolicy /> },
+      { path: 'dresses', element: <Dresses /> },
+      { path: 'dress', element: <Dress /> },
+      { path: 'create-dress', element: <CreateDress /> },
+      { path: 'update-dress', element: <UpdateDress /> },
+      { path: 'dress-analytics', element: <DressAnalytics /> },
       ...(env.HIDE_SUPPLIERS ? [] : [{ path: 'suppliers', element: <Suppliers /> }]),
       { path: '*', element: <NoMatch /> }
     ]

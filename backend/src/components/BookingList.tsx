@@ -38,12 +38,14 @@ interface BookingListProps {
   statuses?: string[]
   filter?: bookcarsTypes.Filter | null
   car?: string
+  dress?: string
   offset?: number
   user?: bookcarsTypes.User
   loggedUser?: bookcarsTypes.User
   containerClassName?: string
   hideDates?: boolean
   hideCarColumn?: boolean
+  hideDressColumn?: boolean
   hideSupplierColumn?: boolean
   language?: string
   loading?: boolean
@@ -56,12 +58,14 @@ const BookingList = ({
   statuses: bookingStatuses,
   filter: bookingFilter,
   car: bookingCar,
+  dress: bookingDress,
   offset: bookingOffset,
   user: bookingUser,
   loggedUser: bookingLoggedUser,
   containerClassName,
   hideDates,
   hideCarColumn,
+  hideDressColumn,
   hideSupplierColumn,
   language,
   checkboxSelection,
@@ -85,6 +89,7 @@ const BookingList = ({
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
   const [car, setCar] = useState<string>(bookingCar || '')
+  const [dress, setDress] = useState<string>(bookingDress || '')
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
   const [openDeleteDialog, setopenDeleteDialog] = useState(false)
   const [offset, setOffset] = useState(0)
@@ -101,7 +106,7 @@ const BookingList = ({
     }
   }, [paginationModel])
 
-  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _car?: string) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _car?: string, _dress?: string) => {
     try {
       const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
@@ -112,6 +117,7 @@ const BookingList = ({
           statuses,
           filter: filter || undefined,
           car: _car || car,
+          dress: _dress || dress,
           user: (_user && _user._id) || undefined,
         }
 
@@ -175,6 +181,14 @@ const BookingList = ({
       fetchData(page, user, bookingCar)
     }
   }, [bookingCar]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setDress(bookingDress || '')
+
+    if (bookingDress) {
+      fetchData(page, user, undefined, bookingDress)
+    }
+  }, [bookingDress]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setOffset(bookingOffset || 0)
@@ -313,8 +327,18 @@ const BookingList = ({
         field: 'car',
         headerName: strings.CAR,
         flex: 1,
-        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/car?cr=${(row.car as bookcarsTypes.Car)._id}`}>{value}</Link>,
-        valueGetter: (value: bookcarsTypes.Car) => value?.name,
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/car?cr=${(row.car as any)?._id}`}>{value}</Link>,
+        valueGetter: (value: any) => value?.name,
+      })
+    }
+
+    if (!hideDressColumn) {
+      _columns.unshift({
+        field: 'dress',
+        headerName: strings.DRESS,
+        flex: 1,
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/dress?dr=${(row.dress as any)?._id}`}>{value}</Link>,
+        valueGetter: (value: any) => value?.name,
       })
     }
 
@@ -494,12 +518,22 @@ const BookingList = ({
                   <div className={`bs bs-${booking.status}`}>
                     <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
-                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                    <span className="booking-detail-title">{strings.CAR}</span>
-                    <div className="booking-detail-value">
-                      <Link href={`car/?cr=${(booking.car as bookcarsTypes.Car)._id}`}>{(booking.car as bookcarsTypes.Car).name}</Link>
+                  {booking.car && (
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <span className="booking-detail-title">{strings.CAR}</span>
+                      <div className="booking-detail-value">
+                        <Link href={`car/?cr=${(booking.car as any)._id}`}>{(booking.car as any).name}</Link>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {booking.dress && (
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <span className="booking-detail-title">{strings.DRESS}</span>
+                      <div className="booking-detail-value">
+                        <Link href={`dress/?dr=${(booking.dress as any)._id}`}>{(booking.dress as any).name}</Link>
+                      </div>
+                    </div>
+                  )}
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DRIVER}</span>
                     <div className="booking-detail-value">
@@ -532,7 +566,7 @@ const BookingList = ({
                     </div>
                   </div>
 
-                  {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver) && (
+                  {(booking.cancellation || booking.amendments) && (
                     <>
                       <div className="extras">
                         <span className="extras-title">{commonStrings.OPTIONS}</span>
@@ -540,7 +574,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.CANCELLATION}</span>
-                            <span className="extra-text">{helper.getCancellationOption((booking.car as bookcarsTypes.Car).cancellation, language as string, true)}</span>
+                            <span className="extra-text">{helper.getCancellationOption((booking.dress as any)?.cancellation || (booking.car as any)?.cancellation, language as string, true)}</span>
                           </div>
                         )}
 
@@ -548,41 +582,11 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.AMENDMENTS}</span>
-                            <span className="extra-text">{helper.getAmendmentsOption((booking.car as bookcarsTypes.Car).amendments, language as string, true)}</span>
+                            <span className="extra-text">{helper.getAmendmentsOption((booking.dress as any)?.amendments || (booking.car as any)?.amendments, language as string, true)}</span>
                           </div>
                         )}
 
-                        {booking.collisionDamageWaiver && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="extra-text">{helper.getCollisionDamageWaiverOption((booking.car as bookcarsTypes.Car).collisionDamageWaiver, days, language as string, true)}</span>
-                          </div>
-                        )}
 
-                        {booking.theftProtection && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="extra-text">{helper.getTheftProtectionOption((booking.car as bookcarsTypes.Car).theftProtection, days, language as string, true)}</span>
-                          </div>
-                        )}
-
-                        {booking.fullInsurance && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.FULL_INSURANCE}</span>
-                            <span className="extra-text">{helper.getFullInsuranceOption((booking.car as bookcarsTypes.Car).fullInsurance, days, language as string, true)}</span>
-                          </div>
-                        )}
-
-                        {booking.additionalDriver && (
-                          <div className="extra">
-                            <CheckIcon className="extra-icon" />
-                            <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="extra-text">{helper.getAdditionalDriverOption((booking.car as bookcarsTypes.Car).additionalDriver, days, language as string, true)}</span>
-                          </div>
-                        )}
                       </div>
                     </>
                   )}

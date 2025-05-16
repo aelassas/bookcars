@@ -1,0 +1,88 @@
+div.dresses {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+}
+
+div.dresses .sc-search {
+  width: 100%;
+}
+
+div.dresses .new-dress {
+  margin: 10px 5px 0 0;
+  width: 100%;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (width <=960px) {
+  div.dresses {
+    flex-direction: column;
+    flex: 0 1 auto;
+  }
+
+  div.dresses .sc-search {
+    width: 80%;
+  }
+
+  div.dresses .new-dress {
+    margin: 20px 5px 5px 0;
+    width: 100%;
+  }
+
+  div.dresses div.col-1 {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+  }
+
+  div.dresses div.col-1 div.col-1-container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  div.dresses .dress-filter {
+    text-align: left;
+  }
+
+  div.dresses div.col-2 {
+    margin-top: 3px;
+    padding: 1px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (width >=960px) {
+  div.dresses {
+    flex-direction: row;
+  }
+
+  div.dresses div.col-1 {
+    width: 300px;
+    margin-left: 20px;
+  }
+
+  div.dresses div.col-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  div.dresses div.search {
+    margin-top: 15px;
+  }
+
+  div.dresses .new-dress {
+    margin: 10px 5px 0 0;
+    width: 100%;
+  }
+}

@@ -7,10 +7,10 @@ import { strings } from '@/lang/bookings'
 import env from '@/config/env.config'
 import * as helper from '@/common/helper'
 import * as SupplierService from '@/services/SupplierService'
-import VehicleScheduler from '@/components/VehicleScheduler'
+import DressScheduler from '@/components/DressScheduler'
 import SupplierFilter from '@/components/SupplierFilter'
 import StatusFilter from '@/components/StatusFilter'
-import VehicleSchedulerFilter from '@/components/VehicleSchedulerFilter'
+import DressSchedulerFilter from '@/components/DressSchedulerFilter'
 
 import Layout from '@/components/Layout'
 
@@ -35,7 +35,7 @@ const Scheduler = () => {
     setStatuses(_statuses)
   }
 
-  const handleVehicleSchedulerFilterSubmit = (_filter: bookcarsTypes.Filter | null) => {
+  const handleDressSchedulerFilterSubmit = (_filter: bookcarsTypes.Filter | null) => {
     setFilter(_filter)
   }
 
@@ -64,20 +64,20 @@ const Scheduler = () => {
                 <Button variant="contained" className="btn-primary cl-new-booking" size="small" onClick={() => navigate('/create-booking')}>
                   {strings.NEW_BOOKING}
                 </Button>
-                {admin
-                  && (
-                    <SupplierFilter
-                      suppliers={allSuppliers}
-                      onChange={handleSupplierFilterChange}
-                      className="cl-supplier-filter"
-                    />
-                  )}
+
+                {admin && (
+                  <SupplierFilter
+                    suppliers={allSuppliers}
+                    onChange={handleSupplierFilterChange}
+                    className="cl-supplier-filter"
+                  />
+                )}
                 <StatusFilter
                   onChange={handleStatusFilterChange}
                   className="cl-status-filter"
                 />
-                <VehicleSchedulerFilter
-                  onSubmit={handleVehicleSchedulerFilterSubmit}
+                <DressSchedulerFilter
+                  onSubmit={handleDressSchedulerFilterSubmit}
                   className="cl-scheduler-filter"
                   collapse={!env.isMobile}
                 />
@@ -85,7 +85,7 @@ const Scheduler = () => {
             )}
           </div>
           <div className="col-2">
-            <VehicleScheduler
+            <DressScheduler
               suppliers={suppliers}
               statuses={statuses}
               filter={filter!}
