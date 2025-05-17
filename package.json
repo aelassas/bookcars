@@ -1,6 +1,6 @@
 {
   "name": "bookcars",
-  "version": "6.9.0",
+  "version": "7.2.0",
   "description": "Car Rental Booking System",
   "keywords": [
     "react",
@@ -28,10 +28,11 @@
   "main": "pre-commit.js",
   "scripts": {
     "pre-commit": "node pre-commit.js",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "chalk": "^5.4.1",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "p-limit": "^6.2.0"
   }
 }

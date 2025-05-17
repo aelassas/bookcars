@@ -89,7 +89,7 @@ const Map = ({
 }: MapProps) => {
   const _initialZoom = initialZoom || 5.5
   const [zoom, setZoom] = useState(_initialZoom)
-  const map = useRef<L.Map>(null)
+  const map = useRef<L.Map | null>(null)
 
   useEffect(() => {
     if (map.current) {
@@ -97,6 +97,12 @@ const Map = ({
       map.current.invalidateSize()
     }
   }, [map])
+
+  useEffect(() => {
+    if (map.current && position) {
+      map.current.setView(position, _initialZoom)
+    }
+  }, [position, _initialZoom, map])
 
   //
   // Tile server

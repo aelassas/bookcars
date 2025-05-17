@@ -3,7 +3,7 @@ import { FormControl, Input, InputLabel, Paper } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '@/common/helper'
 import * as BankDetailsService from '@/services/BankDetailsService'
-import { strings } from '@/lang/settings'
+import { strings } from '@/lang/bank-details-form'
 import Layout from '@/components/Layout'
 import NoMatch from './NoMatch'
 
@@ -31,11 +31,7 @@ const BankDetails = () => {
 
         {bankDetails && !noMatch && (
           <Paper className="bank-details-form bank-details-form-wrapper" elevation={10}>
-            <h1 className="bank-details-form-title">
-              {' '}
-              {strings.BANK_DETAILS}
-              {' '}
-            </h1>
+            <h1 className="bank-details-form-title">{strings.BANK_DETAILS}</h1>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{strings.ACCOUNT_HOLDER}</InputLabel>

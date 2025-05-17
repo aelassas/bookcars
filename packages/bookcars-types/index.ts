@@ -164,6 +164,7 @@ export interface UpsertLocationPayload {
   names: LocationName[]
   image?: string | null
   parkingSpots?: ParkingSpot[]
+  supplier?: string
 }
 
 export interface UpdateSupplierPayload {
@@ -178,6 +179,7 @@ export interface UpdateSupplierPayload {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  blacklisted?: boolean
 }
 
 export interface CreateCarPayload {
@@ -313,6 +315,7 @@ export interface ActivatePayload {
 
 export interface ValidateEmailPayload {
   email: string
+  appType?: AppType
 }
 
 export enum SocialSignInType {
@@ -426,16 +429,23 @@ export interface Location {
   values?: LocationValue[]
   image?: string
   parkingSpots?: ParkingSpot[]
+  supplier?: User
 }
 
 export interface Country {
   _id: string
   name?: string
   values?: LocationValue[]
+  supplier?: User
 }
 
 export interface CountryInfo extends Country {
   locations?: Location[]
+}
+
+export interface UpsertCountryPayload {
+  names: CountryName[]
+  supplier?: string
 }
 
 export interface DateBasedPrice {

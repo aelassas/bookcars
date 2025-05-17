@@ -6,13 +6,15 @@ import {
   FormControl,
   FormHelperText,
   Button,
-  Paper
+  Paper,
+  FormLabel
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as clStrings } from '@/lang/create-country'
+import { strings as suppliersStrings } from '@/lang/suppliers'
 import { strings } from '@/lang/update-country'
 import * as CountryService from '@/services/CountryService'
 import NoMatch from './NoMatch'
@@ -20,12 +22,14 @@ import Error from './Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
+import SupplierBadge from '@/components/SupplierBadge'
 
 import '@/assets/css/update-country.css'
 
 const UpdateCountry = () => {
   const navigate = useNavigate()
 
+  const [user, setUser] = useState<bookcarsTypes.User>()
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.CountryName[]>([])
@@ -116,9 +120,10 @@ const UpdateCountry = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setLoading(true)
+      setUser(_user)
 
       const params = new URLSearchParams(window.location.search)
       if (params.has('loc')) {
@@ -126,6 +131,12 @@ const UpdateCountry = () => {
         if (id && id !== '') {
           try {
             const _country = await CountryService.getCountry(id)
+
+            if (!helper.admin(_user) && _user._id !== _country.supplier?._id) {
+              setLoading(false)
+              setNoMatch(true)
+              return
+            }
 
             if (_country && _country.values) {
               env._LANGUAGES.forEach((lang) => {
@@ -169,12 +180,14 @@ const UpdateCountry = () => {
       {!error && !noMatch && country && country.values && (
         <div className="update-country">
           <Paper className="country-form country-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="country-form-title">
-              {' '}
-              {strings.UPDATE_COUNTRY}
-              {' '}
-            </h1>
+            <h1 className="country-form-title">{strings.UPDATE_COUNTRY}</h1>
             <form onSubmit={handleSubmit}>
+              {helper.admin(user) && country.supplier && (
+                <FormControl fullWidth margin="dense">
+                  <FormLabel>{suppliersStrings.SUPPLIER}</FormLabel>
+                  <SupplierBadge supplier={country.supplier} />
+                </FormControl>
+              )}
               {country.values.map((value, index) => (
                 <FormControl key={value.language} fullWidth margin="dense">
                   <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES.filter((l) => l.code === value.language)[0].label})`}</InputLabel>

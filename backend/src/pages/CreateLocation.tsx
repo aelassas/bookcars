@@ -21,12 +21,14 @@ import Avatar from '@/components/Avatar'
 import Backdrop from '@/components/SimpleBackdrop'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 import PositionInput from '@/components/PositionInput'
+import { UserContextType, useUserContext } from '@/context/UserContext'
 
 import '@/assets/css/create-location.css'
 
 const CreateLocation = () => {
   // const navigate = useNavigate()
 
+  const { user } = useUserContext() as UserContextType
   const [visible, setVisible] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])
@@ -80,7 +82,8 @@ const CreateLocation = () => {
           longitude: longitude ? Number(longitude) : undefined,
           names,
           image,
-          parkingSpots
+          parkingSpots,
+          supplier: helper.supplier(user) ? user?._id : undefined,
         }
         const status = await LocationService.create(payload)
 
@@ -113,11 +116,7 @@ const CreateLocation = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-location">
         <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="location-form-title">
-            {' '}
-            {strings.NEW_LOCATION_HEADING}
-            {' '}
-          </h1>
+          <h1 className="location-form-title">{strings.NEW_LOCATION_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Location}

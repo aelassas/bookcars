@@ -26,15 +26,15 @@ const Layout = ({
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (userLoaded) {
-      if (!user && strict) {
-        UserService.signout(true)
-      } else {
-        setLoading(false)
+    const currentUser = UserService.getCurrentUser()
 
-        if (onLoad) {
-          onLoad(user || undefined)
-        }
+    if (!currentUser && strict) {
+      UserService.signout(true)
+    } else if (userLoaded) {
+      setLoading(false)
+
+      if (onLoad) {
+        onLoad(user || undefined)
       }
     }
   }, [user, userLoaded, strict]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -71,7 +71,7 @@ const Layout = ({
     <>
       {((!user && !loading) || (user && user.verified) || !strict) && !unauthorized ? (
         <div className="content" style={style || {}}>
-          {children}
+          {userLoaded && children}
         </div>
       ) : (
         !loading && !unauthorized && (

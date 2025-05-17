@@ -30,6 +30,8 @@ import { strings } from '@/lang/countries'
 import * as CountryService from '@/services/CountryService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
+import { UserContextType, useUserContext } from '@/context/UserContext'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/country-list.css'
 
@@ -46,6 +48,7 @@ const CountryList = ({
 }: CountryListProps) => {
   const navigate = useNavigate()
 
+  const { user } = useUserContext() as UserContextType
   const [keyword, setKeyword] = useState(countryKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -199,7 +202,7 @@ const CountryList = ({
     setCountryIndex(-1)
   }
 
-  return (
+  return user && (
     <>
       <section className="country-list">
         {rows.length === 0 ? (
@@ -218,20 +221,22 @@ const CountryList = ({
               <ListItem
                 className="country-list-item"
                 key={country._id}
-                secondaryAction={(
-                  <div>
-                    <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={commonStrings.DELETE}>
-                      <IconButton edge="end" data-id={country._id} data-index={index} onClick={handleDelete}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                )}
+                secondaryAction={
+                  (helper.admin(user) || country.supplier?._id === user._id) && (
+                    <div>
+                      <Tooltip title={commonStrings.UPDATE}>
+                        <IconButton edge="end" onClick={() => navigate(`/update-country?loc=${country._id}`)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={commonStrings.DELETE}>
+                        <IconButton edge="end" data-id={country._id} data-index={index} onClick={handleDelete}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )
+                }
               >
                 <ListItemAvatar>
                   <Avatar>
@@ -265,6 +270,8 @@ const CountryList = ({
             </Button>
           </DialogActions>
         </Dialog>
+
+        {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager

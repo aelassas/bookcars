@@ -10,6 +10,7 @@ import LocationValue from '../src/models/LocationValue'
 import Country from '../src/models/Country'
 import Location from '../src/models/Location'
 
+let SUPPLIER_ID: string
 let COUNTRY_ID: string
 
 let COUNTRY_NAMES: bookcarsTypes.CountryName[] = [
@@ -31,12 +32,15 @@ beforeAll(async () => {
 
   await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
+  const supplierName = nanoid()
+  SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
 })
 
 //
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
+  await testHelper.deleteSupplier(SUPPLIER_ID)
   await testHelper.close()
   await databaseHelper.close()
 })
@@ -99,19 +103,30 @@ describe('POST /api/create-country', () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success
+    const payload: bookcarsTypes.UpsertCountryPayload = {
+      names: COUNTRY_NAMES,
+      supplier: SUPPLIER_ID,
+    }
     let res = await request(app)
       .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
-      .send(COUNTRY_NAMES)
+      .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body?.values?.length).toBe(2)
     COUNTRY_ID = res.body?._id
+
+    // test failure (wrong payload)
+    res = await request(app)
+      .post('/api/create-country')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send({})
+    expect(res.statusCode).toBe(400)
 
     // test failure (no payload)
     res = await request(app)
       .post('/api/create-country')
       .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
   })

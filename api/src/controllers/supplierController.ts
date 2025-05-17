@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'node:fs/promises'
+import asyncFs from 'node:fs/promises'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
@@ -79,6 +79,7 @@ export const update = async (req: Request, res: Response) => {
         priceChangeRate,
         supplierCarLimit,
         notifyAdminOnNewCar,
+        blacklisted,
       } = body
       supplier.fullName = fullName
       supplier.phone = phone
@@ -90,6 +91,7 @@ export const update = async (req: Request, res: Response) => {
       supplier.priceChangeRate = priceChangeRate
       supplier.supplierCarLimit = supplierCarLimit
       supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
+      supplier.blacklisted = !!blacklisted
 
       await supplier.save()
       res.json({
@@ -106,6 +108,7 @@ export const update = async (req: Request, res: Response) => {
         priceChangeRate: supplier.priceChangeRate,
         supplierCarLimit: supplier.supplierCarLimit,
         notifyAdminOnNewCar: supplier.notifyAdminOnNewCar,
+        blacklisted: supplier.blacklisted,
       })
       return
     }
@@ -136,8 +139,8 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
       if (supplier.avatar) {
         const avatar = path.join(env.CDN_USERS, supplier.avatar)
-        if (await helper.exists(avatar)) {
-          await fs.unlink(avatar)
+        if (await helper.pathExists(avatar)) {
+          await asyncFs.unlink(avatar)
         }
       }
 
@@ -145,8 +148,8 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         for (const contract of supplier.contracts) {
           if (contract.file) {
             const file = path.join(env.CDN_CONTRACTS, contract.file)
-            if (await helper.exists(file)) {
-              await fs.unlink(file)
+            if (await helper.pathExists(file)) {
+              await asyncFs.unlink(file)
             }
           }
         }
@@ -166,8 +169,8 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
         if (car.image) {
           const image = path.join(env.CDN_CARS, car.image)
-          if (await helper.exists(image)) {
-            await fs.unlink(image)
+          if (await helper.pathExists(image)) {
+            await asyncFs.unlink(image)
           }
         }
       }
@@ -217,6 +220,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       priceChangeRate,
       supplierCarLimit,
       notifyAdminOnNewCar,
+      blacklisted,
     } = user
 
     res.json({
@@ -234,6 +238,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       priceChangeRate,
       supplierCarLimit,
       notifyAdminOnNewCar,
+      blacklisted,
     })
   } catch (err) {
     logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
@@ -267,6 +272,29 @@ export const getSuppliers = async (req: Request, res: Response) => {
           },
         },
         {
+          $lookup: {
+            from: 'Car',
+            let: { supplierId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$supplier', '$$supplierId'] },
+                },
+              },
+            ],
+            as: 'car',
+          },
+        },
+        { $unwind: { path: '$car', preserveNullAndEmptyArrays: true } },
+        {
+          $group: {
+            _id: '$_id',
+            fullName: { $first: '$fullName' },
+            avatar: { $first: '$avatar' },
+            carCount: { $sum: { $cond: [{ $ifNull: ['$car', false] }, 1, 0] } },
+          },
+        },
+        {
           $facet: {
             resultData: [{ $sort: { fullName: 1, _id: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
@@ -280,9 +308,9 @@ export const getSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    data[0].resultData = data[0].resultData.map((supplier: env.User) => {
-      const { _id, fullName, avatar } = supplier
-      return { _id, fullName, avatar }
+    data[0].resultData = data[0].resultData.map((supplier: env.User & { carCount: number }) => {
+      const { _id, fullName, avatar, carCount } = supplier
+      return { _id, fullName, avatar, carCount }
     })
 
     res.json(data)
@@ -426,7 +454,8 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ['$_id', '$$userId'] },
+                  // $expr: { $eq: ['$_id', '$$userId'] },
+                  $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
                 },
               },
             ],
@@ -670,7 +699,7 @@ export const createContract = async (req: Request, res: Response) => {
     const filename = `${nanoid()}_${language}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CONTRACTS, filename)
 
-    await fs.writeFile(filepath, req.file.buffer)
+    await asyncFs.writeFile(filepath, req.file.buffer)
     res.json(filename)
   } catch (err) {
     logger.error(`[supplier.createContract] ${i18n.t('DB_ERROR')}`, err)
@@ -711,15 +740,15 @@ export const updateContract = async (req: Request, res: Response) => {
       const contract = supplier.contracts?.find((c) => c.language === language)
       if (contract?.file) {
         const contractFile = path.join(env.CDN_CONTRACTS, contract.file)
-        if (await helper.exists(contractFile)) {
-          await fs.unlink(contractFile)
+        if (await helper.pathExists(contractFile)) {
+          await asyncFs.unlink(contractFile)
         }
       }
 
       const filename = `${supplier._id}_${language}${path.extname(file.originalname)}`
       const filepath = path.join(env.CDN_CONTRACTS, filename)
 
-      await fs.writeFile(filepath, file.buffer)
+      await asyncFs.writeFile(filepath, file.buffer)
       if (!contract) {
         supplier.contracts?.push({ language, file: filename })
       } else {
@@ -762,8 +791,8 @@ export const deleteContract = async (req: Request, res: Response) => {
       const contract = supplier.contracts?.find((c) => c.language === language)
       if (contract?.file) {
         const contractFile = path.join(env.CDN_CONTRACTS, contract.file)
-        if (await helper.exists(contractFile)) {
-          await fs.unlink(contractFile)
+        if (await helper.pathExists(contractFile)) {
+          await asyncFs.unlink(contractFile)
         }
         contract.file = null
       }
@@ -796,8 +825,8 @@ export const deleteTempContract = async (req: Request, res: Response) => {
       throw new Error('Filename not valid')
     }
     const contractFile = path.join(env.CDN_TEMP_CONTRACTS, file)
-    if (await helper.exists(contractFile)) {
-      await fs.unlink(contractFile)
+    if (await helper.pathExists(contractFile)) {
+      await asyncFs.unlink(contractFile)
     }
 
     res.sendStatus(200)

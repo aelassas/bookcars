@@ -341,11 +341,7 @@ const CreateUser = () => {
       {user && (
         <div className="create-user">
           <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="user-form-title">
-              {' '}
-              {strings.CREATE_USER_HEADING}
-              {' '}
-            </h1>
+            <h1 className="user-form-title">{strings.CREATE_USER_HEADING}</h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={type}

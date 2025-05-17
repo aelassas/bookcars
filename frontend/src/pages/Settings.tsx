@@ -10,11 +10,10 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import env from '@/config/env.config'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/settings'
@@ -26,6 +25,7 @@ import * as helper from '@/common/helper'
 import DriverLicense from '@/components/DriverLicense'
 import Footer from '@/components/Footer'
 import { useUserContext, UserContextType } from '@/context/UserContext'
+import { schema, FormFields } from '@/models/SettingsForm'
 
 import '@/assets/css/settings.css'
 
@@ -33,61 +33,16 @@ const Settings = () => {
   const navigate = useNavigate()
 
   const { user, setUser } = useUserContext() as UserContextType
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [birthDate, setBirthDate] = useState<Date>()
-  const [birthDateValid, setBirthDateValid] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-  }
+  const { register, control, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+  })
 
-  const validatePhone = (_phone: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const validateBirthDate = (date?: Date) => {
-    if (date && bookcarsHelper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
-
-      setBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setBirthDateValid(true)
-    return true
-  }
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBio(e.target.value)
-  }
+  const { birthDate } = useWatch({ control })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -124,35 +79,22 @@ const Settings = () => {
     setLoading(false)
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
-
       if (!user || !user._id) {
-        helper.error()
         return
       }
 
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
-        return
-      }
-
-      const _birthDateValid = validateBirthDate(birthDate)
-      if (!_birthDateValid) {
-        return
-      }
-
-      const data: bookcarsTypes.UpdateUserPayload = {
+      const payload: bookcarsTypes.UpdateUserPayload = {
         _id: user._id,
-        fullName,
-        birthDate,
-        phone,
-        location,
-        bio,
+        fullName: data.fullName,
+        birthDate: data.birthDate,
+        phone: data.phone,
+        location: data.location || '',
+        bio: data.bio || '',
       }
 
-      const status = await UserService.updateUser(data)
+      const status = await UserService.updateUser(payload)
 
       if (status === 200) {
         helper.info(strings.SETTINGS_UPDATED)
@@ -167,11 +109,12 @@ const Settings = () => {
   const onLoad = (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
-      setFullName(_user.fullName)
-      setPhone(_user.phone || '')
-      setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
-      setLocation(_user.location || '')
-      setBio(_user.bio || '')
+      setValue('email', _user.email!)
+      setValue('fullName', _user.fullName)
+      setValue('phone', _user.phone || '')
+      setValue('birthDate', new Date(_user.birthDate!))
+      setValue('location', _user.location || '')
+      setValue('bio', _user.bio || '')
       setEnableEmailNotifications(_user.enableEmailNotifications ?? true)
       setVisible(true)
       setLoading(false)
@@ -185,7 +128,7 @@ const Settings = () => {
           <div className="settings">
 
             <Paper className="settings-form settings-form-wrapper" elevation={10}>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <Avatar
                   loggedUser={user}
                   user={user}
@@ -198,47 +141,46 @@ const Settings = () => {
                 />
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                  <Input type="text" required onChange={handleFullNameChange} autoComplete="off" value={fullName} />
+                  <Input {...register('fullName')} type="text" required autoComplete="off" />
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                  <Input type="text" value={user.email} disabled />
+                  <Input {...register('email')} type="text" disabled />
                 </FormControl>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.phone}>
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <Input type="text" required error={!phoneValid} onChange={handlePhoneChange} autoComplete="off" value={phone} />
-                  <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors('phone')} />
+                  <FormHelperText>{errors.phone?.message || ''}</FormHelperText>
                 </FormControl>
-                <FormControl fullWidth margin="dense">
+                <FormControl fullWidth margin="dense" error={!!errors.birthDate}>
                   <DatePicker
                     label={commonStrings.BIRTH_DATE}
-                    value={birthDate}
                     variant="standard"
                     required
-                    onChange={(_birthDate) => {
-                      if (_birthDate) {
-                        const _birthDateValid = validateBirthDate(_birthDate)
-
-                        setBirthDate(_birthDate)
-                        setBirthDateValid(_birthDateValid)
+                    value={birthDate || undefined}
+                    onChange={(birthDate) => {
+                      if (birthDate) {
+                        clearErrors('birthDate')
+                        setValue('birthDate', birthDate, { shouldValidate: true })
                       }
                     }}
                     language={user.language}
                   />
-                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
+                  <FormHelperText>{errors.birthDate?.message || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                  <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                  <Input {...register('location')} type="text" autoComplete="off" />
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel>{commonStrings.BIO}</InputLabel>
-                  <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
+                  <Input {...register('bio')} type="text" autoComplete="off" />
                 </FormControl>
                 <div className="buttons">
                   <Button
                     variant="contained"
                     className="btn-primary btn-margin btn-margin-bottom"
+                    disabled={isSubmitting}
                     onClick={(e) => {
                       e.preventDefault()
                       navigate('/change-password')
@@ -246,7 +188,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
                     {commonStrings.SAVE}
                   </Button>
                   <Button

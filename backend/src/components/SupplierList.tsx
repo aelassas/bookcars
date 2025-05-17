@@ -203,6 +203,11 @@ const SupplierList = ({
                     <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
                   </div>
                   <span className="supplier-item-title">{supplier.fullName}</span>
+                  {
+                    supplier.carCount != undefined ? (
+                      <span className="supplier-item-subtitle">{`${supplier.carCount} ${supplier.carCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>
+                    ) : null
+                  }
                 </div>
                 <div className="supplier-actions">
                   {canDelete && (

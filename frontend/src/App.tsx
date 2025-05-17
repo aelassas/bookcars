@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
 import env from '@/config/env.config'
-import { GlobalProvider } from '@/context/GlobalContext'
+import { NotificationProvider } from '@/context/NotificationContext'
 import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { PayPalProvider } from '@/context/PayPalContext'
@@ -38,52 +38,65 @@ const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 
-const App = () => (
-  <BrowserRouter>
-    <GlobalProvider>
-      <UserProvider>
+const AppLayout = () => {
+  const location = useLocation()
+  const [refreshKey, setRefreshKey] = useState(0) // refreshKey to check user and notifications when navigating between routes
+
+  useEffect(() => {
+    setRefreshKey((prev) => prev + 1)
+  }, [location.pathname])
+
+  return (
+    <UserProvider refreshKey={refreshKey}>
+      <NotificationProvider refreshKey={refreshKey}>
         <RecaptchaProvider>
           <PayPalProvider>
             <ScrollToTop />
-
             <div className="app">
               <Suspense fallback={<NProgressIndicator />}>
                 <Header />
-
-                <Routes>
-                  <Route path="/sign-in" element={<SignIn />} />
-                  <Route path="/sign-up" element={<SignUp />} />
-                  <Route path="/activate" element={<Activate />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="/" element={<Home />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/checkout-session/:sessionId" element={<CheckoutSession />} />
-                  <Route path="/bookings" element={<Bookings />} />
-                  <Route path="/booking" element={<Booking />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/notifications" element={<Notifications />} />
-                  <Route path="/change-password" element={<ChangePassword />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/tos" element={<ToS />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/locations" element={<Locations />} />
-                  {!env.HIDE_SUPPLIERS && <Route path="/suppliers" element={<Suppliers />} />}
-                  <Route path="/faq" element={<Faq />} />
-                  <Route path="/cookie-policy" element={<CookiePolicy />} />
-
-                  <Route path="*" element={<NoMatch />} />
-                </Routes>
+                <Outlet />
               </Suspense>
             </div>
-
           </PayPalProvider>
         </RecaptchaProvider>
-      </UserProvider>
-    </GlobalProvider>
-  </BrowserRouter>
-)
+      </NotificationProvider>
+    </UserProvider>
+  )
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'sign-in', element: <SignIn /> },
+      { path: 'sign-up', element: <SignUp /> },
+      { path: 'activate', element: <Activate /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
+      { path: 'search', element: <Search /> },
+      { path: 'checkout', element: <Checkout /> },
+      { path: 'checkout-session/:sessionId', element: <CheckoutSession /> },
+      { path: 'bookings', element: <Bookings /> },
+      { path: 'booking', element: <Booking /> },
+      { path: 'settings', element: <Settings /> },
+      { path: 'notifications', element: <Notifications /> },
+      { path: 'change-password', element: <ChangePassword /> },
+      { path: 'about', element: <About /> },
+      { path: 'tos', element: <ToS /> },
+      { path: 'privacy', element: <Privacy /> },
+      { path: 'contact', element: <Contact /> },
+      { path: 'locations', element: <Locations /> },
+      { path: 'faq', element: <Faq /> },
+      { path: 'cookie-policy', element: <CookiePolicy /> },
+      ...(env.HIDE_SUPPLIERS ? [] : [{ path: 'suppliers', element: <Suppliers /> }]),
+      { path: '*', element: <NoMatch /> }
+    ]
+  }
+])
+
+const App = () => <RouterProvider router={router} />
 
 export default App

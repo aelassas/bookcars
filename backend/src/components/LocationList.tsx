@@ -28,9 +28,11 @@ import { strings } from '@/lang/locations'
 import * as LocationService from '@/services/LocationService'
 import * as helper from '@/common/helper'
 import Pager from './Pager'
+import Avatar from './Avatar'
+import { UserContextType, useUserContext } from '@/context/UserContext'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/location-list.css'
-import Avatar from './Avatar'
 
 interface LocationListProps {
   keyword?: string
@@ -45,6 +47,7 @@ const LocationList = ({
 }: LocationListProps) => {
   const navigate = useNavigate()
 
+  const { user } = useUserContext() as UserContextType
   const [keyword, setKeyword] = useState(locationKeyword)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -198,7 +201,7 @@ const LocationList = ({
     setLocationIndex(-1)
   }
 
-  return (
+  return user && (
     <>
       <section className="location-list">
         {rows.length === 0 ? (
@@ -217,20 +220,22 @@ const LocationList = ({
               <ListItem
                 className="location-list-item"
                 key={location._id}
-                secondaryAction={(
-                  <div>
-                    <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton edge="end" onClick={() => navigate(`/update-location?loc=${location._id}`)}>
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={commonStrings.DELETE}>
-                      <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                )}
+                secondaryAction={
+                  (helper.admin(user) || location.supplier?._id === user._id) && (
+                    <div>
+                      <Tooltip title={commonStrings.UPDATE}>
+                        <IconButton edge="end" onClick={() => navigate(`/update-location?loc=${location._id}`)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={commonStrings.DELETE}>
+                        <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )
+                }
               >
                 <ListItemAvatar>
                   <Avatar
@@ -275,6 +280,8 @@ const LocationList = ({
             </Button>
           </DialogActions>
         </Dialog>
+
+        {loading && <Progress />}
       </section>
       {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile && (
         <Pager

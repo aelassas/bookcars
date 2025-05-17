@@ -135,6 +135,7 @@ export const createSupplier = async (email: string, fullName: string) => {
     avatar: 'avatar.jpg',
     minimumRentalDays: 2,
     notifyAdminOnNewCar: true,
+    blacklisted: false,
   }
   const supplier = new User(body)
   await supplier.save()
@@ -149,7 +150,7 @@ export const deleteSupplier = async (id: string) => {
     for (const contract of supplier!.contracts) {
       if (contract.file) {
         const filename = path.join(env.CDN_CONTRACTS, contract.file)
-        if (await helper.exists(filename)) {
+        if (await helper.pathExists(filename)) {
           await fs.unlink(filename)
         }
       }

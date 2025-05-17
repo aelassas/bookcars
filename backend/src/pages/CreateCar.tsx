@@ -327,11 +327,7 @@ const CreateCar = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-car">
         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="car-form-title">
-            {' '}
-            {strings.NEW_CAR_HEADING}
-            {' '}
-          </h1>
+          <h1 className="car-form-title">{strings.NEW_CAR_HEADING}</h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Car}
