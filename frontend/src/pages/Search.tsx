@@ -424,6 +424,10 @@ const Search = () => {
                   initialZoom={9}
                   cars={carResults}
                   onMarkerClick={handleMarkerClick}
+                  from={from}
+                  to={to}
+                  pickupLocationId={pickupLocation?._id}
+                  dropOffLocationId={dropOffLocation?._id}
                 >
                    <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
                 </Map>
@@ -495,24 +499,28 @@ const Search = () => {
               includeComingSoonCars={false}
               onLoad={handleCarListLoad}
             />
-          </div>
-
-          <MapDialog
-            open={openMapDialog}
-            zoom={13}
-            location={searchCoordinates || pickupLocation}
-            radius={searchRadius}
-            cars={carResults}
-            selectedCarId={selectedCarId}
-            onClose={() => {
-              setOpenMapDialog(false)
-            }}
-          />
+                    </div>
           
         </div>
       )}
 
       {noMatch && <NoMatch hideHeader />}
+
+      <MapDialog
+        open={openMapDialog}
+        zoom={13}
+        location={searchCoordinates || pickupLocation}
+        radius={searchRadius}
+        cars={carResults}
+        selectedCarId={selectedCarId}
+        from={from}
+        to={to}
+        pickupLocationId={pickupLocation?._id}
+        dropOffLocationId={dropOffLocation?._id}
+        onClose={() => {
+          setOpenMapDialog(false)
+        }}
+      />
     </Layout>
   )
 }

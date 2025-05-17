@@ -82,6 +82,10 @@ interface MapProps {
   onMapClick?: () => void
   onMarkerClick?: (carId: string) => void
   selectedCarId?: string | null
+  from?: Date
+  to?: Date
+  pickupLocationId?: string
+  dropOffLocationId?: string
 }
 
 const Map = ({
@@ -100,6 +104,10 @@ const Map = ({
   onMapClick,
   onMarkerClick,
   selectedCarId,
+  from,
+  to,
+  pickupLocationId,
+  dropOffLocationId,
 }: MapProps) => {
   const _initialZoom = initialZoom || mapZoom || 5.5
   const [zoom, setZoom] = useState(_initialZoom)
@@ -354,8 +362,54 @@ const Map = ({
                 onClick={() => {
                   // Handle car selection
                   if (car._id) {
-                    // Navigate to car details or booking page
-                    navigate(`/checkout?carId=${car._id}`)
+                    // Use the props passed from the parent component if available
+                    // or fallback to defaults
+                    
+                    // Get pickup location ID from props or from the location object
+                    let _pickupLocationId = pickupLocationId;
+                    if (!_pickupLocationId && location && 'latitude' in location && '_id' in location) {
+                      _pickupLocationId = location._id;
+                    }
+                    
+                    // If still no pickup location ID, use placeholder
+                    if (!_pickupLocationId) {
+                      _pickupLocationId = '000000000000000000000000';
+                    }
+                    
+                    // Get drop-off location ID or default to pickup location
+                    const _dropOffLocationId = dropOffLocationId || _pickupLocationId;
+                    
+                    // Get dates from props or use defaults
+                    const now = new Date();
+                    const _from = from || car.from || now;
+                    const _to = to || car.to || new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000)); // 3 days later
+                    
+                    // Ensure dates are properly serialized for router state
+                    console.log('Choose car - Parameters before navigate:', {
+                      carId: car._id,
+                      pickupLocationId: _pickupLocationId,
+                      dropOffLocationId: _dropOffLocationId,
+                      from: _from,
+                      to: _to
+                    });
+
+                    // Navigate with complete state data
+                    navigate('/checkout', {
+                      state: {
+                        carId: car._id,
+                        pickupLocationId: _pickupLocationId,
+                        dropOffLocationId: _dropOffLocationId,
+                        // Convert dates to ISO strings to avoid serialization issues
+                        from: _from instanceof Date ? _from.toISOString() : _from,
+                        to: _to instanceof Date ? _to.toISOString() : _to,
+                        // Add coordinates for location-based search
+                        pickupCoordinates: location && 'latitude' in location && location.latitude ? {
+                          latitude: location.latitude,
+                          longitude: location.longitude,
+                          address: 'latitude' in location && '_id' in location && location.name ? location.name : 'Selected Location'
+                        } : null
+                      }
+                    });
                   }
                 }}
               >

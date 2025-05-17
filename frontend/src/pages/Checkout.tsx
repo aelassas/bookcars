@@ -463,8 +463,11 @@ const Checkout = () => {
     setAuthenticated(_user !== undefined)
     setLanguage(UserService.getLanguage())
 
+    console.log('Checkout onLoad - Received state:', location.state)
+
     const { state } = location
     if (!state) {
+      console.error('Checkout onLoad - No state received')
       setNoMatch(true)
       return
     }
@@ -472,10 +475,27 @@ const Checkout = () => {
     const { carId } = state
     const { pickupLocationId } = state
     const { dropOffLocationId } = state
-    const { from: _from } = state
-    const { to: _to } = state
+    let { from: _from } = state
+    let { to: _to } = state
+
+    // Ensure dates are properly parsed
+    if (_from && typeof _from === 'string') {
+      _from = new Date(_from)
+    }
+    if (_to && typeof _to === 'string') {
+      _to = new Date(_to)
+    }
+
+    console.log('Checkout onLoad - Parsed parameters:', {
+      carId,
+      pickupLocationId,
+      dropOffLocationId,
+      from: _from,
+      to: _to
+    })
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
+      console.error('Checkout onLoad - Missing required parameters')
       setNoMatch(true)
       return
     }
@@ -491,7 +511,19 @@ const Checkout = () => {
         return
       }
 
-      _pickupLocation = await LocationService.getLocation(pickupLocationId)
+      // Handle placeholder location ID for coordinate-based search
+      if (pickupLocationId === '000000000000000000000000') {
+        console.log('Using placeholder pickup location for coordinate-based search')
+        _pickupLocation = {
+          _id: pickupLocationId,
+          name: 'Selected Location',
+          // Default coordinates if needed
+          latitude: state.pickupCoordinates?.latitude || 0,
+          longitude: state.pickupCoordinates?.longitude || 0
+        }
+      } else {
+        _pickupLocation = await LocationService.getLocation(pickupLocationId)
+      }
 
       if (!_pickupLocation) {
         setNoMatch(true)
@@ -507,7 +539,18 @@ const Checkout = () => {
       // }
 
       if (dropOffLocationId !== pickupLocationId) {
-        _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
+        if (dropOffLocationId === '000000000000000000000000') {
+          console.log('Using placeholder drop-off location for coordinate-based search')
+          _dropOffLocation = {
+            _id: dropOffLocationId,
+            name: 'Selected Location',
+            // Default coordinates if needed
+            latitude: state.dropOffCoordinates?.latitude || state.pickupCoordinates?.latitude || 0,
+            longitude: state.dropOffCoordinates?.longitude || state.pickupCoordinates?.longitude || 0
+          }
+        } else {
+          _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
+        }
       } else {
         _dropOffLocation = _pickupLocation
       }

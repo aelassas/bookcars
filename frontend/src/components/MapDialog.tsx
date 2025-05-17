@@ -15,6 +15,10 @@ interface MapDialogProps {
   cars?: bookcarsTypes.Car[]
   selectedCarId?: string | null
   onClose: () => void
+  from?: Date
+  to?: Date
+  pickupLocationId?: string
+  dropOffLocationId?: string
 }
 
 const MapDialog = ({
@@ -25,6 +29,10 @@ const MapDialog = ({
   cars,
   selectedCarId,
   onClose,
+  from,
+  to,
+  pickupLocationId,
+  dropOffLocationId,
 }: MapDialogProps) => {
   const [openMapDialog, setOpenMapDialog] = useState(openProp)
 
@@ -91,6 +99,10 @@ const MapDialog = ({
             className="map"
             cars={cars}
             selectedCarId={selectedCarId}
+            from={from}
+            to={to}
+            pickupLocationId={pickupLocationId}
+            dropOffLocationId={dropOffLocationId}
           />
         )}
       </DialogContent>

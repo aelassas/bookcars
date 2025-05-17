@@ -380,13 +380,25 @@ const Car = ({
                     variant="contained"
                     className="btn-primary btn-book btn-margin-bottom"
                     onClick={() => {
+                      console.log('Car component - navigating to checkout with:', {
+                        carId: car._id,
+                        pickupLocationId: pickupLocation,
+                        dropOffLocationId: dropOffLocation,
+                        // Serialize dates to avoid React Router state issues
+                        from: from instanceof Date ? from.toISOString() : from,
+                        to: to instanceof Date ? to.toISOString() : to
+                      });
+                      
                       navigate('/checkout', {
                         state: {
                           carId: car._id,
                           pickupLocationId: pickupLocation,
                           dropOffLocationId: dropOffLocation,
-                          from,
-                          to
+                          // Serialize dates to avoid React Router state issues
+                          from: from instanceof Date ? from.toISOString() : from,
+                          to: to instanceof Date ? to.toISOString() : to,
+                          // Add dummy coordinates to help checkout identify this as a location-based search
+                          pickupCoordinates: car.coordinates || null
                         }
                       })
                     }}
