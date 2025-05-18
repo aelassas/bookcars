@@ -11,18 +11,16 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
-  SelectChangeEvent
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import { intervalToDuration } from 'date-fns'
-import validator from 'validator'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as ccStrings } from '@/lang/create-supplier'
-import { strings as cuStrings } from '@/lang/create-user'
+import { strings as csStrings } from '@/lang/create-supplier'
 import { strings } from '@/lang/update-user'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
@@ -33,6 +31,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
 import DatePicker from '@/components/DatePicker'
 import DriverLicense from '@/components/DriverLicense'
+import { schema, FormFields } from '@/models/UserForm'
 
 import '@/assets/css/update-user.css'
 
@@ -44,138 +43,49 @@ const UpdateUser = () => {
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [admin, setAdmin] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
-  const [error, setError] = useState(false)
+  const [formError, setFormError] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [fullNameError, setFullNameError] = useState(false)
   const [avatar, setAvatar] = useState('')
   const [avatarError, setAvatarError] = useState(false)
-  const [type, setType] = useState('')
-  const [birthDate, setBirthDate] = useState<Date>()
-  const [birthDateValid, setBirthDateValid] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(false)
-  const [licenseRequired, setLicenseRequired] = useState(true)
-  const [minimumRentalDays, setMinimumRentalDays] = useState('')
-  const [priceChangeRate, setPriceChangeRate] = useState('')
-  const [supplierCarLimit, setSupplierCarLimit] = useState('')
-  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
-  const [blacklisted, setBlacklisted] = useState(false)
 
-  const validateFullName = async (_fullName: string, strict = true) => {
-    const __fullName = _fullName || fullName
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    setFocus,
+    clearErrors,
+    setValue,
+    trigger,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: {
+      type: '',
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+      bio: '',
+      payLater: false,
+      licenseRequired: false,
+      minimumRentalDays: '',
+      priceChangeRate: '',
+      supplierCarLimit: '',
+      notifyAdminOnNewCar: false
+    },
+  })
 
-    if (__fullName && (strict || (!strict && __fullName !== user?.fullName))) {
-      try {
-        const status = await SupplierService.validate({ fullName: __fullName })
-
-        if (status === 200) {
-          setFullNameError(false)
-          setError(false)
-          return true
-        }
-        setFullNameError(true)
-        setAvatarError(false)
-        setError(false)
-        return false
-      } catch (err) {
-        helper.error(err)
-        return true
-      }
-    } else {
-      setFullNameError(false)
-      return true
-    }
-  }
-
-  const handleUserTypeChange = async (e: SelectChangeEvent<string>) => {
-    const _type = e.target.value
-
-    setType(e.target.value)
-
-    if (_type === bookcarsTypes.RecordType.Supplier) {
-      await validateFullName(fullName)
-    } else {
-      setFullNameError(false)
-    }
-  }
-
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-
-    if (!e.target.value) {
-      setFullNameError(false)
-    }
-  }
-
-  const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    if (type === bookcarsTypes.RecordType.Supplier) {
-      await validateFullName(e.target.value)
-    } else {
-      setFullNameError(false)
-    }
-  }
-
-  const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupplierCarLimit(e.target.value)
-  }
-
-  const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinimumRentalDays(e.target.value)
-  }
-
-  const handlePriceChangeRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPriceChangeRate(e.target.value)
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value)
-
-    if (!e.target.value) {
-      setPhoneValid(true)
-    }
-  }
-
-  const validatePhone = (_phone?: string) => {
-    if (_phone) {
-      const _phoneValid = validator.isMobilePhone(_phone)
-      setPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setPhoneValid(true)
-
-    return true
-  }
-
-  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validatePhone(e.target.value)
-  }
-
-  const validateBirthDate = (date?: Date) => {
-    if (date && bookcarsHelper.isDate(date) && type === bookcarsTypes.RecordType.User) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
-
-      setBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setBirthDateValid(true)
-    return true
-  }
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value)
-  }
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBio(e.target.value)
-  }
+  const {
+    type,
+    fullName,
+    email,
+    blacklisted,
+    payLater,
+    licenseRequired,
+    notifyAdminOnNewCar,
+  } = useWatch({ control })
 
   const onBeforeUpload = () => {
     setLoading(true)
@@ -244,21 +154,21 @@ const UpdateUser = () => {
               setLoggedUser(_loggedUser)
               setUser(_user)
               setAdmin(helper.admin(_loggedUser))
-              setType(_user.type || '')
-              setEmail(_user.email || '')
               setAvatar(_user.avatar || '')
-              setFullName(_user.fullName || '')
-              setPhone(_user.phone || '')
-              setLocation(_user.location || '')
-              setBio(_user.bio || '')
-              setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
-              setPayLater(_user.payLater || false)
-              setLicenseRequired(_user.licenseRequired || false)
-              setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
-              setPriceChangeRate(_user.priceChangeRate?.toString() || '')
-              setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
-              setNotifyAdminOnNewCar(!!_user.notifyAdminOnNewCar)
-              setBlacklisted(!!_user.blacklisted)
+              setValue('type', _user.type || '')
+              setValue('email', _user.email || '')
+              setValue('fullName', _user.fullName || '')
+              setValue('phone', _user.phone || '')
+              setValue('location', _user.location || '')
+              setValue('bio', _user.bio || '')
+              setValue('birthDate', _user && _user.birthDate ? new Date(_user.birthDate) : undefined)
+              setValue('payLater', _user.payLater || false)
+              setValue('licenseRequired', _user.licenseRequired || false)
+              setValue('minimumRentalDays', _user.minimumRentalDays?.toString() || '')
+              setValue('priceChangeRate', _user.priceChangeRate?.toString() || '')
+              setValue('supplierCarLimit', _user.supplierCarLimit?.toString() || '')
+              setValue('notifyAdminOnNewCar', !!_user.notifyAdminOnNewCar)
+              setValue('blacklisted', !!_user.blacklisted)
               setVisible(true)
               setLoading(false)
             } else {
@@ -281,76 +191,60 @@ const UpdateUser = () => {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault()
+  const validateFullName = async (value?: string) => {
+    if (!!value && type === bookcarsTypes.UserType.Supplier && user?.fullName !== value) {
+      const status = await SupplierService.validate({ fullName: value })
+      if (status !== 200) {
+        setError('fullName', { message: csStrings.INVALID_SUPPLIER_NAME })
+        setFocus('fullName')
+        return false
+      }
+    }
+    return true
+  }
 
+  const onSubmit = async (data: FormFields) => {
+    try {
       if (!user) {
         helper.error()
         return
       }
 
-      if (type === bookcarsTypes.RecordType.Supplier) {
-        const fullNameValid = await validateFullName(fullName, false)
-
-        if (!fullNameValid) {
-          return
-        }
-      } else {
-        setFullNameError(false)
-      }
-
-      const _phoneValid = validatePhone(phone)
-      if (!_phoneValid) {
-        return
-      }
-
-      const _birthDateValid = validateBirthDate(birthDate)
-      if (!_birthDateValid) {
-        return
-      }
-
-      if (type === bookcarsTypes.RecordType.Supplier && !avatar) {
-        setAvatarError(true)
-        setError(false)
-        return
-      }
-
       const language = UserService.getLanguage()
-      const data: bookcarsTypes.UpdateUserPayload = {
+      const payload: bookcarsTypes.UpdateUserPayload = {
         _id: user._id as string,
-        phone,
-        location,
-        bio,
-        fullName,
+        phone: data.phone || '',
+        location: data.location || '',
+        bio: data.bio || '',
+        fullName: data.fullName,
         language,
-        type,
+        type: data.type,
         avatar,
-        birthDate,
-        minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
-        priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
+        birthDate: data.birthDate,
+        minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
+        priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
+        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
         notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
-        blacklisted,
+        blacklisted: data.blacklisted,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
-        data.payLater = payLater
-        data.licenseRequired = licenseRequired
+        payload.payLater = payLater
+        payload.licenseRequired = licenseRequired
       }
 
-      const status = await UserService.updateUser(data)
+      const status = await UserService.updateUser(payload)
 
       if (status === 200) {
         const _user = bookcarsHelper.clone(user) as bookcarsTypes.User
-        _user.fullName = fullName
+        _user.fullName = data.fullName
         _user.type = type
         setUser(_user)
         helper.info(commonStrings.UPDATED)
       } else {
         helper.error()
 
-        setError(false)
+        setFormError(false)
       }
     } catch (err) {
       helper.error(err)
@@ -367,12 +261,8 @@ const UpdateUser = () => {
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
-            <h1 className="user-form-title">
-              {' '}
-              {strings.UPDATE_USER_HEADING}
-              {' '}
-            </h1>
-            <form onSubmit={handleSubmit}>
+            <h1 className="user-form-title">{strings.UPDATE_USER_HEADING}</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Avatar
                 type={type}
                 mode="update"
@@ -389,39 +279,70 @@ const UpdateUser = () => {
               {supplier && (
                 <div className="info">
                   <InfoIcon />
-                  <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
+                  <span>{csStrings.RECOMMENDED_IMAGE_SIZE}</span>
                 </div>
               )}
 
               {admin && (
                 <FormControl fullWidth margin="dense" style={{ marginTop: supplier ? 0 : 39 }}>
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
-                  <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
-                    <MenuItem value={bookcarsTypes.RecordType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.Supplier}>{helper.getUserType(bookcarsTypes.UserType.Supplier)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
+                  <Select
+                    label={commonStrings.TYPE}
+                    value={type}
+                    onChange={(e) => {
+                      clearErrors('fullName')
+                      setValue('type', e.target.value)
+                    }}
+                    variant="standard"
+                    required
+                    fullWidth
+                  >
+                    <MenuItem value={bookcarsTypes.UserType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.UserType.Supplier}>{helper.getUserType(bookcarsTypes.UserType.Supplier)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.UserType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
                   </Select>
                 </FormControl>
               )}
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" value={fullName} />
-                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
+                <Input
+                  // {...register('fullName')}
+                  value={fullName}
+                  type="text"
+                  error={!!errors.fullName}
+                  required
+                  autoComplete="off"
+                  onChange={(e) => {
+                    clearErrors('fullName')
+                    setValue('fullName', e.target.value)
+                  }}
+                  onBlur={async (e) => {
+                    await validateFullName(e.target.value)
+                  }}
+                />
+                <FormHelperText error={!!errors.fullName}>
+                  {errors.fullName?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" value={email} disabled />
+                <Input
+                  {...register('email')}
+                  type="text"
+                  disabled
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={(
                     <Switch
+                      {...register('blacklisted')}
                       checked={blacklisted}
                       onChange={(e) => {
-                        setBlacklisted(e.target.checked)
+                        setValue('blacklisted', e.target.checked)
                       }}
                       color="primary"
                     />
@@ -435,20 +356,18 @@ const UpdateUser = () => {
                 <>
                   <FormControl fullWidth margin="dense">
                     <DatePicker
-                      label={cuStrings.BIRTH_DATE}
-                      value={birthDate}
+                      label={commonStrings.BIRTH_DATE}
+                      variant="standard"
                       required
-                      onChange={(_birthDate) => {
-                        if (_birthDate) {
-                          const _birthDateValid = validateBirthDate(_birthDate)
-
-                          setBirthDate(_birthDate)
-                          setBirthDateValid(_birthDateValid)
+                      onChange={(birthDate) => {
+                        if (birthDate) {
+                          clearErrors('birthDate')
+                          setValue('birthDate', birthDate, { shouldValidate: true })
                         }
                       }}
                       language={(user && user.language) || env.DEFAULT_LANGUAGE}
                     />
-                    <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
+                    <FormHelperText error={!!errors.birthDate}>{errors.birthDate?.message || ''}</FormHelperText>
                   </FormControl>
 
                   <DriverLicense user={user} className="driver-license-field" />
@@ -461,9 +380,10 @@ const UpdateUser = () => {
                     <FormControlLabel
                       control={(
                         <Switch
+                          {...register('payLater')}
                           checked={payLater}
                           onChange={(e) => {
-                            setPayLater(e.target.checked)
+                            setValue('payLater', e.target.checked)
                           }}
                           color="primary"
                         />
@@ -476,9 +396,10 @@ const UpdateUser = () => {
                     <FormControlLabel
                       control={(
                         <Switch
+                          {...register('licenseRequired')}
                           checked={licenseRequired}
                           onChange={(e) => {
-                            setLicenseRequired(e.target.checked)
+                            setValue('licenseRequired', e.target.checked)
                           }}
                           color="primary"
                         />
@@ -491,10 +412,11 @@ const UpdateUser = () => {
                     <FormControlLabel
                       control={(
                         <Switch
+                          {...register('notifyAdminOnNewCar')}
                           checked={notifyAdminOnNewCar}
                           disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                           onChange={(e) => {
-                            setNotifyAdminOnNewCar(e.target.checked)
+                            setValue('notifyAdminOnNewCar', e.target.checked)
                           }}
                           color="primary"
                         />
@@ -506,36 +428,43 @@ const UpdateUser = () => {
                   <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
                     <Input
+                      {...register('supplierCarLimit')}
                       type="text"
-                      onChange={handleSupplierCarLimitChange}
                       autoComplete="off"
-                      slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
-                      value={supplierCarLimit}
-                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
+                      error={!!errors.supplierCarLimit}
+                      onChange={() => clearErrors('supplierCarLimit')}
                     />
+                    <FormHelperText error={!!errors.supplierCarLimit}>
+                      {errors.supplierCarLimit?.message || ''}
+                    </FormHelperText>
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
                     <Input
+                      {...register('minimumRentalDays')}
                       type="text"
-                      onChange={handleMinimumRentalDaysChange}
                       autoComplete="off"
-                      slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
-                      value={minimumRentalDays}
+                      error={!!errors.minimumRentalDays}
+                      onChange={() => clearErrors('minimumRentalDays')}
                     />
+                    <FormHelperText error={!!errors.minimumRentalDays}>
+                      {errors.minimumRentalDays?.message || ''}
+                    </FormHelperText>
                   </FormControl>
 
                   <FormControl fullWidth margin="dense">
                     <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
                     <Input
+                      {...register('priceChangeRate')}
                       type="text"
-                      onChange={handlePriceChangeRateChange}
                       autoComplete="off"
-                      slotProps={{ input: { inputMode: 'numeric', pattern: '^-?\\d+(\\.\\d+)?$' } }}
-                      value={priceChangeRate}
-                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
+                      error={!!errors.priceChangeRate}
+                      onChange={() => clearErrors('priceChangeRate')}
                     />
+                    <FormHelperText error={!!errors.priceChangeRate}>
+                      {errors.priceChangeRate?.message || ''}
+                    </FormHelperText>
                   </FormControl>
                 </>
               )}
@@ -547,18 +476,36 @@ const UpdateUser = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
-                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                <Input
+                  {...register('phone', {
+                    onBlur: () => trigger('phone'),
+                  })}
+                  type="text"
+                  autoComplete="off"
+                  error={!!errors.phone}
+                  onChange={() => clearErrors('phone')}
+                />
+                <FormHelperText error={!!errors.phone}>
+                  {errors.phone?.message || ''}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
+                <Input
+                  {...register('location')}
+                  type="text"
+                  autoComplete="off"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
+                <Input
+                  {...register('bio')}
+                  type="text"
+                  autoComplete="off"
+                />
               </FormControl>
 
               {activate && (
@@ -577,7 +524,7 @@ const UpdateUser = () => {
                   {commonStrings.RESET_PASSWORD}
                 </Button>
 
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {commonStrings.SAVE}
                 </Button>
 
@@ -587,14 +534,14 @@ const UpdateUser = () => {
               </div>
 
               <div className="form-error">
-                {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                {formError && <Error message={commonStrings.GENERIC_ERROR} />}
                 {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
           </Paper>
         </div>
       )}
-      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+      {(loading || isSubmitting) && <Backdrop text={commonStrings.PLEASE_WAIT} disableMargin />}
       {noMatch && <NoMatch hideHeader />}
     </Layout>
   )

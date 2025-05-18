@@ -283,7 +283,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
 
       totalPrice += applicableRate
       currentDate.setDate(currentDate.getDate() + 1)
-      currentDate.setHours(0, 0, 0, 0); // Ensure time is reset
+      currentDate.setHours(0, 0, 0, 0) // Ensure time is reset
       currentDay += 1
     }
   } else {
@@ -449,6 +449,17 @@ export const shuffle = (array: any[]) => {
     array[j] = temp
   }
 }
+
+/**
+ * Return all user types.
+ *
+ * @returns {bookcarsTypes.UserType[]}
+ */
+export const getAllUserTypes = ()=> [
+  bookcarsTypes.UserType.Admin, 
+  bookcarsTypes.UserType.Supplier,
+  bookcarsTypes.UserType.User,
+]
 
 /**
  * Return all car ranges.
