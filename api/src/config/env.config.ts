@@ -489,6 +489,7 @@ export interface UserInfo {
   payLater?: boolean
   licenseRequired?: boolean
   license?: string
+  minimumRentalDays?: number
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean

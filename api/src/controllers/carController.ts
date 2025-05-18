@@ -1068,7 +1068,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       try {
         // Simplified approach: first get all cars that match basic criteria
         const allMatchingCars = await Car.find($match)
-          .populate('supplier')
+          .populate<{ supplier: env.UserInfo }>('supplier')
           .populate('dateBasedPrices')
           .lean();
         
@@ -1100,9 +1100,11 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         
         // Apply supplier minimum days filter
         const filteredCars = days
-          ? carsWithDistance.filter(car => 
-              !car.supplier.minimumRentalDays || car.supplier.minimumRentalDays <= days
-            )
+          ? carsWithDistance.filter(car => {
+              // Ensure supplier is properly typed
+              const supplier = car.supplier as env.UserInfo;
+              return !supplier.minimumRentalDays || supplier.minimumRentalDays <= days;
+            })
           : carsWithDistance;
         
         console.log(`${filteredCars.length} cars after supplier days filter`);
@@ -1123,7 +1125,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
           // Format the supplier data
           for (const car of resultData) {
             if (car.supplier) {
-              const { _id, fullName, avatar, priceChangeRate } = car.supplier;
+              // Properly cast supplier to UserInfo type
+              const supplier = car.supplier as env.UserInfo;
+              const { _id, fullName, avatar, priceChangeRate } = supplier;
               car.supplier = { _id, fullName, avatar, priceChangeRate };
             }
           }

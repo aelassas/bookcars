@@ -44,7 +44,7 @@ interface CarListProps {
   seats?: number
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
-  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+  onLoad?: (data: bookcarsTypes.Data<bookcarsTypes.Car>) => void
   coordinates?: { latitude: number, longitude: number }
   radius?: number
 }

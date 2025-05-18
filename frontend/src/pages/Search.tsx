@@ -207,7 +207,7 @@ const Search = () => {
   }
   
   // Handler for car list data
-  const handleCarListLoad = (data: bookcarsTypes.DataEvent<bookcarsTypes.Car>) => {
+  const handleCarListLoad = (data: bookcarsTypes.Data<bookcarsTypes.Car>) => {
     console.log('Car data loaded:', data.rows);
     setCarResults(data.rows);
   }
