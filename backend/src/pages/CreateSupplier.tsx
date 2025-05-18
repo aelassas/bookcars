@@ -351,7 +351,8 @@ const CreateSupplier = () => {
               <Input
                 {...register('bio')}
                 type="text"
-                autoComplete="off" />
+                autoComplete="off"
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense">

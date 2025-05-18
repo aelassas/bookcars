@@ -163,7 +163,6 @@ const SignUp = () => {
                   }}
                   language={language}
                 />
-
                 <FormHelperText error={!!errors.birthDate}>{errors.birthDate?.message || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense" error={!!errors.password}>
