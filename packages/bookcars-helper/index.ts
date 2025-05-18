@@ -451,6 +451,17 @@ export const shuffle = (array: any[]) => {
 }
 
 /**
+ * Return all user types.
+ *
+ * @returns {bookcarsTypes.UserType[]}
+ */
+export const getAllUserTypes = ()=> [
+  bookcarsTypes.UserType.Admin, 
+  bookcarsTypes.UserType.Supplier,
+  bookcarsTypes.UserType.User,
+]
+
+/**
  * Return all car ranges.
  *
  * @returns {bookcarsTypes.CarRange[]}
