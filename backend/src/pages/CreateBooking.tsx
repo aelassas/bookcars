@@ -81,13 +81,12 @@ const CreateBooking = () => {
       additionalDriverPhone: '',
     }
   })
-  console.log('rendering')
+
   const supplier = useWatch({ control, name: 'supplier' })
   const pickupLocation = useWatch({ control, name: 'pickupLocation' })
   const from = useWatch({ control, name: 'from' })
   const to = useWatch({ control, name: 'to' })
   const additionalDriverEnabled = useWatch({ control, name: 'additionalDriver' })
-
 
   useEffect(() => {
     if (from) {
