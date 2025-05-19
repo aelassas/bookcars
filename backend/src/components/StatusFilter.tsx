@@ -15,7 +15,7 @@ interface StatusFilterProps {
 }
 
 const statuses = helper.getBookingStatuses()
-const allStatuses = statuses.map((status) => status.value)
+const allStatuses = bookcarsHelper.getAllBookingStatuses()
 
 const StatusFilter = ({
   className,

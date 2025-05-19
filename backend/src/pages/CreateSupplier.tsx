@@ -70,11 +70,9 @@ const CreateSupplier = () => {
     },
   })
 
-  const {
-    payLater,
-    licenseRequired,
-    notifyAdminOnNewCar,
-  } = useWatch({ control })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const licenseRequired = useWatch({ control, name: 'licenseRequired' })
+  const notifyAdminOnNewCar = useWatch({ control, name: 'notifyAdminOnNewCar' })
 
   const onBeforeUpload = () => {
     setLoading(true)
