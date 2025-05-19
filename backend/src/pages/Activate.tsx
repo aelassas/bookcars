@@ -162,7 +162,11 @@ const Activate = () => {
                   type="password"
                   required
                   autoComplete="new-password"
-                  onChange={() => clearErrors()}
+                  onChange={() => {
+                    if (errors.password) {
+                      clearErrors('password')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
               </FormControl>
@@ -173,7 +177,11 @@ const Activate = () => {
                   type="password"
                   required
                   autoComplete="new-password"
-                  onChange={() => clearErrors()}
+                  onChange={() => {
+                    if (errors.confirmPassword) {
+                      clearErrors('confirmPassword')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
               </FormControl>

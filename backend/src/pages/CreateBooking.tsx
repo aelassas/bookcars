@@ -427,7 +427,9 @@ const CreateBooking = () => {
                     required
                     onChange={(birthDate) => {
                       if (birthDate) {
-                        clearErrors('additionalDriverBirthDate')
+                        if (errors.additionalDriverBirthDate) {
+                          clearErrors('additionalDriverBirthDate')
+                        }
                         setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
                       }
                     }}

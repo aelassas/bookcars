@@ -114,7 +114,9 @@ const SignIn = () => {
               <Input
                 {...register('email')}
                 onChange={(e) => {
-                  clearErrors()
+                  if (errors.email) {
+                    clearErrors('email')
+                  }
                   // Without the next line, if the field is auto-filled by the browser, react-form does not know it
                   setValue('email', e.target.value)
                 }}
@@ -128,7 +130,9 @@ const SignIn = () => {
               <Input
                 {...register('password')}
                 onChange={(e) => {
-                  clearErrors()
+                  if (errors.password) {
+                    clearErrors('password')
+                  }
                   setValue('password', e.target.value)
                 }}
                 type="password"

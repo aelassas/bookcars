@@ -133,6 +133,7 @@ const Checkout = () => {
     clearErrors,
     setFocus,
     trigger,
+    getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -144,8 +145,6 @@ const Checkout = () => {
   })
 
   const additionalDriver = useWatch({ control, name: 'additionalDriver' })
-  const additionalDriverEmail = useWatch({ control, name: 'additionalDriverEmail' })
-  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
   const payLater = useWatch({ control, name: 'payLater' })
   const payDeposit = useWatch({ control, name: 'payDeposit' })
 
@@ -523,7 +522,9 @@ const Checkout = () => {
                               required
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('email')
+                                if (errors.email) {
+                                  clearErrors('email')
+                                }
                                 setEmailRegistered(false)
                                 setEmailInfo(false)
                                 setValue('email', e.target.value)
@@ -570,7 +571,9 @@ const Checkout = () => {
                               required
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('phone')
+                                if (errors.phone) {
+                                  clearErrors('phone')
+                                }
                                 setPhoneInfo(false)
                                 setValue('phone', e.target.value)
                               }}
@@ -592,7 +595,9 @@ const Checkout = () => {
                               variant="outlined"
                               required
                               onChange={(_birthDate) => {
-                                clearErrors('birthDate')
+                                if (errors.birthDate) {
+                                  clearErrors('birthDate')
+                                }
                                 if (_birthDate) {
                                   setValue('birthDate', _birthDate, { shouldValidate: true })
                                 } else {
@@ -614,7 +619,7 @@ const Checkout = () => {
                                     <Checkbox
                                       {...register('tos')}
                                       onChange={(e) => {
-                                        if (e.target.checked) {
+                                        if (e.target.checked && errors.tos) {
                                           clearErrors('tos')
                                         }
                                       }}
@@ -691,14 +696,16 @@ const Checkout = () => {
                             <OutlinedInput
                               // {...register('additionalDriverEmail')}
                               inputRef={additionalDriverEmailRef}
-                              value={additionalDriverEmail}
+                              value={getValues('additionalDriverEmail')}
                               type="text"
                               label={commonStrings.EMAIL}
                               error={!!errors.additionalDriverEmail}
                               required={adRequired}
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('additionalDriverEmail')
+                                if (errors.additionalDriverEmail) {
+                                  clearErrors('additionalDriverEmail')
+                                }
                                 setValue('additionalDriverEmail', e.target.value)
                               }}
                               onBlur={() => {
@@ -714,14 +721,16 @@ const Checkout = () => {
                             <OutlinedInput
                               // {...register('additionalDriverPhone')}
                               inputRef={additionalDriverPhoneRef}
-                              value={additionalDriverPhone}
+                              value={getValues('additionalDriverPhone')}
                               type="text"
                               label={commonStrings.PHONE}
                               error={!!errors.additionalDriverPhone}
                               required={adRequired}
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('additionalDriverPhone')
+                                if (errors.additionalDriverPhone) {
+                                  clearErrors('additionalDriverPhone')
+                                }
                                 setValue('additionalDriverPhone', e.target.value)
                               }}
                               onBlur={() => {

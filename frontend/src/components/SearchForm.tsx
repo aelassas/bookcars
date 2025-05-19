@@ -137,7 +137,7 @@ const SearchForm = ({
 
       if (minPickupTime < minPickupDuration) {
         setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
-      } else {
+      } else if (errors.from) {
         clearErrors('from')
       }
     }
@@ -155,11 +155,11 @@ const SearchForm = ({
         setValue('to', _to)
       } else if (rentalDuration < minRentalDuration) {
         setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
-      } else {
+      } else if (errors.to) {
         clearErrors('to')
       }
     }
-  }, [from, to, setValue, setError, clearErrors])
+  }, [from, to, setValue, setError, clearErrors, errors.from, errors.to])
 
   useEffect(() => {
     setRanges(__ranges || bookcarsHelper.getAllRanges())

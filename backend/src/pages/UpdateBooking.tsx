@@ -18,7 +18,7 @@ import {
   Person as DriverIcon
 } from '@mui/icons-material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -70,6 +70,7 @@ const UpdateBooking = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
@@ -97,6 +98,17 @@ const UpdateBooking = () => {
       additionalDriverPhone: '',
     }
   })
+
+  const supplier = useWatch({ control, name: 'supplier' })
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
+  const driver = useWatch({ control, name: 'driver' })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const additionalDriverEnabled = useWatch({ control, name: 'additionalDriver' })
+  const additionalEmail = useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
+  const additionalDriverBirthDate = useWatch({ control, name: 'additionalDriverBirthDate' })
 
   const toastErr = (err?: unknown, hideLoading?: boolean): void => {
     helper.error(err)
@@ -298,8 +310,6 @@ const UpdateBooking = () => {
     }
   }
 
-  const from = getValues('from')
-  const to = getValues('to')
   const days = bookcarsHelper.days(from, to)
 
   return (
@@ -320,7 +330,7 @@ const UpdateBooking = () => {
                       setValue('car', undefined)
                       setCarObj(undefined)
                     }}
-                    value={getValues('supplier')}
+                    value={supplier}
                   />
                 </FormControl>
               )}
@@ -330,7 +340,7 @@ const UpdateBooking = () => {
                 required
                 variant="standard"
                 onChange={(values) => setValue('driver', values.length > 0 ? values[0] as Option : undefined)}
-                value={getValues('driver')}
+                value={driver}
               />
 
               <FormControl fullWidth margin="dense">
@@ -339,7 +349,7 @@ const UpdateBooking = () => {
                   required
                   variant="standard"
                   onChange={(values) => setValue('pickupLocation', values.length > 0 ? values[0] as Option : undefined)}
-                  value={getValues('pickupLocation')}
+                  value={pickupLocation}
                 />
               </FormControl>
 
@@ -349,14 +359,14 @@ const UpdateBooking = () => {
                   required
                   variant="standard"
                   onChange={(values) => setValue('dropOffLocation', values.length > 0 ? values[0] as Option : undefined)}
-                  value={getValues('dropOffLocation')}
+                  value={dropOffLocation}
                 />
               </FormControl>
 
               <CarSelectList
                 label={blStrings.CAR}
-                supplier={getValues('supplier')?._id!}
-                pickupLocation={getValues('pickupLocation')?._id!}
+                supplier={supplier?._id!}
+                pickupLocation={pickupLocation?._id!}
                 value={carObj}
                 onChange={async (values) => {
                   try {
@@ -366,8 +376,6 @@ const UpdateBooking = () => {
                       // car changed
                       const _car = await CarService.getCar(newCar._id)
 
-                      const from = getValues('from')
-                      const to = getValues('to')
                       if (_car && from && to) {
                         const _booking = bookcarsHelper.clone(booking)
                         _booking.car = _car
@@ -408,12 +416,37 @@ const UpdateBooking = () => {
               <FormControl fullWidth margin="dense">
                 <DateTimePicker
                   label={commonStrings.FROM}
-                  value={getValues('from')}
+                  value={from}
                   maxDate={maxDate}
                   showClear
                   required
-                  onChange={(date) => {
-                    setValue('from', date || undefined)
+                  onChange={async (date) => {
+                    if (date) {
+                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                      _booking.from = date
+
+                      const options: bookcarsTypes.CarOptions = {
+                        cancellation: getValues('cancellation'),
+                        amendments: getValues('amendments'),
+                        theftProtection: getValues('theftProtection'),
+                        collisionDamageWaiver: getValues('collisionDamageWaiver'),
+                        fullInsurance: getValues('fullInsurance'),
+                        additionalDriver: getValues('additionalDriver'),
+                      }
+
+                      const _price = await bookcarsHelper.calculateTotalPrice(carObj!, date, to!, carObj!.supplier.priceChangeRate || 0, options)
+                      setBooking(_booking)
+                      setPrice(_price)
+                      setValue('from', date)
+
+                      const _minDate = new Date(date)
+                      _minDate.setDate(_minDate.getDate() + 1)
+                      setMinDate(_minDate)
+                      setFromError(false)
+                    } else {
+                      setValue('from', undefined)
+                      setMinDate(undefined)
+                    }
                   }}
                   onError={(err: DateTimeValidationError) => {
                     if (err) {
@@ -429,12 +462,37 @@ const UpdateBooking = () => {
               <FormControl fullWidth margin="dense">
                 <DateTimePicker
                   label={commonStrings.TO}
-                  value={getValues('to')}
+                  value={to}
                   minDate={minDate}
                   showClear
                   required
-                  onChange={(date) => {
-                    setValue('to', date || undefined)
+                  onChange={async (date) => {
+                    if (date) {
+                      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                      _booking.to = date
+
+                      const options: bookcarsTypes.CarOptions = {
+                        cancellation: getValues('cancellation'),
+                        amendments: getValues('amendments'),
+                        theftProtection: getValues('theftProtection'),
+                        collisionDamageWaiver: getValues('collisionDamageWaiver'),
+                        fullInsurance: getValues('fullInsurance'),
+                        additionalDriver: getValues('additionalDriver'),
+                      }
+
+                      const _price = await bookcarsHelper.calculateTotalPrice(carObj!, from!, date, carObj!.supplier.priceChangeRate || 0, options)
+                      setBooking(_booking)
+                      setPrice(_price)
+                      setValue('to', date)
+
+                      const _maxDate = new Date(date)
+                      _maxDate.setDate(_maxDate.getDate() - 1)
+                      setMaxDate(_maxDate)
+                      setToError(false)
+                    } else {
+                      setValue('to', undefined)
+                      setMaxDate(undefined)
+                    }
                   }}
                   onError={(err: DateTimeValidationError) => {
                     if (err) {
@@ -475,8 +533,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.cancellation = e.target.checked
@@ -494,7 +550,6 @@ const UpdateBooking = () => {
                           setBooking(_booking)
                           setPrice(_price)
                           setValue('cancellation', _booking.cancellation || false)
-                          console.log('cancellation', _booking.cancellation)
                         }
                       }}
                     />
@@ -513,8 +568,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.amendments = e.target.checked
@@ -550,8 +603,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.theftProtection = e.target.checked
@@ -587,8 +638,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.collisionDamageWaiver = e.target.checked
@@ -624,8 +673,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.fullInsurance = e.target.checked
@@ -661,8 +708,6 @@ const UpdateBooking = () => {
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
                       onChange={async (e) => {
-                        const from = getValues('from')
-                        const to = getValues('to')
                         if (booking && carObj && from && to) {
                           const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
                           _booking.additionalDriver = e.target.checked
@@ -689,7 +734,7 @@ const UpdateBooking = () => {
                 />
               </FormControl>
 
-              {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && getValues('additionalDriver') && (
+              {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriverEnabled && (
                 <>
                   <div className="info">
                     <DriverIcon />
@@ -710,14 +755,16 @@ const UpdateBooking = () => {
                     <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                     <Input
                       // {...register('additionalDriverEmail')}
+                      value={additionalEmail}
                       onChange={(e) => {
-                        clearErrors('additionalDriverEmail')
+                        if (errors.additionalDriverEmail) {
+                          clearErrors('additionalDriverEmail')
+                        }
                         setValue('additionalDriverEmail', e.target.value)
                       }}
                       onBlur={() => {
                         trigger('additionalDriverEmail')
                       }}
-                      value={getValues('additionalDriverEmail')}
                       type="text"
                       error={!!errors.additionalDriverEmail}
                       required
@@ -730,33 +777,37 @@ const UpdateBooking = () => {
                     <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                     <Input
                       // {...register('additionalDriverPhone')}
+                      value={additionalDriverPhone}
                       type="text"
                       error={!!errors.additionalDriverPhone}
                       required
                       autoComplete="off"
                       onChange={(e) => {
-                        clearErrors('additionalDriverPhone')
+                        if (errors.additionalDriverPhone) {
+                          clearErrors('additionalDriverPhone')
+                        }
                         setValue('additionalDriverPhone', e.target.value)
                       }}
                       onBlur={() => {
                         trigger('additionalDriverPhone')
                       }}
-                      value={getValues('additionalDriverPhone')}
                     />
                     {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
                   </FormControl>
                   <FormControl fullWidth margin="dense">
                     <DatePicker
                       label={commonStrings.BIRTH_DATE}
+                      value={additionalDriverBirthDate}
                       required
                       onChange={(birthDate) => {
                         if (birthDate) {
-                          clearErrors('additionalDriverBirthDate')
+                          if (errors.additionalDriverBirthDate) {
+                            clearErrors('additionalDriverBirthDate')
+                          }
                           setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
                         }
                       }}
                       language={UserService.getLanguage()}
-                      value={getValues('additionalDriverBirthDate')}
                     />
                     {errors.additionalDriverBirthDate && (
                       <FormHelperText error>
