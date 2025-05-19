@@ -10,7 +10,7 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -37,12 +37,11 @@ const Settings = () => {
   const [loading, setLoading] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const { register, control, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
+  const { register, getValues, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit',
   })
 
-  const birthDate = useWatch({ control, name: 'birthDate' })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -133,7 +132,8 @@ const Settings = () => {
                   loggedUser={user}
                   user={user}
                   size="large"
-                  readonly={false}
+                  // readonly={false}
+                  readonly
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   color="disabled"
@@ -149,7 +149,17 @@ const Settings = () => {
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.phone}>
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <Input {...register('phone')} type="text" required autoComplete="off" onChange={() => clearErrors('phone')} />
+                  <Input
+                    {...register('phone')}
+                    type="text"
+                    required
+                    autoComplete="off"
+                    onChange={() => {
+                      if (errors.phone) {
+                        clearErrors('phone')
+                      }
+                    }}
+                  />
                   <FormHelperText>{errors.phone?.message || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.birthDate}>
@@ -157,10 +167,12 @@ const Settings = () => {
                     label={commonStrings.BIRTH_DATE}
                     variant="standard"
                     required
-                    value={birthDate || undefined}
+                    value={getValues('birthDate') || undefined}
                     onChange={(birthDate) => {
                       if (birthDate) {
-                        clearErrors('birthDate')
+                        if (errors.birthDate) {
+                          clearErrors('birthDate')
+                        }
                         setValue('birthDate', birthDate, { shouldValidate: true })
                       }
                     }}
@@ -188,7 +200,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
                     {commonStrings.SAVE}
                   </Button>
                   <Button

@@ -28,13 +28,11 @@ const BookingFilter = ({
   onSubmit
 }: BookingFilterProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const { control, register, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormFields>({
+  const { control, getValues, register, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   })
 
-  const from = useWatch({ control, name: 'from' })
-  const to = useWatch({ control, name: 'to' })
   const keyword = useWatch({ control, name: 'keyword' })
 
   const [minDate, setMinDate] = useState<Date | undefined>(undefined)
@@ -75,9 +73,10 @@ const BookingFilter = ({
           <DatePicker
             {...register('from')}
             label={commonStrings.FROM}
-            value={from}
+            value={getValues('from')}
             onChange={(date) => {
               if (date) {
+                const to = getValues('to')
                 if (to && to.getTime() <= date.getTime()) {
                   setValue('to', undefined)
                 }
@@ -101,7 +100,7 @@ const BookingFilter = ({
             {...register('to')}
             label={commonStrings.TO}
             minDate={minDate}
-            value={to}
+            value={getValues('to')}
             onChange={(date) => setValue('to', date || undefined)}
             language={language}
             variant="standard"

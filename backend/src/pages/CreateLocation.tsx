@@ -187,7 +187,11 @@ const CreateLocation = () => {
 
                 <Input
                   {...register(`names.${index}.name`)}
-                  onChange={() => clearErrors(`names.${index}.name`)}
+                  onChange={() => {
+                    if (errors.names?.[index]?.name) {
+                      clearErrors(`names.${index}.name`)
+                    }
+                  }}
                   error={!!errors.names?.[index]?.name}
                   required
                 />

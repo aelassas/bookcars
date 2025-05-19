@@ -27,17 +27,15 @@ const BookingFilter = ({
   language,
   onSubmit
 }: BookingFilterProps) => {
+  const [minDate, setMinDate] = useState<Date | undefined>(undefined)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { control, register, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormFields>({
+
+  const { control, register, handleSubmit, setValue, getValues, formState: { isSubmitting } } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   })
 
-  const from = useWatch({ control, name: 'from' })
-  const to = useWatch({ control, name: 'to' })
   const keyword = useWatch({ control, name: 'keyword' })
-
-  const [minDate, setMinDate] = useState<Date | undefined>(undefined)
 
   const handleFormSubmit = (data: FormFields) => {
     let filter: bookcarsTypes.Filter | null = {
@@ -74,9 +72,10 @@ const BookingFilter = ({
         <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.FROM}
-            value={from}
+            value={getValues('from')}
             onChange={(date) => {
               if (date) {
+                const to = getValues('to')
                 if (to && to.getTime() <= date.getTime()) {
                   setValue('to', undefined)
                 }
@@ -99,7 +98,7 @@ const BookingFilter = ({
           <DatePicker
             label={commonStrings.TO}
             minDate={minDate}
-            value={to}
+            value={getValues('to')}
             onChange={(date) => setValue('to', date || undefined)}
             language={language}
             variant="standard"
@@ -126,7 +125,6 @@ const BookingFilter = ({
             {...register('keyword')}
             inputRef={inputRef}
             variant="standard"
-            value={keyword || ''}
             onChange={(e) => setValue('keyword', e.target.value)}
             placeholder={commonStrings.SEARCH_PLACEHOLDER}
             slotProps={{

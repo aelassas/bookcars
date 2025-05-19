@@ -99,7 +99,16 @@ const ChangePassword = () => {
                 {hasPassword && (
                   <FormControl fullWidth margin="dense" error={!!errors.currentPassword}>
                     <InputLabel className="required">{strings.CURRENT_PASSWORD}</InputLabel>
-                    <Input {...register('currentPassword')} type="password" required onChange={() => clearErrors()} />
+                    <Input
+                      {...register('currentPassword')}
+                      type="password"
+                      required
+                      onChange={() => {
+                        if (errors.currentPassword) {
+                          clearErrors('currentPassword')
+                        }
+                      }}
+                    />
                     <FormHelperText>{errors.currentPassword?.message || ''}</FormHelperText>
                   </FormControl>
                 )}
@@ -107,14 +116,31 @@ const ChangePassword = () => {
                   <InputLabel className="required">
                     {strings.NEW_PASSWORD}
                   </InputLabel>
-                  <Input {...register('newPassword')} type="password" required onChange={() => clearErrors()} />
+                  <Input
+                    {...register('newPassword')}
+                    type="password"
+                    required
+                    onChange={() => {
+                      if (errors.newPassword) {
+                        clearErrors('newPassword')
+                      }
+                    }}
+                  />
                   <FormHelperText>{errors.newPassword?.message || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
                   <InputLabel className="required">
                     {commonStrings.CONFIRM_PASSWORD}
                   </InputLabel>
-                  <Input {...register('confirmPassword')} type="password" required onChange={() => clearErrors()}
+                  <Input
+                    {...register('confirmPassword')}
+                    type="password"
+                    required
+                    onChange={() => {
+                      if (errors.confirmPassword) {
+                        clearErrors('confirmPassword')
+                      }
+                    }}
                   />
                   <FormHelperText>{errors.confirmPassword?.message || ''}</FormHelperText>
                 </FormControl>

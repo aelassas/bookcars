@@ -71,7 +71,11 @@ const ForgotPassword = () => {
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                 <Input
                   {...register('email')}
-                  onChange={() => clearErrors('email')}
+                  onChange={() =>{
+                    if (errors.email) {
+                      clearErrors('email')
+                    }
+                  }}
                   type="text"
                   error={!!errors.email}
                   autoComplete="off"

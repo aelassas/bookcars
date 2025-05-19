@@ -130,7 +130,9 @@ const SignUp = () => {
                   label={commonStrings.EMAIL}
                   autoComplete="off"
                   onChange={() => {
-                    clearErrors('email')
+                    if (errors.email) {
+                      clearErrors('email')
+                    }
                   }}
                   required
                 />
@@ -144,7 +146,9 @@ const SignUp = () => {
                   label={commonStrings.PHONE}
                   autoComplete="off"
                   onChange={() => {
-                    clearErrors('phone')
+                    if (errors.phone) {
+                      clearErrors('phone')
+                    }
                   }}
                   required
                 />
@@ -157,7 +161,9 @@ const SignUp = () => {
                   required
                   onChange={(birthDate) => {
                     if (birthDate) {
-                      clearErrors('birthDate')
+                      if (errors.birthDate) {
+                        clearErrors('birthDate')
+                      }
                       setValue('birthDate', birthDate, { shouldValidate: true })
                     }
                   }}
@@ -178,7 +184,9 @@ const SignUp = () => {
                     },
                   }}
                   onChange={() => {
-                    clearErrors('password')
+                    if (errors.password) {
+                      clearErrors('password')
+                    }
                   }}
                   required
                 />
@@ -197,7 +205,9 @@ const SignUp = () => {
                     },
                   }}
                   onChange={() => {
-                    clearErrors('confirmPassword')
+                    if (errors.confirmPassword) {
+                      clearErrors('confirmPassword')
+                    }
                   }}
                   required
                 />
@@ -212,7 +222,11 @@ const SignUp = () => {
                         <Checkbox
                           {...register('tos')}
                           color="primary"
-                          onChange={() => clearErrors('tos')}
+                          onChange={() => {
+                            if (errors.tos) {
+                              clearErrors('tos')
+                            }
+                          }}
                         />
                       </td>
                       <td>
