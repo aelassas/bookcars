@@ -33,7 +33,9 @@ const BookingFilter = ({
     mode: 'onChange',
   })
 
-  const { from, to, keyword } = useWatch({ control })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const keyword = useWatch({ control, name: 'keyword' })
 
   const [minDate, setMinDate] = useState<Date | undefined>(undefined)
 
@@ -71,7 +73,6 @@ const BookingFilter = ({
         <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
         <FormControl fullWidth margin="dense">
           <DatePicker
-            {...register('from')}
             label={commonStrings.FROM}
             value={from}
             onChange={(date) => {
@@ -96,7 +97,6 @@ const BookingFilter = ({
         </FormControl>
         <FormControl fullWidth margin="dense">
           <DatePicker
-            {...register('to')}
             label={commonStrings.TO}
             minDate={minDate}
             value={to}

@@ -74,12 +74,10 @@ const CreateUser = () => {
     },
   })
 
-  const {
-    type,
-    payLater,
-    licenseRequired,
-    notifyAdminOnNewCar,
-  } = useWatch({ control })
+  const type = useWatch({ control, name: 'type' })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const licenseRequired = useWatch({ control, name: 'licenseRequired' })
+  const notifyAdminOnNewCar = useWatch({ control, name: 'notifyAdminOnNewCar' })
 
   const onBeforeUpload = () => {
     setLoading(true)

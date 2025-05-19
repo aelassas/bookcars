@@ -63,7 +63,11 @@ const CarFilter = ({
     mode: 'onSubmit',
   })
 
-  const { from, to, pickupLocation, dropOffLocation, sameLocation } = useWatch({ control })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
+  const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
     if (filterFrom) {

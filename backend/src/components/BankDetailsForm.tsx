@@ -24,7 +24,7 @@ const BankDetailsForm = ({ bankDetails, onSubmit: onFormSubmit }: BankDetailsFor
     mode: 'onSubmit',
   })
 
-  const { showBankDetailsPage } = useWatch({ control })
+  const showBankDetailsPage = useWatch({ control, name: 'showBankDetailsPage' })
 
   useEffect(() => {
     if (bankDetails) {

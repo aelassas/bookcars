@@ -42,7 +42,7 @@ const Settings = () => {
     mode: 'onSubmit',
   })
 
-  const { birthDate } = useWatch({ control })
+  const birthDate = useWatch({ control, name: 'birthDate' })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {

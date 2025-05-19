@@ -77,15 +77,13 @@ const UpdateUser = () => {
     },
   })
 
-  const {
-    type,
-    fullName,
-    email,
-    blacklisted,
-    payLater,
-    licenseRequired,
-    notifyAdminOnNewCar,
-  } = useWatch({ control })
+  const type = useWatch({ control, name: 'type' })
+  const fullName = useWatch({ control, name: 'fullName' })
+  const email = useWatch({ control, name: 'email' })
+  const blacklisted = useWatch({ control, name: 'blacklisted' })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const licenseRequired = useWatch({ control, name: 'licenseRequired' })
+  const notifyAdminOnNewCar = useWatch({ control, name: 'notifyAdminOnNewCar' })
 
   const onBeforeUpload = () => {
     setLoading(true)
