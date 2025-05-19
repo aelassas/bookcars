@@ -9,12 +9,14 @@ import {
   Paper,
   FormLabel
 } from '@mui/material'
+import { useForm, useFieldArray, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as clStrings } from '@/lang/create-location'
 import { strings } from '@/lang/update-location'
+import { strings as clStrings } from '@/lang/create-location'
 import { strings as suppliersStrings } from '@/lang/suppliers'
 import * as LocationService from '@/services/LocationService'
 import NoMatch from './NoMatch'
@@ -27,6 +29,7 @@ import Avatar from '@/components/Avatar'
 import PositionInput from '@/components/PositionInput'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 import SupplierBadge from '@/components/SupplierBadge'
+import { schema, ParkingSpot, FormFields } from '@/models/LocationForm'
 
 import '@/assets/css/update-location.css'
 
@@ -36,16 +39,50 @@ const UpdateLocation = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
-  const [nameErrors, setNameErrors] = useState<boolean[]>([])
+  const [originalNames, setOriginalNames] = useState<bookcarsTypes.LocationName[]>([])
   const [noMatch, setNoMatch] = useState(false)
-  const [error, setError] = useState(false)
+  const [formError, setFormError] = useState(false)
   const [location, setLocation] = useState<bookcarsTypes.Location>()
   const [country, setCountry] = useState<bookcarsTypes.Country>()
-  const [image, setImage] = useState('')
-  const [longitude, setLongitude] = useState('')
-  const [latitude, setLatitude] = useState('')
-  const [parkingSpots, setParkingSpots] = useState<bookcarsTypes.ParkingSpot[]>([])
+
+  // Initialize form with React Hook Form and Zod validation
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+    setFocus,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+    defaultValues: {
+      country: '',
+      names: env._LANGUAGES.map(lang => ({ language: lang.code, name: '' })),
+      latitude: '',
+      longitude: '',
+      parkingSpots: [],
+      image: undefined
+    }
+  })
+
+  // Use field array for names and parking spots
+  const { fields: nameFields } = useFieldArray({
+    control,
+    name: 'names'
+  })
+
+  const { fields: parkingSpotFields, append: appendParkingSpot, update: updateParkingSpot, remove: removeParkingSpot } = useFieldArray({
+    control,
+    name: 'parkingSpots'
+  })
+
+  // Watch values from the form
+  const watchImage = useWatch({
+    control,
+    name: 'image'
+  })
 
   const handleBeforeUpload = () => {
     setLoading(true)
@@ -53,7 +90,7 @@ const UpdateLocation = () => {
 
   const handleImageChange = (_image: string) => {
     setLoading(false)
-    setImage(_image as string)
+    setValue('image', _image as string)
   }
 
   const _error = () => {
@@ -61,28 +98,7 @@ const UpdateLocation = () => {
     helper.error()
   }
 
-  const checkName = () => {
-    let _nameChanged = false
-
-    if (!location || !location.values) {
-      helper.error()
-      return _nameChanged
-    }
-
-    for (let i = 0; i < names.length; i += 1) {
-      const name = names[i]
-      if (name.name !== location.values[i].value) {
-        _nameChanged = true
-        break
-      }
-    }
-
-    return _nameChanged
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const onSubmit = async (data: FormFields) => {
     try {
       if (!country || !location || !location.values) {
         helper.error()
@@ -90,35 +106,36 @@ const UpdateLocation = () => {
       }
 
       let isValid = true
+      const validationPromises = data.names.map(async (name, index) => {
+        if (name.name !== originalNames[index].name) {
+          const status = await LocationService.validate({ language: name.language, name: name.name })
 
-      const _nameErrors = bookcarsHelper.clone(nameErrors) as boolean[]
-      for (let i = 0; i < nameErrors.length; i += 1) {
-        _nameErrors[i] = false
-      }
-
-      for (let i = 0; i < names.length; i += 1) {
-        const name = names[i]
-        if (name.name !== location.values[i].value) {
-          const _isValid = (await LocationService.validate({ language: name.language, name: name.name })) === 200
-          isValid = isValid && _isValid
-          if (!_isValid) {
-            _nameErrors[i] = true
+          if (status !== 200) {
+            setError(`names.${index}.name`, {
+              type: 'manual',
+              message: clStrings.INVALID_LOCATION
+            })
+            setFocus(`names.${index}.name`)
+            isValid = false
           }
+          return status === 200
         }
+        return true
       }
+      )
 
-      setNameErrors(_nameErrors)
+      await Promise.all(validationPromises)
 
       if (isValid) {
         const payload: bookcarsTypes.UpsertLocationPayload = {
           country: country._id,
-          latitude: latitude ? Number(latitude) : undefined,
-          longitude: longitude ? Number(longitude) : undefined,
-          names,
-          image,
-          parkingSpots
+          latitude: data.latitude ? Number(data.latitude) : undefined,
+          longitude: data.longitude ? Number(data.longitude) : undefined,
+          names: data.names,
+          image: watchImage,
+          parkingSpots: data.parkingSpots as bookcarsTypes.ParkingSpot[] || [],
         }
-        const { status, data } = await LocationService.update(location._id, payload)
+        const { status, data: newLocation } = await LocationService.update(location._id, payload)
 
         if (status === 200) {
           // for (let i = 0; i < names.length; i += 1) {
@@ -126,7 +143,8 @@ const UpdateLocation = () => {
           //   location.values[i].value = name.name
           // }
 
-          setLocation(data)
+          setLocation(newLocation)
+          setOriginalNames(bookcarsHelper.clone(data.names) as bookcarsTypes.LocationName[])
           helper.info(strings.LOCATION_UPDATED)
         } else {
           _error()
@@ -169,10 +187,15 @@ const UpdateLocation = () => {
 
               setLocation(_location)
               setCountry(_location.country)
-              setNames(_names)
-              setLongitude((_location.longitude && _location.longitude.toString()) || '')
-              setLatitude((_location.latitude && _location.latitude.toString()) || '')
-              setParkingSpots(_location.parkingSpots || [])
+              setOriginalNames(_names)
+              setValue('names', _names)
+              setValue('longitude', (_location.longitude && _location.longitude.toString()) || '')
+              setValue('latitude', (_location.latitude && _location.latitude.toString()) || '')
+              setValue('parkingSpots', _location.parkingSpots?.map((ps) => ({
+                latitude: ps.latitude.toString(),
+                longitude: ps.longitude.toString(),
+                values: ps.values as ParkingSpot['values'],
+              })) || [])
               setVisible(true)
               setLoading(false)
             } else {
@@ -182,7 +205,7 @@ const UpdateLocation = () => {
           } catch (err) {
             helper.error(err)
             setLoading(false)
-            setError(true)
+            setFormError(true)
             setVisible(false)
           }
         } else {
@@ -198,15 +221,11 @@ const UpdateLocation = () => {
 
   return (
     <Layout onLoad={onLoad} strict>
-      {!error && !noMatch && location && location.values && (
+      {!formError && !noMatch && location && location.values && (
         <div className="update-location">
           <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="location-form-title">
-              {' '}
-              {strings.UPDATE_LOCATION}
-              {' '}
-            </h1>
-            <form onSubmit={handleSubmit}>
+            <h1 className="location-form-title">{strings.UPDATE_LOCATION}</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Avatar
                 type={bookcarsTypes.RecordType.Location}
                 mode="update"
@@ -226,89 +245,78 @@ const UpdateLocation = () => {
                 </FormControl>
               )}
 
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" error={!!errors.country}>
                 <CountrySelectList
-                  label={clStrings.COUNTRY}
+                  label={strings.COUNTRY}
                   variant="standard"
-                  value={country}
                   onChange={(countries: bookcarsTypes.Option[]) => {
-                    if (countries.length > 0) {
-                      const opt = countries[0]
-                      const _country = { _id: opt._id, name: opt.name }
-                      setCountry(_country)
-                    } else {
-                      setCountry(undefined)
-                    }
+                    const _country = countries.length > 0 ? countries[0] as bookcarsTypes.Country : null
+                    setCountry(_country || undefined)
+                    setValue('country', _country?._id || '')
                   }}
+                  value={country}
                   required
                 />
+                {errors.country && (
+                  <FormHelperText>{errors.country.message}</FormHelperText>
+                )}
               </FormControl>
 
-              {location.values.map((value, index) => (
-                <FormControl key={value.language} fullWidth margin="dense">
-                  <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES.filter((l) => l.code === value.language)[0].label})`}</InputLabel>
+              {nameFields.map((field, index) => (
+                <FormControl key={field.id} fullWidth margin="dense">
+                  <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES.filter((l) => l.code === field.language)[0].label})`}</InputLabel>
+
                   <Input
                     type="text"
-                    value={(names[index] && names[index].name) || ''}
-                    error={nameErrors[index]}
+                    error={!!errors.names?.[index]?.name}
                     required
-                    onChange={(e) => {
-                      const _names = bookcarsHelper.clone(names) as bookcarsTypes.LocationName[]
-                      _names[index].name = e.target.value
-                      const _nameErrors = bookcarsHelper.cloneArray(nameErrors) as boolean[]
-                      _nameErrors[index] = false
-                      checkName()
-                      setNames(_names)
-                      setNameErrors(_nameErrors)
-                    }}
+                    {...register(`names.${index}.name`)}
                     autoComplete="off"
                   />
-                  <FormHelperText error={nameErrors[index]}>{(nameErrors[index] && clStrings.INVALID_LOCATION) || ''}</FormHelperText>
+                  <FormHelperText error={!!errors.names?.[index]?.name}>
+                    {errors.names?.[index]?.name?.message || ''}
+                  </FormHelperText>
                 </FormControl>
               ))}
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LATITUDE}</InputLabel>
                 <PositionInput
-                  value={latitude}
-                  onChange={(e) => {
-                    setLatitude(e.target.value)
-                  }}
+                  {...register('latitude')}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" >
                 <InputLabel>{commonStrings.LONGITUDE}</InputLabel>
                 <PositionInput
-                  value={longitude}
-                  onChange={(e) => {
-                    setLongitude(e.target.value)
-                  }}
+                  {...register('longitude')}
                 />
               </FormControl>
 
               <ParkingSpotEditList
-                title={clStrings.PARKING_SPOTS}
-                values={parkingSpots}
+                title={strings.PARKING_SPOTS}
+                values={parkingSpotFields as bookcarsTypes.ParkingSpot[]}
                 onAdd={(value) => {
-                  const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
-                  _parkingSpots.push(value)
-                  setParkingSpots(_parkingSpots)
+                  const parkingSpot: ParkingSpot = {
+                    values: value.values?.map((v) => ({ value: v.value!, language: v.language })) || [],
+                    latitude: value.latitude as string,
+                    longitude: value.longitude as string,
+                  }
+                  appendParkingSpot(parkingSpot)
                 }}
                 onUpdate={(value, index) => {
-                  const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
-                  _parkingSpots[index] = value
-                  setParkingSpots(_parkingSpots)
+                  const parkingSpot: ParkingSpot = {
+                    values: value.values?.map((v) => ({ value: v.value!, language: v.language })) || [],
+                    latitude: value.latitude as string,
+                    longitude: value.longitude as string,
+                  }
+                  updateParkingSpot(index, parkingSpot)
                 }}
-                onDelete={(_, index) => {
-                  const _parkingSpots = bookcarsHelper.clone(parkingSpots) as bookcarsTypes.ParkingSpot[]
-                  _parkingSpots.splice(index, 1)
-                  setParkingSpots(_parkingSpots)
-                }}
+                onDelete={(_, index) => removeParkingSpot(index)}
               />
 
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {commonStrings.SAVE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/locations')}>
@@ -320,7 +328,7 @@ const UpdateLocation = () => {
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-      {error && <Error />}
+      {formError && <Error />}
       {noMatch && <NoMatch hideHeader />}
     </Layout>
   )
