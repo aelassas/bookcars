@@ -233,7 +233,9 @@ const CreateUser = () => {
                     label={commonStrings.TYPE}
                     value={type}
                     onChange={(e) => {
-                      clearErrors('fullName')
+                      if (errors.fullName) {
+                        clearErrors('fullName')
+                      }
                       setValue('type', e.target.value)
                     }}
                     variant="standard"
@@ -256,7 +258,9 @@ const CreateUser = () => {
                   required
                   autoComplete="off"
                   onChange={(e) => {
-                    clearErrors('fullName')
+                    if (errors.fullName) {
+                      clearErrors('fullName')
+                    }
                     setValue('fullName', e.target.value)
                   }}
                   onBlur={async (e) => {
@@ -273,7 +277,9 @@ const CreateUser = () => {
                 <Input
                   // {...register('email')}
                   onChange={(e) => {
-                    clearErrors('email')
+                    if (errors.email) {
+                      clearErrors('email')
+                    }
                     setValue('email', e.target.value)
                   }}
                   onBlur={async (e) => {
@@ -298,7 +304,9 @@ const CreateUser = () => {
                       required
                       onChange={(birthDate) => {
                         if (birthDate) {
-                          clearErrors('birthDate')
+                          if (errors.birthDate) {
+                            clearErrors('birthDate')
+                          }
                           setValue('birthDate', birthDate, { shouldValidate: true })
                         }
                       }}
@@ -325,7 +333,11 @@ const CreateUser = () => {
                   type="text"
                   autoComplete="off"
                   error={!!errors.phone}
-                  onChange={() => clearErrors('phone')}
+                  onChange={() => {
+                    if (errors.phone) {
+                      clearErrors('phone')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.phone}>
                   {errors.phone?.message || ''}
@@ -408,7 +420,11 @@ const CreateUser = () => {
                       type="text"
                       autoComplete="off"
                       error={!!errors.supplierCarLimit}
-                      onChange={() => clearErrors('supplierCarLimit')}
+                      onChange={() => {
+                        if (errors.supplierCarLimit) {
+                          clearErrors('supplierCarLimit')
+                        }
+                      }}
                     />
                     <FormHelperText error={!!errors.supplierCarLimit}>
                       {errors.supplierCarLimit?.message || ''}
@@ -422,7 +438,11 @@ const CreateUser = () => {
                       type="text"
                       autoComplete="off"
                       error={!!errors.minimumRentalDays}
-                      onChange={() => clearErrors('minimumRentalDays')}
+                      onChange={() => {
+                        if (errors.minimumRentalDays) {
+                          clearErrors('minimumRentalDays')
+                        }
+                      }}
                     />
                     <FormHelperText error={!!errors.minimumRentalDays}>
                       {errors.minimumRentalDays?.message || ''}
@@ -436,7 +456,11 @@ const CreateUser = () => {
                       type="text"
                       autoComplete="off"
                       error={!!errors.priceChangeRate}
-                      onChange={() => clearErrors('priceChangeRate')}
+                      onChange={() => {
+                        if (errors.priceChangeRate) {
+                          clearErrors('priceChangeRate')
+                        }
+                      }}
                     />
                     <FormHelperText error={!!errors.priceChangeRate}>
                       {errors.priceChangeRate?.message || ''}

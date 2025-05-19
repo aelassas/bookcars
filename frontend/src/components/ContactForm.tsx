@@ -100,7 +100,11 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
               label={commonStrings.EMAIL}
               required
               autoComplete="off"
-              onChange={() => clearErrors()}
+              onChange={() => {
+                if (errors.email) {
+                  clearErrors('email')
+                }
+              }}
             />
             <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
           </FormControl>
