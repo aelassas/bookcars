@@ -18,7 +18,7 @@ import {
   Person as DriverIcon
 } from '@mui/icons-material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import { useForm, useWatch } from 'react-hook-form'
+import { Control, FieldErrors, useForm, UseFormClearErrors, UseFormRegister, UseFormSetValue, UseFormTrigger, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -48,6 +48,109 @@ import { Option } from '@/models/common'
 import { schema, FormFields } from '@/models/BookingForm'
 
 import '@/assets/css/booking.css'
+
+// Create a separate component to avoid re-renders
+interface AdditionalDriverFormProps {
+  control: Control<FormFields>
+  register: UseFormRegister<FormFields>
+  errors: FieldErrors<FormFields>
+  clearErrors: UseFormClearErrors<FormFields>
+  trigger: UseFormTrigger<FormFields>
+  setValue: UseFormSetValue<FormFields>
+  language: string
+}
+
+const AdditionalDriverForm = ({ control, register, errors, clearErrors, trigger, setValue, language }: AdditionalDriverFormProps) => {
+  // Only watch the fields needed in this component
+  const additionalDriverBirthDate = useWatch({ control, name: 'additionalDriverBirthDate' })
+  const additionalEmail = useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
+
+  return (
+    <>
+      <div className="info">
+        <DriverIcon />
+        <span>{csStrings.ADDITIONAL_DRIVER}</span>
+      </div>
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+        <Input
+          {...register('additionalDriverFullName')}
+          type="text"
+          required
+          autoComplete="off"
+        />
+        {errors.additionalDriverFullName && <FormHelperText error>{commonStrings.REQUIRED}</FormHelperText>}
+      </FormControl>
+
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+        <Input
+          value={additionalEmail || ''}
+          onChange={(e) => {
+            if (errors.additionalDriverEmail) {
+              clearErrors('additionalDriverEmail')
+            }
+
+            setValue('additionalDriverEmail', e.target.value)
+          }}
+          onBlur={() => {
+            trigger('additionalDriverEmail')
+          }}
+          type="text"
+          error={!!errors.additionalDriverEmail}
+          required
+          autoComplete="off"
+        />
+        {errors.additionalDriverEmail && <FormHelperText error>{errors.additionalDriverEmail.message}</FormHelperText>}
+      </FormControl>
+
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+        <Input
+          value={additionalDriverPhone || ''}
+          type="text"
+          error={!!errors.additionalDriverPhone}
+          required
+          autoComplete="off"
+          onChange={(e) => {
+            if (errors.additionalDriverPhone) {
+              clearErrors('additionalDriverPhone')
+            }
+
+            setValue('additionalDriverPhone', e.target.value)
+          }}
+          onBlur={() => {
+            trigger('additionalDriverPhone')
+          }}
+        />
+        {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
+      </FormControl>
+      <FormControl fullWidth margin="dense">
+        <DatePicker
+          label={commonStrings.BIRTH_DATE}
+          value={additionalDriverBirthDate}
+          required
+          onChange={(birthDate) => {
+            if (birthDate) {
+              if (errors.additionalDriverBirthDate) {
+                clearErrors('additionalDriverBirthDate')
+              }
+              setValue('additionalDriverBirthDate', birthDate)
+              trigger('additionalDriverBirthDate')
+            }
+          }}
+          language={language}
+        />
+        {errors.additionalDriverBirthDate && (
+          <FormHelperText error>
+            {helper.getBirthDateError(env.MINIMUM_AGE)}
+          </FormHelperText>
+        )}
+      </FormControl>
+    </>
+  )
+}
 
 const UpdateBooking = () => {
   const navigate = useNavigate()
@@ -105,10 +208,12 @@ const UpdateBooking = () => {
   const driver = useWatch({ control, name: 'driver' })
   const from = useWatch({ control, name: 'from' })
   const to = useWatch({ control, name: 'to' })
-  const additionalDriverEnabled = useWatch({ control, name: 'additionalDriver' })
-  const additionalEmail = useWatch({ control, name: 'additionalDriverEmail' })
-  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
-  const additionalDriverBirthDate = useWatch({ control, name: 'additionalDriverBirthDate' })
+  const cancellation = useWatch({ control, name: 'cancellation' })
+  const amendments = useWatch({ control, name: 'amendments' })
+  const theftProtection = useWatch({ control, name: 'theftProtection' })
+  const collisionDamageWaiver = useWatch({ control, name: 'collisionDamageWaiver' })
+  const fullInsurance = useWatch({ control, name: 'fullInsurance' })
+  const additionalDriver = useWatch({ control, name: 'additionalDriver' })
 
   const toastErr = (err?: unknown, hideLoading?: boolean): void => {
     helper.error(err)
@@ -381,12 +486,12 @@ const UpdateBooking = () => {
                         _booking.car = _car
 
                         const options: bookcarsTypes.CarOptions = {
-                          cancellation: getValues('cancellation'),
-                          amendments: getValues('amendments'),
-                          theftProtection: getValues('theftProtection'),
-                          collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                          fullInsurance: getValues('fullInsurance'),
-                          additionalDriver: getValues('additionalDriver'),
+                          cancellation: cancellation,
+                          amendments,
+                          theftProtection,
+                          collisionDamageWaiver,
+                          fullInsurance,
+                          additionalDriver,
                         }
 
                         const _price = await bookcarsHelper.calculateTotalPrice(_car, from, to, _car.supplier.priceChangeRate || 0, options)
@@ -426,12 +531,12 @@ const UpdateBooking = () => {
                       _booking.from = date
 
                       const options: bookcarsTypes.CarOptions = {
-                        cancellation: getValues('cancellation'),
-                        amendments: getValues('amendments'),
-                        theftProtection: getValues('theftProtection'),
-                        collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                        fullInsurance: getValues('fullInsurance'),
-                        additionalDriver: getValues('additionalDriver'),
+                        cancellation: cancellation,
+                        amendments,
+                        theftProtection,
+                        collisionDamageWaiver,
+                        fullInsurance,
+                        additionalDriver,
                       }
 
                       const _price = await bookcarsHelper.calculateTotalPrice(carObj!, date, to!, carObj!.supplier.priceChangeRate || 0, options)
@@ -472,12 +577,12 @@ const UpdateBooking = () => {
                       _booking.to = date
 
                       const options: bookcarsTypes.CarOptions = {
-                        cancellation: getValues('cancellation'),
-                        amendments: getValues('amendments'),
-                        theftProtection: getValues('theftProtection'),
-                        collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                        fullInsurance: getValues('fullInsurance'),
-                        additionalDriver: getValues('additionalDriver'),
+                        cancellation: cancellation,
+                        amendments,
+                        theftProtection,
+                        collisionDamageWaiver,
+                        fullInsurance,
+                        additionalDriver,
                       }
 
                       const _price = await bookcarsHelper.calculateTotalPrice(carObj!, from!, date, carObj!.supplier.priceChangeRate || 0, options)
@@ -529,7 +634,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('cancellation')}
-                      checked={getValues('cancellation')}
+                      checked={cancellation}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
                       onChange={async (e) => {
@@ -539,11 +644,11 @@ const UpdateBooking = () => {
 
                           const options: bookcarsTypes.CarOptions = {
                             cancellation: _booking.cancellation,
-                            amendments: getValues('amendments'),
-                            theftProtection: getValues('theftProtection'),
-                            collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                            fullInsurance: getValues('fullInsurance'),
-                            additionalDriver: getValues('additionalDriver'),
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
                           }
 
                           const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
@@ -573,12 +678,12 @@ const UpdateBooking = () => {
                           _booking.amendments = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: getValues('cancellation'),
+                            cancellation: cancellation,
                             amendments: _booking.amendments,
-                            theftProtection: getValues('theftProtection'),
-                            collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                            fullInsurance: getValues('fullInsurance'),
-                            additionalDriver: getValues('additionalDriver'),
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
                           }
 
                           const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
@@ -608,12 +713,12 @@ const UpdateBooking = () => {
                           _booking.theftProtection = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: getValues('cancellation'),
-                            amendments: getValues('amendments'),
+                            cancellation: cancellation,
+                            amendments,
                             theftProtection: _booking.theftProtection,
-                            collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                            fullInsurance: getValues('fullInsurance'),
-                            additionalDriver: getValues('additionalDriver'),
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
                           }
 
                           const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
@@ -643,12 +748,12 @@ const UpdateBooking = () => {
                           _booking.collisionDamageWaiver = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: getValues('cancellation'),
-                            amendments: getValues('amendments'),
-                            theftProtection: getValues('theftProtection'),
+                            cancellation: cancellation,
+                            amendments,
+                            theftProtection,
                             collisionDamageWaiver: _booking.collisionDamageWaiver,
-                            fullInsurance: getValues('fullInsurance'),
-                            additionalDriver: getValues('additionalDriver'),
+                            fullInsurance,
+                            additionalDriver,
                           }
 
                           const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
@@ -678,12 +783,12 @@ const UpdateBooking = () => {
                           _booking.fullInsurance = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: getValues('cancellation'),
-                            amendments: getValues('amendments'),
-                            theftProtection: getValues('theftProtection'),
-                            collisionDamageWaiver: getValues('collisionDamageWaiver'),
+                            cancellation: cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
                             fullInsurance: _booking.fullInsurance,
-                            additionalDriver: getValues('additionalDriver'),
+                            additionalDriver,
                           }
 
                           const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
@@ -713,11 +818,11 @@ const UpdateBooking = () => {
                           _booking.additionalDriver = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: getValues('cancellation'),
-                            amendments: getValues('amendments'),
-                            theftProtection: getValues('theftProtection'),
-                            collisionDamageWaiver: getValues('collisionDamageWaiver'),
-                            fullInsurance: getValues('fullInsurance'),
+                            cancellation: cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
                             additionalDriver: _booking.additionalDriver,
                           }
 
@@ -734,88 +839,16 @@ const UpdateBooking = () => {
                 />
               </FormControl>
 
-              {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriverEnabled && (
-                <>
-                  <div className="info">
-                    <DriverIcon />
-                    <span>{csStrings.ADDITIONAL_DRIVER}</span>
-                  </div>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                    <Input
-                      {...register('additionalDriverFullName')}
-                      type="text"
-                      required
-                      autoComplete="off"
-                    />
-                    {errors.additionalDriverFullName && <FormHelperText error>{commonStrings.REQUIRED}</FormHelperText>}
-                  </FormControl>
-
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                    <Input
-                      // {...register('additionalDriverEmail')}
-                      value={additionalEmail}
-                      onChange={(e) => {
-                        if (errors.additionalDriverEmail) {
-                          clearErrors('additionalDriverEmail')
-                        }
-                        setValue('additionalDriverEmail', e.target.value)
-                      }}
-                      onBlur={() => {
-                        trigger('additionalDriverEmail')
-                      }}
-                      type="text"
-                      error={!!errors.additionalDriverEmail}
-                      required
-                      autoComplete="off"
-                    />
-                    {errors.additionalDriverEmail && <FormHelperText error>{errors.additionalDriverEmail.message}</FormHelperText>}
-                  </FormControl>
-
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                    <Input
-                      // {...register('additionalDriverPhone')}
-                      value={additionalDriverPhone}
-                      type="text"
-                      error={!!errors.additionalDriverPhone}
-                      required
-                      autoComplete="off"
-                      onChange={(e) => {
-                        if (errors.additionalDriverPhone) {
-                          clearErrors('additionalDriverPhone')
-                        }
-                        setValue('additionalDriverPhone', e.target.value)
-                      }}
-                      onBlur={() => {
-                        trigger('additionalDriverPhone')
-                      }}
-                    />
-                    {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <DatePicker
-                      label={commonStrings.BIRTH_DATE}
-                      value={additionalDriverBirthDate}
-                      required
-                      onChange={(birthDate) => {
-                        if (birthDate) {
-                          if (errors.additionalDriverBirthDate) {
-                            clearErrors('additionalDriverBirthDate')
-                          }
-                          setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
-                        }
-                      }}
-                      language={UserService.getLanguage()}
-                    />
-                    {errors.additionalDriverBirthDate && (
-                      <FormHelperText error>
-                        {helper.getBirthDateError(env.MINIMUM_AGE)}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </>
+              {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriver && (
+                <AdditionalDriverForm
+                  control={control}
+                  register={register}
+                  errors={errors}
+                  clearErrors={clearErrors}
+                  trigger={trigger}
+                  setValue={setValue}
+                  language={language}
+                />
               )}
 
               <div>
