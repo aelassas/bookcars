@@ -455,7 +455,6 @@ export interface DateBasedPrice {
   dailyPrice: number | string
 }
 
-
 export interface Car {
   _id: string
   name: string
