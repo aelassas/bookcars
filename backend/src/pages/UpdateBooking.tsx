@@ -486,7 +486,7 @@ const UpdateBooking = () => {
                         _booking.car = _car
 
                         const options: bookcarsTypes.CarOptions = {
-                          cancellation: cancellation,
+                          cancellation,
                           amendments,
                           theftProtection,
                           collisionDamageWaiver,
@@ -531,7 +531,7 @@ const UpdateBooking = () => {
                       _booking.from = date
 
                       const options: bookcarsTypes.CarOptions = {
-                        cancellation: cancellation,
+                        cancellation,
                         amendments,
                         theftProtection,
                         collisionDamageWaiver,
@@ -577,7 +577,7 @@ const UpdateBooking = () => {
                       _booking.to = date
 
                       const options: bookcarsTypes.CarOptions = {
-                        cancellation: cancellation,
+                        cancellation,
                         amendments,
                         theftProtection,
                         collisionDamageWaiver,
@@ -678,7 +678,7 @@ const UpdateBooking = () => {
                           _booking.amendments = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: cancellation,
+                            cancellation,
                             amendments: _booking.amendments,
                             theftProtection,
                             collisionDamageWaiver,
@@ -713,7 +713,7 @@ const UpdateBooking = () => {
                           _booking.theftProtection = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: cancellation,
+                            cancellation,
                             amendments,
                             theftProtection: _booking.theftProtection,
                             collisionDamageWaiver,
@@ -748,7 +748,7 @@ const UpdateBooking = () => {
                           _booking.collisionDamageWaiver = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: cancellation,
+                            cancellation,
                             amendments,
                             theftProtection,
                             collisionDamageWaiver: _booking.collisionDamageWaiver,
@@ -783,7 +783,7 @@ const UpdateBooking = () => {
                           _booking.fullInsurance = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: cancellation,
+                            cancellation,
                             amendments,
                             theftProtection,
                             collisionDamageWaiver,
@@ -818,7 +818,7 @@ const UpdateBooking = () => {
                           _booking.additionalDriver = e.target.checked
 
                           const options: bookcarsTypes.CarOptions = {
-                            cancellation: cancellation,
+                            cancellation,
                             amendments,
                             theftProtection,
                             collisionDamageWaiver,
