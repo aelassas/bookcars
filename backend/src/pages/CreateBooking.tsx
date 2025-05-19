@@ -88,7 +88,6 @@ const CreateBooking = () => {
   const to = useWatch({ control, name: 'to' })
   const additionalDriverEnabled = useWatch({ control, name: 'additionalDriver' })
 
-
   useEffect(() => {
     if (from) {
       const _minDate = new Date(from)
