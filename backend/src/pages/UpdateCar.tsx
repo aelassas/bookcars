@@ -37,7 +37,8 @@ import FuelPolicyList from '@/components/FuelPolicyList'
 import MultimediaList from '@/components/MultimediaList'
 import CarRangeList from '@/components/CarRangeList'
 import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
-import { schema, FormFields, DateBasedPrice, Supplier } from '@/models/CarForm'
+import { Option, Supplier } from '@/models/common'
+import { schema, FormFields, DateBasedPrice } from '@/models/CarForm'
 
 import '@/assets/css/create-car.css'
 
@@ -65,6 +66,7 @@ const UpdateCar = () => {
     getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
+    mode: 'onSubmit',
     defaultValues: {
       name: '',
       supplier: undefined,
@@ -105,23 +107,21 @@ const UpdateCar = () => {
   })
 
   // Use watch to track form values
-  const {
-    supplier,
-    locations,
-    isDateBasedPrice,
-    dateBasedPrices,
-    range,
-    multimedia,
-    available,
-    fullyBooked,
-    comingSoon,
-    type,
-    gearbox,
-    seats,
-    doors,
-    fuelPolicy,
-    aircon,
-  } = useWatch({ control })
+  const supplier = useWatch({ control, name: 'supplier' })
+  const locations = useWatch({ control, name: 'locations' })
+  const isDateBasedPrice = useWatch({ control, name: 'isDateBasedPrice' })
+  const dateBasedPrices = useWatch({ control, name: 'dateBasedPrices' })
+  const range = useWatch({ control, name: 'range' })
+  const multimedia = useWatch({ control, name: 'multimedia' })
+  const available = useWatch({ control, name: 'available' })
+  const fullyBooked = useWatch({ control, name: 'fullyBooked' })
+  const comingSoon = useWatch({ control, name: 'comingSoon' })
+  const type = useWatch({ control, name: 'type' })
+  const gearbox = useWatch({ control, name: 'gearbox' })
+  const seats = useWatch({ control, name: 'seats' })
+  const doors = useWatch({ control, name: 'doors' })
+  const fuelPolicy = useWatch({ control, name: 'fuelPolicy' })
+  const aircon = useWatch({ control, name: 'aircon' })
 
   const handleBeforeUpload = () => {
     setLoading(true)
@@ -247,10 +247,10 @@ const UpdateCar = () => {
               setValue('name', _car.name)
               setValue('supplier', _supplier)
               setValue('minimumAge', _car.minimumAge.toString())
-              const lcs: bookcarsTypes.Option[] = []
+              const lcs: Option[] = []
               for (const loc of _car.locations) {
                 const { _id, name: _name } = loc
-                const lc: bookcarsTypes.Option = { _id, name: _name ?? '' }
+                const lc: Option = { _id, name: _name ?? '' }
                 lcs.push(lc)
               }
               setValue('locations', lcs)
@@ -387,7 +387,7 @@ const UpdateCar = () => {
                   multiple
                   required
                   variant="standard"
-                  onChange={(values) => setValue('locations', values)}
+                  onChange={(values) => setValue('locations', values as Option[])}
                 />
               </FormControl>
 

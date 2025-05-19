@@ -3,6 +3,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/create-car'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
+import { supplierSchema, optionSchema } from '@/models/common'
 
 const dateBasedPriceSchema = z.object({
   _id: z.string().optional(),
@@ -13,14 +14,6 @@ const dateBasedPriceSchema = z.object({
 })
 
 export type DateBasedPrice = z.infer<typeof dateBasedPriceSchema>
-
-const supplierSchema = z.object({
-  _id: z.string(),
-  name: z.string(),
-  image: z.string().optional(),
-})
-
-export type Supplier = z.infer<typeof supplierSchema>
 
 export const schema = z.object({
   name: z.string(),
@@ -33,7 +26,7 @@ export const schema = z.object({
       },
       { message: strings.MINIMUM_AGE_NOT_VALID }
     ),
-  locations: z.array(z.object({ _id: z.string() })),
+  locations: z.array(optionSchema),
   dailyPrice: z.string()
     .refine((val) => !isNaN(Number(val)), { message: commonStrings.REQUIRED }),
   discountedDailyPrice: z.string().optional(),

@@ -28,12 +28,14 @@ const BookingFilter = ({
   onSubmit
 }: BookingFilterProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const { control, register, handleSubmit, setValue } = useForm<FormFields>({
+  const { control, register, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   })
 
-  const { from, to, keyword } = useWatch({ control })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const keyword = useWatch({ control, name: 'keyword' })
 
   const [minDate, setMinDate] = useState<Date | undefined>(undefined)
 
@@ -147,7 +149,7 @@ const BookingFilter = ({
             className="bf-search"
           />
         </FormControl>
-        <Button type="submit" variant="contained" className="btn-primary btn-search" fullWidth>
+        <Button type="submit" variant="contained" className="btn-primary btn-search" fullWidth disabled={isSubmitting}>
           {commonStrings.SEARCH}
         </Button>
       </form>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   FormControl,
@@ -15,8 +15,8 @@ import {
   Person as DriverIcon
 } from '@mui/icons-material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -36,214 +36,133 @@ import CarSelectList from '@/components/CarSelectList'
 import StatusList from '@/components/StatusList'
 import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
+import { Option, Supplier } from '@/models/common'
+import { schema, FormFields } from '@/models/BookingForm'
 
 import '@/assets/css/create-booking.css'
 
 const CreateBooking = () => {
   const navigate = useNavigate()
+
   const [isSupplier, setIsSupplier] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [supplier, setSupplier] = useState('')
-  const [car, setCar] = useState<bookcarsTypes.Car>()
-  const [driver, setDriver] = useState('')
-  const [pickupLocation, setPickupLocation] = useState('')
-  const [dropOffLocation, setDropOffLocation] = useState('')
-  const [from, setFrom] = useState<Date>()
-  const [to, setTo] = useState<Date>()
+  const [carObj, setCarObj] = useState<bookcarsTypes.Car>()
   const [minDate, setMinDate] = useState<Date>()
   const [maxDate, setMaxDate] = useState<Date>()
-  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
-  const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
-  const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
-  const [addtionalDriverBirthDate, setAdditionalDriverBirthDate] = useState<Date>()
-  const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
-  const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
-  const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
 
-  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
-    setSupplier(values.length > 0 ? values[0]._id : '')
-  }
-
-  const handleDriverChange = (values: bookcarsTypes.Option[]) => {
-    setDriver(values.length > 0 ? values[0]._id : '')
-  }
-
-  const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    setPickupLocation(values.length > 0 ? values[0]._id : '-1')
-  }
-
-  const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setDropOffLocation(values.length > 0 ? values[0]._id : '-1')
-  }
-
-  const handleCarSelectListChange = useCallback((values: bookcarsTypes.Car[]) => {
-    if (Array.isArray(values) && values.length > 0) {
-      const _car = values[0]
-      if (_car) {
-        setCar(_car)
-      } else {
-        helper.error()
-      }
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors, isSubmitting },
+    clearErrors,
+    getValues,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+    defaultValues: {
+      supplier: undefined,
+      driver: undefined,
+      pickupLocation: undefined,
+      dropOffLocation: undefined,
+      car: undefined,
+      status: undefined,
+      cancellation: false,
+      amendments: false,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      additionalDriver: false,
+      additionalDriverFullName: '',
+      additionalDriverEmail: '',
+      additionalDriverPhone: '',
     }
-  }, [])
+  })
+  console.log('rendering')
+  const supplier = useWatch({ control, name: 'supplier' })
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const additionalDriverEnabled = useWatch({ control, name: 'additionalDriver' })
 
-  const handleStatusChange = (value: bookcarsTypes.BookingStatus) => {
-    setStatus(value)
-  }
 
-  const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCancellation(e.target.checked)
-  }
-
-  const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmendments(e.target.checked)
-  }
-
-  const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTheftProtection(e.target.checked)
-  }
-
-  const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCollisionDamageWaiver(e.target.checked)
-  }
-
-  const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullInsurance(e.target.checked)
-  }
-
-  const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAdditionalDriver(e.target.checked)
-  }
-
-  const _validateEmail = (email: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
-        setAdditionalDriverEmailValid(true)
-        return true
-      }
-      setAdditionalDriverEmailValid(false)
-      return false
+  useEffect(() => {
+    if (from) {
+      const _minDate = new Date(from)
+      _minDate.setDate(_minDate.getDate() + 1)
+      setMinDate(_minDate)
+    } else {
+      setMinDate(undefined)
     }
-    setAdditionalDriverEmailValid(true)
-    return false
-  }
+  }, [from])
 
-  const _validatePhone = (phone?: string) => {
-    if (phone) {
-      const _phoneValid = validator.isMobilePhone(phone)
-      setAdditionalDriverPhoneValid(_phoneValid)
-
-      return _phoneValid
+  useEffect(() => {
+    if (to) {
+      const _maxDate = new Date(to)
+      _maxDate.setDate(_maxDate.getDate() - 1)
+      setMaxDate(_maxDate)
+    } else {
+      setMaxDate(undefined)
     }
-    setAdditionalDriverPhoneValid(true)
+  }, [to])
 
-    return true
-  }
-
-  const _validateBirthDate = (date?: Date) => {
-    if (date && bookcarsHelper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
-
-      setAdditionalDriverBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setAdditionalDriverBirthDateValid(true)
-    return true
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (!car || !from || !to || !status) {
+  const onSubmit = async (data: FormFields) => {
+    if (!carObj || fromError || toError) {
       helper.error()
       return
     }
 
-    if (fromError || toError) {
-      return
-    }
-
-    const additionalDriverSet = helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
-
-    if (additionalDriverSet) {
-      const emailValid = _validateEmail(addtionalDriverEmail)
-      if (!emailValid) {
-        return
-      }
-
-      const phoneValid = _validatePhone(additionalDriverPhone)
-      if (!phoneValid) {
-        return
-      }
-
-      const birthDateValid = _validateBirthDate(addtionalDriverBirthDate)
-      if (!birthDateValid) {
-        return
-      }
-    }
+    const additionalDriverSet = helper.carOptionAvailable(carObj, 'additionalDriver') && data.additionalDriver
 
     const booking: bookcarsTypes.Booking = {
-      supplier,
-      car: car._id,
-      driver,
-      pickupLocation,
-      dropOffLocation,
-      from,
-      to,
-      status,
-      cancellation,
-      amendments,
-      theftProtection,
-      collisionDamageWaiver,
-      fullInsurance,
+      supplier: data.supplier?._id!,
+      car: carObj._id,
+      driver: data.driver?._id,
+      pickupLocation: data.pickupLocation!._id,
+      dropOffLocation: data.dropOffLocation!._id,
+      from: data.from!,
+      to: data.to!,
+      status: data.status as bookcarsTypes.BookingStatus,
+      cancellation: data.cancellation,
+      amendments: data.amendments,
+      theftProtection: data.theftProtection,
+      collisionDamageWaiver: data.collisionDamageWaiver,
+      fullInsurance: data.fullInsurance,
       additionalDriver: additionalDriverSet,
     }
 
     let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
     if (additionalDriverSet) {
-      if (!addtionalDriverBirthDate) {
-        helper.error()
-        return
-      }
-
       _additionalDriver = {
-        fullName: additionalDriverfullName,
-        email: addtionalDriverEmail,
-        phone: additionalDriverPhone,
-        birthDate: addtionalDriverBirthDate,
+        fullName: data.additionalDriverFullName!,
+        email: data.additionalDriverEmail!,
+        phone: data.additionalDriverPhone!,
+        birthDate: data.additionalDriverBirthDate!,
       }
     }
 
-    // use bookcarsHelper.calculatePrice
     const options: bookcarsTypes.CarOptions = {
-      cancellation,
-      amendments,
-      theftProtection,
-      collisionDamageWaiver,
-      fullInsurance,
-      additionalDriver,
+      cancellation: data.cancellation,
+      amendments: data.amendments,
+      theftProtection: data.theftProtection,
+      collisionDamageWaiver: data.collisionDamageWaiver,
+      fullInsurance: data.fullInsurance,
+      additionalDriver: additionalDriverSet,
     }
 
     try {
-      const price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
+      // use bookcarsHelper.calculatePrice
+      const price = await bookcarsHelper.calculateTotalPrice(carObj, from!, to!, carObj.supplier.priceChangeRate || 0, options)
       booking.price = price
 
       const _booking = await BookingService.create({
         booking,
         additionalDriver: _additionalDriver,
       })
-
+      console.log(_booking)
       if (_booking && _booking._id) {
         navigate('/')
       } else {
@@ -259,7 +178,7 @@ const CreateBooking = () => {
       setVisible(true)
 
       if (user.type === bookcarsTypes.RecordType.Supplier) {
-        setSupplier(user._id as string)
+        setValue('supplier', { _id: user._id, name: user.fullName, image: user.avatar } as Supplier)
         setIsSupplier(true)
       }
     }
@@ -269,19 +188,15 @@ const CreateBooking = () => {
     <Layout onLoad={onLoad} strict>
       <div className="create-booking">
         <Paper className="booking-form booking-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="booking-form-title">
-            {' '}
-            {strings.NEW_BOOKING_HEADING}
-            {' '}
-          </h1>
-          <form onSubmit={handleSubmit}>
+          <h1 className="booking-form-title">{strings.NEW_BOOKING_HEADING}</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {!isSupplier && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
                   label={blStrings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleSupplierChange}
+                  onChange={(values) => setValue('supplier', values.length > 0 ? values[0] as Option : undefined)}
                 />
               </FormControl>
             )}
@@ -290,7 +205,7 @@ const CreateBooking = () => {
               label={blStrings.DRIVER}
               required
               variant="standard"
-              onChange={handleDriverChange}
+              onChange={(values) => setValue('driver', values.length > 0 ? values[0] as Option : undefined)}
             />
 
             <FormControl fullWidth margin="dense">
@@ -298,7 +213,7 @@ const CreateBooking = () => {
                 label={bfStrings.PICK_UP_LOCATION}
                 required
                 variant="standard"
-                onChange={handlePickupLocationChange}
+                onChange={(values) => setValue('pickupLocation', values.length > 0 ? values[0] as Option : undefined)}
               />
             </FormControl>
 
@@ -307,15 +222,19 @@ const CreateBooking = () => {
                 label={bfStrings.DROP_OFF_LOCATION}
                 required
                 variant="standard"
-                onChange={handleDropOffLocationChange}
+                onChange={(values) => setValue('dropOffLocation', values.length > 0 ? values[0] as Option : undefined)}
               />
             </FormControl>
 
             <CarSelectList
               label={blStrings.CAR}
-              supplier={supplier}
-              pickupLocation={pickupLocation}
-              onChange={handleCarSelectListChange}
+              supplier={supplier?._id!}
+              pickupLocation={pickupLocation?._id!}
+              onChange={(values) => {
+                const _car = values.length > 0 ? values[0] as bookcarsTypes.Car : undefined
+                setValue('car', _car)
+                setCarObj(_car)
+              }}
               required
             />
 
@@ -327,16 +246,7 @@ const CreateBooking = () => {
                 showClear
                 required
                 onChange={(date) => {
-                  if (date) {
-                    const _minDate = new Date(date)
-                    _minDate.setDate(_minDate.getDate() + 1)
-                    setFrom(date)
-                    setMinDate(_minDate)
-                    setFromError(false)
-                  } else {
-                    setFrom(undefined)
-                    setMinDate(undefined)
-                  }
+                  setValue('from', date || undefined)
                 }}
                 onError={(err: DateTimeValidationError) => {
                   if (err) {
@@ -357,16 +267,7 @@ const CreateBooking = () => {
                 showClear
                 required
                 onChange={(date) => {
-                  if (date) {
-                    const _maxDate = new Date(date)
-                    _maxDate.setDate(_maxDate.getDate() - 1)
-                    setTo(date)
-                    setMaxDate(_maxDate)
-                    setToError(false)
-                  } else {
-                    setTo(undefined)
-                    setMaxDate(undefined)
-                  }
+                  setValue('to', date || undefined)
                 }}
                 onError={(err: DateTimeValidationError) => {
                   if (err) {
@@ -382,7 +283,12 @@ const CreateBooking = () => {
             <FormControl fullWidth margin="dense">
               <StatusList
                 label={blStrings.STATUS}
-                onChange={handleStatusChange}
+                onChange={(value) => {
+                  const currentValue = getValues('status')
+                  if (currentValue !== value) {
+                    setValue('status', value)
+                  }
+                }}
                 required
               />
             </FormControl>
@@ -394,59 +300,89 @@ const CreateBooking = () => {
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('cancellation')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
+                  />
+                }
                 label={csStrings.CANCELLATION}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'cancellation')}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('amendments')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
+                  />
+                }
                 label={csStrings.AMENDMENTS}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'amendments')}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('theftProtection')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
+                  />
+                }
                 label={csStrings.THEFT_PROTECTION}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'theftProtection')}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('collisionDamageWaiver')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
+                  />
+                }
                 label={csStrings.COLLISION_DAMAGE_WAVER}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'collisionDamageWaiver')}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('fullInsurance')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
+                  />
+                }
                 label={csStrings.FULL_INSURANCE}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'fullInsurance')}
               />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
               <FormControlLabel
-                control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
+                control={
+                  <Switch
+                    {...register('additionalDriver')}
+                    color="primary"
+                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
+                  />
+                }
                 label={csStrings.ADDITIONAL_DRIVER}
                 className="checkbox-fcl"
-                disabled={!helper.carOptionAvailable(car, 'additionalDriver')}
               />
             </FormControl>
 
-            {helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
+            {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriverEnabled && (
               <>
                 <div className="info">
                   <DriverIcon />
@@ -455,84 +391,61 @@ const CreateBooking = () => {
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                   <Input
+                    {...register('additionalDriverFullName')}
                     type="text"
                     required
-                    onChange={(e) => {
-                      setAdditionalDriverFullName(e.target.value)
-                    }}
                     autoComplete="off"
                   />
+                  {errors.additionalDriverFullName && <FormHelperText error>{commonStrings.REQUIRED}</FormHelperText>}
                 </FormControl>
+
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                   <Input
+                    {...register('additionalDriverEmail')}
                     type="text"
-                    error={!additionalDriverEmailValid}
-                    onBlur={(e) => {
-                      _validateEmail(e.target.value)
-                    }}
-                    onChange={(e) => {
-                      setAdditionalDriverEmail(e.target.value)
-
-                      if (!e.target.value) {
-                        setAdditionalDriverEmailValid(true)
-                      }
-                    }}
+                    error={!!errors.additionalDriverEmail}
                     required
                     autoComplete="off"
                   />
-                  <FormHelperText error={!additionalDriverEmailValid}>{(!additionalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                  {errors.additionalDriverEmail && <FormHelperText error>{errors.additionalDriverEmail.message}</FormHelperText>}
                 </FormControl>
+
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                   <Input
+                    {...register('additionalDriverPhone')}
                     type="text"
-                    error={!additionalDriverPhoneValid}
-                    onBlur={(e) => {
-                      _validatePhone(e.target.value)
-                    }}
-                    onChange={(e) => {
-                      setAdditionalDriverPhone(e.target.value)
-
-                      if (!e.target.value) {
-                        setAdditionalDriverPhoneValid(true)
-                      }
-                    }}
+                    error={!!errors.additionalDriverPhone}
                     required
                     autoComplete="off"
                   />
-                  <FormHelperText
-                    error={!additionalDriverPhoneValid}
-                  >
-                    {(!additionalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                  </FormHelperText>
+                  {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <DatePicker
                     label={commonStrings.BIRTH_DATE}
                     required
-                    onChange={(_birthDate) => {
-                      if (_birthDate) {
-                        const _birthDateValid = _validateBirthDate(_birthDate)
-
-                        setAdditionalDriverBirthDate(_birthDate)
-                        setAdditionalDriverBirthDateValid(_birthDateValid)
+                    onChange={(birthDate) => {
+                      if (birthDate) {
+                        clearErrors('additionalDriverBirthDate')
+                        setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
                       }
                     }}
                     language={UserService.getLanguage()}
                   />
-                  <FormHelperText
-                    error={!additionalDriverBirthDateValid}
-                  >
-                    {(!additionalDriverBirthDateValid && helper.getBirthDateError(env.MINIMUM_AGE)) || ''}
-                  </FormHelperText>
+                  {errors.additionalDriverBirthDate && (
+                    <FormHelperText error>
+                      {helper.getBirthDateError(env.MINIMUM_AGE)}
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </>
             )}
 
             <div>
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {commonStrings.CREATE}
                 </Button>
                 <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>

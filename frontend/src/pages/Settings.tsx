@@ -42,7 +42,7 @@ const Settings = () => {
     mode: 'onSubmit',
   })
 
-  const { birthDate } = useWatch({ control })
+  const birthDate = useWatch({ control, name: 'birthDate' })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -133,8 +133,7 @@ const Settings = () => {
                   loggedUser={user}
                   user={user}
                   size="large"
-                  // readonly={false}
-                  readonly
+                  readonly={false}
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   color="disabled"
@@ -189,7 +188,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
                     {commonStrings.SAVE}
                   </Button>
                   <Button

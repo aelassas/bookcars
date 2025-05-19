@@ -143,13 +143,11 @@ const Checkout = () => {
     }
   })
 
-  const {
-    additionalDriver,
-    additionalDriverEmail,
-    additionalDriverPhone,
-    payLater,
-    payDeposit,
-  } = useWatch({ control })
+  const additionalDriver = useWatch({ control, name: 'additionalDriver' })
+  const additionalDriverEmail = useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const payDeposit = useWatch({ control, name: 'payDeposit' })
 
   const validateEmail = (email: string) => {
     return validator.isEmail(email)

@@ -36,7 +36,8 @@ import CarRangeList from '@/components/CarRangeList'
 import MultimediaList from '@/components/MultimediaList'
 import DateBasedPriceEditList from '@/components/DateBasedPriceEditList'
 import { UserContextType, useUserContext } from '@/context/UserContext'
-import { schema, FormFields, DateBasedPrice, Supplier } from '@/models/CarForm'
+import { Option, Supplier } from '@/models/common'
+import { schema, FormFields, DateBasedPrice } from '@/models/CarForm'
 
 import '@/assets/css/create-car.css'
 
@@ -61,6 +62,7 @@ const CreateCar = () => {
     getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
+    mode: 'onSubmit',
     defaultValues: {
       name: '',
       supplier: undefined,
@@ -101,21 +103,20 @@ const CreateCar = () => {
   })
 
   // Use watch to track form values
-  const {
-    isDateBasedPrice,
-    dateBasedPrices,
-    range,
-    multimedia,
-    available,
-    fullyBooked,
-    comingSoon,
-    type,
-    gearbox,
-    seats,
-    doors,
-    fuelPolicy,
-    aircon,
-  } = useWatch({ control })
+  const isDateBasedPrice = useWatch({ control, name: 'isDateBasedPrice' })
+  const dateBasedPrices = useWatch({ control, name: 'dateBasedPrices' })
+  const range = useWatch({ control, name: 'range' })
+  const multimedia = useWatch({ control, name: 'multimedia' })
+  const available = useWatch({ control, name: 'available' })
+  const fullyBooked = useWatch({ control, name: 'fullyBooked' })
+  const comingSoon = useWatch({ control, name: 'comingSoon' })
+  const type = useWatch({ control, name: 'type' })
+  const gearbox = useWatch({ control, name: 'gearbox' })
+  const seats = useWatch({ control, name: 'seats' })
+  const doors = useWatch({ control, name: 'doors' })
+  const fuelPolicy = useWatch({ control, name: 'fuelPolicy' })
+  const aircon = useWatch({ control, name: 'aircon' })
+
 
   const handleBeforeUpload = () => {
     setLoading(true)
@@ -227,7 +228,7 @@ const CreateCar = () => {
     }
     navigate('/cars')
   }
-
+  console.log('rendering')
   return (
     <Layout onLoad={onLoad} strict>
       <div className="create-car">
@@ -294,7 +295,7 @@ const CreateCar = () => {
                 multiple
                 required
                 variant="standard"
-                onChange={(values) => setValue('locations', values)}
+                onChange={(values) => setValue('locations', values as Option[])}
               />
             </FormControl>
 
