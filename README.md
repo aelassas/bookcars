@@ -57,6 +57,12 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Secure against XSS, XST, CSR, MITM and DDoS
 * Supported Platforms: iOS, Android, Web, Docker
 
+## Support
+
+If this project has been valuable in your work or research, consider supporting its ongoing development and maintenance. You can contribute through [GitHub Sponsorship](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://buymeacoffee.com/aelassas). Even a simple star on the GitHub repository helps spread the word, increases visibility and is greatly appreciated.
+
+<a href="https://www.buymeacoffee.com/aelassas" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## Live Demo
 <!--
 Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will you give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
@@ -133,12 +139,6 @@ You can install the Android App by downloading the APK and installing it on any 
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 19. [Release Notes](https://github.com/aelassas/bookcars/releases)
-
-## Support
-
-If this project has been valuable in your work or research, consider supporting its ongoing development and maintenance. You can contribute through [GitHub Sponsorship](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://buymeacoffee.com/aelassas). Even a simple star on the GitHub repository helps spread the word, increases visibility and is greatly appreciated.
-
-<a href="https://www.buymeacoffee.com/aelassas" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## License
 
