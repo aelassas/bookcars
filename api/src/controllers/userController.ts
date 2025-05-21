@@ -1543,7 +1543,14 @@ export const deleteUsers = async (req: Request, res: Response) => {
         }
 
         if (user.type === bookcarsTypes.UserType.Supplier) {
-          const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+          const additionalDrivers = (
+            await Booking
+              .find(
+                { supplier: id, _additionalDriver: { $ne: null } },
+              )
+              .select('_additionalDriver -_id')
+              .lean()
+          ).map((b) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
           await Booking.deleteMany({ supplier: id })
           const cars = await Car.find({ supplier: id })
