@@ -414,7 +414,6 @@ const UpdateCar = () => {
                   label={`${strings.DISCOUNTED_DAILY_PRICE} (${commonStrings.CURRENCY})`}
                   {...register('discountedDailyPrice')}
                   variant="standard"
-                  required
                   autoComplete="off"
                   slotProps={{
                     htmlInput: {
