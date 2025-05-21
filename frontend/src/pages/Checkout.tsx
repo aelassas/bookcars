@@ -133,7 +133,6 @@ const Checkout = () => {
     clearErrors,
     setFocus,
     trigger,
-    getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -143,6 +142,9 @@ const Checkout = () => {
       additionalDriverPhone: '',
     }
   })
+
+  const additionalDriverEmail= useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
 
   const additionalDriver = useWatch({ control, name: 'additionalDriver' })
   const payLater = useWatch({ control, name: 'payLater' })
@@ -696,7 +698,7 @@ const Checkout = () => {
                             <OutlinedInput
                               // {...register('additionalDriverEmail')}
                               inputRef={additionalDriverEmailRef}
-                              value={getValues('additionalDriverEmail')}
+                              value={additionalDriverEmail}
                               type="text"
                               label={commonStrings.EMAIL}
                               error={!!errors.additionalDriverEmail}
@@ -721,7 +723,7 @@ const Checkout = () => {
                             <OutlinedInput
                               // {...register('additionalDriverPhone')}
                               inputRef={additionalDriverPhoneRef}
-                              value={getValues('additionalDriverPhone')}
+                              value={additionalDriverPhone}
                               type="text"
                               label={commonStrings.PHONE}
                               error={!!errors.additionalDriverPhone}
