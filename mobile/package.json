@@ -1,6 +1,6 @@
 {
   "name": "bookcars",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
