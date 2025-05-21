@@ -60,9 +60,11 @@ const CreateCar = () => {
     setValue,
     register,
     getValues,
+    clearErrors,
+    setFocus,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
-    mode: 'onSubmit',
+    mode: 'onBlur',
     defaultValues: {
       name: '',
       supplier: undefined,
@@ -207,6 +209,13 @@ const CreateCar = () => {
     }
   }
 
+  const onError = () => {
+    const firstErrorField = Object.keys(errors)[0] as keyof FormFields
+    if (firstErrorField) {
+      setFocus(firstErrorField)
+    }
+  }
+
   const onLoad = (user?: bookcarsTypes.User) => {
     if (user && user.verified) {
       setVisible(true)
@@ -228,13 +237,13 @@ const CreateCar = () => {
     }
     navigate('/cars')
   }
-  console.log('rendering')
+
   return (
     <Layout onLoad={onLoad} strict>
       <div className="create-car">
         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
           <h1 className="car-form-title">{strings.NEW_CAR_HEADING}</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
             <Avatar
               type={bookcarsTypes.RecordType.Car}
               mode="create"
@@ -282,7 +291,11 @@ const CreateCar = () => {
                 {...register('minimumAge')}
                 error={!!errors.minimumAge}
                 autoComplete="off"
-                inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
+                onChange={() => {
+                  if (errors.minimumAge) {
+                    clearErrors('minimumAge')
+                  }
+                }}
               />
               {errors.minimumAge && (
                 <FormHelperText error>{errors.minimumAge.message}</FormHelperText>
@@ -308,10 +321,9 @@ const CreateCar = () => {
                 required
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                onChange={() => {
+                  if (errors.dailyPrice) {
+                    clearErrors('dailyPrice')
                   }
                 }}
               />
@@ -322,12 +334,12 @@ const CreateCar = () => {
                 label={`${strings.DISCOUNTED_DAILY_PRICE} (${commonStrings.CURRENCY})`}
                 {...register('discountedDailyPrice')}
                 variant="standard"
-                required
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.discountedDailyPrice}
+                helperText={errors.discountedDailyPrice?.message}
+                onChange={() => {
+                  if (errors.discountedDailyPrice) {
+                    clearErrors('discountedDailyPrice')
                   }
                 }}
               />
@@ -376,10 +388,11 @@ const CreateCar = () => {
                     {...register('biWeeklyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.biWeeklyPrice}
+                    helperText={errors.biWeeklyPrice?.message}
+                    onChange={() => {
+                      if (errors.biWeeklyPrice) {
+                        clearErrors('biWeeklyPrice')
                       }
                     }}
                   />
@@ -391,10 +404,11 @@ const CreateCar = () => {
                     {...register('discountedBiWeeklyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.discountedBiWeeklyPrice}
+                    helperText={errors.discountedBiWeeklyPrice?.message}
+                    onChange={() => {
+                      if (errors.discountedBiWeeklyPrice) {
+                        clearErrors('discountedBiWeeklyPrice')
                       }
                     }}
                   />
@@ -406,10 +420,11 @@ const CreateCar = () => {
                     {...register('weeklyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.weeklyPrice}
+                    helperText={errors.weeklyPrice?.message}
+                    onChange={() => {
+                      if (errors.weeklyPrice) {
+                        clearErrors('weeklyPrice')
                       }
                     }}
                   />
@@ -421,10 +436,11 @@ const CreateCar = () => {
                     {...register('discountedWeeklyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.discountedWeeklyPrice}
+                    helperText={errors.discountedWeeklyPrice?.message}
+                    onChange={() => {
+                      if (errors.discountedWeeklyPrice) {
+                        clearErrors('discountedWeeklyPrice')
                       }
                     }}
                   />
@@ -436,10 +452,11 @@ const CreateCar = () => {
                     {...register('monthlyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.monthlyPrice}
+                    helperText={errors.monthlyPrice?.message}
+                    onChange={() => {
+                      if (errors.monthlyPrice) {
+                        clearErrors('monthlyPrice')
                       }
                     }}
                   />
@@ -451,10 +468,11 @@ const CreateCar = () => {
                     {...register('discountedMonthlyPrice')}
                     variant="standard"
                     autoComplete="off"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: 'numeric',
-                        pattern: '^\\d+(\\.\\d+)?$'
+                    error={!!errors.discountedMonthlyPrice}
+                    helperText={errors.discountedMonthlyPrice?.message}
+                    onChange={() => {
+                      if (errors.discountedMonthlyPrice) {
+                        clearErrors('discountedMonthlyPrice')
                       }
                     }}
                   />
@@ -469,10 +487,11 @@ const CreateCar = () => {
                 required
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.deposit}
+                helperText={errors.deposit?.message}
+                onChange={() => {
+                  if (errors.deposit) {
+                    clearErrors('deposit')
                   }
                 }}
               />
@@ -524,10 +543,11 @@ const CreateCar = () => {
                 {...register('co2')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.co2}
+                helperText={errors.co2?.message}
+                onChange={() => {
+                  if (errors.co2) {
+                    clearErrors('co2')
                   }
                 }}
               />
@@ -651,10 +671,11 @@ const CreateCar = () => {
                 {...register('mileage')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.mileage}
+                helperText={errors.mileage?.message}
+                onChange={() => {
+                  if (errors.mileage) {
+                    clearErrors('mileage')
                   }
                 }}
               />
@@ -666,10 +687,11 @@ const CreateCar = () => {
                 {...register('cancellation')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.cancellation}
+                helperText={errors.cancellation?.message}
+                onChange={() => {
+                  if (errors.cancellation) {
+                    clearErrors('cancellation')
                   }
                 }}
               />
@@ -681,10 +703,11 @@ const CreateCar = () => {
                 {...register('amendments')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.amendments}
+                helperText={errors.amendments?.message}
+                onChange={() => {
+                  if (errors.amendments) {
+                    clearErrors('amendments')
                   }
                 }}
               />
@@ -696,10 +719,11 @@ const CreateCar = () => {
                 {...register('theftProtection')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.theftProtection}
+                helperText={errors.theftProtection?.message}
+                onChange={() => {
+                  if (errors.theftProtection) {
+                    clearErrors('theftProtection')
                   }
                 }}
               />
@@ -711,10 +735,11 @@ const CreateCar = () => {
                 {...register('collisionDamageWaiver')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.collisionDamageWaiver}
+                helperText={errors.collisionDamageWaiver?.message}
+                onChange={() => {
+                  if (errors.collisionDamageWaiver) {
+                    clearErrors('collisionDamageWaiver')
                   }
                 }}
               />
@@ -726,10 +751,11 @@ const CreateCar = () => {
                 {...register('fullInsurance')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.fullInsurance}
+                helperText={errors.fullInsurance?.message}
+                onChange={() => {
+                  if (errors.fullInsurance) {
+                    clearErrors('fullInsurance')
                   }
                 }}
               />
@@ -741,10 +767,11 @@ const CreateCar = () => {
                 {...register('additionalDriver')}
                 variant="standard"
                 autoComplete="off"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: 'numeric',
-                    pattern: '^\\d+(\\.\\d+)?$'
+                error={!!errors.additionalDriver}
+                helperText={errors.additionalDriver?.message}
+                onChange={() => {
+                  if (errors.additionalDriver) {
+                    clearErrors('additionalDriver')
                   }
                 }}
               />
@@ -767,7 +794,7 @@ const CreateCar = () => {
             <div className="form-error">
               {imageError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               {imageSizeError && <Error message={strings.CAR_IMAGE_SIZE_ERROR} />}
-              {Object.keys(errors).length > 0 && <Error message={commonStrings.FORM_ERROR} />}
+              {/* {Object.keys(errors).length > 0 && <Error message={commonStrings.FORM_ERROR} />} */}
             </div>
           </form>
         </Paper>
