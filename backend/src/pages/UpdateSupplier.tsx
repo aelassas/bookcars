@@ -72,12 +72,10 @@ const UpdateSupplier = () => {
     },
   })
 
-  const {
-    payLater,
-    licenseRequired,
-    notifyAdminOnNewCar,
-    blacklisted,
-  } = useWatch({ control })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const licenseRequired = useWatch({ control, name: 'licenseRequired' })
+  const notifyAdminOnNewCar = useWatch({ control, name: 'notifyAdminOnNewCar' })
+  const blacklisted = useWatch({ control, name: 'blacklisted' })
 
   const onBeforeUpload = () => {
     setLoading(true)
@@ -363,7 +361,11 @@ const UpdateSupplier = () => {
                   type="text"
                   autoComplete="off"
                   error={!!errors.supplierCarLimit}
-                  onChange={() => clearErrors('supplierCarLimit')}
+                  onChange={() => {
+                    if (errors.supplierCarLimit) {
+                      clearErrors('supplierCarLimit')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.supplierCarLimit}>
                   {errors.supplierCarLimit?.message || ''}
@@ -377,7 +379,11 @@ const UpdateSupplier = () => {
                   type="text"
                   autoComplete="off"
                   error={!!errors.minimumRentalDays}
-                  onChange={() => clearErrors('minimumRentalDays')}
+                  onChange={() => {
+                    if (errors.minimumRentalDays) {
+                      clearErrors('minimumRentalDays')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.minimumRentalDays}>
                   {errors.minimumRentalDays?.message || ''}
@@ -391,7 +397,11 @@ const UpdateSupplier = () => {
                   type="text"
                   autoComplete="off"
                   error={!!errors.priceChangeRate}
-                  onChange={() => clearErrors('priceChangeRate')}
+                  onChange={() => {
+                    if (errors.priceChangeRate) {
+                      clearErrors('priceChangeRate')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.priceChangeRate}>
                   {errors.priceChangeRate?.message || ''}
@@ -407,7 +417,11 @@ const UpdateSupplier = () => {
                   type="text"
                   autoComplete="off"
                   error={!!errors.phone}
-                  onChange={() => clearErrors('phone')}
+                  onChange={() => {
+                    if (errors.phone) {
+                      clearErrors('phone')
+                    }
+                  }}
                 />
                 <FormHelperText error={!!errors.phone}>
                   {errors.phone?.message || ''}

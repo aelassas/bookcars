@@ -143,13 +143,12 @@ const Checkout = () => {
     }
   })
 
-  const {
-    additionalDriver,
-    additionalDriverEmail,
-    additionalDriverPhone,
-    payLater,
-    payDeposit,
-  } = useWatch({ control })
+  const additionalDriverEmail= useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
+
+  const additionalDriver = useWatch({ control, name: 'additionalDriver' })
+  const payLater = useWatch({ control, name: 'payLater' })
+  const payDeposit = useWatch({ control, name: 'payDeposit' })
 
   const validateEmail = (email: string) => {
     return validator.isEmail(email)
@@ -525,7 +524,9 @@ const Checkout = () => {
                               required
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('email')
+                                if (errors.email) {
+                                  clearErrors('email')
+                                }
                                 setEmailRegistered(false)
                                 setEmailInfo(false)
                                 setValue('email', e.target.value)
@@ -572,7 +573,9 @@ const Checkout = () => {
                               required
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('phone')
+                                if (errors.phone) {
+                                  clearErrors('phone')
+                                }
                                 setPhoneInfo(false)
                                 setValue('phone', e.target.value)
                               }}
@@ -594,7 +597,9 @@ const Checkout = () => {
                               variant="outlined"
                               required
                               onChange={(_birthDate) => {
-                                clearErrors('birthDate')
+                                if (errors.birthDate) {
+                                  clearErrors('birthDate')
+                                }
                                 if (_birthDate) {
                                   setValue('birthDate', _birthDate, { shouldValidate: true })
                                 } else {
@@ -616,7 +621,7 @@ const Checkout = () => {
                                     <Checkbox
                                       {...register('tos')}
                                       onChange={(e) => {
-                                        if (e.target.checked) {
+                                        if (e.target.checked && errors.tos) {
                                           clearErrors('tos')
                                         }
                                       }}
@@ -700,7 +705,9 @@ const Checkout = () => {
                               required={adRequired}
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('additionalDriverEmail')
+                                if (errors.additionalDriverEmail) {
+                                  clearErrors('additionalDriverEmail')
+                                }
                                 setValue('additionalDriverEmail', e.target.value)
                               }}
                               onBlur={() => {
@@ -723,7 +730,9 @@ const Checkout = () => {
                               required={adRequired}
                               autoComplete="off"
                               onChange={(e) => {
-                                clearErrors('additionalDriverPhone')
+                                if (errors.additionalDriverPhone) {
+                                  clearErrors('additionalDriverPhone')
+                                }
                                 setValue('additionalDriverPhone', e.target.value)
                               }}
                               onBlur={() => {

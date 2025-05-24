@@ -57,6 +57,14 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Secure against XSS, XST, CSR, MITM and DDoS
 * Supported Platforms: iOS, Android, Web, Docker
 
+## Support
+
+If this project has been valuable in your work or research, consider supporting its ongoing development and maintenance. You can contribute through [GitHub Sponsorship](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://buymeacoffee.com/aelassas). Even a simple star on the GitHub repository helps spread the word, increases visibility and is greatly appreciated.
+
+<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>
+<a href="https://www.paypal.me/aelassaspp"><img src="https://aelassas.github.io/content/paypal-button-v2.png" alt="PayPal" width="208"></a>
+<a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" height="38"></a>
+
 ## Live Demo
 <!--
 Some features are locked down on the demo links provided. To unlock all the features contact me by email and I will you give a full access. You can find my email on my [GitHub](https://github.com/aelassas) profile page.
@@ -81,7 +89,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-7.1.png">
+<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-7.2.png">
 
 #### How to install the Mobile App on Android
 
@@ -93,7 +101,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-7.1.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-7.2.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
@@ -133,12 +141,6 @@ You can install the Android App by downloading the APK and installing it on any 
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 19. [Release Notes](https://github.com/aelassas/bookcars/releases)
-
-## Support
-
-If you find this project helpful, consider buying me a coffee.
-
-<a href="https://www.buymeacoffee.com/aelassas" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## License
 

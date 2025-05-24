@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   FormControl,
@@ -18,8 +18,8 @@ import {
   Person as DriverIcon
 } from '@mui/icons-material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
+import { Control, FieldErrors, useForm, UseFormClearErrors, UseFormRegister, UseFormSetValue, UseFormTrigger, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -44,235 +44,176 @@ import CarSelectList from '@/components/CarSelectList'
 import StatusList from '@/components/StatusList'
 import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
+import { Option } from '@/models/common'
+import { schema, FormFields } from '@/models/BookingForm'
 
 import '@/assets/css/booking.css'
 
+// Create a separate component to avoid re-renders
+interface AdditionalDriverFormProps {
+  control: Control<FormFields>
+  register: UseFormRegister<FormFields>
+  errors: FieldErrors<FormFields>
+  clearErrors: UseFormClearErrors<FormFields>
+  trigger: UseFormTrigger<FormFields>
+  setValue: UseFormSetValue<FormFields>
+  language: string
+}
+
+const AdditionalDriverForm = ({ control, register, errors, clearErrors, trigger, setValue, language }: AdditionalDriverFormProps) => {
+  // Only watch the fields needed in this component
+  const additionalDriverBirthDate = useWatch({ control, name: 'additionalDriverBirthDate' })
+  const additionalEmail = useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
+
+  return (
+    <>
+      <div className="info">
+        <DriverIcon />
+        <span>{csStrings.ADDITIONAL_DRIVER}</span>
+      </div>
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+        <Input
+          {...register('additionalDriverFullName')}
+          type="text"
+          required
+          autoComplete="off"
+        />
+        {errors.additionalDriverFullName && <FormHelperText error>{commonStrings.REQUIRED}</FormHelperText>}
+      </FormControl>
+
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+        <Input
+          value={additionalEmail || ''}
+          onChange={(e) => {
+            if (errors.additionalDriverEmail) {
+              clearErrors('additionalDriverEmail')
+            }
+
+            setValue('additionalDriverEmail', e.target.value)
+          }}
+          onBlur={() => {
+            trigger('additionalDriverEmail')
+          }}
+          type="text"
+          error={!!errors.additionalDriverEmail}
+          required
+          autoComplete="off"
+        />
+        {errors.additionalDriverEmail && <FormHelperText error>{errors.additionalDriverEmail.message}</FormHelperText>}
+      </FormControl>
+
+      <FormControl fullWidth margin="dense">
+        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+        <Input
+          value={additionalDriverPhone || ''}
+          type="text"
+          error={!!errors.additionalDriverPhone}
+          required
+          autoComplete="off"
+          onChange={(e) => {
+            if (errors.additionalDriverPhone) {
+              clearErrors('additionalDriverPhone')
+            }
+
+            setValue('additionalDriverPhone', e.target.value)
+          }}
+          onBlur={() => {
+            trigger('additionalDriverPhone')
+          }}
+        />
+        {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
+      </FormControl>
+      <FormControl fullWidth margin="dense">
+        <DatePicker
+          label={commonStrings.BIRTH_DATE}
+          value={additionalDriverBirthDate}
+          required
+          onChange={(birthDate) => {
+            if (birthDate) {
+              if (errors.additionalDriverBirthDate) {
+                clearErrors('additionalDriverBirthDate')
+              }
+              setValue('additionalDriverBirthDate', birthDate)
+              trigger('additionalDriverBirthDate')
+            }
+          }}
+          language={language}
+        />
+        {errors.additionalDriverBirthDate && (
+          <FormHelperText error>
+            {helper.getBirthDateError(env.MINIMUM_AGE)}
+          </FormHelperText>
+        )}
+      </FormControl>
+    </>
+  )
+}
+
 const UpdateBooking = () => {
   const navigate = useNavigate()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
-  const [error, setError] = useState(false)
+  const [formError, setFormError] = useState(false)
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
+  const [carObj, setCarObj] = useState<bookcarsTypes.Car>()
   const [isSupplier, setIsSupplier] = useState(false)
-  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
-  const [car, setCar] = useState<bookcarsTypes.Car>()
-  const [price, setPrice] = useState<number>()
-  const [driver, setDriver] = useState<bookcarsTypes.Option>()
-  const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Option>()
-  const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Option>()
-  const [from, setFrom] = useState<Date>()
-  const [to, setTo] = useState<Date>()
   const [minDate, setMinDate] = useState<Date>()
   const [maxDate, setMaxDate] = useState<Date>()
-  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
-  const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
-  const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
-  const [addtionalDriverBirthDate, setAdditionalDriverBirthDate] = useState<Date>()
-  const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
-  const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
-  const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
+  const [price, setPrice] = useState<number>()
 
-  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
-    setSupplier(values.length > 0 ? values[0] : undefined)
-  }
-
-  const handleDriverChange = (values: bookcarsTypes.Option[]) => {
-    setDriver(values.length > 0 ? values[0] : undefined)
-  }
-
-  const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    setPickupLocation(values.length > 0 ? values[0] : undefined)
-  }
-
-  const handleDropOffLocationChange = (values: bookcarsTypes.Option[]) => {
-    setDropOffLocation(values.length > 0 ? values[0] : undefined)
-  }
-
-  const handleCarSelectListChange = useCallback(
-    async (values: bookcarsTypes.Car[]) => {
-      try {
-        const newCar = values.length > 0 ? values[0] : undefined
-
-        if ((!car && newCar) || (car && newCar && car._id !== newCar._id)) {
-          // car changed
-          const _car = await CarService.getCar(newCar._id)
-
-          if (_car && from && to) {
-            const _booking = bookcarsHelper.clone(booking)
-            _booking.car = _car
-
-            const options: bookcarsTypes.CarOptions = {
-              cancellation,
-              amendments,
-              theftProtection,
-              collisionDamageWaiver,
-              fullInsurance,
-              additionalDriver,
-            }
-
-            const _price = await bookcarsHelper.calculateTotalPrice(_car, from, to, _car.supplier.priceChangeRate || 0, options)
-            setPrice(_price)
-
-            setBooking(_booking)
-            setCar(newCar)
-          } else {
-            helper.error()
-          }
-        } else if (!newCar) {
-          setPrice(0)
-          setCar(newCar)
-        } else {
-          setCar(newCar)
-        }
-      } catch (err) {
-        helper.error(err)
-      }
-    },
-    [car, from, to, booking, cancellation, amendments, theftProtection, collisionDamageWaiver, fullInsurance, additionalDriver],
-  )
-
-  const handleStatusChange = (value: bookcarsTypes.BookingStatus) => {
-    setStatus(value)
-  }
-
-  const handleCancellationChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.cancellation = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation: _booking.cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setCancellation(_booking.cancellation || false)
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+    clearErrors,
+    getValues,
+    trigger,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+    defaultValues: {
+      supplier: undefined,
+      driver: undefined,
+      pickupLocation: undefined,
+      dropOffLocation: undefined,
+      car: undefined,
+      status: undefined,
+      cancellation: false,
+      amendments: false,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      additionalDriver: false,
+      additionalDriverFullName: '',
+      additionalDriverEmail: '',
+      additionalDriverPhone: '',
     }
-  }
+  })
 
-  const handleAmendmentsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.amendments = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments: _booking.amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setAmendments(_booking.amendments || false)
-    }
-  }
-
-  const handleCollisionDamageWaiverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.collisionDamageWaiver = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver: _booking.collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
-    }
-  }
-
-  const handleTheftProtectionChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.theftProtection = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection: _booking.theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setTheftProtection(_booking.theftProtection || false)
-    }
-  }
-
-  const handleFullInsuranceChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.fullInsurance = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance: _booking.fullInsurance,
-        additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setFullInsurance(_booking.fullInsurance || false)
-    }
-  }
-
-  const handleAdditionalDriverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && car && from && to) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.additionalDriver = e.target.checked
-
-      const options: bookcarsTypes.CarOptions = {
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver: _booking.additionalDriver,
-      }
-
-      const _price = await bookcarsHelper.calculateTotalPrice(car, from, to, car.supplier.priceChangeRate || 0, options)
-      setBooking(_booking)
-      setPrice(_price)
-      setAdditionalDriver(_booking.additionalDriver || false)
-    }
-  }
+  const supplier = useWatch({ control, name: 'supplier' })
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
+  const driver = useWatch({ control, name: 'driver' })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const cancellation = useWatch({ control, name: 'cancellation' })
+  const amendments = useWatch({ control, name: 'amendments' })
+  const theftProtection = useWatch({ control, name: 'theftProtection' })
+  const collisionDamageWaiver = useWatch({ control, name: 'collisionDamageWaiver' })
+  const fullInsurance = useWatch({ control, name: 'fullInsurance' })
+  const additionalDriver = useWatch({ control, name: 'additionalDriver' })
 
   const toastErr = (err?: unknown, hideLoading?: boolean): void => {
     helper.error(err)
@@ -309,68 +250,11 @@ const UpdateBooking = () => {
     }
   }
 
-  const _validateEmail = (email: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
-        setAdditionalDriverEmailValid(true)
-        return true
-      }
-      setAdditionalDriverEmailValid(false)
-      return false
-    }
-    setAdditionalDriverEmailValid(true)
-    return false
-  }
-
-  const _validatePhone = (phone?: string) => {
-    if (phone) {
-      const _phoneValid = validator.isMobilePhone(phone)
-      setAdditionalDriverPhoneValid(_phoneValid)
-
-      return _phoneValid
-    }
-    setAdditionalDriverPhoneValid(true)
-
-    return true
-  }
-
-  const _validateBirthDate = (date?: Date) => {
-    if (date) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
-
-      setAdditionalDriverBirthDateValid(_birthDateValid)
-      return _birthDateValid
-    }
-    setAdditionalDriverBirthDateValid(true)
-    return true
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: FormFields) => {
     try {
-      e.preventDefault()
+      const additionalDriverSet = helper.carOptionAvailable(carObj, 'additionalDriver') && data.additionalDriver
 
-      const additionalDriverSet = helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
-
-      if (additionalDriverSet) {
-        const emailValid = _validateEmail(addtionalDriverEmail)
-        if (!emailValid) {
-          return
-        }
-
-        const phoneValid = _validatePhone(additionalDriverPhone)
-        if (!phoneValid) {
-          return
-        }
-
-        const birthDateValid = _validateBirthDate(addtionalDriverBirthDate)
-        if (!birthDateValid) {
-          return
-        }
-      }
-
-      if (!booking || !supplier || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
+      if (!booking) {
         helper.error()
         return
       }
@@ -381,19 +265,19 @@ const UpdateBooking = () => {
 
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
-        supplier: supplier._id,
-        car: car._id,
-        driver: driver._id,
-        pickupLocation: pickupLocation._id,
-        dropOffLocation: dropOffLocation._id,
-        from,
-        to,
-        status,
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
+        supplier: data.supplier?._id!,
+        car: data.car?._id!,
+        driver: data.driver?._id,
+        pickupLocation: data.pickupLocation?._id!,
+        dropOffLocation: data.dropOffLocation?._id!,
+        from: data.from!,
+        to: data.to!,
+        status: data.status as bookcarsTypes.BookingStatus,
+        cancellation: data.cancellation,
+        amendments: data.amendments,
+        theftProtection: data.theftProtection,
+        collisionDamageWaiver: data.collisionDamageWaiver,
+        fullInsurance: data.fullInsurance,
         additionalDriver: additionalDriverSet,
         price,
       }
@@ -401,15 +285,11 @@ const UpdateBooking = () => {
       let payload: bookcarsTypes.UpsertBookingPayload
       let _additionalDriver: bookcarsTypes.AdditionalDriver
       if (additionalDriverSet) {
-        if (!addtionalDriverBirthDate) {
-          helper.error()
-          return
-        }
         _additionalDriver = {
-          fullName: additionalDriverfullName,
-          email: addtionalDriverEmail,
-          phone: additionalDriverPhone,
-          birthDate: addtionalDriverBirthDate,
+          fullName: data.additionalDriverFullName!,
+          email: data.additionalDriverEmail!,
+          phone: data.additionalDriverPhone!,
+          birthDate: data.additionalDriverBirthDate!,
         }
 
         payload = {
@@ -424,10 +304,10 @@ const UpdateBooking = () => {
 
       if (_status === 200) {
         if (!additionalDriverSet) {
-          setAdditionalDriverFullName('')
-          setAdditionalDriverEmail('')
-          setAdditionalDriverPhone('')
-          setAdditionalDriverBirthDate(undefined)
+          setValue('additionalDriverFullName', '')
+          setValue('additionalDriverEmail', '')
+          setValue('additionalDriverPhone', '')
+          setValue('additionalDriverBirthDate', undefined)
         }
         helper.info(commonStrings.UPDATED)
       } else {
@@ -470,49 +350,50 @@ const UpdateBooking = () => {
               setVisible(true)
               setIsSupplier(_user.type === bookcarsTypes.RecordType.Supplier)
               const cmp = _booking.supplier as bookcarsTypes.User
-              setSupplier({
+              setValue('supplier', {
                 _id: cmp._id as string,
                 name: cmp.fullName,
                 image: cmp.avatar,
               })
-              setCar(_booking.car as bookcarsTypes.Car)
+              setValue('car', _booking.car as bookcarsTypes.Car)
+              setCarObj(_booking.car as bookcarsTypes.Car)
               const drv = _booking.driver as bookcarsTypes.User
-              setDriver({
+              setValue('driver', {
                 _id: drv._id as string,
                 name: drv.fullName,
                 image: drv.avatar,
               })
               const pul = _booking.pickupLocation as bookcarsTypes.Location
-              setPickupLocation({
+              setValue('pickupLocation', {
                 _id: pul._id,
                 name: pul.name || '',
               })
               const dol = _booking.dropOffLocation as bookcarsTypes.Location
-              setDropOffLocation({
+              setValue('dropOffLocation', {
                 _id: dol._id,
                 name: dol.name || '',
               })
-              setFrom(new Date(_booking.from))
+              setValue('from', new Date(_booking.from))
               const _minDate = new Date(_booking.from)
               _minDate.setDate(_minDate.getDate() + 1)
               setMinDate(_minDate)
-              setTo(new Date(_booking.to))
+              setValue('to', new Date(_booking.to))
               const _maxDate = new Date(_booking.to)
               _maxDate.setDate(_maxDate.getDate() - 1)
               setMaxDate(_maxDate)
-              setStatus(_booking.status)
-              setCancellation(_booking.cancellation || false)
-              setAmendments(_booking.amendments || false)
-              setTheftProtection(_booking.theftProtection || false)
-              setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
-              setFullInsurance(_booking.fullInsurance || false)
-              setAdditionalDriver((_booking.additionalDriver && !!_booking._additionalDriver) || false)
+              setValue('status', _booking.status)
+              setValue('cancellation', _booking.cancellation || false)
+              setValue('amendments', _booking.amendments || false)
+              setValue('theftProtection', _booking.theftProtection || false)
+              setValue('collisionDamageWaiver', _booking.collisionDamageWaiver || false)
+              setValue('fullInsurance', _booking.fullInsurance || false)
+              setValue('additionalDriver', (_booking.additionalDriver && !!_booking._additionalDriver) || false)
               if (_booking.additionalDriver && _booking._additionalDriver) {
                 const _additionalDriver = _booking._additionalDriver as bookcarsTypes.AdditionalDriver
-                setAdditionalDriverFullName(_additionalDriver.fullName)
-                setAdditionalDriverEmail(_additionalDriver.email)
-                setAdditionalDriverPhone(_additionalDriver.phone)
-                setAdditionalDriverBirthDate(new Date(_additionalDriver.birthDate))
+                setValue('additionalDriverFullName', _additionalDriver.fullName)
+                setValue('additionalDriverEmail', _additionalDriver.email)
+                setValue('additionalDriverPhone', _additionalDriver.phone)
+                setValue('additionalDriverBirthDate', new Date(_additionalDriver.birthDate))
               }
             } else {
               setLoading(false)
@@ -520,7 +401,7 @@ const UpdateBooking = () => {
             }
           } catch {
             setLoading(false)
-            setError(true)
+            setFormError(true)
             setVisible(false)
           }
         } else {
@@ -541,14 +422,19 @@ const UpdateBooking = () => {
       {visible && booking && (
         <div className="booking">
           <div className="col-1">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               {!isSupplier && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList
                     label={blStrings.SUPPLIER}
                     required
                     variant="standard"
-                    onChange={handleSupplierChange}
+                    onChange={(values) => {
+                      const supplier = values.length > 0 ? values[0] as Option : undefined
+                      setValue('supplier', supplier)
+                      setValue('car', undefined)
+                      setCarObj(undefined)
+                    }}
                     value={supplier}
                   />
                 </FormControl>
@@ -558,7 +444,7 @@ const UpdateBooking = () => {
                 label={blStrings.DRIVER}
                 required
                 variant="standard"
-                onChange={handleDriverChange}
+                onChange={(values) => setValue('driver', values.length > 0 ? values[0] as Option : undefined)}
                 value={driver}
               />
 
@@ -567,7 +453,7 @@ const UpdateBooking = () => {
                   label={bfStrings.PICK_UP_LOCATION}
                   required
                   variant="standard"
-                  onChange={handlePickupLocationChange}
+                  onChange={(values) => setValue('pickupLocation', values.length > 0 ? values[0] as Option : undefined)}
                   value={pickupLocation}
                 />
               </FormControl>
@@ -577,18 +463,59 @@ const UpdateBooking = () => {
                   label={bfStrings.DROP_OFF_LOCATION}
                   required
                   variant="standard"
-                  onChange={handleDropOffLocationChange}
+                  onChange={(values) => setValue('dropOffLocation', values.length > 0 ? values[0] as Option : undefined)}
                   value={dropOffLocation}
                 />
               </FormControl>
 
               <CarSelectList
                 label={blStrings.CAR}
-                supplier={(supplier && supplier._id) || ''}
-                pickupLocation={(pickupLocation && pickupLocation._id) || ''}
-                onChange={handleCarSelectListChange}
+                supplier={supplier?._id!}
+                pickupLocation={pickupLocation?._id!}
+                value={carObj}
+                onChange={async (values) => {
+                  try {
+                    const newCar = values.length > 0 ? values[0] : undefined
+
+                    if ((!carObj && newCar) || (carObj && newCar && carObj._id !== newCar._id)) {
+                      // car changed
+                      const _car = await CarService.getCar(newCar._id)
+
+                      if (_car && from && to) {
+                        const _booking = bookcarsHelper.clone(booking)
+                        _booking.car = _car
+
+                        const options: bookcarsTypes.CarOptions = {
+                          cancellation,
+                          amendments,
+                          theftProtection,
+                          collisionDamageWaiver,
+                          fullInsurance,
+                          additionalDriver,
+                        }
+
+                        const _price = await bookcarsHelper.calculateTotalPrice(_car, from, to, _car.supplier.priceChangeRate || 0, options)
+                        setPrice(_price)
+
+                        setBooking(_booking)
+                        setCarObj(newCar)
+                        setValue('car', newCar)
+                      } else {
+                        helper.error()
+                      }
+                    } else if (!newCar) {
+                      setPrice(0)
+                      setCarObj(newCar)
+                      setValue('car', newCar)
+                    } else {
+                      setCarObj(newCar)
+                      setValue('car', newCar)
+                    }
+                  } catch (err) {
+                    helper.error(err)
+                  }
+                }}
                 required
-                value={car}
               />
 
               <FormControl fullWidth margin="dense">
@@ -612,17 +539,17 @@ const UpdateBooking = () => {
                         additionalDriver,
                       }
 
-                      const _price = await bookcarsHelper.calculateTotalPrice(car!, date, to!, car!.supplier.priceChangeRate || 0, options)
+                      const _price = await bookcarsHelper.calculateTotalPrice(carObj!, date, to!, carObj!.supplier.priceChangeRate || 0, options)
                       setBooking(_booking)
                       setPrice(_price)
-                      setFrom(date)
+                      setValue('from', date)
 
                       const _minDate = new Date(date)
                       _minDate.setDate(_minDate.getDate() + 1)
                       setMinDate(_minDate)
                       setFromError(false)
                     } else {
-                      setFrom(undefined)
+                      setValue('from', undefined)
                       setMinDate(undefined)
                     }
                   }}
@@ -636,6 +563,7 @@ const UpdateBooking = () => {
                   language={UserService.getLanguage()}
                 />
               </FormControl>
+
               <FormControl fullWidth margin="dense">
                 <DateTimePicker
                   label={commonStrings.TO}
@@ -657,17 +585,17 @@ const UpdateBooking = () => {
                         additionalDriver,
                       }
 
-                      const _price = await bookcarsHelper.calculateTotalPrice(car!, from!, date, car!.supplier.priceChangeRate || 0, options)
+                      const _price = await bookcarsHelper.calculateTotalPrice(carObj!, from!, date, carObj!.supplier.priceChangeRate || 0, options)
                       setBooking(_booking)
                       setPrice(_price)
-                      setTo(date)
+                      setValue('to', date)
 
                       const _maxDate = new Date(date)
                       _maxDate.setDate(_maxDate.getDate() - 1)
                       setMaxDate(_maxDate)
                       setToError(false)
                     } else {
-                      setTo(undefined)
+                      setValue('to', undefined)
                       setMaxDate(undefined)
                     }
                   }}
@@ -683,7 +611,17 @@ const UpdateBooking = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <StatusList label={blStrings.STATUS} onChange={handleStatusChange} required value={status} />
+                <StatusList
+                  label={blStrings.STATUS}
+                  value={getValues('status')}
+                  onChange={(value) => {
+                    const currentValue = getValues('status')
+                    if (currentValue !== value) {
+                      setValue('status', value)
+                    }
+                  }}
+                  required
+                />
               </FormControl>
 
               <div className="info">
@@ -693,140 +631,229 @@ const UpdateBooking = () => {
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('cancellation')}
+                      checked={cancellation}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.cancellation = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation: _booking.cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('cancellation', _booking.cancellation || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.CANCELLATION}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'cancellation')}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('amendments')}
+                      checked={getValues('amendments')}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.amendments = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation,
+                            amendments: _booking.amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('amendments', _booking.amendments || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.AMENDMENTS}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'amendments')}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('theftProtection')}
+                      checked={getValues('theftProtection')}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.theftProtection = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation,
+                            amendments,
+                            theftProtection: _booking.theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('theftProtection', _booking.theftProtection || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.THEFT_PROTECTION}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'theftProtection')}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('collisionDamageWaiver')}
+                      checked={getValues('collisionDamageWaiver')}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.collisionDamageWaiver = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver: _booking.collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('collisionDamageWaiver', _booking.collisionDamageWaiver || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.COLLISION_DAMAGE_WAVER}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'collisionDamageWaiver')}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('fullInsurance')}
+                      checked={getValues('fullInsurance')}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.fullInsurance = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance: _booking.fullInsurance,
+                            additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('fullInsurance', _booking.fullInsurance || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.FULL_INSURANCE}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'fullInsurance')}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
+                  control={
+                    <Switch
+                      // {...register('additionalDriver')}
+                      checked={getValues('additionalDriver')}
+                      color="primary"
+                      disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
+                      onChange={async (e) => {
+                        if (booking && carObj && from && to) {
+                          const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
+                          _booking.additionalDriver = e.target.checked
+
+                          const options: bookcarsTypes.CarOptions = {
+                            cancellation,
+                            amendments,
+                            theftProtection,
+                            collisionDamageWaiver,
+                            fullInsurance,
+                            additionalDriver: _booking.additionalDriver,
+                          }
+
+                          const _price = await bookcarsHelper.calculateTotalPrice(carObj, from, to, carObj.supplier.priceChangeRate || 0, options)
+                          setBooking(_booking)
+                          setPrice(_price)
+                          setValue('additionalDriver', _booking.additionalDriver || false)
+                        }
+                      }}
+                    />
+                  }
                   label={csStrings.ADDITIONAL_DRIVER}
                   className="checkbox-fcl"
-                  disabled={!helper.carOptionAvailable(car, 'additionalDriver')}
                 />
               </FormControl>
 
-              {helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
-                <>
-                  <div className="info">
-                    <DriverIcon />
-                    <span>{csStrings.ADDITIONAL_DRIVER}</span>
-                  </div>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                    <Input
-                      type="text"
-                      value={additionalDriverfullName}
-                      required
-                      onChange={(e) => {
-                        setAdditionalDriverFullName(e.target.value)
-                      }}
-                      autoComplete="off"
-                    />
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                    <Input
-                      type="text"
-                      value={addtionalDriverEmail}
-                      error={!additionalDriverEmailValid}
-                      onBlur={(e) => {
-                        _validateEmail(e.target.value)
-                      }}
-                      onChange={(e) => {
-                        setAdditionalDriverEmail(e.target.value)
-
-                        if (!e.target.value) {
-                          setAdditionalDriverEmailValid(true)
-                        }
-                      }}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!additionalDriverEmailValid}>{(!additionalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                    <Input
-                      type="text"
-                      value={additionalDriverPhone}
-                      error={!additionalDriverPhoneValid}
-                      onBlur={(e) => {
-                        _validatePhone(e.target.value)
-                      }}
-                      onChange={(e) => {
-                        setAdditionalDriverPhone(e.target.value)
-
-                        if (!e.target.value) {
-                          setAdditionalDriverPhoneValid(true)
-                        }
-                      }}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!additionalDriverPhoneValid}>{(!additionalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <DatePicker
-                      label={commonStrings.BIRTH_DATE}
-                      value={addtionalDriverBirthDate}
-                      required
-                      onChange={(_birthDate) => {
-                        if (_birthDate) {
-                          const _birthDateValid = _validateBirthDate(_birthDate)
-                          setAdditionalDriverBirthDate(_birthDate)
-                          setAdditionalDriverBirthDateValid(_birthDateValid)
-                        }
-                      }}
-                      language={UserService.getLanguage()}
-                    />
-                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && helper.getBirthDateError(env.MINIMUM_AGE)) || ''}</FormHelperText>
-                  </FormControl>
-                </>
+              {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriver && (
+                <AdditionalDriverForm
+                  control={control}
+                  register={register}
+                  errors={errors}
+                  clearErrors={clearErrors}
+                  trigger={trigger}
+                  setValue={setValue}
+                  language={language}
+                />
               )}
 
               <div>
                 <div className="buttons">
-                  <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit">
+                  <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit" disabled={isSubmitting}>
                     {commonStrings.SAVE}
                   </Button>
                   <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
@@ -851,7 +878,7 @@ const UpdateBooking = () => {
               className="car"
               user={user}
               booking={booking}
-              cars={((car && [booking.car]) as bookcarsTypes.Car[]) || []}
+              cars={((carObj && [booking.car]) as bookcarsTypes.Car[]) || []}
               language={language}
               hidePrice
             />
@@ -874,7 +901,7 @@ const UpdateBooking = () => {
 
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {noMatch && <NoMatch hideHeader />}
-      {error && <Error />}
+      {formError && <Error />}
     </Layout>
   )
 }

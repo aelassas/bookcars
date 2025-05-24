@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Input,
@@ -9,6 +9,8 @@ import {
   Paper,
   FormLabel
 } from '@mui/material'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -23,6 +25,7 @@ import Backdrop from '@/components/SimpleBackdrop'
 import * as helper from '@/common/helper'
 import env from '@/config/env.config'
 import SupplierBadge from '@/components/SupplierBadge'
+import { schema, FormFields } from '@/models/CountryForm'
 
 import '@/assets/css/update-country.css'
 
@@ -32,84 +35,101 @@ const UpdateCountry = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [names, setNames] = useState<bookcarsTypes.CountryName[]>([])
-  const [nameErrors, setNameErrors] = useState<boolean[]>([])
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
   const [country, setCountry] = useState<bookcarsTypes.Country>()
+  const [originalNames, setOriginalNames] = useState<bookcarsTypes.CountryName[]>([])
   const [nameChanged, setNameChanged] = useState(false)
+
+  // Initialize React Hook Form
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    setError: setFormError,
+    formState: { errors, isSubmitting },
+    setFocus,
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: 'onSubmit',
+    defaultValues: {
+      names: [],
+    },
+  })
+
+  // Watch all form values for changes
+  const watchedNames = useWatch({
+    control,
+    name: 'names',
+  })
+
+  // Check if names have changed compared to original values
+  useEffect(() => {
+    if (watchedNames && originalNames.length > 0) {
+      let changed = false
+
+      for (let i = 0; i < watchedNames.length; i++) {
+        if (watchedNames[i].name !== originalNames[i].name) {
+          changed = true
+          break
+        }
+      }
+
+      setNameChanged(changed)
+    }
+  }, [watchedNames, originalNames])
 
   const _error = () => {
     setLoading(false)
     helper.error()
   }
 
-  const checkName = () => {
-    let _nameChanged = false
-
-    if (!country || !country.values) {
-      helper.error()
-      return _nameChanged
-    }
-
-    for (let i = 0; i < names.length; i += 1) {
-      const name = names[i]
-      if (name.name !== country.values[i].value) {
-        _nameChanged = true
-        break
-      }
-    }
-
-    setNameChanged(_nameChanged)
-    return _nameChanged
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const onSubmit = async (data: FormFields) => {
     try {
-      if (!country || !country.values) {
+      if (!country) {
         helper.error()
         return
       }
 
-      const _nameChanged = checkName()
-
-      if (!_nameChanged) {
+      if (!nameChanged) {
         return
       }
 
       let isValid = true
-
-      const _nameErrors = bookcarsHelper.clone(nameErrors) as boolean[]
-      for (let i = 0; i < nameErrors.length; i += 1) {
-        _nameErrors[i] = false
-      }
-
-      for (let i = 0; i < names.length; i += 1) {
-        const name = names[i]
-        if (name.name !== country.values[i].value) {
-          const _isValid = (await CountryService.validate(name)) === 200
-          isValid = isValid && _isValid
-          if (!_isValid) {
-            _nameErrors[i] = true
-          }
+      const validationPromises = data.names.map((name, index) => {
+        // Only validate if the name has changed
+        if (name.name !== originalNames[index].name) {
+          return CountryService.validate(name).then((status) => {
+            if (status !== 200) {
+              setFormError(`names.${index}.name`, {
+                type: 'manual',
+                message: clStrings.INVALID_COUNTRY
+              })
+              setFocus(`names.${index}.name`)
+              isValid = false
+            }
+            return status === 200
+          })
         }
-      }
+        return Promise.resolve(true)
+      })
 
-      setNameErrors(_nameErrors)
+      await Promise.all(validationPromises)
 
       if (isValid) {
-        const status = await CountryService.update(country._id, names)
+        const status = await CountryService.update(country._id, data.names)
 
         if (status === 200) {
           const _country = bookcarsHelper.clone(country) as bookcarsTypes.Country
-          for (let i = 0; i < names.length; i += 1) {
-            const name = names[i]
-            _country.values![i].value = name.name
+          if (_country.values) {
+            for (let i = 0; i < data.names.length; i += 1) {
+              _country.values[i].value = data.names[i].name
+            }
           }
 
           setCountry(_country)
+          setOriginalNames(bookcarsHelper.clone(data.names) as bookcarsTypes.LocationName[])
           helper.info(strings.COUNTRY_UPDATED)
         } else {
           _error()
@@ -151,7 +171,11 @@ const UpdateCountry = () => {
               }))
 
               setCountry(_country)
-              setNames(_names)
+              setOriginalNames(_names)
+
+              // Reset form with the loaded country data
+              reset({ names: _names })
+
               setVisible(true)
               setLoading(false)
             } else {
@@ -181,7 +205,7 @@ const UpdateCountry = () => {
         <div className="update-country">
           <Paper className="country-form country-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
             <h1 className="country-form-title">{strings.UPDATE_COUNTRY}</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               {helper.admin(user) && country.supplier && (
                 <FormControl fullWidth margin="dense">
                   <FormLabel>{suppliersStrings.SUPPLIER}</FormLabel>
@@ -193,29 +217,33 @@ const UpdateCountry = () => {
                   <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES.filter((l) => l.code === value.language)[0].label})`}</InputLabel>
                   <Input
                     type="text"
-                    value={(names[index] && names[index].name) || ''}
-                    error={nameErrors[index]}
+                    error={!!errors.names?.[index]?.name}
                     required
-                    onChange={(e) => {
-                      const _names = bookcarsHelper.clone(names) as bookcarsTypes.CountryName[]
-                      _names[index].name = e.target.value
-                      const _nameErrors = bookcarsHelper.cloneArray(nameErrors) as boolean[]
-                      _nameErrors[index] = false
-                      checkName()
-                      setNames(_names)
-                      setNameErrors(_nameErrors)
-                    }}
+                    {...register(`names.${index}.name`)}
                     autoComplete="off"
                   />
-                  <FormHelperText error={nameErrors[index]}>{(nameErrors[index] && clStrings.INVALID_COUNTRY) || ''}</FormHelperText>
+                  <FormHelperText error={!!errors.names?.[index]?.name}>
+                    {errors.names?.[index]?.name?.message || ''}
+                  </FormHelperText>
                 </FormControl>
               ))}
 
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={!nameChanged}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="btn-primary btn-margin-bottom"
+                  size="small"
+                  disabled={!nameChanged || isSubmitting}
+                >
                   {commonStrings.SAVE}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/countries')}>
+                <Button
+                  variant="contained"
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  onClick={() => navigate('/countries')}
+                >
                   {commonStrings.CANCEL}
                 </Button>
               </div>

@@ -62,7 +62,11 @@ const SearchForm = ({
     }
   })
 
-  const { from, to, pickupLocation, dropOffLocation, sameLocation } = useWatch({ control })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
+  const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
     const _from = new Date()
@@ -133,7 +137,7 @@ const SearchForm = ({
 
       if (minPickupTime < minPickupDuration) {
         setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
-      } else {
+      } else if (errors.from) {
         clearErrors('from')
       }
     }
@@ -151,11 +155,11 @@ const SearchForm = ({
         setValue('to', _to)
       } else if (rentalDuration < minRentalDuration) {
         setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
-      } else {
+      } else if (errors.to) {
         clearErrors('to')
       }
     }
-  }, [from, to, setValue, setError, clearErrors])
+  }, [from, to, setValue, setError, clearErrors, errors.from, errors.to])
 
   useEffect(() => {
     setRanges(__ranges || bookcarsHelper.getAllRanges())

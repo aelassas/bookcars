@@ -451,6 +451,17 @@ export const shuffle = (array: any[]) => {
 }
 
 /**
+ * Return all user types.
+ *
+ * @returns {bookcarsTypes.UserType[]}
+ */
+export const getAllUserTypes = () => [
+  bookcarsTypes.UserType.Admin,
+  bookcarsTypes.UserType.Supplier,
+  bookcarsTypes.UserType.User,
+]
+
+/**
  * Return all car ranges.
  *
  * @returns {bookcarsTypes.CarRange[]}
@@ -487,6 +498,20 @@ export const getAllFuelPolicies = () => [
   bookcarsTypes.FuelPolicy.LikeForLike,
   bookcarsTypes.FuelPolicy.FullToFull,
   bookcarsTypes.FuelPolicy.FullToEmpty,
+]
+
+/**
+ * Return all statuses.
+ *
+ * @returns {bookcarsTypes.BookingStatus[]}
+ */
+export const getAllBookingStatuses = () => [
+  bookcarsTypes.BookingStatus.Void,
+  bookcarsTypes.BookingStatus.Pending,
+  bookcarsTypes.BookingStatus.Deposit,
+  bookcarsTypes.BookingStatus.Paid,
+  bookcarsTypes.BookingStatus.Reserved,
+  bookcarsTypes.BookingStatus.Cancelled,
 ]
 
 /**

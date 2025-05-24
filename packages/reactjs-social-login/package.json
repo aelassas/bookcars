@@ -10,15 +10,15 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@types/node": "^22.13.14",
-    "@types/react": "^19.0.12",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "eslint": "^9.27.0",
     "microbundle-crl": "^0.13.11",
     "react": "^19.1.0",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "files": [
     "dist/"

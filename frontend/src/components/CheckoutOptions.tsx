@@ -85,6 +85,17 @@ const CheckoutOptions = ({
     fetchPrices()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (car) {
+      setCancellation(car.cancellation === 0)
+      setAmendments(car.amendments === 0)
+      setTheftProtection(car.theftProtection === 0)
+      setCollisionDamageWaiver(car.collisionDamageWaiver === 0)
+      setFullInsurance(car.fullInsurance === 0)
+      setAdditionalDriver(car.additionalDriver === 0)
+    }
+  }, [car])
+
   if (loading) {
     return null
   }
@@ -278,7 +289,7 @@ const CheckoutOptions = ({
 
         <FormControl fullWidth margin="dense">
           <FormControlLabel
-            disabled={car.additionalDriver === -1 || !!clientSecret || payPalLoaded}
+            disabled={car.additionalDriver === -1 || car.additionalDriver === 0 || !!clientSecret || payPalLoaded}
             control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
             label={(
               <span>

@@ -81,7 +81,11 @@ const NewsletterForm = () => {
             inputProps={{
               'aria-label': 'email',
             }}
-            onChange={() => clearErrors()}
+            onChange={() => {
+              if (errors.email) {
+                clearErrors('email')
+              }
+            }}
           />
           <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
         </FormControl>

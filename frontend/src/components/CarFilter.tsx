@@ -51,6 +51,7 @@ const CarFilter = ({
     formState: { errors, isSubmitting },
     setError,
     clearErrors,
+    getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -63,7 +64,7 @@ const CarFilter = ({
     mode: 'onSubmit',
   })
 
-  const { from, to, pickupLocation, dropOffLocation, sameLocation } = useWatch({ control })
+  const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
     if (filterFrom) {
@@ -72,43 +73,6 @@ const CarFilter = ({
       setMinDate(__minDate)
     }
   }, [filterFrom])
-
-  useEffect(() => {
-    const minPickupDuration = env.MIN_PICK_UP_HOURS * 60 * 60 * 1000
-    const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
-
-    if (from) {
-      let __minDate = new Date(from)
-      __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
-      setMinDate(__minDate)
-
-      const minPickupTime = from.getTime() - Date.now()
-
-      if (minPickupTime < minPickupDuration) {
-        setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
-      } else {
-        clearErrors('from')
-      }
-    }
-
-    if (from && to) {
-      const rentalDuration = to.getTime() - from.getTime()
-
-      if (from.getTime() > to.getTime()) {
-        const _to = new Date(from)
-        if (env.MIN_RENTAL_HOURS < 24) {
-          _to.setDate(_to.getDate() + 1)
-        } else {
-          _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
-        }
-        setValue('to', _to)
-      } else if (rentalDuration < minRentalDuration) {
-        setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
-      } else {
-        clearErrors('to')
-      }
-    }
-  }, [from, to, setValue, setError, clearErrors])
 
   useEffect(() => {
     if (sameLocation) {
@@ -123,7 +87,7 @@ const CarFilter = ({
     setValue('sameLocation', e.target.checked)
 
     if (e.target.checked) {
-      setValue('dropOffLocation', pickupLocation as LocationField)
+      setValue('dropOffLocation', getValues('pickupLocation'))
     }
   }
 
@@ -146,6 +110,45 @@ const CarFilter = ({
       const _dropOffLocation = await LocationService.getLocation(dropOffLocationId) as LocationField
 
       setValue('dropOffLocation', _dropOffLocation)
+    }
+  }
+
+  const checkDates = () => {
+    const minPickupDuration = env.MIN_PICK_UP_HOURS * 60 * 60 * 1000
+    const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
+    const from = getValues('from')
+    const to = getValues('to')
+
+    if (from) {
+      let __minDate = new Date(from)
+      __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+      setMinDate(__minDate)
+
+      const minPickupTime = from.getTime() - Date.now()
+
+      if (minPickupTime < minPickupDuration) {
+        setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
+      } else if (errors.from) {
+        clearErrors('from')
+      }
+    }
+
+    if (from && to) {
+      const rentalDuration = to.getTime() - from.getTime()
+
+      if (from.getTime() > to.getTime()) {
+        const _to = new Date(from)
+        if (env.MIN_RENTAL_HOURS < 24) {
+          _to.setDate(_to.getDate() + 1)
+        } else {
+          _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+        }
+        setValue('to', _to)
+      } else if (rentalDuration < minRentalDuration) {
+        setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
+      } else if (errors.to) {
+        clearErrors('to')
+      }
     }
   }
 
@@ -187,7 +190,7 @@ const CarFilter = ({
             init={!env.isMobile}
             required
             variant="standard"
-            value={pickupLocation as bookcarsTypes.Location}
+            value={getValues('pickupLocation') as bookcarsTypes.Location}
             onChange={handlePickupLocationChange}
           />
         </FormControl>
@@ -196,7 +199,7 @@ const CarFilter = ({
             <LocationSelectList
               {...register('dropOffLocation')}
               label={commonStrings.DROP_OFF_LOCATION}
-              value={dropOffLocation as bookcarsTypes.Location}
+              value={getValues('dropOffLocation') as bookcarsTypes.Location}
               hidePopupIcon
               customOpen={env.isMobile}
               init={!env.isMobile}
@@ -208,15 +211,16 @@ const CarFilter = ({
         )}
         <FormControl fullWidth className="from">
           <DateTimePicker
-            {...register('from')}
+            // {...register('from')}
             label={strings.PICK_UP_DATE}
-            value={from || undefined}
+            value={getValues('from') || undefined}
             minDate={_minDate}
             variant="standard"
             required
             onChange={(date) => {
               if (date) {
                 setValue('from', date, { shouldValidate: true })
+                checkDates()
               } else {
                 setValue('from', null)
                 setMinDate(_minDate)
@@ -228,15 +232,16 @@ const CarFilter = ({
         </FormControl>
         <FormControl fullWidth className="to">
           <DateTimePicker
-            {...register('to')}
+            // {...register('to')}
             label={strings.DROP_OFF_DATE}
-            value={to || undefined}
+            value={getValues('to') || undefined}
             minDate={minDate}
             variant="standard"
             required
             onChange={(date) => {
               if (date) {
                 setValue('to', date, { shouldValidate: true })
+                checkDates()
               } else {
                 setValue('to', null)
               }
