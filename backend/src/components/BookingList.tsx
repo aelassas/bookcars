@@ -269,11 +269,11 @@ const BookingList = ({
                   <EditIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={commonStrings.DELETE}>
+              {/*<Tooltip title={commonStrings.DELETE}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip>*/}
             </div>
           )
         },
@@ -288,7 +288,7 @@ const BookingList = ({
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={strings.DELETE_SELECTION}>
+            {/* <Tooltip title={strings.DELETE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setopenDeleteDialog(true)
@@ -296,7 +296,7 @@ const BookingList = ({
               >
                 <DeleteIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         ) : (
           <></>
@@ -601,7 +601,7 @@ const BookingList = ({
                     >
                       {commonStrings.UPDATE}
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       className="btn-secondary"
                       size="small"
@@ -610,7 +610,7 @@ const BookingList = ({
                       onClick={handleDelete}
                     >
                       {commonStrings.DELETE}
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               )
