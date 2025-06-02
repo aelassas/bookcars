@@ -19,16 +19,13 @@ const UpdateSupplier = lazy(() => import('@/pages/UpdateSupplier'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const CreateLocation = lazy(() => import('@/pages/CreateLocation'))
 const UpdateLocation = lazy(() => import('@/pages/UpdateLocation'))
-const Cars = lazy(() => import('@/pages/Cars'))
-const Car = lazy(() => import('@/pages/Car'))
-const CreateCar = lazy(() => import('@/pages/CreateCar'))
-const UpdateCar = lazy(() => import('@/pages/UpdateCar'))
+
 const Dresses = lazy(() => import('@/pages/Dresses'))
 const Dress = lazy(() => import('@/pages/Dress'))
 const CreateDress = lazy(() => import('@/pages/CreateDress'))
 const UpdateDress = lazy(() => import('@/pages/UpdateDress'))
 const Bookings = lazy(() => import('@/pages/Bookings'))
-const UpdateBooking = lazy(() => import('@/pages/UpdateBooking'))
+
 const CreateBooking = lazy(() => import('@/pages/CreateBooking'))
 const Users = lazy(() => import('@/pages/Users'))
 const User = lazy(() => import('@/pages/User'))
@@ -91,15 +88,12 @@ const router = createBrowserRouter([
       { path: 'locations', element: <Locations /> },
       { path: 'create-location', element: <CreateLocation /> },
       { path: 'update-location', element: <UpdateLocation /> },
-      { path: 'cars', element: <Cars /> },
-      { path: 'car', element: <Car /> },
-      { path: 'create-car', element: <CreateCar /> },
-      { path: 'update-car', element: <UpdateCar /> },
+
       { path: 'dresses', element: <Dresses /> },
       { path: 'dress', element: <Dress /> },
       { path: 'create-dress', element: <CreateDress /> },
       { path: 'update-dress', element: <UpdateDress /> },
-      { path: 'update-booking', element: <UpdateBooking /> },
+
       { path: 'create-booking', element: <CreateBooking /> },
       { path: 'users', element: <Users /> },
       { path: 'user', element: <User /> },

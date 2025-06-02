@@ -91,3 +91,71 @@ export const check = (id: string): Promise<number> =>
       { withCredentials: true }
     )
     .then((res) => res.status)
+
+/**
+ * Create a Dress image.
+ *
+ * @param {Blob} file
+ * @returns {Promise<string>}
+ */
+export const createImage = (file: Blob): Promise<string> => {
+  const formData = new FormData()
+  formData.append('image', file)
+
+  return axiosInstance
+    .post(
+      '/api/create-dress-image',
+      formData,
+      { withCredentials: true }
+    )
+    .then((res) => res.data)
+}
+
+/**
+ * Update a Dress image.
+ *
+ * @param {string} id
+ * @param {Blob} file
+ * @returns {Promise<number>}
+ */
+export const updateImage = (id: string, file: Blob): Promise<number> => {
+  const formData = new FormData()
+  formData.append('image', file)
+
+  return axiosInstance
+    .put(
+      `/api/update-dress-image/${id}`,
+      formData,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+}
+
+/**
+ * Delete a Dress image.
+ *
+ * @param {string} id
+ * @returns {Promise<number>}
+ */
+export const deleteImage = (id: string): Promise<number> =>
+  axiosInstance
+    .delete(
+      `/api/delete-dress-image/${id}`,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+
+/**
+ * Delete a temporary Dress image.
+ *
+ * @param {string} image
+ * @returns {Promise<number>}
+ */
+export const deleteTempImage = (image: string): Promise<number> =>
+  axiosInstance
+    .post(
+      `/api/delete-temp-dress-image/${encodeURIComponent(image)}`,
+      null,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)

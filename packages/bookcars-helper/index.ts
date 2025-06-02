@@ -470,46 +470,7 @@ export const getAllAccessories = () => [
   bookcarsTypes.DressAccessories.Headpiece,
 ]
 
-/**
- * Return all car types.
- *
- * @returns {bookcarsTypes.CarType[]}
- */
-export const getAllCarTypes = () => [
-  bookcarsTypes.CarType.Diesel,
-  bookcarsTypes.CarType.Gasoline,
-  bookcarsTypes.CarType.Electric,
-  bookcarsTypes.CarType.Hybrid,
-  bookcarsTypes.CarType.PlugInHybrid,
-  bookcarsTypes.CarType.Unknown,
-]
-
-/**
- * Return all car multimedia options.
- *
- * @returns {bookcarsTypes.CarMultimedia[]}
- */
-export const getAllMultimedias = () => [
-  bookcarsTypes.CarMultimedia.AndroidAuto,
-  bookcarsTypes.CarMultimedia.AppleCarPlay,
-  bookcarsTypes.CarMultimedia.BluetoothConnection,
-  bookcarsTypes.CarMultimedia.CdPlayer,
-  bookcarsTypes.CarMultimedia.ParkingSensors,
-  bookcarsTypes.CarMultimedia.RearviewCamera,
-  bookcarsTypes.CarMultimedia.UsbConnection,
-]
-
-/**
- * Return all fuel policies.
- *
- * @returns {bookcarsTypes.FuelPolicy[]}
- */
-export const getAllFuelPolicies = () => [
-  bookcarsTypes.FuelPolicy.LikeForLike,
-  bookcarsTypes.FuelPolicy.FreeTank,
-  bookcarsTypes.FuelPolicy.FullToFull,
-  bookcarsTypes.FuelPolicy.FullToEmpty,
-]
+// Car-related functions removed
 
 /**
  * Return all dress materials.

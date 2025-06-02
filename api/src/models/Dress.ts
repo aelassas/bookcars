@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Document } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import * as logger from '../common/logger'
@@ -182,6 +183,9 @@ const dressSchema = new Schema<env.Dress>(
   },
 )
 
+// Add mongoose-paginate-v2 plugin
+dressSchema.plugin(mongoosePaginate)
+
 // Add custom indexes
 dressSchema.index({ updatedAt: -1, _id: 1 })
 dressSchema.index({ name: 'text' })
@@ -197,7 +201,9 @@ dressSchema.index({ accessories: 1 })
 dressSchema.index({ dailyPrice: 1, _id: 1 })
 dressSchema.index({ dateBasedPrices: 1 })
 
-const Dress = model<env.Dress>('Dress', dressSchema)
+// Add PaginateModel interface
+interface DressDocument extends env.Dress, Document {}
+const Dress = model<env.Dress, mongoosePaginate.PaginateModel<DressDocument>>('Dress', dressSchema)
 
 // Create indexes manually and handle potential errors
 Dress.syncIndexes().catch((err) => {

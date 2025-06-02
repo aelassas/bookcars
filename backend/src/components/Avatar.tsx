@@ -15,7 +15,7 @@ import {
   PhotoCamera as PhotoCameraIcon,
   BrokenImageTwoTone as DeleteIcon,
   CorporateFare as SupplierIcon,
-  DirectionsCar as CarIcon,
+  Checkroom as DressIcon,
   Check as VerifiedIcon,
   LocationOn as LocationIcon,
 } from '@mui/icons-material'
@@ -25,7 +25,7 @@ import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
-import * as CarService from '@/services/CarService'
+import * as DressService from '@/services/DressService'
 import * as LocationService from '@/services/LocationService'
 
 interface AvatarProps {
@@ -34,7 +34,7 @@ interface AvatarProps {
   height?: number
   mode?: 'create' | 'update'
   type?: string
-  record?: bookcarsTypes.User | bookcarsTypes.Car | bookcarsTypes.Location | null
+  record?: bookcarsTypes.User | bookcarsTypes.Dress | bookcarsTypes.Location | null
   size: 'small' | 'medium' | 'large'
   readonly?: boolean
   color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
@@ -66,7 +66,7 @@ const Avatar = ({
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [openTypeDialog, setOpenTypeDialog] = useState(false)
-  const [avatarRecord, setAvatarRecord] = useState<bookcarsTypes.User | bookcarsTypes.Car | bookcarsTypes.Location>()
+  const [avatarRecord, setAvatarRecord] = useState<bookcarsTypes.User | bookcarsTypes.Dress | bookcarsTypes.Location>()
   const [avatar, setAvatar] = useState<string | undefined | null>(null)
   const [loading, setIsLoading] = useState(true)
 
@@ -172,15 +172,15 @@ const Avatar = ({
 
           await validate(file, updateAvatar)
         }
-      } else if (type === bookcarsTypes.RecordType.Car) {
+      } else if (type === bookcarsTypes.RecordType.Dress) {
         if (mode === 'create') {
           const createAvatar = async () => {
             try {
               if (avatar) {
-                await CarService.deleteTempImage(avatar)
+                await DressService.deleteTempImage(avatar)
               }
 
-              const data = await CarService.createImage(file)
+              const data = await DressService.createImage(file)
               setAvatar(data)
 
               if (onChange) {
@@ -207,17 +207,17 @@ const Avatar = ({
                 return
               }
 
-              const status = await CarService.updateImage(_id, file)
+              const status = await DressService.updateImage(_id, file)
 
               if (status === 200) {
-                const car = await CarService.getCar(_id)
+                const dress = await DressService.getDress(_id)
 
-                if (car) {
-                  setAvatarRecord(car)
-                  setAvatar(car.image || '')
+                if (dress) {
+                  setAvatarRecord(dress)
+                  setAvatar(dress.image || '')
 
                   if (onChange) {
-                    onChange(car.image || '')
+                    onChange(dress.image || '')
                   }
                 } else {
                   helper.error()
@@ -374,9 +374,9 @@ const Avatar = ({
             helper.error()
           }
         }
-      } else if (type === bookcarsTypes.RecordType.Car) {
+      } else if (type === bookcarsTypes.RecordType.Dress) {
         if (!avatarRecord && mode === 'create') {
-          const status = await CarService.deleteTempImage(avatar as string)
+          const status = await DressService.deleteTempImage(avatar as string)
 
           if (status === 200) {
             setAvatar(null)
@@ -395,13 +395,13 @@ const Avatar = ({
             return
           }
 
-          const status = await CarService.deleteImage(_id)
+          const status = await DressService.deleteImage(_id)
 
           if (status === 200) {
-            const car = await CarService.getCar(_id)
+            const dress = await DressService.getDress(_id)
 
-            if (car) {
-              setAvatarRecord(car)
+            if (dress) {
+              setAvatarRecord(dress)
               setAvatar(null)
               if (onChange) {
                 onChange('')
@@ -461,8 +461,8 @@ const Avatar = ({
   }
 
   const cdn = () => {
-    if (type === bookcarsTypes.RecordType.Car) {
-      return mode === 'create' ? env.CDN_TEMP_CARS : env.CDN_CARS
+    if (type === bookcarsTypes.RecordType.Dress) {
+      return mode === 'create' ? env.CDN_TEMP_DRESSES : env.CDN_DRESSES
     }
 
     if (type === bookcarsTypes.RecordType.Location) {
@@ -480,8 +480,8 @@ const Avatar = ({
     if (currentUser) {
       if (record) {
         setAvatarRecord(record)
-        if (type === bookcarsTypes.RecordType.Car) {
-          setAvatar((record as bookcarsTypes.Car).image)
+        if (type === bookcarsTypes.RecordType.Dress) {
+          setAvatar((record as bookcarsTypes.Dress).image)
         } else if (type === bookcarsTypes.RecordType.Location) {
           setAvatar((record as bookcarsTypes.Location).image)
         } else {
@@ -499,7 +499,7 @@ const Avatar = ({
 
   const supplierImageStyle = { width: env.SUPPLIER_IMAGE_WIDTH }
 
-  const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
+  const dressImageStyle = { width: env.DRESS_IMAGE_WIDTH }
 
   const locationImageStyle = { maxWidth: '100%', maxHeight: '100%' }
 
@@ -517,8 +517,8 @@ const Avatar = ({
     <div className={className}>
       {avatar ? (
         readonly ? (
-          type === bookcarsTypes.RecordType.Car ? (
-            <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+          type === bookcarsTypes.RecordType.Dress ? (
+            <img style={dressImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Dress).name} />
           )
             : type === bookcarsTypes.RecordType.Location ? (
               <img style={locationImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Location).name} />
@@ -599,13 +599,13 @@ const Avatar = ({
                 </Tooltip>
               )}
             >
-              {type === bookcarsTypes.RecordType.Car ? (
-                <div className="car-avatar">
-                  <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+              {type === bookcarsTypes.RecordType.Dress ? (
+                <div className="dress-avatar">
+                  <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Dress).name} />
                 </div>
               )
                 : type === bookcarsTypes.RecordType.Location ? (
-                  <div className="car-avatar">
+                  <div className="location-avatar">
                     <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Location).name} />
                   </div>
                 )
@@ -619,8 +619,8 @@ const Avatar = ({
         )
       ) // !avatar
         : readonly ? (
-          type === bookcarsTypes.RecordType.Car ? (
-            <CarIcon style={carImageStyle} color={color || 'inherit'} />
+          type === bookcarsTypes.RecordType.Dress ? (
+            <DressIcon style={dressImageStyle} color={color || 'inherit'} />
           )
             : type === bookcarsTypes.RecordType.Location ? (
               <LocationIcon style={locationImageStyle} color={color || 'inherit'} />
@@ -681,8 +681,8 @@ const Avatar = ({
                 </Tooltip>
               )}
             >
-              {type === bookcarsTypes.RecordType.Car ? (
-                <CarIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+              {type === bookcarsTypes.RecordType.Dress ? (
+                <DressIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
               )
                 : type === bookcarsTypes.RecordType.Location ? (
                   <LocationIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />

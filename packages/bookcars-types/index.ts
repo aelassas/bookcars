@@ -15,6 +15,10 @@ export enum DressType {
   Designer = 'designer',
   Vintage = 'vintage',
   Casual = 'casual',
+  Wedding = 'wedding',
+  Evening = 'evening',
+  Cocktail = 'cocktail',
+  Prom = 'prom',
   Unknown = 'unknown',
 }
 
@@ -36,10 +40,13 @@ export enum DressAccessories {
 }
 
 export enum DressSize {
+  ExtraSmall = 'extraSmall',
   Small = 'small',
   Medium = 'medium',
   Large = 'large',
   ExtraLarge = 'extraLarge',
+  DoubleExtraLarge = 'doubleExtraLarge',
+  Custom = 'custom',
 }
 
 export enum DressMaterial {

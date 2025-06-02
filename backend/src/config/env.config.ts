@@ -56,6 +56,10 @@ const env = {
   CAR_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_CAR_IMAGE_HEIGHT), 10) || 200,
   CAR_OPTION_IMAGE_HEIGHT: 85,
   SELECTED_CAR_OPTION_IMAGE_HEIGHT: 30,
+  DRESS_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_DRESS_IMAGE_WIDTH), 10) || 300,
+  DRESS_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_DRESS_IMAGE_HEIGHT), 10) || 200,
+  DRESS_OPTION_IMAGE_HEIGHT: 85,
+  SELECTED_DRESS_OPTION_IMAGE_HEIGHT: 30,
   MINIMUM_AGE: Number.parseInt(String(import.meta.env.VITE_BC_MINIMUM_AGE), 10) || 21,
   // PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
   // If you choose CLASSIC, you will get a classic pagination with next and previous buttons on desktop and infinite scroll on mobile.

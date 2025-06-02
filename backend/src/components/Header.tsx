@@ -25,7 +25,7 @@ import {
   Dashboard as DashboardIcon,
   CorporateFare as SuppliersIcon,
   LocationOn as LocationsIcon,
-  DirectionsCar as CarsIcon,
+
   People as UsersIcon,
   InfoTwoTone as AboutIcon,
   DescriptionTwoTone as TosIcon,
@@ -348,15 +348,7 @@ const Header = ({
                   <ListItemIcon><LocationsIcon /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
                 </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/cars')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CarsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CARS} />
-                </ListItem>
+
                 <ListItem
                   onClick={() => {
                     navigate('/dresses')

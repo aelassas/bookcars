@@ -22,7 +22,7 @@ import * as helper from '@/common/helper'
 import Layout from '@/components/Layout'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
-import CarList from '@/components/CarList'
+import DressList from '@/components/DressList'
 import InfoBox from '@/components/InfoBox'
 import Error from './Error'
 import NoMatch from './NoMatch'
@@ -85,13 +85,13 @@ const Supplier = () => {
     setOpenDeleteDialog(false)
   }
 
-  const handleCarListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Car> = (data) => {
+  const handleDressListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Dress> = (data) => {
     if (data) {
       setRowCount(data.rowCount)
     }
   }
 
-  const handleCarDelete = (_rowCount: number) => {
+  const handleDressDelete = (_rowCount: number) => {
     setRowCount(_rowCount)
   }
 
@@ -203,17 +203,17 @@ const Supplier = () => {
                 </Tooltip>
               )}
             </div>
-            {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className="car-count" />}
+            {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.DRESSES : commonStrings.DRESS}`} className="dress-count" />}
           </div>
           <div className="col-2">
-            <CarList
+            <DressList
               user={user}
               suppliers={suppliers}
               keyword=""
               reload={false}
               language={language}
-              onLoad={handleCarListLoad}
-              onDelete={handleCarDelete}
+              onLoad={handleDressListLoad}
+              onDelete={handleDressDelete}
               hideSupplier
             />
           </div>

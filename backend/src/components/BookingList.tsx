@@ -116,7 +116,7 @@ const BookingList = ({
           suppliers,
           statuses,
           filter: filter || undefined,
-          car: _car || car,
+
           dress: _dress || dress,
           user: (_user && _user._id) || undefined,
         }
@@ -322,15 +322,7 @@ const BookingList = ({
       _columns.splice(1, 2)
     }
 
-    if (!hideCarColumn) {
-      _columns.unshift({
-        field: 'car',
-        headerName: strings.CAR,
-        flex: 1,
-        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/car?cr=${(row.car as any)?._id}`}>{value}</Link>,
-        valueGetter: (value: any) => value?.name,
-      })
-    }
+
 
     if (!hideDressColumn) {
       _columns.unshift({
@@ -518,14 +510,7 @@ const BookingList = ({
                   <div className={`bs bs-${booking.status}`}>
                     <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
-                  {booking.car && (
-                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <span className="booking-detail-title">{strings.CAR}</span>
-                      <div className="booking-detail-value">
-                        <Link href={`car/?cr=${(booking.car as any)._id}`}>{(booking.car as any).name}</Link>
-                      </div>
-                    </div>
-                  )}
+
                   {booking.dress && (
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.DRESS}</span>
@@ -574,7 +559,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.CANCELLATION}</span>
-                            <span className="extra-text">{helper.getCancellationOption((booking.dress as any)?.cancellation || (booking.car as any)?.cancellation, language as string, true)}</span>
+                            <span className="extra-text">{helper.getCancellationOption((booking.dress as any)?.cancellation, language as string, true)}</span>
                           </div>
                         )}
 
@@ -582,7 +567,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.AMENDMENTS}</span>
-                            <span className="extra-text">{helper.getAmendmentsOption((booking.dress as any)?.amendments || (booking.car as any)?.amendments, language as string, true)}</span>
+                            <span className="extra-text">{helper.getAmendmentsOption((booking.dress as any)?.amendments, language as string, true)}</span>
                           </div>
                         )}
 

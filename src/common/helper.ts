@@ -50,22 +50,22 @@ export const error = (err?: unknown, message?: string) => {
 export const getDressType = (type: string) => {
   switch (type) {
     case bookcarsTypes.DressType.Traditional:
-      return strings.TRADITIONAL
+      return strings.en.TRADITIONAL
 
     case bookcarsTypes.DressType.Modern:
-      return strings.MODERN
+      return strings.en.MODERN
 
     case bookcarsTypes.DressType.Designer:
-      return strings.DESIGNER
+      return strings.en.DESIGNER
 
     case bookcarsTypes.DressType.Vintage:
-      return strings.VINTAGE
+      return strings.en.VINTAGE
 
     case bookcarsTypes.DressType.Casual:
-      return strings.CASUAL
+      return strings.en.CASUAL
 
     case bookcarsTypes.DressType.Unknown:
-      return strings.UNKNOWN
+      return strings.en.UNKNOWN
 
     default:
       return ''
@@ -81,22 +81,22 @@ export const getDressType = (type: string) => {
 export const getDressTypeShort = (type: string) => {
   switch (type) {
     case bookcarsTypes.DressType.Traditional:
-      return strings.TRADITIONAL_SHORT
+      return strings.en.TRADITIONAL_SHORT
 
     case bookcarsTypes.DressType.Modern:
-      return strings.MODERN_SHORT
+      return strings.en.MODERN_SHORT
 
     case bookcarsTypes.DressType.Designer:
-      return strings.DESIGNER_SHORT
+      return strings.en.DESIGNER_SHORT
 
     case bookcarsTypes.DressType.Vintage:
-      return strings.VINTAGE_SHORT
+      return strings.en.VINTAGE_SHORT
 
     case bookcarsTypes.DressType.Casual:
-      return strings.CASUAL_SHORT
+      return strings.en.CASUAL_SHORT
 
     case bookcarsTypes.DressType.Unknown:
-      return strings.UNKNOWN_SHORT
+      return strings.en.UNKNOWN_SHORT
 
     default:
       return ''
@@ -112,16 +112,16 @@ export const getDressTypeShort = (type: string) => {
 export const getDressSize = (size: string) => {
   switch (size) {
     case bookcarsTypes.DressSize.Small:
-      return strings.SIZE_S
+      return strings.en.SIZE_S
 
     case bookcarsTypes.DressSize.Medium:
-      return strings.SIZE_M
+      return strings.en.SIZE_M
 
     case bookcarsTypes.DressSize.Large:
-      return strings.SIZE_L
+      return strings.en.SIZE_L
 
     case bookcarsTypes.DressSize.ExtraLarge:
-      return strings.SIZE_XL
+      return strings.en.SIZE_XL
 
     default:
       return ''
@@ -137,19 +137,19 @@ export const getDressSize = (size: string) => {
 export const getDressMaterial = (material: string) => {
   switch (material) {
     case bookcarsTypes.DressMaterial.Silk:
-      return strings.SILK
+      return strings.en.SILK
 
     case bookcarsTypes.DressMaterial.Cotton:
-      return strings.COTTON
+      return strings.en.COTTON
 
     case bookcarsTypes.DressMaterial.Lace:
-      return strings.LACE
+      return strings.en.LACE
 
     case bookcarsTypes.DressMaterial.Satin:
-      return strings.SATIN
+      return strings.en.SATIN
 
     case bookcarsTypes.DressMaterial.Chiffon:
-      return strings.CHIFFON
+      return strings.en.CHIFFON
 
     default:
       return ''
@@ -165,22 +165,22 @@ export const getDressMaterial = (material: string) => {
 export const getDressTypeTooltip = (type: string) => {
   switch (type) {
     case bookcarsTypes.DressType.Traditional:
-      return strings.TRADITIONAL_TOOLTIP
+      return strings.en.TRADITIONAL_TOOLTIP
 
     case bookcarsTypes.DressType.Modern:
-      return strings.MODERN_TOOLTIP
+      return strings.en.MODERN_TOOLTIP
 
     case bookcarsTypes.DressType.Designer:
-      return strings.DESIGNER_TOOLTIP
+      return strings.en.DESIGNER_TOOLTIP
 
     case bookcarsTypes.DressType.Vintage:
-      return strings.VINTAGE_TOOLTIP
+      return strings.en.VINTAGE_TOOLTIP
 
     case bookcarsTypes.DressType.Casual:
-      return strings.CASUAL_TOOLTIP
+      return strings.en.CASUAL_TOOLTIP
 
     case bookcarsTypes.DressType.Unknown:
-      return strings.UNKNOWN_TOOLTIP
+      return strings.en.UNKNOWN_TOOLTIP
 
     default:
       return ''
@@ -196,16 +196,16 @@ export const getDressTypeTooltip = (type: string) => {
 export const getDressSizeTooltip = (size: string) => {
   switch (size) {
     case bookcarsTypes.DressSize.Small:
-      return strings.SIZE_S_TOOLTIP
+      return strings.en.SIZE_S_TOOLTIP
 
     case bookcarsTypes.DressSize.Medium:
-      return strings.SIZE_M_TOOLTIP
+      return strings.en.SIZE_M_TOOLTIP
 
     case bookcarsTypes.DressSize.Large:
-      return strings.SIZE_L_TOOLTIP
+      return strings.en.SIZE_L_TOOLTIP
 
     case bookcarsTypes.DressSize.ExtraLarge:
-      return strings.SIZE_XL_TOOLTIP
+      return strings.en.SIZE_XL_TOOLTIP
 
     default:
       return ''
@@ -221,19 +221,19 @@ export const getDressSizeTooltip = (size: string) => {
 export const getDressMaterialTooltip = (material: string) => {
   switch (material) {
     case bookcarsTypes.DressMaterial.Silk:
-      return strings.SILK_TOOLTIP
+      return strings.en.SILK_TOOLTIP
 
     case bookcarsTypes.DressMaterial.Cotton:
-      return strings.COTTON_TOOLTIP
+      return strings.en.COTTON_TOOLTIP
 
     case bookcarsTypes.DressMaterial.Lace:
-      return strings.LACE_TOOLTIP
+      return strings.en.LACE_TOOLTIP
 
     case bookcarsTypes.DressMaterial.Satin:
-      return strings.SATIN_TOOLTIP
+      return strings.en.SATIN_TOOLTIP
 
     case bookcarsTypes.DressMaterial.Chiffon:
-      return strings.CHIFFON_TOOLTIP
+      return strings.en.CHIFFON_TOOLTIP
 
     default:
       return ''
@@ -251,11 +251,11 @@ export const getAdditionalDriver = (additionalDriver: number, language: string) 
   const fr = bookcarsHelper.isFrench(language)
 
   if (additionalDriver === -1) {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
+    return `${strings.en.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.en.UNAVAILABLE}`
   } if (additionalDriver === 0) {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
+    return `${strings.en.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.en.INCLUDED}`
   }
-  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
+  return `${strings.en.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
@@ -269,11 +269,11 @@ export const getAmendments = (amendments: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
-    return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}${fr ? 's' : ''}`
+    return `${strings.en.AMENDMENTS}${fr ? ' : ' : ': '}${strings.en.UNAVAILABLE}${fr ? 's' : ''}`
   } if (amendments === 0) {
-    return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
+    return `${strings.en.AMENDMENTS}${fr ? ' : ' : ': '}${strings.en.INCLUDED}${fr ? 'es' : ''}`
   }
-  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
+  return `${strings.en.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -287,17 +287,20 @@ export const getCancellation = (cancellation: number, language: string) => {
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
-    return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
+    return `${strings.en.CANCELLATION}${fr ? ' : ' : ': '}${strings.en.UNAVAILABLE}`
   } if (cancellation === 0) {
-    return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
+    return `${strings.en.CANCELLATION}${fr ? ' : ' : ': '}${strings.en.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
+  return `${strings.en.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
 }
 
 /**
  * Check whether a user is and admin or not.
  *
  * @param {?bookcarsTypes.User} [user]
+ * @returns {boolean}
+ */
+export const admin = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) || false
 
 /**
  * Get all user types.
@@ -348,7 +351,7 @@ export const getUserType = (status?: bookcarsTypes.UserType) => {
  * @returns {string}
  */
 export const getDays = (days: number) =>
-  `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+  `${strings.en.PRICE_DAYS_PART_1} ${days} ${strings.en.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
 
 /**
  * Get short days label.
@@ -356,7 +359,7 @@ export const getDays = (days: number) =>
  * @param {number} days
  * @returns {string}
  */
-export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+export const getDaysShort = (days: number) => `${days} ${strings.en.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
 
 /**
  * Get cancellation option label.
@@ -370,9 +373,9 @@ export const getCancellationOption = (cancellation: number, language: string, hi
   const fr = bookcarsHelper.isFrench(language)
 
   if (cancellation === -1) {
-    return strings.UNAVAILABLE
+    return strings.en.UNAVAILABLE
   } if (cancellation === 0) {
-    return `${strings.INCLUDED}${fr ? 'e' : ''}`
+    return `${strings.en.INCLUDED}${fr ? 'e' : ''}`
   }
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
 }
@@ -389,9 +392,9 @@ export const getAmendmentsOption = (amendments: number, language: string, hidePl
   const fr = bookcarsHelper.isFrench(language)
 
   if (amendments === -1) {
-    return `${strings.UNAVAILABLE}${fr ? 's' : ''}`
+    return `${strings.en.UNAVAILABLE}${fr ? 's' : ''}`
   } if (amendments === 0) {
-    return `${strings.INCLUDED}${fr ? 'es' : ''}`
+    return `${strings.en.INCLUDED}${fr ? 'es' : ''}`
   }
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
 }
@@ -407,9 +410,9 @@ export const getAmendmentsOption = (amendments: number, language: string, hidePl
  */
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, language: string, hidePlus: boolean) => {
   if (additionalDriver === -1) {
-    return strings.UNAVAILABLE
+    return strings.en.UNAVAILABLE
   } if (additionalDriver === 0) {
-    return strings.INCLUDED
+    return strings.en.INCLUDED
   }
   return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatPrice(additionalDriver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
@@ -468,25 +471,25 @@ export const downloadURI = (uri: string, name: string = '') => {
 export const getDressRange = (range: bookcarsTypes.DressRange) => {
   switch (range) {
     case bookcarsTypes.DressRange.Mini:
-      return strings.DRESS_RANGE_MINI
+      return strings.en.DRESS_RANGE_MINI
 
     case bookcarsTypes.DressRange.Midi:
-      return strings.DRESS_RANGE_MIDI
+      return strings.en.DRESS_RANGE_MIDI
 
     case bookcarsTypes.DressRange.Maxi:
-      return strings.DRESS_RANGE_MAXI
+      return strings.en.DRESS_RANGE_MAXI
 
     case bookcarsTypes.DressRange.Bridal:
-      return strings.DRESS_RANGE_BRIDAL
+      return strings.en.DRESS_RANGE_BRIDAL
 
     case bookcarsTypes.DressRange.Evening:
-      return strings.DRESS_RANGE_EVENING
+      return strings.en.DRESS_RANGE_EVENING
 
     case bookcarsTypes.DressRange.Cocktail:
-      return strings.DRESS_RANGE_COCKTAIL
+      return strings.en.DRESS_RANGE_COCKTAIL
 
     case bookcarsTypes.DressRange.Casual:
-      return strings.DRESS_RANGE_CASUAL
+      return strings.en.DRESS_RANGE_CASUAL
 
     default:
       return ''
@@ -511,9 +514,6 @@ export const verifyReCaptcha = async (token: string): Promise<boolean> => {
     return false
   }
 }
- * @returns {boolean}
- */
-export const admin = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) || false
 
 /**
  * Check whether a user is a supplier or not.

@@ -299,9 +299,9 @@ export const checkDress = async (req: Request, res: Response): Promise<void> => 
     }
 
     res.sendStatus(200)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.checkDress] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -325,9 +325,9 @@ export const createImage = async (req: Request, res: Response): Promise<void> =>
     await fs.promises.writeFile(tempPath, req.file.buffer)
 
     res.json(filename)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.createImage] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -359,9 +359,9 @@ export const updateImage = async (req: Request, res: Response): Promise<void> =>
     await fs.promises.writeFile(tempPath, req.file.buffer)
 
     res.json(filename)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.updateImage] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -392,9 +392,9 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
     await dress.save()
 
     res.sendStatus(200)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.deleteImage] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -415,9 +415,9 @@ export const deleteTempImage = async (req: Request, res: Response): Promise<void
     }
 
     res.sendStatus(200)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.deleteTempImage] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -458,9 +458,9 @@ export const getBookingDresses = async (req: Request, res: Response): Promise<vo
 
     const result = await Dress.paginate(query, options)
     res.json(result)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.getBookingDresses] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
 
@@ -555,8 +555,8 @@ export const getFrontendDresses = async (req: Request, res: Response): Promise<v
 
     const result = await Dress.paginate(query, options)
     res.json(result)
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`[dressController.getFrontendDresses] ${err}`)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' })
   }
 }
