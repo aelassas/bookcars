@@ -60,8 +60,8 @@ const CreateUser = () => {
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [license, setLicense] = useState<string | undefined>()
   const [priceChangeRate, setPriceChangeRate] = useState('')
-  const [supplierCarLimit, setSupplierCarLimit] = useState('')
-  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+  const [supplierDressLimit, setSupplierDressLimit] = useState('')
+  const [notifyAdminOnNewDress, setNotifyAdminOnNewDress] = useState(false)
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
@@ -160,7 +160,7 @@ const CreateUser = () => {
   }
 
   const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupplierCarLimit(e.target.value)
+    setSupplierDressLimit(e.target.value)
   }
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -312,8 +312,8 @@ const CreateUser = () => {
         license,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
+        supplierDressLimit: supplierDressLimit ? Number(supplierDressLimit) : undefined,
+        notifyAdminOnNewDress: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewDress : undefined,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -469,10 +469,10 @@ const CreateUser = () => {
                     <FormControlLabel
                       control={(
                         <Switch
-                          checked={notifyAdminOnNewCar}
+                          checked={notifyAdminOnNewDress}
                           disabled={user?.type === bookcarsTypes.UserType.Supplier}
                           onChange={(e) => {
-                            setNotifyAdminOnNewCar(e.target.checked)
+                            setNotifyAdminOnNewDress(e.target.checked)
                           }}
                           color="primary"
                         />

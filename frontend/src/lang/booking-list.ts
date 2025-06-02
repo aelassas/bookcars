@@ -4,6 +4,7 @@ import * as langHelper from '@/common/langHelper'
 const strings = new LocalizedStrings({
   fr: {
     CAR: 'Voiture',
+    DRESS: 'Robe',
     SUPPLIER: 'Fournisseur',
     DRIVER: 'Conducteur',
     PRICE: 'Prix',
@@ -25,6 +26,7 @@ const strings = new LocalizedStrings({
   },
   en: {
     CAR: 'Car',
+    DRESS: 'Dress',
     SUPPLIER: 'Supplier',
     DRIVER: 'Driver',
     PRICE: 'Price',
@@ -46,6 +48,7 @@ const strings = new LocalizedStrings({
   },
   es: {
     CAR: 'Coche',
+    DRESS: 'Vestido',
     SUPPLIER: 'Proveedor',
     DRIVER: 'Conductor',
     PRICE: 'Precio',

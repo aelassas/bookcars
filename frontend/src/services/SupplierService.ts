@@ -33,10 +33,10 @@ export const getSuppliers = (keyword: string, page: number, size: number): Promi
 /**
 * Get frontend suppliers.
 *
-* @param {bookcarsTypes.GetCarsPayload} data
+* @param {bookcarsTypes.GetDressesPayload} data
 * @returns {Promise<bookcarsTypes.User[]>}
 */
-export const getFrontendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
+export const getFrontendSuppliers = (data: bookcarsTypes.GetDressesPayload): Promise<bookcarsTypes.User[]> =>
   axiosInstance
     .post(
       '/api/frontend-suppliers',

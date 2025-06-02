@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
-import { strings } from '@/lang/cars'
+import { strings } from '@/lang/dresses'
 import Accordion from './Accordion'
 
 import '@/assets/css/deposit-filter.css'

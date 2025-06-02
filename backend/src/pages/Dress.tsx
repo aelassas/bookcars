@@ -107,7 +107,7 @@ const Dress = () => {
         if (id && id !== '') {
           const currentUser = UserService.getCurrentUser()
           if (currentUser) {
-            const _user = await UserService.getUser(currentUser.id)
+            const _user = await UserService.getUser(currentUser._id)
             if (_user) {
               setUser(_user)
               const _dress = await DressService.getDress(id)
@@ -117,7 +117,7 @@ const Dress = () => {
                 setVisible(true)
 
                 const _suppliers = [_dress.supplier._id]
-                setSuppliers(_suppliers)
+                setSuppliers(_suppliers.filter(s => s !== undefined) as string[])
 
                 const _statuses = helper.getBookingStatuses().map((status) => status.value)
                 setStatuses(_statuses)

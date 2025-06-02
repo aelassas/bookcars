@@ -67,15 +67,15 @@ const UpdateSupplier = () => {
       licenseRequired: false,
       minimumRentalDays: '',
       priceChangeRate: '',
-      supplierCarLimit: '',
-      notifyAdminOnNewCar: false
+      supplierDressLimit: '',
+      notifyAdminOnNewDress: false
     },
   })
 
   const {
     payLater,
     licenseRequired,
-    notifyAdminOnNewCar,
+    notifyAdminOnNewDress,
     blacklisted,
   } = useWatch({ control })
 
@@ -151,8 +151,8 @@ const UpdateSupplier = () => {
               setValue('licenseRequired', !!_supplier.licenseRequired)
               setValue('minimumRentalDays', _supplier.minimumRentalDays?.toString() || '')
               setValue('priceChangeRate', _supplier.priceChangeRate?.toString() || '')
-              setValue('supplierCarLimit', _supplier.supplierCarLimit?.toString() || '')
-              setValue('notifyAdminOnNewCar', !!_supplier.notifyAdminOnNewCar)
+              setValue('supplierDressLimit', _supplier.supplierDressLimit?.toString() || '')
+              setValue('notifyAdminOnNewDress', !!_supplier.notifyAdminOnNewDress)
               setValue('blacklisted', !!_supplier.blacklisted)
               setVisible(true)
               setLoading(false)
@@ -210,8 +210,8 @@ const UpdateSupplier = () => {
         licenseRequired: !!data.licenseRequired,
         minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
         priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
-        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: data.notifyAdminOnNewCar,
+        supplierDressLimit: data.supplierDressLimit ? Number(data.supplierDressLimit) : undefined,
+        notifyAdminOnNewDress: data.notifyAdminOnNewDress,
         blacklisted: !!data.blacklisted,
       }
 
@@ -343,30 +343,30 @@ const UpdateSupplier = () => {
                 <FormControlLabel
                   control={(
                     <Switch
-                      {...register('notifyAdminOnNewCar')}
-                      checked={notifyAdminOnNewCar}
+                      {...register('notifyAdminOnNewDress')}
+                      checked={notifyAdminOnNewDress}
                       disabled={user?.type === bookcarsTypes.UserType.Supplier}
                       onChange={(e) => {
-                        setValue('notifyAdminOnNewCar', e.target.checked)
+                        setValue('notifyAdminOnNewDress', e.target.checked)
                       }}
                       color="primary"
                     />
                   )}
-                  label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
+                  label={commonStrings.NOTIFY_ADMIN_ON_NEW_DRESS}
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
+                <InputLabel>{commonStrings.SUPPLIER_DRESS_LIMIT}</InputLabel>
                 <Input
-                  {...register('supplierCarLimit')}
+                  {...register('supplierDressLimit')}
                   type="text"
                   autoComplete="off"
-                  error={!!errors.supplierCarLimit}
-                  onChange={() => clearErrors('supplierCarLimit')}
+                  error={!!errors.supplierDressLimit}
+                  onChange={() => clearErrors('supplierDressLimit')}
                 />
-                <FormHelperText error={!!errors.supplierCarLimit}>
-                  {errors.supplierCarLimit?.message || ''}
+                <FormHelperText error={!!errors.supplierDressLimit}>
+                  {errors.supplierDressLimit?.message || ''}
                 </FormHelperText>
               </FormControl>
 

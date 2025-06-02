@@ -65,15 +65,15 @@ const CreateSupplier = () => {
       licenseRequired: false,
       minimumRentalDays: '',
       priceChangeRate: '',
-      supplierCarLimit: '',
-      notifyAdminOnNewCar: false
+      supplierDressLimit: '',
+      notifyAdminOnNewDress: false
     },
   })
 
   const {
     payLater,
     licenseRequired,
-    notifyAdminOnNewCar,
+    notifyAdminOnNewDress,
   } = useWatch({ control })
 
   const onBeforeUpload = () => {
@@ -151,8 +151,8 @@ const CreateSupplier = () => {
         contracts,
         minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
         priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
-        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: data.notifyAdminOnNewCar,
+        supplierDressLimit: data.supplierDressLimit ? Number(data.supplierDressLimit) : undefined,
+        notifyAdminOnNewDress: data.notifyAdminOnNewDress,
       }
 
       status = await UserService.create(payload)
@@ -266,11 +266,11 @@ const CreateSupplier = () => {
               <FormControlLabel
                 control={(
                   <Switch
-                    {...register('notifyAdminOnNewCar')}
-                    checked={notifyAdminOnNewCar}
+                    {...register('notifyAdminOnNewDress')}
+                    checked={notifyAdminOnNewDress}
                     disabled={user?.type === bookcarsTypes.UserType.Supplier}
                     onChange={(e) => {
-                      setValue('notifyAdminOnNewCar', e.target.checked)
+                      setValue('notifyAdminOnNewDress', e.target.checked)
                     }}
                     color="primary"
                   />
@@ -282,14 +282,14 @@ const CreateSupplier = () => {
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
               <Input
-                {...register('supplierCarLimit')}
+                {...register('supplierDressLimit')}
                 type="text"
                 autoComplete="off"
-                error={!!errors.supplierCarLimit}
-                onChange={() => clearErrors('supplierCarLimit')}
+                error={!!errors.supplierDressLimit}
+                onChange={() => clearErrors('supplierDressLimit')}
               />
-              <FormHelperText error={!!errors.supplierCarLimit}>
-                {errors.supplierCarLimit?.message || ''}
+              <FormHelperText error={!!errors.supplierDressLimit}>
+                {errors.supplierDressLimit?.message || ''}
               </FormHelperText>
             </FormControl>
 

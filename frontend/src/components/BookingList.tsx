@@ -106,7 +106,7 @@ const BookingList = ({
           suppliers,
           statuses,
           filter: filter || undefined,
-          car: _car || car,
+          dress: _car || car,
           user: (_user && _user._id) || undefined,
         }
 
@@ -285,10 +285,10 @@ const BookingList = ({
 
     if (!hideCarColumn) {
       _columns.unshift({
-        field: 'car',
-        headerName: strings.CAR,
+        field: 'dress',
+        headerName: strings.DRESS,
         flex: 1,
-        valueGetter: (value: bookcarsTypes.Car) => value?.name,
+        valueGetter: (value: bookcarsTypes.Dress) => value?.name,
       })
     }
 
@@ -390,7 +390,7 @@ const BookingList = ({
         && (env.isMobile ? (
           <>
             {rows.map((booking) => {
-              const _bookingCar = booking.car as bookcarsTypes.Car
+              const _bookingDress = booking.dress as bookcarsTypes.Dress
               const bookingSupplier = booking.supplier as bookcarsTypes.User
               const from = new Date(booking.from)
               const to = new Date(booking.to)
@@ -402,8 +402,8 @@ const BookingList = ({
                     <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                    <span className="booking-detail-title">{strings.CAR}</span>
-                    <div className="booking-detail-value">{_bookingCar.name}</div>
+                    <span className="booking-detail-title">{strings.DRESS}</span>
+                    <div className="booking-detail-value">{_bookingDress.name}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DAYS}</span>
@@ -432,11 +432,7 @@ const BookingList = ({
                   </div>
 
                   {(booking.cancellation
-                    || booking.amendments
-                    || booking.collisionDamageWaiver
-                    || booking.theftProtection
-                    || booking.fullInsurance
-                    || booking.additionalDriver) && (
+                    || booking.amendments) && (
                       <Extras
                         booking={booking}
                         days={days}

@@ -61,7 +61,7 @@ const DressScheduler = (
         keyword: filter?.keyword,
       },
       user: (user && user._id) || undefined,
-      dress: true, // This is the key difference - we're only fetching dress bookings
+      dress: '', // This is the key difference - we're only fetching dress bookings
     }
 
     const data = await BookingService.getBookings(payload, 1, 10000)

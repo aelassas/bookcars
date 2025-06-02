@@ -486,6 +486,46 @@ export const getAllMaterials = () => [
 ]
 
 /**
+ * Return all dress materials.
+ *
+ * @returns {bookcarsTypes.DressMaterial[]}
+ */
+export const getAllDressMaterials = () => [
+  bookcarsTypes.DressMaterial.Silk,
+  bookcarsTypes.DressMaterial.Cotton,
+  bookcarsTypes.DressMaterial.Lace,
+  bookcarsTypes.DressMaterial.Satin,
+  bookcarsTypes.DressMaterial.Chiffon,
+]
+
+/**
+ * Return all dress sizes.
+ *
+ * @returns {bookcarsTypes.DressSize[]}
+ */
+export const getAllDressSizes = () => [
+  bookcarsTypes.DressSize.ExtraSmall,
+  bookcarsTypes.DressSize.Small,
+  bookcarsTypes.DressSize.Medium,
+  bookcarsTypes.DressSize.Large,
+  bookcarsTypes.DressSize.ExtraLarge,
+  bookcarsTypes.DressSize.DoubleExtraLarge,
+  bookcarsTypes.DressSize.Custom,
+]
+
+/**
+ * Return all dress styles.
+ *
+ * @returns {bookcarsTypes.DressStyle[]}
+ */
+export const getAllDressStyles = () => [
+  bookcarsTypes.DressStyle.Traditional,
+  bookcarsTypes.DressStyle.Modern,
+  bookcarsTypes.DressStyle.Designer,
+  bookcarsTypes.DressStyle.Vintage,
+]
+
+/**
  * Calculate distance between two points on map.
  *
  * @param {number} lat1

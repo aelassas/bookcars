@@ -140,7 +140,7 @@ const SupplierFilter = ({
                     title={supplier.fullName}
                   />
                 </span>
-                {!!supplier.carCount && <span className="car-count">{`(${supplier.carCount})`}</span>}
+                {!!supplier.dressCount && <span className="dress-count">{`(${supplier.dressCount})`}</span>}
               </li>
             ))}
           </ul>

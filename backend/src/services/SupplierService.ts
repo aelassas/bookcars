@@ -94,7 +94,7 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
 * @param {bookcarsTypes.GetCarsPayload} data
 * @returns {Promise<bookcarsTypes.User[]>}
 */
-export const getBackendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
+export const getBackendSuppliers = (data: bookcarsTypes.GetDressesPayload): Promise<bookcarsTypes.User[]> =>
   axiosInstance
     .post(
       '/api/backend-suppliers',

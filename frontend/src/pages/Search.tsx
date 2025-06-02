@@ -12,19 +12,13 @@ import * as SupplierService from '@/services/SupplierService'
 // import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import NoMatch from './NoMatch'
-import CarFilter from '@/components/CarFilter'
-import CarSpecsFilter from '@/components/CarSpecsFilter'
 import SupplierFilter from '@/components/SupplierFilter'
-import CarType from '@/components/CarTypeFilter'
-import GearboxFilter from '@/components/GearboxFilter'
-import MileageFilter from '@/components/MileageFilter'
-import FuelPolicyFilter from '@/components/FuelPolicyFilter'
 import DepositFilter from '@/components/DepositFilter'
-import CarList from '@/components/CarList'
-import CarRatingFilter from '@/components/CarRatingFilter'
-import CarRangeFilter from '@/components/CarRangeFilter'
-import CarMultimediaFilter from '@/components/CarMultimediaFilter'
-import CarSeatsFilter from '@/components/CarSeatsFilter'
+import DressList from '@/components/DressList'
+import DressTypeFilter from '@/components/DressTypeFilter'
+import DressSizeFilter from '@/components/DressSizeFilter'
+import DressStyleFilter from '@/components/DressStyleFilter'
+import DressMaterialFilter from '@/components/DressMaterialFilter'
 import Map from '@/components/Map'
 // import Progress from '@/components/Progress'
 import ViewOnMapButton from '@/components/ViewOnMapButton'
@@ -46,16 +40,11 @@ const Search = () => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [supplierIds, setSupplierIds] = useState<string[]>()
   const [loading, setLoading] = useState(true)
-  const [carSpecs, setCarSpecs] = useState<bookcarsTypes.CarSpecs>({})
-  const [carType, setCarType] = useState(bookcarsHelper.getAllCarTypes())
-  const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
-  const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
-  const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
+  const [dressType, setDressType] = useState(bookcarsHelper.getAllDressTypes())
+  const [dressSize, setDressSize] = useState(bookcarsHelper.getAllDressSizes())
+  const [dressStyle, setDressStyle] = useState(bookcarsHelper.getAllDressStyles())
+  const [dressMaterial, setDressMaterial] = useState(bookcarsHelper.getAllDressMaterials())
   const [deposit, setDeposit] = useState(-1)
-  const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
-  const [multimedia, setMultimedia] = useState<bookcarsTypes.CarMultimedia[]>([])
-  const [rating, setRating] = useState(-1)
-  const [seats, setSeats] = useState(-1)
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
   const [showFilters, setShowFilters] = useState(false)
@@ -78,18 +67,13 @@ const Search = () => {
   useEffect(() => {
     const updateSuppliers = async () => {
       if (pickupLocation) {
-        const payload: bookcarsTypes.GetCarsPayload = {
+        const payload: bookcarsTypes.GetDressesPayload = {
           pickupLocation: pickupLocation._id,
-          carSpecs,
-          carType,
-          gearbox,
-          mileage,
-          fuelPolicy,
+          dressType,
+          dressSize,
+          dressStyle,
+          dressMaterial,
           deposit,
-          ranges,
-          multimedia,
-          rating,
-          seats,
           days: bookcarsHelper.days(from, to),
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
@@ -100,58 +84,26 @@ const Search = () => {
     if (from && to) {
       updateSuppliers()
     }
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
-
-  const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
-    if (suppliers.length < allSuppliers.length) {
-      const _supplierIds = bookcarsHelper.clone(allSuppliersIds)
-      setSupplierIds(_supplierIds)
-    }
-
-    setPickupLocation(filter.pickupLocation)
-    setDropOffLocation(filter.dropOffLocation)
-    setFrom(filter.from)
-    setTo(filter.to)
-  }
+  }, [pickupLocation, dressType, dressSize, dressStyle, dressMaterial, deposit, from, to])
 
   const handleSupplierFilterChange = (newSuppliers: string[]) => {
     setSupplierIds(newSuppliers)
   }
 
-  const handleRatingFilterChange = (value: number) => {
-    setRating(value)
+  const handleDressTypeFilterChange = (values: bookcarsTypes.DressType[]) => {
+    setDressType(values)
   }
 
-  const handleRangeFilterChange = (value: bookcarsTypes.CarRange[]) => {
-    setRanges(value)
+  const handleDressSizeFilterChange = (values: bookcarsTypes.DressSize[]) => {
+    setDressSize(values)
   }
 
-  const handleMultimediaFilterChange = (value: bookcarsTypes.CarMultimedia[]) => {
-    setMultimedia(value)
+  const handleDressStyleFilterChange = (values: bookcarsTypes.DressStyle[]) => {
+    setDressStyle(values)
   }
 
-  const handleSeatsFilterChange = (value: number) => {
-    setSeats(value)
-  }
-
-  const handleCarSpecsFilterChange = (value: bookcarsTypes.CarSpecs) => {
-    setCarSpecs(value)
-  }
-
-  const handleCarTypeFilterChange = (values: bookcarsTypes.CarType[]) => {
-    setCarType(values)
-  }
-
-  const handleGearboxFilterChange = (values: bookcarsTypes.GearboxType[]) => {
-    setGearbox(values)
-  }
-
-  const handleMileageFilterChange = (values: bookcarsTypes.Mileage[]) => {
-    setMileage(values)
-  }
-
-  const handleFuelPolicyFilterChange = (values: bookcarsTypes.FuelPolicy[]) => {
-    setFuelPolicy(values)
+  const handleDressMaterialFilterChange = (values: bookcarsTypes.DressMaterial[]) => {
+    setDressMaterial(values)
   }
 
   const handleDepositFilterChange = (value: number) => {
@@ -199,18 +151,13 @@ const Search = () => {
         return
       }
 
-      const payload: bookcarsTypes.GetCarsPayload = {
+      const payload: bookcarsTypes.GetDressesPayload = {
         pickupLocation: _pickupLocation._id,
-        carSpecs,
-        carType,
-        gearbox,
-        mileage,
-        fuelPolicy,
+        dressType,
+        dressSize,
+        dressStyle,
+        dressMaterial,
         deposit,
-        ranges,
-        multimedia,
-        rating,
-        seats,
         days: bookcarsHelper.days(from, to),
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
@@ -266,15 +213,7 @@ const Search = () => {
                       </Map>
                     )}
 
-                  <CarFilter
-                    className="filter"
-                    pickupLocation={pickupLocation}
-                    dropOffLocation={dropOffLocation}
-                    from={from}
-                    to={to}
-                    collapse
-                    onSubmit={handleCarFilterSubmit}
-                  />
+                  {/* Dress filter would go here if needed */}
 
                   <Button
                     variant="outlined"
@@ -292,15 +231,10 @@ const Search = () => {
                     showFilters && (
                       <>
                         {!env.HIDE_SUPPLIERS && <SupplierFilter className="filter" suppliers={suppliers} onChange={handleSupplierFilterChange} />}
-                        <CarRatingFilter className="filter" onChange={handleRatingFilterChange} />
-                        <CarRangeFilter className="filter" onChange={handleRangeFilterChange} />
-                        <CarMultimediaFilter className="filter" onChange={handleMultimediaFilterChange} />
-                        <CarSeatsFilter className="filter" onChange={handleSeatsFilterChange} />
-                        <CarSpecsFilter className="filter" onChange={handleCarSpecsFilterChange} />
-                        <CarType className="filter" onChange={handleCarTypeFilterChange} />
-                        <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
-                        <MileageFilter className="filter" onChange={handleMileageFilterChange} />
-                        <FuelPolicyFilter className="filter" onChange={handleFuelPolicyFilterChange} />
+                        <DressTypeFilter className="filter" onChange={handleDressTypeFilterChange} />
+                        <DressSizeFilter className="filter" onChange={handleDressSizeFilterChange} />
+                        <DressStyleFilter className="filter" onChange={handleDressStyleFilterChange} />
+                        <DressMaterialFilter className="filter" onChange={handleDressMaterialFilterChange} />
                         <DepositFilter className="filter" onChange={handleDepositFilterChange} />
                       </>
                     )
@@ -309,29 +243,20 @@ const Search = () => {
               )}
             </div>
             <div className="col-2">
-              <CarList
-                carSpecs={carSpecs}
+              <DressList
                 suppliers={supplierIds}
-                carType={carType}
-                gearbox={gearbox}
-                mileage={mileage}
-                fuelPolicy={fuelPolicy}
+                dressType={dressType}
+                dressSize={dressSize}
+                dressStyle={dressStyle}
+                dressMaterial={dressMaterial}
                 deposit={deposit}
                 pickupLocation={pickupLocation._id}
                 dropOffLocation={dropOffLocation._id}
-                // pickupLocationName={pickupLocation.name}
                 loading={loading}
                 from={from}
                 to={to}
-                ranges={ranges}
-                multimedia={multimedia}
-                rating={rating}
-                seats={seats}
-                // distance={distance}
-                // onLoad={() => setLoadingPage(false)}
                 hideSupplier={env.HIDE_SUPPLIERS}
-                // includeAlreadyBookedCars
-                includeComingSoonCars
+                includeComingSoonDresses
               />
             </div>
           </div>

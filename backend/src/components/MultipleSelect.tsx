@@ -247,7 +247,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (type === bookcarsTypes.RecordType.Car && !multiple && values.length === 1 && values[0]) {
+          if (type === bookcarsTypes.RecordType.Dress && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -348,7 +348,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (type === bookcarsTypes.RecordType.Car) {
+          if (type === bookcarsTypes.RecordType.Dress) {
             return (
               <li {..._props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image car-ia">

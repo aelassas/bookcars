@@ -64,7 +64,7 @@ const BookingList = ({
   loggedUser: bookingLoggedUser,
   containerClassName,
   hideDates,
-  hideCarColumn,
+
   hideDressColumn,
   hideSupplierColumn,
   language,

@@ -7,6 +7,9 @@ import env from '@/config/env.config'
 import * as PaymentService from '@/services/PaymentService'
 import * as UserService from '@/services/UserService'
 
+// Re-export joinURL from bookcars-helper for convenience
+export const joinURL = bookcarsHelper.joinURL
+
 /**
  * Get language.
  *

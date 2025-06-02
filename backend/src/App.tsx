@@ -26,7 +26,7 @@ const CreateDress = lazy(() => import('@/pages/CreateDress'))
 const UpdateDress = lazy(() => import('@/pages/UpdateDress'))
 const Bookings = lazy(() => import('@/pages/Bookings'))
 
-const CreateBooking = lazy(() => import('@/pages/CreateBooking'))
+
 const Users = lazy(() => import('@/pages/Users'))
 const User = lazy(() => import('@/pages/User'))
 const CreateUser = lazy(() => import('@/pages/CreateUser'))
@@ -94,7 +94,7 @@ const router = createBrowserRouter([
       { path: 'create-dress', element: <CreateDress /> },
       { path: 'update-dress', element: <UpdateDress /> },
 
-      { path: 'create-booking', element: <CreateBooking /> },
+
       { path: 'users', element: <Users /> },
       { path: 'user', element: <User /> },
       { path: 'create-user', element: <CreateUser /> },

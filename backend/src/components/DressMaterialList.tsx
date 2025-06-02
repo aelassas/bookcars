@@ -67,9 +67,7 @@ const DressMaterialList = ({
         <MenuItem value={bookcarsTypes.DressMaterial.Chiffon}>
           {helper.getDressMaterial(bookcarsTypes.DressMaterial.Chiffon)}
         </MenuItem>
-        <MenuItem value={bookcarsTypes.DressMaterial.Other}>
-          {helper.getDressMaterial(bookcarsTypes.DressMaterial.Other)}
-        </MenuItem>
+
       </Select>
     </FormControl>
   )

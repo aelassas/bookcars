@@ -2,28 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Button,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Paper,
-  FormControlLabel,
-  Switch,
-  Box,
-  Typography,
-  Tooltip,
-  IconButton,
 } from '@mui/material'
 import {
   Add as AddIcon,
-  Search as SearchIcon,
-  Clear as ClearIcon,
-  Info as InfoIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as bookcarsHelper from ':bookcars-helper'
-import env from '@/config/env.config'
-import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/dresses'
 import * as helper from '@/common/helper'
 import * as SupplierService from '@/services/SupplierService'
@@ -69,7 +52,7 @@ const Dresses = () => {
           const _allSuppliers = await SupplierService.getAllSuppliers()
           const _suppliers = _admin ? _allSuppliers.map((supplier) => supplier._id) : [currentUser._id]
           setAllSuppliers(_allSuppliers)
-          setSuppliers(_suppliers)
+          setSuppliers(_suppliers.filter(s => s !== undefined) as string[])
         }
       } catch (err) {
         helper.error(err)
@@ -96,13 +79,13 @@ const Dresses = () => {
     setReload(true)
   }
 
-  const handleDepositFilterChange = (value: string) => {
-    setDeposit(value)
+  const handleDepositFilterChange = (value: number) => {
+    setDeposit(value.toString())
     setReload(true)
   }
 
-  const handleAvailabilityFilterChange = (value: string) => {
-    setAvailability(value)
+  const handleAvailabilityFilterChange = (values: bookcarsTypes.Availablity[]) => {
+    setAvailability(values.join(','))
     setReload(true)
   }
 
@@ -116,17 +99,7 @@ const Dresses = () => {
     setReload(true)
   }
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      setReload(true)
-    }
-  }
-
-  const handleDressListLoad = (data: bookcarsTypes.DataEvent<bookcarsTypes.Dress>) => {
+  const handleDressListLoad = (data?: bookcarsTypes.Data<bookcarsTypes.Dress>) => {
     if (data && data.rowCount !== undefined) {
       setRowCount(data.rowCount)
     }
@@ -193,11 +166,11 @@ const Dresses = () => {
               <DressList
                 user={user}
                 suppliers={suppliers}
-                dressType={dressType}
-                dressSize={dressSize}
-                dressStyle={dressStyle}
-                deposit={deposit}
-                availability={availability}
+                dressType={dressType ? [dressType] : []}
+                dressSize={dressSize ? [dressSize] : []}
+                dressStyle={dressStyle ? [dressStyle] : []}
+                deposit={deposit ? Number(deposit) : undefined}
+                availability={availability ? availability.split(',') : []}
                 rentalsCount={rentalsCount}
                 keyword={keyword}
                 loading={loading}

@@ -5,7 +5,6 @@ import {
   Typography,
   Button,
   TextField,
-  Grid,
   Box,
   Paper,
   FormControl,
@@ -16,8 +15,10 @@ import {
   Checkbox,
   Snackbar,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Chip
 } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import { Save as SaveIcon } from '@mui/icons-material'
 import Layout from '../components/Layout'
 import * as DressService from '../services/DressService'
@@ -248,7 +249,7 @@ const UpdateDress: React.FC = () => {
           
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{ width: '100%', maxWidth: 300 }}>
                   <Avatar
                     type="dress"
@@ -267,10 +268,10 @@ const UpdateDress: React.FC = () => {
                   )}
                 </Box>
               </Grid>
-              
-              <Grid item xs={12} md={8}>
+
+              <Grid xs={12} md={8}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <TextField
                       name="name"
                       label={commonStrings.NAME}
@@ -282,8 +283,8 @@ const UpdateDress: React.FC = () => {
                       helperText={validationErrors.name ? commonStrings.REQUIRED_FIELD : ''}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <FormControl fullWidth required error={validationErrors.type}>
                       <InputLabel>{strings.DRESS_TYPE}</InputLabel>
                       <Select
@@ -300,8 +301,8 @@ const UpdateDress: React.FC = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <FormControl fullWidth required error={validationErrors.size}>
                       <InputLabel>{strings.DRESS_SIZE}</InputLabel>
                       <Select
@@ -320,8 +321,8 @@ const UpdateDress: React.FC = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <FormControl fullWidth required error={validationErrors.style}>
                       <InputLabel>{strings.DRESS_STYLE}</InputLabel>
                       <Select
@@ -338,7 +339,7 @@ const UpdateDress: React.FC = () => {
                     </FormControl>
                   </Grid>
                   
-                  <Grid item xs={12} sm={6}>
+                  <Grid xs={12} sm={6}>
                     <FormControl fullWidth>
                       <InputLabel>{strings.MATERIAL}</InputLabel>
                       <Select
@@ -356,8 +357,8 @@ const UpdateDress: React.FC = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <TextField
                       name="color"
                       label={strings.COLOR}
@@ -369,8 +370,8 @@ const UpdateDress: React.FC = () => {
                       helperText={validationErrors.color ? commonStrings.REQUIRED_FIELD : ''}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <TextField
                       name="price"
                       label={strings.PRICE}
@@ -386,8 +387,8 @@ const UpdateDress: React.FC = () => {
                       }}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <TextField
                       name="deposit"
                       label={strings.DEPOSIT}
@@ -402,8 +403,8 @@ const UpdateDress: React.FC = () => {
                       }}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid xs={12} sm={6}>
                     <TextField
                       name="minimumAge"
                       label={strings.MINIMUM_AGE}
@@ -413,8 +414,8 @@ const UpdateDress: React.FC = () => {
                       fullWidth
                     />
                   </Grid>
-                  
-                  <Grid item xs={12}>
+
+                  <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>{strings.LOCATIONS}</InputLabel>
                       <Select
@@ -443,7 +444,7 @@ const UpdateDress: React.FC = () => {
                     </FormControl>
                   </Grid>
                   
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -456,8 +457,8 @@ const UpdateDress: React.FC = () => {
                       label={strings.AVAILABLE}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12}>
+
+                  <Grid xs={12}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -470,8 +471,8 @@ const UpdateDress: React.FC = () => {
                       label={strings.CUSTOMIZABLE}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12}>
+
+                  <Grid xs={12}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -484,8 +485,8 @@ const UpdateDress: React.FC = () => {
                       label={strings.CANCELLATION}
                     />
                   </Grid>
-                  
-                  <Grid item xs={12}>
+
+                  <Grid xs={12}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -501,7 +502,7 @@ const UpdateDress: React.FC = () => {
                 </Grid>
               </Grid>
               
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   type="submit"
                   variant="contained"

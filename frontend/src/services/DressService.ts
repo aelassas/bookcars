@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as env from '../config/env.config'
+import env from '../config/env.config'
 import { Dress } from ':bookcars-types'
 
 /**

@@ -140,11 +140,11 @@ const DressList = ({
         dressSpecs,
         dressType: __dressType,
         dressSize: __dressSize,
-        dressStyle: __dressStyle,
+
         deposit,
         availability,
         ranges: _range,
-        rentalsCount: _rentalsCount,
+
       }
       const data = await DressService.getDresses(keyword || '', payload, _page, env.DRESSES_PAGE_SIZE)
 

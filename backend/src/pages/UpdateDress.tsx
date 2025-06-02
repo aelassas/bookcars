@@ -20,8 +20,8 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/dresses'
 import * as DressService from '@/services/DressService'
 import * as helper from '@/common/helper'
-import Error from './Error'
-import ErrorMessage from '@/components/Error'
+import ErrorPage from './Error'
+import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '@/components/Avatar'
@@ -80,7 +80,7 @@ const UpdateDress = () => {
     setLoading(true)
   }
 
-  const handleImageChange = (image: string) => {
+  const handleImageChange = (_image: string) => {
     setLoading(false)
     setImageError(false)
     setImageSizeError(false)
@@ -92,8 +92,8 @@ const UpdateDress = () => {
     }
   }
 
-  const handleSupplierChange = (value: bookcarsTypes.Option) => {
-    setSupplier(value._id)
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const handleLocationsChange = (values: bookcarsTypes.Option[]) => {
@@ -232,6 +232,7 @@ const UpdateDress = () => {
 
       const data: bookcarsTypes.UpdateDressPayload = {
         _id: dress?._id as string,
+        loggedUser: user?._id as string,
         name,
         supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
@@ -250,7 +251,6 @@ const UpdateDress = () => {
         comingSoon,
         type: type as bookcarsTypes.DressType,
         size: size as bookcarsTypes.DressSize,
-        style,
         color,
         length: Number(length),
         material: material as bookcarsTypes.DressMaterial,
@@ -259,6 +259,8 @@ const UpdateDress = () => {
         amendments: extraToNumber(amendments),
         isDateBasedPrice,
         dateBasedPrices,
+        range: '',
+        accessories: [],
       }
 
       const status = await DressService.update(data)
@@ -293,7 +295,7 @@ const UpdateDress = () => {
           if (_dress) {
             setDress(_dress)
             setName(_dress.name)
-            setSupplier(_dress.supplier._id)
+            setSupplier(_dress.supplier._id || '')
             setLocations(_dress.locations as bookcarsTypes.Option[])
             setDailyPrice(_dress.dailyPrice.toString())
             setDiscountedDailyPrice(_dress.discountedDailyPrice?.toString() || '')
@@ -379,7 +381,7 @@ const UpdateDress = () => {
                 <SupplierSelectList
                   label={commonStrings.SUPPLIER}
                   required
-                  value={supplier}
+                  value={supplier ? { _id: supplier, name: '', image: '' } : undefined}
                   onChange={handleSupplierChange}
                 />
               </FormControl>
@@ -571,7 +573,7 @@ const UpdateDress = () => {
         </div>
       )}
       {loading && <Backdrop text={commonStrings.LOADING} />}
-      {error && <Error />}
+      {error && <ErrorPage />}
       {noMatch && <NoMatch />}
     </Layout>
   )

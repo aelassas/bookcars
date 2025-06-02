@@ -90,8 +90,8 @@ const CreateDress = () => {
     }
   }
 
-  const handleSupplierChange = (value: bookcarsTypes.Option) => {
-    setSupplier(value._id)
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const handleLocationsChange = (values: bookcarsTypes.Option[]) => {
@@ -248,7 +248,7 @@ const CreateDress = () => {
         comingSoon,
         type: type as bookcarsTypes.DressType,
         size: size as bookcarsTypes.DressSize,
-        style,
+
         color,
         length: Number(length),
         material: material as bookcarsTypes.DressMaterial,
@@ -258,6 +258,8 @@ const CreateDress = () => {
         amendments: extraToNumber(amendments),
         isDateBasedPrice,
         dateBasedPrices,
+        range: '',
+        accessories: [],
       }
 
       const dress = await DressService.create(data)
@@ -281,7 +283,7 @@ const CreateDress = () => {
     setImageSizeError(false)
 
     try {
-      const currentUser = helper.getCurrentUser()
+      const currentUser = JSON.parse(localStorage.getItem('bc-user') || '{}')
       if (currentUser) {
         const _isSupplier = helper.supplier(currentUser)
         setIsSupplier(_isSupplier)

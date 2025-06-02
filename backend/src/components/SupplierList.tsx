@@ -204,8 +204,8 @@ const SupplierList = ({
                   </div>
                   <span className="supplier-item-title">{supplier.fullName}</span>
                   {
-                    supplier.carCount != undefined ? (
-                      <span className="supplier-item-subtitle">{`${supplier.carCount} ${supplier.carCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}</span>
+                    supplier.dressCount != undefined ? (
+                      <span className="supplier-item-subtitle">{`${supplier.dressCount} ${supplier.dressCount > 1 ? commonStrings.DRESSES : commonStrings.DRESS}`}</span>
                     ) : null
                   }
                 </div>

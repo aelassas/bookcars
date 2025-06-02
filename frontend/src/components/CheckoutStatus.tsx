@@ -77,9 +77,9 @@ const CheckoutStatus = (
             </div>
             <div className="status-details">
               <div className="status-detail">
-                <span className="status-detail-title">{checkoutStrings.CAR}</span>
+                <span className="status-detail-title">{checkoutStrings.DRESS}</span>
                 <div className="status-detail-value">
-                  <span>{(booking.car as bookcarsTypes.Car).name}</span>
+                  <span>{(booking.dress as bookcarsTypes.Dress).name}</span>
                 </div>
               </div>
               <div className="status-detail">

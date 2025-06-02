@@ -62,8 +62,8 @@ const UpdateUser = () => {
   const [licenseRequired, setLicenseRequired] = useState(true)
   const [minimumRentalDays, setMinimumRentalDays] = useState('')
   const [priceChangeRate, setPriceChangeRate] = useState('')
-  const [supplierCarLimit, setSupplierCarLimit] = useState('')
-  const [notifyAdminOnNewCar, setNotifyAdminOnNewCar] = useState(false)
+  const [supplierDressLimit, setSupplierDressLimit] = useState('')
+  const [notifyAdminOnNewDress, setNotifyAdminOnNewDress] = useState(false)
   const [blacklisted, setBlacklisted] = useState(false)
 
   const validateFullName = async (_fullName: string, strict = true) => {
@@ -121,7 +121,7 @@ const UpdateUser = () => {
   }
 
   const handleSupplierCarLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupplierCarLimit(e.target.value)
+    setSupplierDressLimit(e.target.value)
   }
 
   const handleMinimumRentalDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,8 +256,8 @@ const UpdateUser = () => {
               setLicenseRequired(_user.licenseRequired || false)
               setMinimumRentalDays(_user.minimumRentalDays?.toString() || '')
               setPriceChangeRate(_user.priceChangeRate?.toString() || '')
-              setSupplierCarLimit(_user.supplierCarLimit?.toString() || '')
-              setNotifyAdminOnNewCar(!!_user.notifyAdminOnNewCar)
+              setSupplierDressLimit(_user.supplierDressLimit?.toString() || '')
+              setNotifyAdminOnNewDress(!!_user.notifyAdminOnNewDress)
               setBlacklisted(!!_user.blacklisted)
               setVisible(true)
               setLoading(false)
@@ -329,8 +329,8 @@ const UpdateUser = () => {
         birthDate,
         minimumRentalDays: minimumRentalDays ? Number(minimumRentalDays) : undefined,
         priceChangeRate: priceChangeRate ? Number(priceChangeRate) : undefined,
-        supplierCarLimit: supplierCarLimit ? Number(supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
+        supplierDressLimit: supplierDressLimit ? Number(supplierDressLimit) : undefined,
+        notifyAdminOnNewDress: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewDress : undefined,
         blacklisted,
       }
 
@@ -487,10 +487,10 @@ const UpdateUser = () => {
                     <FormControlLabel
                       control={(
                         <Switch
-                          checked={notifyAdminOnNewCar}
+                          checked={notifyAdminOnNewDress}
                           disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                           onChange={(e) => {
-                            setNotifyAdminOnNewCar(e.target.checked)
+                            setNotifyAdminOnNewDress(e.target.checked)
                           }}
                           color="primary"
                         />
@@ -506,7 +506,7 @@ const UpdateUser = () => {
                       onChange={handleSupplierCarLimitChange}
                       autoComplete="off"
                       slotProps={{ input: { inputMode: 'numeric', pattern: '^\\d+$' } }}
-                      value={supplierCarLimit}
+                      value={supplierDressLimit}
                       disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                     />
                   </FormControl>

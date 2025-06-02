@@ -19,6 +19,7 @@ export enum DressType {
   Evening = 'evening',
   Cocktail = 'cocktail',
   Prom = 'prom',
+  Other = 'other',
   Unknown = 'unknown',
 }
 
@@ -40,6 +41,12 @@ export enum DressAccessories {
 }
 
 export enum DressSize {
+  XS = 'xs',
+  S = 's',
+  M = 'm',
+  L = 'l',
+  XL = 'xl',
+  XXL = 'xxl',
   ExtraSmall = 'extraSmall',
   Small = 'small',
   Medium = 'medium',
@@ -55,6 +62,13 @@ export enum DressMaterial {
   Lace = 'lace',
   Satin = 'satin',
   Chiffon = 'chiffon',
+}
+
+export enum DressStyle {
+  Traditional = 'traditional',
+  Modern = 'modern',
+  Designer = 'designer',
+  Vintage = 'vintage',
 }
 
 export enum RentalTerm {

@@ -228,7 +228,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                     <div className="message-container">
                       <div className="message">{row.message}</div>
                       <div className="actions">
-                        {(row.booking || row.car) && (
+                        {(row.booking || row.dress) && (
                           <Tooltip title={strings.VIEW}>
                             <IconButton
                               onClick={async () => {
@@ -239,7 +239,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                                   }
 
                                   const __navigate__ = () => {
-                                    const url = row.booking ? `/update-booking?b=${row.booking}` : `/update-car?cr=${row.car}`
+                                    const url = row.booking ? `/update-booking?b=${row.booking}` : `/update-dress?dr=${row.dress}`
                                     navigate(url)
                                   }
 
