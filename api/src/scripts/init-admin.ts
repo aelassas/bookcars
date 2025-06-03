@@ -10,7 +10,7 @@ import * as bookcarsTypes from ':bookcars-types'
 const initAdmin = async () => {
   try {
     // Connect to MongoDB
-    await mongoose.connect(env.DB_URI, { ssl: env.DB_SSL, sslCA: env.DB_SSL_CA, sslCert: env.DB_SSL_CERT })
+    await mongoose.connect(env.DB_URI)
     console.log('Connected to MongoDB')
 
     // Check if admin user already exists

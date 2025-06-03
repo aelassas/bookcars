@@ -122,24 +122,24 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
   }
   const from = booking.from.toLocaleString(locale, options)
   const to = booking.to.toLocaleString(locale, options)
-  const dress = await Dress.findById(booking.dress).populate<{ supplier: env.User }>('supplier')
+  const dress = await Dress.findById(booking.dress).populate('supplier')
   if (!dress) {
     logger.info(`Dress ${booking.dress} not found`)
     return false
   }
-  const pickupLocation = await Location.findById(booking.pickupLocation).populate<{ values: env.LocationValue[] }>('values')
+  const pickupLocation = await Location.findById(booking.pickupLocation).populate('values')
   if (!pickupLocation) {
     logger.info(`Pick-up location ${booking.pickupLocation} not found`)
     return false
   }
 
-  const pickupLocationName = pickupLocation.values.filter((value) => value.language === language)[0].value
-  const dropOffLocation = await Location.findById(booking.dropOffLocation).populate<{ values: env.LocationValue[] }>('values')
+  const pickupLocationName = (pickupLocation.values as unknown as env.LocationValue[]).filter((value) => value.language === language)[0].value
+  const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
   if (!dropOffLocation) {
     logger.info(`Drop-off location ${booking.pickupLocation} not found`)
     return false
   }
-  const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
+  const dropOffLocationName = (dropOffLocation.values as unknown as env.LocationValue[]).filter((value) => value.language === language)[0].value
 
   let contractFile: string | null = null
   if (supplier.contracts && supplier.contracts.length > 0) {
@@ -158,11 +158,11 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
         ${i18n.t('HELLO')}${user.fullName},<br><br>
         ${!payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
         + '<br><br>' : ''}
-        ${i18n.t('BOOKING_CONFIRMED_PART3')}${dress.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
+        ${i18n.t('BOOKING_CONFIRMED_PART3')}${(dress.supplier as unknown as env.User).fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
       + `${from} ${i18n.t('BOOKING_CONFIRMED_PART6')}`
       + `${dress.name}${i18n.t('BOOKING_CONFIRMED_PART7')}`
       + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART8')}<br><br>`
-      + `${i18n.t('BOOKING_CONFIRMED_PART9')}${dress.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
+      + `${i18n.t('BOOKING_CONFIRMED_PART9')}${(dress.supplier as unknown as env.User).fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
       + `${to} ${i18n.t('BOOKING_CONFIRMED_PART12')}`
       + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART13')}<br><br>${i18n.t('BOOKING_CONFIRMED_PART14')}${env.FRONTEND_HOST}<br><br>
         ${i18n.t('REGARDS')}<br>

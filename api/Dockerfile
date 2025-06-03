@@ -3,6 +3,7 @@
 FROM node:lts-alpine
 WORKDIR /bookdress/api
 COPY ./api ./
+COPY ./api/.env.docker .env
 COPY ./packages /bookdress/packages
 RUN npm install
 RUN npm run build
@@ -13,7 +14,7 @@ RUN echo '#!/bin/sh' > /startup.sh && \
     echo 'echo "Waiting for MongoDB to be ready..."' >> /startup.sh && \
     echo 'sleep 10' >> /startup.sh && \
     echo 'echo "Initializing admin user..."' >> /startup.sh && \
-    echo 'node dist/scripts/init-admin.js || echo "Admin initialization failed or already exists"' >> /startup.sh && \
+    echo 'node dist/src/scripts/init-admin.js || echo "Admin initialization failed or already exists"' >> /startup.sh && \
     echo 'echo "Starting API server..."' >> /startup.sh && \
     echo 'npm start' >> /startup.sh && \
     chmod +x /startup.sh
