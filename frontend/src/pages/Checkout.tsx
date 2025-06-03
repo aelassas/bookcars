@@ -850,7 +850,7 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    {(!dress.supplier.payLater || !payLater) && (
+                    {(!dress.supplier.payLater || !payLater) && env.PAYMENT_GATEWAY && (
                       env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe
                         ? (
                           clientSecret && (
@@ -907,10 +907,20 @@ const Checkout = () => {
                           </div>
                         ) : null
                     )}
+
+                    {/* Show message when payment is disabled */}
+                    {!env.PAYMENT_GATEWAY && (
+                      <div className="payment-disabled-message">
+                        <p style={{ textAlign: 'center', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', margin: '20px 0' }}>
+                          💳 Payment processing is currently disabled. This booking will be processed manually by the admin.
+                        </p>
+                      </div>
+                    )}
                     <div className="checkout-buttons">
                       {(
                         (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe && !clientSecret)
                         || (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal && !payPalInit)
+                        || !env.PAYMENT_GATEWAY
                         || payLater) && (
                           <Button
                             type="submit"

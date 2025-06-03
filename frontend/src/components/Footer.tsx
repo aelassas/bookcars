@@ -63,19 +63,21 @@ const Footer = () => {
           </div>
         </div>
       </section>
-      <section className="payment">
-        <div
-          className="payment-text"
-          style={{ margin: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? '0 20px' : '-25px 10px 0 0' }}
-        >
-          {strings.SECURE_PAYMENT}
-        </div>
-        <img
-          src={SecurePayment}
-          alt=""
-          style={{ height: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? 64 : 'auto' }}
-        />
-      </section>
+      {env.PAYMENT_GATEWAY && (
+        <section className="payment">
+          <div
+            className="payment-text"
+            style={{ margin: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? '0 20px' : '-25px 10px 0 0' }}
+          >
+            {strings.SECURE_PAYMENT}
+          </div>
+          <img
+            src={SecurePayment}
+            alt=""
+            style={{ height: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal ? 64 : 'auto' }}
+          />
+        </section>
+      )}
       <section className="copyright">
         <div className="copyright">
           <span>{strings.COPYRIGHT_PART1}</span>

@@ -48,6 +48,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
+    env_file: ./backend/.env.docker
     depends_on:
       - bc-api
     environment:
@@ -62,6 +63,7 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+    env_file: ./frontend/.env.docker
     depends_on:
       - bc-api
     environment:

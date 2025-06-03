@@ -66,6 +66,10 @@ const CURRENCIES: Currency[] = [
 const getPaymentGateway = () => {
   const paymentGateway = String(import.meta.env.VITE_BC_PAYMENT_GATEWAY || 'stripe').toUpperCase()
 
+  if (paymentGateway === 'NONE' || paymentGateway === 'DISABLED') {
+    return null // No payment gateway
+  }
+
   if (paymentGateway === 'PAYPAL') {
     return bookcarsTypes.PaymentGateway.PayPal
   }

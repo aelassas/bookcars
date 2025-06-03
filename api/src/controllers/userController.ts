@@ -53,7 +53,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
   try {
     body.email = helper.trim(body.email, ' ')
     body.active = true
-    body.verified = false
+    body.verified = true  // Auto-verify users to skip email verification
     body.blacklisted = false
     body.type = userType
 
@@ -76,53 +76,14 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
         await user.save()
       }
     }
+
+    // Skip email verification for development/demo purposes
+    logger.info(`[user.signup] User ${user.email} created and auto-verified`)
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[user.signup] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
     res.status(400).send(i18n.t('DB_ERROR') + err)
     return
-  }
-
-  //
-  // Send confirmation email
-  //
-  try {
-    // generate token and save
-    const token = new Token({ user: user._id, token: helper.generateToken() })
-
-    await token.save()
-
-    // Send email
-    i18n.locale = user.language
-
-    const activationLink = `http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}`
-
-    const mailOptions: nodemailer.SendMailOptions = {
-      from: env.SMTP_FROM,
-      to: user.email,
-      subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-      html:
-        `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
-          <p style="font-size: 16px; color: #555;">
-            ${i18n.t('HELLO')} ${user.fullName},<br><br>
-            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-            <a href="${activationLink}" target="_blank">${activationLink}</a><br><br>
-            ${i18n.t('REGARDS')}<br>
-          </p>
-        </div>`,
-    }
-    await mailHelper.sendMail(mailOptions)
-    res.sendStatus(200)
-  } catch (err) {
-    try {
-      //
-      // Delete user in case of smtp failure
-      //
-      await user.deleteOne()
-    } catch (deleteErr) {
-      logger.error(`[user.signup] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, deleteErr)
-    }
-    logger.error(`[user.signup] ${i18n.t('SMTP_ERROR')}`, err)
-    res.status(400).send(i18n.t('SMTP_ERROR') + err)
   }
 }
 
