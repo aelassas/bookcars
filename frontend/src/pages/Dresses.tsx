@@ -16,7 +16,7 @@ import DressTypeFilter from '../components/DressTypeFilter'
 import DressSizeFilter from '../components/DressSizeFilter'
 import DressStyleFilter from '../components/DressStyleFilter'
 import DepositFilter from '../components/DepositFilter'
-import AvailabilityFilter from '../components/AvailabilityFilter'
+// import AvailabilityFilter from '../components/AvailabilityFilter'
 import RentalsCountFilter from '../components/RentalsCountFilter'
 import SearchBox from '../components/SearchBox'
 import * as helper from '../common/helper'
@@ -30,7 +30,7 @@ const Dresses: React.FC = () => {
   const [dressType, setDressType] = useState('')
   const [dressSize, setDressSize] = useState('')
   const [dressStyle, setDressStyle] = useState('')
-  const [deposit, setDeposit] = useState('')
+  const [deposit, setDeposit] = useState<number>(0)
   const [availability, setAvailability] = useState('')
   const [rentalsCount, setRentalsCount] = useState('')
   const [keyword, setKeyword] = useState('')
@@ -59,7 +59,7 @@ const Dresses: React.FC = () => {
     setReload(true)
   }
 
-  const handleDepositFilterChange = (value: string) => {
+  const handleDepositFilterChange = (value: number) => {
     setDeposit(value)
     setReload(true)
   }
@@ -79,7 +79,7 @@ const Dresses: React.FC = () => {
     setReload(true)
   }
 
-  const handleDressListLoad = (data: any[]) => {
+  const handleDressListLoad = (_data: any[]) => {
     setLoading(false)
     if (reload) {
       setReload(false)
@@ -114,8 +114,8 @@ const Dresses: React.FC = () => {
             )}
           </Box>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={3}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
+            <Box sx={{ width: { xs: '100%', md: '25%' } }}>
               <Paper sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom>
                   {commonStrings.FILTERS}
@@ -125,7 +125,7 @@ const Dresses: React.FC = () => {
                 <Box sx={{ mb: 2 }}>
                   <SearchBox
                     placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                    onSubmit={handleSearch}
+                    onChange={handleSearch}
                     className="dress-search"
                   />
                 </Box>
@@ -150,15 +150,15 @@ const Dresses: React.FC = () => {
                   className="dress-filter"
                   onChange={handleRentalsCountFilterChange}
                 />
-                {admin && (
+                {/* {admin && (
                   <AvailabilityFilter
                     className="dress-filter"
                     onChange={handleAvailabilityFilterChange}
                   />
-                )}
+                )} */}
               </Paper>
-            </Grid>
-            <Grid item xs={12} md={9}>
+            </Box>
+            <Box sx={{ width: { xs: '100%', md: '75%' } }}>
               <DressList
                 user={user}
                 suppliers={suppliers}
@@ -173,8 +173,8 @@ const Dresses: React.FC = () => {
                 onLoad={handleDressListLoad}
                 onDelete={handleDressDelete}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Container>
       )}
     </Layout>

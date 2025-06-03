@@ -41,10 +41,10 @@ interface BookingListProps {
   suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter | null
-  car?: string
+  dress?: string
   user?: bookcarsTypes.User
   hideDates?: boolean
-  hideCarColumn?: boolean
+  hideDressColumn?: boolean
   hideSupplierColumn?: boolean
   language?: string
   loading?: boolean
@@ -56,10 +56,10 @@ const BookingList = ({
   suppliers: bookingSuppliers,
   statuses: bookingStatuses,
   filter: bookingFilter,
-  car: bookingCar,
+  dress: bookingDress,
   user: bookingUser,
   hideDates,
-  hideCarColumn,
+  hideDressColumn,
   hideSupplierColumn,
   language,
   checkboxSelection,
@@ -78,7 +78,7 @@ const BookingList = ({
   const [suppliers, setSuppliers] = useState<string[] | undefined>(bookingSuppliers)
   const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
-  const [car, setCar] = useState<string>(bookingCar || '')
+  const [dress, setDress] = useState<string>(bookingDress || '')
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: env.BOOKINGS_PAGE_SIZE,
     page: 0,
@@ -95,7 +95,7 @@ const BookingList = ({
     }
   }, [paginationModel])
 
-  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _car?: string) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User, _dress?: string) => {
     try {
       const _pageSize = env.isMobile ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
@@ -106,7 +106,7 @@ const BookingList = ({
           suppliers,
           statuses,
           filter: filter || undefined,
-          dress: _car || car,
+          dress: _dress || dress,
           user: (_user && _user._id) || undefined,
         }
 
@@ -168,18 +168,18 @@ const BookingList = ({
   }, [bookingFilter])
 
   useEffect(() => {
-    setCar(bookingCar || '')
+    setDress(bookingDress || '')
 
-    if (bookingCar) {
-      fetchData(page, user, bookingCar)
+    if (bookingDress) {
+      fetchData(page, user, bookingDress)
     }
-  }, [bookingCar]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bookingDress]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setUser(bookingUser)
 
     if(bookingUser){
-      fetchData(page, bookingUser, car)
+      fetchData(page, bookingUser, dress)
     }
   }, [bookingUser]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -283,7 +283,7 @@ const BookingList = ({
       _columns.splice(0, 2)
     }
 
-    if (!hideCarColumn) {
+    if (!hideDressColumn) {
       _columns.unshift({
         field: 'dress',
         headerName: strings.DRESS,
@@ -424,9 +424,9 @@ const BookingList = ({
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
-                      <div className="car-supplier">
+                      <div className="dress-supplier">
                         <img src={bookcarsHelper.joinURL(env.CDN_USERS, bookingSupplier.avatar)} alt={bookingSupplier.fullName} />
-                        <span className="car-supplier-name">{bookingSupplier.fullName}</span>
+                        <span className="dress-supplier-name">{bookingSupplier.fullName}</span>
                       </div>
                     </div>
                   </div>

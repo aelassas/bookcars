@@ -50,7 +50,7 @@ div.booking div.col-2 div.col-2-header span.price-day {
 }
 
 @media only screen and (width <=1270px) {
-  div.booking div.col-2 .car {
+  div.booking div.col-2 .dress {
     display: none;
   }
 }

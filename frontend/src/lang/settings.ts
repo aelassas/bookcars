@@ -17,6 +17,11 @@ const strings = new LocalizedStrings({
     NETWORK_SETTINGS: 'Configuración de red',
     SETTINGS_EMAIL_NOTIFICATIONS: 'Habilitar notificaciones por correo electrónico',
   },
+  ar: {
+    SETTINGS_UPDATED: 'تم تحديث الإعدادات بنجاح.',
+    NETWORK_SETTINGS: 'إعدادات الشبكة',
+    SETTINGS_EMAIL_NOTIFICATIONS: 'تفعيل إشعارات البريد الإلكتروني',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -448,6 +448,16 @@ export const admin = (user?: bookcarsTypes.User | null): boolean => (user && use
 export const supplier = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Supplier) || false
 
 /**
+ * Get current user from localStorage.
+ *
+ * @returns {bookcarsTypes.User | null}
+ */
+export const getUser = (): bookcarsTypes.User | null => {
+  const user = localStorage.getItem('bc-user')
+  return user ? JSON.parse(user) : null
+}
+
+/**
  * Get dress range label.
  *
  * @param {string} range

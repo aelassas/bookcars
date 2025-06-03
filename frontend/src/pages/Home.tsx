@@ -41,9 +41,7 @@ import Map from '@/components/Map'
 import Footer from '@/components/Footer'
 import FaqList from '@/components/FaqList'
 
-import Mini from '@/assets/img/mini.png'
-import Midi from '@/assets/img/midi.png'
-import Maxi from '@/assets/img/maxi.png'
+
 
 import '@/assets/css/home.css'
 
@@ -58,30 +56,19 @@ const Home = () => {
   const [tabValue, setTabValue] = useState(0)
   const [openLocationSearchFormDialog, setOpenLocationSearchFormDialog] = useState(false)
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])
-  const [ranges, setRanges] = useState([bookcarsTypes.CarRange.Mini, bookcarsTypes.CarRange.Midi])
-  const [openRangeSearchFormDialog, setOpenRangeSearchFormDialog] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [miniPricePhr, setMiniPricePhr] = useState(2.5)
-  const [miniPricePday, setMiniPricePday] = useState(40)
   const [midiPricePhr, setMidiPricePhr] = useState(3.5)
-  const [midiPricePday, setMidiPricePday] = useState(50)
   const [maxiPricePhr, setMaxiPricePhr] = useState(4.5)
-  const [maxiPricePday, setMaxiPricePday] = useState(80)
 
   useEffect(() => {
     const init = async () => {
       const _miniPricePhr = await PaymentService.convertPrice(miniPricePhr)
       setMiniPricePhr(_miniPricePhr)
-      const _miniPricePday = await PaymentService.convertPrice(miniPricePday)
-      setMiniPricePday(_miniPricePday)
       const _midiPricePhr = await PaymentService.convertPrice(midiPricePhr)
       setMidiPricePhr(_midiPricePhr)
-      const _midiPricePday = await PaymentService.convertPrice(midiPricePday)
-      setMidiPricePday(_midiPricePday)
       const _maxiPricePhr = await PaymentService.convertPrice(maxiPricePhr)
       setMaxiPricePhr(_maxiPricePhr)
-      const _maxiPricePday = await PaymentService.convertPrice(maxiPricePday)
-      setMaxiPricePday(_maxiPricePday)
     }
 
     init()
@@ -332,167 +319,83 @@ const Home = () => {
           </div>
         )}
 
-        <div className="car-size">
-          <h1>{strings.CAR_SIZE_TITLE}</h1>
-          <p>{strings.CAR_SIZE_TEXT}</p>
+        <div className="dress-types">
+          <h1>{strings.DRESS_TYPES_TITLE}</h1>
+          <p>{strings.DRESS_TYPES_TEXT}</p>
           <div className="boxes">
             <div className="box">
-              <div className="box-img">
-                <img alt="Mini" src={Mini} />
-              </div>
               <div className="box-content">
-                {/* <FormControlLabel
-                  control={(
-                    <Checkbox
-                      defaultChecked
-                      onChange={(e) => {
-                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
-                        if (e.target.checked) {
-                          _ranges.push(bookcarsTypes.CarRange.Mini)
-                        } else {
-                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Mini), 1)
-                        }
-                        setRanges(_ranges)
-                      }}
-                    />
-                  )}
-                  label={strings.MINI}
-                /> */}
-                <span>{carsStrings.CAR_RANGE_MINI}</span>
+                <span>Wedding Dresses</span>
+                <p>Perfect for your special day</p>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(miniPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
+                    <span className="unit"> · per day</span>
                   </li>
                 </ul>
               </div>
-              <div className="car-size-action">
+              <div className="dress-type-action">
                 <Button
                   variant="contained"
-                  className="btn-primary btn-car-size"
-                  aria-label="Search for a car"
-                  disabled={ranges.length === 0}
+                  className="btn-primary btn-dress-type"
+                  aria-label="Search for wedding dresses"
                   onClick={() => {
-                    setRanges([bookcarsTypes.CarRange.Mini])
-                    setOpenRangeSearchFormDialog(true)
+                    navigate('/search?type=Wedding')
                   }}
                 >
-                  {strings.SEARCH_FOR_CAR}
+                  {strings.SEARCH_FOR_DRESS}
                 </Button>
               </div>
             </div>
             <div className="box">
-              <div className="box-img">
-                <img alt="Midi" src={Midi} />
-              </div>
               <div className="box-content">
-                {/* <FormControlLabel
-                  control={(
-                    <Checkbox
-                      defaultChecked
-                      onChange={(e) => {
-                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
-                        if (e.target.checked) {
-                          _ranges.push(bookcarsTypes.CarRange.Midi)
-                        } else {
-                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Midi), 1)
-                        }
-                        setRanges(_ranges)
-                      }}
-                    />
-                  )}
-                  label={strings.MIDI}
-                /> */}
-                <span>{carsStrings.CAR_RANGE_MIDI}</span>
+                <span>Evening Dresses</span>
+                <p>Elegant for special occasions</p>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(midiPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
+                    <span className="unit"> · per day</span>
                   </li>
                 </ul>
               </div>
-              <div className="car-size-action">
+              <div className="dress-type-action">
                 <Button
                   variant="contained"
-                  className="btn-primary btn-car-size"
-                  aria-label="Search for a car"
-                  disabled={ranges.length === 0}
+                  className="btn-primary btn-dress-type"
+                  aria-label="Search for evening dresses"
                   onClick={() => {
-                    setRanges([bookcarsTypes.CarRange.Midi])
-                    setOpenRangeSearchFormDialog(true)
+                    navigate('/search?type=Evening')
                   }}
                 >
-                  {strings.SEARCH_FOR_CAR}
+                  {strings.SEARCH_FOR_DRESS}
                 </Button>
               </div>
             </div>
             <div className="box">
-              <div className="box-img">
-                <img alt="Maxi" src={Maxi} />
-              </div>
               <div className="box-content">
-                {/* <FormControlLabel
-                  control={(
-                    <Checkbox
-                      onChange={(e) => {
-                        const _ranges = bookcarsHelper.cloneArray(ranges) || []
-                        if (e.target.checked) {
-                          _ranges.push(bookcarsTypes.CarRange.Maxi)
-                        } else {
-                          _ranges.splice(_ranges.findIndex((r) => r === bookcarsTypes.CarRange.Maxi), 1)
-                        }
-                        setRanges(_ranges)
-                      }}
-                    />
-                  )}
-                  label={strings.MAXI}
-                /> */}
-                <span>{carsStrings.CAR_RANGE_MAXI}</span>
+                <span>Cocktail Dresses</span>
+                <p>Perfect for parties and events</p>
                 <ul>
                   <li>
                     <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(maxiPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
+                    <span className="unit"> · per day</span>
                   </li>
                 </ul>
               </div>
-              <div className="car-size-action">
+              <div className="dress-type-action">
                 <Button
                   variant="contained"
-                  className="btn-primary btn-car-size"
-                  aria-label="Search for a car"
-                  disabled={ranges.length === 0}
+                  className="btn-primary btn-dress-type"
+                  aria-label="Search for cocktail dresses"
                   onClick={() => {
-                    setRanges([bookcarsTypes.CarRange.Maxi])
-                    setOpenRangeSearchFormDialog(true)
+                    navigate('/search?type=Cocktail')
                   }}
                 >
-                  {strings.SEARCH_FOR_CAR}
+                  {strings.SEARCH_FOR_DRESS}
                 </Button>
               </div>
             </div>
           </div>
-          {/* <Button
-            variant="contained"
-            className="btn-primary btn-home"
-            disabled={ranges.length === 0}
-            onClick={() => {
-              setOpenRangeSearchFormDialog(true)
-            }}
-          >
-            {strings.SEARCH_FOR_CAR}
-          </Button> */}
         </div>
         <div className="faq">
           <FaqList />
@@ -571,7 +474,6 @@ const Home = () => {
       >
         <DialogContent className="search-dialog-content">
           <SearchForm
-            ranges={bookcarsHelper.getAllRanges()}
             pickupLocation={pickupLocation}
           // onCancel={() => {
           //   setOpenLocationSearchFormDialog(false)
@@ -580,23 +482,7 @@ const Home = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        // fullWidth={env.isMobile}
-        maxWidth={false}
-        open={openRangeSearchFormDialog}
-        onClose={() => {
-          setOpenRangeSearchFormDialog(false)
-        }}
-      >
-        <DialogContent className="search-dialog-content">
-          <SearchForm
-            ranges={ranges}
-          // onCancel={() => {
-          //   setOpenRangeSearchFormDialog(false)
-          // }}
-          />
-        </DialogContent>
-      </Dialog>
+
 
       <Footer />
     </Layout>

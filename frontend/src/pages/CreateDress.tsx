@@ -5,7 +5,6 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   Paper,
   FormControlLabel,
   Switch,
@@ -14,6 +13,7 @@ import {
   Alert
 } from '@mui/material'
 import { Dress } from ':bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as DressService from '../services/DressService'
 import { strings } from '../lang/dresses'
 import { strings as commonStrings } from '../lang/common'
@@ -31,8 +31,8 @@ const CreateDress: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<Partial<Dress>>({
     name: '',
-    type: '',
-    size: '',
+    type: undefined,
+    size: undefined,
     style: '',
     color: '',
     price: 0,
@@ -168,120 +168,130 @@ const CreateDress: React.FC = () => {
           </Typography>
 
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-                  <input
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    id="dress-image-upload"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                  <label htmlFor="dress-image-upload">
-                    <Button variant="outlined" component="span" sx={{ mb: 2 }}>
-                      {commonStrings.UPLOAD_IMAGE}
-                    </Button>
-                  </label>
-                  {imagePreview && (
-                    <Box sx={{ mt: 2 }}>
-                      <img
-                        src={imagePreview}
-                        alt="Dress preview"
-                        style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
-                      />
-                    </Box>
-                  )}
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="name"
-                  label={strings.NAME}
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="dress-image-upload"
+                  type="file"
+                  onChange={handleImageChange}
                 />
-              </Grid>
+                <label htmlFor="dress-image-upload">
+                  <Button variant="outlined" component="span" sx={{ mb: 2 }}>
+                    {commonStrings.UPLOAD_IMAGE}
+                  </Button>
+                </label>
+                {imagePreview && (
+                  <Box sx={{ mt: 2 }}>
+                    <img
+                      src={imagePreview}
+                      alt="Dress preview"
+                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                    />
+                  </Box>
+                )}
+              </Box>
 
-              {helper.admin(user) && (
-                <Grid item xs={12} sm={6}>
-                  <SupplierSelectList
-                    label={commonStrings.SUPPLIER}
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <TextField
+                    name="name"
+                    label={strings.NAME}
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    fullWidth
                     required
-                    onChange={handleSupplierChange}
                   />
-                </Grid>
-              )}
+                </Box>
 
-              <Grid item xs={12} sm={6}>
-                <DressTypeList
-                  label={strings.DRESS_TYPE}
-                  required
-                  onChange={handleTypeChange}
-                />
-              </Grid>
+                {helper.admin(user) && (
+                  <Box sx={{ flex: 1, minWidth: '250px' }}>
+                    <SupplierSelectList
+                      label={commonStrings.SUPPLIER}
+                      required
+                      onChange={handleSupplierChange}
+                    />
+                  </Box>
+                )}
+              </Box>
 
-              <Grid item xs={12} sm={6}>
-                <DressSizeList
-                  label={strings.DRESS_SIZE}
-                  required
-                  onChange={handleSizeChange}
-                />
-              </Grid>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <DressTypeList
+                    label={strings.DRESS_TYPE}
+                    required
+                    onChange={handleTypeChange}
+                  />
+                </Box>
 
-              <Grid item xs={12} sm={6}>
-                <DressStyleList
-                  label={strings.DRESS_STYLE}
-                  required
-                  onChange={handleStyleChange}
-                />
-              </Grid>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <DressSizeList
+                    label={strings.DRESS_SIZE}
+                    required
+                    onChange={handleSizeChange}
+                  />
+                </Box>
+              </Box>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="color"
-                  label={strings.COLOR}
-                  value={formData.color}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <DressStyleList
+                    label={strings.DRESS_STYLE}
+                    required
+                    onChange={handleStyleChange}
+                  />
+                </Box>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="price"
-                  label={strings.PRICE}
-                  type="number"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                  InputProps={{
-                    startAdornment: <span>$</span>
-                  }}
-                />
-              </Grid>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <TextField
+                    name="color"
+                    label={strings.COLOR}
+                    value={formData.color}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                  />
+                </Box>
+              </Box>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="deposit"
-                  label={strings.DEPOSIT}
-                  type="number"
-                  value={formData.deposit}
-                  onChange={handleInputChange}
-                  fullWidth
-                  required
-                  InputProps={{
-                    startAdornment: <span>$</span>
-                  }}
-                />
-              </Grid>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <TextField
+                    name="price"
+                    label={strings.PRICE}
+                    type="number"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                    slotProps={{
+                      input: {
+                        startAdornment: <span>$</span>
+                      }
+                    }}
+                  />
+                </Box>
 
-              <Grid item xs={12} sm={6}>
+                <Box sx={{ flex: 1, minWidth: '250px' }}>
+                  <TextField
+                    name="deposit"
+                    label={strings.DEPOSIT}
+                    type="number"
+                    value={formData.deposit}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                    slotProps={{
+                      input: {
+                        startAdornment: <span>$</span>
+                      }
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              <Box sx={{ flex: 1, minWidth: '250px' }}>
                 <TextField
                   name="minimumAge"
                   label={strings.MINIMUM_AGE}
@@ -290,22 +300,22 @@ const CreateDress: React.FC = () => {
                   onChange={handleInputChange}
                   fullWidth
                   required
-                  InputProps={{
-                    inputProps: { min: env.MINIMUM_AGE }
+                  slotProps={{
+                    htmlInput: { min: env.MINIMUM_AGE }
                   }}
                 />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12}>
+              <Box>
                 <LocationSelectList
                   label={strings.LOCATIONS}
                   multiple
                   required
                   onChange={handleLocationsChange}
                 />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12}>
+              <Box>
                 <FormControlLabel
                   control={
                     <Switch
@@ -317,28 +327,26 @@ const CreateDress: React.FC = () => {
                   }
                   label={strings.AVAILABLE}
                 />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="flex-end" gap={2}>
-                  <Button
-                    variant="outlined"
-                    onClick={() => navigate('/dresses')}
-                    disabled={loading}
-                  >
-                    {commonStrings.CANCEL}
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={loading}
-                  >
-                    {commonStrings.CREATE}
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
+              <Box display="flex" justifyContent="flex-end" gap={2}>
+                <Button
+                  variant="outlined"
+                  onClick={() => navigate('/dresses')}
+                  disabled={loading}
+                >
+                  {commonStrings.CANCEL}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={loading}
+                >
+                  {commonStrings.CREATE}
+                </Button>
+              </Box>
+            </Box>
           </form>
         </Paper>
       </Container>

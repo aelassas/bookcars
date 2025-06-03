@@ -26,7 +26,7 @@ services:
       - mongo
 
   bc-api:
-    build: 
+    build:
       context: .
       dockerfile: ./api/Dockerfile
     env_file: ./api/.env.docker
@@ -35,30 +35,45 @@ services:
       - 4002:4002
     depends_on:
       - mongo
+    environment:
+      - TZ=Asia/Jerusalem
+      - BC_DEFAULT_LANGUAGE=ar
+      - BC_BASE_CURRENCY=ILS
+      - BC_TIMEZONE=Asia/Jerusalem
     volumes:
-      - cdn:/var/www/cdn/bookcars
-      - api_logs:/bookcars/api/logs
+      - cdn:/var/www/cdn/bookdresses
+      - api_logs:/bookdresses/api/logs
 
   bc-backend:
-    build: 
+    build:
       context: .
       dockerfile: ./backend/Dockerfile
     depends_on:
       - bc-api
+    environment:
+      - TZ=Asia/Jerusalem
+      - BC_DEFAULT_LANGUAGE=ar
+      - BC_BASE_CURRENCY=ILS
+      - BC_TIMEZONE=Asia/Jerusalem
     ports:
       - 3001:3001
 
   bc-frontend:
-    build: 
+    build:
       context: .
       dockerfile: ./frontend/Dockerfile
     depends_on:
       - bc-api
+    environment:
+      - TZ=Asia/Jerusalem
+      - BC_DEFAULT_LANGUAGE=ar
+      - BC_BASE_CURRENCY=ILS
+      - BC_TIMEZONE=Asia/Jerusalem
     ports:
       - 8080:80
       - 8443:443
     volumes:
-      - cdn:/var/www/cdn/bookcars
+      - cdn:/var/www/cdn/bookdresses
 
 volumes:
   cdn:

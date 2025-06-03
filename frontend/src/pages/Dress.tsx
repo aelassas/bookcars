@@ -71,7 +71,7 @@ const Dress: React.FC = () => {
     fetchDress()
     
     // Set up booking list filters
-    setSuppliers(currentUser.type === 'admin' ? [] : [currentUser._id])
+    setSuppliers(currentUser?.type === 'admin' ? [] : [currentUser?._id || ''])
     setStatuses(helper.getBookingStatuses().map(status => status.value))
   }, [location.search, navigate])
 
@@ -105,15 +105,15 @@ const Dress: React.FC = () => {
     <Layout>
       <Container maxWidth="lg">
         <Paper sx={{ p: 3, mb: 3 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <img 
-                src={dress.image ? helper.joinURL(env.CDN_DRESSES, dress.image) : '/placeholder.jpg'} 
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
+            <Box sx={{ width: { xs: '100%', md: '33.33%' } }}>
+              <img
+                src={dress.image ? helper.joinURL(env.CDN_DRESSES, dress.image) : '/placeholder.jpg'}
                 alt={dress.name}
                 style={{ width: '100%', borderRadius: 8 }}
               />
-            </Grid>
-            <Grid item xs={12} md={8}>
+            </Box>
+            <Box sx={{ width: { xs: '100%', md: '66.67%' } }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <Typography variant="h4" gutterBottom>
                   {dress.name}
@@ -212,8 +212,8 @@ const Dress: React.FC = () => {
                   </Box>
                 </Box>
               )}
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Paper>
 
         <Typography variant="h5" gutterBottom>
@@ -221,8 +221,7 @@ const Dress: React.FC = () => {
         </Typography>
         
         <BookingList
-          containerClassName="dress-bookings"
-          loggedUser={user}
+          user={user}
           suppliers={suppliers}
           statuses={statuses}
           dress={dress._id}

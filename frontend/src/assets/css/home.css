@@ -248,7 +248,7 @@ div.home div.destinations div.tabs {
   width: 100%;
 }
 
-div.home div.car-size {
+div.home div.dress-types {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -257,13 +257,13 @@ div.home div.car-size {
   padding: 50px 0;
 }
 
-div.home div.car-size h1 {
+div.home div.dress-types h1 {
   font-weight: 500;
   padding: 0 10px;
   text-align: center;
 }
 
-div.home div.car-size p {
+div.home div.dress-types p {
   max-width: 614px;
   text-align: center;
   line-height: 30px;
@@ -272,54 +272,54 @@ div.home div.car-size p {
   padding: 0 20px;
 }
 
-div.home div.car-size div.boxes {
+div.home div.dress-types div.boxes {
   margin: 30px 0;
 }
 
-div.home div.car-size div.boxes div.box {
+div.home div.dress-types div.boxes div.box {
   width: 326px;
   height: 278px;
   background-color: #fff;
 }
 
-div.home div.car-size div.boxes div.box div.box-img {
+div.home div.dress-types div.boxes div.box div.box-img {
   height: 140px;
 }
 
-div.home div.car-size div.boxes div.box img {
+div.home div.dress-types div.boxes div.box img {
   max-width: 100%;
   max-height: 140px;
 }
 
-div.home div.car-size div.boxes div.box div.box-content {
+div.home div.dress-types div.boxes div.box div.box-content {
   padding: 0 15px;
   user-select: none;
 }
 
-div.home div.car-size div.boxes div.box div.box-content ul {
+div.home div.dress-types div.boxes div.box div.box-content ul {
   list-style: none;
   padding: 0 0 0 27px;
   margin: 10px 0;
 }
 
-div.home div.car-size div.boxes div.box div.box-content span.price {
+div.home div.dress-types div.boxes div.box div.box-content span.price {
   font-size: 14px;
   font-weight: bold;
 }
 
-div.home div.car-size div.boxes div.box div.box-content span.unit {
+div.home div.dress-types div.boxes div.box div.box-content span.unit {
   font-size: 14px;
   color: #696969;
 }
 
-div.home div.car-size div.boxes div.box div.car-size-action {
+div.home div.dress-types div.boxes div.box div.dress-type-action {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
 
-div.home div.car-size div.boxes div.box div.car-size-action .btn-car-size {
+div.home div.dress-types div.boxes div.box div.dress-type-action .btn-dress-type {
   margin: 0 10px;
   width: 100%;
 }
@@ -425,12 +425,12 @@ div.home div.customer-care div.customer-care-img img {
     flex-direction: column;
   }
 
-  div.home div.car-size div.boxes {
+  div.home div.dress-types div.boxes {
     display: flex;
     flex-direction: column;
   }
 
-  div.home div.car-size div.boxes div.box {
+  div.home div.dress-types div.boxes div.box {
     margin-bottom: 30px;
   }
 
@@ -477,13 +477,13 @@ div.home div.customer-care div.customer-care-img img {
     margin-top: -75px;
   }
 
-  div.home div.car-size div.boxes {
+  div.home div.dress-types div.boxes {
     display: grid;
     grid-auto-rows: 1fr;
     grid-template-columns: 1fr 1fr 1fr;
   }
 
-  div.home div.car-size div.boxes div.box {
+  div.home div.dress-types div.boxes div.box {
     margin-right: 30px;
   }
 }

@@ -18,6 +18,10 @@ const LANGUAGES = [
     code: 'es',
     label: 'Español',
   },
+  {
+    code: 'ar',
+    label: 'العربية',
+  },
 ]
 
 const env = {
@@ -30,7 +34,7 @@ const env = {
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
-  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
+  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'ar'),
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
   DRESSES_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_DRESSES_PAGE_SIZE), 10) || 15,

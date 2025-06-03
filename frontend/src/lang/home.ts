@@ -19,6 +19,8 @@ const strings = new LocalizedStrings({
     MIDI: 'MIDI',
     MAXI: 'MAXI',
     SEARCH_FOR_DRESS: 'Rechercher une robe',
+    DRESS_TYPES_TITLE: 'Découvrez nos types de robes',
+    DRESS_TYPES_TEXT: 'Nos robes sont disponibles pour toutes les occasions.',
 
     TITLE: 'Les meilleures offres de location de robes',
     SUBTITLE: "Comparez nos prix et réservez votre robe dès aujourd'hui !",
@@ -70,6 +72,8 @@ const strings = new LocalizedStrings({
     MIDI: 'MIDI',
     MAXI: 'MAXI',
     SEARCH_FOR_DRESS: 'Search for a dress',
+    DRESS_TYPES_TITLE: 'Discover Our Dress Types',
+    DRESS_TYPES_TEXT: 'Our dresses are available for every occasion.',
 
     TITLE: 'Top Dress Rental Deals',
     SUBTITLE: 'Compare our prices and book your dress today!',
@@ -121,6 +125,8 @@ const strings = new LocalizedStrings({
     MIDI: 'MIDI',
     MAXI: 'MAXI',
     SEARCH_FOR_DRESS: 'Buscar un vestido',
+    DRESS_TYPES_TITLE: 'Descubre nuestros tipos de vestidos',
+    DRESS_TYPES_TEXT: 'Nuestros vestidos están disponibles para toda ocasión.',
 
     TITLE: 'Las mejores ofertas de alquiler de vestidos',
     SUBTITLE: '¡Compare nuestros precios y reserve su vestido hoy mismo!',
@@ -172,6 +178,8 @@ const strings = new LocalizedStrings({
     MIDI: 'متوسط',
     MAXI: 'كبير',
     SEARCH_FOR_DRESS: 'ابحث عن فستان',
+    DRESS_TYPES_TITLE: 'اكتشف أنواع فساتيننا',
+    DRESS_TYPES_TEXT: 'فساتيننا متوفرة لكل المناسبات.',
 
     TITLE: 'أفضل عروض تأجير الفساتين',
     SUBTITLE: 'قارن أسعارنا واحجز فستانك اليوم!',
