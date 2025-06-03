@@ -34,7 +34,7 @@ import stripeAPI from '../stripe'
 export const create = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
-    if (body.booking.additionalDriver) {
+    if (body.booking._additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
       body.booking._additionalDriver = additionalDriver._id.toString()
@@ -321,7 +321,7 @@ export const checkout = async (req: Request, res: Response) => {
     i18n.locale = language
 
     // additionalDriver
-    if (body.booking.additionalDriver && body.additionalDriver) {
+    if (body.booking._additionalDriver && body.additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
       body.booking._additionalDriver = additionalDriver._id.toString()
@@ -498,7 +498,7 @@ export const update = async (req: Request, res: Response) => {
     const booking = await Booking.findById(body.booking._id)
 
     if (booking) {
-      if (!body.booking.additionalDriver && booking._additionalDriver) {
+      if (!body.booking._additionalDriver && booking._additionalDriver) {
         await AdditionalDriver.deleteOne({ _id: booking._additionalDriver })
       }
 
@@ -538,7 +538,7 @@ export const update = async (req: Request, res: Response) => {
 
       const {
         supplier,
-        car,
+        dress,
         driver,
         pickupLocation,
         dropOffLocation,
@@ -547,10 +547,6 @@ export const update = async (req: Request, res: Response) => {
         status,
         cancellation,
         amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
         price,
         isDeposit,
       } = body.booking
@@ -558,7 +554,7 @@ export const update = async (req: Request, res: Response) => {
       const previousStatus = booking.status
 
       booking.supplier = new mongoose.Types.ObjectId(supplier as string)
-      booking.car = new mongoose.Types.ObjectId(car as string)
+      booking.dress = new mongoose.Types.ObjectId(dress as string)
       booking.driver = new mongoose.Types.ObjectId(driver as string)
       booking.pickupLocation = new mongoose.Types.ObjectId(pickupLocation as string)
       booking.dropOffLocation = new mongoose.Types.ObjectId(dropOffLocation as string)
@@ -567,14 +563,11 @@ export const update = async (req: Request, res: Response) => {
       booking.status = status
       booking.cancellation = cancellation
       booking.amendments = amendments
-      booking.theftProtection = theftProtection
-      booking.collisionDamageWaiver = collisionDamageWaiver
-      booking.fullInsurance = fullInsurance
-      booking.additionalDriver = additionalDriver
+      booking._additionalDriver = body.booking._additionalDriver as unknown as mongoose.Types.ObjectId
       booking.price = price as number
       booking.isDeposit = isDeposit || false
 
-      if (!additionalDriver && booking._additionalDriver) {
+      if (!body.booking._additionalDriver && booking._additionalDriver) {
         booking._additionalDriver = undefined
       }
 
@@ -708,8 +701,8 @@ export const getBooking = async (req: Request, res: Response) => {
   try {
     const booking = await Booking.findById(id)
       .populate<{ supplier: env.UserInfo }>('supplier')
-      .populate<{ car: env.CarInfo }>({
-        path: 'car',
+      .populate<{ dress: env.DressInfo }>({
+        path: 'dress',
         populate: {
           path: 'supplier',
           model: 'User',
@@ -744,12 +737,12 @@ export const getBooking = async (req: Request, res: Response) => {
         priceChangeRate: booking.supplier.priceChangeRate,
       }
 
-      booking.car.supplier = {
-        _id: booking.car.supplier._id,
-        fullName: booking.car.supplier.fullName,
-        avatar: booking.car.supplier.avatar,
-        payLater: booking.car.supplier.payLater,
-        priceChangeRate: booking.car.supplier.priceChangeRate,
+      booking.dress.supplier = {
+        _id: booking.dress.supplier._id,
+        fullName: booking.dress.supplier.fullName,
+        avatar: booking.dress.supplier.avatar,
+        payLater: booking.dress.supplier.payLater,
+        priceChangeRate: booking.dress.supplier.priceChangeRate,
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
@@ -812,7 +805,7 @@ export const getBookings = async (req: Request, res: Response) => {
     const {
       statuses,
       user,
-      car,
+      dress,
     } = body
     const from = (body.filter && body.filter.from && new Date(body.filter.from)) || null
     const dateBetween = (body.filter && body.filter.dateBetween && new Date(body.filter.dateBetween)) || null
@@ -829,8 +822,8 @@ export const getBookings = async (req: Request, res: Response) => {
     if (user) {
       $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
     }
-    if (car) {
-      $match.$and!.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
+    if (dress) {
+      $match.$and!.push({ 'dress._id': { $eq: new mongoose.Types.ObjectId(dress) } })
     }
 
     if (dateBetween) {

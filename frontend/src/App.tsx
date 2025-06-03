@@ -21,11 +21,12 @@ const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
 const Home = lazy(() => import('@/pages/Home'))
-const Search = lazy(() => import('@/pages/Search'))
-const Checkout = lazy(() => import('@/pages/Checkout'))
-const CheckoutSession = lazy(() => import('@/pages/CheckoutSession'))
-const Bookings = lazy(() => import('@/pages/Bookings'))
-const Booking = lazy(() => import('@/pages/Booking'))
+// Client-facing imports commented out
+// const Search = lazy(() => import('@/pages/Search'))
+// const Checkout = lazy(() => import('@/pages/Checkout'))
+// const CheckoutSession = lazy(() => import('@/pages/CheckoutSession'))
+// const Bookings = lazy(() => import('@/pages/Bookings'))
+// const Booking = lazy(() => import('@/pages/Booking'))
 const Settings = lazy(() => import('@/pages/Settings'))
 const Notifications = lazy(() => import('@/pages/Notifications'))
 const ToS = lazy(() => import('@/pages/ToS'))
@@ -39,7 +40,7 @@ const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 const Dresses = lazy(() => import('@/pages/Dresses'))
-const Dress = lazy(() => import('@/pages/Dress'))
+// const Dress = lazy(() => import('@/pages/Dress')) // Client-facing dress view
 const CreateDress = lazy(() => import('@/pages/CreateDress'))
 const UpdateDress = lazy(() => import('@/pages/UpdateDress'))
 const DressAnalytics = lazy(() => import('@/pages/DressAnalytics'))
@@ -92,11 +93,12 @@ const router = createBrowserRouter([
       { path: 'activate', element: <Activate /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'reset-password', element: <ResetPassword /> },
-      { path: 'search', element: <Search /> },
-      { path: 'checkout', element: <Checkout /> },
-      { path: 'checkout-session/:sessionId', element: <CheckoutSession /> },
-      { path: 'bookings', element: <Bookings /> },
-      { path: 'booking', element: <Booking /> },
+      // Client-facing routes commented out - focusing on admin functionality
+      // { path: 'search', element: <Search /> },
+      // { path: 'checkout', element: <Checkout /> },
+      // { path: 'checkout-session/:sessionId', element: <CheckoutSession /> },
+      // { path: 'bookings', element: <Bookings /> },
+      // { path: 'booking', element: <Booking /> },
       { path: 'settings', element: <Settings /> },
       { path: 'notifications', element: <Notifications /> },
       { path: 'change-password', element: <ChangePassword /> },
@@ -108,7 +110,7 @@ const router = createBrowserRouter([
       { path: 'faq', element: <Faq /> },
       { path: 'cookie-policy', element: <CookiePolicy /> },
       { path: 'dresses', element: <Dresses /> },
-      { path: 'dress', element: <Dress /> },
+      // { path: 'dress', element: <Dress /> }, // Client-facing dress view
       { path: 'create-dress', element: <CreateDress /> },
       { path: 'update-dress', element: <UpdateDress /> },
       { path: 'dress-analytics', element: <DressAnalytics /> },

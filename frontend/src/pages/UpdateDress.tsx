@@ -25,6 +25,7 @@ import * as LocationService from '../services/LocationService'
 import * as helper from '../common/helper'
 import { strings } from '../lang/dresses'
 import { strings as commonStrings } from '../lang/common'
+import * as bookcarsTypes from ':bookcars-types'
 import { DressType, DressSize, DressStyle, DressMaterial, Location } from ':bookcars-types'
 
 
@@ -224,12 +225,16 @@ const UpdateDress: React.FC = () => {
     setSaving(true)
     
     try {
-      const updateData = {
+      const updateData: bookcarsTypes.Dress = {
+        ...dress,
         ...formData,
         _id: dress._id,
-        image: imageChanged ? image : undefined
+        image: imageChanged ? image : dress.image,
+        dailyPrice: formData.price,
+        supplier: dress.supplier,
+        locations: formData.locations.map(id => locations.find(loc => loc._id === id)!).filter(Boolean)
       }
-      
+
       await DressService.updateDress(dress._id, updateData)
       setSuccess(true)
       setTimeout(() => {

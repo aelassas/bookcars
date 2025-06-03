@@ -62,6 +62,11 @@ export enum DressMaterial {
   Lace = 'lace',
   Satin = 'satin',
   Chiffon = 'chiffon',
+  Tulle = 'tulle',
+  Organza = 'organza',
+  Velvet = 'velvet',
+  Polyester = 'polyester',
+  Crepe = 'crepe',
 }
 
 export enum DressStyle {

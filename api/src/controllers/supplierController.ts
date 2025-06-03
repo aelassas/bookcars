@@ -366,14 +366,14 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     const {
       dressType,
       size,
-      mileage,
-      fuelPolicy,
+      // mileage,
+      // fuelPolicy,
       deposit,
       dressSpecs,
       ranges,
-      multimedia,
-      rating,
-      seats,
+      // multimedia,
+      // rating,
+      // seats,
       days,
     } = body
 
@@ -382,7 +382,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
         { locations: pickupLocation },
         { type: { $in: dressType } },
         { size: { $in: size } },
-        { fuelPolicy: { $in: fuelPolicy } },
+        // { fuelPolicy: { $in: fuelPolicy } }, // Commented out car-related property
         { available: true },
         { fullyBooked: { $in: [false, null] } },
       ],
@@ -400,16 +400,16 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       }
     }
 
-    if (mileage) {
-      if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
-        $match.$and!.push({ rentalTerm: { $gt: -1 } })
-      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
-        $match.$and!.push({ rentalTerm: -1 })
-      } else if (mileage.length === 0) {
-        res.json([])
-        return
-      }
-    }
+    // if (mileage) {
+    //   if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
+    //     $match.$and!.push({ rentalTerm: { $gt: -1 } })
+    //   } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
+    //     $match.$and!.push({ rentalTerm: -1 })
+    //   } else if (mileage.length === 0) {
+    //     res.json([])
+    //     return
+    //   }
+    // }
 
     if (deposit && deposit > -1) {
       $match.$and!.push({ deposit: { $lte: deposit } })
@@ -419,25 +419,25 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       $match.$and!.push({ range: { $in: ranges } })
     }
 
-    if (multimedia && multimedia.length > 0) {
-      for (const multimediaOption of multimedia) {
-        $match.$and!.push({ multimedia: multimediaOption })
-      }
-    }
+    // if (multimedia && multimedia.length > 0) {
+    //   for (const multimediaOption of multimedia) {
+    //     $match.$and!.push({ multimedia: multimediaOption })
+    //   }
+    // }
 
-    if (rating && rating > -1) {
-      $match.$and!.push({ rating: { $gte: rating } })
-    }
+    // if (rating && rating > -1) {
+    //   $match.$and!.push({ rating: { $gte: rating } })
+    // }
 
-    if (seats) {
-      if (seats > -1) {
-        if (seats === 6) {
-          $match.$and!.push({ seats: { $gte: 5 } })
-        } else {
-          $match.$and!.push({ seats })
-        }
-      }
-    }
+    // if (seats) {
+    //   if (seats > -1) {
+    //     if (seats === 6) {
+    //       $match.$and!.push({ seats: { $gte: 5 } })
+    //     } else {
+    //       $match.$and!.push({ seats })
+    //     }
+    //   }
+    // }
 
     let $supplierMatch: mongoose.FilterQuery<any> = {}
     if (days) {
@@ -545,15 +545,15 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     const {
       dressType,
       size,
-      mileage,
+      // mileage,
       deposit,
       availability,
-      fuelPolicy,
+      // fuelPolicy,
       dressSpecs,
       ranges,
-      multimedia,
-      rating,
-      seats,
+      // multimedia,
+      // rating,
+      // seats,
     } = body
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -561,7 +561,7 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
     const $match: mongoose.FilterQuery<bookcarsTypes.Dress> = {
       $and: [
         { name: { $regex: keyword, $options: options } },
-        { fuelPolicy: { $in: fuelPolicy } },
+        // { fuelPolicy: { $in: fuelPolicy } }, // Commented out car-related property
       ],
     }
 
@@ -585,16 +585,16 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       $match.$and!.push({ size: { $in: size } })
     }
 
-    if (mileage) {
-      if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
-        $match.$and!.push({ rentalTerm: { $gt: -1 } })
-      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
-        $match.$and!.push({ rentalTerm: -1 })
-      } else if (mileage.length === 0) {
-        res.json([])
-        return
-      }
-    }
+    // if (mileage) {
+    //   if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Limited) {
+    //     $match.$and!.push({ rentalTerm: { $gt: -1 } })
+    //   } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.RentalTerm.Unlimited) {
+    //     $match.$and!.push({ rentalTerm: -1 })
+    //   } else if (mileage.length === 0) {
+    //     res.json([])
+    //     return
+    //   }
+    // }
 
     if (deposit && deposit > -1) {
       $match.$and!.push({ deposit: { $lte: deposit } })
@@ -615,25 +615,25 @@ export const getBackendSuppliers = async (req: Request, res: Response) => {
       $match.$and!.push({ range: { $in: ranges } })
     }
 
-    if (multimedia && multimedia.length > 0) {
-      for (const multimediaOption of multimedia) {
-        $match.$and!.push({ multimedia: multimediaOption })
-      }
-    }
+    // if (multimedia && multimedia.length > 0) {
+    //   for (const multimediaOption of multimedia) {
+    //     $match.$and!.push({ multimedia: multimediaOption })
+    //   }
+    // }
 
-    if (rating && rating > -1) {
-      $match.$and!.push({ rating: { $gte: rating } })
-    }
+    // if (rating && rating > -1) {
+    //   $match.$and!.push({ rating: { $gte: rating } })
+    // }
 
-    if (seats) {
-      if (seats > -1) {
-        if (seats === 6) {
-          $match.$and!.push({ seats: { $gte: 5 } })
-        } else {
-          $match.$and!.push({ seats })
-        }
-      }
-    }
+    // if (seats) {
+    //   if (seats > -1) {
+    //     if (seats === 6) {
+    //       $match.$and!.push({ seats: { $gte: 5 } })
+    //     } else {
+    //       $match.$and!.push({ seats })
+    //     }
+    //   }
+    // }
 
     const data = await Dress.aggregate(
       [

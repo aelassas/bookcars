@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
@@ -93,13 +93,32 @@ const dressSchema = new Schema<env.Dress>(
         bookcarsTypes.DressType.Designer,
         bookcarsTypes.DressType.Vintage,
         bookcarsTypes.DressType.Casual,
+        bookcarsTypes.DressType.Wedding,
+        bookcarsTypes.DressType.Evening,
+        bookcarsTypes.DressType.Cocktail,
+        bookcarsTypes.DressType.Prom,
+        bookcarsTypes.DressType.Other,
         bookcarsTypes.DressType.Unknown,
       ],
       required: [true, "can't be blank"],
     },
     size: {
       type: String,
-      enum: [bookcarsTypes.DressSize.Small, bookcarsTypes.DressSize.Medium, bookcarsTypes.DressSize.Large, bookcarsTypes.DressSize.ExtraLarge],
+      enum: [
+        bookcarsTypes.DressSize.XS,
+        bookcarsTypes.DressSize.S,
+        bookcarsTypes.DressSize.M,
+        bookcarsTypes.DressSize.L,
+        bookcarsTypes.DressSize.XL,
+        bookcarsTypes.DressSize.XXL,
+        bookcarsTypes.DressSize.ExtraSmall,
+        bookcarsTypes.DressSize.Small,
+        bookcarsTypes.DressSize.Medium,
+        bookcarsTypes.DressSize.Large,
+        bookcarsTypes.DressSize.ExtraLarge,
+        bookcarsTypes.DressSize.DoubleExtraLarge,
+        bookcarsTypes.DressSize.Custom,
+      ],
       required: [true, "can't be blank"],
     },
     customizable: {
@@ -130,9 +149,24 @@ const dressSchema = new Schema<env.Dress>(
         bookcarsTypes.DressMaterial.Lace,
         bookcarsTypes.DressMaterial.Satin,
         bookcarsTypes.DressMaterial.Chiffon,
+        // bookcarsTypes.DressMaterial.Tulle,
+        // bookcarsTypes.DressMaterial.Organza,
+        // bookcarsTypes.DressMaterial.Velvet,
+        // bookcarsTypes.DressMaterial.Polyester,
+        // bookcarsTypes.DressMaterial.Crepe,
       ],
       required: [true, "can't be blank"],
     },
+    // style: {
+    //   type: String,
+    //   enum: [
+    //     bookcarsTypes.DressStyle.Traditional,
+    //     bookcarsTypes.DressStyle.Modern,
+    //     bookcarsTypes.DressStyle.Designer,
+    //     bookcarsTypes.DressStyle.Vintage,
+    //   ],
+    //   required: [true, "can't be blank"],
+    // },
     cancellation: {
       type: Number,
       required: [true, "can't be blank"],
@@ -201,12 +235,14 @@ dressSchema.index({ accessories: 1 })
 dressSchema.index({ dailyPrice: 1, _id: 1 })
 dressSchema.index({ dateBasedPrices: 1 })
 
-// Add PaginateModel interface
-interface DressDocument extends env.Dress, Document {}
-const Dress = model<env.Dress, mongoosePaginate.PaginateModel<DressDocument>>('Dress', dressSchema)
+// Add pagination plugin to schema
+dressSchema.plugin(mongoosePaginate)
+
+// Dress model with pagination interface
+const Dress = model<env.Dress>('Dress', dressSchema) as any
 
 // Create indexes manually and handle potential errors
-Dress.syncIndexes().catch((err) => {
+Dress.syncIndexes().catch((err: any) => {
   logger.error('Error creating Dress indexes:', err)
 })
 

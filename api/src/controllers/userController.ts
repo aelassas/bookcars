@@ -19,7 +19,7 @@ import * as authHelper from '../common/authHelper'
 import * as mailHelper from '../common/mailHelper'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
-import Car from '../models/Car'
+// import Car from '../models/Car'
 import AdditionalDriver from '../models/AdditionalDriver'
 import * as logger from '../common/logger'
 
@@ -1007,8 +1007,8 @@ export const update = async (req: Request, res: Response) => {
       licenseRequired,
       minimumRentalDays,
       priceChangeRate,
-      supplierCarLimit,
-      notifyAdminOnNewCar,
+      supplierDressLimit,
+      notifyAdminOnNewDress,
       blacklisted,
     } = body
 
@@ -1021,8 +1021,8 @@ export const update = async (req: Request, res: Response) => {
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     user.minimumRentalDays = minimumRentalDays
     user.priceChangeRate = priceChangeRate
-    user.supplierCarLimit = supplierCarLimit
-    user.notifyAdminOnNewCar = notifyAdminOnNewCar
+    user.supplierDressLimit = supplierDressLimit
+    user.notifyAdminOnNewDress = notifyAdminOnNewDress
     user.blacklisted = !!blacklisted
     if (type) {
       user.type = type as bookcarsTypes.UserType
@@ -1546,16 +1546,16 @@ export const deleteUsers = async (req: Request, res: Response) => {
           const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
           await Booking.deleteMany({ supplier: id })
-          const cars = await Car.find({ supplier: id })
-          await Car.deleteMany({ supplier: id })
-          for (const car of cars) {
-            if (car.image) {
-              const image = path.join(env.CDN_CARS, car.image)
-              if (await helper.pathExists(image)) {
-                await asyncFs.unlink(image)
-              }
-            }
-          }
+          // const cars = await Car.find({ supplier: id })
+          // await Car.deleteMany({ supplier: id })
+          // for (const car of cars) {
+          //   if (car.image) {
+          //     // const image = path.join(env.CDN_CARS, car.image)
+          //     if (await helper.pathExists(image)) {
+          //       await asyncFs.unlink(image)
+          //     }
+          //   }
+          // }
         } else if (user.type === bookcarsTypes.UserType.User) {
           await Booking.deleteMany({ driver: id })
         }

@@ -1,0 +1,46 @@
+{
+  "name": "car-to-dress-migration",
+  "version": "1.0.0",
+  "description": "Comprehensive migration scripts to transition from car rental to dress rental system",
+  "main": "comprehensive-car-to-dress-migration.js",
+  "scripts": {
+    "init-db": "node init-dress-database.js",
+    "test-db": "node test-database.js",
+    "migrate": "node comprehensive-car-to-dress-migration.js",
+    "verify": "node verify-migration.js",
+    "migrate-safe": "./run-migration.sh",
+    "backup": "mongodump --uri=\"${BC_MONGODB_URI:-mongodb://localhost:27017/bookdresses}\" --out=\"./backups/manual_backup_$(date +%Y%m%d_%H%M%S)\"",
+    "restore": "mongorestore --uri=\"${BC_MONGODB_URI:-mongodb://localhost:27017/bookdresses}\" --drop",
+    "test-connection": "node -e \"const mongoose = require('mongoose'); mongoose.connect(process.env.BC_MONGODB_URI || 'mongodb://localhost:27017/bookdresses').then(() => { console.log('✅ Database connection successful'); process.exit(0); }).catch(err => { console.error('❌ Database connection failed:', err.message); process.exit(1); });\""
+  },
+  "keywords": [
+    "migration",
+    "database",
+    "car-rental",
+    "dress-rental",
+    "mongodb",
+    "sql",
+    "entity-framework"
+  ],
+  "author": "BookDresses Team",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^7.0.0",
+    "dotenv": "^16.0.0",
+    "bcrypt": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/bookdresses.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/bookdresses/issues"
+  },
+  "homepage": "https://github.com/your-org/bookdresses#readme"
+}

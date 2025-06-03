@@ -4,7 +4,7 @@ import dressRoutes from './dressRoutes' // Changed from carRoutes
 import bookingRoutes from './bookingRoutes'
 import locationRoutes from './locationRoutes'
 import notificationRoutes from './notificationRoutes'
-import paymentRoutes from './paymentRoutes'
+// import paymentRoutes from './paymentRoutes'
 
 const router = express.Router()
 
@@ -14,6 +14,6 @@ router.use(dressRoutes) // Changed from carRoutes
 router.use(bookingRoutes)
 router.use(locationRoutes)
 router.use(notificationRoutes)
-router.use(paymentRoutes)
+// router.use(paymentRoutes) // Commented out payment routes
 
 export default router

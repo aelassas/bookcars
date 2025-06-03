@@ -4,7 +4,6 @@ import {
   Container,
   Typography,
   Button,
-  Grid,
   Box,
   Paper,
   Divider
@@ -34,7 +33,7 @@ const Dresses: React.FC = () => {
   const [availability, setAvailability] = useState('')
   const [rentalsCount, setRentalsCount] = useState('')
   const [keyword, setKeyword] = useState('')
-  const [suppliers, setSuppliers] = useState<any[]>([])
+  const [suppliers] = useState<any[]>([])
   const [reload, setReload] = useState(false)
   const [admin, setAdmin] = useState(false)
 
@@ -74,8 +73,8 @@ const Dresses: React.FC = () => {
     setReload(true)
   }
 
-  const handleSearch = (newKeyword: string) => {
-    setKeyword(newKeyword)
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value)
     setReload(true)
   }
 
@@ -124,9 +123,9 @@ const Dresses: React.FC = () => {
 
                 <Box sx={{ mb: 2 }}>
                   <SearchBox
+                    value={keyword}
                     placeholder={commonStrings.SEARCH_PLACEHOLDER}
                     onChange={handleSearch}
-                    className="dress-search"
                   />
                 </Box>
 
@@ -165,7 +164,7 @@ const Dresses: React.FC = () => {
                 dressType={dressType}
                 dressSize={dressSize}
                 dressStyle={dressStyle}
-                deposit={deposit}
+                deposit={deposit.toString()}
                 availability={availability}
                 rentalsCount={rentalsCount}
                 keyword={keyword}

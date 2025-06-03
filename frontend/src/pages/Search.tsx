@@ -71,8 +71,7 @@ const Search = () => {
           pickupLocation: pickupLocation._id,
           dressType,
           dressSize,
-          dressStyle,
-          dressMaterial,
+          material: dressMaterial,
           deposit,
           days: bookcarsHelper.days(from, to),
         }
@@ -90,20 +89,20 @@ const Search = () => {
     setSupplierIds(newSuppliers)
   }
 
-  const handleDressTypeFilterChange = (values: bookcarsTypes.DressType[]) => {
-    setDressType(values)
+  const handleDressTypeFilterChange = (value: string) => {
+    setDressType(value ? [value as bookcarsTypes.DressType] : bookcarsHelper.getAllDressTypes())
   }
 
-  const handleDressSizeFilterChange = (values: bookcarsTypes.DressSize[]) => {
-    setDressSize(values)
+  const handleDressSizeFilterChange = (value: string) => {
+    setDressSize(value ? [value as bookcarsTypes.DressSize] : bookcarsHelper.getAllDressSizes())
   }
 
-  const handleDressStyleFilterChange = (values: bookcarsTypes.DressStyle[]) => {
-    setDressStyle(values)
+  const handleDressStyleFilterChange = (value: string) => {
+    setDressStyle(value ? [value as bookcarsTypes.DressStyle] : bookcarsHelper.getAllDressStyles())
   }
 
-  const handleDressMaterialFilterChange = (values: bookcarsTypes.DressMaterial[]) => {
-    setDressMaterial(values)
+  const handleDressMaterialFilterChange = (value: string) => {
+    setDressMaterial(value ? [value as bookcarsTypes.DressMaterial] : bookcarsHelper.getAllDressMaterials())
   }
 
   const handleDepositFilterChange = (value: number) => {
@@ -155,8 +154,7 @@ const Search = () => {
         pickupLocation: _pickupLocation._id,
         dressType,
         dressSize,
-        dressStyle,
-        dressMaterial,
+        material: dressMaterial,
         deposit,
         days: bookcarsHelper.days(from, to),
       }
@@ -170,10 +168,10 @@ const Search = () => {
       setSuppliers(_suppliers)
       setSupplierIds(_supplierIds)
 
-      const { ranges: _ranges } = state
-      if (_ranges) {
-        setRanges(_ranges)
-      }
+      // const { ranges: _ranges } = state
+      // if (_ranges) {
+      //   setRanges(_ranges)
+      // }
 
       // if (_pickupLocation.latitude && _pickupLocation.longitude) {
       //   const l = await helper.getLocation()
@@ -245,18 +243,11 @@ const Search = () => {
             <div className="col-2">
               <DressList
                 suppliers={supplierIds}
-                dressType={dressType}
-                dressSize={dressSize}
-                dressStyle={dressStyle}
-                dressMaterial={dressMaterial}
-                deposit={deposit}
-                pickupLocation={pickupLocation._id}
-                dropOffLocation={dropOffLocation._id}
+                dressType={dressType.length === 1 ? dressType[0] : ''}
+                dressSize={dressSize.length === 1 ? dressSize[0] : ''}
+                dressStyle={dressStyle.length === 1 ? dressStyle[0] : ''}
+                deposit={deposit.toString()}
                 loading={loading}
-                from={from}
-                to={to}
-                hideSupplier={env.HIDE_SUPPLIERS}
-                includeComingSoonDresses
               />
             </div>
           </div>

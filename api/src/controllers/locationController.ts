@@ -583,7 +583,7 @@ export const getLocationsWithPosition = async (req: Request, res: Response) => {
 }
 
 /**
- * Check if a Location is used by a Car.
+ * Check if a Location is used by a Dress.
  *
  * @export
  * @async
@@ -597,7 +597,7 @@ export const checkLocation = async (req: Request, res: Response) => {
   try {
     const _id = new mongoose.Types.ObjectId(id)
 
-    const count = await Car
+    const count = await Dress
       .find({ locations: _id })
       .limit(1)
       .countDocuments()
