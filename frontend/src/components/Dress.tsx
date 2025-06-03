@@ -7,8 +7,7 @@ import {
   Typography,
   Button,
   Chip,
-  Box,
-  Grid
+  Box
 } from '@mui/material'
 import { Dress as DressType } from ':bookcars-types'
 import * as helper from '../common/helper'
@@ -69,37 +68,27 @@ const Dress: React.FC<DressProps> = ({
           </Typography>
         )}
 
-        <Box sx={{ mt: 2 }}>
-          <Grid container spacing={1}>
-            <Grid item>
-              <Chip
-                label={strings[`${dress.type.toUpperCase()}`] || dress.type}
-                color="primary"
-                size="small"
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                label={strings[`SIZE_${dress.size}`] || dress.size}
-                color="secondary"
-                size="small"
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                label={strings[`STYLE_${dress.style.toUpperCase()}`] || dress.style}
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                label={dress.color}
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
-          </Grid>
+        <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          <Chip
+            label={helper.getDressTypeLabel(dress.type)}
+            color="primary"
+            size="small"
+          />
+          <Chip
+            label={helper.getDressSizeLabel(dress.size)}
+            color="secondary"
+            size="small"
+          />
+          <Chip
+            label={helper.getDressStyleLabel(dress.style)}
+            variant="outlined"
+            size="small"
+          />
+          <Chip
+            label={dress.color}
+            variant="outlined"
+            size="small"
+          />
         </Box>
 
         {!hidePrice && (

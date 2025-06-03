@@ -3,7 +3,6 @@ import {
   Paper,
   Typography,
   Box,
-  Grid,
   Card,
   CardContent,
   Divider,
@@ -44,7 +43,7 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
       const fetchedDresses = result.data.docs
 
       // Calculate total rentals
-      const total = fetchedDresses.reduce((sum, dress) => sum + (dress.rentals || 0), 0)
+      const total = fetchedDresses.reduce((sum: number, dress: any) => sum + (dress.rentals || 0), 0)
       setTotalRentals(total)
 
       // Calculate average rentals
@@ -57,7 +56,7 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
 
       // Calculate rentals by dress type
       const typeData: { [key: string]: number } = {}
-      fetchedDresses.forEach(dress => {
+      fetchedDresses.forEach((dress: any) => {
         const type = dress.type
         if (!typeData[type]) {
           typeData[type] = 0
@@ -68,7 +67,7 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
 
       // Calculate rentals by dress size
       const sizeData: { [key: string]: number } = {}
-      fetchedDresses.forEach(dress => {
+      fetchedDresses.forEach((dress: any) => {
         const size = dress.size
         if (!sizeData[size]) {
           sizeData[size] = 0
@@ -122,53 +121,45 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
       </Typography>
       <Divider sx={{ mb: 3 }} />
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {strings.TOTAL_RENTALS || 'Total Rentals'}
-              </Typography>
-              <Typography variant="h3">{totalRentals}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {strings.AVERAGE_RENTALS || 'Average Rentals'}
-              </Typography>
-              <Typography variant="h3">{averageRentals.toFixed(1)}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {strings.TOTAL_DRESSES || 'Total Dresses'}
-              </Typography>
-              <Typography variant="h3">{dresses.length}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                {strings.RENTED_DRESSES || 'Rented Dresses'}
-              </Typography>
-              <Typography variant="h3">
-                {dresses.filter(d => (d.rentals || 0) > 0).length}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
+        <Card sx={{ flex: '1 1 250px' }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {strings.TOTAL_RENTALS || 'Total Rentals'}
+            </Typography>
+            <Typography variant="h3">{totalRentals}</Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ flex: '1 1 250px' }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {strings.AVERAGE_RENTALS || 'Average Rentals'}
+            </Typography>
+            <Typography variant="h3">{averageRentals.toFixed(1)}</Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ flex: '1 1 250px' }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {strings.TOTAL_DRESSES || 'Total Dresses'}
+            </Typography>
+            <Typography variant="h3">{dresses.length}</Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ flex: '1 1 250px' }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {strings.RENTED_DRESSES || 'Rented Dresses'}
+            </Typography>
+            <Typography variant="h3">
+              {dresses.filter(d => (d.rentals || 0) > 0).length}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+      <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+        <Box sx={{ flex: '1 1 400px' }}>
           <Typography variant="h5" gutterBottom>
             {strings.TOP_DRESSES || 'Top Dresses'}
           </Typography>
@@ -192,8 +183,8 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Box>
+        <Box sx={{ flex: '1 1 400px' }}>
           <Typography variant="h5" gutterBottom>
             {strings.RENTALS_BY_TYPE || 'Rentals by Type'}
           </Typography>
@@ -215,8 +206,8 @@ const DressRentalStats: React.FC<DressRentalStatsProps> = ({ className }) => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Paper>
   )
 }

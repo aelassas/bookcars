@@ -71,8 +71,12 @@ export const getDressType = (type: string) => {
     case bookcarsTypes.DressType.Casual:
       return strings.CASUAL
     default:
-      return ''
+      return strings.UNKNOWN
   }
+}
+
+export const getDressTypeLabel = (type: string) => {
+  return getDressType(type)
 }
 
 /**
@@ -92,8 +96,12 @@ export const getDressSize = (size: string) => {
     case bookcarsTypes.DressSize.ExtraLarge:
       return strings.SIZE_EXTRA_LARGE
     default:
-      return ''
+      return strings.UNKNOWN
   }
+}
+
+export const getDressSizeLabel = (size: string) => {
+  return getDressSize(size)
 }
 
 /**
@@ -115,11 +123,38 @@ export const getDressMaterial = (material: string) => {
     case bookcarsTypes.DressMaterial.Chiffon:
       return strings.MATERIAL_CHIFFON
     default:
-      return ''
+      return strings.UNKNOWN
   }
 }
 
+export const getDressMaterialLabel = (material: string) => {
+  return getDressMaterial(material)
+}
 
+/**
+ * Get dress style label.
+ *
+ * @param {string} style
+ * @returns {string}
+ */
+export const getDressStyle = (style: string) => {
+  switch (style) {
+    case bookcarsTypes.DressStyle.Traditional:
+      return strings.STYLE_TRADITIONAL
+    case bookcarsTypes.DressStyle.Modern:
+      return strings.STYLE_MODERN
+    case bookcarsTypes.DressStyle.Designer:
+      return strings.STYLE_DESIGNER
+    case bookcarsTypes.DressStyle.Vintage:
+      return strings.STYLE_VINTAGE
+    default:
+      return strings.UNKNOWN
+  }
+}
+
+export const getDressStyleLabel = (style: string) => {
+  return getDressStyle(style)
+}
 
 /**
  * Get amendments label.
@@ -395,6 +430,22 @@ export const verifyReCaptcha = async (token: string): Promise<boolean> => {
     return false
   }
 }
+
+/**
+ * Check whether a user is an admin or not.
+ *
+ * @param {?bookcarsTypes.User} [user]
+ * @returns {boolean}
+ */
+export const admin = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) || false
+
+/**
+ * Check whether a user is a supplier or not.
+ *
+ * @param {?bookcarsTypes.User} [user]
+ * @returns {boolean}
+ */
+export const supplier = (user?: bookcarsTypes.User | null): boolean => (user && user.type === bookcarsTypes.RecordType.Supplier) || false
 
 /**
  * Get dress range label.

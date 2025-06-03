@@ -26,7 +26,7 @@ import '@/assets/css/search-form.css'
 interface SearchFormProps {
   pickupLocation?: string
   dropOffLocation?: string
-  ranges?: bookcarsTypes.CarRange[]
+  ranges?: string[]
   onCancel?: () => void
 }
 
@@ -44,7 +44,7 @@ const SearchForm = ({
   const [pickupLocationId, setPickupLocationId] = useState('')
   const [dropOffLocationId, setDropOffLocationId] = useState('')
   const [minDate, setMinDate] = useState(_minDate)
-  const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
+  const [ranges, setRanges] = useState<string[]>(bookcarsHelper.getAllRanges())
 
   const {
     register,
@@ -158,7 +158,7 @@ const SearchForm = ({
   }, [from, to, setValue, setError, clearErrors])
 
   useEffect(() => {
-    setRanges(__ranges || bookcarsHelper.getAllRanges())
+    setRanges((__ranges as string[]) || bookcarsHelper.getAllRanges())
   }, [__ranges])
 
   const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {

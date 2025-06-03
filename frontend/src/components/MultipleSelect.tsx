@@ -270,7 +270,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (type === bookcarsTypes.RecordType.Car && !multiple && values.length === 1 && values[0]) {
+          if (type === bookcarsTypes.RecordType.Dress && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -286,10 +286,10 @@ const MultipleSelect = ({
                       <>
                         <InputAdornment position="start">
                           <img
-                            src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
+                            src={bookcarsHelper.joinURL(env.CDN_DRESSES, option.image)}
                             alt={option.name}
                             style={{
-                              height: env.SELECTED_CAR_OPTION_IMAGE_HEIGHT,
+                              height: env.SELECTED_DRESS_OPTION_IMAGE_HEIGHT,
                             }}
                           />
                         </InputAdornment>
@@ -354,19 +354,19 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Car) {
+          } if (type === bookcarsTypes.RecordType.Dress) {
             return (
               <li {..._props} key={option._id} className={`${props.className} ms-option`}>
-                <span className="option-image car-ia">
+                <span className="option-image dress-ia">
                   <img
-                    src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
+                    src={bookcarsHelper.joinURL(env.CDN_DRESSES, option.image)}
                     alt={option.name}
                     style={{
-                      height: env.CAR_OPTION_IMAGE_HEIGHT,
+                      height: env.DRESS_OPTION_IMAGE_HEIGHT,
                     }}
                   />
                 </span>
-                <span className="car-option-name">{option.name}</span>
+                <span className="dress-option-name">{option.name}</span>
               </li>
             )
           }

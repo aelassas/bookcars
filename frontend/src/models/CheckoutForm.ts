@@ -6,13 +6,13 @@ import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/common/helper'
 import { strings as commonStrings } from '@/lang/common'
 
-const validateBirthDate = (car?: bookcarsTypes.Car, date?: Date) => {
-    if (!car || !date || !bookcarsHelper.isDate(date)) {
+const validateBirthDate = (dress?: bookcarsTypes.Dress, date?: Date) => {
+    if (!dress || !date || !bookcarsHelper.isDate(date)) {
         return false
     }
     const now = new Date()
     const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-    return sub >= car.minimumAge
+    return sub >= dress.minimumAge
 }
 
 const baseSchema = z.object({
@@ -56,20 +56,20 @@ const baseSchema = z.object({
     additionalDriverBirthDate: z.date().optional(),
 })
 
-export const createSchema = (car?: bookcarsTypes.Car) => {
-    if (car) {
+export const createSchema = (dress?: bookcarsTypes.Dress) => {
+    if (dress) {
         return baseSchema.merge(
             z.object({
                 birthDate: z.date().refine(
-                    (date) => !date || validateBirthDate(car, date),
+                    (date) => !date || validateBirthDate(dress, date),
                     {
-                        message: car.minimumAge ? helper.getBirthDateError(car.minimumAge) : '',
+                        message: dress.minimumAge ? helper.getBirthDateError(dress.minimumAge) : '',
                     }
                 ).optional(),
                 additionalDriverBirthDate: z.date().refine(
-                    (date) => !date || validateBirthDate(car, date),
+                    (date) => !date || validateBirthDate(dress, date),
                     {
-                        message: car.minimumAge ? helper.getBirthDateError(car.minimumAge) : '',
+                        message: dress.minimumAge ? helper.getBirthDateError(dress.minimumAge) : '',
                     }
                 ).optional(),
             })

@@ -33,17 +33,17 @@ import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import validator from 'validator'
 import { createSchema, FormFields } from '@/models/CheckoutForm'
-import CarList from '@/components/CarList'
+
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import * as BookingService from '@/services/BookingService'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as csStrings } from '@/lang/cars'
+import { strings as dsStrings } from '@/lang/dresses'
 import { strings } from '@/lang/checkout'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
-import * as CarService from '@/services/CarService'
+import * as DressService from '@/services/DressService'
 import * as LocationService from '@/services/LocationService'
 import * as PaymentService from '@/services/PaymentService'
 import * as StripeService from '@/services/StripeService'
@@ -79,7 +79,7 @@ const Checkout = () => {
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [car, setCar] = useState<bookcarsTypes.Car>()
+  const [dress, setDress] = useState<bookcarsTypes.Dress>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
@@ -123,7 +123,7 @@ const Checkout = () => {
   const days = bookcarsHelper.days(from, to)
   const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
 
-  const schema = createSchema(car)
+  const schema = createSchema(dress)
 
   const {
     control,
@@ -162,7 +162,7 @@ const Checkout = () => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
+      if (!dress || !pickupLocation || !dropOffLocation || !from || !to) {
         helper.error()
         return
       }
@@ -193,7 +193,7 @@ const Checkout = () => {
         }
       }
 
-      if (car.supplier.licenseRequired && !license) {
+      if (dress.supplier.licenseRequired && !license) {
         setLicenseRequired(true)
         return
       }
@@ -218,8 +218,8 @@ const Checkout = () => {
       const basePrice = await bookcarsHelper.convertPrice(price, PaymentService.getCurrency(), env.BASE_CURRENCY)
 
       const booking: bookcarsTypes.Booking = {
-        supplier: car.supplier._id as string,
-        car: car._id,
+        supplier: dress.supplier._id as string,
+        dress: dress._id,
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id,
         dropOffLocation: dropOffLocation._id,
@@ -228,10 +228,7 @@ const Checkout = () => {
         status: bookcarsTypes.BookingStatus.Pending,
         cancellation: data.cancellation,
         amendments: data.amendments,
-        theftProtection: data.theftProtection,
-        collisionDamageWaiver: data.collisionDamageWaiver,
-        fullInsurance: data.fullInsurance,
-        additionalDriver,
+        // Car-specific insurance options removed for dress rental
         price: basePrice,
       }
 
@@ -251,8 +248,8 @@ const Checkout = () => {
       let _sessionId: string | undefined
       if (!payLater) {
         if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe) {
-          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
-          const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+          const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${dress.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
+          const _description = `${env.WEBSITE_NAME} - ${dress.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
           const payload: bookcarsTypes.CreatePaymentPayload = {
@@ -334,24 +331,25 @@ const Checkout = () => {
       return
     }
 
-    const { carId } = state
+    const { dressId } = state
     const { pickupLocationId } = state
     const { dropOffLocationId } = state
     const { from: _from } = state
     const { to: _to } = state
 
-    if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
+    if (!dressId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setNoMatch(true)
       return
     }
 
-    let _car
+    let _dress
     let _pickupLocation
     let _dropOffLocation
 
     try {
-      _car = await CarService.getCar(carId)
-      if (!_car) {
+      const _dressResponse = await DressService.getDress(dressId)
+      _dress = _dressResponse?.data
+      if (!_dress) {
         setNoMatch(true)
         return
       }
@@ -382,25 +380,23 @@ const Checkout = () => {
         return
       }
 
-      const priceChangeRate = _car.supplier.priceChangeRate || 0
-      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to, priceChangeRate))
-      let _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
+      const priceChangeRate = _dress.supplier.priceChangeRate || 0
+      const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_dress, _from, _to, priceChangeRate))
+      let _depositPrice = _dress.deposit > 0 ? await PaymentService.convertPrice(_dress.deposit) : 0
       _depositPrice += _depositPrice * (priceChangeRate / 100)
 
       const included = (val: number) => val === 0
 
-      setCar(_car)
+      setDress(_dress)
       setPrice(_price)
       setDepositPrice(_depositPrice)
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
-      setValue('cancellation', included(_car.cancellation))
-      setValue('amendments', included(_car.amendments))
-      setValue('theftProtection', included(_car.theftProtection))
-      setValue('collisionDamageWaiver', included(_car.collisionDamageWaiver))
-      setValue('fullInsurance', included(_car.fullInsurance))
+      setValue('cancellation', included(_dress.cancellation))
+      setValue('amendments', included(_dress.amendments))
+      // Car-specific insurance options removed for dress rental
       setLicense(_user?.license || null)
       setVisible(true)
     } catch (err) {
@@ -411,7 +407,7 @@ const Checkout = () => {
   return (
     <>
       <Layout onLoad={onLoad} strict={false}>
-        {!user?.blacklisted && visible && car && from && to && pickupLocation && dropOffLocation && (
+        {!user?.blacklisted && visible && dress && from && to && pickupLocation && dropOffLocation && (
           <>
             <div className="checkout">
               <Paper className="checkout-form" elevation={10}>
@@ -433,31 +429,34 @@ const Checkout = () => {
                         </Map>
                       )}
 
-                    <CarList
-                      cars={[car]}
-                      // pickupLocationName={pickupLocation.name}
-                      // distance={distance}
-                      hidePrice
-                      sizeAuto
-                      onLoad={() => setLoadingPage(false)}
-                      hideSupplier={env.HIDE_SUPPLIERS}
-                    />
+                    {/* Dress display - simplified for checkout page */}
+                    <div className="dress-display" onLoad={() => setLoadingPage(false)}>
+                      <h3>{dress.name}</h3>
+                      {dress.image && (
+                        <img
+                          src={bookcarsHelper.joinURL(env.CDN_DRESSES, dress.image)}
+                          alt={dress.name}
+                          style={{ maxWidth: '300px', height: 'auto' }}
+                        />
+                      )}
+                      {!env.HIDE_SUPPLIERS && (
+                        <div className="dress-supplier">
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, dress.supplier.avatar)} alt={dress.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                          <span className="dress-supplier-name">{dress.supplier.fullName}</span>
+                        </div>
+                      )}
+                    </div>
 
                     <CheckoutOptions
-                      car={car}
+                      dress={dress}
                       from={from}
                       to={to}
                       language={language}
                       clientSecret={clientSecret}
                       payPalLoaded={payPalLoaded}
-                      onPriceChange={(value) => setPrice(value)}
-                      onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
-                      onCancellationChange={(value) => setValue('cancellation', value)}
-                      onAmendmentsChange={(value) => setValue('amendments', value)}
-                      onTheftProtectionChange={(value) => setValue('theftProtection', value)}
-                      onCollisionDamageWaiverChange={(value) => setValue('collisionDamageWaiver', value)}
-                      onFullInsuranceChange={(value) => setValue('fullInsurance', value)}
-                      onAdditionalDriverChange={(value) => setValue('additionalDriver', value)}
+                      onPriceChange={(value: number) => setPrice(value)}
+                      onCancellationChange={(value: boolean) => setValue('cancellation', value)}
+                      onAmendmentsChange={(value: boolean) => setValue('amendments', value)}
                     />
 
                     <div className="checkout-details-container">
@@ -481,16 +480,16 @@ const Checkout = () => {
                           <div className="checkout-detail-value">{dropOffLocation.name}</div>
                         </div>
                         <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
-                          <span className="checkout-detail-title">{strings.CAR}</span>
-                          <div className="checkout-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
+                          <span className="checkout-detail-title">{strings.DRESS}</span>
+                          <div className="checkout-detail-value">{`${dress.name} (${bookcarsHelper.formatPrice(price / days, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
                         </div>
                         {!env.HIDE_SUPPLIERS && (
                           <div className="checkout-detail" style={{ height: bookingDetailHeight }}>
                             <span className="checkout-detail-title">{commonStrings.SUPPLIER}</span>
                             <div className="checkout-detail-value">
-                              <div className="car-supplier">
-                                <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
-                                <span className="car-supplier-name">{car.supplier.fullName}</span>
+                              <div className="dress-supplier">
+                                <img src={bookcarsHelper.joinURL(env.CDN_USERS, dress.supplier.avatar)} alt={dress.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                                <span className="dress-supplier-name">{dress.supplier.fullName}</span>
                               </div>
                             </div>
                           </div>
@@ -555,7 +554,7 @@ const Checkout = () => {
                                 <span>
                                   <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
                                   <span> </span>
-                                  <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
+                                  <a href={`/sign-in?c=${dress._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                                 </span>
                               ))
                                 || ''}
@@ -641,7 +640,7 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {car.supplier.licenseRequired && (
+                    {dress.supplier.licenseRequired && (
                       <div className="driver-details">
                         <div className="checkout-info">
                           <LicenseIcon />
@@ -673,7 +672,7 @@ const Checkout = () => {
                       <div className="driver-details">
                         <div className="checkout-info">
                           <DriverIcon />
-                          <span>{csStrings.ADDITIONAL_DRIVER}</span>
+                          <span>{dsStrings.ADDITIONAL_DRIVER}</span>
                         </div>
                         <div className="driver-details-form">
                           <FormControl fullWidth margin="dense">
@@ -756,7 +755,7 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {car.supplier.payLater && (
+                    {dress.supplier.payLater && (
                       <div className="payment-options-container">
                         <div className="checkout-info">
                           <PaymentOptionsIcon />
@@ -784,7 +783,7 @@ const Checkout = () => {
                                 )}
                               />
                               {
-                                car.deposit > 0 && (
+                                dress.deposit > 0 && (
                                   <FormControlLabel
                                     value="payDeposit"
                                     control={<Radio />}
@@ -851,7 +850,7 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    {(!car.supplier.payLater || !payLater) && (
+                    {(!dress.supplier.payLater || !payLater) && (
                       env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe
                         ? (
                           clientSecret && (
@@ -869,8 +868,8 @@ const Checkout = () => {
                           <div className="payment-options-container">
                             <PayPalButtons
                               createOrder={async () => {
-                                const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
-                                const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                const name = bookcarsHelper.truncateString(dress.name, PayPalService.ORDER_NAME_MAX_LENGTH)
+                                const _description = `${dress.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
                                 const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
                                 const amount = payDeposit ? depositPrice : price
                                 const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)

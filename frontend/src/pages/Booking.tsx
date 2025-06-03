@@ -11,21 +11,21 @@ import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as blStrings } from '@/lang/booking-list'
 import { strings as bfStrings } from '@/lang/booking-filter'
-import { strings as csStrings } from '@/lang/cars'
+import { strings as dressStrings } from '@/lang/dresses'
 import env from '@/config/env.config'
 import * as helper from '@/common/helper'
 import Layout from '@/components/Layout'
 import * as UserService from '@/services/UserService'
 import * as BookingService from '@/services/BookingService'
-import * as CarService from '@/services/CarService'
+import * as DressService from '@/services/DressService'
 import * as PaymentService from '@/services/PaymentService'
 import Backdrop from '@/components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
-import CarList from '@/components/CarList'
+
 import SupplierSelectList from '@/components/SupplierSelectList'
 import LocationSelectList from '@/components/LocationSelectList'
-import CarSelectList from '@/components/CarSelectList'
+import DressSelectList from '@/components/DressSelectList'
 import StatusList from '@/components/StatusList'
 import DateTimePicker from '@/components/DateTimePicker'
 
@@ -39,7 +39,7 @@ const Booking = () => {
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
   const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
-  const [car, setCar] = useState<bookcarsTypes.Car>()
+  const [dress, setDress] = useState<bookcarsTypes.Dress>()
   const [price, setPrice] = useState<number>()
   const [driver, setDriver] = useState<bookcarsTypes.Option>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Option>()
@@ -49,10 +49,7 @@ const Booking = () => {
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
+  // Car-specific insurance state variables removed for dress rental
   const [minDate, setMinDate] = useState<Date>()
   const edit = false
 
@@ -68,30 +65,40 @@ const Booking = () => {
     setDropOffLocation(values.length > 0 ? values[0] : undefined)
   }
 
-  const handleCarSelectListChange = async (values: bookcarsTypes.Car[]) => {
+  const handleDressSelectListChange = async (values: bookcarsTypes.Option[]) => {
     try {
-      const newCar = values.length > 0 ? values[0] : undefined
+      const newDressOption = values.length > 0 ? values[0] : undefined
 
-      if ((!car && newCar) || (car && newCar && car._id !== newCar._id)) {
-        // car changed
-        const _car = await CarService.getCar(newCar._id)
+      if ((!dress && newDressOption) || (dress && newDressOption && dress._id !== newDressOption._id)) {
+        // dress changed
+        const _dressResponse = await DressService.getDress(newDressOption._id)
 
-        if (_car && from && to) {
+        if (_dressResponse && _dressResponse.data && from && to) {
+          const _dress = _dressResponse.data
           const _booking = bookcarsHelper.clone(booking)
-          _booking.car = _car
-          const _price = bookcarsHelper.calculateTotalPrice(_car, from, to, _booking)
+          _booking.dress = _dress
+          const _price = bookcarsHelper.calculateTotalPrice(_dress, from, to, _booking)
 
           setBooking(_booking)
           setPrice(_price)
-          setCar(newCar)
+          // Convert Option back to Dress-like object for state
+          setDress({
+            _id: newDressOption._id,
+            name: newDressOption.name || '',
+            image: newDressOption.image
+          } as bookcarsTypes.Dress)
         } else {
           helper.error()
         }
-      } else if (!newCar) {
+      } else if (!newDressOption) {
         setPrice(0)
-        setCar(newCar)
+        setDress(undefined)
       } else {
-        setCar(newCar)
+        setDress({
+          _id: newDressOption._id,
+          name: newDressOption.name || '',
+          image: newDressOption.image
+        } as bookcarsTypes.Dress)
       }
     } catch (err) {
       helper.error(err)
@@ -103,16 +110,16 @@ const Booking = () => {
   }
 
   const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
+    if (booking && booking.dress) {
       const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
       _booking.cancellation = e.target.checked
 
       const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
+        booking.dress as bookcarsTypes.Dress,
         new Date(booking.from),
         new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
+        (booking.dress as bookcarsTypes.Dress).supplier.priceChangeRate || 0,
+        booking as bookcarsTypes.DressOptions,
       )
       setBooking(_booking)
       setPrice(_price)
@@ -121,16 +128,16 @@ const Booking = () => {
   }
 
   const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
+    if (booking && booking.dress) {
       const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
       _booking.amendments = e.target.checked
 
       const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
+        booking.dress as bookcarsTypes.Dress,
         new Date(booking.from),
         new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
+        (booking.dress as bookcarsTypes.Dress).supplier.priceChangeRate || 0,
+        booking as bookcarsTypes.DressOptions,
       )
       setBooking(_booking)
       setPrice(_price)
@@ -138,83 +145,13 @@ const Booking = () => {
     }
   }
 
-  const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.collisionDamageWaiver = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setCollisionDamageWaiver(_booking.collisionDamageWaiver)
-    }
-  }
-
-  const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.theftProtection = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setTheftProtection(_booking.theftProtection)
-    }
-  }
-
-  const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.fullInsurance = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setFullInsurance(_booking.fullInsurance)
-    }
-  }
-
-  const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (booking && booking.car) {
-      const _booking = bookcarsHelper.clone(booking) as bookcarsTypes.Booking
-      _booking.additionalDriver = e.target.checked
-
-      const _price = bookcarsHelper.calculateTotalPrice(
-        booking.car as bookcarsTypes.Car,
-        new Date(booking.from),
-        new Date(booking.to),
-        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-        booking as bookcarsTypes.CarOptions,
-      )
-      setBooking(_booking)
-      setPrice(_price)
-      setAdditionalDriver(_booking.additionalDriver)
-    }
-  }
+  // Car-specific insurance handlers removed for dress rental
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault()
 
-      if (!booking || !supplier || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
+      if (!booking || !supplier || !dress || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
         helper.error()
         return
       }
@@ -222,7 +159,7 @@ const Booking = () => {
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
         supplier: supplier._id,
-        car: car._id,
+        dress: dress._id,
         driver: driver._id,
         pickupLocation: pickupLocation._id,
         dropOffLocation: dropOffLocation._id,
@@ -231,9 +168,6 @@ const Booking = () => {
         status,
         cancellation,
         amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
         price
       }
 
@@ -271,7 +205,7 @@ const Booking = () => {
               name: cmp.fullName,
               image: cmp.avatar,
             })
-            setCar(_booking.car as bookcarsTypes.Car)
+            setDress(_booking.dress as bookcarsTypes.Dress)
             const drv = _booking.driver as bookcarsTypes.User
             setDriver({
               _id: drv._id as string,
@@ -294,10 +228,7 @@ const Booking = () => {
             setStatus(_booking.status)
             setCancellation(_booking.cancellation || false)
             setAmendments(_booking.amendments || false)
-            setTheftProtection(_booking.theftProtection || false)
-            setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
-            setFullInsurance(_booking.fullInsurance || false)
-            setAdditionalDriver((_booking.additionalDriver && !!_booking._additionalDriver) || false)
+            // Car-specific insurance options removed for dress rental
           } else {
             setLoading(false)
             setNoMatch(true)
@@ -362,14 +293,12 @@ const Booking = () => {
                 />
               </FormControl>
 
-              <CarSelectList
-                label={blStrings.CAR}
+              <DressSelectList
+                label={blStrings.DRESS}
                 supplier={(supplier && supplier._id) || ''}
-                pickupLocation={(pickupLocation && pickupLocation._id) || ''}
-                onChange={handleCarSelectListChange}
+                onChange={handleDressSelectListChange}
                 required
-                value={car}
-                readOnly={!edit}
+                value={dress}
               />
 
               <FormControl fullWidth margin="dense">
@@ -384,11 +313,11 @@ const Booking = () => {
                       _booking.from = _from
 
                       const _price = bookcarsHelper.calculateTotalPrice(
-                        booking.car as bookcarsTypes.Car,
+                        booking.dress as bookcarsTypes.Dress,
                         new Date(booking.from),
                         new Date(booking.to),
-                        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-                        booking as bookcarsTypes.CarOptions,
+                        (booking.dress as bookcarsTypes.Dress).supplier.priceChangeRate || 0,
+                        booking as bookcarsTypes.DressOptions,
                       )
                       _booking.price = _price
                       setBooking(_booking)
@@ -413,11 +342,11 @@ const Booking = () => {
                       _booking.to = _to
 
                       const _price = bookcarsHelper.calculateTotalPrice(
-                        booking.car as bookcarsTypes.Car,
+                        booking.dress as bookcarsTypes.Dress,
                         new Date(booking.from),
                         new Date(booking.to),
-                        (booking.car as bookcarsTypes.Car).supplier.priceChangeRate || 0,
-                        booking as bookcarsTypes.CarOptions,
+                        (booking.dress as bookcarsTypes.Dress).supplier.priceChangeRate || 0,
+                        booking as bookcarsTypes.DressOptions,
                       )
                       _booking.price = _price
                       setBooking(_booking)
@@ -440,57 +369,23 @@ const Booking = () => {
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).cancellation === -1 || (booking.car as bookcarsTypes.Car).cancellation === 0}
+                  disabled={!edit || (booking.dress as bookcarsTypes.Dress).cancellation === -1 || (booking.dress as bookcarsTypes.Dress).cancellation === 0}
                   control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
-                  label={csStrings.CANCELLATION}
+                  label={dressStrings.CANCELLATION}
                   className="checkbox-fcl"
                 />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).amendments === -1 || (booking.car as bookcarsTypes.Car).amendments === 0}
+                  disabled={!edit || (booking.dress as bookcarsTypes.Dress).amendments === -1 || (booking.dress as bookcarsTypes.Dress).amendments === 0}
                   control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
-                  label={csStrings.AMENDMENTS}
+                  label={dressStrings.AMENDMENTS}
                   className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).collisionDamageWaiver === -1 || (booking.car as bookcarsTypes.Car).collisionDamageWaiver === 0}
-                  control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
-                  label={csStrings.COLLISION_DAMAGE_WAVER}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).theftProtection === -1 || (booking.car as bookcarsTypes.Car).theftProtection === 0}
-                  control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
-                  label={csStrings.THEFT_PROTECTION}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).fullInsurance === -1 || (booking.car as bookcarsTypes.Car).fullInsurance === 0}
-                  control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
-                  label={csStrings.FULL_INSURANCE}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  disabled={!edit || (booking.car as bookcarsTypes.Car).additionalDriver === -1 || (booking.car as bookcarsTypes.Car).additionalDriver === 0}
-                  control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
-                  label={csStrings.ADDITIONAL_DRIVER}
-                  className="checkbox-fcl"
-                />
-              </FormControl>
+              {/* Car-specific insurance options removed for dress rental */}
 
               <div>
                 {edit && (
@@ -508,16 +403,22 @@ const Booking = () => {
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
                 <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
+                <span className="price-day">{`${dressStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
-            <CarList
-              className="car"
-              booking={booking}
-              cars={[booking.car as bookcarsTypes.Car]}
-              hidePrice
-              hideSupplier={env.HIDE_SUPPLIERS}
-            />
+            {/* Dress display - simplified for booking page */}
+            {booking.dress && (
+              <div className="dress-display">
+                <h3>{(booking.dress as bookcarsTypes.Dress).name}</h3>
+                {(booking.dress as bookcarsTypes.Dress).image && (
+                  <img
+                    src={bookcarsHelper.joinURL(env.CDN_DRESSES, (booking.dress as bookcarsTypes.Dress).image)}
+                    alt={(booking.dress as bookcarsTypes.Dress).name}
+                    style={{ maxWidth: '200px', height: 'auto' }}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -16,9 +16,9 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
-  Chip
+  Chip,
+  Grid
 } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
 import { Save as SaveIcon } from '@mui/icons-material'
 import Layout from '../components/Layout'
 import * as DressService from '../services/DressService'
@@ -27,7 +27,7 @@ import * as helper from '../common/helper'
 import { strings } from '../lang/dresses'
 import { strings as commonStrings } from '../lang/common'
 import { DressType, DressSize, DressStyle, DressMaterial, Location } from ':bookcars-types'
-import Avatar from '../components/Avatar'
+
 
 const UpdateDress: React.FC = () => {
   const navigate = useNavigate()
@@ -113,13 +113,29 @@ const UpdateDress: React.FC = () => {
     fetchData()
   }, [location.search, navigate])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData({
       ...formData,
       [name as string]: value
     })
-    
+
+    // Clear validation error when field is edited
+    if (name && validationErrors[name as string]) {
+      setValidationErrors({
+        ...validationErrors,
+        [name]: false
+      })
+    }
+  }
+
+  const handleSelectChange = (e: any) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name as string]: value
+    })
+
     // Clear validation error when field is edited
     if (name && validationErrors[name as string]) {
       setValidationErrors({
@@ -137,7 +153,7 @@ const UpdateDress: React.FC = () => {
     })
   }
 
-  const handleLocationChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+  const handleLocationChange = (e: any) => {
     setFormData({
       ...formData,
       locations: e.target.value as string[]
@@ -251,16 +267,38 @@ const UpdateDress: React.FC = () => {
             <Grid container spacing={3}>
               <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{ width: '100%', maxWidth: 300 }}>
-                  <Avatar
-                    type="dress"
-                    mode="update"
-                    record={dress}
-                    size="large"
-                    readonly={false}
-                    onChange={handleImageChange}
-                    color="primary"
-                    className="avatar-ctn"
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="dress-image-upload"
+                    type="file"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        const file = e.target.files[0]
+                        const reader = new FileReader()
+                        reader.onload = (event) => {
+                          if (event.target?.result) {
+                            handleImageChange(event.target.result as string)
+                          }
+                        }
+                        reader.readAsDataURL(file)
+                      }
+                    }}
                   />
+                  <label htmlFor="dress-image-upload">
+                    <Button variant="outlined" component="span" sx={{ mb: 2 }}>
+                      {commonStrings.UPLOAD_IMAGE}
+                    </Button>
+                  </label>
+                  {image && (
+                    <Box sx={{ mt: 2 }}>
+                      <img
+                        src={image}
+                        alt="Dress preview"
+                        style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                      />
+                    </Box>
+                  )}
                   {imageError && (
                     <Typography color="error" variant="caption" display="block" gutterBottom>
                       {commonStrings.IMAGE_REQUIRED}
@@ -290,7 +328,7 @@ const UpdateDress: React.FC = () => {
                       <Select
                         name="type"
                         value={formData.type}
-                        onChange={handleInputChange}
+                        onChange={handleSelectChange}
                         label={strings.DRESS_TYPE}
                       >
                         <MenuItem value={DressType.Wedding}>{strings.WEDDING}</MenuItem>
@@ -308,7 +346,7 @@ const UpdateDress: React.FC = () => {
                       <Select
                         name="size"
                         value={formData.size}
-                        onChange={handleInputChange}
+                        onChange={handleSelectChange}
                         label={strings.DRESS_SIZE}
                       >
                         <MenuItem value={DressSize.XS}>{strings.SIZE_XS}</MenuItem>
@@ -328,7 +366,7 @@ const UpdateDress: React.FC = () => {
                       <Select
                         name="style"
                         value={formData.style}
-                        onChange={handleInputChange}
+                        onChange={handleSelectChange}
                         label={strings.DRESS_STYLE}
                       >
                         <MenuItem value={DressStyle.Traditional}>{strings.STYLE_TRADITIONAL}</MenuItem>
@@ -345,7 +383,7 @@ const UpdateDress: React.FC = () => {
                       <Select
                         name="material"
                         value={formData.material}
-                        onChange={handleInputChange}
+                        onChange={handleSelectChange}
                         label={strings.MATERIAL}
                       >
                         <MenuItem value=""><em>{commonStrings.NONE}</em></MenuItem>

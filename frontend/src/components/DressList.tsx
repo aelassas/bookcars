@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import {
   DataGrid,
   GridColDef,
-  GridValueGetterParams,
   GridRenderCellParams,
 } from '@mui/x-data-grid'
 import {
@@ -38,8 +37,6 @@ interface DressListProps {
 }
 
 const DressList: React.FC<DressListProps> = ({
-  user,
-  suppliers,
   dressType,
   dressSize,
   dressStyle,
@@ -48,8 +45,7 @@ const DressList: React.FC<DressListProps> = ({
   rentalsCount,
   keyword,
   loading: externalLoading,
-  onLoad,
-  onDelete
+  onLoad
 }) => {
   const navigate = useNavigate()
   const [dresses, setDresses] = useState<Dress[]>([])
@@ -177,13 +173,13 @@ const DressList: React.FC<DressListProps> = ({
       field: 'rentals',
       headerName: strings.RENTALS_COUNT || 'Rentals',
       width: 120,
-      valueGetter: (params: GridValueGetterParams) => params.value || 0
+      valueGetter: (params: any) => params.value || 0
     },
     {
       field: 'type',
       headerName: strings.DRESS_TYPE,
       width: 150,
-      valueGetter: (params: GridValueGetterParams) => {
+      valueGetter: (params: any) => {
         const type = params.value
         switch (type) {
           case 'Wedding': return strings.WEDDING
@@ -198,7 +194,7 @@ const DressList: React.FC<DressListProps> = ({
       field: 'size',
       headerName: strings.DRESS_SIZE,
       width: 120,
-      valueGetter: (params: GridValueGetterParams) => {
+      valueGetter: (params: any) => {
         const size = params.value
         switch (size) {
           case 'XS': return strings.SIZE_XS || 'XS'
@@ -278,3 +274,5 @@ const DressList: React.FC<DressListProps> = ({
     </div>
   )
 }
+
+export default DressList

@@ -16,16 +16,10 @@ import App from '@/App'
 
 import { strings as activateStrings } from '@/lang/activate'
 import { strings as bookingStrings } from '@/lang/booking'
-import { strings as bookingCarListStrings } from '@/lang/booking-car-list'
 import { strings as bookingFilterStrings } from '@/lang/booking-filter'
 import { strings as bookingListStrings } from '@/lang/booking-list'
 import { strings as bookingsStrings } from '@/lang/bookings'
-import { strings as carMultimediaFilterStrings } from '@/lang/car-multimedia-filter'
-import { strings as carRangeFilterStrings } from '@/lang/car-range-filter'
-import { strings as carRatingFilterStrings } from '@/lang/car-rating-filter'
-import { strings as carsStrings } from '@/lang/cars'
-import { strings as carSeatsFilterStrings } from '@/lang/car-seats-filter'
-import { strings as carSpecsStrings } from '@/lang/car-specs'
+import { strings as dressesStrings } from '@/lang/dresses'
 import { strings as changePasswordStrings } from '@/lang/change-password'
 import { strings as checkoutStrings } from '@/lang/checkout'
 import { strings as commonStrings } from '@/lang/common'
@@ -123,15 +117,10 @@ if (lang) {
 
     activateStrings.setLanguage(_lang)
     bookingStrings.setLanguage(_lang)
-    bookingCarListStrings.setLanguage(_lang)
     bookingFilterStrings.setLanguage(_lang)
     bookingListStrings.setLanguage(_lang)
     bookingsStrings.setLanguage(_lang)
-    carMultimediaFilterStrings.setLanguage(_lang)
-    carRangeFilterStrings.setLanguage(_lang)
-    carRatingFilterStrings.setLanguage(_lang)
-    carsStrings.setLanguage(_lang)
-    carSeatsFilterStrings.setLanguage(_lang)
+    dressesStrings.setLanguage(_lang)
     changePasswordStrings.setLanguage(_lang)
     checkoutStrings.setLanguage(_lang)
     commonStrings.setLanguage(_lang)
@@ -151,7 +140,6 @@ if (lang) {
     signInStrings.setLanguage(_lang)
     signUpStrings.setLanguage(_lang)
     tosStrings.setLanguage(_lang)
-    carSpecsStrings.setLanguage(_lang)
     newsletterFormStrings.setLanguage(_lang)
     privacyStrings.setLanguage(_lang)
     faqListStrings.setLanguage(_lang)

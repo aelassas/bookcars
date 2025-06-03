@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Check as CheckIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as csStrings } from '@/lang/cars'
+import { strings } from '@/lang/dresses'
 import * as helper from '@/common/helper'
 import * as UserService from '@/services/UserService'
 
@@ -19,36 +19,24 @@ const Extras = ({
 }: ExtrasProps) => {
   const [cancellationOption, setCancellationOption] = useState('')
   const [amendmentsOption, setAmendmentsOption] = useState('')
-  const [collisionDamageWaiverOption, setCollisionDamageWaiverOption] = useState('')
-  const [theftProtectionOption, setTheftProtectionOption] = useState('')
-  const [fullInsuranceOption, setFullInsuranceOption] = useState('')
-  const [additionalDriverOption, setAdditionalDriverOption] = useState('')
+  const [customizationOption, setCustomizationOption] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const init = async () => {
       if (booking && days) {
         const language = UserService.getLanguage()
-        const car = booking.car as bookcarsTypes.Car
+        const dress = booking.dress as bookcarsTypes.Dress
         const priceChangeRate = (booking.supplier as bookcarsTypes.User).priceChangeRate || 0
 
-        if (booking.cancellation) {
-          setCancellationOption(await helper.getCancellationOption(car.cancellation, language, priceChangeRate))
+        if (booking.cancellation && dress.cancellation !== undefined) {
+          setCancellationOption(await helper.getCancellationOption(dress.cancellation, language, priceChangeRate))
         }
-        if (booking.amendments) {
-          setAmendmentsOption(await helper.getAmendmentsOption(car.amendments, language, priceChangeRate))
+        if (booking.amendments && dress.amendments !== undefined) {
+          setAmendmentsOption(await helper.getAmendmentsOption(dress.amendments, language, priceChangeRate))
         }
-        if (booking.collisionDamageWaiver) {
-          setCollisionDamageWaiverOption(await helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, priceChangeRate))
-        }
-        if (booking.theftProtection) {
-          setTheftProtectionOption(await helper.getTheftProtectionOption(car.theftProtection, days, language, priceChangeRate))
-        }
-        if (booking.fullInsurance) {
-          setFullInsuranceOption(await helper.getFullInsuranceOption(car.fullInsurance, days, language, priceChangeRate))
-        }
-        if (booking.additionalDriver) {
-          setAdditionalDriverOption(await helper.getAdditionalDriverOption(car.additionalDriver, days, language, priceChangeRate))
+        if (dress.customizable) {
+          setCustomizationOption(strings.CUSTOMIZABLE_TOOLTIP)
         }
         setLoading(false)
       }
@@ -67,7 +55,7 @@ const Extras = ({
       {booking.cancellation && (
         <div className="extra">
           <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.CANCELLATION}</span>
+          <span className="extra-title">{strings.CANCELLATION}</span>
           <span className="extra-text">{cancellationOption}</span>
         </div>
       )}
@@ -75,40 +63,16 @@ const Extras = ({
       {booking.amendments && (
         <div className="extra">
           <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.AMENDMENTS}</span>
+          <span className="extra-title">{strings.AMENDMENTS}</span>
           <span className="extra-text">{amendmentsOption}</span>
         </div>
       )}
 
-      {booking.theftProtection && (
+      {customizationOption && (
         <div className="extra">
           <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.THEFT_PROTECTION}</span>
-          <span className="extra-text">{theftProtectionOption}</span>
-        </div>
-      )}
-
-      {booking.collisionDamageWaiver && (
-        <div className="extra">
-          <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-          <span className="extra-text">{collisionDamageWaiverOption}</span>
-        </div>
-      )}
-
-      {booking.fullInsurance && (
-        <div className="extra">
-          <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.FULL_INSURANCE}</span>
-          <span className="extra-text">{fullInsuranceOption}</span>
-        </div>
-      )}
-
-      {booking.additionalDriver && (
-        <div className="extra">
-          <CheckIcon className="extra-icon" />
-          <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
-          <span className="extra-text">{additionalDriverOption}</span>
+          <span className="extra-title">{strings.CUSTOMIZABLE}</span>
+          <span className="extra-text">{customizationOption}</span>
         </div>
       )}
     </div>

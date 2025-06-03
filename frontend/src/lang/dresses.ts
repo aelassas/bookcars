@@ -1,9 +1,11 @@
+import LocalizedStrings from 'localized-strings'
+import * as langHelper from '@/common/langHelper'
 import { strings as commonStrings } from './common'
+import env from '@/config/env.config'
 
 const isUS = commonStrings.LANGUAGE === 'en-US'
-const env = process.env
 
-export const strings = {
+const strings = new LocalizedStrings({
   en: {
     NEW_DRESS: 'New dress',
     DELETE_DRESS: 'Are you sure you want to delete this dress?',
@@ -68,10 +70,10 @@ export const strings = {
     VIEW_DRESS: 'View this dress',
     EMPTY_LIST: 'No dresses.',
     CANNOT_DELETE_DRESS: 'This dress cannot be deleted because it is linked to bookings. However, you can make it unavailable for rental by modifying it.',
-    LESS_THAN_VALUE_1: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_1_2: `Between ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''} and ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_2_3: `Between ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''} and ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    GREATER_THAN_VALUE_3: `Greater than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_1_2: `Between ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} and ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_2_3: `Between ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} and ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    GREATER_THAN_VALUE_3: `Greater than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
     DAY: 'day',
     VIEW_DETAILS: 'View Details',
     RENT_NOW: 'Rent Now',
@@ -105,9 +107,10 @@ export const strings = {
     RENTALS_BY_SIZE: 'Rentals by Size',
     MORE_THAN: 'More than',
     SUPPLIER: 'Supplier',
+    PRICE_PER_DAY: 'Price per day',
     // Missing strings for DepositFilter
-    LESS_THAN_VALUE_2: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `Less than ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_2: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_3: `Less than ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
   },
   fr: {
     NEW_DRESS: 'Nouvelle robe',
@@ -173,10 +176,10 @@ export const strings = {
     VIEW_DRESS: 'Voir cette robe',
     EMPTY_LIST: 'Aucune robe.',
     CANNOT_DELETE_DRESS: 'Cette robe ne peut pas être supprimée car elle est liée à des réservations. Cependant, vous pouvez la rendre indisponible à la location en la modifiant.',
-    LESS_THAN_VALUE_1: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_1_2: `Entre ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''} et ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_2_3: `Entre ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''} et ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    GREATER_THAN_VALUE_3: `Plus de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_1_2: `Entre ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} et ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_2_3: `Entre ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} et ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    GREATER_THAN_VALUE_3: `Plus de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
     DAY: 'jour',
     VIEW_DETAILS: 'Voir les détails',
     RENT_NOW: 'Louer maintenant',
@@ -210,9 +213,10 @@ export const strings = {
     RENTALS_BY_SIZE: 'Locations par Taille',
     MORE_THAN: 'Plus de',
     SUPPLIER: 'Fournisseur',
+    PRICE_PER_DAY: 'Prix par jour',
     // Missing strings for DepositFilter
-    LESS_THAN_VALUE_2: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `Moins de ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_2: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_3: `Moins de ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
   },
   ar: {
     NEW_DRESS: 'فستان جديد',
@@ -278,10 +282,10 @@ export const strings = {
     VIEW_DRESS: 'عرض هذا الفستان',
     EMPTY_LIST: 'لا توجد فساتين.',
     CANNOT_DELETE_DRESS: 'لا يمكن حذف هذا الفستان لأنه مرتبط بحجوزات. ومع ذلك، يمكنك جعله غير متاح للإيجار عن طريق تعديله.',
-    LESS_THAN_VALUE_1: `أقل من ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_1_2: `بين ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1}${!isUS ? (` ${env.CURRENCY}`) : ''} و ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    BETWEEN_VALUES_2_3: `بين ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''} و ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    GREATER_THAN_VALUE_3: `أكثر من ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_1: `أقل من ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_1_2: `بين ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_1 || 200}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} و ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    BETWEEN_VALUES_2_3: `بين ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''} و ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    GREATER_THAN_VALUE_3: `أكثر من ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
     DAY: 'يوم',
     VIEW_DETAILS: 'عرض التفاصيل',
     RENT_NOW: 'استأجر الآن',
@@ -315,10 +319,12 @@ export const strings = {
     RENTALS_BY_SIZE: 'الإيجارات حسب المقاس',
     MORE_THAN: 'أكثر من',
     SUPPLIER: 'المورد',
+    PRICE_PER_DAY: 'السعر في اليوم',
     // Missing strings for DepositFilter
-    LESS_THAN_VALUE_2: `أقل من ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
-    LESS_THAN_VALUE_3: `أقل من ${isUS ? env.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3}${!isUS ? (` ${env.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_2: `أقل من ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_2 || 500}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
+    LESS_THAN_VALUE_3: `أقل من ${isUS ? commonStrings.CURRENCY : ''}${env.DEPOSIT_FILTER_VALUE_3 || 1000}${!isUS ? (` ${commonStrings.CURRENCY}`) : ''}`,
   }
-}
+})
 
-export default strings
+langHelper.setLanguage(strings)
+export { strings }

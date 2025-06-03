@@ -25,7 +25,6 @@ import DressSizeList from '../components/DressSizeList'
 import DressStyleList from '../components/DressStyleList'
 import SupplierSelectList from '../components/SupplierSelectList'
 import LocationSelectList from '../components/LocationSelectList'
-import Avatar from '../components/Avatar'
 
 const CreateDress: React.FC = () => {
   const navigate = useNavigate()
@@ -90,17 +89,19 @@ const CreateDress: React.FC = () => {
     }))
   }
 
-  const handleSupplierChange = (value: string) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    const supplierId = values.length > 0 ? values[0]._id : ''
     setFormData(prev => ({
       ...prev,
-      supplier: value
+      supplier: supplierId
     }))
   }
 
-  const handleLocationsChange = (values: string[]) => {
+  const handleLocationsChange = (values: bookcarsTypes.Option[]) => {
+    const locationIds = values.map(option => option._id)
     setFormData(prev => ({
       ...prev,
-      locations: values
+      locations: locationIds
     }))
   }
 
@@ -169,17 +170,28 @@ const CreateDress: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Box display="flex" justifyContent="center" mb={3}>
-                  <Avatar
-                    type="image"
-                    mode="create"
-                    record={null}
-                    size="large"
-                    readonly={false}
-                    onSelect={handleImageChange}
-                    preview={imagePreview}
-                    hideDelete
+                <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="dress-image-upload"
+                    type="file"
+                    onChange={handleImageChange}
                   />
+                  <label htmlFor="dress-image-upload">
+                    <Button variant="outlined" component="span" sx={{ mb: 2 }}>
+                      {commonStrings.UPLOAD_IMAGE}
+                    </Button>
+                  </label>
+                  {imagePreview && (
+                    <Box sx={{ mt: 2 }}>
+                      <img
+                        src={imagePreview}
+                        alt="Dress preview"
+                        style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                      />
+                    </Box>
+                  )}
                 </Box>
               </Grid>
 

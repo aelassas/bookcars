@@ -1,16 +1,28 @@
 import axios from 'axios'
 import env from '../config/env.config'
-import { Dress } from ':bookcars-types'
+import { Dress, GetDressesPayload } from ':bookcars-types'
 
 /**
  * Get all dresses with pagination.
- * 
+ *
  * @param {number} page - Page number
  * @param {number} size - Page size
  * @returns {Promise<any>}
  */
 export const getDresses = (page: number, size: number) => {
   return axios.get(`${env.API_HOST}/api/dresses/${page}/${size}`)
+}
+
+/**
+ * Get dresses with filters.
+ *
+ * @param {GetDressesPayload} payload - Filter payload
+ * @param {number} page - Page number
+ * @param {number} size - Page size
+ * @returns {Promise<Dress[]>}
+ */
+export const getDressesWithFilters = (payload: GetDressesPayload, page: number = 1, size: number = 10): Promise<Dress[]> => {
+  return axios.post(`${env.API_HOST}/api/frontend-dresses/${page}/${size}`, payload).then(res => res.data)
 }
 
 /**
