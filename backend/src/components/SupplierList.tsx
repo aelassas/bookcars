@@ -210,13 +210,13 @@ const SupplierList = ({
                   }
                 </div>
                 <div className="supplier-actions">
-                  {canDelete && (
+                  {/* {canDelete && (
                     <Tooltip title={commonStrings.DELETE}>
                       <IconButton data-id={supplier._id} data-index={index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                  )}
+                  )} */}
                   {edit && (
                     <Tooltip title={commonStrings.UPDATE}>
                       <IconButton onClick={() => navigate(`/update-supplier?c=${supplier._id}`)}>
