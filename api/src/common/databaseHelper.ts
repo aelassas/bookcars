@@ -39,7 +39,10 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
   mongoose.Promise = globalThis.Promise
 
   try {
-    await mongoose.connect(uri, options)
+    await mongoose.connect(uri, {
+      ...options,
+      autoIndex: false,
+    })
 
     // ✅ Explicitly wait for connection to be open
     await mongoose.connection.asPromise()
@@ -297,18 +300,7 @@ export const createCollectionSafe = async <T>(
 
       return
     } catch (err) {
-      const isSessionError =
-        typeof err === 'object' &&
-        err !== null &&
-        'name' in err &&
-        (err as any).name === 'MongoExpiredSessionError' ||
-        (typeof err === 'object' &&
-          err !== null &&
-          'message' in err &&
-          typeof (err as any).message === 'string' &&
-          (err as any).message.includes('Cannot use a session that has ended'))
-
-      if (isSessionError && i < retries - 1) {
+      if (i < retries - 1) {
         logger.info(`Retrying ${model.modelName}.createCollectionSafe() [${i + 1}]`)
         await new Promise(resolve => setTimeout(resolve, 1000))
       } else {
