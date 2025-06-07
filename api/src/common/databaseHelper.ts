@@ -39,7 +39,8 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
   mongoose.Promise = globalThis.Promise
 
   mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose connection disconnected')
+    console.log('🔴 Mongoose disconnected')
+    console.trace('🔍 Mongoose disconnected stack trace') // <--- Shows where disconnect was triggered
   })
 
   mongoose.connection.on('error', (err) => {
