@@ -38,27 +38,13 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
   mongoose.set('debug', debug)
   mongoose.Promise = globalThis.Promise
 
-  mongoose.connection.on('disconnected', () => {
-    console.log('🔴 Mongoose disconnected')
-    console.trace('🔍 Mongoose disconnected stack trace') // <--- Shows where disconnect was triggered
-  })
-
-  mongoose.connection.on('error', (err) => {
-    console.error('Mongoose connection error:', err)
-  })
-
   try {
-    await mongoose.connect(uri, {
-      ...options,
-      autoIndex: false,
-    })
+    await mongoose.connect(uri, options)
 
     // ✅ Explicitly wait for connection to be open
     await mongoose.connection.asPromise()
 
     logger.info('Database is connected')
-
-    await new Promise((res) => setTimeout(res, 1000))
     return true
   } catch (err) {
     logger.error('Cannot connect to the database:', err)
@@ -283,41 +269,12 @@ const createUserIndex = async (): Promise<void> => {
   await User.collection.createIndex({ expireAt: 1 }, { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true })
 }
 
-export const createCollection = async<T>(model: Model<T>) => {
+const createCollection = async<T>(model: Model<T>) => {
   try {
     await model.collection.indexes()
   } catch {
     await model.createCollection()
     await model.createIndexes()
-  }
-}
-
-export const createCollectionSafe = async <T>(
-  model: Model<T>,
-  retries = 3
-): Promise<void> => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      // Check if collection exists by listing it explicitly
-      const collections = (await model.db.listCollections()).filter(
-        (col) => col.name === model.collection.name
-      )
-
-      if (collections.length === 0) {
-        await model.createCollection()
-      }
-
-      await model.syncIndexes() // safer than createIndexes
-
-      return
-    } catch (err) {
-      if (i < retries - 1) {
-        logger.info(`Retrying ${model.modelName}.createCollectionSafe() [${i + 1}]`)
-        await new Promise(resolve => setTimeout(resolve, 1000))
-      } else {
-        throw err
-      }
-    }
   }
 }
 
@@ -330,18 +287,18 @@ export const createCollectionSafe = async <T>(
 export const initialize = async (): Promise<boolean> => {
   try {
     if (mongoose.connection.readyState) {
-      await createCollectionSafe<env.Booking>(Booking)
-      await createCollectionSafe<env.Car>(Car)
-      await createCollectionSafe<env.LocationValue>(LocationValue)
-      await createCollectionSafe<env.Country>(Country)
-      await createCollectionSafe<env.ParkingSpot>(ParkingSpot)
-      await createCollectionSafe<env.Location>(Location)
-      await createCollectionSafe<env.Notification>(Notification)
-      await createCollectionSafe<env.NotificationCounter>(NotificationCounter)
-      await createCollectionSafe<env.PushToken>(PushToken)
-      await createCollectionSafe<env.Token>(Token)
-      await createCollectionSafe<env.User>(User)
-      await createCollectionSafe<env.AdditionalDriver>(AdditionalDriver)
+      await createCollection<env.Booking>(Booking)
+      await createCollection<env.Car>(Car)
+      await createCollection<env.LocationValue>(LocationValue)
+      await createCollection<env.Country>(Country)
+      await createCollection<env.ParkingSpot>(ParkingSpot)
+      await createCollection<env.Location>(Location)
+      await createCollection<env.Notification>(Notification)
+      await createCollection<env.NotificationCounter>(NotificationCounter)
+      await createCollection<env.PushToken>(PushToken)
+      await createCollection<env.Token>(Token)
+      await createCollection<env.User>(User)
+      await createCollection<env.AdditionalDriver>(AdditionalDriver)
     }
 
     //
