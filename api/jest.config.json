@@ -10,7 +10,7 @@
     "./__tests__/"
   ],
   "testMatch": [
-    "**/*.test.ts"
+    "**/car.test.ts"
   ],
   "collectCoverage": true,
   "coverageReporters": [

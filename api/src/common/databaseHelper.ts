@@ -289,7 +289,7 @@ export const createCollectionSafe = async <T>(
     try {
       // Check if collection exists by listing it explicitly
       const collections = (await model.db.listCollections()).filter(
-        (col: any) => col.name === model.collection.name
+        (col) => col.name === model.collection.name
       )
 
       if (collections.length === 0) {
