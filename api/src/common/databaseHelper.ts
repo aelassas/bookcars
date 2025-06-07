@@ -38,6 +38,14 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
   mongoose.set('debug', debug)
   mongoose.Promise = globalThis.Promise
 
+  mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose connection disconnected')
+  })
+
+  mongoose.connection.on('error', (err) => {
+    console.error('Mongoose connection error:', err)
+  })
+
   try {
     await mongoose.connect(uri, {
       ...options,
