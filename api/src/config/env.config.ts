@@ -43,6 +43,13 @@ export const LANGUAGES = [
 export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
 
 /**
+ * Indicate whether we are in CI environment or not.
+ *
+ * @type {string}
+ */
+export const CI = helper.StringToBoolean(__env__('BC_CI', false, 'false'))
+
+/**
  * Server Port. Default is 4002.
  *
  * @type {number}
