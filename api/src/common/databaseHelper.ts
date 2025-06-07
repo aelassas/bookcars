@@ -44,6 +44,8 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
       autoIndex: false,
     })
 
+    await new Promise((res) => setTimeout(res, 1000))
+    
     // ✅ Explicitly wait for connection to be open
     await mongoose.connection.asPromise()
 
