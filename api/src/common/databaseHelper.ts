@@ -269,12 +269,52 @@ const createUserIndex = async (): Promise<void> => {
   await User.collection.createIndex({ expireAt: 1 }, { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true })
 }
 
-const createCollection = async<T>(model: Model<T>) => {
+export const createCollection = async<T>(model: Model<T>) => {
   try {
     await model.collection.indexes()
   } catch {
     await model.createCollection()
     await model.createIndexes()
+  }
+}
+
+export const createCollectionSafe = async <T>(
+  model: Model<T>,
+  retries = 3
+): Promise<void> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      // Check if collection exists by listing it explicitly
+      const collections = (await model.db.listCollections()).filter(
+        (col: any) => col.name === model.collection.name
+      )
+
+      if (collections.length === 0) {
+        await model.createCollection()
+      }
+
+      await model.syncIndexes() // safer than createIndexes
+
+      return
+    } catch (err) {
+      const isSessionError =
+        typeof err === 'object' &&
+        err !== null &&
+        'name' in err &&
+        (err as any).name === 'MongoExpiredSessionError' ||
+        (typeof err === 'object' &&
+          err !== null &&
+          'message' in err &&
+          typeof (err as any).message === 'string' &&
+          (err as any).message.includes('Cannot use a session that has ended'))
+
+      if (isSessionError && i < retries - 1) {
+        logger.info(`Retrying ${model.modelName}.createCollectionSafe() [${i + 1}]`)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      } else {
+        throw err
+      }
+    }
   }
 }
 
@@ -287,18 +327,18 @@ const createCollection = async<T>(model: Model<T>) => {
 export const initialize = async (): Promise<boolean> => {
   try {
     if (mongoose.connection.readyState) {
-      await createCollection<env.Booking>(Booking)
-      await createCollection<env.Car>(Car)
-      await createCollection<env.LocationValue>(LocationValue)
-      await createCollection<env.Country>(Country)
-      await createCollection<env.ParkingSpot>(ParkingSpot)
-      await createCollection<env.Location>(Location)
-      await createCollection<env.Notification>(Notification)
-      await createCollection<env.NotificationCounter>(NotificationCounter)
-      await createCollection<env.PushToken>(PushToken)
-      await createCollection<env.Token>(Token)
-      await createCollection<env.User>(User)
-      await createCollection<env.AdditionalDriver>(AdditionalDriver)
+      await createCollectionSafe<env.Booking>(Booking)
+      await createCollectionSafe<env.Car>(Car)
+      await createCollectionSafe<env.LocationValue>(LocationValue)
+      await createCollectionSafe<env.Country>(Country)
+      await createCollectionSafe<env.ParkingSpot>(ParkingSpot)
+      await createCollectionSafe<env.Location>(Location)
+      await createCollectionSafe<env.Notification>(Notification)
+      await createCollectionSafe<env.NotificationCounter>(NotificationCounter)
+      await createCollectionSafe<env.PushToken>(PushToken)
+      await createCollectionSafe<env.Token>(Token)
+      await createCollectionSafe<env.User>(User)
+      await createCollectionSafe<env.AdditionalDriver>(AdditionalDriver)
     }
 
     //
