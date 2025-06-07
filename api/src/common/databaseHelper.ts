@@ -40,6 +40,10 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
 
   try {
     await mongoose.connect(uri, options)
+
+    // ✅ Explicitly wait for connection to be open
+    await mongoose.connection.asPromise()
+
     logger.info('Database is connected')
     return true
   } catch (err) {
