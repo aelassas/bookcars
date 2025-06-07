@@ -33,6 +33,7 @@ jobs:
            cd ./api
            touch .env
            echo NODE_ENV=$NODE_ENV >> .env
+           echo BC_CI=$BC_CI >> .env
            echo BC_HTTPS=$BC_HTTPS >> .env
            echo BC_DB_URI=$BC_DB_URI >> .env
            echo BC_DB_SSL=$BC_DB_SSL >> .env
@@ -69,6 +70,7 @@ jobs:
            npm test
       env:
         NODE_ENV: ${{ vars.NODE_ENV }}
+        BC_CI: ${{ vars.BC_CI }}
         BC_HTTPS: ${{ vars.BC_HTTPS }}
         BC_DB_URI: ${{ secrets.BC_DEMO_DB_URI }}
         BC_DB_SSL: ${{ vars.BC_DB_SSL }}
