@@ -44,12 +44,12 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
       autoIndex: false,
     })
 
-    await new Promise((res) => setTimeout(res, 1000))
-    
     // ✅ Explicitly wait for connection to be open
     await mongoose.connection.asPromise()
 
     logger.info('Database is connected')
+
+    await new Promise((res) => setTimeout(res, 1000))
     return true
   } catch (err) {
     logger.error('Cannot connect to the database:', err)
