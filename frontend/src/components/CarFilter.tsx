@@ -51,7 +51,6 @@ const CarFilter = ({
     formState: { errors, isSubmitting },
     setError,
     clearErrors,
-    getValues,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -64,6 +63,10 @@ const CarFilter = ({
     mode: 'onSubmit',
   })
 
+  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
+  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
+  const from = useWatch({ control, name: 'from' })
+  const to = useWatch({ control, name: 'to' })
   const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
@@ -87,7 +90,7 @@ const CarFilter = ({
     setValue('sameLocation', e.target.checked)
 
     if (e.target.checked) {
-      setValue('dropOffLocation', getValues('pickupLocation'))
+      setValue('dropOffLocation', pickupLocation)
     }
   }
 
@@ -116,8 +119,6 @@ const CarFilter = ({
   const checkDates = () => {
     const minPickupDuration = env.MIN_PICK_UP_HOURS * 60 * 60 * 1000
     const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
-    const from = getValues('from')
-    const to = getValues('to')
 
     if (from) {
       let __minDate = new Date(from)
@@ -190,7 +191,7 @@ const CarFilter = ({
             init={!env.isMobile}
             required
             variant="standard"
-            value={getValues('pickupLocation') as bookcarsTypes.Location}
+            value={pickupLocation as bookcarsTypes.Location}
             onChange={handlePickupLocationChange}
           />
         </FormControl>
@@ -199,7 +200,7 @@ const CarFilter = ({
             <LocationSelectList
               {...register('dropOffLocation')}
               label={commonStrings.DROP_OFF_LOCATION}
-              value={getValues('dropOffLocation') as bookcarsTypes.Location}
+              value={dropOffLocation as bookcarsTypes.Location}
               hidePopupIcon
               customOpen={env.isMobile}
               init={!env.isMobile}
@@ -213,7 +214,7 @@ const CarFilter = ({
           <DateTimePicker
             // {...register('from')}
             label={strings.PICK_UP_DATE}
-            value={getValues('from') || undefined}
+            value={from || undefined}
             minDate={_minDate}
             variant="standard"
             required
@@ -234,7 +235,7 @@ const CarFilter = ({
           <DateTimePicker
             // {...register('to')}
             label={strings.DROP_OFF_DATE}
-            value={getValues('to') || undefined}
+            value={to || undefined}
             minDate={minDate}
             variant="standard"
             required
