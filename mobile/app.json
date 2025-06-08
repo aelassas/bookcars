@@ -3,7 +3,7 @@
     "jsEngine": "hermes",
     "newArchEnabled": true,
     "name": "BookCars",
-    "version": "7.3.0",
+    "version": "7.4.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
@@ -14,7 +14,7 @@
       "image": "./assets/splash.png"
     },
     "android": {
-      "versionCode": 730,
+      "versionCode": 740,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
@@ -24,7 +24,7 @@
       "package": "com.bookcars"
     },
     "ios": {
-      "buildNumber": "7.3.0",
+      "buildNumber": "7.4.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       "bundleIdentifier": "com.bookcars"
