@@ -133,7 +133,7 @@ const Settings = () => {
                   loggedUser={user}
                   user={user}
                   size="large"
-                  readonly={false}
+                  readonly
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   color="disabled"
@@ -200,7 +200,7 @@ const Settings = () => {
                   >
                     {commonStrings.RESET_PASSWORD}
                   </Button>
-                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled>
                     {commonStrings.SAVE}
                   </Button>
                   <Button
