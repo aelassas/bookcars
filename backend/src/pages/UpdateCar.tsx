@@ -63,7 +63,6 @@ const UpdateCar = () => {
     formState: { errors, isSubmitting },
     setValue,
     register,
-    getValues,
     clearErrors,
     setFocus,
   } = useForm<FormFields>({
@@ -604,8 +603,7 @@ const UpdateCar = () => {
                   label={strings.MULTIMEDIA}
                   value={multimedia as bookcarsTypes.CarMultimedia[]}
                   onChange={(value) => {
-                    const currentValue = getValues('multimedia')
-                    if (JSON.stringify(currentValue) !== JSON.stringify(value)) {
+                    if (JSON.stringify(multimedia) !== JSON.stringify(value)) {
                       setValue('multimedia', value)
                     }
                   }}

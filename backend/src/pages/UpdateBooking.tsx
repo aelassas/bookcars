@@ -178,7 +178,6 @@ const UpdateBooking = () => {
     setValue,
     formState: { errors, isSubmitting },
     clearErrors,
-    getValues,
     trigger,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -208,6 +207,7 @@ const UpdateBooking = () => {
   const driver = useWatch({ control, name: 'driver' })
   const from = useWatch({ control, name: 'from' })
   const to = useWatch({ control, name: 'to' })
+  const status = useWatch({ control, name: 'status' })
   const cancellation = useWatch({ control, name: 'cancellation' })
   const amendments = useWatch({ control, name: 'amendments' })
   const theftProtection = useWatch({ control, name: 'theftProtection' })
@@ -613,10 +613,9 @@ const UpdateBooking = () => {
               <FormControl fullWidth margin="dense">
                 <StatusList
                   label={blStrings.STATUS}
-                  value={getValues('status')}
+                  value={status}
                   onChange={(value) => {
-                    const currentValue = getValues('status')
-                    if (currentValue !== value) {
+                    if (status !== value) {
                       setValue('status', value)
                     }
                   }}
@@ -669,7 +668,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('amendments')}
-                      checked={getValues('amendments')}
+                      checked={amendments}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
                       onChange={async (e) => {
@@ -704,7 +703,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('theftProtection')}
-                      checked={getValues('theftProtection')}
+                      checked={theftProtection}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
                       onChange={async (e) => {
@@ -739,7 +738,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('collisionDamageWaiver')}
-                      checked={getValues('collisionDamageWaiver')}
+                      checked={collisionDamageWaiver}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
                       onChange={async (e) => {
@@ -774,7 +773,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('fullInsurance')}
-                      checked={getValues('fullInsurance')}
+                      checked={fullInsurance}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
                       onChange={async (e) => {
@@ -809,7 +808,7 @@ const UpdateBooking = () => {
                   control={
                     <Switch
                       // {...register('additionalDriver')}
-                      checked={getValues('additionalDriver')}
+                      checked={additionalDriver}
                       color="primary"
                       disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
                       onChange={async (e) => {
@@ -856,9 +855,9 @@ const UpdateBooking = () => {
                   <Button variant="contained" className="btn-primary btn-margin-bottom" size="small" type="submit" disabled={isSubmitting}>
                     {commonStrings.SAVE}
                   </Button>
-                  {/* <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
+                  <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                     {commonStrings.DELETE}
-                  </Button> */}
+                  </Button>
                   <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                     {commonStrings.CANCEL}
                   </Button>
