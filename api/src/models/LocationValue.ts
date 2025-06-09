@@ -29,6 +29,14 @@ const locationValueSchema = new Schema<env.LocationValue>(
 
 // Add custom indexes
 locationValueSchema.index({ language: 1, value: 1 })
+locationValueSchema.index(
+  { value: 'text' },
+  {
+    default_language: 'none', // This disables stemming
+    language_override: '_none', // Prevent MongoDB from expecting a language field
+    background: true,
+  },
+)
 
 const LocationValue = model<env.LocationValue>('LocationValue', locationValueSchema)
 
