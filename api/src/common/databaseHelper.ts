@@ -114,8 +114,9 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
     // Create new text index with fallback options
     await collection.createIndex({ [field]: 'text' }, fallbackOptions)
     logger.info(`✅ Created text index "${indexName}" on "${field}" with fallback options`)
-  } catch (err: any) {
-    logger.info(`⚠️ Failed to use language override; falling back to basic text index: "${err.message}"`)
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : JSON.stringify(err)
+    logger.info(`⚠️ Failed to use language override; falling back to basic text index: "${message}"`)
     try {
       // Retry creating a basic text index without override if needed
       await collection.createIndex({ [field]: 'text' }, {
@@ -135,11 +136,11 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
  * to ensure that each document has language-specific values for all supported languages defined in env.LANGUAGES.
  *
  * @async
- * @param {Model<any>} collection 
+ * @param {Model<T>} collection 
  * @param {string} label 
  * @returns {Promise<boolean>}
  */
-const syncLanguageValues = async (collection: Model<any>, label: string) => {
+const syncLanguageValues = async <T extends { values: mongoose.Types.ObjectId[] }>(collection: Model<T>, label: string) => {
   try {
     logger.info(`ℹ️ Initializing ${label}...`)
     const docs = await collection.find({}).populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })
@@ -158,7 +159,7 @@ const syncLanguageValues = async (collection: Model<any>, label: string) => {
           await val.save()
           const fresh = await collection.findById(doc.id)
           if (fresh) {
-            fresh.values.push(val._id)
+            fresh.values.push(val.id)
             await fresh.save()
           }
         }
@@ -166,13 +167,14 @@ const syncLanguageValues = async (collection: Model<any>, label: string) => {
     }
 
     // Delete LocationValue nin env.LANGUAGES
-    const obsolete = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    const obsolete = await LocationValue.find({ language: { $nin: env.LANGUAGES } }).populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })
+
     const obsoleteIds = obsolete.map((v) => v.id)
 
     for (const val of obsolete) {
       const affected = await collection.find({ values: val.id })
       for (const doc of affected) {
-        doc.values = doc.values.filter((v: any) => !v.equals(val.id))
+        doc.values = doc.values.filter((v) => !v.equals(val.id))
         await doc.save()
       }
     }
@@ -189,21 +191,21 @@ const syncLanguageValues = async (collection: Model<any>, label: string) => {
 /**
  * Initialiazes locations.
  *
- * @returns {unknown} 
+ * @returns {Promise<boolean>} 
  */
 export const initializeLocations = () => syncLanguageValues(Location, 'locations')
 
 /**
  * Initialiazes countries.
  *
- * @returns {unknown} 
+ * @returns {Promise<boolean>} 
  */
 export const initializeCountries = () => syncLanguageValues(Country, 'countries')
 
 /**
  * Initialiazes parkingSpots.
  *
- * @returns {unknown} 
+ * @returns {Promise<boolean>} 
  */
 export const initializeParkingSpots = () => syncLanguageValues(ParkingSpot, 'parkingSpots')
 
@@ -211,12 +213,12 @@ export const initializeParkingSpots = () => syncLanguageValues(ParkingSpot, 'par
  * Creates TTL index.
  *
  * @async
- * @param {Model<any>} model 
+ * @param {Model<T>} model 
  * @param {string} name 
  * @param {number} expireAfterSeconds 
- * @returns {*} 
+ * @returns {Promise<void>} 
  */
-const createTTLIndex = async (model: Model<any>, name: string, expireAfterSeconds: number) => {
+const createTTLIndex = async <T>(model: Model<T>, name: string, expireAfterSeconds: number) => {
   await model.collection.createIndex(
     { expireAt: 1 },
     { name, expireAfterSeconds, background: true },
@@ -227,12 +229,12 @@ const createTTLIndex = async (model: Model<any>, name: string, expireAfterSecond
  * Updates TTL index.
  *
  * @async
- * @param {Model<any>} model 
+ * @param {Model<T>} model 
  * @param {string} name 
  * @param {number} seconds 
- * @returns {*} 
+ * @returns {Promise<void>} 
  */
-const checkAndUpdateTTL = async (model: Model<any>, name: string, seconds: number) => {
+const checkAndUpdateTTL = async <T>(model: Model<T>, name: string, seconds: number) => {
   const indexName = `${model.modelName}.${name}`
   logger.info(`ℹ️ Checking TTL index: ${indexName}`)
   const indexes = await model.collection.indexes()
@@ -295,11 +297,22 @@ const createCollection = async <T>(model: Model<T>, retries = 3, delay = 500): P
 }
 
 /**
- * Models.
+ * Helper utility to infer the union type of array elements.
  *
- * @type {Model<any>[]}
+ * @template {readonly unknown[]} T 
+ * @param {T} models 
+ * @returns {T} 
  */
-export const models: Model<any>[] = [
+const defineModels = <T extends readonly unknown[]>(models: T) => models
+
+/**
+ * Array of Mongoose model constructors used throughout the application.
+ * Each element corresponds to a Mongoose model imported from the respective model files.
+ *
+ * The array is a readonly tuple preserving the exact model constructor types.
+ * 
+ */
+export const models = defineModels([
   AdditionalDriver,
   BankDetails,
   Booking,
@@ -314,7 +327,7 @@ export const models: Model<any>[] = [
   PushToken,
   Token,
   User,
-]
+] as const)
 
 /**
  * Initializes database.
@@ -334,7 +347,7 @@ export const initialize = async (): Promise<boolean> => {
     //
     // Create collections
     //
-    await Promise.all(models.map((model) => createCollection(model)))
+    await Promise.all(models.map((model) => createCollection(model as Model<unknown>)))
 
     //
     // Feature Detection and Conditional Index Creation
