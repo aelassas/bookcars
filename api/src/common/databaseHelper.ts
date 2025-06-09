@@ -80,11 +80,11 @@ export const close = async (force = false): Promise<void> => {
 /**
  * Creates a text index on a model's field, falling back gracefully if language override is unsupported.
  *
- * @param {Model<any>} model - The Mongoose model.
+ * @param {Model<T>} model - The Mongoose model.
  * @param {string} field - The field to index.
  * @param {string} indexName - The desired index name.
  */
-export const createTextIndexWithFallback = async (model: Model<any>, field: string, indexName: string) => {
+export const createTextIndexWithFallback = async <T>(model: Model<T>, field: string, indexName: string) => {
   const collection = model.collection
   const fallbackOptions = {
     name: indexName,
