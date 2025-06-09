@@ -159,7 +159,7 @@ userSchema.index({ type: 1, expireAt: 1, email: 1, _id: 1 })
 const User = model<env.User>('User', userSchema)
 
 // Create indexes manually and handle potential errors
-User.syncIndexes().catch((err) => {
+User.createIndexes().catch((err) => {
   logger.error('Error creating User indexes:', err)
 })
 
