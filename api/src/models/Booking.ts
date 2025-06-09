@@ -141,7 +141,7 @@ bookingSchema.index({ 'car.name': 1 })
 const Booking = model<env.Booking>('Booking', bookingSchema)
 
 // Create indexes manually and handle potential errors
-Booking.syncIndexes().catch((err) => {
+Booking.createIndexes().catch((err) => {
   logger.error('Error creating Booking indexes:', err)
 })
 

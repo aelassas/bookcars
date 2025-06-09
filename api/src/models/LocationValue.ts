@@ -33,7 +33,7 @@ locationValueSchema.index({ language: 1, value: 1 })
 const LocationValue = model<env.LocationValue>('LocationValue', locationValueSchema)
 
 // Create indexes manually and handle potential errors
-LocationValue.syncIndexes().catch((err) => {
+LocationValue.createIndexes().catch((err) => {
   logger.error('Error creating LocationValue indexes:', err)
 })
 
