@@ -220,7 +220,7 @@ carSchema.index({ dateBasedPrices: 1 })
 const Car = model<env.Car>('Car', carSchema)
 
 // Create indexes manually and handle potential errors
-Car.syncIndexes().catch((err) => {
+Car.createIndexes().catch((err) => {
   logger.error('Error creating Car indexes:', err)
 })
 

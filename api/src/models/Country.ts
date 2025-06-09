@@ -28,7 +28,7 @@ countrySchema.index({ values: 1 })
 const Country = model<env.Country>('Country', countrySchema)
 
 // Create indexes manually and handle potential errors
-Country.syncIndexes().catch((err) => {
+Country.createIndexes().catch((err) => {
   logger.error('Error creating Country indexes:', err)
 })
 
