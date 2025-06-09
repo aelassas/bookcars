@@ -97,7 +97,7 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
   try {
     // Drop the existing text index if it exists
     const indexes = await collection.indexes()
-    const existingIndex = indexes.find(i => i.name === indexName)
+    const existingIndex = indexes.find((index) => index.name === indexName)
     if (existingIndex) {
       const sameOptions =
         existingIndex.default_language === fallbackOptions.default_language &&
