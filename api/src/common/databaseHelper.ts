@@ -1,6 +1,7 @@
 import mongoose, { ConnectOptions, Model } from 'mongoose'
 import * as env from '../config/env.config'
 import * as logger from './logger'
+import * as helper from './helper'
 import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../models/Booking'
 import Car from '../models/Car'
 import Location from '../models/Location'
@@ -13,350 +14,359 @@ import User, { USER_EXPIRE_AT_INDEX_NAME } from '../models/User'
 import Country from '../models/Country'
 import ParkingSpot from '../models/ParkingSpot'
 import AdditionalDriver from '../models/AdditionalDriver'
+import BankDetails from '../models/BankDetails'
+import DateBasedPrice from '../models/DateBasedPrice'
 
 /**
- * Connect to database.
+ * Tracks the current database connection status to prevent redundant connections.
+ * Set to true after a successful connection is established via `connect()`,
+ * and reset to false after `close()` is called.
+ * 
+ * @type {boolean}
+ */
+let isConnected = false
+
+/**
+ * Connects to database.
  *
- * @export
  * @async
- * @param {string} uri
- * @param {boolean} ssl
- * @param {boolean} debug
- * @returns {Promise<boolean>}
+ * @param {string} uri 
+ * @param {boolean} ssl 
+ * @param {boolean} debug 
+ * @returns {Promise<boolean>} 
  */
 export const connect = async (uri: string, ssl: boolean, debug: boolean): Promise<boolean> => {
-  let options: ConnectOptions = {}
+  if (isConnected) {
+    return true
+  }
 
-  if (ssl) {
-    options = {
+  const options: ConnectOptions = ssl
+    ? {
       tls: true,
       tlsCertificateKeyFile: env.DB_SSL_CERT,
       tlsCAFile: env.DB_SSL_CA,
     }
-  }
+    : {}
 
   mongoose.set('debug', debug)
   mongoose.Promise = globalThis.Promise
 
   try {
     await mongoose.connect(uri, options)
-
-    // ✅ Explicitly wait for connection to be open
+    // Explicitly wait for connection to be open
     await mongoose.connection.asPromise()
-
-    logger.info('Database is connected')
+    logger.info('✅ Database connected')
+    isConnected = true
     return true
   } catch (err) {
-    logger.error('Cannot connect to the database:', err)
+    logger.error('❌ Database connection failed:', err)
     return false
   }
 }
 
 /**
- * Close database connection.
+ * Closes database connection.
  *
- * @export
  * @async
- * @param {boolean} force
- * @returns {Promise<void>}
+ * @param {boolean} [force=false] 
+ * @returns {Promise<void>} 
  */
-export const close = async (force: boolean = false): Promise<void> => {
+export const close = async (force = false): Promise<void> => {
   await mongoose.connection.close(force)
+  isConnected = false
+  logger.info('✅ Database connection closed')
 }
 
 /**
- * Initialize locations.
- * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * Creates a text index on a model's field, falling back gracefully if language override is unsupported.
  *
- * @async
- * @returns {*}
+ * @param {Model<any>} model - The Mongoose model.
+ * @param {string} field - The field to index.
+ * @param {string} indexName - The desired index name.
  */
-export const initializeLocations = async () => {
+export const createTextIndexWithFallback = async (model: Model<any>, field: string, indexName: string) => {
+  const collection = model.collection
+  const fallbackOptions = {
+    name: indexName,
+    default_language: 'none', // This disables stemming
+    language_override: '_none', // Prevent MongoDB from expecting a language field
+    background: true,
+    weights: { [field]: 1 },
+  }
+
   try {
-    logger.info('Initializing locations...')
-    const locations = await Location.find({})
-      .populate<{ values: env.LocationValue[] }>({
-        path: 'values',
-        model: 'LocationValue',
+    // Drop the existing text index if it exists
+    const indexes = await collection.indexes()
+    const existingIndex = indexes.find(i => i.name === indexName)
+    if (existingIndex) {
+      const sameOptions =
+        existingIndex.default_language === fallbackOptions.default_language &&
+        existingIndex.language_override === fallbackOptions.language_override
+      if (!sameOptions) {
+        await collection.dropIndex(indexName)
+        logger.info(`✅ Dropped old text index "${indexName}" due to option mismatch`)
+      } else {
+        logger.info(`ℹ️ Text index "${indexName}" already exists and is up to date`)
+        return
+      }
+    }
+
+    // Create new text index with fallback options
+    await collection.createIndex({ [field]: 'text' }, fallbackOptions)
+    logger.info(`✅ Created text index "${indexName}" on "${field}" with fallback options`)
+  } catch (err: any) {
+    logger.info(`⚠️ Failed to use language override; falling back to basic text index: "${err.message}"`)
+    try {
+      // Retry creating a basic text index without override if needed
+      await collection.createIndex({ [field]: 'text' }, {
+        name: indexName,
+        background: true,
+        weights: { [field]: 1 },
       })
+      logger.info(`✅ Created basic text index "${indexName}" on "${field}" without language override`)
+    } catch (fallbackErr) {
+      logger.error(`❌ Failed to create text index "${indexName}":`, fallbackErr)
+    }
+  }
+}
 
-    // Add missing LocationValues in env.LANGUAGES
-    for (const location of locations) {
-      const enLocationValue = location.values.find((val) => val.language === 'en')
+const syncLanguageValues = async (collection: Model<any>, label: string) => {
+  try {
+    logger.info(`ℹ️ Initializing ${label}...`)
+    const docs = await collection.find({}).populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })
 
-      if (enLocationValue) {
-        for (const lang of env.LANGUAGES) {
-          if (!location.values.some((val) => val.language === lang)) {
-            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
-            await langLocationValue.save()
-            const loc = await Location.findById(location.id)
-            if (loc) {
-              loc.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-              await loc.save()
-            }
+    for (const doc of docs) {
+      const en = doc.values.find((v) => v.language === 'en')
+      if (!en) {
+        logger.info(`⚠️ English value missing for ${label}:`, doc.id)
+        continue
+      }
+
+      // Add missing LocationValues in env.LANGUAGES
+      for (const lang of env.LANGUAGES) {
+        if (!doc.values.some((v) => v.language === lang)) {
+          const val = new LocationValue({ language: lang, value: en.value })
+          await val.save()
+          const fresh = await collection.findById(doc.id)
+          if (fresh) {
+            fresh.values.push(val._id)
+            await fresh.save()
           }
         }
-      } else {
-        logger.info('English value not found for location:', location.id)
       }
     }
 
     // Delete LocationValue nin env.LANGUAGES
-    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
-    const valuesIds = values.map((v) => v.id)
-    for (const val of values) {
-      const _locations = await Location.find({ values: val.id })
-      for (const _location of _locations) {
-        _location.values.splice(_location.values.findIndex((v) => v.equals(val.id)), 1)
-        await _location.save()
-        await LocationValue.deleteMany({ $and: [{ _id: { $in: _location.values } }, { _id: { $in: valuesIds } }] })
+    const obsolete = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
+    const obsoleteIds = obsolete.map((v) => v.id)
+
+    for (const val of obsolete) {
+      const affected = await collection.find({ values: val.id })
+      for (const doc of affected) {
+        doc.values = doc.values.filter((v: any) => !v.equals(val.id))
+        await doc.save()
       }
     }
+    await LocationValue.deleteMany({ _id: { $in: obsoleteIds } })
 
-    logger.info('Locations initialized')
+    logger.info(`✅ ${label} initialized`)
     return true
   } catch (err) {
-    logger.error('Error while initializing locations:', err)
+    logger.error(`❌ Failed to initialize ${label}:`, err)
     return false
   }
 }
 
 /**
- * Initialize countries.
- * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * Initialiazes locations.
+ *
+ * @returns {unknown} 
+ */
+export const initializeLocations = () => syncLanguageValues(Location, 'locations')
+
+/**
+ * Initialiazes countries.
+ *
+ * @returns {unknown} 
+ */
+export const initializeCountries = () => syncLanguageValues(Country, 'countries')
+
+/**
+ * Initialiazes parkingSpots.
+ *
+ * @returns {unknown} 
+ */
+export const initializeParkingSpots = () => syncLanguageValues(ParkingSpot, 'parkingSpots')
+
+/**
+ * Creates TTL index.
  *
  * @async
- * @returns {*}
+ * @param {Model<any>} model 
+ * @param {string} name 
+ * @param {number} expireAfterSeconds 
+ * @returns {*} 
  */
-export const initializeCountries = async () => {
-  try {
-    logger.info('Initializing countries...')
-    const countries = await Country.find({})
-      .populate<{ values: env.LocationValue[] }>({
-        path: 'values',
-        model: 'LocationValue',
-      })
+const createTTLIndex = async (model: Model<any>, name: string, expireAfterSeconds: number) => {
+  await model.collection.createIndex(
+    { expireAt: 1 },
+    { name, expireAfterSeconds, background: true },
+  )
+}
 
-    // Add missing LocationValues in env.LANGUAGES
-    for (const country of countries) {
-      const enLocationValue = country.values.find((val) => val.language === 'en')
+/**
+ * Updates TTL index.
+ *
+ * @async
+ * @param {Model<any>} model 
+ * @param {string} name 
+ * @param {number} seconds 
+ * @returns {*} 
+ */
+const checkAndUpdateTTL = async (model: Model<any>, name: string, seconds: number) => {
+  const indexName = `${model.modelName}.${name}`
+  logger.info(`ℹ️ Checking TTL index: ${indexName}`)
+  const indexes = await model.collection.indexes()
+  const existing = indexes.find((index) => index.name === name && index.expireAfterSeconds !== seconds)
 
-      if (enLocationValue) {
-        for (const lang of env.LANGUAGES) {
-          if (!country.values.some((val) => val.language === lang)) {
-            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
-            await langLocationValue.save()
-            const cnt = await Country.findById(country.id)
-            if (cnt) {
-              cnt.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-              await cnt.save()
-            }
-          }
-        }
+  if (existing) {
+    try {
+      await model.collection.dropIndex(name)
+    } catch (err) {
+      logger.error(`❌ Failed to drop index "${name}"`, err)
+    } finally {
+      await createTTLIndex(model, name, seconds)
+      await model.createIndexes()
+    }
+  } else {
+    logger.info(`ℹ️ TTL index "${indexName}" is already up to date`)
+  }
+}
+
+/**
+ * Creates a Model with retry logic.
+ *
+ * @async
+ * @template T 
+ * @param {Model<T>} model 
+ * @param {number} [retries=3] 
+ * @param {number} [delay=500] 
+ * @returns {Promise<void>} 
+ */
+const createCollection = async <T>(model: Model<T>, retries = 3, delay = 500): Promise<void> => {
+  const modelName = model.modelName
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const collections = await model.db.listCollections()
+      const exists = collections.some((col) => col.name === modelName)
+      if (!exists) {
+        await model.createCollection()
+        await model.createIndexes()
+        // Optionally log success
+        logger.info(`✅ Created collection: ${modelName}`)
       } else {
-        logger.info('English value not found for country:', country.id)
+        // Optionally log existing collection
+        logger.info(`ℹ️ Collection already exists: ${modelName}`)
       }
-    }
-
-    // Delete LocationValue nin env.LANGUAGES
-    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
-    const valuesIds = values.map((v) => v.id)
-    for (const val of values) {
-      const _countries = await Country.find({ values: val.id })
-      for (const _country of _countries) {
-        _country.values.splice(_country.values.findIndex((v) => v.equals(val.id)), 1)
-        await _country.save()
-        await LocationValue.deleteMany({ $and: [{ _id: { $in: _country.values } }, { _id: { $in: valuesIds } }] })
+      return
+    } catch (err) {
+      const isLastAttempt = attempt === retries
+      // Optionally log warning
+      logger.info(`⚠️ Attempt ${attempt} failed to create ${modelName}:`, err)
+      if (isLastAttempt) {
+        // Optionally log error
+        logger.error(`❌ Failed to create collection ${modelName} after ${retries} attempts.`)
+        throw err
       }
+      // Wait before next retry (exponential backoff: 500ms, 1000ms, 2000ms)
+      await helper.delay(delay * 2 ** (attempt - 1))
     }
-
-    logger.info('Countries initialized')
-    return true
-  } catch (err) {
-    logger.error('Error while initializing countries:', err)
-    return false
   }
 }
 
 /**
- * Initialize parkingSpots.
- * If a new language is added, english values will be added by default with the new language.
- * The new language values must be updated from the backend.
+ * Models.
  *
- * @async
- * @returns {*}
+ * @type {Model<any>[]}
  */
-export const initializeParkingSpots = async () => {
-  try {
-    logger.info('Initializing parkingSpots...')
-    const parkingSpots = await ParkingSpot.find({})
-      .populate<{ values: env.LocationValue[] }>({
-        path: 'values',
-        model: 'LocationValue',
-      })
-
-    // Add missing LocationValues in env.LANGUAGES
-    for (const parkingSpot of parkingSpots) {
-      const enLocationValue = parkingSpot.values.find((val) => val.language === 'en')
-
-      if (enLocationValue) {
-        for (const lang of env.LANGUAGES) {
-          if (!parkingSpot.values.some((val) => val.language === lang)) {
-            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
-            await langLocationValue.save()
-            const ps = await ParkingSpot.findById(parkingSpot.id)
-            if (ps) {
-              ps.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
-              await ps.save()
-            }
-          }
-        }
-      } else {
-        logger.info('English value not found for parkingSpot:', parkingSpot.id)
-      }
-    }
-
-    // Delete LocationValue nin env.LANGUAGES
-    const values = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
-    const valuesIds = values.map((v) => v.id)
-    for (const val of values) {
-      const _parkingSpots = await ParkingSpot.find({ values: val.id })
-      for (const _parkingSpot of _parkingSpots) {
-        _parkingSpot.values.splice(_parkingSpot.values.findIndex((v) => v.equals(val.id)), 1)
-        await _parkingSpot.save()
-        await LocationValue.deleteMany({ $and: [{ _id: { $in: _parkingSpot.values } }, { _id: { $in: valuesIds } }] })
-      }
-    }
-    await LocationValue.deleteMany({ language: { $nin: env.LANGUAGES } })
-
-    logger.info('ParkingSpots initialized')
-    return true
-  } catch (err) {
-    logger.error('Error while initializing parkingSpots:', err)
-    return false
-  }
-}
+export const models: Model<any>[] = [
+  AdditionalDriver,
+  BankDetails,
+  Booking,
+  Car,
+  Country,
+  DateBasedPrice,
+  Location,
+  LocationValue,
+  Notification,
+  NotificationCounter,
+  ParkingSpot,
+  PushToken,
+  Token,
+  User,
+]
 
 /**
- * Create Token TTL index.
+ * Initializes database.
  *
  * @async
- * @returns {Promise<void>}
- */
-const createTokenIndex = async (): Promise<void> => {
-  await Token.collection.createIndex({ expireAt: 1 }, { name: TOKEN_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.TOKEN_EXPIRE_AT, background: true })
-}
-
-/**
- * Create Booking TTL index.
- *
- * @async
- * @returns {Promise<void>}
- */
-const createBookingIndex = async (): Promise<void> => {
-  await Booking.collection.createIndex({ expireAt: 1 }, { name: BOOKING_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.BOOKING_EXPIRE_AT, background: true })
-}
-
-/**
- * Create User TTL index.
- *
- * @async
- * @returns {Promise<void>}
- */
-const createUserIndex = async (): Promise<void> => {
-  await User.collection.createIndex({ expireAt: 1 }, { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true })
-}
-
-const createCollection = async<T>(model: Model<T>) => {
-  try {
-    await model.collection.indexes()
-  } catch {
-    await model.createCollection()
-    await model.createIndexes()
-  }
-}
-
-/**
- * Initialize database.
- *
- * @async
- * @returns {Promise<boolean>}
+ * @returns {Promise<boolean>} 
  */
 export const initialize = async (): Promise<boolean> => {
   try {
-    if (mongoose.connection.readyState) {
-      await createCollection<env.Booking>(Booking)
-      await createCollection<env.Car>(Car)
-      await createCollection<env.LocationValue>(LocationValue)
-      await createCollection<env.Country>(Country)
-      await createCollection<env.ParkingSpot>(ParkingSpot)
-      await createCollection<env.Location>(Location)
-      await createCollection<env.Notification>(Notification)
-      await createCollection<env.NotificationCounter>(NotificationCounter)
-      await createCollection<env.PushToken>(PushToken)
-      await createCollection<env.Token>(Token)
-      await createCollection<env.User>(User)
-      await createCollection<env.AdditionalDriver>(AdditionalDriver)
+    //
+    // Check if connection is ready
+    //
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error('Mongoose connection is not ready')
     }
 
     //
-    // Update Booking TTL index if configuration changes
+    // Create collections
     //
-    const bookingIndexes = await Booking.collection.indexes()
-    const bookingIndex = bookingIndexes.find((index) => index.name === BOOKING_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.BOOKING_EXPIRE_AT)
-    if (bookingIndex) {
-      try {
-        await Booking.collection.dropIndex(bookingIndex.name!)
-      } catch (err) {
-        logger.error('Failed dropping Booking TTL index', err)
-      } finally {
-        await createBookingIndex()
-        await Booking.createIndexes()
-      }
-    }
+    await Promise.all(models.map((model) => createCollection(model)))
 
     //
-    // Update User TTL index if configuration changes
+    // Feature Detection and Conditional Index Creation
     //
-    const userIndexes = await User.collection.indexes()
-    const userIndex = userIndexes.find((index) => index.name === USER_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.USER_EXPIRE_AT)
-    if (userIndex) {
-      try {
-        await User.collection.dropIndex(userIndex.name!)
-      } catch (err) {
-        logger.error('Failed dropping User TTL index', err)
-      } finally {
-        await createUserIndex()
-        await User.createIndexes()
-      }
-    }
+    await createTextIndexWithFallback(LocationValue, 'value', 'value_text')
+    await createTextIndexWithFallback(Car, 'name', 'name_text')
 
     //
-    // Update Token TTL index if configuration changes
+    // Update TTL index if configuration changes
     //
-    const tokenIndexes = await Token.collection.indexes()
-    const tokenIndex = tokenIndexes.find((index) => index.name?.includes(TOKEN_EXPIRE_AT_INDEX_NAME))
-    if (tokenIndex) {
-      try {
-        await Token.collection.dropIndex(tokenIndex.name!)
-      } catch (err) {
-        logger.error('Failed dropping Token TTL index', err)
-      } finally {
-        await createTokenIndex()
-        await Token.createIndexes()
-      }
-    }
+    await Promise.all([
+      checkAndUpdateTTL(Booking, BOOKING_EXPIRE_AT_INDEX_NAME, env.BOOKING_EXPIRE_AT),
+      checkAndUpdateTTL(User, USER_EXPIRE_AT_INDEX_NAME, env.USER_EXPIRE_AT),
+      checkAndUpdateTTL(Token, TOKEN_EXPIRE_AT_INDEX_NAME, env.TOKEN_EXPIRE_AT),
+    ])
 
     //
     // Initialize collections
     //
-    const res = (await initializeLocations()) && (await initializeCountries()) && (await initializeParkingSpots())
+    const results = await Promise.all([
+      initializeLocations(),
+      initializeCountries(),
+      initializeParkingSpots(),
+    ])
+
+    const res = results.every(Boolean)
+
+    if (res) {
+      logger.info('✅ Database initialized successfully')
+    } else {
+      logger.error('❌ Some parts of the database failed to initialize')
+    }
 
     return res
   } catch (err) {
-    logger.error('An error occured while initializing database:', err)
+    logger.error('❌ Database initialization error:', err)
+    try {
+      await close()
+    } catch (closeErr) {
+      logger.error('❌ Failed to close database connection after initialization failure:', closeErr)
+    }
     return false
   }
 }
