@@ -130,6 +130,15 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
   }
 }
 
+/**
+ * Synchronizes multilingual LocationValue entries for a given collection (such as Location, Country, or ParkingSpot) 
+ * to ensure that each document has language-specific values for all supported languages defined in env.LANGUAGES.
+ *
+ * @async
+ * @param {Model<any>} collection 
+ * @param {string} label 
+ * @returns {Promise<boolean>}
+ */
 const syncLanguageValues = async (collection: Model<any>, label: string) => {
   try {
     logger.info(`ℹ️ Initializing ${label}...`)
@@ -318,7 +327,7 @@ export const initialize = async (): Promise<boolean> => {
     //
     // Check if connection is ready
     //
-    if (mongoose.connection.readyState !== 1) {
+    if (mongoose.connection.readyState !== mongoose.ConnectionStates.connected) {
       throw new Error('Mongoose connection is not ready')
     }
 
