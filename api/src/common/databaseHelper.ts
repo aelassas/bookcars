@@ -167,10 +167,7 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
     }
 
     // Delete LocationValue nin env.LANGUAGES
-    const obsolete = await LocationValue
-      .find({ language: { $nin: env.LANGUAGES } })
-      .populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })
-
+    const obsolete = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
     const obsoleteIds = obsolete.map((v) => v.id)
 
     for (const val of obsolete) {
