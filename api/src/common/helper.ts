@@ -286,4 +286,4 @@ export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 1
  * @param {number} ms 
  * @returns {*} 
  */
-export const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
