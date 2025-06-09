@@ -29,24 +29,31 @@ const logger = winston.createLogger({
   ],
 })
 
+const fixMessage = (message: string) => {
+  const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
+  return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
+}
+
 export const info = (message: string, obj?: any) => {
+  const msg = fixMessage(message)
   if (ENABLE_LOGGING) {
     if (obj) {
-      logger.info(`${message} ${JSON.stringify(obj)}`)
+      logger.info(`${msg} ${JSON.stringify(obj)}`)
     } else {
-      logger.info(message)
+      logger.info(msg)
     }
   }
 }
 
 export const error = (message: string, obj?: unknown) => {
   if (ENABLE_LOGGING && ENABLE_ERROR_LOGGING) {
+    const msg = fixMessage(message)
     if (obj instanceof Error) {
-      logger.error(`${message} ${obj.message} ${obj.stack}`) // ${obj.stack}
+      logger.error(`${msg} ${obj.message} ${obj.stack}`) // ${obj.stack}
     } else if (obj) {
-      logger.error(`${message} ${JSON.stringify(obj)}`)
+      logger.error(`${msg} ${JSON.stringify(obj)}`)
     } else {
-      logger.error(message)
+      logger.error(msg)
     }
   }
 }

@@ -19,20 +19,19 @@ if ((await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) && (awa
     server = https.createServer(credentials, app)
 
     server.listen(env.PORT, () => {
-      logger.info('HTTPS server is running on Port', env.PORT)
+      logger.info('✅ HTTPS server is running on Port', env.PORT)
     })
   } else {
     server = app.listen(env.PORT, () => {
-      logger.info('HTTP server is running on Port', env.PORT)
+      logger.info('✅ HTTP server is running on Port', env.PORT)
     })
   }
 
   const close = () => {
-    logger.info('Gracefully stopping...')
+    logger.info('ℹ️ Gracefully stopping...')
     server.close(async () => {
-      logger.info(`HTTP${env.HTTPS ? 'S' : ''} server closed`)
+      logger.info(`✅ HTTP${env.HTTPS ? 'S' : ''} server closed`)
       await databaseHelper.close(true)
-      logger.info('Database connection closed')
       process.exit(0)
     })
   }
