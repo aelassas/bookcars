@@ -140,7 +140,7 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
  * @param {string} label 
  * @returns {Promise<boolean>}
  */
-const syncLanguageValues = async <T extends { values: mongoose.Types.ObjectId[] }>(collection: Model<T>, label: string) => {
+const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId | env.LocationValue)[] }>(collection: Model<T>, label: string) => {
   try {
     logger.info(`ℹ️ Initializing ${label}...`)
     const docs = await collection.find({}).populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })

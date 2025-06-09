@@ -755,7 +755,7 @@ export interface LocationInfo {
 export interface ParkingSpot extends Document {
   longitude: number
   latitude: number
-  values: Types.ObjectId[]
+  values: (Types.ObjectId | LocationValue)[]
   name?: string
 }
 
