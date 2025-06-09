@@ -279,3 +279,11 @@ export const validateAccessToken = async (socialSignInType: bookcarsTypes.Social
  * @returns {string}
  */
 export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 100).toFixed(2)
+
+/**
+ * Delay in milliseconds.
+ *
+ * @param {number} ms 
+ * @returns {*} 
+ */
+export const delay = (ms: number) => new Promise(res => setTimeout(res, ms))

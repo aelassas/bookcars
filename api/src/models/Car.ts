@@ -206,7 +206,6 @@ const carSchema = new Schema<env.Car>(
 
 // Add custom indexes
 carSchema.index({ updatedAt: -1, _id: 1 })
-carSchema.index({ name: 'text' })
 carSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -1, _id: 1 })
 carSchema.index({ available: 1, gearbox: 1, deposit: 1 })
 carSchema.index({ seats: 1, doors: 1 })
