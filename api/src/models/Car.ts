@@ -216,6 +216,14 @@ carSchema.index({ range: 1 })
 carSchema.index({ multimedia: 1 })
 carSchema.index({ dailyPrice: 1, _id: 1 })
 carSchema.index({ dateBasedPrices: 1 })
+carSchema.index(
+  { name: 'text' },
+  {
+    default_language: 'none', // This disables stemming
+    language_override: '_none', // Prevent MongoDB from expecting a language field
+    background: true,
+  },
+)
 
 const Car = model<env.Car>('Car', carSchema)
 
