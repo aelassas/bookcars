@@ -1,8 +1,8 @@
 import winston, { format, transports } from 'winston'
 import * as helper from './helper'
 
-let enableLogging = true
-let enableErrorLogging = true
+let enableLogs = true
+let enableErrorLogs = true
 
 /**
  * Fixes the message formatting for specific terminals (e.g. VSCode)
@@ -57,7 +57,7 @@ type LogLevel = 'info' | 'warn' | 'error'
  * @param {*} [obj] - Optional additional data to log (object or string).
  */
 const log = (level: LogLevel, prefix: string, message: string, obj?: any): void => {
-  if (!enableLogging || (level === 'error' && !enableErrorLogging)) {
+  if (!enableLogs || (level === 'error' && !enableErrorLogs)) {
     return
   }
 
@@ -116,27 +116,27 @@ export const error = (message: string, obj?: unknown): void => log('error', pref
 /**
  * Enables all logging.
  */
-export const enableLoggingFn = (): void => {
-  enableLogging = true
+export const enableLogging = (): void => {
+  enableLogs = true
 }
 
 /**
  * Disables all logging.
  */
-export const disableLoggingFn = (): void => {
-  enableLogging = false
+export const disableLogging = (): void => {
+  enableLogs = false
 }
 
 /**
  * Enables error logging.
  */
-export const enableErrorLoggingFn = (): void => {
-  enableErrorLogging = true
+export const enableErrorLogging = (): void => {
+  enableErrorLogs = true
 }
 
 /**
  * Disables error logging.
  */
-export const disableErrorLoggingFn = (): void => {
-  enableErrorLogging = false
+export const disableErrorLogging = (): void => {
+  enableErrorLogs = false
 }
