@@ -1,7 +1,18 @@
 import winston, { format, transports } from 'winston'
 import * as helper from './helper'
 
+/**
+ * Enables logging.
+ *
+ * @type {boolean}
+ */
 let enableLogs = true
+
+/**
+ * Enables error logging.
+ *
+ * @type {boolean}
+ */
 let enableErrorLogs = true
 
 /**
@@ -14,7 +25,6 @@ const prefixMap = {
   error: '❌',
 }
 
-
 /**
  * Fixes the message formatting for specific terminals (e.g. VSCode)
  * by adding spaces after certain emojis to prevent squishing.
@@ -23,9 +33,8 @@ const prefixMap = {
  * @returns {string} - The fixed message.
  */
 const fixMessage = (message: string): string => {
-  // const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
-  // return isVSCodeTerminal ? message.replace(new RegExp(`(${Object.values(prefixMap).join('|')})`, 'g'), '$1 ') : message
-  return message.replace(new RegExp(`(${Object.values(prefixMap).join('|')})`, 'g'), '$1 ')
+  const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
+  return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
 }
 
 /**
