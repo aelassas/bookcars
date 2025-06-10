@@ -1,8 +1,29 @@
 import winston, { format, transports } from 'winston'
 import * as helper from './helper'
 
+/**
+ * Enables logging.
+ *
+ * @type {boolean}
+ */
 let enableLogs = true
+
+/**
+ * Enables error logging.
+ *
+ * @type {boolean}
+ */
 let enableErrorLogs = true
+
+/**
+ * Map of log levels to emoji prefixes.
+ */
+const prefixMap = {
+  info: 'ℹ️',
+  warn: '⚠️',
+  success: '✅',
+  error: '❌',
+}
 
 /**
  * Fixes the message formatting for specific terminals (e.g. VSCode)
@@ -69,16 +90,6 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
   } else {
     logger[level](finalMessage)
   }
-}
-
-/**
- * Map of log levels to emoji prefixes.
- */
-const prefixMap = {
-  info: 'ℹ️',
-  warn: '⚠️',
-  success: '✅',
-  error: '❌',
 }
 
 /**
