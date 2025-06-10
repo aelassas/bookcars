@@ -5,12 +5,13 @@ import * as env from '../src/config/env.config'
 import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../src/models/Booking'
 import User, { USER_EXPIRE_AT_INDEX_NAME } from '../src/models/User'
 import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../src/models/Token'
+import LocationValue from '../src/models/LocationValue'
 
 //
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-  // testHelper.initializeLogger()
+  testHelper.initializeLogger()
 
   await databaseHelper.connect(env.DB_URI, false, false)
 })
@@ -85,6 +86,23 @@ describe('Test database initialization', () => {
       expect(res).toBeTruthy()
       await delay()
     }
+
+     // test success (text index)
+    const indexName = 'value_text'
+    const opts = {
+      name: indexName,
+      default_language: 'en',
+      language_override: '_none',
+      background: true,
+      weights: { ['value']: 1 },
+    }
+    await LocationValue.collection.dropIndex(indexName)
+    res = await databaseHelper.initialize()
+    expect(res).toBeTruthy()
+    await LocationValue.collection.dropIndex(indexName)
+    await LocationValue.collection.createIndex({ ['value']: 'text' }, opts)
+    res = await databaseHelper.initialize()
+    expect(res).toBeTruthy()
 
     // test failure (loast db connection)
     try {
