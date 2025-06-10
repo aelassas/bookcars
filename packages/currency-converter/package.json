@@ -12,14 +12,14 @@
   "author": "Akram El Assas",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.6",
     "easy-currencies": "^1.8.3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "eslint": "^9.27.0",
+    "@types/node": "^24.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.28.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"
   }
