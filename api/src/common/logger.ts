@@ -5,6 +5,17 @@ let enableLogs = true
 let enableErrorLogs = true
 
 /**
+ * Map of log levels to emoji prefixes.
+ */
+const prefixMap = {
+  info: 'ℹ️',
+  warn: '⚠️',
+  success: '✅',
+  error: '❌',
+}
+
+
+/**
  * Fixes the message formatting for specific terminals (e.g. VSCode)
  * by adding spaces after certain emojis to prevent squishing.
  *
@@ -12,8 +23,9 @@ let enableErrorLogs = true
  * @returns {string} - The fixed message.
  */
 const fixMessage = (message: string): string => {
-  const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
-  return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
+  // const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
+  // return isVSCodeTerminal ? message.replace(new RegExp(`(${Object.values(prefixMap).join('|')})`, 'g'), '$1 ') : message
+  return message.replace(new RegExp(`(${Object.values(prefixMap).join('|')})`, 'g'), '$1 ')
 }
 
 /**
@@ -69,16 +81,6 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
   } else {
     logger[level](finalMessage)
   }
-}
-
-/**
- * Map of log levels to emoji prefixes.
- */
-const prefixMap = {
-  info: 'ℹ️',
-  warn: '⚠️',
-  success: '✅',
-  error: '❌',
 }
 
 /**
