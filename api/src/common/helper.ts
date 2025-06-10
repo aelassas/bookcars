@@ -287,3 +287,17 @@ export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 1
  * @returns {*} 
  */
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
+/**
+ * Safe stringify object.
+ *
+ * @param {*} obj 
+ * @returns {string} 
+ */
+export const safeStringify = (obj: any) => {
+  try {
+    return JSON.stringify(obj)
+  } catch {
+    return '[Unserializable object]'
+  }
+}
