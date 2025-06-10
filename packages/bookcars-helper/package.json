@@ -11,13 +11,13 @@
   "author": "Akram El Assas",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "eslint": "^9.27.0",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.28.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0"
+    "@babel/runtime": "^7.27.6"
   }
 }
