@@ -11,7 +11,7 @@ import LocationValue from '../src/models/LocationValue'
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-  testHelper.initializeLogger()
+  // testHelper.initializeLogger()
 
   await databaseHelper.connect(env.DB_URI, false, false)
 })

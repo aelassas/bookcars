@@ -8,7 +8,7 @@ import Country from '../src/models/Country'
 import ParkingSpot from '../src/models/ParkingSpot'
 
 beforeAll(() => {
-  testHelper.initializeLogger()
+  // testHelper.initializeLogger()
 })
 
 describe('Test database connection', () => {
