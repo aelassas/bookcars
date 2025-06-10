@@ -18,16 +18,16 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@hookform/resolvers": "^5.1.0",
+    "@hookform/resolvers": "^5.1.1",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
     "@mui/x-data-grid": "^8.5.1",
     "@mui/x-date-pickers": "^8.5.1",
     "@types/nprogress": "^0.2.3",
-    "@types/react": "^19.1.6",
+    "@types/react": "^19.1.7",
     "@types/react-dom": "^19.1.6",
     "@types/validator": "^13.15.1",
-    "@vitejs/plugin-react": "^4.5.1",
+    "@vitejs/plugin-react": "^4.5.2",
     "axios": "^1.9.0",
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
@@ -44,12 +44,12 @@
     "typescript": "^5.8.3",
     "validator": "^13.15.15",
     "vite": "^6.3.5",
-    "zod": "^3.25.56"
+    "zod": "^3.25.57"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.27.4",
-    "@typescript-eslint/eslint-plugin": "^8.33.1",
-    "@typescript-eslint/parser": "^8.33.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint": "^9.28.0",
     "eslint-plugin-react": "^7.37.5",
@@ -59,7 +59,7 @@
     "npm-check-updates": "^18.0.1",
     "stylelint": "^16.20.0",
     "stylelint-config-standard": "^38.0.0",
-    "terser": "^5.41.0",
+    "terser": "^5.42.0",
     "vite-plugin-html": "^3.2.2"
   }
 }
