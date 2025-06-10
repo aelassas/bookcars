@@ -53,13 +53,12 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
 
   try {
     await mongoose.connect(uri, options)
-    // Explicitly wait for connection to be open
-    await mongoose.connection.asPromise()
-    logger.info('✅ Database connected')
+    await mongoose.connection.asPromise() // Explicitly wait for connection to be open
+    logger.success('Database connected')
     isConnected = true
     return true
   } catch (err) {
-    logger.error('❌ Database connection failed:', err)
+    logger.error(' Database connection failed:', err instanceof Error ? err.message : err)
     return false
   }
 }
@@ -74,11 +73,16 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
 export const close = async (force = false): Promise<void> => {
   await mongoose.connection.close(force)
   isConnected = false
-  logger.info('✅ Database connection closed')
+  logger.success('Database connection closed')
 }
 
 /**
  * Creates a text index on a model's field, falling back gracefully if language override is unsupported.
+ *
+ * Some MongoDB versions or configurations do not support `language_override: '_none'`.
+ * This disables stemming and language processing for the text index.
+ * If the index creation with this option fails, the function falls back to creating
+ * a basic text index without language override.
  *
  * @param {Model<T>} model - The Mongoose model.
  * @param {string} field - The field to index.
@@ -89,7 +93,7 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
   const fallbackOptions = {
     name: indexName,
     default_language: 'none', // This disables stemming
-    language_override: '_none', // Prevent MongoDB from expecting a language field
+    language_override: '_none', // Prevent MongoDB from expecting a language field (may not be supported on some versions)
     background: true,
     weights: { [field]: 1 },
   }
@@ -104,19 +108,19 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
         existingIndex.language_override === fallbackOptions.language_override
       if (!sameOptions) {
         await collection.dropIndex(indexName)
-        logger.info(`✅ Dropped old text index "${indexName}" due to option mismatch`)
+        logger.success(`Dropped old text index "${indexName}" due to option mismatch`)
       } else {
-        logger.info(`ℹ️ Text index "${indexName}" already exists and is up to date`)
+        logger.info(`Text index "${indexName}" already exists and is up to date`)
         return
       }
     }
 
     // Create new text index with fallback options
     await collection.createIndex({ [field]: 'text' }, fallbackOptions)
-    logger.info(`✅ Created text index "${indexName}" on "${field}" with fallback options`)
+    logger.success(`Created text index "${indexName}" on "${field}" with fallback options`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : JSON.stringify(err)
-    logger.info(`⚠️ Failed to use language override; falling back to basic text index: "${message}"`)
+    logger.warn(`Failed to use language override; falling back to basic text index: "${message}"`)
     try {
       // Retry creating a basic text index without override if needed
       await collection.createIndex({ [field]: 'text' }, {
@@ -124,9 +128,9 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
         background: true,
         weights: { [field]: 1 },
       })
-      logger.info(`✅ Created basic text index "${indexName}" on "${field}" without language override`)
+      logger.success(`Created basic text index "${indexName}" on "${field}" without language override`)
     } catch (fallbackErr) {
-      logger.error(`❌ Failed to create text index "${indexName}":`, fallbackErr)
+      logger.error(`Failed to create text index "${indexName}":`, fallbackErr)
     }
   }
 }
@@ -140,49 +144,91 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
  * @param {string} label 
  * @returns {Promise<boolean>}
  */
-const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId | env.LocationValue)[] }>(collection: Model<T>, label: string) => {
+const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId | env.LocationValue)[] }>(
+  collection: Model<T>,
+  label: string
+): Promise<boolean> => {
   try {
-    logger.info(`ℹ️ Initializing ${label}...`)
-    const docs = await collection.find({}).populate<{ values: env.LocationValue[] }>({ path: 'values', model: 'LocationValue' })
+    // Load all documents with populated 'values' field
+    const docs = await collection.find({}).populate<{ values: env.LocationValue[] }>({
+      path: 'values',
+      model: 'LocationValue',
+    })
+
+    const newValues: env.LocationValue[] = []
+    const updates: { id: string; pushIds: string[] }[] = []
 
     for (const doc of docs) {
+      // Ensure English value exists to copy from
       const en = doc.values.find((v) => v.language === 'en')
       if (!en) {
-        logger.info(`⚠️ English value missing for ${label}:`, doc.id)
+        logger.warn(`English value missing for ${label} document:`, doc.id)
         continue
       }
 
-      // Add missing LocationValues in env.LANGUAGES
-      for (const lang of env.LANGUAGES) {
-        if (!doc.values.some((v) => v.language === lang)) {
+      // Find which languages are missing
+      const missingLangs = env.LANGUAGES.filter((lang) => !doc.values.some((v) => v.language === lang))
+
+      if (missingLangs.length > 0) {
+        const additions: string[] = []
+        for (const lang of missingLangs) {
+          // Create new LocationValue with English value as fallback
           const val = new LocationValue({ language: lang, value: en.value })
-          await val.save()
-          const fresh = await collection.findById(doc.id)
-          if (fresh) {
-            fresh.values.push(val.id)
-            await fresh.save()
-          }
+          newValues.push(val)
+          additions.push(val.id)
         }
+        updates.push({ id: doc.id, pushIds: additions })
       }
     }
 
-    // Delete LocationValue nin env.LANGUAGES
-    const obsolete = await LocationValue.find({ language: { $nin: env.LANGUAGES } })
-    const obsoleteIds = obsolete.map((v) => v.id)
+    // Insert all newly created LocationValues in one batch for efficiency
+    if (newValues.length > 0) {
+      await LocationValue.insertMany(newValues)
+      logger.info(`Inserted ${newValues.length} new LocationValue docs for ${label}`)
+    }
 
-    for (const val of obsolete) {
-      const affected = await collection.find({ values: val.id })
-      for (const doc of affected) {
-        doc.values = doc.values.filter((v) => !v.equals(val.id))
-        await doc.save()
+    // Update documents by pushing the new LocationValue references
+    if (updates.length > 0) {
+      const bulkOps = updates.map(({ id, pushIds }) => ({
+        updateOne: {
+          filter: { _id: id },
+          update: { $push: { values: { $each: pushIds } } },
+        },
+      }))
+      await collection.bulkWrite(bulkOps)
+      logger.info(`Updated ${updates.length} ${label} documents with new language values`)
+    }
+
+    // Cleanup: Delete LocationValues with unsupported languages and remove references
+    const cursor = LocationValue.find({ language: { $nin: env.LANGUAGES } }, { _id: 1 }).cursor()
+    let obsoleteIdsBatch: string[] = []
+
+    for await (const obsoleteVal of cursor) {
+      obsoleteIdsBatch.push(obsoleteVal.id)
+
+      if (obsoleteIdsBatch.length >= env.BATCH_SIZE) {
+        await Promise.all([
+          collection.updateMany({ values: { $in: obsoleteIdsBatch } }, { $pull: { values: { $in: obsoleteIdsBatch } } }),
+          LocationValue.deleteMany({ _id: { $in: obsoleteIdsBatch } }),
+        ])
+        logger.info(`Cleaned up batch of ${obsoleteIdsBatch.length} obsolete LocationValues in ${label}`)
+        obsoleteIdsBatch = []
       }
     }
-    await LocationValue.deleteMany({ _id: { $in: obsoleteIds } })
 
-    logger.info(`✅ ${label} initialized`)
+    // Final cleanup for any remaining obsolete ids after loop
+    if (obsoleteIdsBatch.length > 0) {
+      await Promise.all([
+        collection.updateMany({ values: { $in: obsoleteIdsBatch } }, { $pull: { values: { $in: obsoleteIdsBatch } } }),
+        LocationValue.deleteMany({ _id: { $in: obsoleteIdsBatch } }),
+      ])
+      logger.info(`Cleaned up final batch of ${obsoleteIdsBatch.length} obsolete LocationValues in ${label}`)
+    }
+
+    logger.success(`${label} initialized successfully`)
     return true
   } catch (err) {
-    logger.error(`❌ Failed to initialize ${label}:`, err)
+    logger.error(`Failed to initialize ${label}:`, err)
     return false
   }
 }
@@ -218,10 +264,20 @@ export const initializeParkingSpots = () => syncLanguageValues(ParkingSpot, 'par
  * @returns {Promise<void>} 
  */
 const createTTLIndex = async <T>(model: Model<T>, name: string, expireAfterSeconds: number) => {
-  await model.collection.createIndex(
-    { expireAt: 1 },
-    { name, expireAfterSeconds, background: true },
-  )
+  try {
+    await model.collection.createIndex(
+      { [env.expireAt]: 1 },
+      { name, expireAfterSeconds, background: true },
+    )
+  } catch (err) {
+    logger.warn(`Failed to create TTL index "${name}" directly on collection:`, err)
+    try {
+      await model.createIndexes() // fallback to model-defined indexes
+      logger.success(`Fallback to model.createIndexes() succeeded for TTL index "${name}"`)
+    } catch (fallbackErr) {
+      logger.error(`Fallback to model.createIndexes() failed for "${name}":`, fallbackErr)
+    }
+  }
 }
 
 /**
@@ -234,8 +290,7 @@ const createTTLIndex = async <T>(model: Model<T>, name: string, expireAfterSecon
  * @returns {Promise<void>} 
  */
 const checkAndUpdateTTL = async <T>(model: Model<T>, name: string, seconds: number) => {
-  const indexName = `${model.modelName}.${name}`
-  logger.info(`ℹ️ Checking TTL index: ${indexName}`)
+  const indexTag = `${model.modelName}.${name}`
   const indexes = await model.collection.indexes()
   const existing = indexes.find((index) => index.name === name && index.expireAfterSeconds !== seconds)
 
@@ -243,13 +298,11 @@ const checkAndUpdateTTL = async <T>(model: Model<T>, name: string, seconds: numb
     try {
       await model.collection.dropIndex(name)
     } catch (err) {
-      logger.error(`❌ Failed to drop index "${name}"`, err)
-    } finally {
-      await createTTLIndex(model, name, seconds)
-      await model.createIndexes()
+      logger.error(`Failed to drop TTL index "${name}":`, err)
     }
+    await createTTLIndex(model, name, seconds)
   } else {
-    logger.info(`ℹ️ TTL index "${indexName}" is already up to date`)
+    logger.info(`TTL index "${indexTag}" is already up to date`)
   }
 }
 
@@ -273,24 +326,19 @@ const createCollection = async <T>(model: Model<T>, retries = 3, delay = 500): P
       if (!exists) {
         await model.createCollection()
         await model.createIndexes()
-        // Optionally log success
-        logger.info(`✅ Created collection: ${modelName}`)
-      } else {
-        // Optionally log existing collection
-        logger.info(`ℹ️ Collection already exists: ${modelName}`)
+        logger.success(`Created collection: ${modelName}`) // Optionally log success
       }
       return
     } catch (err) {
       const isLastAttempt = attempt === retries
-      // Optionally log warning
-      logger.info(`⚠️ Attempt ${attempt} failed to create ${modelName}:`, err)
+      logger.warn(`Attempt ${attempt} failed to create ${modelName}:`, err) // Optionally log warning
       if (isLastAttempt) {
-        // Optionally log error
-        logger.error(`❌ Failed to create collection ${modelName} after ${retries} attempts.`)
+        logger.error(`Failed to create collection ${modelName} after ${retries} attempts.`) // Optionally log error
         throw err
       }
       // Wait before next retry (exponential backoff: 500ms, 1000ms, 2000ms)
-      await helper.delay(delay * 2 ** (attempt - 1))
+      const wait = delay * Math.pow(2, attempt - 1)
+      await helper.delay(wait)
     }
   }
 }
@@ -349,7 +397,7 @@ export const initialize = async (): Promise<boolean> => {
     await Promise.all(models.map((model) => createCollection(model as Model<unknown>)))
 
     //
-    // Feature Detection and Conditional Index Creation
+    // Feature detection and conditional text index creation (backward compatible with older versions)
     //
     await createTextIndexWithFallback(LocationValue, 'value', 'value_text')
     await createTextIndexWithFallback(Car, 'name', 'name_text')
@@ -375,18 +423,18 @@ export const initialize = async (): Promise<boolean> => {
     const res = results.every(Boolean)
 
     if (res) {
-      logger.info('✅ Database initialized successfully')
+      logger.success('Database initialized successfully')
     } else {
-      logger.error('❌ Some parts of the database failed to initialize')
+      logger.error(' Some parts of the database failed to initialize')
     }
 
     return res
   } catch (err) {
-    logger.error('❌ Database initialization error:', err)
+    logger.error(' Database initialization error:', err)
     try {
       await close()
     } catch (closeErr) {
-      logger.error('❌ Failed to close database connection after initialization failure:', closeErr)
+      logger.error(' Failed to close database connection after initialization failure:', closeErr)
     }
     return false
   }

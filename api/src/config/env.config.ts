@@ -36,6 +36,15 @@ export const LANGUAGES = [
 ]
 
 /**
+ * Name of the field used for TTL (Time-To-Live) index expiration.
+ * MongoDB automatically deletes documents when the date in this field is reached.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const expireAt = 'expireAt'
+
+/**
  * Website Name.
  *
  * @type {string}
@@ -48,6 +57,15 @@ export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
  * @type {string}
  */
 export const CI = helper.StringToBoolean(__env__('BC_CI', false, 'false'))
+
+/**
+ * Number of documents to process per batch when deleting obsolete language values.
+ * This helps avoid large memory usage and improves performance during deletions.
+ * Default is 1000.
+ *
+ * @type {number}
+ */
+export const BATCH_SIZE = Number.parseInt(__env__('BC_BATCH_SIZE', false, '1000'), 10)
 
 /**
  * Server Port. Default is 4002.
