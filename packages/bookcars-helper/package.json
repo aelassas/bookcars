@@ -10,10 +10,10 @@
   "author": "Akram El Assas",
   "license": "ISC",
   "devDependencies": {
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0"
+    "@babel/runtime": "^7.27.6"
   }
 }
