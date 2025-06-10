@@ -8,13 +8,16 @@ import Country from '../src/models/Country'
 import ParkingSpot from '../src/models/ParkingSpot'
 
 beforeAll(() => {
-  // testHelper.initializeLogger()
+  testHelper.initializeLogger()
 })
 
 describe('Test database connection', () => {
   it('should connect to database', async () => {
     // test success (connected)
-    const res = await databaseHelper.connect(env.DB_URI, false, false)
+    let res = await databaseHelper.connect(env.DB_URI, false, false)
+    expect(res).toBeTruthy()
+    // test success (already connected)
+    res = await databaseHelper.connect(env.DB_URI, false, false)
     expect(res).toBeTruthy()
     await databaseHelper.close()
   })
@@ -41,6 +44,12 @@ describe('Test database initialization', () => {
     await l1.save()
     const l2 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv2.id] })
     await l2.save()
+
+    // test batch deletion pf unsupported languages
+    for (let i = 0; i < 1001; i++) {
+      const lv2 = new LocationValue({ language: 'pt', value: 'localização' })
+      await lv2.save()
+    }
 
     const cv1 = new LocationValue({ language: 'en', value: 'country' })
     await cv1.save()
@@ -83,12 +92,16 @@ describe('Test database initialization', () => {
     await parkingSpot1?.deleteOne()
     await parkingSpot2?.deleteOne()
 
+    // test success (initialization again)
+    res = await databaseHelper.initialize()
+    expect(res).toBeTruthy()
+
     await databaseHelper.close()
   })
 })
 
 describe('Test database initialization failures', () => {
-  it('should check database initialization failures', async () => {
+    it('should check database initialization failures', async () => {
     // test failure (lost db connection)
     await databaseHelper.close()
     expect(await databaseHelper.initializeLocations()).toBeFalsy()
