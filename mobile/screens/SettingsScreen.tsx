@@ -231,7 +231,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     navigation.navigate('ChangePassword', {})
   }
 
-  const updateAvatarHandler = async () => {
+  const handleUpdateAvatar = async () => {
     try {
       if (!user || !user._id) {
         helper.error()
@@ -304,7 +304,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Pressable
                     style={styles.updateAvatar}
                     hitSlop={15}
-                    onPress={updateAvatarHandler}
+                    onPress={handleUpdateAvatar}
                   >
                     {/* <Badge style={styles.badge} size={36}> */}
                     <View style={styles.badge}>
