@@ -29,11 +29,11 @@
     "@types/express": "^5.0.3",
     "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.13",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.0.1",
     "@types/nodemailer": "^6.4.17",
     "@types/supertest": "^6.0.3",
     "@types/validator": "^13.15.1",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "babel-jest": "^30.0.0",
     "babel-plugin-add-import-extension": "^1.6.0",
     "babel-plugin-module-resolver": "^5.0.2",
@@ -50,7 +50,7 @@
     "i18n-js": "^4.5.1",
     "jest": "^30.0.0",
     "jose": "^6.0.11",
-    "mongoose": "^8.15.1",
+    "mongoose": "^8.15.2",
     "multer": "^2.0.1",
     "nanoid": "^5.1.5",
     "nocache": "^4.0.0",
@@ -65,12 +65,12 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.13.0",
+    "eslint-plugin-jest": "^28.13.5",
     "globals": "^16.2.0",
     "nodemon": "^3.1.10",
     "npm-check-updates": "^18.0.1",
-    "tsx": "^4.19.4"
+    "tsx": "^4.20.3"
   }
 }
