@@ -34,7 +34,7 @@ import { strings } from '@/lang/cars'
 import * as helper from '@/common/helper'
 import * as CarService from '@/services/CarService'
 import Pager from '@/components/Pager'
-import SimpleBackdrop from '@/components/SimpleBackdrop'
+import Progress from '@/components/Progress'
 import SupplierBadge from '@/components/SupplierBadge'
 
 import DoorsIcon from '@/assets/img/car-door.png'
@@ -634,6 +634,9 @@ const CarList = ({
                 </article>
               )
             })}
+
+          {loading && <Progress />}
+
           <Dialog disableEscapeKeyDown maxWidth="xs" open={openInfoDialog}>
             <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
             <DialogContent>{strings.CANNOT_DELETE_CAR}</DialogContent>
@@ -667,7 +670,6 @@ const CarList = ({
             onPrevious={() => setPage(page - 1)}
           />
         )}
-        {loading && <SimpleBackdrop text={commonStrings.LOADING} />}
       </>
     )) || <></>
   )
