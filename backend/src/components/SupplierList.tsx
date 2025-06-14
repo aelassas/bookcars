@@ -25,7 +25,8 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/supplier-list'
 import * as SupplierService from '@/services/SupplierService'
 import * as helper from '@/common/helper'
-import Pager from './Pager'
+import Pager from '@/components/Pager'
+import Progress from '@/components/Progress'
 
 import '@/assets/css/supplier-list.css'
 
@@ -233,6 +234,9 @@ const SupplierList = ({
               </article>
             )
           })}
+
+        {loading && <Progress />}
+
         <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
           <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
           <DialogContent>{strings.DELETE_SUPPLIER}</DialogContent>
