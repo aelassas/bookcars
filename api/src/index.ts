@@ -23,6 +23,8 @@ const createServer = async (): Promise<http.Server | https.Server> => {
     const credentials: ServerOptions = { key: privateKey, cert: certificate }
     return https.createServer(credentials, app)
   }
+
+  http.globalAgent.maxSockets = Infinity
   return http.createServer(app)
 }
 
@@ -78,4 +80,4 @@ const start = async (): Promise<void> => {
   }
 }
 
-start()
+start() // Start server
