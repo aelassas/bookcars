@@ -24,11 +24,11 @@ With BookCars, you can deploy your own customizable car rental marketplace at mi
 <!--
 BookCars is free and open source. You can customize it as you want and deploy it yourself by following the [documentation](https://github.com/aelassas/bookcars/wiki). If you want me to customize it and deploy it for you, contact me by email. You can find my email in my [GitHub profile page](https://github.com/aelassas). You need to be logged in to GitHub to view my email. I can deploy the platform to the cloud for you, configure your DNS, emailing, webmail and all related tasks.
 -->
-BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin dashboard. BookCars can also work with a single supplier and can be used as a car rental aggregator.
+BookCars is designed to work with multiple suppliers. Suppliers can manage their car fleets and bookings from the admin panel. BookCars can also work with a single supplier and can be used as a car rental aggregator.
 
-From the admin dashboard, admins can create and manage suppliers, cars, countries, locations, parking spots, customers, bookings and payments.
+From the admin panel, admins can create and manage suppliers, cars, countries, locations, parking spots, customers, bookings and payments.
 
-When new suppliers are created, they receive an email prompting them to create an account in order to access the admin dashboard and manage their car fleets and bookings.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the admin panel and manage their car fleets and bookings.
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
@@ -52,7 +52,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
 * [Multiple Payment Gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
-* Responsive admin dashboard and frontend
+* Responsive admin panel and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
 * Secure against XSS, XST, CSR, MITM and DDoS
