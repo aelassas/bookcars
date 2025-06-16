@@ -1,5 +1,6 @@
 {
-  "name": "bookcars",
+  "name": "bookcars-mobile",
+  "description": "Mobile app for BookCars (customer app)",
   "version": "7.5.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
