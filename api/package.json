@@ -1,7 +1,7 @@
 {
-  "name": "api",
+  "name": "bookcars-backend",
+  "description": "Backend server for BookCars",
   "version": "7.5.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {

@@ -1,5 +1,6 @@
 {
-  "name": "backend",
+  "name": "bookcars-admin-panel",
+  "description": "Admin panel for managing BookCars",
   "private": true,
   "version": "7.5.0",
   "type": "module",
