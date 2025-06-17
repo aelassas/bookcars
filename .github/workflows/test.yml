@@ -30,7 +30,7 @@ jobs:
         
     - name: Run tests
       run: |
-           cd ./api
+           cd ./backend
            touch .env
            echo NODE_ENV=$NODE_ENV >> .env
            echo BC_CI=$BC_CI >> .env
