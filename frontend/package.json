@@ -5,8 +5,8 @@
   "version": "7.5.0",
   "type": "module",
   "scripts": {
-    "install:currency-converter": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i && cd ../../frontend",
-    "install:reactjs-social-login": "cd ../packages/reactjs-social-login && npm i && cd ../../frontend",
+    "install:currency-converter": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
+    "install:reactjs-social-login": "cd ../packages/reactjs-social-login && npm i",
     "install:dependencies": "npm run install:currency-converter && npm run install:reactjs-social-login",
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",

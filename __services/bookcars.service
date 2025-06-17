@@ -1,5 +1,5 @@
 [Unit]
-Description=BookCars API
+Description=BookCars Backend Server
 Wants=mongod.service
 After=mongod.service
 
