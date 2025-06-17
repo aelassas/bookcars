@@ -68,7 +68,7 @@ const Cars = () => {
   //       rating,
   //       seats,
   //     }
-  //     const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
+  //     const _allSuppliers = await SupplierService.getAdminSuppliers(payload)
   //     setAllSuppliers(_allSuppliers)
   //   }
 
@@ -157,7 +157,7 @@ const Cars = () => {
       //   rating,
       //   seats,
       // }
-      // const _allSuppliers = await SupplierService.getBackendSuppliers(payload)
+      // const _allSuppliers = await SupplierService.getAdminSuppliers(payload)
       const _allSuppliers = await SupplierService.getAllSuppliers()
       const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
       setAllSuppliers(_allSuppliers)

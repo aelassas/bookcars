@@ -89,15 +89,15 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
     .then((res) => res.data)
 
 /**
-* Get backend suppliers.
+* Get admin suppliers.
 *
 * @param {bookcarsTypes.GetCarsPayload} data
 * @returns {Promise<bookcarsTypes.User[]>}
 */
-export const getBackendSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
+export const getAdminSuppliers = (data: bookcarsTypes.GetCarsPayload): Promise<bookcarsTypes.User[]> =>
   axiosInstance
     .post(
-      '/api/backend-suppliers',
+      '/api/admin-suppliers',
       data,
       { withCredentials: true }
     ).then((res) => res.data)

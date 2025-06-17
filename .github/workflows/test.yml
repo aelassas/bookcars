@@ -58,7 +58,7 @@ jobs:
            echo BC_CDN_TEMP_CONTRACTS=$BC_CDN_TEMP_CONTRACTS >> .env
            echo BC_CDN_LICENSES=$BC_CDN_LICENSES >> .env
            echo BC_CDN_TEMP_LICENSES=$BC_CDN_TEMP_LICENSES >> .env             
-           echo BC_BACKEND_HOST=$BC_BACKEND_HOST >> .env
+           echo BC_ADMIN_HOST=$BC_ADMIN_HOST >> .env
            echo BC_FRONTEND_HOST=$BC_FRONTEND_HOST >> .env
            echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
            echo BC_EXPO_ACCESS_TOKEN=$BC_EXPO_ACCESS_TOKEN >> .env
@@ -96,7 +96,7 @@ jobs:
         BC_CDN_TEMP_CONTRACTS: ${{ vars.BC_CDN_TEMP_CONTRACTS }}
         BC_CDN_LICENSES: ${{ vars.BC_CDN_LICENSES }}
         BC_CDN_TEMP_LICENSES: ${{ vars.BC_CDN_TEMP_LICENSES }}        
-        BC_BACKEND_HOST: ${{ vars.BC_BACKEND_HOST }}
+        BC_ADMIN_HOST: ${{ vars.BC_ADMIN_HOST }}
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
         BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}

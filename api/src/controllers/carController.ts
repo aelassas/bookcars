@@ -102,7 +102,7 @@ export const create = async (req: Request, res: Response) => {
                 html: `<p>
 ${i18n.t('HELLO')}${admin.fullName},<br><br>
 ${message}<br><br>
-${helper.joinURL(env.BACKEND_HOST, `update-car?cr=${car.id}`)}<br><br>
+${helper.joinURL(env.ADMIN_HOST, `update-car?cr=${car.id}`)}<br><br>
 ${i18n.t('REGARDS')}<br>
 </p>`,
               }

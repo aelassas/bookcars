@@ -24,10 +24,10 @@ services:
     ports:
       - 27017:27017
 
-  backend:
+  admin:
     build: 
       context: .
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./admin/Dockerfile
     depends_on:
       - api
     ports:

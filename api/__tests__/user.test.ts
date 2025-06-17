@@ -381,7 +381,7 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
 
     // test success (token not valid)
     res = await request(app)
-      .get(`/api/check-token/${bookcarsTypes.AppType.Backend}/${USER1_ID}/${USER1_EMAIL}/${token}`)
+      .get(`/api/check-token/${bookcarsTypes.AppType.Admin}/${USER1_ID}/${USER1_EMAIL}/${token}`)
     expect(res.statusCode).toBe(204)
 
     // test success (token not found)
@@ -515,7 +515,7 @@ describe('POST /api/resend/:type/:email/:reset', () => {
     // test success (reset)
     reset = false
     res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${ADMIN_EMAIL}/${reset}`)
+      .post(`/api/resend/${bookcarsTypes.AppType.Admin}/${ADMIN_EMAIL}/${reset}`)
     expect(res.statusCode).toBe(200)
     user = await User.findById(ADMIN_ID)
     expect(user).not.toBeNull()
@@ -523,7 +523,7 @@ describe('POST /api/resend/:type/:email/:reset', () => {
 
     // test failure (forbiden)
     res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${USER1_EMAIL}/${reset}`)
+      .post(`/api/resend/${bookcarsTypes.AppType.Admin}/${USER1_EMAIL}/${reset}`)
     expect(res.statusCode).toBe(403)
 
     // test success (user not found)
@@ -650,7 +650,7 @@ describe('POST /api/sign-in/:type', () => {
     // test success (not authorized)
     payload.password = USER1_PASSWORD
     res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Admin}`)
       .send(payload)
     expect(res.statusCode).toBe(204)
 

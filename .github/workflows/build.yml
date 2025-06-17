@@ -33,9 +33,9 @@ jobs:
            npm install
            npm run lint
            npm run build
-    - name: Build Backend
+    - name: Build Admin
       run: |
-           cd ./backend
+           cd ./admin
            npm install --force
            npm run lint
            npm run build
