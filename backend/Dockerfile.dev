@@ -16,22 +16,22 @@ RUN set -e && \
 
 FROM node:lts-alpine AS build
 
-WORKDIR /bookcars/api
+WORKDIR /bookcars/backend
 
-COPY ./api/package*.json ./
+COPY ./backend/package*.json ./
 
 RUN npm install --force && \
     npm cache clean --force
 
 FROM node:lts-alpine
-WORKDIR /bookcars/api
+WORKDIR /bookcars/backend
 
-COPY --from=build /bookcars/api/node_modules ./node_modules
+COPY --from=build /bookcars/backend/node_modules ./node_modules
 
 COPY --from=packages /bookcars/packages /bookcars/packages
 
-COPY ./api ./
-COPY ./api/.env.docker .env
+COPY ./backend ./
+COPY ./backend/.env.docker .env
 
 EXPOSE 4002
 
