@@ -2,7 +2,7 @@
   "name": "bookcars-frontend",
   "description": "Public web frontend for BookCars (customer-facing website)",
   "private": true,
-  "version": "7.5.0",
+  "version": "7.6.0",
   "type": "module",
   "scripts": {
     "install:currency-converter": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
