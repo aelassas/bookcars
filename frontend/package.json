@@ -36,7 +36,7 @@
     "@types/react-dom": "^19.1.6",
     "@types/react-recaptcha-v3": "^1.1.5",
     "@types/react-slick": "^0.23.13",
-    "@types/validator": "^13.15.1",
+    "@types/validator": "^13.15.2",
     "@vitejs/plugin-react": "^4.5.2",
     "axios": "^1.10.0",
     "cross-env": "^7.0.3",
@@ -52,7 +52,7 @@
     "react-circle-flags": "^0.0.23",
     "react-dom": "^19.1.0",
     "react-ga4": "^2.1.0",
-    "react-hook-form": "^7.57.0",
+    "react-hook-form": "^7.58.1",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.6.2",
     "react-slick": "^0.30.3",
@@ -61,12 +61,12 @@
     "typescript": "^5.8.3",
     "validator": "^13.15.15",
     "vite": "^6.3.5",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.27.4",
-    "@typescript-eslint/eslint-plugin": "^8.34.0",
-    "@typescript-eslint/parser": "^8.34.0",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
@@ -76,7 +76,7 @@
     "npm-check-updates": "^18.0.1",
     "stylelint": "^16.20.0",
     "stylelint-config-standard": "^38.0.0",
-    "terser": "^5.42.0",
+    "terser": "^5.43.0",
     "vite-plugin-html": "^3.2.2"
   }
 }
