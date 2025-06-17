@@ -1,10 +1,10 @@
 version: "3.8"
 services:
-  api:
+  backend:
     build: 
       context: .
-      dockerfile: ./api/Dockerfile
-    env_file: ./api/.env.docker
+      dockerfile: ./backend/Dockerfile
+    env_file: ./backend/.env.docker
     restart: always
     ports:
       - 4002:4002
@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: ./admin/Dockerfile
     depends_on:
-      - api
+      - backend
     ports:
       - 3001:3001
 
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: ./frontend/Dockerfile
     depends_on:
-      - api
+      - backend
     ports:
       - 80:80
       - 443:443
