@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./api/
+        working-directory: ./backend/
 
     strategy:
       matrix:
@@ -30,7 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './api/package-lock.json'
+        cache-dependency-path: './backend/package-lock.json'
     - run: npm install
     - run: npm run lint
     - run: npm run build
