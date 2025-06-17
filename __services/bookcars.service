@@ -5,7 +5,7 @@ After=mongod.service
 
 [Service]
 ExecStart=/usr/bin/npm start
-WorkingDirectory=/opt/bookcars/api
+WorkingDirectory=/opt/bookcars/backend
 Type=simple
 Restart=always
 StandardOutput=append:/var/log/bookcars.log
