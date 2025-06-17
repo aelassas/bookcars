@@ -40,19 +40,19 @@ services:
       - /bookcars/api/node_modules
       - api_logs:/bookcars/api/logs
 
-  bc-dev-backend:
+  bc-dev-admin:
     build:
       context: .
-      dockerfile: ./backend/Dockerfile.dev
-    env_file: ./backend/.env.docker
+      dockerfile: ./admin/Dockerfile.dev
+    env_file: ./admin/.env.docker
     restart: always
     depends_on:
       - bc-dev-api
     ports:
       - 3001:3001
     volumes:
-      - ./backend:/bookcars/backend
-      - /bookcars/backend/node_modules
+      - ./admin:/bookcars/admin
+      - /bookcars/admin/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true

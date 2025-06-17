@@ -29,39 +29,39 @@ afterAll(async () => {
   await databaseHelper.close()
 })
 
-describe('POST /api/sign-in/backend', () => {
-  it('should authenticate through backend HttpOnly cookie', async () => {
-    // test success (backend auth without origin)
+describe('POST /api/sign-in/admin', () => {
+  it('should authenticate through admin HttpOnly cookie', async () => {
+    // test success (admin auth without origin)
     const payload: bookcarsTypes.SignInPayload = {
       email: ADMIN_EMAIL,
       password: testHelper.PASSWORD,
     }
     let res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Admin}`)
       .send(payload)
     expect(res.statusCode).toBe(200)
     const cookies = res.headers['set-cookie'] as unknown as string[]
     expect(cookies.length).toBeGreaterThan(1)
-    const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.BACKEND_AUTH_COOKIE_NAME)
+    const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.ADMIN_AUTH_COOKIE_NAME)
 
-    // test success (backend auth with origin)
+    // test success (admin auth with origin)
     res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
-      .set('Origin', env.BACKEND_HOST)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Admin}`)
+      .set('Origin', env.ADMIN_HOST)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
     // test success (cookie)
     res = await request(app)
       .get(`/api/user/${USER_ID}`)
-      .set('Origin', env.BACKEND_HOST)
+      .set('Origin', env.ADMIN_HOST)
       .set('Cookie', cookie)
     expect(res.statusCode).toBe(200)
     expect(res.body.email).toBe(USER_EMAIL)
 
     // test failure (not allowed by CORS)
     res = await request(app)
-      .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
+      .post(`/api/sign-in/${bookcarsTypes.AppType.Admin}`)
       .set('Origin', 'http://unknow/')
       .send(payload)
     expect(res.statusCode).toBe(500)
@@ -70,7 +70,7 @@ describe('POST /api/sign-in/backend', () => {
 
 describe('POST /api/sign-in/frontend', () => {
   it('should authenticate through frontend HttpOnly cookie', async () => {
-    // test success (backend auth without origin)
+    // test success (admin auth without origin)
     const payload: bookcarsTypes.SignInPayload = {
       email: USER_EMAIL,
       password: testHelper.PASSWORD,
@@ -83,7 +83,7 @@ describe('POST /api/sign-in/frontend', () => {
     expect(cookies.length).toBeGreaterThan(1)
     const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.FRONTEND_AUTH_COOKIE_NAME)
 
-    // test success (backend auth wit origin)
+    // test success (admin auth wit origin)
     res = await request(app)
       .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
       .set('Origin', env.FRONTEND_HOST)

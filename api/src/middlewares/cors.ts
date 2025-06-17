@@ -4,7 +4,7 @@ import * as env from '../config/env.config'
 import * as logger from '../common/logger'
 
 const whitelist = [
-  helper.trimEnd(env.BACKEND_HOST, '/'),
+  helper.trimEnd(env.ADMIN_HOST, '/'),
   helper.trimEnd(env.FRONTEND_HOST, '/'),
 ]
 

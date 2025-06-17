@@ -90,7 +90,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
       html: `<p>
     ${i18n.t('HELLO')}${user.fullName},<br><br>
     ${message}<br><br>
-    ${helper.joinURL(env.BACKEND_HOST, `update-booking?b=${bookingId}`)}<br><br>
+    ${helper.joinURL(env.ADMIN_HOST, `update-booking?b=${bookingId}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
     }

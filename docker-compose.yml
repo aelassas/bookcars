@@ -39,10 +39,10 @@ services:
       - cdn:/var/www/cdn/bookcars
       - api_logs:/bookcars/api/logs
 
-  bc-backend:
+  bc-admin:
     build: 
       context: .
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./admin/Dockerfile
     depends_on:
       - bc-api
     ports:

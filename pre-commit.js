@@ -24,9 +24,9 @@ const config = {
       container: 'bc-dev-api',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
-    backend: {
-      folder: 'backend',
-      container: 'bc-dev-backend',
+    admin: {
+      folder: 'admin',
+      container: 'bc-dev-admin',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
     frontend: {

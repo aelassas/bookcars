@@ -13,14 +13,14 @@ RUN set -e && \
     fi; \
   done' _ {} +
 
-FROM node:lts-alpine AS backend
-WORKDIR /bookcars/backend
+FROM node:lts-alpine AS admin
+WORKDIR /bookcars/admin
 
-COPY ./backend/package*.json ./
+COPY ./admin/package*.json ./
 RUN npm install --force && npm cache clean --force
 
-COPY ./backend ./ 
-COPY ./backend/.env.docker .env
+COPY ./admin ./ 
+COPY ./admin/.env.docker .env
 
 # Copy preinstalled internal packages
 COPY --from=packages /bookcars/packages /bookcars/packages

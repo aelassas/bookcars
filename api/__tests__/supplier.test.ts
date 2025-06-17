@@ -671,8 +671,8 @@ describe('POST /api/frontend-suppliers', () => {
   })
 })
 
-describe('POST /api/backend-suppliers', () => {
-  it('should return backend suppliers', async () => {
+describe('POST /api/admin-suppliers', () => {
+  it('should return admin suppliers', async () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success (full filter)
@@ -695,7 +695,7 @@ describe('POST /api/backend-suppliers', () => {
       ranges: [bookcarsTypes.CarRange.Midi],
     }
     let res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -703,7 +703,7 @@ describe('POST /api/backend-suppliers', () => {
 
     // test failure (no payload)
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
 
@@ -714,7 +714,7 @@ describe('POST /api/backend-suppliers', () => {
     payload.seats = -1
     payload.mileage = [bookcarsTypes.Mileage.Unlimited]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -727,7 +727,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (carSpecs, seats)
     payload.mileage = [bookcarsTypes.Mileage.Limited]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -736,7 +736,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (no mileage)
     payload.mileage = []
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -746,7 +746,7 @@ describe('POST /api/backend-suppliers', () => {
     payload.mileage = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
     payload.deposit = 1200
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -755,7 +755,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (seats)
     payload.seats = 3
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -765,7 +765,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -774,7 +774,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -783,7 +783,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (availability)
     payload.availability = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
@@ -793,7 +793,7 @@ describe('POST /api/backend-suppliers', () => {
     // test success (no availability)
     payload.availability = []
     res = await request(app)
-      .post('/api/backend-suppliers')
+      .post('/api/admin-suppliers')
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)

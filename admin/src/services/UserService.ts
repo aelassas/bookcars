@@ -65,10 +65,10 @@ export const deleteTokens = (userId: string): Promise<number> =>
  *
  * @param {?string} [email]
  * @param {boolean} [reset=false]
- * @param {string} [appType=bookcarsTypes.AppType.Backend]
+ * @param {string} [appType=bookcarsTypes.AppType.Admin]
  * @returns {Promise<number>}
  */
-export const resend = (email?: string, reset = false, appType: string = bookcarsTypes.AppType.Backend): Promise<number> =>
+export const resend = (email?: string, reset = false, appType: string = bookcarsTypes.AppType.Admin): Promise<number> =>
   axiosInstance
     .post(
       `/api/resend/${appType}/${encodeURIComponent(email || '')}/${reset}`
@@ -163,7 +163,7 @@ export const validateAccessToken = (): Promise<number> =>
   axiosInstance
     .post(
       '/api/validate-access-token',
-      { backend: true },
+      { admin: true },
       { withCredentials: true }
     )
     .then((res) => res.status)
