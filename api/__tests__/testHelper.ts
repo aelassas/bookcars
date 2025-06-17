@@ -108,7 +108,7 @@ const signin = async (appType: bookcarsTypes.AppType, email: string) => {
   return token
 }
 
-export const signinAsAdmin = () => signin(bookcarsTypes.AppType.Backend, ADMIN_EMAIL)
+export const signinAsAdmin = () => signin(bookcarsTypes.AppType.Admin, ADMIN_EMAIL)
 
 export const signinAsUser = () => signin(bookcarsTypes.AppType.Frontend, USER_EMAIL)
 

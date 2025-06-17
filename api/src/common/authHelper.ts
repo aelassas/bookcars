@@ -45,13 +45,13 @@ export const decryptJWT = async (input: string) => {
 }
 
 /**
- * Check whether the request is from the backend or not.
+ * Check whether the request is from the admin or not.
  *
  * @export
  * @param {Request} req
  * @returns {boolean}
  */
-export const isBackend = (req: Request): boolean => !!req.headers.origin && helper.trimEnd(req.headers.origin, '/') === helper.trimEnd(env.BACKEND_HOST, '/')
+export const isAdmin = (req: Request): boolean => !!req.headers.origin && helper.trimEnd(req.headers.origin, '/') === helper.trimEnd(env.ADMIN_HOST, '/')
 
 /**
  * Check whether the request is from the frontend or not.
@@ -69,9 +69,9 @@ export const isFrontend = (req: Request): boolean => !!req.headers.origin && hel
  * @returns {string}
  */
 export const getAuthCookieName = (req: Request): string => {
-  if (isBackend(req)) {
-    // Backend auth cookie name
-    return env.BACKEND_AUTH_COOKIE_NAME
+  if (isAdmin(req)) {
+    // Admin auth cookie name
+    return env.ADMIN_AUTH_COOKIE_NAME
   }
 
   if (isFrontend(req)) {

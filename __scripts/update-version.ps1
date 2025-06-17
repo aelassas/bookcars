@@ -83,7 +83,7 @@ function Update-NpmPackageVersion {
 
 Update-NpmPackageVersion -Version "$Version" -FolderPath ".."
 Update-NpmPackageVersion -Version "$Version" -FolderPath "..\api"
-Update-NpmPackageVersion -Version "$Version" -FolderPath "..\backend"
+Update-NpmPackageVersion -Version "$Version" -FolderPath "..\admin"
 Update-NpmPackageVersion -Version "$Version" -FolderPath "..\frontend"
 Update-NpmPackageVersion -Version "$Version" -FolderPath "..\mobile"
 

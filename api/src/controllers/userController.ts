@@ -139,7 +139,7 @@ export const signup = async (req: Request, res: Response) => {
 }
 
 /**
- * Backend Sign Up.
+ * Admin Sign Up.
  *
  * @export
  * @async
@@ -245,7 +245,7 @@ export const create = async (req: Request, res: Response) => {
         ${i18n.t('HELLO')}${user.fullName},<br><br>
         ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
         ${helper.joinURL(
-          user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
+          user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.ADMIN_HOST,
           'activate',
         )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${i18n.t('REGARDS')}<br>
@@ -282,8 +282,8 @@ export const checkToken = async (req: Request, res: Response) => {
       const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
       if (
-        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
-        || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)
+        || (type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
         || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
         || user.active
       ) {
@@ -363,8 +363,8 @@ export const resend = async (req: Request, res: Response) => {
       const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
       if (
-        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
-        || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)
+        || (type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
         || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
       ) {
         res.sendStatus(403)
@@ -383,7 +383,7 @@ export const resend = async (req: Request, res: Response) => {
       const reset = req.params.reset === 'true'
 
       const activationOrResetLink = `${helper.joinURL(
-        user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
+        user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.ADMIN_HOST,
         reset ? 'reset-password' : 'activate',
       )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}`
 
@@ -490,8 +490,8 @@ export const signin = async (req: Request, res: Response) => {
       !password
       || !user
       || !user.password
-      || ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
-      || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+      || ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)
+      || (type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
       || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
     ) {
       res.sendStatus(204)
@@ -1616,7 +1616,7 @@ export const verifyRecaptcha = async (req: Request, res: Response) => {
 export const sendEmail = async (req: Request, res: Response) => {
   try {
     const whitelist = [
-      helper.trimEnd(env.BACKEND_HOST, '/'),
+      helper.trimEnd(env.ADMIN_HOST, '/'),
       helper.trimEnd(env.FRONTEND_HOST, '/'),
     ]
     const { origin } = req.headers
