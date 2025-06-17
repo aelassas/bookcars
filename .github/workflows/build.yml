@@ -27,25 +27,25 @@ jobs:
         node-version: ${{ matrix.node-version }}
         
         
-    - name: Build API
+    - name: Build backend
       run: |
-           cd ./api
+           cd ./backend
            npm install
            npm run lint
            npm run build
-    - name: Build Admin
+    - name: Build admin panel
       run: |
            cd ./admin
            npm install --force
            npm run lint
            npm run build
-    - name: Build Frontend
+    - name: Build frontend
       run: |
            cd ./frontend
            npm install --force
            npm run lint
            npm run build
-    - name: Build Mobile App
+    - name: Build mobile app
       run: |
            cd ./mobile
            npm install
