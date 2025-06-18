@@ -385,7 +385,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       days,
     } = body
 
-    // include pickup locations and pickup locations whose parent is equal to pickupLocation
+    // Include pickupLocation and child locations in search results
     const locIds = await Location.find({
       $or: [
         { _id: pickupLocation },
