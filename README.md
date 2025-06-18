@@ -34,7 +34,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 
 ## Features
 
-### 🧑‍💼 Supplier & Fleet Management
+### 🏢 Supplier & Fleet Management
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 * Ready for single or multiple suppliers
