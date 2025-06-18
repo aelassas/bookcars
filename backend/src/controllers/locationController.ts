@@ -111,6 +111,7 @@ export const create = async (req: Request, res: Response) => {
     image,
     parkingSpots: _parkingSpots,
     supplier,
+    parentLocation,
   } = body
 
   try {
@@ -147,6 +148,7 @@ export const create = async (req: Request, res: Response) => {
       values,
       parkingSpots,
       supplier,
+      parentLocation,
     })
     await location.save()
 
@@ -186,11 +188,19 @@ export const update = async (req: Request, res: Response) => {
       .populate<{ values: env.LocationValue[] }>('values')
 
     if (location) {
-      const { country, longitude, latitude, names, parkingSpots }: bookcarsTypes.UpsertLocationPayload = req.body
+      const {
+        country,
+        longitude,
+        latitude,
+        names,
+        parkingSpots,
+        parentLocation,
+      }: bookcarsTypes.UpsertLocationPayload = req.body
 
       location.country = new mongoose.Types.ObjectId(country)
       location.longitude = longitude
       location.latitude = latitude
+      location.parentLocation = parentLocation ? new mongoose.Types.ObjectId(parentLocation) : undefined
 
       for (const name of names) {
         const locationValue = location.values.filter((value) => value.language === name.language)[0]
@@ -365,9 +375,21 @@ export const getLocation = async (req: Request, res: Response) => {
         },
       })
       .populate<{ supplier: env.UserInfo }>('supplier')
+      .populate<{
+        parentLocation: env.LocationInfo
+      }>({
+        path: 'parentLocation',
+        populate: {
+          path: 'values',
+          model: 'LocationValue',
+        },
+      })
       .lean()
 
     if (location) {
+      const { language } = req.params
+      const name = (location.values as env.LocationValue[]).filter((value) => value.language === language)[0].value
+
       if (location.country) {
         const countryName = ((location.country as env.CountryInfo).values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         location.country.name = countryName
@@ -377,13 +399,18 @@ export const getLocation = async (req: Request, res: Response) => {
           parkingSpot.name = (parkingSpot.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
         }
       }
-      const name = (location.values as env.LocationValue[]).filter((value) => value.language === req.params.language)[0].value
       if (location.supplier) {
         const { _id, fullName, avatar } = location.supplier
         location.supplier = { _id, fullName, avatar }
       }
-      const l = { ...location, name }
-      res.json(l)
+      let parentLocation: env.LocationInfo | undefined
+      if (location.parentLocation) {
+        const parentLocationName = (location.parentLocation.values as env.LocationValue[]).filter((value) => value.language === language)[0].value
+        parentLocation = { ...location.parentLocation, name: parentLocationName }
+      }
+
+      const loc = { ...location, name, parentLocation }
+      res.json(loc)
       return
     }
     logger.error('[location.getLocation] Location not found:', id)
@@ -597,12 +624,17 @@ export const checkLocation = async (req: Request, res: Response) => {
   try {
     const _id = new mongoose.Types.ObjectId(id)
 
-    const count = await Car
+    const carCount = await Car
       .find({ locations: _id })
       .limit(1)
       .countDocuments()
 
-    if (count === 1) {
+    const childLocationsCount = await Location
+      .find({ parentLocation: _id })
+      .limit(1)
+      .countDocuments()
+
+    if (carCount === 1 || childLocationsCount === 1) {
       res.sendStatus(200)
       return
     }

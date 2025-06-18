@@ -744,6 +744,7 @@ export interface Location extends Document {
   image?: string | null
   parkingSpots?: Types.ObjectId[] | null
   supplier?: Types.ObjectId
+  parentLocation?: Types.ObjectId
 }
 
 /**
@@ -760,6 +761,7 @@ export interface LocationInfo {
   name?: string
   image?: string | null
   values: LocationValue[]
+  parentLocation?: Types.ObjectId
 }
 
 /**
