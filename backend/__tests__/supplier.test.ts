@@ -24,7 +24,7 @@ const CONTRACT1_PATH = path.join(__dirname, `./contracts/${CONTRACT1}`)
 const CONTRACT2 = 'contract2.pdf'
 const CONTRACT2_PATH = path.join(__dirname, `./contracts/${CONTRACT2}`)
 
-const LOCATION_ID = testHelper.GetRandromObjectIdAsString()
+let LOCATION_ID: string
 
 let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
@@ -40,6 +40,8 @@ beforeAll(async () => {
 
   await databaseHelper.connect(env.DB_URI, false, false)
   await testHelper.initialize()
+
+  LOCATION_ID = await testHelper.createLocation('loc en', 'loc fr', testHelper.GetRandromObjectIdAsString())
 
   // create two suppliers
   SUPPLIER1_NAME = testHelper.getSupplierName()
@@ -116,6 +118,9 @@ beforeAll(async () => {
 //
 afterAll(async () => {
   await testHelper.close()
+
+  // delete location
+  await testHelper.deleteLocation(LOCATION_ID)
 
   // delete suppliers
   await testHelper.deleteSupplier(SUPPLIER1_ID)

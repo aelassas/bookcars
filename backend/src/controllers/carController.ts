@@ -854,7 +854,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       includeComingSoonCars,
     } = body
 
-    // include pickupLocation and child locations in search results
+    // Include pickupLocation and child locations in search results
     const locIds = await Location.find({
       $or: [
         { _id: pickupLocation },
