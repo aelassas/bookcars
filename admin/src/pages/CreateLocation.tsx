@@ -23,6 +23,8 @@ import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 import PositionInput from '@/components/PositionInput'
 import { UserContextType, useUserContext } from '@/context/UserContext'
 import { schema, ParkingSpot, FormFields } from '@/models/LocationForm'
+import LocationSelectList from '@/components/LocationSelectList'
+import { Option } from '@/models/common'
 
 import '@/assets/css/create-location.css'
 
@@ -30,7 +32,6 @@ const CreateLocation = () => {
   const { user } = useUserContext() as UserContextType
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [country, setCountry] = useState<bookcarsTypes.Country | null>(null)
 
   // Initialize form with React Hook Form and Zod validation
   const {
@@ -47,13 +48,19 @@ const CreateLocation = () => {
     resolver: zodResolver(schema),
     mode: 'onSubmit',
     defaultValues: {
-      country: '',
+      country: undefined,
       names: env._LANGUAGES.map(lang => ({ language: lang.code, name: '' })),
       latitude: '',
       longitude: '',
       parkingSpots: [],
-      image: undefined
+      image: undefined,
+      parentLocation: undefined,
     }
+  })
+
+  const country = useWatch({
+    control,
+    name: 'country'
   })
 
   // Use field array for names and parking spots
@@ -71,6 +78,11 @@ const CreateLocation = () => {
   const watchImage = useWatch({
     control,
     name: 'image'
+  })
+
+  const parentLocation = useWatch({
+    control,
+    name: 'parentLocation'
   })
 
   const handleBeforeUpload = () => {
@@ -103,27 +115,28 @@ const CreateLocation = () => {
 
       if (isValid) {
         const payload: bookcarsTypes.UpsertLocationPayload = {
-          country: data.country,
+          country: data.country?._id!,
           latitude: data.latitude ? Number(data.latitude) : undefined,
           longitude: data.longitude ? Number(data.longitude) : undefined,
           names: data.names,
           image: data.image,
           parkingSpots: data.parkingSpots as bookcarsTypes.ParkingSpot[] || [],
           supplier: helper.supplier(user) ? user?._id : undefined,
+          parentLocation: data.parentLocation?._id || undefined,
         }
 
         const status = await LocationService.create(payload)
 
         if (status === 200) {
           reset({
-            country: '',
+            country: undefined,
             names: env._LANGUAGES.map(lang => ({ language: lang.code, name: '' })),
             latitude: '',
             longitude: '',
             parkingSpots: [],
-            image: undefined
+            image: undefined,
+            parentLocation: undefined,
           })
-          setCountry(null)
           helper.info(strings.LOCATION_CREATED)
         } else {
           helper.error()
@@ -169,9 +182,8 @@ const CreateLocation = () => {
                 label={strings.COUNTRY}
                 variant="standard"
                 onChange={(countries: bookcarsTypes.Option[]) => {
-                  const _country = countries.length > 0 ? countries[0] as bookcarsTypes.Country : null
-                  setCountry(_country)
-                  setValue('country', _country?._id || '')
+                  const _country = countries.length > 0 ? countries[0] as bookcarsTypes.Country : undefined
+                  setValue('country', _country as Option || undefined)
                 }}
                 value={country}
                 required
@@ -180,6 +192,15 @@ const CreateLocation = () => {
                 <FormHelperText>{errors.country.message}</FormHelperText>
               )}
             </FormControl>
+
+            <LocationSelectList
+              label={strings.PARENT_LOCATION}
+              variant="standard"
+              value={parentLocation}
+              onChange={(locations: bookcarsTypes.Option[]) => {
+                setValue('parentLocation', locations.length > 0 ? locations[0] as Option : undefined)
+              }}
+            />
 
             {nameFields.map((field, index) => (
               <FormControl key={field.id} fullWidth margin="dense">

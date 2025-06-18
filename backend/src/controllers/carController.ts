@@ -17,6 +17,7 @@ import User from '../models/User'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import * as mailHelper from '../common/mailHelper'
+import Location from '../models/Location'
 
 /**
  * Create a Car.
@@ -853,10 +854,21 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       includeComingSoonCars,
     } = body
 
+    // include pickup locations and pickup locations whose parent is equal to pickupLocation
+    const locIds = await Location.find({
+      $or: [
+        { _id: pickupLocation },
+        { parentLocation: pickupLocation },
+      ],
+    }).select('_id').lean()
+
+    const locationIds = locIds.map((loc) => loc._id)
+
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
         { supplier: { $in: suppliers } },
-        { locations: pickupLocation },
+        // { locations: pickupLocation },
+        { locations: { $in: locationIds } },
         { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
         { available: true },

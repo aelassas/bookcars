@@ -33,18 +33,10 @@ const CountrySelectList = ({
   const [selectedOptions, setSelectedOptions] = useState<bookcarsTypes.Country[]>([])
 
   useEffect(() => {
-    const _value = multiple ? value as bookcarsTypes.Country[] : [value as bookcarsTypes.Country]
+    const _value = multiple ? value as bookcarsTypes.Country[] : value ? [value as bookcarsTypes.Country] : []
 
-    // if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
-    //   setSelectedOptions(_value)
-    // }
-
-    if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
+    if (!bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
-    }
-
-    if ((value === null || (Array.isArray(value) && value.length === 0)) && selectedOptions.length > 0) {
-      setSelectedOptions([])
     }
   }, [value, multiple, selectedOptions])
 

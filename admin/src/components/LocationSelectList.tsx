@@ -10,6 +10,7 @@ import MultipleSelect from './MultipleSelect'
 interface LocationSelectListProps {
   value?: bookcarsTypes.Option | bookcarsTypes.Option[]
   multiple?: boolean
+  excludeId?: string
   label?: string
   required?: boolean
   variant?: TextFieldVariants
@@ -19,6 +20,7 @@ interface LocationSelectListProps {
 const LocationSelectList = ({
   value,
   multiple,
+  excludeId,
   label,
   required,
   variant,
@@ -33,9 +35,9 @@ const LocationSelectList = ({
   const [selectedOptions, setSelectedOptions] = useState<bookcarsTypes.Location[]>([])
 
   useEffect(() => {
-    const _value = multiple ? value as bookcarsTypes.Location[] : [value as bookcarsTypes.Location]
+    const _value = multiple ? value as bookcarsTypes.Location[] : value ? [value as bookcarsTypes.Location] : []
 
-    if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
+    if (!bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
     }
   }, [value, multiple, selectedOptions])
@@ -53,7 +55,7 @@ const LocationSelectList = ({
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
         const _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-        setRows(_rows)
+        setRows(excludeId ? _rows.filter((row) => row._id !== excludeId) : _rows)
         setFetch(_data.resultData.length > 0)
 
         if (onFetch) {
