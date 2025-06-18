@@ -42,7 +42,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 
-### 💰 Pricing & Payments
+### 💳 Pricing & Payments
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
