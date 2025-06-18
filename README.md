@@ -34,29 +34,46 @@ Customers can sign up from the frontend or the mobile app, search for available 
 
 ## Features
 
+### 🧑‍💼 Supplier & Fleet Management
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
-* Ready for one or multiple suppliers
+* Ready for single or multiple suppliers
 * Car fleet management
-* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
-* [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
-* [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
-* Location, country, parking spots and map features
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
+
+### 💰 Pricing & Payments
+* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
+* [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Payment management
+* [Multiple payment gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
+* Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
+
+### 🌍 Locations & Search
+* [Hierarchical locations with country, map, and parking integration](https://github.com/aelassas/bookcars/wiki/Locations)
+* Location-based search with nested child location support
+* Map display for locations and parking spots
+
+### 👥 User Experience
 * Customer management
-* Multiple login options (Google, Facebook, Apple, Email)
-* Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit)
-* Multiple language support (English, French, Spanish)
+* Multiple login options: Google, Facebook, Apple, Email
+* Multiple language support: English, French, Spanish
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
-* Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
-* [Multiple Payment Gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
-* Responsive admin panel and frontend
-* Native Mobile app for Android and iOS with single codebase
+* Multiple pagination styles: classic (next/previous), infinite scroll
 * Push notifications
-* Secure against XSS, XST, CSR, MITM and DDoS
-* Supported Platforms: iOS, Android, Web, Docker
+
+### 🛡️ Security & Performance
+* Secure against XSS, XST, CSRF, MITM, and DDoS attacks
+* Responsive admin panel and frontend
+* Native mobile app for Android and iOS (single codebase)
+* [Docker](https://www.docker.com/) support for easy deployment
+
+### 🖥️ Supported Platforms
+* iOS
+* Android
+* Web
+* Docker
 
 ## Support
 
@@ -131,10 +148,7 @@ You can install the Android App by downloading the APK and installing it on any 
     2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
     4. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)
-11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
-12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
-13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
-14. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
+13. [Locations](https://github.com/aelassas/bookcars/wiki/Locations)
 15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
     1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)
     2. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)
@@ -142,7 +156,11 @@ You can install the Android App by downloading the APK and installing it on any 
     4. [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
     4. [Calculation Algorithm](https://github.com/aelassas/bookcars/wiki/Price-Calculation#calculation-algorithm)
 16. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+12. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 17. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
+14. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
 18. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 19. [Release Notes](https://github.com/aelassas/bookcars/releases)
 
