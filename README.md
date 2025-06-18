@@ -67,7 +67,7 @@ Customers can sign up from the frontend or the mobile app, search for available 
 * Secure against XSS, XST, CSRF, MITM, and DDoS attacks
 * Responsive admin panel and frontend
 * Native mobile app for Android and iOS (single codebase)
-* [Docker](https://www.docker.com/) support for easy deployment
+* [Docker](https://www.docker.com/) support for easy deployment and a better developer experience
 
 ### 🖥️ Supported Platforms
 * iOS
