@@ -30,6 +30,8 @@ import PositionInput from '@/components/PositionInput'
 import ParkingSpotEditList from '@/components/ParkingSpotEditList'
 import SupplierBadge from '@/components/SupplierBadge'
 import { schema, ParkingSpot, FormFields } from '@/models/LocationForm'
+import LocationSelectList from '@/components/LocationSelectList'
+import { Option } from '@/models/common'
 
 import '@/assets/css/update-location.css'
 
@@ -43,7 +45,6 @@ const UpdateLocation = () => {
   const [noMatch, setNoMatch] = useState(false)
   const [formError, setFormError] = useState(false)
   const [location, setLocation] = useState<bookcarsTypes.Location>()
-  const [country, setCountry] = useState<bookcarsTypes.Country>()
 
   // Initialize form with React Hook Form and Zod validation
   const {
@@ -58,13 +59,19 @@ const UpdateLocation = () => {
     resolver: zodResolver(schema),
     mode: 'onSubmit',
     defaultValues: {
-      country: '',
+      country: undefined,
       names: env._LANGUAGES.map(lang => ({ language: lang.code, name: '' })),
       latitude: '',
       longitude: '',
       parkingSpots: [],
-      image: undefined
+      image: undefined,
+      parentLocation: undefined,
     }
+  })
+
+  const country = useWatch({
+    control,
+    name: 'country'
   })
 
   // Use field array for names and parking spots
@@ -82,6 +89,11 @@ const UpdateLocation = () => {
   const watchImage = useWatch({
     control,
     name: 'image'
+  })
+
+  const parentLocation = useWatch({
+    control,
+    name: 'parentLocation'
   })
 
   const handleBeforeUpload = () => {
@@ -128,12 +140,13 @@ const UpdateLocation = () => {
 
       if (isValid) {
         const payload: bookcarsTypes.UpsertLocationPayload = {
-          country: country._id,
+          country: data.country?._id!,
           latitude: data.latitude ? Number(data.latitude) : undefined,
           longitude: data.longitude ? Number(data.longitude) : undefined,
           names: data.names,
           image: watchImage,
           parkingSpots: data.parkingSpots as bookcarsTypes.ParkingSpot[] || [],
+          parentLocation: data.parentLocation?._id || undefined,
         }
         const { status, data: newLocation } = await LocationService.update(location._id, payload)
 
@@ -186,7 +199,7 @@ const UpdateLocation = () => {
               }))
 
               setLocation(_location)
-              setCountry(_location.country)
+              setValue('country', _location.country as Option)
               setOriginalNames(_names)
               setValue('names', _names)
               setValue('longitude', (_location.longitude && _location.longitude.toString()) || '')
@@ -196,6 +209,7 @@ const UpdateLocation = () => {
                 longitude: ps.longitude.toString(),
                 values: ps.values as ParkingSpot['values'],
               })) || [])
+              setValue('parentLocation', _location.parentLocation as Option)
               setVisible(true)
               setLoading(false)
             } else {
@@ -247,12 +261,11 @@ const UpdateLocation = () => {
 
               <FormControl fullWidth margin="dense" error={!!errors.country}>
                 <CountrySelectList
-                  label={strings.COUNTRY}
+                  label={clStrings.COUNTRY}
                   variant="standard"
                   onChange={(countries: bookcarsTypes.Option[]) => {
                     const _country = countries.length > 0 ? countries[0] as bookcarsTypes.Country : null
-                    setCountry(_country || undefined)
-                    setValue('country', _country?._id || '')
+                    setValue('country', _country as Option || undefined)
                   }}
                   value={country}
                   required
@@ -261,6 +274,15 @@ const UpdateLocation = () => {
                   <FormHelperText>{errors.country.message}</FormHelperText>
                 )}
               </FormControl>
+
+              <LocationSelectList
+                label={clStrings.PARENT_LOCATION}
+                variant="standard"
+                value={parentLocation}
+                onChange={(locations: bookcarsTypes.Option[]) => {
+                  setValue('parentLocation', locations.length > 0 ? locations[0] as Option : undefined)
+                }}
+              />
 
               {nameFields.map((field, index) => (
                 <FormControl key={field.id} fullWidth margin="dense">

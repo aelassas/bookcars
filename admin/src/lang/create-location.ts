@@ -9,6 +9,7 @@ const strings = new LocalizedStrings({
     LOCATION_CREATED: 'Lieu créé avec succès.',
     COUNTRY: 'Pays',
     PARKING_SPOTS: 'Places de parking',
+    PARENT_LOCATION: 'Lieu Parent',
   },
   en: {
     NEW_LOCATION_HEADING: 'New location',
@@ -17,6 +18,7 @@ const strings = new LocalizedStrings({
     LOCATION_CREATED: 'Location created successfully.',
     COUNTRY: 'Country',
     PARKING_SPOTS: 'Parking spots',
+    PARENT_LOCATION: 'Parent Location',
   },
   es: {
     NEW_LOCATION_HEADING: 'Nuevo lugar',
@@ -25,6 +27,7 @@ const strings = new LocalizedStrings({
     LOCATION_CREATED: 'Lugar creado con éxito.',
     COUNTRY: 'País',
     PARKING_SPOTS: 'Plazas de aparcamiento',
+    PARENT_LOCATION: 'Ubicación de los Padres',
   },
 })
 

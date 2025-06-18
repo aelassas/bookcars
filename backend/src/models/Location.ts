@@ -33,6 +33,10 @@ const locationSchema = new Schema<env.Location>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    parentLocation: {
+      type: Schema.Types.ObjectId,
+      ref: 'Location',
+    },
   },
   {
     timestamps: true,

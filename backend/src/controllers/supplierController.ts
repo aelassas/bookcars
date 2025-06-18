@@ -16,6 +16,7 @@ import Car from '../models/Car'
 import DateBasedPrice from '../models/DateBasedPrice'
 import * as helper from '../common/helper'
 import * as logger from '../common/logger'
+import Location from '../models/Location'
 
 /**
  * Validate Supplier by fullname.
@@ -384,9 +385,20 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       days,
     } = body
 
+    // include pickup locations and pickup locations whose parent is equal to pickupLocation
+    const locIds = await Location.find({
+      $or: [
+        { _id: pickupLocation },
+        { parentLocation: pickupLocation },
+      ],
+    }).select('_id').lean()
+
+    const locationIds = locIds.map((loc) => loc._id)
+
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
-        { locations: pickupLocation },
+        // { locations: pickupLocation },
+        { locations: { $in: locationIds } },
         { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
         { fuelPolicy: { $in: fuelPolicy } },
