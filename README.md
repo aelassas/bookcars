@@ -63,7 +63,7 @@ Customers can register through the web frontend or mobile app, search for availa
 
 ### 👥 User Experience
 * Customer management
-* Multiple login options: Google, Facebook, Apple, Email
+* [Multiple login options](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): Google, Facebook, Apple, Email
 * Multiple language support: English, French, Spanish
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination styles: classic (next/previous), infinite scroll
@@ -155,6 +155,7 @@ You can install the Android App by downloading the APK and installing it on any 
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
 5. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 6. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
+7. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
 7. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
 8. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
