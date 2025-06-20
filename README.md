@@ -41,6 +41,7 @@ Customers can register through the web frontend or mobile app, search for availa
 ### 🏢 Supplier & Fleet Management
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+* [Supplier search result limit](https://github.com/aelassas/bookcars/wiki/FAQ#how-do-i-limit-the-number-of-cars-for-a-supplier-in-search-results)
 * Ready for single or multiple suppliers
 * Car fleet management
 * Booking management
