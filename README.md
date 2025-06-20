@@ -46,6 +46,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Car fleet management
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
+* [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
 ### 💳 Pricing & Payments
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
@@ -166,6 +167,7 @@ You can install the Android App by downloading the APK and installing it on any 
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
     4. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)
 13. [Locations](https://github.com/aelassas/bookcars/wiki/Locations)
+14. [Auto‐Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
     1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)
     2. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)
