@@ -24,7 +24,7 @@ You can deploy BookCars with minimal cost using the [Docker-based setup](https:/
 
 BookCars supports both **single-supplier** and **multi-supplier** modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email invitation prompting them to create their account and gain access to the system.
 
-The admin panel allows admins to manage suppliers, cars, countries & locations, parking spots, customers, and bookings & payments
+The admin panel allows admins to manage suppliers, cars, countries , locations, parking spots, customers, bookings, and payments.
 
 Customers can register through the web frontend or mobile app, search for available cars based on pickup/drop-off details, and complete the booking and payment process in a few clicks.
 
