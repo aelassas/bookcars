@@ -22,7 +22,7 @@ It comes with built-in support for [Stripe](https://stripe.com/global) and [PayP
 
 You can deploy BookCars with minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). It runs efficiently on a small virtual server with just 1GB of RAM—ideal for startups and small businesses. Hosting can cost as little as $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-BookCars supports both **single-supplier** and **multi-supplier** modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email invitation prompting them to create their account and gain access to the system.
+BookCars supports both single-supplier and multi-supplier modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email invitation prompting them to create their account and gain access to the system.
 
 The admin panel allows admins to manage suppliers, cars, countries , locations, parking spots, customers, bookings, and payments.
 
