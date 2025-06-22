@@ -1,20 +1,19 @@
 import 'react-native-gesture-handler'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
+import { NavigationContainerRef } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import { StripeProvider } from '@stripe/stripe-react-native'
-import Toast from 'react-native-toast-message'
-import DrawerNavigator from './components/DrawerNavigator'
 import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
 import { GlobalProvider } from './context/GlobalContext'
 import * as env from './config/env.config'
 import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
+import { AuthProvider } from '@/context/AuthContext'
+import NavigationWrapper from '@/components/NavigationWrapper'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -104,19 +103,20 @@ const App = () => {
 
   return (
     <GlobalProvider>
-      <SafeAreaProvider>
-        <Provider>
-          <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-            <AutocompleteDropdownContextProvider>
-              <NavigationContainer ref={navigationRef} onReady={onReady}>
-                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-                <DrawerNavigator />
-                <Toast />
-              </NavigationContainer>
-            </AutocompleteDropdownContextProvider>
-          </StripeProvider>
-        </Provider>
-      </SafeAreaProvider>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <Provider>
+            <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
+              <AutocompleteDropdownContextProvider>
+                <NavigationWrapper
+                  ref={navigationRef}
+                  onReady={onReady}
+                />
+              </AutocompleteDropdownContextProvider>
+            </StripeProvider>
+          </Provider>
+        </SafeAreaProvider>
+      </AuthProvider>
     </GlobalProvider>
   )
 }
