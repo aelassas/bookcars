@@ -25,12 +25,10 @@ import ChangePasswordScreen from '@/screens/ChangePasswordScreen'
 import DrawerContent from './DrawerContent'
 import CheckoutScreen from '@/screens/CheckoutScreen'
 import NotificationsScreen from '@/screens/NotificationsScreen'
+import { useAuth } from '@/context/AuthContext'
 
 const DrawerNavigator = () => {
-  const routes = useNavigationState((state) => state && state.routes)
-  const index = useNavigationState((state) => state && state.index)
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
+  const { loggedIn, language } = useAuth()
 
   const Drawer = createDrawerNavigator<StackParams>()
   const insets = useSafeAreaInsets()
@@ -122,17 +120,6 @@ const DrawerNavigator = () => {
     },
   ]
 
-  useEffect(() => {
-    const init = async () => {
-      const _loggedIn = await UserService.loggedIn()
-      setLoggedIn(_loggedIn)
-      const _language = await UserService.getLanguage()
-      setLanguage(_language)
-    }
-
-    init()
-  }, [routes])
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -151,7 +138,7 @@ const DrawerNavigator = () => {
         }}
         drawerContent={(props) => (
           <DrawerContent
-            index={index}
+            index={props.state.index}
             drawerItems={drawerItems}
             loggedIn={loggedIn}
             language={language}

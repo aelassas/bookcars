@@ -20,10 +20,10 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^5.1.1",
-    "@mui/icons-material": "^7.1.1",
-    "@mui/material": "^7.1.1",
-    "@mui/x-data-grid": "^8.5.2",
-    "@mui/x-date-pickers": "^8.5.2",
+    "@mui/icons-material": "^7.1.2",
+    "@mui/material": "^7.1.2",
+    "@mui/x-data-grid": "^8.5.3",
+    "@mui/x-date-pickers": "^8.5.3",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
@@ -58,9 +58,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.2.0",
     "npm-check-updates": "^18.0.1",
-    "stylelint": "^16.20.0",
+    "stylelint": "^16.21.0",
     "stylelint-config-standard": "^38.0.0",
-    "terser": "^5.43.0",
+    "terser": "^5.43.1",
     "vite-plugin-html": "^3.2.2"
   }
 }

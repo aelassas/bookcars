@@ -1,124 +1,279 @@
-import 'react-native-gesture-handler'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { Provider } from 'react-native-paper'
-import * as SplashScreen from 'expo-splash-screen'
-import * as Notifications from 'expo-notifications'
-import { StripeProvider } from '@stripe/stripe-react-native'
-import Toast from 'react-native-toast-message'
-import DrawerNavigator from './components/DrawerNavigator'
-import * as helper from './common/helper'
-import * as NotificationService from './services/NotificationService'
-import * as UserService from './services/UserService'
-import { GlobalProvider } from './context/GlobalContext'
-import * as env from './config/env.config'
-import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
+import type {
+  ApplePayError,
+  CardActionError,
+  ConfirmPaymentError,
+  ConfirmSetupIntentError,
+  CreatePaymentMethodError,
+  CreateTokenError,
+  GooglePayError,
+  PaymentSheetError,
+  RetrievePaymentIntentError,
+  RetrieveSetupIntentError,
+  StripeError,
+  VerifyMicrodepositsError,
+  CollectBankAccountError,
+} from './Errors';
+import * as ApplePay from './ApplePay';
+import * as PaymentIntent from './PaymentIntent';
+import * as PaymentMethod from './PaymentMethod';
+import * as PaymentSheet from './PaymentSheet';
+import * as SetupIntent from './SetupIntent';
+import * as ThreeDSecure from './ThreeDSecure';
+import * as AuBECSDebitFormComponent from './components/AuBECSDebitFormComponent';
+import * as CardFieldInput from './components/CardFieldInput';
+import * as CardFormView from './components/CardFormView';
+import * as Token from './Token';
+import * as FinancialConnections from './FinancialConnections';
+import * as PlatformPay from './PlatformPay';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowList: true,
-  }),
-})
+export {
+  ApplePay,
+  PaymentIntent,
+  PaymentMethod,
+  PaymentSheet,
+  SetupIntent,
+  ThreeDSecure,
+  AuBECSDebitFormComponent,
+  CardFieldInput,
+  CardFormView,
+  Token,
+  FinancialConnections,
+  PlatformPay,
+};
 
-//
-// Keep the splash screen visible while we fetch resources
-//
-SplashScreen.preventAutoHideAsync()
+export * from './PushProvisioning';
+export * from './Errors';
+export * from './CustomerSheet';
+export type { Address, BillingDetails, AddressDetails } from './Common';
+export { CardBrand } from './Common';
+export { PaymentMethodLayout } from './PaymentSheet';
 
-const App = () => {
-  const [appIsReady, setAppIsReady] = useState(false)
+/**
+ * @ignore
+ */
+export type Dictionary<T> = {
+  [key: string]: T;
+};
 
-  const responseListener = useRef<Notifications.EventSubscription | null>(null)
-  const navigationRef = useRef<NavigationContainerRef<StackParams> | null>(null)
-
-  useEffect(() => {
-    const register = async () => {
-      const loggedIn = await UserService.loggedIn()
-      if (loggedIn) {
-        const currentUser = await UserService.getCurrentUser()
-        if (currentUser?._id) {
-          await helper.registerPushToken(currentUser._id)
-        } else {
-          helper.error()
-        }
-      }
-    }
-
-    //
-    // Register push notifiations token
-    //
-    register()
-
-    //
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    //
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
-      try {
-        if (navigationRef.current) {
-          const { data } = response.notification.request.content
-
-          if (data.booking) {
-            if (data.user && data.notification) {
-              await NotificationService.markAsRead(data.user as string, [data.notification as string])
-            }
-            navigationRef.current.navigate('Booking', { id: data.booking as string })
-          } else {
-            navigationRef.current.navigate('Notifications', {})
-          }
-        }
-      } catch (err) {
-        helper.error(err, false)
-      }
-    })
-
-    return () => {
-      responseListener.current?.remove()
-    }
-  }, [])
-
-  setTimeout(() => {
-    setAppIsReady(true)
-  }, 500)
-
-  const onReady = useCallback(async () => {
-    if (appIsReady) {
-      //
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      //
-      await SplashScreen.hideAsync()
-    }
-  }, [appIsReady])
-
-  if (!appIsReady) {
-    return null
-  }
-
-  return (
-    <GlobalProvider>
-      <SafeAreaProvider>
-        <Provider>
-          <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-            <AutocompleteDropdownContextProvider>
-              <NavigationContainer ref={navigationRef} onReady={onReady}>
-                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-                <DrawerNavigator />
-                <Toast />
-              </NavigationContainer>
-            </AutocompleteDropdownContextProvider>
-          </StripeProvider>
-        </Provider>
-      </SafeAreaProvider>
-    </GlobalProvider>
-  )
+export interface AppInfo {
+  name?: string;
+  partnerId?: string;
+  url?: string;
+  version?: string;
 }
 
-export default App
+export type CreatePaymentMethodResult =
+  | {
+      paymentMethod: PaymentMethod.Result;
+      error?: undefined;
+    }
+  | {
+      paymentMethod?: undefined;
+      error: StripeError<CreatePaymentMethodError>;
+    };
+
+export type RetrievePaymentIntentResult =
+  | {
+      paymentIntent: PaymentIntent.Result;
+      error?: undefined;
+    }
+  | {
+      paymentIntent?: undefined;
+      error: StripeError<RetrievePaymentIntentError>;
+    };
+
+export type RetrieveSetupIntentResult =
+  | {
+      setupIntent: SetupIntent.Result;
+      error?: undefined;
+    }
+  | {
+      setupIntent?: undefined;
+      error: StripeError<RetrieveSetupIntentError>;
+    };
+
+export type ConfirmPaymentResult =
+  | {
+      paymentIntent: PaymentIntent.Result;
+      error?: undefined;
+    }
+  | {
+      paymentIntent?: undefined;
+      error: StripeError<ConfirmPaymentError>;
+    };
+
+export type HandleNextActionResult =
+  | {
+      paymentIntent: PaymentIntent.Result;
+      error?: undefined;
+    }
+  | {
+      paymentIntent?: undefined;
+      error: StripeError<CardActionError>;
+    };
+
+export type HandleNextActionForSetupResult =
+  | {
+      setupIntent: SetupIntent.Result;
+      error?: undefined;
+    }
+  | {
+      setupIntent?: undefined;
+      error: StripeError<CardActionError>;
+    };
+
+export type ConfirmSetupIntentResult =
+  | {
+      setupIntent: SetupIntent.Result;
+      error?: undefined;
+    }
+  | {
+      setupIntent?: undefined;
+      error: StripeError<ConfirmSetupIntentError>;
+    };
+
+export type CreateTokenForCVCUpdateResult =
+  | {
+      tokenId: string;
+      error?: undefined;
+    }
+  | {
+      tokenId?: undefined;
+      error: StripeError<ConfirmSetupIntentError>;
+    };
+
+export type InitPaymentSheetResult =
+  | {
+      paymentOption?: PaymentSheet.PaymentOption;
+      error?: undefined;
+    }
+  | {
+      paymentOption?: undefined;
+      error: StripeError<PaymentSheetError>;
+    };
+
+export type PresentPaymentSheetResult = {
+  paymentOption?: PaymentSheet.PaymentOption | undefined;
+  error?: StripeError<PaymentSheetError> | undefined;
+};
+
+export type CreateTokenResult =
+  | {
+      token: Token.Result;
+      error?: undefined;
+    }
+  | {
+      token?: undefined;
+      error: StripeError<CreateTokenError>;
+    };
+
+export type ConfirmPaymentSheetPaymentResult = {
+  error?: StripeError<PaymentSheetError>;
+};
+
+export type ApplePayResult =
+  | {
+      paymentMethod: PaymentMethod.Result;
+      error?: undefined;
+    }
+  | {
+      paymentMethod?: undefined;
+      error: StripeError<ApplePayError>;
+    };
+
+export interface InitStripeParams {
+  publishableKey: string;
+  stripeAccountId?: string;
+  threeDSecureParams?: ThreeDSecure.ConfigurationParams;
+  merchantIdentifier?: string;
+  urlScheme?: string;
+  setReturnUrlSchemeOnAndroid?: boolean;
+}
+
+export interface InitialiseParams extends InitStripeParams {
+  appInfo: AppInfo;
+}
+
+export type GooglePayInitResult =
+  | {
+      error?: undefined;
+    }
+  | {
+      error: StripeError<GooglePayError>;
+    };
+
+export type PayWithGooglePayResult =
+  | {
+      error?: undefined;
+    }
+  | {
+      error: StripeError<GooglePayError>;
+    };
+
+export type CreateGooglePayPaymentMethodResult =
+  | {
+      paymentMethod: PaymentMethod.Result;
+      error?: undefined;
+    }
+  | {
+      paymentMethod?: undefined;
+      error: StripeError<GooglePayError>;
+    };
+
+export type OpenApplePaySetupResult =
+  | {
+      error?: undefined;
+    }
+  | {
+      error: StripeError<ApplePayError>;
+    };
+
+export type VerifyMicrodepositsParams =
+  | {
+      amounts: number[];
+      descriptorCode?: undefined;
+    }
+  | {
+      amounts?: undefined;
+      descriptorCode: string;
+    };
+
+export type VerifyMicrodepositsForPaymentResult =
+  | {
+      paymentIntent: PaymentIntent.Result;
+      error?: undefined;
+    }
+  | {
+      paymentIntent?: undefined;
+      error: StripeError<VerifyMicrodepositsError>;
+    };
+
+export type VerifyMicrodepositsForSetupResult =
+  | {
+      setupIntent: SetupIntent.Result;
+      error?: undefined;
+    }
+  | {
+      setupIntent?: undefined;
+      error: StripeError<VerifyMicrodepositsError>;
+    };
+
+export type CollectBankAccountForPaymentResult =
+  | {
+      paymentIntent: PaymentIntent.Result;
+      error?: undefined;
+    }
+  | {
+      paymentIntent?: undefined;
+      error: StripeError<CollectBankAccountError>;
+    };
+
+export type CollectBankAccountForSetupResult =
+  | {
+      setupIntent: SetupIntent.Result;
+      error?: undefined;
+    }
+  | {
+      setupIntent?: undefined;
+      error: StripeError<CollectBankAccountError>;
+    };
