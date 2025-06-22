@@ -48,7 +48,7 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
   const wrapperRef = useRef<View>(null)
   const activeControllerRef = useRef<IAutocompleteDropdownRef | null>(null)
   const controllerRefs = useRef<IAutocompleteDropdownRef[]>([])
-  const positionTrackingIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const positionTrackingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     if (!inputMeasurements?.height) {
