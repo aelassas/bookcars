@@ -1,7 +1,6 @@
 import mongoose, { ConnectOptions, Model } from 'mongoose'
 import * as env from '../config/env.config'
 import * as logger from './logger'
-import * as helper from './helper'
 import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../models/Booking'
 import Car from '../models/Car'
 import Location from '../models/Location'
@@ -77,23 +76,18 @@ export const close = async (force = false): Promise<void> => {
 }
 
 /**
- * Creates a text index on a model's field, falling back gracefully if language override is unsupported.
- *
- * Some MongoDB versions or configurations do not support `language_override: '_none'`.
- * This disables stemming and language processing for the text index.
- * If the index creation with this option fails, the function falls back to creating
- * a basic text index without language override.
+ * Creates a text index on a model's field.
  *
  * @param {Model<T>} model - The Mongoose model.
  * @param {string} field - The field to index.
  * @param {string} indexName - The desired index name.
  */
-export const createTextIndexWithFallback = async <T>(model: Model<T>, field: string, indexName: string) => {
+export const createTextIndex = async <T>(model: Model<T>, field: string, indexName: string) => {
   const collection = model.collection
   const fallbackOptions = {
     name: indexName,
     default_language: 'none', // This disables stemming
-    language_override: '_none', // Prevent MongoDB from expecting a language field (may not be supported on some versions)
+    language_override: '_none', // Prevent MongoDB from expecting a language field
     background: true,
     weights: { [field]: 1 },
   }
@@ -118,20 +112,8 @@ export const createTextIndexWithFallback = async <T>(model: Model<T>, field: str
     // Create new text index with fallback options
     await collection.createIndex({ [field]: 'text' }, fallbackOptions)
     logger.success(`Created text index "${indexName}" on "${field}" with fallback options`)
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : JSON.stringify(err)
-    logger.warn(`Failed to use language override; falling back to basic text index: "${message}"`)
-    try {
-      // Retry creating a basic text index without override if needed
-      await collection.createIndex({ [field]: 'text' }, {
-        name: indexName,
-        background: true,
-        weights: { [field]: 1 },
-      })
-      logger.success(`Created basic text index "${indexName}" on "${field}" without language override`)
-    } catch (fallbackErr) {
-      logger.error(`Failed to create text index "${indexName}":`, fallbackErr)
-    }
+  } catch (err) {
+    logger.error('Failed to create text index:', err)
   }
 }
 
@@ -264,20 +246,10 @@ export const initializeParkingSpots = () => syncLanguageValues(ParkingSpot, 'par
  * @returns {Promise<void>} 
  */
 const createTTLIndex = async <T>(model: Model<T>, name: string, expireAfterSeconds: number) => {
-  try {
-    await model.collection.createIndex(
-      { [env.expireAt]: 1 },
-      { name, expireAfterSeconds, background: true },
-    )
-  } catch (err) {
-    logger.warn(`Failed to create TTL index "${name}" directly on collection:`, err)
-    try {
-      await model.createIndexes() // fallback to model-defined indexes
-      logger.success(`Fallback to model.createIndexes() succeeded for TTL index "${name}"`)
-    } catch (fallbackErr) {
-      logger.error(`Fallback to model.createIndexes() failed for "${name}":`, fallbackErr)
-    }
-  }
+  await model.collection.createIndex(
+    { [env.expireAt]: 1 },
+    { name, expireAfterSeconds, background: true },
+  )
 }
 
 /**
@@ -307,39 +279,21 @@ const checkAndUpdateTTL = async <T>(model: Model<T>, name: string, seconds: numb
 }
 
 /**
- * Creates a Model with retry logic.
+ * Creates a Model.
  *
  * @async
  * @template T 
  * @param {Model<T>} model 
- * @param {number} [retries=3] 
- * @param {number} [delay=500] 
  * @returns {Promise<void>} 
  */
-const createCollection = async <T>(model: Model<T>, retries = 3, delay = 500): Promise<void> => {
+const createCollection = async <T>(model: Model<T>): Promise<void> => {
   const modelName = model.modelName
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const collections = await model.db.listCollections()
-      const exists = collections.some((col) => col.name === modelName)
-      if (!exists) {
-        await model.createCollection()
-        await model.createIndexes()
-        logger.success(`Created collection: ${modelName}`) // Optionally log success
-      }
-      return
-    } catch (err) {
-      const isLastAttempt = attempt === retries
-      logger.warn(`Attempt ${attempt} failed to create ${modelName}:`, err) // Optionally log warning
-      if (isLastAttempt) {
-        logger.error(`Failed to create collection ${modelName} after ${retries} attempts.`) // Optionally log error
-        throw err
-      }
-      // Wait before next retry (exponential backoff: 500ms, 1000ms, 2000ms)
-      const wait = delay * Math.pow(2, attempt - 1)
-      await helper.delay(wait)
-    }
+  const collections = await model.db.listCollections()
+  const exists = collections.some((col) => col.name === modelName)
+  if (!exists) {
+    await model.createCollection()
+    await model.createIndexes()
+    logger.success(`Created collection: ${modelName}`) // Optionally log success
   }
 }
 
@@ -399,8 +353,8 @@ export const initialize = async (): Promise<boolean> => {
     //
     // Feature detection and conditional text index creation (backward compatible with older versions)
     //
-    await createTextIndexWithFallback(LocationValue, 'value', 'value_text')
-    await createTextIndexWithFallback(Car, 'name', 'name_text')
+    await createTextIndex(LocationValue, 'value', 'value_text')
+    await createTextIndex(Car, 'name', 'name_text')
 
     //
     // Update TTL index if configuration changes
@@ -431,11 +385,7 @@ export const initialize = async (): Promise<boolean> => {
     return res
   } catch (err) {
     logger.error(' Database initialization error:', err)
-    try {
-      await close()
-    } catch (closeErr) {
-      logger.error(' Failed to close database connection after initialization failure:', closeErr)
-    }
+    await close()
     return false
   }
 }
