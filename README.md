@@ -107,7 +107,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-7.5.png">
+<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-7.6.png">
 
 #### How to install the Mobile App on Android
 
@@ -119,7 +119,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-7.5.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-7.6.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
