@@ -22,29 +22,25 @@ It comes with built-in support for [Stripe](https://stripe.com/global) and [PayP
 
 You can deploy BookCars with minimal cost using the [Docker-based setup](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)). It runs efficiently on a small virtual server with just 1GB of RAM—ideal for startups and small businesses. Hosting can cost as little as $5/month using cloud providers like [Hetzner](https://www.hetzner.com/cloud/) or [DigitalOcean](https://www.digitalocean.com/pricing/droplets).
 
-BookCars supports both **single-supplier** and **multi-supplier** modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email invitation prompting them to create their account and gain access to the system.
+BookCars supports both single-supplier and multi-supplier modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email invitation prompting them to create their account and gain access to the system.
 
-The admin panel allows administrators to manage:
-- Suppliers  
-- Cars  
-- Countries & locations  
-- Parking spots  
-- Customers  
-- Bookings & payments  
+The admin panel allows admins to manage suppliers, cars, countries , locations, parking spots, customers, bookings, and payments.
 
 Customers can register through the web frontend or mobile app, search for available cars based on pickup/drop-off details, and complete the booking and payment process in a few clicks.
 
-> BookCars is free and open source. You can customize and deploy it yourself by following the [documentation](https://github.com/aelassas/bookcars/wiki). If you prefer assistance with customization or deployment, feel free to [contact me](https://github.com/aelassas). My email is available on my GitHub profile (requires login).
+BookCars is free and open source. You can customize and deploy it yourself by following the [documentation](https://github.com/aelassas/bookcars/wiki). If you prefer assistance with customization or deployment, feel free to [contact me](https://github.com/aelassas). My email is available on my GitHub profile (requires login).
 
 ## Features
 
 ### 🏢 Supplier & Fleet Management
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
+* [Supplier search result limit](https://github.com/aelassas/bookcars/wiki/FAQ#how-do-i-limit-the-number-of-cars-for-a-supplier-in-search-results)
 * Ready for single or multiple suppliers
 * Car fleet management
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
+* [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
 ### 💳 Pricing & Payments
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
@@ -61,7 +57,7 @@ Customers can register through the web frontend or mobile app, search for availa
 
 ### 👥 User Experience
 * Customer management
-* Multiple login options: Google, Facebook, Apple, Email
+* [Multiple login options](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): Google, Facebook, Apple, Email
 * Multiple language support: English, French, Spanish
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination styles: classic (next/previous), infinite scroll
@@ -81,21 +77,9 @@ Customers can register through the web frontend or mobile app, search for availa
 
 ## Support
 
-If this project helped you in your work, saved you time, or inspired you in any way, please consider supporting its ongoing development. Open-source software requires time, effort, and resources to maintain—your support helps keep this project alive, up-to-date, and accessible to everyone.
+If this project helped you, saved you time, or inspired you in any way, please consider supporting its future growth and maintenance. You can show your support by starring the repository (it helps increase visibility and shows your appreciation), sharing the project (recommend it to colleagues, communities, or on social media), or making a donation (if you'd like to financially support the development) via [GitHub Sponsors](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://www.buymeacoffee.com/aelassas). Open-source software requires time, effort, and resources to maintain—your support helps keep this project alive, up-to-date, and accessible to everyone. Every contribution, big or small, makes a difference and motivates continued work on features, bug fixes, and new ideas.
 
-You can contribute in several ways:
-
-- **⭐ Star the repository** – It helps increase visibility and shows your appreciation.
-- **💬 Share the project** – Recommend it to colleagues, communities, or on social media.
-- **☕ Donate or sponsor** – If you'd like to financially support the development, you can do so via:
-
-  - [GitHub Sponsors](https://github.com/sponsors/aelassas) (one-time or monthly)
-  - [PayPal](https://www.paypal.me/aelassaspp)
-  - [Buy Me a Coffee](https://www.buymeacoffee.com/aelassas)
-
-Every contribution, big or small, makes a difference and motivates continued work on features, bug fixes, and new ideas.
-
-<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>
+<!--<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>-->
 <a href="https://www.paypal.me/aelassaspp"><img src="https://aelassas.github.io/content/paypal-button-v2.png" alt="PayPal" width="208"></a>
 <a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" height="38"></a>
 
@@ -153,6 +137,7 @@ You can install the Android App by downloading the APK and installing it on any 
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
 5. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 6. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
+7. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
 7. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
 8. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
@@ -165,6 +150,7 @@ You can install the Android App by downloading the APK and installing it on any 
     3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
     4. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)
 13. [Locations](https://github.com/aelassas/bookcars/wiki/Locations)
+14. [Auto‐Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 15. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
     1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)
     2. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)
