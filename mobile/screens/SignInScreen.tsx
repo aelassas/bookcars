@@ -166,6 +166,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           setBlacklisted(true)
         } else {
           await helper.registerPushToken(res.data._id as string)
+          await UserService.setLanguage(res.data.language || UserService.getDefaultLanguage())
 
           setPasswordError(false)
           setBlacklisted(false)
