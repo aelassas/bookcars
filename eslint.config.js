@@ -12,7 +12,7 @@ const config = [
       '.husky/',
       '.vscode/',
       'api/',
-      'backend/',
+      'admin/',
       'frontend/',
       'mobile/',
       'packages/',

@@ -25,11 +25,11 @@ services:
     depends_on:
       - mongo
 
-  bc-api:
+  bc-backend:
     build: 
       context: .
-      dockerfile: ./api/Dockerfile
-    env_file: ./api/.env.docker
+      dockerfile: ./backend/Dockerfile
+    env_file: ./backend/.env.docker
     restart: always
     ports:
       - 4002:4002
@@ -37,14 +37,14 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
-      - api_logs:/bookcars/api/logs
+      - backend_logs:/bookcars/backend/logs
 
-  bc-backend:
+  bc-admin:
     build: 
       context: .
-      dockerfile: ./backend/Dockerfile
+      dockerfile: ./admin/Dockerfile
     depends_on:
-      - bc-api
+      - bc-backend
     ports:
       - 3001:3001
 
@@ -53,7 +53,7 @@ services:
       context: .
       dockerfile: ./frontend/Dockerfile
     depends_on:
-      - bc-api
+      - bc-backend
     ports:
       - 8080:80
       - 8443:443
@@ -64,4 +64,4 @@ volumes:
   cdn:
   mongodb_data:
   mongodb_config:
-  api_logs:
+  backend_logs:

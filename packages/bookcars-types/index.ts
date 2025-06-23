@@ -5,7 +5,7 @@ export enum UserType {
 }
 
 export enum AppType {
-  Backend = 'backend',
+  Admin = 'admin',
   Frontend = 'frontend',
 }
 
@@ -165,6 +165,7 @@ export interface UpsertLocationPayload {
   image?: string | null
   parkingSpots?: ParkingSpot[]
   supplier?: string
+  parentLocation?: string
 }
 
 export interface UpdateSupplierPayload {
@@ -430,6 +431,7 @@ export interface Location {
   image?: string
   parkingSpots?: ParkingSpot[]
   supplier?: User
+  parentLocation?: Location
 }
 
 export interface Country {

@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
-
 import * as bookcarsTypes from ':bookcars-types'
+
 import * as UserService from '@/services/UserService'
 import Button from './Button'
 import i18n from '@/lang/i18n'
 import * as helper from '@/common/helper'
 import Header from './Header'
-// import { AutocompleteDropdownContextProvider } from './AutocompleteDropdown-v4.3.1'
+import { useAuth } from '@/context/AuthContext'
 
 interface LayoutProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   strict?: boolean
-  route?: RouteProp<StackParams, keyof StackParams>,
+  route?: RouteProp<StackParams, keyof StackParams>
   reload?: boolean
   style?: object
   title?: string
@@ -38,7 +38,7 @@ const Layout = ({
 }: LayoutProps) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
-  const [loggedIn, setLoggedIn] = useState(false)
+  const { loggedIn, refresh } = useAuth()
 
   const exit = async (_reload = false) => {
     if (strict) {
@@ -49,7 +49,7 @@ const Layout = ({
       }
     } else {
       await UserService.signout(navigation, false, false)
-      setLoggedIn(false)
+      refresh()
 
       if (onLoad) {
         onLoad()
@@ -84,7 +84,7 @@ const Layout = ({
               return
             }
 
-            setLoggedIn(true)
+            refresh()
             setUser(_user)
             setLoading(false)
 
