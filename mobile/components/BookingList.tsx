@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ActivityIndicator, StyleSheet, View, Text, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
-import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
+import { Text as RNPText, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
@@ -234,9 +234,9 @@ const BookingList = ({
             {cancelRequestProcessing ? (
               <ActivityIndicator size="large" color="#f37022" />
             ) : cancelRequestSent ? (
-              <Paragraph>{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</Paragraph>
+              <RNPText variant="bodyMedium">{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</RNPText>
             ) : (
-              <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>
+              <RNPText variant="bodyMedium">{i18n.t('CANCEL_BOOKING')}</RNPText>
             )}
           </Dialog.Content>
           <Dialog.Actions style={styles.dialogActions}>
