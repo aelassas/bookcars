@@ -223,7 +223,12 @@ export const validateAccessToken = async (): Promise<number> => {
         timeout: env.AXIOS_TIMEOUT,
       }
     )
-    .then((res) => res.status)
+    .then((res) => res.status).catch((err) => {
+      if (err.response && err.response.status) {
+        return err.response.status
+      }
+      return 500
+    })
 }
 
 /**
