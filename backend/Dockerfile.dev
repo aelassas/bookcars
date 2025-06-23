@@ -13,17 +13,26 @@ RUN set -e && \
     fi; \
   done' _ {} +
 
-FROM node:lts-alpine AS backend
+
+FROM node:lts-alpine AS build
+
 WORKDIR /bookcars/backend
 
 COPY ./backend/package*.json ./
-RUN npm install --force && npm cache clean --force
 
-COPY ./backend ./ 
-COPY ./backend/.env.docker .env
+RUN npm install --force && \
+    npm cache clean --force
 
-# Copy preinstalled internal packages
+FROM node:lts-alpine
+WORKDIR /bookcars/backend
+
+COPY --from=build /bookcars/backend/node_modules ./node_modules
+
 COPY --from=packages /bookcars/packages /bookcars/packages
 
-EXPOSE 3001
-CMD ["npm", "run", "dev:docker"]
+COPY ./backend ./
+COPY ./backend/.env.docker .env
+
+EXPOSE 4002
+
+CMD ["npm", "run", "dev"]

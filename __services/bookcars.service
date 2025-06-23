@@ -1,11 +1,11 @@
 [Unit]
-Description=BookCars API
+Description=BookCars Backend Server
 Wants=mongod.service
 After=mongod.service
 
 [Service]
 ExecStart=/usr/bin/npm start
-WorkingDirectory=/opt/bookcars/api
+WorkingDirectory=/opt/bookcars/backend
 Type=simple
 Restart=always
 StandardOutput=append:/var/log/bookcars.log
