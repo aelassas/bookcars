@@ -199,7 +199,8 @@ const BookingList = ({
             <RefreshControl refreshing={refreshing} onRefresh={() => {
               setRefreshing(true)
 
-              navigation.navigate('Bookings', {})
+              bookingId?navigation.navigate('Booking', { id: bookingId })
+                : navigation.navigate('Bookings', {})
 
               // navigation.dispatch((state) => {
               //   const { routes } = state
