@@ -224,6 +224,12 @@ export const validateAccessToken = async (): Promise<number> => {
       }
     )
     .then((res) => res.status)
+    .catch((err) => {
+      if (err.response?.status) {
+        return err.response.status
+      }
+      return 500
+    })
 }
 
 /**
@@ -489,18 +495,21 @@ export const deleteAvatar = async (userId: string): Promise<number> => {
  * @returns {unknown}
  */
 export const loggedIn = async () => {
-  const currentUser = await getCurrentUser()
-  if (currentUser) {
-    const status = await validateAccessToken()
-    if (status === 200 && currentUser._id) {
-      const user = await getUser(currentUser._id)
-      if (user) {
-        return true
+  try {
+    const currentUser = await getCurrentUser()
+    if (currentUser) {
+      const status = await validateAccessToken()
+      if (status === 200 && currentUser._id) {
+        const user = await getUser(currentUser._id)
+        if (user) {
+          return true
+        }
       }
     }
+    return false
+  } catch {
+    return false
   }
-
-  return false
 }
 
 /**
