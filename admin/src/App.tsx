@@ -79,7 +79,7 @@ const router = createBrowserRouter([
       { path: 'activate', element: <Activate /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'reset-password', element: <ResetPassword /> },
-      { path: 'sign-up', element: <SignUp /> },
+      // { path: 'sign-up', element: <SignUp /> },
       { path: 'suppliers', element: <Suppliers /> },
       { path: 'supplier', element: <Supplier /> },
       { path: 'create-supplier', element: <CreateSupplier /> },
