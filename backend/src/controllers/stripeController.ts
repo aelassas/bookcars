@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import Stripe from 'stripe'
-import stripeAPI from '../stripe'
+import stripeAPI from '../payment/stripe'
 import i18n from '../lang/i18n'
 import * as logger from '../common/logger'
 import * as bookcarsTypes from ':bookcars-types'
