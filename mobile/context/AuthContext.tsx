@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import * as UserService from '@/services/UserService'
 import * as env from '@/config/env.config'
