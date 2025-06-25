@@ -1,10 +1,10 @@
 import 'dotenv/config'
-import bcrypt from 'bcrypt'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import * as databaseHelper from '../common/databaseHelper'
 import User from '../models/User'
 import * as logger from '../common/logger'
+import * as helper from '../common/helper'
 
 try {
   const connected = await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)
@@ -19,8 +19,7 @@ try {
 
   if (!adminUser) {
     const password = 'B00kC4r5'
-    const salt = await bcrypt.genSalt(10)
-    const passwordHash = await bcrypt.hash(password, salt)
+    const passwordHash = await helper.hashPassword(password)
 
     const newAdmin = new User({
       fullName: 'admin',
