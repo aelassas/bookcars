@@ -1,6 +1,5 @@
 import request from 'supertest'
 import cookieParser from 'cookie-parser'
-import bcrypt from 'bcrypt'
 import path from 'path'
 import fs from 'fs/promises'
 import { nanoid } from 'nanoid'
@@ -45,8 +44,7 @@ export const initializeLogger = (disable = true) => {
 }
 
 export const initialize = async () => {
-  const salt = await bcrypt.genSalt(10)
-  const passwordHash = await bcrypt.hash(PASSWORD, salt)
+  const passwordHash = await helper.hashPassword(PASSWORD)
 
   // admin
   const admin = new User({
@@ -124,8 +122,7 @@ export const signout = async (token: string) => {
 }
 
 export const createSupplier = async (email: string, fullName: string) => {
-  const salt = await bcrypt.genSalt(10)
-  const passwordHash = await bcrypt.hash(PASSWORD, salt)
+  const passwordHash = await helper.hashPassword(PASSWORD)
   const body = {
     email,
     fullName,
