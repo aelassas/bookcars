@@ -141,6 +141,7 @@ You can install the Android App by downloading the APK and installing it on any 
    7. [Shared Packages](https://github.com/aelassas/bookcars/wiki/Architecture#shared-packages)
    8. [Architecture Principles](https://github.com/aelassas/bookcars/wiki/Architecture#architecture-principles)
    9. [Docker & Development Environment](https://github.com/aelassas/bookcars/wiki/Architecture#docker--development-environment)
+   10. [Codebase Overview](https://github.com/aelassas/bookcars/wiki/Architecture#codebase-overview)
    10. [Git Pre-commit Checks with Husky](https://github.com/aelassas/bookcars/wiki/Architecture#git-pre-commit-checks-with-husky)
    11. [Continuous Integration (CI)](https://github.com/aelassas/bookcars/wiki/Architecture#continuous-integration-ci)
 3. [Installing (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
