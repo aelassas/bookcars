@@ -14,6 +14,7 @@ import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
 import * as logger from '../src/common/logger'
 import * as helper from '../src/common/helper'
+import * as authHelper from '../src/common/authHelper'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)
@@ -44,7 +45,7 @@ export const initializeLogger = (disable = true) => {
 }
 
 export const initialize = async () => {
-  const passwordHash = await helper.hashPassword(PASSWORD)
+  const passwordHash = await authHelper.hashPassword(PASSWORD)
 
   // admin
   const admin = new User({
@@ -122,7 +123,7 @@ export const signout = async (token: string) => {
 }
 
 export const createSupplier = async (email: string, fullName: string) => {
-  const passwordHash = await helper.hashPassword(PASSWORD)
+  const passwordHash = await authHelper.hashPassword(PASSWORD)
   const body = {
     email,
     fullName,
