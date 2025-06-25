@@ -4,7 +4,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
-import stripeAPI from '../src/stripe'
+import stripeAPI from '../src/payment/stripe'
 import * as env from '../src/config/env.config'
 import Booking from '../src/models/Booking'
 

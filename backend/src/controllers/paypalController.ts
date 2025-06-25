@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import * as paypal from '../paypal'
+import * as paypal from '../payment/paypal'
 import i18n from '../lang/i18n'
 import * as logger from '../common/logger'
 import * as bookcarsTypes from ':bookcars-types'
