@@ -1,10 +1,10 @@
 import 'dotenv/config'
 import bcrypt from 'bcrypt'
 import * as bookcarsTypes from ':bookcars-types'
-import * as env from './config/env.config'
-import * as databaseHelper from './common/databaseHelper'
-import User from './models/User'
-import * as logger from './common/logger'
+import * as env from '../config/env.config'
+import * as databaseHelper from '../common/databaseHelper'
+import User from '../models/User'
+import * as logger from '../common/logger'
 
 try {
   const connected = await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)
