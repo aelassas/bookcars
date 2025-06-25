@@ -1,5 +1,6 @@
 import { Request } from 'express'
 import { jwtVerify, SignJWT } from 'jose'
+import bcrypt from 'bcrypt'
 import * as helper from './helper'
 import * as env from '../config/env.config'
 
@@ -81,4 +82,16 @@ export const getAuthCookieName = (req: Request): string => {
 
   // Mobile app and unit tests auth header name
   return env.X_ACCESS_TOKEN
+}
+
+/**
+ * Hash password using bcrypt.
+ *
+ * @async
+ * @param {string} password 
+ * @returns {Promise<string>} 
+ */
+export const hashPassword = async (password: string): Promise<string> => {
+  const salt = await bcrypt.genSalt(10)
+  return bcrypt.hash(password, salt)
 }
