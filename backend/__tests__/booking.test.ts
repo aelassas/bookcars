@@ -19,7 +19,7 @@ import PushToken from '../src/models/PushToken'
 import Token from '../src/models/Token'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
-import stripeAPI from '../src/stripe'
+import stripeAPI from '../src/payment/stripe'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
