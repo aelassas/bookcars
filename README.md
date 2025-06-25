@@ -133,6 +133,7 @@ You can install the Android App by downloading the APK and installing it on any 
 2. [Software Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
    1. [Technologies Overview](https://github.com/aelassas/bookcars/wiki/Architecture#technologies-overview)
    2. [TypeScript Across the Stack](https://github.com/aelassas/bookcars/wiki/Architecture#typescript-across-the-stack)
+   3. [Platform Highlights](https://github.com/aelassas/bookcars/wiki/Architecture#platform-highlights)
    3. [Backend](https://github.com/aelassas/bookcars/wiki/Architecture#backend)
    4. [Frontend](https://github.com/aelassas/bookcars/wiki/Architecture#frontend)
    5. [Admin Panel](https://github.com/aelassas/bookcars/wiki/Architecture#admin-panel)
