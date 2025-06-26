@@ -194,10 +194,6 @@ You can install the Android App by downloading the APK and installing it on any 
 25. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)
 26. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
 
-## About the Code
-
-All core code in BookCars is handcrafted and maintained by me. I occasionally use AI tools to assist with small scripts, basic functions, or to improve documentation and communication. However, the full codebase and architectural decisions reflect my own development work and experience.
-
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
