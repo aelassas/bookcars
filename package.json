@@ -28,6 +28,7 @@
   "main": "pre-commit.js",
   "scripts": {
     "pre-commit": "node pre-commit.js",
+    "releases": "node releases.js",
     "prepare": "husky",
     "lint": "eslint . --cache --cache-location .eslintcache"
   },
