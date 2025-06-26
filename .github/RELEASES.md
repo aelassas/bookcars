@@ -34,6 +34,7 @@
 - [bookcars-7.5.apk](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-7.5.apk) (94323.15 KB)
 - [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-db.zip) (8851.49 KB)
 
+<<<<<<< HEAD
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.5)
 - [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.5)
@@ -63,6 +64,31 @@
 #### New Contributors
 * @aspirin01 made their first contribution in https://github.com/aelassas/bookcars/pull/79
 
+=======
+## What's Changed
+* feat(admin): add loading indicator for suppliers
+* feat(admin): replace loading backdrop with progress indicator in cars page
+* fix(database): text indexes errors when adding new languages
+* fix(logger): improve message formatting for VSCode terminal
+* chore(index): update server startup logging for better visibility
+* chore(tests): enhance database tests with additional scenarios and index handling
+* chore: update dependencies
+* refactor(mobile): making the code a bit more modular by segregating the logic into a function #79
+* refactor(database): enhance connection management and improve logging; refactor initialization functions for better clarity
+* refactor(mail): streamline email transporter creation
+* refactor(api): modularized server creation supporting HTTP/HTTPS with async file reads
+* refactor(api): added detailed JSDoc comments for functions and constants
+* refactor(api): added robust database connection and initialization checks before starting server
+* refactor(api): introduced configurable shutdown timeout to force exit if shutdown hangs
+* refactor(api): improved shutdown handler to log received signals and handle cleanup gracefully
+* refactor(api): used `process.once` for signal handling to avoid multiple shutdowns
+* refactor(api): improved code readability with consistent naming and minor cleanup
+* refactor(logger): reorganize prefixMap and simplify message formatting logic
+
+## New Contributors
+* @aspirin01 made their first contribution in https://github.com/aelassas/bookcars/pull/79
+
+>>>>>>> f32f91023c34c58d17fc186eebb1d2e40b34a850
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.3...v7.4
 
 ### Assets
@@ -177,6 +203,7 @@
 - [bookcars-6.9.apk](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-6.9.apk) (88872.75 KB)
 - [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-db.zip) (8852.76 KB)
 
+<<<<<<< HEAD
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.9)
 - [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.9)
@@ -204,6 +231,29 @@
 ##### New Contributors
 * @oxcodexo made their first contribution in https://github.com/aelassas/bookcars/pull/67
 
+=======
+### What's Changed
+* Feat: set up [Docker development environment](https://github.com/aelassas/bookcars/wiki/Run-from-Source-(Docker)) with CDN integration and data persistence #67
+* Feat: added `mongo-express` service to docker-compose
+* Feat: added `api_logs` volume to docker-compose for logging
+* Feat: added CDN middleware to API to serve static files
+* Feat: improved account activation and reset emails with styled HTML (auth) #69
+* Feat: enabled `babel-plugin-react-compiler` in both backend and frontend vite.config.ts files
+* Chore: updated dependencies
+* Dev: added custom pre-commit hook for linting and type-checking #68
+* Dev: enabled react-compiler rule in ESLint configuration
+* Fix: updated button color scheme in Navigation in Scheduler component
+* Fix: enabled reCAPTCHA check based on environment configuration
+* Fix: removed console log from country selection in CreateLocation page
+* Fix: updated service references in Docker configuration files
+* Fix: updated lint script to use cache for all projects and add .eslintcache to .gitignore
+* Fix: show contact form even if reCAPTCHA is disabled
+* Fix: trigger data fetch on car and user changes in BookingList component
+
+### New Contributors
+* @oxcodexo made their first contribution in https://github.com/aelassas/bookcars/pull/67
+
+>>>>>>> f32f91023c34c58d17fc186eebb1d2e40b34a850
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.7...v6.8
 
 ### Assets
@@ -667,6 +717,7 @@
 - [bookcars-4.6.apk](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk) (87598.28 KB)
 - [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-db.zip) (8837.85 KB)
 
+<<<<<<< HEAD
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.6)
 - [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.6)
@@ -689,6 +740,24 @@
 * @fdikmen made their first contribution in https://github.com/aelassas/bookcars/pull/53
 * @guillaumehussong made their first contribution in https://github.com/aelassas/bookcars/pull/54
 
+=======
+## What's Changed
+* Fix: Asynchronous Supplier Fetching Issue in Search Component by @fdikmen in https://github.com/aelassas/bookcars/pull/53
+* Fix: checkout issues
+* Fix: TextField deprecated props
+* Fix: layout and db issues
+* Spanish language added by @guillaumehussong in https://github.com/aelassas/bookcars/pull/54
+* Added protection against Brute force, DoS and DDoS attacks, and Web scraping
+* Added @ import alias
+* Replaced `jsonwebtoken` by `jose`
+* Updated Docker configuration
+* Updated dependencies
+
+## New Contributors
+* @fdikmen made their first contribution in https://github.com/aelassas/bookcars/pull/53
+* @guillaumehussong made their first contribution in https://github.com/aelassas/bookcars/pull/54
+
+>>>>>>> f32f91023c34c58d17fc186eebb1d2e40b34a850
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.4...v4.5
 
 ### Assets
@@ -731,6 +800,7 @@
 
 ## [BookCars 4.3](https://github.com/aelassas/bookcars/releases/tag/v4.3) – 2024-08-05
 
+<<<<<<< HEAD
 * Added country, latitude, longitude, image and parking spots to locations
 * Added range, rating and multimedia fields to cars
 * Added new search filters
@@ -744,6 +814,21 @@
 #### New Contributors
 * @jay51 made their first contribution in https://github.com/aelassas/bookcars/pull/52
 
+=======
+* Added country, latitude, longitude, image and parking spots to locations
+* Added range, rating and multimedia fields to cars
+* Added new search filters
+* Updated booking status style
+* Updated dependencies
+* Updated demo database
+* Fix search filter issues
+* Fix infinite scroll
+* Fix layout issues
+
+## New Contributors
+* @jay51 made their first contribution in https://github.com/aelassas/bookcars/pull/52
+
+>>>>>>> f32f91023c34c58d17fc186eebb1d2e40b34a850
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.2...v4.3
 
 ### Assets

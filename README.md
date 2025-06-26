@@ -189,7 +189,7 @@ You can install the Android App by downloading the APK and installing it on any 
     1. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
     1. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
 23. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
-24. [Release Notes](https://github.com/aelassas/bookcars/releases)
+24. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)
 
 ## License
 
