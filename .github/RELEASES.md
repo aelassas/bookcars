@@ -1,6 +1,6 @@
 # Releases
 
-## BookCars 7.6 – 2025-06-22
+## [BookCars 7.6](https://github.com/aelassas/bookcars/releases/tag/v7.6) – 2025-06-22
 
 * feat: add [parent locations](https://github.com/aelassas/bookcars/wiki/Locations) and include child locations in search results
 * feat(mobile): upgrade to React Navigation v7
@@ -11,7 +11,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.5...v7.6
 
-## BookCars 7.5 – 2025-06-17
+### Assets
+- [bookcars-7.6.apk](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-7.6.apk) (94323.01 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-db.zip) (8851.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.6)
+
+## [BookCars 7.5](https://github.com/aelassas/bookcars/releases/tag/v7.5) – 2025-06-17
 
 * refactor(admin): rename backend folder to admin for clarity
 * refactor(backend): rename api folder to backend for clarity
@@ -22,9 +30,17 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.4...v7.5
 
-## BookCars 7.4 – 2025-06-14
+### Assets
+- [bookcars-7.5.apk](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-7.5.apk) (94323.15 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-db.zip) (8851.49 KB)
 
-## What's Changed
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.5)
+
+## [BookCars 7.4](https://github.com/aelassas/bookcars/releases/tag/v7.4) – 2025-06-14
+
+#### What's Changed
 * feat(admin): add loading indicator for suppliers
 * feat(admin): replace loading backdrop with progress indicator in cars page
 * fix(database): text indexes errors when adding new languages
@@ -44,12 +60,20 @@
 * refactor(api): improved code readability with consistent naming and minor cleanup
 * refactor(logger): reorganize prefixMap and simplify message formatting logic
 
-## New Contributors
+#### New Contributors
 * @aspirin01 made their first contribution in https://github.com/aelassas/bookcars/pull/79
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.3...v7.4
 
-## BookCars 7.3 – 2025-06-08
+### Assets
+- [bookcars-7.4.apk](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-7.4.apk) (94320.99 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-db.zip) (8851.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.4)
+
+## [BookCars 7.3](https://github.com/aelassas/bookcars/releases/tag/v7.3) – 2025-06-08
 
 * fix(env): update CDN URLs to include port 4002 for admin, frontend, and mobile environments
 * fix(database): explicitly wait for database connection to be open
@@ -60,7 +84,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.2...v7.3
 
-## BookCars 7.2 – 2025-05-21
+### Assets
+- [bookcars-7.3.apk](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-7.3.apk) (94337.50 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-db.zip) (8851.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.3)
+
+## [BookCars 7.2](https://github.com/aelassas/bookcars/releases/tag/v7.2) – 2025-05-21
 
 * feat(frontend): add form submission state handling and disable buttons during submission
 * refactor(frontend, admin): update forms to use react-hook-form and zod for validation
@@ -80,7 +112,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.1...v7.2
 
-## BookCars 7.1 – 2025-05-13
+### Assets
+- [bookcars-7.2.apk](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-7.2.apk) (94300.56 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-db.zip) (8851.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.2)
+
+## [BookCars 7.1](https://github.com/aelassas/bookcars/releases/tag/v7.1) – 2025-05-13
 
 * chore(mobile): upgrade to expo 53 and react-native 0.79
 * chore(all): update all dependencies to their latest versions across all projects
@@ -94,7 +134,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.0...v7.1
 
-## BookCars 7.0 – 2025-05-08
+### Assets
+- [bookcars-7.1.apk](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-7.1.apk) (94300.01 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-db.zip) (8851.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.1)
+
+## [BookCars 7.0](https://github.com/aelassas/bookcars/releases/tag/v7.0) – 2025-05-08
 
 * Refactor: migrate to `createBrowserRouter` for improved routing structure
 * Refactor(tests): comment out user blacklisting logic in middleware tests
@@ -105,7 +153,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.9...v7.0
 
-## BookCars 6.9 – 2025-05-04
+### Assets
+- [bookcars-7.0.apk](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-7.0.apk) (88872.74 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.0)
+
+## [BookCars 6.9](https://github.com/aelassas/bookcars/releases/tag/v6.9) – 2025-05-04
 
 * Feat: added the number of cars near the supplier's name in suppliers page in the admin dashboard
 * Feat(pre-commit): optimized pre-commit hook to lint and type-check only changed projects with Docker fallback #70
@@ -117,9 +173,17 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.8...v6.9
 
-## BookCars 6.8 – 2025-04-25
+### Assets
+- [bookcars-6.9.apk](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-6.9.apk) (88872.75 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-db.zip) (8852.76 KB)
 
-### What's Changed
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.9)
+
+## [BookCars 6.8](https://github.com/aelassas/bookcars/releases/tag/v6.8) – 2025-04-25
+
+##### What's Changed
 * Feat: set up [Docker development environment](https://github.com/aelassas/bookcars/wiki/Run-from-Source-(Docker)) with CDN integration and data persistence #67
 * Feat: added `mongo-express` service to docker-compose
 * Feat: added `api_logs` volume to docker-compose for logging
@@ -137,12 +201,20 @@
 * Fix: show contact form even if reCAPTCHA is disabled
 * Fix: trigger data fetch on car and user changes in BookingList component
 
-### New Contributors
+##### New Contributors
 * @oxcodexo made their first contribution in https://github.com/aelassas/bookcars/pull/67
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.7...v6.8
 
-## BookCars 6.7 – 2025-04-18
+### Assets
+- [bookcars-6.8.apk](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-6.8.apk) (88871.11 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.8)
+
+## [BookCars 6.7](https://github.com/aelassas/bookcars/releases/tag/v6.7) – 2025-04-18
 
 * Upgrade to @mui/x-data-grid and @mui/x-date-pickers 8.0.0
 * Updated admin dashboard main color
@@ -155,7 +227,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.6...v6.7
 
-## BookCars 6.6 – 2025-04-07
+### Assets
+- [bookcars-6.7.apk](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-6.7.apk) (88870.80 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.7)
+
+## [BookCars 6.6](https://github.com/aelassas/bookcars/releases/tag/v6.6) – 2025-04-07
 
 * Migrated to Express 5 for improved performance and future compatibility
 * Fix: add loading indicator for supplier filter in admin dashboard
@@ -177,7 +257,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.5...v6.6
 
-## BookCars 6.5 – 2025-03-31
+### Assets
+- [bookcars-6.6.apk](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-6.6.apk) (88871.90 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.6)
+
+## [BookCars 6.5](https://github.com/aelassas/bookcars/releases/tag/v6.5) – 2025-03-31
 
 * Upgrade to react 19.1 and mui 7.0
 * Fix: wrong imports in scheduler component in admin dashboard
@@ -188,7 +276,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.4...v6.5
 
-## BookCars 6.4 – 2025-03-24
+### Assets
+- [bookcars-6.5.apk](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-6.5.apk) (88534.02 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.5)
+
+## [BookCars 6.4](https://github.com/aelassas/bookcars/releases/tag/v6.4) – 2025-03-24
 
 * Add reCAPTCHA and enhance contact, tos and about pages in admin dashboard
 * Fix: remove unnecessary trailing spaces in multiple components for consistency
@@ -199,7 +295,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.3...v6.4
 
-## BookCars 6.3 – 2025-03-20
+### Assets
+- [bookcars-6.4.apk](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-6.4.apk) (88527.87 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.4)
+
+## [BookCars 6.3](https://github.com/aelassas/bookcars/releases/tag/v6.3) – 2025-03-20
 
 * Added [Supplier Car Limit](https://github.com/aelassas/bookcars/wiki/FAQ#how-do-i-limit-the-number-of-cars-for-a-supplier-in-search-results): Max Allowed Cars in Search for a supplier
 * Added [Notify Admin On New Car](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-notify-the-admin-when-a-supplier-creates-a-new-car): to notify the admin when a supplier creates a new car
@@ -210,7 +314,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.2...v6.3
 
-## BookCars 6.2 – 2025-03-14
+### Assets
+- [bookcars-6.3.apk](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-6.3.apk) (88527.83 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.3)
+
+## [BookCars 6.2](https://github.com/aelassas/bookcars/releases/tag/v6.2) – 2025-03-14
 
 * Added [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate) to suppliers for flexible price calculation
 * Added new car ranges: Bus, Truck, and Caravan
@@ -219,7 +331,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.1...v6.2
 
-## BookCars 6.1 – 2025-03-10
+### Assets
+- [bookcars-6.2.apk](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-6.2.apk) (88527.86 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.2)
+
+## [BookCars 6.1](https://github.com/aelassas/bookcars/releases/tag/v6.1) – 2025-03-10
 
 * Upgrade to ESLint 9
 * Updated dependencies
@@ -229,7 +349,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.0...v6.1
 
-## BookCars 6.0 – 2025-02-27
+### Assets
+- [bookcars-6.1.apk](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-6.1.apk) (88527.40 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.1)
+
+## [BookCars 6.0](https://github.com/aelassas/bookcars/releases/tag/v6.0) – 2025-02-27
 
 * Added PayPal debug environment variable `VITE_BC_PAYPAL_DEBUG` to frontend
 * Fix: update PayPal order status check from `APPROVED` to `COMPLETED` and capture order on approval
@@ -241,7 +369,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.9...v6.0
 
-## BookCars 5.9 – 2025-02-22
+### Assets
+- [bookcars-6.0.apk](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-6.0.apk) (88525.92 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v6.0)
+
+## [BookCars 5.9](https://github.com/aelassas/bookcars/releases/tag/v5.9) – 2025-02-22
 
 * Fix: date and time pickers issues on iOS #66
 * Fix: update car filter component offset height to fix accordion layout issues
@@ -251,7 +387,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.8...v5.9
 
-## BookCars 5.8 – 2025-02-13
+### Assets
+- [bookcars-5.9.apk](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-5.9.apk) (88525.43 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.9)
+
+## [BookCars 5.8](https://github.com/aelassas/bookcars/releases/tag/v5.8) – 2025-02-13
 
 * Added IPInfo integration for country code retrieval
 * Added environment variables to frontend for flexible map settings
@@ -264,7 +408,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.7...v5.8
 
-## BookCars 5.7 – 2025-02-10
+### Assets
+- [bookcars-5.8.apk](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-5.8.apk) (88522.92 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.8)
+
+## [BookCars 5.7](https://github.com/aelassas/bookcars/releases/tag/v5.7) – 2025-02-10
 
 * [Added Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates) (Feature Request #57)
 * Added total records header to search results in the frontend
@@ -274,7 +426,15 @@
 * Fix: set "Listed in search results" to `true` by default when creating a new car from the admin dashboard
 * Fix: maximum rental days of supplier not taken into consideration in search screen in mobile app
 
-## BookCars 5.6 – 2025-02-08
+### Assets
+- [bookcars-5.7.apk](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-5.7.apk) (88521.61 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-db.zip) (8852.76 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.7)
+
+## [BookCars 5.6](https://github.com/aelassas/bookcars/releases/tag/v5.6) – 2025-02-08
 
 * Added user context to admin dashboard
 * Added `VITE_BC_HIDE_SUPPLIERS` setting to toggle supplier visibility in the frontend
@@ -288,7 +448,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.5...v5.6
 
-## BookCars 5.5 – 2025-02-02
+### Assets
+- [bookcars-5.6.apk](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-5.6.apk) (88520.82 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.6)
+
+## [BookCars 5.5](https://github.com/aelassas/bookcars/releases/tag/v5.5) – 2025-02-02
 
 * [Integrated PayPal Payment Gateway](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 * [Added Vehicle Scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
@@ -307,7 +475,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.4...v5.5
 
-## BookCars 5.4 – 2025-01-19
+### Assets
+- [bookcars-5.5.apk](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-5.5.apk) (88616.33 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.5)
+
+## [BookCars 5.4](https://github.com/aelassas/bookcars/releases/tag/v5.4) – 2025-01-19
 
 * Added dynamic company/website name setting #61
 * Added spanish language to backend #60
@@ -322,7 +498,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.3...v5.4
 
-## BookCars 5.3 – 2025-01-08
+### Assets
+- [bookcars-5.4.apk](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-5.4.apk) (87642.14 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.4)
+
+## [BookCars 5.3](https://github.com/aelassas/bookcars/releases/tag/v5.3) – 2025-01-08
 
 * Added footer to sign in, sign up, forgot password, activate and reset password pages
 * Fix: redirect to checkout from sign in page not working
@@ -335,7 +519,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.2...v5.3
 
-## BookCars 5.2 – 2025-01-04
+### Assets
+- [bookcars-5.3.apk](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-5.3.apk) (87642.31 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.3)
+
+## [BookCars 5.2](https://github.com/aelassas/bookcars/releases/tag/v5.2) – 2025-01-04
 
 * Fix: page reload not working properly on Firefox
 * Fix: conditionally render Map component based on pickupLocation coordinates
@@ -348,7 +540,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.1...v5.2
 
-## BookCars 5.1 – 2024-12-31
+### Assets
+- [bookcars-5.2.apk](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-5.2.apk) (87642.30 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.2)
+
+## [BookCars 5.1](https://github.com/aelassas/bookcars/releases/tag/v5.1) – 2024-12-31
 
 * Added user context for managing user state
 * Improved Header component responsiveness
@@ -358,7 +558,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.0...v5.1
 
-## BookCars 5.0 – 2024-12-29
+### Assets
+- [bookcars-5.1.apk](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-5.1.apk) (87642.31 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.1)
+
+## [BookCars 5.0](https://github.com/aelassas/bookcars/releases/tag/v5.0) – 2024-12-29
 
 * Improved global performance on [Google PageSpeed Insights](https://pagespeed.web.dev/) (95/100)
 * Fix: reCAPTCHA context doesn't work properly
@@ -372,7 +580,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.9...v5.0
 
-## BookCars 4.9 – 2024-12-27
+### Assets
+- [bookcars-5.0.apk](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-5.0.apk) (87642.30 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v5.0)
+
+## [BookCars 4.9](https://github.com/aelassas/bookcars/releases/tag/v4.9) – 2024-12-27
 
 * Fix: Bookings not rendering properly on mobile view in the frontend
 * Fix: preload link in frontend not working properly
@@ -381,7 +597,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.8...v4.9
 
-## BookCars 4.8 – 2024-12-23
+### Assets
+- [bookcars-4.9.apk](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-4.9.apk) (87642.30 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.9)
+
+## [BookCars 4.8](https://github.com/aelassas/bookcars/releases/tag/v4.8) – 2024-12-23
 
 * Added React Compiler ESLint rules
 * Fix: Car price not being updated when changing dates
@@ -392,7 +616,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.7...v4.8
 
-## BookCars 4.7 – 2024-12-21
+### Assets
+- [bookcars-4.8.apk](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-4.8.apk) (87642.33 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.8)
+
+## [BookCars 4.7](https://github.com/aelassas/bookcars/releases/tag/v4.7) – 2024-12-21
 
 * Upgrade to React 19 stable
 * Added [multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
@@ -411,7 +643,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.6...v4.7
 
-## BookCars 4.6 – 2024-11-24
+### Assets
+- [bookcars-4.7.apk](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-4.7.apk) (87642.50 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-db.zip) (8837.85 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.7)
+
+## [BookCars 4.6](https://github.com/aelassas/bookcars/releases/tag/v4.6) – 2024-11-24
 
 * Upgrade to Expo 52 and React Native 0.76
 * Added [dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
@@ -423,9 +663,17 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.5...v4.6
 
-## BookCars 4.5 – 2024-10-15
+### Assets
+- [bookcars-4.6.apk](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk) (87598.28 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-db.zip) (8837.85 KB)
 
-## What's Changed
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.6)
+
+## [BookCars 4.5](https://github.com/aelassas/bookcars/releases/tag/v4.5) – 2024-10-15
+
+#### What's Changed
 * Fix: Asynchronous Supplier Fetching Issue in Search Component by @fdikmen in https://github.com/aelassas/bookcars/pull/53
 * Fix: checkout issues
 * Fix: TextField deprecated props
@@ -437,13 +685,21 @@
 * Updated Docker configuration
 * Updated dependencies
 
-## New Contributors
+#### New Contributors
 * @fdikmen made their first contribution in https://github.com/aelassas/bookcars/pull/53
 * @guillaumehussong made their first contribution in https://github.com/aelassas/bookcars/pull/54
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.4...v4.5
 
-## BookCars 4.4 – 2024-09-05
+### Assets
+- [bookcars-4.5.apk](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk) (82450.93 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-db.zip) (8837.73 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.5)
+
+## [BookCars 4.4](https://github.com/aelassas/bookcars/releases/tag/v4.4) – 2024-09-05
 
 * Added rating, trips and co2 fields to cars
 * Added car sizes section to homepage
@@ -465,7 +721,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.3...v4.4
 
-## BookCars 4.3 – 2024-08-05
+### Assets
+- [bookcars-4.4.apk](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-4.4.apk) (82379.60 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-db.zip) (8837.73 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.4)
+
+## [BookCars 4.3](https://github.com/aelassas/bookcars/releases/tag/v4.3) – 2024-08-05
 
 * Added country, latitude, longitude, image and parking spots to locations
 * Added range, rating and multimedia fields to cars
@@ -477,12 +741,20 @@
 * Fix infinite scroll
 * Fix layout issues
 
-## New Contributors
+#### New Contributors
 * @jay51 made their first contribution in https://github.com/aelassas/bookcars/pull/52
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.2...v4.3
 
-## BookCars 4.2 – 2024-06-22
+### Assets
+- [bookcars-4.3.apk](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.3.apk) (82169.97 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-db.zip) (8836.75 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.3)
+
+## [BookCars 4.2](https://github.com/aelassas/bookcars/releases/tag/v4.2) – 2024-06-22
 
 * Added suppliers and locations pages
 * Added footer component
@@ -543,7 +815,15 @@
     * Bump @typescript-eslint/parser from 7.10.0 to 7.13.1
     * Bump eslint-plugin-react from 7.34.1 to 7.34.3
 
-## BookCars 4.1 – 2024-05-26
+### Assets
+- [bookcars-4.2.apk](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-4.2.apk) (82111.32 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.2)
+
+## [BookCars 4.1](https://github.com/aelassas/bookcars/releases/tag/v4.1) – 2024-05-26
 
 * Migrate from craco to vite
 * Added `unknown` car engine type
@@ -584,7 +864,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.0...v4.1
 
-## BookCars 4.0 – 2024-05-18
+### Assets
+- [bookcars-4.1.apk](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-4.1.apk) (82108.75 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.1)
+
+## [BookCars 4.0](https://github.com/aelassas/bookcars/releases/tag/v4.0) – 2024-05-18
 
 * Added the following engine types: electric, hybrid and plug-in hybrid
 * Upgrade to Google reCAPTCHA v3
@@ -622,7 +910,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.9...v4.0
 
-## BookCars 3.9 – 2024-05-14
+### Assets
+- [bookcars-4.0.apk](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-4.0.apk) (82102.06 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v4.0)
+
+## [BookCars 3.9](https://github.com/aelassas/bookcars/releases/tag/v3.9) – 2024-05-14
 
 * Upgrade to Expo SDK 51
 * Fix checkout issues
@@ -665,7 +961,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.8...v3.9
 
-## BookCars 3.8 – 2024-05-07
+### Assets
+- [bookcars-3.9.apk](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-3.9.apk) (82040.28 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.9)
+
+## [BookCars 3.8](https://github.com/aelassas/bookcars/releases/tag/v3.8) – 2024-05-07
 
 * Added Google Pay and Apple Pay to mobile app
 * Added `REACT_APP_BC_STRIPE_CURRENCY_CODE` setting to the frontend
@@ -680,7 +984,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.7...v3.8
 
-## BookCars 3.7 – 2024-05-03
+### Assets
+- [bookcars-3.8.apk](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-3.8.apk) (80204.71 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.8)
+
+## [BookCars 3.7](https://github.com/aelassas/bookcars/releases/tag/v3.7) – 2024-05-03
 
 * Fixed push notifications issues in Android app related to FCM V1
 * Fixed some issues in `DateTimePicker` component
@@ -709,7 +1021,15 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.6...v3.7
 
-## BookCars 3.6 – 2024-04-30
+### Assets
+- [bookcars-3.7.apk](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-3.7.apk) (80202.70 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.7)
+
+## [BookCars 3.6](https://github.com/aelassas/bookcars/releases/tag/v3.6) – 2024-04-30
 
 * Added all active Stripe Payment methods to the frontend
 * Updated Stripe Payment integration in the backend, the frontend and the mobile app
@@ -727,7 +1047,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.5...v3.6
 
-## BookCars 3.5 – 2024-04-27
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.6/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.6)
+
+## [BookCars 3.5](https://github.com/aelassas/bookcars/releases/tag/v3.5) – 2024-04-27
 
 * Added [stripe payment gateway](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 * API:
@@ -747,7 +1074,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.4...v3.5
 
-## BookCars 3.4 – 2024-04-24
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.5/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.5)
+
+## [BookCars 3.4](https://github.com/aelassas/bookcars/releases/tag/v3.4) – 2024-04-24
 
 * Fixed some issues in `BookingList`, `DatePicker` and `DateTimePicker` components
 * Fixed some issues in `Bookings` and `User` pages
@@ -764,7 +1098,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.3...v3.4
 
-## BookCars 3.3 – 2024-04-18
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.4/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.4)
+
+## [BookCars 3.3](https://github.com/aelassas/bookcars/releases/tag/v3.3) – 2024-04-18
 
 * Updated currency and price formats
 * Fixed some issues related to `BookingList` and `MultipleSelect` components
@@ -792,7 +1133,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.2...v3.3
 
-## BookCars 3.2 – 2024-04-13
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.3/bookcars-db.zip) (9954.49 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.3)
+
+## [BookCars 3.2](https://github.com/aelassas/bookcars/releases/tag/v3.2) – 2024-04-13
 
 * Added winston logging to the API
 * Added React Context to the backend, the frontend and the mobile app
@@ -819,7 +1167,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.1...v3.2
 
-## BookCars 3.1 – 2024-04-05
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.2/bookcars-db.zip) (9954.51 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.2)
+
+## [BookCars 3.1](https://github.com/aelassas/bookcars/releases/tag/v3.1) – 2024-04-05
 
 * Added `stylelint` scripts
 * Updated home, search and checkout pages
@@ -869,7 +1224,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.0...v3.1
 
-## BookCars 3.0 – 2024-03-18
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.1/bookcars-db.zip) (9954.95 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.1)
+
+## [BookCars 3.0](https://github.com/aelassas/bookcars/releases/tag/v3.0) – 2024-03-18
 
 * Reached 100% code coverage in the API
 * Upgrade to TypeScript 5.4
@@ -914,7 +1276,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.9...v3.0
 
-## BookCars 2.9 – 2024-02-29
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.0/bookcars-db.zip) (9954.95 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v3.0)
+
+## [BookCars 2.9](https://github.com/aelassas/bookcars/releases/tag/v2.9) – 2024-02-29
 
 * Added [unit tests and coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 * Updated eslint presets
@@ -972,7 +1341,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.8...v2.9
 
-## BookCars 2.8 – 2024-01-29
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.9/bookcars-db.zip) (9954.95 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.9)
+
+## [BookCars 2.8](https://github.com/aelassas/bookcars/releases/tag/v2.8) – 2024-01-29
 
 * Upgrade to Expo SDK 50
 * Fixed `react-toastify` issues
@@ -1027,7 +1403,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.7...v2.8
 
-## BookCars 2.7 – 2024-01-10
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.8/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.8)
+
+## [BookCars 2.7](https://github.com/aelassas/bookcars/releases/tag/v2.7) – 2024-01-10
 
 * Updated Search component
 * Replaced `ts-node` by `tsx`
@@ -1072,7 +1455,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.6...v2.7
 
-## BookCars 2.6 – 2023-12-14
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.7/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.7)
+
+## [BookCars 2.6](https://github.com/aelassas/bookcars/releases/tag/v2.6) – 2023-12-14
 
 * Fixed autocomplete issues
 * Fixed TextField clear issues
@@ -1106,7 +1496,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.5...v2.6
 
-## BookCars 2.5 – 2023-12-03
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.6/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.6)
+
+## [BookCars 2.5](https://github.com/aelassas/bookcars/releases/tag/v2.5) – 2023-12-03
 
 * Upgrade to TypeScript 5.3
 * API:
@@ -1149,7 +1546,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.4...v2.5
 
-## BookCars 2.4 – 2023-11-18
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.5/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.5)
+
+## [BookCars 2.4](https://github.com/aelassas/bookcars/releases/tag/v2.4) – 2023-11-18
 
 * Updated MongoDB queries
 * Updated nodemon configuration
@@ -1205,7 +1609,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.3...v2.4
 
-## BookCars 2.3 – 2023-11-02
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.4/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.4)
+
+## [BookCars 2.3](https://github.com/aelassas/bookcars/releases/tag/v2.3) – 2023-11-02
 
 * Added Babel transcompiler to api
 * Updated eslint preset
@@ -1266,7 +1677,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.2...v2.3
 
-## BookCars 2.2 – 2023-10-14
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.3/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.3)
+
+## [BookCars 2.2](https://github.com/aelassas/bookcars/releases/tag/v2.2) – 2023-10-14
 
 * Added `cors` and `allowedMethods` middlewares
 * Fixed some issues related to bookings
@@ -1298,7 +1716,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.1...v2.2
 
-## BookCars 2.1 – 2023-10-09
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.2/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.2)
+
+## [BookCars 2.1](https://github.com/aelassas/bookcars/releases/tag/v2.1) – 2023-10-09
 
 * Secured the backend and the frontend against XSS, XST, CSRF and MITM
 * Made localization more generic
@@ -1328,7 +1753,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.0...v2.1
 
-## BookCars 2.0 – 2023-10-04
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.1/bookcars-db.zip) (9954.68 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.1)
+
+## [BookCars 2.0](https://github.com/aelassas/bookcars/releases/tag/v2.0) – 2023-10-04
 
 * Added airbnb preset
 * Fixed an issue in cars page
@@ -1355,7 +1787,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.9...v2.0
 
-## BookCars 1.9 – 2023-09-29
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.0/bookcars-db.zip) (9954.79 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v2.0)
+
+## [BookCars 1.9](https://github.com/aelassas/bookcars/releases/tag/v1.9) – 2023-09-29
 
 * Added jsdoc to the api, the backend, the frontend and the mobile app
 * Upgrade to `node:lts-alpine`
@@ -1398,7 +1837,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.8...v1.9
 
-## BookCars 1.8 – 2023-09-21
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.9/bookcars-db.zip) (9954.53 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.9)
+
+## [BookCars 1.8](https://github.com/aelassas/bookcars/releases/tag/v1.8) – 2023-09-21
 
 * Added `build:android:preview` and `build:ios:preview` commands
 * Updated api helper and user controller
@@ -1438,7 +1884,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.7...v1.8
 
-## BookCars 1.7 – 2023-09-09
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.8/bookcars-db.zip) (9954.53 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.8)
+
+## [BookCars 1.7](https://github.com/aelassas/bookcars/releases/tag/v1.7) – 2023-09-09
 
 * Rewrite of the entire platform to TypeScript
 * Upgrade to Expo 49.0.9
@@ -1466,7 +1919,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.6...v1.7
 
-## BookCars 1.6 – 2023-08-27
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.7/bookcars-db.zip) (9954.53 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.7)
+
+## [BookCars 1.6](https://github.com/aelassas/bookcars/releases/tag/v1.6) – 2023-08-27
 
 * Added one supplier support to mobile app
 * Fixed an issue in frontend Settings page
@@ -1483,7 +1943,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.5...v1.6
 
-## BookCars 1.5 – 2023-08-18
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.6/bookcars-db.zip) (9954.53 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.6)
+
+## [BookCars 1.5](https://github.com/aelassas/bookcars/releases/tag/v1.5) – 2023-08-18
 
 * Added pure functional components in mobile app
 * Added prettier configuration
@@ -1518,7 +1985,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.4...v1.5
 
-## BookCars 1.4 – 2023-08-02
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.5/bookcars-db.zip) (9948.75 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.5)
+
+## [BookCars 1.4](https://github.com/aelassas/bookcars/releases/tag/v1.4) – 2023-08-02
 
 * Added [Docker support](https://github.com/aelassas/bookcars/wiki/Docker)
 * Added eslint
@@ -1548,7 +2022,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.3...v1.4
 
-## BookCars 1.3 – 2023-07-27
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.4/bookcars-db.zip) (9948.75 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.4)
+
+## [BookCars 1.3](https://github.com/aelassas/bookcars/releases/tag/v1.3) – 2023-07-27
 
 * Upgrade to Expo SDK 49.0.5
 * Added one supplier only support
@@ -1579,7 +2060,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.2...v1.3
 
-## BookCars 1.2 – 2023-07-18
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.3/bookcars-db.zip) (9948.75 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.3)
+
+## [BookCars 1.2](https://github.com/aelassas/bookcars/releases/tag/v1.2) – 2023-07-18
 
 * Upgrade to Expo SDK 49
 * Added axios retries
@@ -1626,7 +2114,14 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.1...v1.2
 
-## BookCars 1.1 – 2023-07-08
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.2/bookcars-db.zip) (9948.79 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.2)
+
+## [BookCars 1.1](https://github.com/aelassas/bookcars/releases/tag/v1.1) – 2023-07-08
 
 * Updated DatePicker and DateTimePicker components
 * Fixed some issues in bookingController.js
@@ -1641,6 +2136,20 @@
 
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.0...v1.1
 
-## BookCars 1.0 – 2023-06-15
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.1/bookcars-db.zip) (9948.79 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.1)
+
+## [BookCars 1.0](https://github.com/aelassas/bookcars/releases/tag/v1.0) – 2023-06-15
 
 Initial release
+
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.0/bookcars-db.zip) (9948.79 KB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v1.0)
