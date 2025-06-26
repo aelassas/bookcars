@@ -12,8 +12,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.5...v7.6
 
 ### Assets
-- [bookcars-7.6.apk](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-7.6.apk) (94323.01 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.6.apk](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-7.6.apk) (92.11 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.6/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.6)
@@ -31,8 +31,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.4...v7.5
 
 ### Assets
-- [bookcars-7.5.apk](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-7.5.apk) (94323.15 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.5.apk](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-7.5.apk) (92.11 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.5/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.5)
@@ -66,8 +66,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.3...v7.4
 
 ### Assets
-- [bookcars-7.4.apk](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-7.4.apk) (94320.99 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.4.apk](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-7.4.apk) (92.11 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.4/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.4)
@@ -85,8 +85,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.2...v7.3
 
 ### Assets
-- [bookcars-7.3.apk](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-7.3.apk) (94337.50 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.3.apk](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-7.3.apk) (92.13 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.3/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.3)
@@ -113,8 +113,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.1...v7.2
 
 ### Assets
-- [bookcars-7.2.apk](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-7.2.apk) (94300.56 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.2.apk](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-7.2.apk) (92.09 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.2/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.2)
@@ -135,8 +135,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.0...v7.1
 
 ### Assets
-- [bookcars-7.1.apk](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-7.1.apk) (94300.01 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-db.zip) (8851.49 KB)
+- [bookcars-7.1.apk](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-7.1.apk) (92.09 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.1/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.1)
@@ -154,8 +154,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.9...v7.0
 
 ### Assets
-- [bookcars-7.0.apk](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-7.0.apk) (88872.74 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-db.zip) (8852.76 KB)
+- [bookcars-7.0.apk](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-7.0.apk) (86.79 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.0/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.0)
@@ -174,8 +174,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.8...v6.9
 
 ### Assets
-- [bookcars-6.9.apk](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-6.9.apk) (88872.75 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.9.apk](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-6.9.apk) (86.79 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.9/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.9)
@@ -207,8 +207,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.7...v6.8
 
 ### Assets
-- [bookcars-6.8.apk](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-6.8.apk) (88871.11 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.8.apk](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-6.8.apk) (86.79 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.8/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.8)
@@ -228,8 +228,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.6...v6.7
 
 ### Assets
-- [bookcars-6.7.apk](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-6.7.apk) (88870.80 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.7.apk](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-6.7.apk) (86.79 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.7/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.7)
@@ -258,8 +258,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.5...v6.6
 
 ### Assets
-- [bookcars-6.6.apk](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-6.6.apk) (88871.90 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.6.apk](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-6.6.apk) (86.79 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.6/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.6)
@@ -277,8 +277,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.4...v6.5
 
 ### Assets
-- [bookcars-6.5.apk](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-6.5.apk) (88534.02 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.5.apk](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-6.5.apk) (86.46 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.5/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.5)
@@ -296,8 +296,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.3...v6.4
 
 ### Assets
-- [bookcars-6.4.apk](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-6.4.apk) (88527.87 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.4.apk](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-6.4.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.4/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.4)
@@ -315,8 +315,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.2...v6.3
 
 ### Assets
-- [bookcars-6.3.apk](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-6.3.apk) (88527.83 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.3.apk](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-6.3.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.3/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.3)
@@ -332,8 +332,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.1...v6.2
 
 ### Assets
-- [bookcars-6.2.apk](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-6.2.apk) (88527.86 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.2.apk](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-6.2.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.2/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.2)
@@ -350,8 +350,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v6.0...v6.1
 
 ### Assets
-- [bookcars-6.1.apk](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-6.1.apk) (88527.40 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.1.apk](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-6.1.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.1/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.1)
@@ -370,8 +370,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.9...v6.0
 
 ### Assets
-- [bookcars-6.0.apk](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-6.0.apk) (88525.92 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-db.zip) (8852.76 KB)
+- [bookcars-6.0.apk](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-6.0.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v6.0/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v6.0)
@@ -388,8 +388,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.8...v5.9
 
 ### Assets
-- [bookcars-5.9.apk](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-5.9.apk) (88525.43 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-db.zip) (8852.76 KB)
+- [bookcars-5.9.apk](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-5.9.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.9/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.9)
@@ -409,8 +409,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.7...v5.8
 
 ### Assets
-- [bookcars-5.8.apk](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-5.8.apk) (88522.92 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-db.zip) (8852.76 KB)
+- [bookcars-5.8.apk](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-5.8.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.8/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.8)
@@ -427,8 +427,8 @@
 * Fix: maximum rental days of supplier not taken into consideration in search screen in mobile app
 
 ### Assets
-- [bookcars-5.7.apk](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-5.7.apk) (88521.61 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-db.zip) (8852.76 KB)
+- [bookcars-5.7.apk](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-5.7.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.7/bookcars-db.zip) (8.65 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.7)
@@ -449,8 +449,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.5...v5.6
 
 ### Assets
-- [bookcars-5.6.apk](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-5.6.apk) (88520.82 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.6.apk](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-5.6.apk) (86.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.6/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.6)
@@ -476,8 +476,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.4...v5.5
 
 ### Assets
-- [bookcars-5.5.apk](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-5.5.apk) (88616.33 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.5.apk](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-5.5.apk) (86.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.5/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.5)
@@ -499,8 +499,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.3...v5.4
 
 ### Assets
-- [bookcars-5.4.apk](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-5.4.apk) (87642.14 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.4.apk](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-5.4.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.4/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.4)
@@ -520,8 +520,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.2...v5.3
 
 ### Assets
-- [bookcars-5.3.apk](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-5.3.apk) (87642.31 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.3.apk](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-5.3.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.3/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.3)
@@ -541,8 +541,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.1...v5.2
 
 ### Assets
-- [bookcars-5.2.apk](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-5.2.apk) (87642.30 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.2.apk](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-5.2.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.2/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.2)
@@ -559,8 +559,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v5.0...v5.1
 
 ### Assets
-- [bookcars-5.1.apk](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-5.1.apk) (87642.31 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.1.apk](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-5.1.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.1/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.1)
@@ -581,8 +581,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.9...v5.0
 
 ### Assets
-- [bookcars-5.0.apk](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-5.0.apk) (87642.30 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-db.zip) (8837.85 KB)
+- [bookcars-5.0.apk](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-5.0.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v5.0/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v5.0)
@@ -598,8 +598,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.8...v4.9
 
 ### Assets
-- [bookcars-4.9.apk](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-4.9.apk) (87642.30 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-db.zip) (8837.85 KB)
+- [bookcars-4.9.apk](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-4.9.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.9/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.9)
@@ -617,8 +617,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.7...v4.8
 
 ### Assets
-- [bookcars-4.8.apk](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-4.8.apk) (87642.33 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-db.zip) (8837.85 KB)
+- [bookcars-4.8.apk](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-4.8.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.8/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.8)
@@ -644,8 +644,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.6...v4.7
 
 ### Assets
-- [bookcars-4.7.apk](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-4.7.apk) (87642.50 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-db.zip) (8837.85 KB)
+- [bookcars-4.7.apk](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-4.7.apk) (85.59 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.7/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.7)
@@ -664,8 +664,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.5...v4.6
 
 ### Assets
-- [bookcars-4.6.apk](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk) (87598.28 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-db.zip) (8837.85 KB)
+- [bookcars-4.6.apk](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-4.6.apk) (85.55 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.6/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.6)
@@ -692,8 +692,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.4...v4.5
 
 ### Assets
-- [bookcars-4.5.apk](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk) (82450.93 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-db.zip) (8837.73 KB)
+- [bookcars-4.5.apk](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-4.5.apk) (80.52 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.5/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.5)
@@ -722,8 +722,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.3...v4.4
 
 ### Assets
-- [bookcars-4.4.apk](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-4.4.apk) (82379.60 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-db.zip) (8837.73 KB)
+- [bookcars-4.4.apk](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-4.4.apk) (80.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.4/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.4)
@@ -747,8 +747,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.2...v4.3
 
 ### Assets
-- [bookcars-4.3.apk](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.3.apk) (82169.97 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-db.zip) (8836.75 KB)
+- [bookcars-4.3.apk](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-4.3.apk) (80.24 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.3/bookcars-db.zip) (8.63 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.3)
@@ -816,8 +816,8 @@
     * Bump eslint-plugin-react from 7.34.1 to 7.34.3
 
 ### Assets
-- [bookcars-4.2.apk](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-4.2.apk) (82111.32 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-db.zip) (9954.49 KB)
+- [bookcars-4.2.apk](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-4.2.apk) (80.19 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.2/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.2)
@@ -865,8 +865,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v4.0...v4.1
 
 ### Assets
-- [bookcars-4.1.apk](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-4.1.apk) (82108.75 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-db.zip) (9954.49 KB)
+- [bookcars-4.1.apk](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-4.1.apk) (80.18 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.1/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.1)
@@ -911,8 +911,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.9...v4.0
 
 ### Assets
-- [bookcars-4.0.apk](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-4.0.apk) (82102.06 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-db.zip) (9954.49 KB)
+- [bookcars-4.0.apk](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-4.0.apk) (80.18 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v4.0/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v4.0)
@@ -962,8 +962,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.8...v3.9
 
 ### Assets
-- [bookcars-3.9.apk](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-3.9.apk) (82040.28 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-db.zip) (9954.49 KB)
+- [bookcars-3.9.apk](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-3.9.apk) (80.12 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.9/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.9)
@@ -985,8 +985,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.7...v3.8
 
 ### Assets
-- [bookcars-3.8.apk](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-3.8.apk) (80204.71 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-db.zip) (9954.49 KB)
+- [bookcars-3.8.apk](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-3.8.apk) (78.32 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.8)
@@ -1022,8 +1022,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.6...v3.7
 
 ### Assets
-- [bookcars-3.7.apk](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-3.7.apk) (80202.70 KB)
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-db.zip) (9954.49 KB)
+- [bookcars-3.7.apk](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-3.7.apk) (78.32 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.7)
@@ -1048,7 +1048,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.5...v3.6
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.6/bookcars-db.zip) (9954.49 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.6/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.6)
@@ -1075,7 +1075,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.4...v3.5
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.5/bookcars-db.zip) (9954.49 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.5/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.5)
@@ -1099,7 +1099,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.3...v3.4
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.4/bookcars-db.zip) (9954.49 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.4/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.4)
@@ -1134,7 +1134,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.2...v3.3
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.3/bookcars-db.zip) (9954.49 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.3/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.3)
@@ -1168,7 +1168,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.1...v3.2
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.2/bookcars-db.zip) (9954.51 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.2/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.2)
@@ -1225,7 +1225,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v3.0...v3.1
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.1/bookcars-db.zip) (9954.95 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.1/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.1)
@@ -1277,7 +1277,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.9...v3.0
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.0/bookcars-db.zip) (9954.95 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v3.0/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v3.0)
@@ -1342,7 +1342,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.8...v2.9
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.9/bookcars-db.zip) (9954.95 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.9/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.9)
@@ -1404,7 +1404,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.7...v2.8
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.8/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.8/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.8)
@@ -1456,7 +1456,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.6...v2.7
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.7/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.7/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.7)
@@ -1497,7 +1497,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.5...v2.6
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.6/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.6/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.6)
@@ -1547,7 +1547,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.4...v2.5
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.5/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.5/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.5)
@@ -1610,7 +1610,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.3...v2.4
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.4/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.4/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.4)
@@ -1678,7 +1678,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.2...v2.3
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.3/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.3/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.3)
@@ -1717,7 +1717,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.1...v2.2
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.2/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.2/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.2)
@@ -1754,7 +1754,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v2.0...v2.1
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.1/bookcars-db.zip) (9954.68 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.1/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.1)
@@ -1788,7 +1788,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.9...v2.0
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.0/bookcars-db.zip) (9954.79 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v2.0/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v2.0)
@@ -1838,7 +1838,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.8...v1.9
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.9/bookcars-db.zip) (9954.53 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.9/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.9)
@@ -1885,7 +1885,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.7...v1.8
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.8/bookcars-db.zip) (9954.53 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.8/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.8)
@@ -1920,7 +1920,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.6...v1.7
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.7/bookcars-db.zip) (9954.53 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.7/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.7)
@@ -1944,7 +1944,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.5...v1.6
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.6/bookcars-db.zip) (9954.53 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.6/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.6)
@@ -1986,7 +1986,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.4...v1.5
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.5/bookcars-db.zip) (9948.75 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.5/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.5)
@@ -2023,7 +2023,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.3...v1.4
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.4/bookcars-db.zip) (9948.75 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.4/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.4)
@@ -2061,7 +2061,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.2...v1.3
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.3/bookcars-db.zip) (9948.75 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.3/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.3)
@@ -2115,7 +2115,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.1...v1.2
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.2/bookcars-db.zip) (9948.79 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.2/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.2)
@@ -2137,7 +2137,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v1.0...v1.1
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.1/bookcars-db.zip) (9948.79 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.1/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.1)
@@ -2148,7 +2148,7 @@
 Initial release
 
 ### Assets
-- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.0/bookcars-db.zip) (9948.79 KB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v1.0/bookcars-db.zip) (9.72 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v1.0)

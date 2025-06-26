@@ -56,6 +56,17 @@ const fetchAllReleases = async () => {
   return allReleases
 }
 
+const formatFileSize = (bytes) => {
+  if (bytes === 0) {
+    return '0 Bytes'
+  }
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  const size = bytes / Math.pow(k, i)
+  return `${size.toFixed(2)} ${sizes[i]}`
+}
+
 const generateMarkdown = async () => {
   try {
     const releases = await fetchAllReleases()
@@ -77,7 +88,7 @@ const generateMarkdown = async () => {
       if (r.assets && r.assets.length > 0) {
         lines.push('### Assets')
         for (const asset of r.assets) {
-          lines.push(`- [${asset.name}](${asset.browser_download_url}) (${(asset.size / 1024).toFixed(2)} KB)`)
+          lines.push(`- [${asset.name}](${asset.browser_download_url}) (${formatFileSize(asset.size)})`)
         }
         lines.push('')
       }
