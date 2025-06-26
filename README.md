@@ -33,7 +33,7 @@ BookCars is free and open source. You can customize and deploy it yourself by fo
 
 ## Features
 
-### 🏢 Supplier & Fleet Management
+### Supplier & Fleet Management
 * Supplier management
 * [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
 * [Supplier search result limit](https://github.com/aelassas/bookcars/wiki/FAQ#how-do-i-limit-the-number-of-cars-for-a-supplier-in-search-results)
@@ -43,7 +43,7 @@ BookCars is free and open source. You can customize and deploy it yourself by fo
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
-### 💳 Pricing & Payments
+### Pricing & Payments
 * [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
@@ -51,12 +51,12 @@ BookCars is free and open source. You can customize and deploy it yourself by fo
 * [Multiple payment gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 * Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
 
-### 🌍 Locations & Search
+### Locations & Search
 * [Hierarchical locations with country, map, and parking integration](https://github.com/aelassas/bookcars/wiki/Locations)
 * Location-based search with nested child location support
 * Map display for locations and parking spots
 
-### 👥 User Experience
+### User Experience
 * Customer management
 * [Multiple login options](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): Google, Facebook, Apple, Email
 * Multiple language support: English, French, Spanish
@@ -64,13 +64,13 @@ BookCars is free and open source. You can customize and deploy it yourself by fo
 * Multiple pagination styles: classic (next/previous), infinite scroll
 * Push notifications
 
-### 🛡️ Security & Performance
+### Security & Performance
 * Secure against XSS, XST, CSRF, MITM, and DDoS attacks
 * Responsive admin panel and frontend
 * Native mobile app for Android and iOS (single codebase)
 * [Docker](https://www.docker.com/) support for easy deployment and a better developer experience
 
-### 🖥️ Supported Platforms
+### Supported Platforms
 * iOS
 * Android
 * Web
