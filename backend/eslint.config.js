@@ -31,6 +31,12 @@ const config = [
       'jest': jestPlugin
     },
     rules: {
+      // Include rules from preset configurations
+      ...eslint.configs.recommended.rules,
+      ...tseslint.configs['eslint-recommended'].rules,
+      ...tseslint.configs.recommended.rules,
+      ...jestPlugin.configs.recommended.rules,
+
       // ESLint core rules
       'linebreak-style': 'off',
       'no-underscore-dangle': 'off',
@@ -54,12 +60,6 @@ const config = [
       'import/extensions': 'off',
       'import/no-extraneous-dependencies': 'off',
       'import/prefer-default-export': 'off',
-
-      // Include rules from preset configurations
-      ...eslint.configs.recommended.rules,
-      ...tseslint.configs['eslint-recommended'].rules,
-      ...tseslint.configs.recommended.rules,
-      ...jestPlugin.configs.recommended.rules,
 
       // TypeScript rules
       '@typescript-eslint/no-explicit-any': 'off',
