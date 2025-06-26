@@ -75,13 +75,17 @@ BookCars is free and open source. You can customize and deploy it yourself by fo
 * Web
 * Docker
 
-## Support
+## Support & Contributing
 
 If this project helped you, saved you time, or inspired you in any way, please consider supporting its future growth and maintenance. You can show your support by starring the repository (it helps increase visibility and shows your appreciation), sharing the project (recommend it to colleagues, communities, or on social media), or making a donation (if you'd like to financially support the development) via [GitHub Sponsors](https://github.com/sponsors/aelassas) (one-time or monthly), [PayPal](https://www.paypal.me/aelassaspp), or [Buy Me a Coffee](https://www.buymeacoffee.com/aelassas). Open-source software requires time, effort, and resources to maintain—your support helps keep this project alive, up-to-date, and accessible to everyone. Every contribution, big or small, makes a difference and motivates continued work on features, bug fixes, and new ideas.
 
 <!--<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>-->
 <a href="https://www.paypal.me/aelassaspp"><img src="https://aelassas.github.io/content/paypal-button-v2.png" alt="PayPal" width="208"></a>
 <a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" height="38"></a>
+
+To contribute code or report issues, please read our [Contribution Guide](https://github.com/aelassas/bookcars/wiki/Contribution-Guide) to learn about the process, coding standards, and how to submit pull requests.
+
+We appreciate your help in making BookCars better!
 
 ## Live Demo
 <!--
@@ -186,6 +190,7 @@ You can install the Android App by downloading the APK and installing it on any 
     1. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)
 23. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 24. [Release Notes](https://github.com/aelassas/bookcars/releases)
+25. [Contribution Guide](https://github.com/aelassas/bookcars/wiki/Contribution-Guide)
 
 ## License
 
