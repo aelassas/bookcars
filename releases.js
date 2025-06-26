@@ -78,7 +78,7 @@ const generateMarkdown = async () => {
       const date = r.published_at?.split('T')[0]
       let body = r.body || 'No changelog provided.'
 
-      // Add two '##' before any '##' header lines to shift them down one level
+      // Add two '#' before any '##' header lines to shift them down two levels
       body = body.replace(/^##/gm, '####')
 
       lines.push(`## [${title}](${r.html_url}) – ${date}`, '')
