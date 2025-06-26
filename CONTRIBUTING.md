@@ -1,4 +1,4 @@
-## Contribution Guide
+# Contribution Guide
 
 Welcome to the **BookCars** Contribution Guide!  
 
