@@ -1,5 +1,5 @@
 /*
-* This script fetches the latest releases from GitHub repository and generates .github/RELEASES.md markdown file
+* This script fetches the latest releases from GitHub repository and generates .github/RELEASES.md markdown file.
 * It handles pagination and formats the release notes, assets, and source code links.
 * It uses the GitHub API to fetch releases and requires Node.js with https module.
 *
