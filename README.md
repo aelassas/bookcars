@@ -86,7 +86,7 @@ To contribute code or report issues, please read the [Contribution Guide](https:
 
 ## Live Demo
 
-Some features are locked down on the demo links provided. To have access to all the features contact me by email. You can find my email on my [profile page](https://github.com/aelassas) (requires login).
+Some features are locked down on the demo links provided. To have access to all the features contact me by email. You can find it on my [profile page](https://github.com/aelassas) (requires login).
 
 ### Frontend
 
