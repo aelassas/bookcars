@@ -15,7 +15,7 @@ const fetchReleasesPage = (url) => {
       }
     }, res => {
       let data = ''
-      res.on('data', chunk => data += chunk)
+      res.on('data', (chunk) => data += chunk)
 
       // Capture Link header for pagination
       const linkHeader = res.headers.link || ''
