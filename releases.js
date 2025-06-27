@@ -25,7 +25,7 @@ const fetchReleasesPage = (url) => {
         'User-Agent': 'Node.js',
         'Accept': 'application/vnd.github+json'
       }
-    }, res => {
+    }, (res) => {
       let data = ''
       res.on('data', (chunk) => data += chunk)
 
@@ -51,7 +51,7 @@ const fetchReleasesPage = (url) => {
  */
 const getNextLink = (linkHeader) => {
   // Parse Link header to find rel="next"
-  const links = linkHeader.split(',').map(s => s.trim())
+  const links = linkHeader.split(',').map((s) => s.trim())
   for (const link of links) {
     const match = link.match(/<([^>]+)>;\s*rel="([^"]+)"/)
     if (match && match[2] === 'next') {
