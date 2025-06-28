@@ -67,6 +67,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Responsive admin panel and frontend
 * Native mobile app for Android and iOS (single codebase)
 * [Docker](https://www.docker.com/) support for easy deployment and a better developer experience
+* Error monitoring and performance tracing with Sentry
 
 ### Supported Platforms
 * iOS
@@ -137,6 +138,7 @@ You can install the Android App by downloading the APK and installing it on any 
 6. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
+7. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)
 7. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 8. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 9. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
@@ -170,6 +172,8 @@ You can install the Android App by downloading the APK and installing it on any 
 24. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)
 25. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)
 26. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
+
+
 
 ## License
 
