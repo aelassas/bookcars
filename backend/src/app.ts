@@ -19,6 +19,9 @@ import paypalRoutes from './routes/paypalRoutes'
 import ipinfoRoutes from './routes/ipinfoRoutes'
 import bankDetailsRoutes from './routes/bankDetailsRoutes'
 import * as helper from './common/helper'
+import { initSentry, Sentry } from './config/sentry'
+
+initSentry()
 
 const app = express()
 
@@ -61,6 +64,10 @@ app.use('/', countryRoutes)
 app.use('/', paypalRoutes)
 app.use('/', ipinfoRoutes)
 app.use('/', bankDetailsRoutes)
+
+if (env.ENABLE_SENTRY) {
+  Sentry.setupExpressErrorHandler(app)
+}
 
 i18n.locale = env.DEFAULT_LANGUAGE
 
