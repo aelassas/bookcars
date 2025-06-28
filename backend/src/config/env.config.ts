@@ -54,7 +54,7 @@ export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
 /**
  * Indicate whether we are in CI environment or not.
  *
- * @type {string}
+ * @type {boolean}
  */
 export const CI = helper.StringToBoolean(__env__('BC_CI', false, 'false'))
 
@@ -442,6 +442,20 @@ export const IPINFO_API_KEY = __env__('BC_IPINFO_API_KEY', false)
  * @type {string}
  */
 export const IPINFO_DEFAULT_COUNTRY = __env__('BC_IPINFO_DEFAULT_COUNTRY', false, 'US')
+
+/**
+ * Enables or disables Sentry error reporting. Set to true to enable.
+ *
+ * @type {boolean}
+ */
+export const ENABLE_SENTRY = helper.StringToBoolean(__env__('BC_ENABLE_SENTRY', false, 'false'))
+
+/**
+ * The Sentry DSN (Data Source Name) used to identify your backend project.
+ *
+ * @type {string}
+ */
+export const SENTRY_DSN_BACKEND = __env__('BC_SENTRY_DSN_BACKEND', ENABLE_SENTRY)
 
 /**
  * User Document.
