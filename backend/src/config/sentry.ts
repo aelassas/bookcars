@@ -1,6 +1,10 @@
 import * as env from './env.config'
 import * as Sentry from '@sentry/node'
 
+/**  
+ * Initializes Sentry for error tracking and performance monitoring.
+ * 
+*/
 const initSentry = (): void => {
   if (env.ENABLE_SENTRY && env.SENTRY_DSN_BACKEND) {
     Sentry.init({
