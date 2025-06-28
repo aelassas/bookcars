@@ -102,7 +102,7 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
         })
       }
     } else {
-      logger[level](finalMessage)
+      logger.error(finalMessage)
 
       if (env.ENABLE_SENTRY) {
         if (obj) {
