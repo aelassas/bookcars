@@ -67,6 +67,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Responsive admin panel and frontend
 * Native mobile app for Android and iOS (single codebase)
 * [Docker](https://www.docker.com/) support for easy deployment and a better developer experience
+* Error monitoring and performance tracing with Sentry
 
 ### Supported Platforms
 * iOS
