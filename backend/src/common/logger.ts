@@ -93,7 +93,7 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
 
       // Report to Sentry
       if (env.ENABLE_SENTRY) {
-        // Capture the erroraé and stack trace
+        // Capture the error and stack trace
         Sentry.withScope((scope) => {
           scope.setLevel('error')
           scope.setExtra('log_message', message)
