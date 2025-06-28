@@ -1,5 +1,7 @@
 import winston, { format, transports } from 'winston'
 import * as helper from './helper'
+import * as env from '../config/env.config'
+import { Sentry } from '../config/sentry'
 
 /**
  * Enables logging.
@@ -85,8 +87,36 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
   const baseMessage = fixMessage(`${prefix} ${message}`)
   const finalMessage = obj ? `${baseMessage} ${typeof obj === 'string' ? obj : helper.safeStringify(obj)}` : baseMessage
 
-  if (level === 'error' && obj instanceof Error) {
-    logger.error(`${baseMessage} ${obj.message}\n${obj.stack}`)
+  if (level === 'error') {
+    if (obj instanceof Error) {
+      logger.error(`${baseMessage} ${obj.message}\n${obj.stack}`)
+
+      // Report to Sentry
+      if (env.ENABLE_SENTRY) {
+        // Capture the error and stack trace
+        Sentry.withScope((scope) => {
+          scope.setLevel('error')
+          scope.setExtra('log_message', message)
+          scope.setExtra('log_obj', helper.safeStringify(obj))
+          Sentry.captureException(obj)
+        })
+      }
+    } else {
+      logger[level](finalMessage)
+
+      if (env.ENABLE_SENTRY) {
+        if (obj) {
+          // If obj is not an Error but some extra data, add it as extra info
+          Sentry.withScope(scope => {
+            scope.setExtra('extra_data', helper.safeStringify(obj))
+            Sentry.captureMessage(message)
+          })
+        } else {
+          // No extra data; just capture the message
+          Sentry.captureMessage(message)
+        }
+      }
+    }
   } else {
     logger[level](finalMessage)
   }
