@@ -1,5 +1,30 @@
 # Releases
 
+## [BookCars 7.7](https://github.com/aelassas/bookcars/releases/tag/v7.7) – 2025-06-28
+
+* feat(backend): add setup script to create admin user
+* feat(backend): add reset script to delete admin user
+* feat: add [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md) to promote a respectful and inclusive community
+* feat: add comprehensive [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md) to assist new contributors
+* feat: add GitHub Actions workflow to automatically update [RELEASES.md](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md) on new releases
+* fix(tests): add parent location tests
+* fix(mobile): auth issues when jwt token expires #80
+* fix(mobile): replace Paragraph with RNPText in BookingList cancellation dialog
+* refactor(backend): move Stripe and PayPal integrations to a dedicated payment directory
+* refactor(backend): replace bcrypt password hashing with helper function
+* docs: add new sections to [software architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
+* chore: update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.6...v7.7
+
+### Assets
+- [bookcars-7.7.apk](https://github.com/aelassas/bookcars/releases/download/v7.7/bookcars-7.7.apk) (92.11 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.7/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.7)
+
 ## [BookCars 7.6](https://github.com/aelassas/bookcars/releases/tag/v7.6) – 2025-06-22
 
 * feat: add [parent locations](https://github.com/aelassas/bookcars/wiki/Locations) and include child locations in search results
