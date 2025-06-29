@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { jest } from '@jest/globals'
 import request from 'supertest'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
@@ -87,6 +88,18 @@ describe('POST /api/upsert-bank-details', () => {
     expect(res.body.iban).toBe(payload.iban)
     expect(res.body.swiftBic).toBe(payload.swiftBic)
     expect(res.body.showBankDetailsPage).toBe(payload.showBankDetailsPage)
+
+    // test failure
+    jest.spyOn(BankDetails, 'findById').mockImplementation(() => {
+      throw new Error('DB failure')
+    })
+    res = await request(app)
+      .post('/api/upsert-bank-details')
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('DB failure')
+    jest.restoreAllMocks()
   })
 })
 
@@ -95,7 +108,7 @@ describe('GET /api/bank-details', () => {
     const token = await testHelper.signinAsAdmin()
 
     // test success
-    const res = await request(app)
+    let res = await request(app)
       .get('/api/bank-details')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
@@ -104,5 +117,16 @@ describe('GET /api/bank-details', () => {
     expect(res.body.iban).toBeTruthy()
     expect(res.body.swiftBic).toBeTruthy()
     expect(res.body.showBankDetailsPage).toBeTruthy()
+
+    // test failure
+    jest.spyOn(BankDetails, 'findOne').mockImplementation(() => {
+      throw new Error('DB failure')
+    })
+    res = await request(app)
+      .get('/api/bank-details')
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('DB failure')
+    jest.restoreAllMocks()
   })
 })
