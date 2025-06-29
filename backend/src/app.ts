@@ -1,3 +1,5 @@
+import './instrument'
+import * as Sentry from '@sentry/node'
 import express from 'express'
 import compression from 'compression'
 import helmet from 'helmet'
@@ -19,9 +21,6 @@ import paypalRoutes from './routes/paypalRoutes'
 import ipinfoRoutes from './routes/ipinfoRoutes'
 import bankDetailsRoutes from './routes/bankDetailsRoutes'
 import * as helper from './common/helper'
-import { initSentry, Sentry } from './config/sentry'
-
-initSentry()
 
 const app = express()
 
