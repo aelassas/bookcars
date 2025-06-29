@@ -19,18 +19,18 @@ import * as bookingController from './bookingController'
  * @returns {unknown}
  */
 export const createCheckoutSession = async (req: Request, res: Response) => {
-  const stripeAPI = (await import('../payment/stripe.js')).default
-  const {
-    amount,
-    currency,
-    locale,
-    receiptEmail,
-    name,
-    description,
-    customerName,
-  }: bookcarsTypes.CreatePaymentPayload = req.body
-
   try {
+    const stripeAPI = (await import('../payment/stripe.js')).default
+    const {
+      amount,
+      currency,
+      locale,
+      receiptEmail,
+      name,
+      description,
+      customerName,
+    }: bookcarsTypes.CreatePaymentPayload = req.body
+
     //
     // 1. Create the customer if he does not already exist
     //
@@ -96,8 +96,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkCheckoutSession = async (req: Request, res: Response) => {
-  const stripeAPI = (await import('../payment/stripe.js')).default
   try {
+    const stripeAPI = (await import('../payment/stripe.js')).default
     const { sessionId } = req.params
 
     //
@@ -200,16 +200,17 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const createPaymentIntent = async (req: Request, res: Response) => {
-  const stripeAPI = (await import('../payment/stripe.js')).default
-  const {
-    amount,
-    currency,
-    receiptEmail,
-    description,
-    customerName,
-  }: bookcarsTypes.CreatePaymentPayload = req.body
-
   try {
+    const stripeAPI = (await import('../payment/stripe.js')).default
+    const {
+      amount,
+      currency,
+      receiptEmail,
+      description,
+      customerName,
+    }: bookcarsTypes.CreatePaymentPayload = req.body
+
+
     //
     // 1. Create the customer if he does not already exist
     //
