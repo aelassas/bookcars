@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import Stripe from 'stripe'
-import stripeAPI from '../payment/stripe'
 import i18n from '../lang/i18n'
 import * as logger from '../common/logger'
 import * as bookcarsTypes from ':bookcars-types'
@@ -20,6 +19,7 @@ import * as bookingController from './bookingController'
  * @returns {unknown}
  */
 export const createCheckoutSession = async (req: Request, res: Response) => {
+  const stripeAPI = (await import('../payment/stripe.js')).default
   const {
     amount,
     currency,
@@ -96,6 +96,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkCheckoutSession = async (req: Request, res: Response) => {
+  const stripeAPI = (await import('../payment/stripe.js')).default
   try {
     const { sessionId } = req.params
 
@@ -199,6 +200,7 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const createPaymentIntent = async (req: Request, res: Response) => {
+  const stripeAPI = (await import('../payment/stripe.js')).default
   const {
     amount,
     currency,
