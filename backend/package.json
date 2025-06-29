@@ -20,7 +20,6 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^9.33.0",
-    "@sentry/tracing": "^7.120.3",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.0",
