@@ -42,6 +42,8 @@ describe('Test logging', () => {
       // test logger with TERM_PROGRAM environment variable
       const originalTermProgram = process.env.TERM_PROGRAM
       process.env.TERM_PROGRAM = ''
+      jest.resetModules()
+      logger = await import('../src/common/logger.js')
       logger.info('ℹ️info ⚠️warn')
       process.env.TERM_PROGRAM = 'vscode'
       jest.resetModules()
