@@ -458,6 +458,20 @@ export const ENABLE_SENTRY = helper.StringToBoolean(__env__('BC_ENABLE_SENTRY', 
 export const SENTRY_DSN_BACKEND = __env__('BC_SENTRY_DSN_BACKEND', ENABLE_SENTRY)
 
 /**
+ * Sentry traces sample rate.
+ * Set to 1.0 to capture 100% of transactions for tracing.
+ * 0.1 means 10% of transactions will be sent to Sentry.
+ * 0 means no transactions will be sent to Sentry.
+ * We recommend adjusting this value in production to avoid high data volume and costs.
+ *
+ * Learn more at
+ * https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#tracesSampleRate
+ * 
+ * @type {number}
+ */
+export const SENTRY_TRACES_SAMPLE_RATE = Number.parseFloat(__env__('BC_SENTRY_TRACES_SAMPLE_RATE', false, '1.0'))
+
+/**
  * User Document.
  *
  * @export
