@@ -9,6 +9,7 @@ import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import * as helper from '../src/common/helper'
+import * as authHelper from '../src/common/authHelper'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
 import Token from '../src/models/Token'
@@ -893,7 +894,7 @@ describe('POST /api/validate-email', () => {
 
 describe('POST /api/validate-access-token', () => {
   it('should validate access token', async () => {
-    const token = await testHelper.signinAsAdmin()
+    let token = await testHelper.signinAsAdmin()
 
     // test success
     let res = await request(app)
@@ -906,6 +907,14 @@ describe('POST /api/validate-access-token', () => {
     res = await request(app)
       .post('/api/validate-access-token')
       .set(env.X_ACCESS_TOKEN, nanoid())
+    expect(res.statusCode).toBe(401)
+
+    // test failure (user not found)
+    const payload: authHelper.SessionData = { id: testHelper.GetRandromObjectIdAsString() }
+    token = await authHelper.encryptJWT(payload, true)
+    res = await request(app)
+      .post('/api/validate-access-token')
+      .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(401)
 
     // test failure (forbidden)
