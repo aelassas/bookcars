@@ -1,7 +1,7 @@
 import winston, { format, transports } from 'winston'
 import * as helper from './helper'
 import * as env from '../config/env.config'
-import { Sentry } from '../config/sentry'
+import * as Sentry from '@sentry/node'
 
 /**
  * Enables logging.
