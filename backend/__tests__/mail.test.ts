@@ -4,7 +4,7 @@ import { jest } from '@jest/globals'
 jest.unstable_mockModule('nodemailer', () => ({
   createTestAccount: jest.fn().mockResolvedValue({ user: 'testuser', pass: 'testpass' } as unknown as never),
   createTransport: jest.fn(() => ({
-    sendMail: jest.fn().mockResolvedValue('mocked sendMail result' as unknown as never),
+    sendMail: jest.fn().mockResolvedValue({ messageId: 'mocked-id' } as unknown as never),
   })),
 }))
 
