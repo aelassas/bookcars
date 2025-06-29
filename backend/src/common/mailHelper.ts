@@ -1,8 +1,8 @@
-import nodemailer, { SendMailOptions, SentMessageInfo, Transporter } from 'nodemailer'
+import * as nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 import * as env from '../config/env.config'
 
-const createTransporter = async (): Promise<Transporter> => {
+const createTransporter = async (): Promise<nodemailer.Transporter> => {
   if (env.CI) {
     const testAccount = await nodemailer.createTestAccount()
     return nodemailer.createTransport({
@@ -33,7 +33,7 @@ const createTransporter = async (): Promise<Transporter> => {
  * @param mailOptions - Email content and metadata
  * @returns A promise resolving to the sending result
  */
-export const sendMail = async (mailOptions: SendMailOptions): Promise<SentMessageInfo> => {
+export const sendMail = async (mailOptions: nodemailer.SendMailOptions): Promise<nodemailer.SentMessageInfo> => {
   const transporter = await createTransporter()
   return transporter.sendMail(mailOptions)
 }
