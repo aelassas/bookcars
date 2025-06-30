@@ -13,6 +13,8 @@ import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import DateBasedPrice from '../src/models/DateBasedPrice'
+import User from '../src/models/User'
+import NotificationCounter from '../src/models/NotificationCounter'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -80,6 +82,12 @@ describe('POST /api/create-car', () => {
     if (!(await helper.pathExists(tempImage))) {
       await asyncFs.copyFile(IMAGE1_PATH, tempImage)
     }
+    const admin = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    expect(admin).toBeTruthy()
+    let notificationCounter = await NotificationCounter.findOne({ user: admin!.id })
+    const notificationCount = notificationCounter?.count || 0
+    await NotificationCounter.deleteMany({ user: admin!.id })
+
     const payload: bookcarsTypes.CreateCarPayload = {
       loggedUser: SUPPLIER1_ID,
       name: 'BMW X1',
@@ -197,6 +205,15 @@ describe('POST /api/create-car', () => {
     }
     payload.isDateBasedPrice = false
     payload.dateBasedPrices = []
+
+    // reset notificationCount
+    notificationCounter = await NotificationCounter.findOne({ user: admin!.id })
+    if (notificationCounter) {
+      notificationCounter.count = notificationCount
+    } else {
+      notificationCounter = new NotificationCounter({ user: admin!.id, count: notificationCount })
+    }
+    await notificationCounter.save()
 
     // test failure (no image)
     payload.image = undefined
