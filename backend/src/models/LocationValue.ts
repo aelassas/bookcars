@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
-import * as logger from '../common/logger'
 
 const locationValueSchema = new Schema<env.LocationValue>(
   {
@@ -39,10 +38,5 @@ locationValueSchema.index(
 )
 
 const LocationValue = model<env.LocationValue>('LocationValue', locationValueSchema)
-
-// Create indexes manually and handle potential errors
-LocationValue.createIndexes().catch((err) => {
-  logger.error('Error creating LocationValue indexes:', err)
-})
 
 export default LocationValue
