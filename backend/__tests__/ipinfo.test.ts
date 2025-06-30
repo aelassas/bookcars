@@ -1,9 +1,12 @@
 import 'dotenv/config'
+import { jest } from '@jest/globals'
 import request from 'supertest'
 import * as env from '../src/config/env.config'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
+
+const ip = '51.91.60.241' // OVH France (Roubaix Data Center)
 
 //
 // Connecting and initializing the database before running the test suite
@@ -34,7 +37,7 @@ describe('GET /api/country-code', () => {
     // test with x-forwarded-for
     res = await request(app)
       .get('/api/country-code')
-      .set('x-forwarded-for', '51.91.60.241') // OVH France (Roubaix Data Center)
+      .set('x-forwarded-for', ip)
     expect(res.statusCode).toBe(200)
     expect(res.body).toBe('FR')
 
@@ -51,5 +54,19 @@ describe('GET /api/country-code', () => {
       .set('x-forwarded-for', 'wrong ip address')
     expect(res.statusCode).toBe(200)
     expect(res.body).toBe('US')
+
+    // test failure (wrong api key)
+    jest.resetModules()
+
+    jest.unstable_mockModule('../src/config/env.config.js', () => ({
+      IPINFO_API_KEY: 'xxxxxxxxxxxxxxxxxxxxx',
+      IPINFO_DEFAULT_COUNTRY: 'US',
+    }))
+
+    await jest.isolateModulesAsync(async () => {
+      const ipinfoHelper = await import('../src/common/ipinfoHelper.js')
+      const country = await ipinfoHelper.getCountryCode(ip)
+      expect(country).toBe('US')
+    })
   })
 })
