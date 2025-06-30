@@ -55,3 +55,17 @@ describe('Test validateAccessToken', () => {
     expect(await helper.validateAccessToken('unknown' as bookcarsTypes.SocialSignInType, 'token', 'unknow@unknown.com')).toBeFalsy()
   })
 })
+
+describe('Test safeStringify', () => {
+  it('should safe stringify an object', () => {
+    // test success (object)
+    expect(helper.safeStringify({ foo: 'bar' })).toStrictEqual('{"foo":"bar"}')
+    // test failure
+    const obj = {
+      get foo() {
+        throw new Error('Cannot access foo')
+      }
+    }
+    expect(helper.safeStringify(obj)).toStrictEqual('[Unserializable object]')
+  })
+})
