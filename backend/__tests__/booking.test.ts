@@ -45,7 +45,7 @@ const ADDITIONAL_DRIVER_EMAIL: string = testHelper.GetRandomEmail()
 const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
   email: ADDITIONAL_DRIVER_EMAIL,
   fullName: 'Additional Driver 1',
-  birthDate: new Date(1990, 5, 20),
+  birthDate: new Date(2024, 5, 20),
   phone: '0102010101',
 }
 
@@ -183,7 +183,7 @@ describe('POST /api/create-booking', () => {
         pickupLocation: LOCATION_ID,
         dropOffLocation: LOCATION_ID,
         from: new Date(2024, 2, 1),
-        to: new Date(1990, 2, 4),
+        to: new Date(2024, 2, 4),
         status: bookcarsTypes.BookingStatus.Pending,
         cancellation: true,
         amendments: true,
@@ -238,7 +238,7 @@ describe('POST /api/checkout', () => {
         pickupLocation: LOCATION_ID,
         dropOffLocation: LOCATION_ID,
         from: new Date(2024, 3, 1),
-        to: new Date(1990, 3, 4),
+        to: new Date(2024, 3, 4),
         status: bookcarsTypes.BookingStatus.Pending,
         cancellation: true,
         amendments: true,
@@ -751,7 +751,7 @@ describe('POST /api/update-booking', () => {
         pickupLocation: LOCATION_ID,
         dropOffLocation: LOCATION_ID,
         from: new Date(2024, 2, 1),
-        to: new Date(1990, 2, 4),
+        to: new Date(2024, 2, 4),
         status: bookcarsTypes.BookingStatus.Paid,
         cancellation: true,
         amendments: true,
@@ -993,7 +993,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
         pickupLocation: LOCATION_ID,
         dropOffLocation: LOCATION_ID,
         from: new Date(2024, 2, 1),
-        to: new Date(1990, 2, 4),
+        to: new Date(2024, 2, 4),
         keyword: DRIVER1_NAME,
       },
       user: DRIVER1_ID,
@@ -1001,6 +1001,17 @@ describe('POST /api/bookings/:page/:size/:language', () => {
     }
 
     let res = await request(app)
+      .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBe(1)
+
+    // test success (dateBetween)
+    payload.filter!.from = undefined
+    payload.filter!.to = undefined
+    payload.filter!.dateBetween = new Date(2024, 2, 1)
+    res = await request(app)
       .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
@@ -1015,6 +1026,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
     payload.filter!.pickupLocation = undefined
     payload.filter!.dropOffLocation = undefined
     payload.filter!.keyword = undefined
+    payload.filter!.dateBetween = undefined
     res = await request(app)
       .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
       .set(env.X_ACCESS_TOKEN, token)
@@ -1174,7 +1186,7 @@ describe('DELETE /api/delete-temp-booking', () => {
       pickupLocation: LOCATION_ID,
       dropOffLocation: LOCATION_ID,
       from: new Date(2024, 2, 1),
-      to: new Date(1990, 2, 4),
+      to: new Date(2024, 2, 4),
       status: bookcarsTypes.BookingStatus.Void,
       sessionId,
       expireAt,
