@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
-import * as logger from '../common/logger'
 
 export const BOOKING_EXPIRE_AT_INDEX_NAME = 'expireAt'
 
@@ -139,10 +138,5 @@ bookingSchema.index({ 'driver.fullName': 1 })
 bookingSchema.index({ 'car.name': 1 })
 
 const Booking = model<env.Booking>('Booking', bookingSchema)
-
-// Create indexes manually and handle potential errors
-Booking.createIndexes().catch((err) => {
-  logger.error('Error creating Booking indexes:', err)
-})
 
 export default Booking
