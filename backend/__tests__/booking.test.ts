@@ -1119,7 +1119,7 @@ describe('POST /api/cancel-booking/:id', () => {
     booking!.supplier = supplierId
     await booking!.save()
 
-    // test success (booking not found)
+    // test failure (booking not found)
     res = await request(app)
       .post(`/api/cancel-booking/${testHelper.GetRandromObjectIdAsString()}`)
       .set(env.X_ACCESS_TOKEN, token)
