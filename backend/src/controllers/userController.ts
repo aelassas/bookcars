@@ -597,7 +597,7 @@ export const socialSignin = async (req: Request, res: Response) => {
         throw new Error('body.accessToken not found')
       }
 
-      if (!(await helper.validateAccessToken(socialSignInType, accessToken, email))) {
+      if (!(await authHelper.validateAccessToken(socialSignInType, accessToken, email))) {
         throw new Error('body.accessToken is not valid')
       }
     }
