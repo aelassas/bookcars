@@ -124,7 +124,7 @@ describe('createCollection', () => {
     const model = {
       modelName,
       db: {
-        listCollections: jest.fn().mockResolvedValue([{ name: 'OtherCollection' }] as unknown as never),
+        listCollections: jest.fn(() => Promise.resolve([{ name: 'OtherCollection' }])),
       },
       createCollection: jest.fn(),
       createIndexes: jest.fn(),
@@ -140,7 +140,7 @@ describe('createCollection', () => {
     const model = {
       modelName,
       db: {
-        listCollections: jest.fn().mockResolvedValue([{ name: modelName }] as unknown as never),
+        listCollections: jest.fn(() => Promise.resolve([{ name: modelName }])),
       },
       createCollection: jest.fn(),
       createIndexes: jest.fn(),
@@ -156,7 +156,7 @@ describe('createCollection', () => {
     const model = {
       modelName,
       db: {
-        listCollections: jest.fn().mockResolvedValue([{ name: modelName }] as unknown as never),
+        listCollections: jest.fn(() => Promise.resolve([{ name: modelName }])),
       },
       createCollection: jest.fn(),
       createIndexes: jest.fn(),
@@ -173,7 +173,7 @@ describe('createTextIndex', () => {
     const error = new Error('Test error')
 
     const collection = {
-      indexes: jest.fn().mockRejectedValue(error as unknown as never),
+      indexes: jest.fn(() => Promise.reject(error)),
       dropIndex: jest.fn(),
       createIndex: jest.fn(),
     }
@@ -229,11 +229,11 @@ describe('checkAndUpdateTTL', () => {
       const model = {
         modelName: 'TestModel',
         collection: {
-          indexes: jest.fn().mockResolvedValue([
+          indexes: jest.fn(() => Promise.resolve([
             { name, expireAfterSeconds: seconds - 1 }, // force existing = true
-          ] as unknown as never),
-          dropIndex: jest.fn().mockRejectedValue(error as unknown as never), // triggers catch block
-          createIndex: jest.fn().mockResolvedValue({} as unknown as never)
+          ])),
+          dropIndex: jest.fn(() => Promise.reject(error)), // triggers catch block
+          createIndex: jest.fn(() => Promise.resolve({}))
         },
       } as any
 
@@ -272,7 +272,7 @@ describe('initialize', () => {
     await jest.isolateModulesAsync(async () => {
       // Import databaseHelper after mocking logger and databaseLangHelper
       const dbh = await import('../src/common/databaseHelper.js')
-      
+
       // test failure 
       const res = await dbh.connect(env.DB_URI, false, false)
       expect(res).toBeTruthy()
