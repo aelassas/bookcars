@@ -5,8 +5,6 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import Stripe from 'stripe'
 import { nanoid } from 'nanoid'
-import axios from 'axios'
-import * as bookcarsTypes from ':bookcars-types'
 
 /**
  * Convert string to boolean.
@@ -213,56 +211,6 @@ export const getStripeLocale = (locale: string): Stripe.Checkout.SessionCreatePa
   }
 
   return 'auto'
-}
-
-/**
- * Parse JWT token.
- *
- * @param {string} token
- * @returns {any}
- */
-export const parseJwt = (token: string) => JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
-
-/**
- * Validate JWT token structure.
- *
- * @param {string} token
- * @returns {Promise<boolean>}
- */
-export const validateAccessToken = async (socialSignInType: bookcarsTypes.SocialSignInType, token: string, email: string): Promise<boolean> => {
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Facebook) {
-    try {
-      parseJwt(token)
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Apple) {
-    try {
-      const res = parseJwt(token)
-      return res.email === email
-    } catch {
-      return false
-    }
-  }
-
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Google) {
-    try {
-      const res = await axios.get(
-        'https://www.googleapis.com/oauth2/v3/tokeninfo',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      )
-      return res.data.email === email
-    } catch {
-      return false
-    }
-  }
-
-  return false
 }
 
 /**
