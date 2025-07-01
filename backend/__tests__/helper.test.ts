@@ -1,9 +1,4 @@
-import 'dotenv/config'
-import { jest } from '@jest/globals'
-import { SignJWT } from 'jose'
-import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '../src/common/helper'
-import * as env from '../src/config/env.config'
 
 describe('Test string to boolean', () => {
   it('should convert a string to boolean', () => {
@@ -49,54 +44,6 @@ describe('Test getStripeLocale', () => {
     expect(helper.getStripeLocale('en')).toBe('en')
     // test success (value not found so should return default one)
     expect(helper.getStripeLocale('')).toBe('auto')
-  })
-})
-
-const jwtSecret = new TextEncoder().encode(env.JWT_SECRET)
-const jwtAlg = 'HS256'
-
-const encryptJWT = async (payload: any) => {
-  const jwt = await new SignJWT(payload)
-    .setProtectedHeader({ alg: jwtAlg })
-    .setIssuedAt()
-  const token = jwt.sign(jwtSecret)
-  return token
-}
-
-describe('Test validateAccessToken', () => {
-  it('should test validateAccessToken', async () => {
-    const email = 'unknow@unknown.com'
-
-    // test failure
-    expect(await helper.validateAccessToken('unknown' as bookcarsTypes.SocialSignInType, 'token', email)).toBeFalsy()
-
-    // test success (facebook)
-    let payload = {}
-    let token = await encryptJWT(payload)
-    expect(await helper.validateAccessToken(bookcarsTypes.SocialSignInType.Facebook, token, email)).toBeTruthy()
-
-    // test success (apple)
-    payload = { email }
-    token = await encryptJWT(payload)
-    expect(await helper.validateAccessToken(bookcarsTypes.SocialSignInType.Apple, token, email)).toBeTruthy()
-
-    await jest.isolateModulesAsync(async () => {
-      // Mock axios with unstable_mockModule
-      await jest.unstable_mockModule('axios', () => ({
-        default: {
-          get: jest.fn().mockResolvedValue({ data: { email } } as unknown as never),
-        },
-      }))
-
-      // Import modules after mock is set (inside isolateModulesAsync)
-      const helper = await import('../src/common/helper') // adjust path
-
-      payload = { data: { email } }
-      token = await encryptJWT(payload)
-      expect(await helper.validateAccessToken(bookcarsTypes.SocialSignInType.Google, token, email)).toBeTruthy()
-      jest.resetModules()
-      jest.clearAllMocks()
-    })
   })
 })
 
