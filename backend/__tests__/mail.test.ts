@@ -1,10 +1,12 @@
 import { jest } from '@jest/globals'
 
+const testAccount = { user: 'testuser', pass: 'testpass' }
+
 // Mock nodemailer createTransport and createTestAccount
 jest.unstable_mockModule('nodemailer', () => ({
-  createTestAccount: jest.fn().mockResolvedValue({ user: 'testuser', pass: 'testpass' } as unknown as never),
+  createTestAccount: jest.fn(() => Promise.resolve(testAccount)),
   createTransport: jest.fn(() => ({
-    sendMail: jest.fn().mockResolvedValue({ messageId: 'mocked-id' } as unknown as never),
+    sendMail: jest.fn(() => Promise.resolve({ messageId: 'mocked-id' })),
   })),
 }))
 
@@ -27,11 +29,7 @@ describe('mail module', () => {
     const nodemailer = await import('nodemailer')
     const { sendMail } = await import('../src/common/mailHelper.js')
 
-    const testAccount = { user: 'testuser', pass: 'testpass' }
-    const createTestAccountMock = nodemailer.createTestAccount as jest.Mock
-    createTestAccountMock.mockResolvedValue(testAccount as unknown as never)
-
-    const sendMailMock = jest.fn().mockResolvedValue({ messageId: '123' } as unknown as never)
+    const sendMailMock = jest.fn(() => Promise.resolve({ messageId: '123' }))
     const createTransportMock = nodemailer.createTransport as jest.Mock
     createTransportMock.mockReturnValue({ sendMail: sendMailMock })
 
@@ -76,7 +74,7 @@ describe('mail module', () => {
     const nodemailer = await import('nodemailer')
     const { sendMail } = await import('../src/common/mailHelper.js')
 
-    const sendMailMock = jest.fn().mockResolvedValue({ messageId: 'abc' } as unknown as never)
+    const sendMailMock = jest.fn(() => Promise.resolve({ messageId: 'abc' }))
     const createTransportMock = nodemailer.createTransport as jest.Mock
     createTransportMock.mockReturnValue({ sendMail: sendMailMock })
 
