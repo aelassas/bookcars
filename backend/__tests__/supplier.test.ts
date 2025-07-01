@@ -163,6 +163,8 @@ describe('POST /api/validate-supplier', () => {
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(500)
+    
+    await testHelper.signout(token)
 
     // test failure (error)
     // Mock escape-string-regexp to simulate an error
