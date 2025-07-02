@@ -1,5 +1,3 @@
-import 'dotenv/config'
-import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '../src/common/helper'
 
 describe('Test string to boolean', () => {
@@ -46,13 +44,6 @@ describe('Test getStripeLocale', () => {
     expect(helper.getStripeLocale('en')).toBe('en')
     // test success (value not found so should return default one)
     expect(helper.getStripeLocale('')).toBe('auto')
-  })
-})
-
-describe('Test validateAccessToken', () => {
-  it('should test validateAccessToken', async () => {
-    // test failure
-    expect(await helper.validateAccessToken('unknown' as bookcarsTypes.SocialSignInType, 'token', 'unknow@unknown.com')).toBeFalsy()
   })
 })
 

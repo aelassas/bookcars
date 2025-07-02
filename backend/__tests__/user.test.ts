@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { jest } from '@jest/globals'
 import request from 'supertest'
 import url from 'url'
 import path from 'path'
@@ -62,6 +63,11 @@ afterAll(async () => {
   await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
 
   await databaseHelper.close()
+})
+
+afterEach(() => {
+  jest.clearAllMocks()
+  jest.resetModules()
 })
 
 //
@@ -130,6 +136,75 @@ describe('POST /api/sign-up', () => {
     res = await request(app)
       .post('/api/sign-up')
     expect(res.statusCode).toBe(400)
+
+    // test failure (smtp failed)
+    payload.email = testHelper.GetRandomEmail()
+    // Mock mailHelper to simulate an error
+    jest.unstable_mockModule('../src/common/mailHelper.js', () => ({
+      sendMail: jest.fn(() => Promise.reject(new Error('SMTP failed')))
+    }))
+
+    jest.resetModules()
+    await jest.isolateModulesAsync(async () => {
+      const env = await import('../src/config/env.config.js')
+      const newApp = (await import('../src/app.js')).default
+      const dbh = await import('../src/common/databaseHelper.js')
+
+      await dbh.close()
+      await dbh.connect(env.DB_URI, false, false)
+
+      res = await request(newApp)
+        .post('/api/sign-up')
+        .send(payload)
+      expect(res.statusCode).toBe(400)
+      user = await User.findOne({ email: payload.email })
+      expect(user).toBeFalsy()
+      await dbh.close()
+    })
+
+    jest.unstable_mockModule('../src/common/mailHelper.js', () => ({
+      sendMail: jest.fn(() => Promise.reject(new Error('SMTP failed'))),
+    }))
+
+    jest.resetModules()
+
+    await jest.isolateModulesAsync(async () => {
+      const env = await import('../src/config/env.config.js')
+      const User = (await import('../src/models/User.js')).default
+      const newApp = (await import('../src/app.js')).default
+      const dbh = await import('../src/common/databaseHelper.js')
+
+      await dbh.close()
+      await dbh.connect(env.DB_URI, false, false)
+
+      // Create a mock user model with failing deleteOne
+      const email = testHelper.GetRandomEmail()
+
+      // Mock deleteOne to fail
+      const deleteOneMock = jest
+        .spyOn(User.prototype, 'deleteOne')
+        .mockImplementation(() => Promise.reject(new Error('deleteOne failed')))
+
+      const payload = {
+        fullName: 'user',
+        email,
+        language: testHelper.LANGUAGE,
+        password: USER1_PASSWORD,
+        birthDate: new Date(1992, 5, 25),
+        phone: '09090909',
+      }
+
+      res = await request(newApp)
+        .post('/api/sign-up')
+        .send(payload)
+      expect(res.statusCode).toBe(400)
+      expect(deleteOneMock).toHaveBeenCalled()
+      deleteOneMock.mockRestore()
+      await User.deleteOne({ email })
+      const deletedUser = await User.findOne({ email })
+      expect(deletedUser).toBeNull()
+      await dbh.close()
+    })
   })
 })
 
@@ -766,6 +841,46 @@ describe('POST /api/social-sign-in/:type', () => {
     res = await request(app)
       .post('/api/social-sign-in')
     expect(res.statusCode).toBe(500)
+
+    // test success (web httpOnly cookie mock)
+    await jest.isolateModulesAsync(async () => {
+      jest.unstable_mockModule('axios', () => ({
+        default: {
+          get: jest.fn(() => Promise.resolve({ data: { success: true } })),
+        },
+      }))
+      const realHelper = await import('../src/common/authHelper.js')
+      jest.unstable_mockModule('../src/common/authHelper.js', () => ({
+        validateAccessToken: jest.fn(() => Promise.resolve(true)),
+        encryptJWT: jest.fn(realHelper.encryptJWT),
+        decryptJWT: jest.fn(realHelper.decryptJWT),
+        isAdmin: jest.fn(realHelper.isAdmin),
+        isFrontend: jest.fn(realHelper.isFrontend),
+        getAuthCookieName: jest.fn(realHelper.getAuthCookieName),
+        hashPassword: jest.fn(realHelper.hashPassword),
+        parseJwt: jest.fn(realHelper.parseJwt),
+      }))
+      jest.resetModules()
+      const env = await import('../src/config/env.config.js')
+      const newApp = (await import('../src/app.js')).default
+      const dbh = await import('../src/common/databaseHelper.js')
+
+      await dbh.close()
+      await dbh.connect(env.DB_URI, false, false)
+
+      const payload: bookcarsTypes.SignInPayload = {
+        email: USER1_EMAIL,
+        socialSignInType: bookcarsTypes.SocialSignInType.Google,
+        accessToken: testHelper.GetRandromObjectIdAsString(),
+      }
+
+      res = await request(newApp)
+        .post('/api/social-sign-in')
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+
+      await dbh.close()
+    })
   })
 })
 
@@ -1861,12 +1976,56 @@ describe('POST /api/delete-users', () => {
 
 describe('POST /api/verify-recaptcha/:token/:ip', () => {
   it('should verify reCAPTCHA', async () => {
-    // test success (not valid)
-    const ip = '134.236.60.166'
-    const recaptchaToken = 'XXXXXX'
-    const res = await request(app)
-      .post(`/api/verify-recaptcha/${recaptchaToken}/${ip}`)
-    expect(res.statusCode).toBe(204)
+    const ip = '127.0.0.1'
+    const recaptchaToken = 'xxxxxxxxxxxxx'
+
+    // test success (valid)
+    jest.unstable_mockModule('axios', () => ({
+      default: {
+        get: jest.fn(() => Promise.resolve({ data: { success: true } })),
+      },
+    }))
+    jest.resetModules()
+
+    await jest.isolateModulesAsync(async () => {
+      const newApp = (await import('../src/app.js')).default
+
+      const res = await request(newApp)
+        .post(`/api/verify-recaptcha/${recaptchaToken}/${ip}`)
+      expect(res.statusCode).toBe(200)
+    })
+
+    // test failure (not valid)
+    jest.unstable_mockModule('axios', () => ({
+      default: {
+        get: jest.fn(() => Promise.resolve({ data: { success: false } })),
+      },
+    }))
+    jest.resetModules()
+
+    await jest.isolateModulesAsync(async () => {
+      const newApp = (await import('../src/app.js')).default
+
+      const res = await request(newApp)
+        .post(`/api/verify-recaptcha/${recaptchaToken}/${ip}`)
+      expect(res.statusCode).toBe(204)
+    })
+
+    // test failure (error)
+    jest.unstable_mockModule('axios', () => ({
+      default: {
+        get: jest.fn(() => Promise.reject(new Error('mock error'))),
+      },
+    }))
+    jest.resetModules()
+
+    await jest.isolateModulesAsync(async () => {
+      const newApp = (await import('../src/app.js')).default
+
+      const res = await request(newApp)
+        .post(`/api/verify-recaptcha/${recaptchaToken}/${ip}`)
+      expect(res.statusCode).toBe(400)
+    })
   })
 })
 
