@@ -225,6 +225,7 @@ export interface CreateCarPayload {
   multimedia: string[]
   rating?: number
   co2?: number
+  blockOnPay?: boolean
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
@@ -251,9 +252,10 @@ export interface GetCarsPayload {
   multimedia?: string[]
   rating?: number
   seats?: number
-  days?: number
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
+  from?: Date
+  to?: Date
 }
 
 export interface SignUpPayload {
@@ -501,6 +503,7 @@ export interface Car {
   rating?: number
   trips: number
   co2?: number
+  blockOnPay?: boolean
   [propKey: string]: any
 }
 

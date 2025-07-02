@@ -34,6 +34,7 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Déjà réservée',
     IS_DATE_BASED_PRICE: 'Prix basé sur des dates',
     DATE_BASED_PRICES: 'Prix par dates',
+    BLOCK_ON_PAY: 'Bloquer la voiture après un paiement réussi',
   },
   en: {
     NEW_CAR_HEADING: 'New car',
@@ -66,6 +67,7 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Fully Booked',
     IS_DATE_BASED_PRICE: 'Date Based Prices',
     DATE_BASED_PRICES: 'Date Based Prices',
+    BLOCK_ON_PAY: 'Block Car On Successful Payment',
   },
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
@@ -98,6 +100,8 @@ const strings = new LocalizedStrings({
     FULLY_BOOKED: 'Ya Reservado',
     IS_DATE_BASED_PRICE: 'Precio basado en fechas',
     DATE_BASED_PRICES: 'Precios por fechas',
+    BLOCK_ON_PAY: 'Bloquear el coche tras el pago exitoso',
+
   },
 })
 

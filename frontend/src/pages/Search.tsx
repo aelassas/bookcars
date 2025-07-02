@@ -90,7 +90,8 @@ const Search = () => {
           multimedia,
           rating,
           seats,
-          days: bookcarsHelper.days(from, to),
+          from,
+          to,
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
@@ -211,7 +212,8 @@ const Search = () => {
         multimedia,
         rating,
         seats,
-        days: bookcarsHelper.days(from, to),
+        from,
+        to,
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)

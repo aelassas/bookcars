@@ -60,3 +60,10 @@ describe('Test safeStringify', () => {
     expect(helper.safeStringify(obj)).toStrictEqual('[Unserializable object]')
   })
 })
+
+describe('Test days', () => {
+  it('should return number of days between two dates', () => {
+    expect(helper.days(new Date(2025, 0, 1), new Date(2025, 0, 3))).toBe(2)
+    expect(helper.days(undefined, undefined)).toBe(0)
+  })
+})

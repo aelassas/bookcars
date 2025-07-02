@@ -195,6 +195,10 @@ const carSchema = new Schema<env.Car>(
     co2: {
       type: Number,
     },
+    blockOnPay: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

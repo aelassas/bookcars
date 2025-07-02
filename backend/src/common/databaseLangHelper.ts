@@ -1,10 +1,10 @@
+import mongoose, { Model } from 'mongoose'
 import * as env from '../config/env.config'
 import * as logger from './logger'
 import Country from '../models/Country'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import ParkingSpot from '../models/ParkingSpot'
-import mongoose, { Model } from 'mongoose'
 
 /**
  * Synchronizes multilingual LocationValue entries for a given collection (such as Location, Country, or ParkingSpot) 

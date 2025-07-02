@@ -82,6 +82,7 @@ const CreateCar = () => {
       available: true,
       fullyBooked: false,
       comingSoon: false,
+      blockOnPay: true,
       type: '',
       gearbox: '',
       seats: '',
@@ -112,6 +113,7 @@ const CreateCar = () => {
   const available = useWatch({ control, name: 'available' })
   const fullyBooked = useWatch({ control, name: 'fullyBooked' })
   const comingSoon = useWatch({ control, name: 'comingSoon' })
+  const blockOnPay = useWatch({ control, name: 'blockOnPay' })
   const type = useWatch({ control, name: 'type' })
   const gearbox = useWatch({ control, name: 'gearbox' })
   const seats = useWatch({ control, name: 'seats' })
@@ -175,6 +177,7 @@ const CreateCar = () => {
         available: data.available,
         fullyBooked: data.fullyBooked,
         comingSoon: data.comingSoon,
+        blockOnPay: data.blockOnPay,
         type: data.type,
         gearbox: data.gearbox,
         aircon: data.aircon,
@@ -591,6 +594,20 @@ const CreateCar = () => {
                   />
                 )}
                 label={strings.COMING_SOON}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={blockOnPay}
+                    onChange={(e) => setValue('blockOnPay', e.target.checked)}
+                    color="primary"
+                  />
+                )}
+                label={strings.BLOCK_ON_PAY}
                 className="checkbox-fcl"
               />
             </FormControl>

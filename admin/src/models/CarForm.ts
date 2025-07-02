@@ -45,6 +45,7 @@ export const schema = z.object({
   available: z.boolean(),
   fullyBooked: z.boolean(),
   comingSoon: z.boolean(),
+  blockOnPay: z.boolean(),
   type: z.string(),
   gearbox: z.string(),
   seats: z.string(),

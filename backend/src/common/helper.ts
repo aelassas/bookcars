@@ -249,3 +249,13 @@ export const safeStringify = (obj: any) => {
     return '[Unserializable object]'
   }
 }
+
+/**
+ * Get number of days between two dates.
+ *
+ * @param {?Date} [from]
+ * @param {?Date} [to]
+ * @returns {number}
+ */
+export const days = (from?: Date, to?: Date) =>
+  (from && to && Math.ceil(((new Date(to)).getTime() - (new Date(from)).getTime()) / (1000 * 3600 * 24))) || 0
