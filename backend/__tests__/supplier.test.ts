@@ -163,7 +163,7 @@ describe('POST /api/validate-supplier', () => {
       .post('/api/validate-supplier')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(500)
-    
+
     await testHelper.signout(token)
 
     // test failure (error)
@@ -647,7 +647,8 @@ describe('POST /api/frontend-suppliers', () => {
         moreThanFourDoors: true,
       },
       ranges: [bookcarsTypes.CarRange.Midi],
-      days: 3,
+      from: new Date(2024, 0, 1),
+      to: new Date(2024, 1, 1),
     }
     let res = await request(app)
       .post('/api/frontend-suppliers')
@@ -657,14 +658,21 @@ describe('POST /api/frontend-suppliers', () => {
     expect(res.body[0].carCount).toBe(1)
     expect(res.body[1].carCount).toBe(1)
 
-    payload.days = undefined
+    // test failure (from missing)
+    payload.from = undefined
     res = await request(app)
       .post('/api/frontend-suppliers')
       .send(payload)
-    expect(res.statusCode).toBe(200)
-    expect(res.body.length).toBe(2)
-    expect(res.body[0].carCount).toBe(1)
-    expect(res.body[1].carCount).toBe(1)
+    expect(res.statusCode).toBe(400)
+    payload.from = new Date(2024, 0, 1)
+
+    // test failure (to missing)
+    payload.to = undefined
+    res = await request(app)
+      .post('/api/frontend-suppliers')
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.to = new Date(2024, 1, 1)
 
     // test failure (no payload)
     res = await request(app)
@@ -744,6 +752,8 @@ describe('POST /api/admin-suppliers', () => {
         moreThanFourDoors: true,
       },
       ranges: [bookcarsTypes.CarRange.Midi],
+      from: new Date(2024, 0, 1),
+      to: new Date(2024, 1, 1),
     }
     let res = await request(app)
       .post('/api/admin-suppliers')

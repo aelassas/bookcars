@@ -85,6 +85,7 @@ const UpdateCar = () => {
       available: true,
       fullyBooked: false,
       comingSoon: false,
+      blockOnPay: true,
       type: '',
       gearbox: '',
       seats: '',
@@ -117,6 +118,7 @@ const UpdateCar = () => {
   const available = useWatch({ control, name: 'available' })
   const fullyBooked = useWatch({ control, name: 'fullyBooked' })
   const comingSoon = useWatch({ control, name: 'comingSoon' })
+  const blockOnPay = useWatch({ control, name: 'blockOnPay' })
   const type = useWatch({ control, name: 'type' })
   const gearbox = useWatch({ control, name: 'gearbox' })
   const seats = useWatch({ control, name: 'seats' })
@@ -202,6 +204,7 @@ const UpdateCar = () => {
         co2: Number(data.co2) || undefined,
         comingSoon: data.comingSoon,
         fullyBooked: data.fullyBooked,
+        blockOnPay: data.blockOnPay,
         isDateBasedPrice: data.isDateBasedPrice,
         dateBasedPrices: data.dateBasedPrices || [],
       }
@@ -282,6 +285,7 @@ const UpdateCar = () => {
               setValue('available', _car.available)
               setValue('fullyBooked', _car.fullyBooked || false)
               setValue('comingSoon', _car.comingSoon || false)
+              setValue('blockOnPay', _car.blockOnPay || false)
               setValue('type', _car.type)
               setValue('gearbox', _car.gearbox)
               setValue('aircon', _car.aircon)
@@ -681,6 +685,20 @@ const UpdateCar = () => {
                     />
                   )}
                   label={strings.COMING_SOON}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={blockOnPay}
+                      onChange={(e) => setValue('blockOnPay', e.target.checked)}
+                      color="primary"
+                    />
+                  )}
+                  label={strings.BLOCK_ON_PAY}
                   className="checkbox-fcl"
                 />
               </FormControl>

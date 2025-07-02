@@ -382,8 +382,17 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       multimedia,
       rating,
       seats,
-      days,
+      from,
+      to,
     } = body
+
+    if (!from) {
+      throw new Error('from date is required')
+    }
+
+    if (!to) {
+      throw new Error('to date is required')
+    }
 
     // Include pickupLocation and child locations in search results
     const locIds = await Location.find({
@@ -459,6 +468,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     }
 
     let $supplierMatch: mongoose.FilterQuery<any> = {}
+    const days = helper.days(from, to)
     if (days) {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
     }
@@ -485,6 +495,65 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
         {
           $match: $supplierMatch,
         },
+
+        // begining of booking overlap check -----------------------------------
+        // if car.blockOnPay is true and (from, to) overlaps with paid, confirmed or deposit bookings of the car the car will
+        // not be included in search results
+        // ----------------------------------------------------------------------
+        {
+          $lookup: {
+            from: 'Booking',
+            let: { carId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$car', '$$carId'] },
+                      {
+                        // Match only bookings that overlap with the requested rental period
+                        // (i.e., NOT completely before or after the requested time range)
+                        $not: [
+                          {
+                            $or: [
+                              // Booking ends before the requested rental period starts → no overlap
+                              { $lt: ['$to', new Date(from)] },
+                              // Booking starts after the requested rental period ends → no overlap
+                              { $gt: ['$from', new Date(to)] }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        // include Paid, Reserved and Deposit bookings
+                        $in: ['$status', [
+                          bookcarsTypes.BookingStatus.Paid,
+                          bookcarsTypes.BookingStatus.Reserved,
+                          bookcarsTypes.BookingStatus.Deposit,
+                        ]]
+                      },
+                      { $ne: ['$status', bookcarsTypes.BookingStatus.Cancelled] } // exclude cancelled bookings
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'overlappingBookings'
+          }
+        },
+        {
+          $match: {
+            $expr: {
+              $or: [
+                { $eq: ['$blockOnPay', false] },
+                { $eq: ['$blockOnPay', null] },
+                { $eq: ['$blockOnPay', undefined] },
+                { $eq: [{ $size: '$overlappingBookings' }, 0] }
+              ]
+            }
+          }
+        },
+        // end of booking overlap check -----------------------------------
 
         // begining of supplierCarLimit -----------------------------------
         {

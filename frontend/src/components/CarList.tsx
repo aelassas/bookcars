@@ -5,7 +5,6 @@ import {
   Typography
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as bookcarsHelper from ':bookcars-helper'
 import Const from '@/config/const'
 import env from '@/config/env.config'
 import * as helper from '@/common/helper'
@@ -135,7 +134,8 @@ const CarList = ({
         multimedia: _multimedia,
         rating: _rating,
         seats: _seats,
-        days: bookcarsHelper.days(from, to),
+        from,
+        to,
         includeAlreadyBookedCars,
         includeComingSoonCars,
       }

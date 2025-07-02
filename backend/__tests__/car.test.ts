@@ -162,6 +162,7 @@ describe('POST /api/create-car', () => {
     expect(car.range).toBe(payload.range)
     expect(car.multimedia).toStrictEqual(payload.multimedia)
     expect(car.rating).toBe(payload.rating)
+    expect(car.blockOnPay).toBe(true)
     CAR1_ID = res.body._id
 
     // test success date based price
@@ -311,6 +312,7 @@ describe('PUT /api/update-car', () => {
       fullyBooked: false,
       isDateBasedPrice: true,
       dateBasedPrices,
+      blockOnPay: false,
     }
     let res = await request(app)
       .put('/api/update-car')
@@ -352,6 +354,7 @@ describe('PUT /api/update-car', () => {
     expect(car.fullyBooked).toBe(payload.fullyBooked)
     expect(car.isDateBasedPrice).toBe(payload.isDateBasedPrice)
     expect(car.dateBasedPrices.length).toBe(payload.dateBasedPrices.length)
+    expect(car.blockOnPay).toBe(false)
 
     // test success (dateBasedPrices undefined)
     const car3 = new Car({
@@ -833,7 +836,8 @@ describe('POST /api/frontend-cars/:page/:size', () => {
         moreThanFourDoors: true,
       },
       fuelPolicy: [bookcarsTypes.FuelPolicy.LikeForLike],
-      days: 3,
+      from: new Date(2024, 0, 1),
+      to: new Date(2024, 1, 1),
     }
     let res = await request(app)
       .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
@@ -850,13 +854,6 @@ describe('POST /api/frontend-cars/:page/:size', () => {
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
     payload.includeAlreadyBookedCars = false
     payload.includeComingSoonCars = false
-
-    payload.days = undefined
-    res = await request(app)
-      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
-      .send(payload)
-    expect(res.statusCode).toBe(200)
-    expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
     // test success (filter)
     payload.rating = undefined
@@ -911,6 +908,22 @@ describe('POST /api/frontend-cars/:page/:size', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+    // test failure (from missing)
+    payload.from = undefined
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.from = new Date(2024, 0, 1)
+
+    // test failure (to missing)
+    payload.to = undefined
+    res = await request(app)
+      .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+      .send(payload)
+    expect(res.statusCode).toBe(400)
+    payload.to = new Date(2024, 1, 1)
 
     // test failure (no payload)
     res = await request(app)

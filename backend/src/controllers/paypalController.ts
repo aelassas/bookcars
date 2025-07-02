@@ -86,9 +86,6 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       if (!car) {
         throw new Error(`Car ${booking.car} not found`)
       }
-      // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
-      //   car.fullyBooked = true
-      // }
       car.trips += 1
       await car.save()
 
