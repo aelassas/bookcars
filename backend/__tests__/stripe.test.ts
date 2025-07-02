@@ -29,7 +29,7 @@ afterAll(async () => {
 
 describe('POST /api/create-checkout-session', () => {
   it('should create checkout session', async () => {
-    await jest.resetModules()
+    jest.resetModules()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
         customers: {
@@ -105,7 +105,7 @@ describe('POST /api/create-checkout-session', () => {
     }
 
     // test success (create new user)
-    await jest.resetModules()
+    jest.resetModules()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
         customers: {
@@ -153,7 +153,7 @@ describe('POST /api/create-checkout-session', () => {
     expect(res.body.customerId).not.toBeNull()
 
     // test failure (create checkout sessions failure)
-    await jest.resetModules()
+    jest.resetModules()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
         customers: {
@@ -279,7 +279,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       await booking.save()
 
       // test success
-      await jest.resetModules()
+      jest.resetModules()
       await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
         default: {
           checkout: {
@@ -353,7 +353,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         sessionId,
       })
       await booking.save()
-      await jest.resetModules()
+      jest.resetModules()
       await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
         default: {
           checkout: {
@@ -372,7 +372,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(204)
-      await jest.resetModules()
+      jest.resetModules()
 
       // test failure (booking exists, order does not exist)
       res = await request(app)
@@ -406,7 +406,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         sessionId: sessionId2,
       })
       await booking2.save()
-      await jest.resetModules()
+      jest.resetModules()
       await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
         default: {
           checkout: {
@@ -428,7 +428,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       const b = await Booking.findById(booking2.id)
       expect(b).toBeFalsy()
       booking2 = undefined
-      await jest.resetModules()
+      jest.resetModules()
 
       // test failure (missing members)
       const sessionId3 = nanoid()
@@ -452,7 +452,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         sessionId: sessionId3,
       })
       await booking3.save()
-      await jest.resetModules()
+      jest.resetModules()
       await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
         default: {
           checkout: {
@@ -547,7 +547,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId3}`)
       expect(res.statusCode).toBe(400)
-      await jest.resetModules()
+      jest.resetModules()
     } catch (err) {
       console.error(err)
       throw new Error(`Error during /api/check-checkout-session/: ${err}`)
@@ -582,7 +582,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
 
 describe('POST /api/create-payment-intent', () => {
   it('should create payment intents', async () => {
-    await jest.resetModules()
+    jest.resetModules()
     const receiptEmail = testHelper.GetRandomEmail()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
@@ -664,7 +664,7 @@ describe('POST /api/create-payment-intent', () => {
     //
     // Test success (create user)
     //
-    await jest.resetModules()
+    jest.resetModules()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
         customers: {
@@ -711,7 +711,7 @@ describe('POST /api/create-payment-intent', () => {
     //
     // Test create payment intent failure
     //
-    await jest.resetModules()
+    jest.resetModules()
     await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
       default: {
         customers: {
