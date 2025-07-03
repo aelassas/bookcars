@@ -144,7 +144,7 @@ describe('POST /api/create-location', () => {
       names: LOCATION_NAMES,
       latitude: 28.0268755,
       longitude: 1.6528399999999976,
-      image: 'unknown.jpg',
+      image: `${nanoid()}.jpg`,
       supplier: SUPPLIER_ID,
     }
     let res = await request(app)
