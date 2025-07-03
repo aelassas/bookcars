@@ -10,6 +10,8 @@ import * as env from '../src/config/env.config'
 import Booking from '../src/models/Booking'
 import User from '../src/models/User'
 import Car from '../src/models/Car'
+import Notification from '../src/models/Notification'
+import NotificationCounter from '../src/models/NotificationCounter'
 
 //
 // Connecting and initializing the database before running the test suite
@@ -298,6 +300,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
+      await testHelper.deleteNotifications(booking.id)
 
       // test failure (booking not found)
       res = await request(app)
@@ -330,6 +333,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
+await testHelper.deleteNotifications(booking.id)
 
       // test failure (stripe order error)
       await booking.deleteOne()
@@ -561,6 +565,8 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       }
       await car.deleteOne()
       await driver.deleteOne()
+      await Notification.deleteMany({ user: driver.id })
+      await NotificationCounter.deleteMany({ user: driver.id })
       await testHelper.deleteLocation(locationId)
       await testHelper.deleteSupplier(supplierId)
     }
