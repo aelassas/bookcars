@@ -10,6 +10,8 @@ import Booking from '../src/models/Booking'
 import app from '../src/app'
 import Car from '../src/models/Car'
 import User from '../src/models/User'
+import Notification from '../src/models/Notification'
+import NotificationCounter from '../src/models/NotificationCounter'
 
 //
 // Connecting and initializing the database before running the test suite
@@ -175,6 +177,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       let res = await request(app)
         .post(`/api/check-paypal-order/${booking.id}/${orderId}`)
       expect(res.statusCode).toBe(200)
+      await testHelper.deleteNotifications(booking.id)
 
       // test success (deposit)
       await booking.deleteOne()
@@ -201,6 +204,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       res = await request(app)
         .post(`/api/check-paypal-order/${booking.id}/${orderId}`)
       expect(res.statusCode).toBe(200)
+      await testHelper.deleteNotifications(booking.id)
 
       // test failure (paypal order error)
       await booking.deleteOne()
@@ -407,6 +411,8 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       }
       await car.deleteOne()
       await driver.deleteOne()
+      await Notification.deleteMany({ user: driver.id })
+      await NotificationCounter.deleteMany({ user: driver.id })
       await testHelper.deleteLocation(locationId)
       await testHelper.deleteSupplier(supplierId)
     }
