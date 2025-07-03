@@ -116,6 +116,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
       //
       // Delete user in case of smtp failure
       //
+      await Token.deleteMany({ user: user.id })
       await user.deleteOne()
     } catch (deleteErr) {
       logger.error(`[user.signup] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, deleteErr)

@@ -85,6 +85,42 @@ const CarFilter = ({
     }
   }, [sameLocation])
 
+  useEffect(() => {
+      const minPickupDuration = env.MIN_PICK_UP_HOURS * 60 * 60 * 1000
+      const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
+  
+      if (from) {
+        let __minDate = new Date(from)
+        __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+        setMinDate(__minDate)
+  
+        const minPickupTime = from.getTime() - Date.now()
+  
+        if (minPickupTime < minPickupDuration) {
+          setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
+        } else if (errors.from) {
+          clearErrors('from')
+        }
+      }
+  
+      if (from && to) {
+        const rentalDuration = to.getTime() - from.getTime()
+  
+        if (from.getTime() > to.getTime()) {
+          const _to = new Date(from)
+          if (env.MIN_RENTAL_HOURS < 24) {
+            _to.setDate(_to.getDate() + 1)
+          } else {
+            _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+          }
+          setValue('to', _to)
+        } else if (rentalDuration < minRentalDuration) {
+          setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
+        } else if (errors.to) {
+          clearErrors('to')
+        }
+      }
+    }, [from, to, setValue, setError, clearErrors, errors.from, errors.to])
 
   const handleSameLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue('sameLocation', e.target.checked)
@@ -113,43 +149,6 @@ const CarFilter = ({
       const _dropOffLocation = await LocationService.getLocation(dropOffLocationId) as LocationField
 
       setValue('dropOffLocation', _dropOffLocation)
-    }
-  }
-
-  const checkDates = () => {
-    const minPickupDuration = env.MIN_PICK_UP_HOURS * 60 * 60 * 1000
-    const minRentalDuration = env.MIN_RENTAL_HOURS * 60 * 60 * 1000
-
-    if (from) {
-      let __minDate = new Date(from)
-      __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
-      setMinDate(__minDate)
-
-      const minPickupTime = from.getTime() - Date.now()
-
-      if (minPickupTime < minPickupDuration) {
-        setError('from', { message: strings.MIN_PICK_UP_HOURS_ERROR })
-      } else if (errors.from) {
-        clearErrors('from')
-      }
-    }
-
-    if (from && to) {
-      const rentalDuration = to.getTime() - from.getTime()
-
-      if (from.getTime() > to.getTime()) {
-        const _to = new Date(from)
-        if (env.MIN_RENTAL_HOURS < 24) {
-          _to.setDate(_to.getDate() + 1)
-        } else {
-          _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
-        }
-        setValue('to', _to)
-      } else if (rentalDuration < minRentalDuration) {
-        setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
-      } else if (errors.to) {
-        clearErrors('to')
-      }
     }
   }
 
@@ -221,7 +220,6 @@ const CarFilter = ({
             onChange={(date) => {
               if (date) {
                 setValue('from', date, { shouldValidate: true })
-                checkDates()
               } else {
                 setValue('from', null)
                 setMinDate(_minDate)
@@ -242,7 +240,6 @@ const CarFilter = ({
             onChange={(date) => {
               if (date) {
                 setValue('to', date, { shouldValidate: true })
-                checkDates()
               } else {
                 setValue('to', null)
               }

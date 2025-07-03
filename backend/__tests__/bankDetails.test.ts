@@ -7,8 +7,10 @@ import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import BankDetails from '../src/models/BankDetails'
+import mongoose from 'mongoose'
 
 let bankDetails: bookcarsTypes.BankDetails | null = null
+let id: string
 
 //
 // Connecting and initializing the database before running the test suite
@@ -29,6 +31,9 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
+  if (!bankDetails || (id && (new mongoose.Types.ObjectId(bankDetails?._id)).equals(id))) {
+    await BankDetails.deleteOne({ _id: id })
+  }
   if (bankDetails) {
     await BankDetails.deleteMany()
     const _bankDetails = new BankDetails({
@@ -62,6 +67,7 @@ describe('POST /api/upsert-bank-details', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .send(payload)
     expect(res.statusCode).toBe(200)
+    id = res.body._id
     expect(res.body._id).toBeTruthy()
     expect(res.body.accountHolder).toBe(payload.accountHolder)
     expect(res.body.bankName).toBe(payload.bankName)
