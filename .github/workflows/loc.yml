@@ -1,5 +1,5 @@
 on: [push]
-name: Lines of Code
+name: loc
 
 jobs:
   loc_job:
