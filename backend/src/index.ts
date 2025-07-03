@@ -53,7 +53,7 @@ const start = async (): Promise<void> => {
     const server = await createServer()
 
     server.listen(env.PORT, () => {
-      logger.success(`${protocol} server is running on port ${env.PORT}`)
+      logger.info(`${protocol} server is running on port ${env.PORT}`)
     })
 
     const shutdown = async (signal: string): Promise<void> => {
@@ -67,7 +67,7 @@ const start = async (): Promise<void> => {
 
       server.close(async () => {
         clearTimeout(shutdownTimeout)
-        logger.success(`${protocol} server closed`)
+        logger.info(`${protocol} server closed`)
         await databaseHelper.close(true)
         process.exit(0)
       })

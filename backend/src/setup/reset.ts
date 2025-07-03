@@ -22,7 +22,7 @@ try {
     await NotificationCounter.deleteMany({ user: adminUser._id })
     await Notification.deleteMany({ user: adminUser._id })
     await adminUser.deleteOne()
-    logger.success('Admin user deleted successfully')
+    logger.info('Admin user deleted successfully')
   } else {
     logger.info('Admin user does not exist')
   }

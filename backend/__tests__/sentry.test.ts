@@ -42,7 +42,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -55,7 +54,7 @@ describe('instrument.ts ESM', () => {
         dsn: 'https://example@dsn.io/123',
         tracesSampleRate: 0.5,
       }))
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
     })
   })
 
@@ -68,7 +67,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -81,7 +79,7 @@ describe('instrument.ts ESM', () => {
         tracesSampleRate: 0,
       }))
       expect(logger.info).toHaveBeenCalledWith('[Sentry] Traces sample rate is set to 0, no transactions will be sent.')
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
     })
   })
 
@@ -96,7 +94,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -107,7 +104,7 @@ describe('instrument.ts ESM', () => {
       expect(Sentry.init).toHaveBeenCalledWith(expect.objectContaining({
         environment: 'production',
       }))
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
     })
   })
 
@@ -122,7 +119,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -133,7 +129,7 @@ describe('instrument.ts ESM', () => {
       expect(Sentry.init).toHaveBeenCalledWith(expect.objectContaining({
         environment: 'development',
       }))
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
     })
   })
 
@@ -148,7 +144,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -159,7 +154,7 @@ describe('instrument.ts ESM', () => {
       expect(Sentry.init).toHaveBeenCalledWith(expect.objectContaining({
         environment: 'development',
       }))
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
     })
   })
 
@@ -172,7 +167,6 @@ describe('instrument.ts ESM', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
     }
     jest.unstable_mockModule('../src/common/logger.js', () => logger)
 
@@ -211,7 +205,6 @@ describe('Sentry initialization in app.ts', () => {
 
     const logger = {
       info: jest.fn(),
-      success: jest.fn(),
       warn: jest.fn(),
       error: jest.fn(),
     }
@@ -226,7 +219,7 @@ describe('Sentry initialization in app.ts', () => {
         tracesSampleRate: 0,
       }))
       expect(logger.info).toHaveBeenCalledWith('[Sentry] Traces sample rate is set to 0, no transactions will be sent.')
-      expect(logger.success).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
+      expect(logger.info).toHaveBeenCalledWith('[Sentry] Initialized with DSN:', 'https://example@dsn.io/123')
 
       await databaseHelper.connect(DB_URI, false, false)
       const app = (await import('../src/app.js')).default
