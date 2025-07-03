@@ -138,9 +138,9 @@ const generateMarkdown = async () => {
 
     await mkdir('.github', { recursive: true })
     await writeFile('.github/RELEASES.md', lines.join('\n'), 'utf-8')
-    console.log('✅ .github/RELEASES.md generated successfully.')
+    console.log('.github/RELEASES.md generated successfully.')
   } catch (err) {
-    console.error('❌ Error generating RELEASES.md:', err.message)
+    console.error('Error generating RELEASES.md:', err.message)
   }
 }
 
