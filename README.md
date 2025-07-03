@@ -15,6 +15,8 @@
 https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 -->
 
+[![](https://bookcars.github.io/content/cover-1.png)](https://wexcommerce.dynv6.net:3002/)
+
 ## BookCars
 
 BookCars is an open-source and cross-platform car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
