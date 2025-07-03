@@ -21,7 +21,7 @@ if (env.ENABLE_SENTRY) {
     // https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#tracesSampleRate
     tracesSampleRate: env.SENTRY_TRACES_SAMPLE_RATE,
   })
-  logger.success('[Sentry] Initialized with DSN:', env.SENTRY_DSN_BACKEND)
+  logger.info('[Sentry] Initialized with DSN:', env.SENTRY_DSN_BACKEND)
 } else {
   logger.info('[Sentry] Skipped: Disabled or missing DSN.')
 }

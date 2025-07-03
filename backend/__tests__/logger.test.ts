@@ -12,8 +12,6 @@ describe('Test logging', () => {
       logger.info('info test')
       logger.info('info test', obj)
       logger.info('info test', 'boom')
-      logger.success('success test')
-      logger.success('success test', obj)
       logger.warn('warn test')
       logger.warn('warn test', obj)
       logger.error('error test')
@@ -30,26 +28,12 @@ describe('Test logging', () => {
       logger.enableLogging()
       logger.info('info test')
       logger.info('info test', obj)
-      logger.success('success test')
-      logger.success('success test', obj)
       logger.warn('warn test')
       logger.warn('warn test', obj)
       logger.enableErrorLogging()
       logger.error('error test')
       logger.error('error test', obj)
       logger.error('error test', new Error('test error'))
-
-      // test logger with TERM_PROGRAM environment variable
-      const originalTermProgram = process.env.TERM_PROGRAM
-      process.env.TERM_PROGRAM = ''
-      jest.resetModules()
-      logger = await import('../src/common/logger.js')
-      logger.info('ℹ️info ⚠️warn')
-      process.env.TERM_PROGRAM = 'vscode'
-      jest.resetModules()
-      logger = await import('../src/common/logger.js')
-      logger.info('ℹ️info ⚠️warn')
-      process.env.TERM_PROGRAM = originalTermProgram
     } catch {
       res = false
     }

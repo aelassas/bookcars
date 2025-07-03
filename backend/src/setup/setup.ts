@@ -31,7 +31,7 @@ try {
       verified: true,
     })
     await newAdmin.save()
-    logger.success('Admin user created successfully')
+    logger.info('Admin user created successfully')
   } else {
     logger.info('Admin user already exists')
   }

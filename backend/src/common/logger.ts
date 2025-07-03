@@ -18,28 +18,6 @@ let enableLogs = true
 let enableErrorLogs = true
 
 /**
- * Map of log levels to emoji prefixes.
- */
-const prefixMap = {
-  info: 'ℹ️',
-  warn: '⚠️',
-  success: '✅',
-  error: '❌',
-}
-
-/**
- * Fixes the message formatting for specific terminals (e.g. VSCode)
- * by adding spaces after certain emojis to prevent squishing.
- *
- * @param {string} message - The log message to fix.
- * @returns {string} - The fixed message.
- */
-const fixMessage = (message: string): string => {
-  const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
-  return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
-}
-
-/**
  * Winston log message format.
  */
 const logFormat = format.printf(({ timestamp, level, message }) =>
@@ -75,21 +53,19 @@ type LogLevel = 'info' | 'warn' | 'error'
  * Core logging function used by exported log methods.
  *
  * @param {LogLevel} level - The log level ('info', 'warn', or 'error').
- * @param {string} prefix - Emoji prefix for the log message.
  * @param {string} message - The main log message.
  * @param {*} [obj] - Optional additional data to log (object or string).
  */
-const log = (level: LogLevel, prefix: string, message: string, obj?: any): void => {
+const log = (level: LogLevel, message: string, obj?: any): void => {
   if (!enableLogs || (level === 'error' && !enableErrorLogs)) {
     return
   }
 
-  const baseMessage = fixMessage(`${prefix} ${message}`)
-  const finalMessage = obj ? `${baseMessage} ${typeof obj === 'string' ? obj : helper.safeStringify(obj)}` : baseMessage
+  const finalMessage = obj ? `${message} ${typeof obj === 'string' ? obj : helper.safeStringify(obj)}` : message
 
   if (level === 'error') {
     if (obj instanceof Error) {
-      logger.error(`${baseMessage} ${obj.message}\n${obj.stack}`)
+      logger.error(`${message} ${obj.message}\n${obj.stack}`)
 
       // Report to Sentry
       if (env.ENABLE_SENTRY) {
@@ -128,7 +104,7 @@ const log = (level: LogLevel, prefix: string, message: string, obj?: any): void 
  * @param {string} message - The message to log.
  * @param {*} [obj] - Optional additional data.
  */
-export const info = (message: string, obj?: any): void => log('info', prefixMap.info, message, obj)
+export const info = (message: string, obj?: any): void => log('info', message, obj)
 
 /**
  * Logs a warning message.
@@ -136,15 +112,7 @@ export const info = (message: string, obj?: any): void => log('info', prefixMap.
  * @param {string} message - The message to log.
  * @param {*} [obj] - Optional additional data.
  */
-export const warn = (message: string, obj?: any): void => log('warn', prefixMap.warn, message, obj)
-
-/**
- * Logs a success message (treated as info level).
- *
- * @param {string} message - The message to log.
- * @param {*} [obj] - Optional additional data.
- */
-export const success = (message: string, obj?: any): void => log('info', prefixMap.success, message, obj)
+export const warn = (message: string, obj?: any): void => log('warn', message, obj)
 
 /**
  * Logs an error message.
@@ -152,7 +120,7 @@ export const success = (message: string, obj?: any): void => log('info', prefixM
  * @param {string} message - The message to log.
  * @param {unknown} [obj] - Optional additional error or data.
  */
-export const error = (message: string, obj?: unknown): void => log('error', prefixMap.error, message, obj)
+export const error = (message: string, obj?: unknown): void => log('error', message, obj)
 
 /**
  * Enables all logging.
