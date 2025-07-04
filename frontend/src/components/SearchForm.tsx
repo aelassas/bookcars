@@ -255,7 +255,6 @@ const SearchForm = ({
   }
 
   const onSubmit = (data: FormFields) => {
-    console.log(',,')
     const valid = validateTimes()
     if (!valid) {
       return
