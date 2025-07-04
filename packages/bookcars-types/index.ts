@@ -613,6 +613,21 @@ export interface UpsertBankDetailsPayload {
   showBankDetailsPage: boolean
 }
 
+export interface Setting {
+  _id: string
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
+}
+
+export interface UpdateSettingsPayload {
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
+}
+
 // 
 // React types
 //

@@ -387,32 +387,41 @@ const Header = ({
                 )}
                 <ListItem
                   onClick={() => {
-                    navigate('/about')
+                    navigate('/settings')
                     handleSideMenuClose()
                   }}
                 >
-                  <ListItemIcon><AboutIcon /></ListItemIcon>
-                  <ListItemText primary={strings.ABOUT} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/tos')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><TosIcon /></ListItemIcon>
-                  <ListItemText primary={strings.TOS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/contact')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><MailIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CONTACT} />
+                  <ListItemIcon><SettingsIcon /></ListItemIcon>
+                  <ListItemText primary={strings.SETTINGS} />
                 </ListItem>
               </List>
+              <ListItem
+                onClick={() => {
+                  navigate('/about')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><AboutIcon /></ListItemIcon>
+                <ListItemText primary={strings.ABOUT} />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  navigate('/tos')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><TosIcon /></ListItemIcon>
+                <ListItemText primary={strings.TOS} />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  navigate('/contact')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><MailIcon /></ListItemIcon>
+                <ListItemText primary={strings.CONTACT} />
+              </ListItem>
             </Drawer>
           </>
           <div style={classes.grow} />
