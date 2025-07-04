@@ -67,3 +67,23 @@ describe('Test days', () => {
     expect(helper.days(undefined, undefined)).toBe(0)
   })
 })
+
+describe('formatPayPalPrice', () => {
+  it('should format PayPal price', () => {
+    expect(helper.formatPayPalPrice(11)).toBe('11.00')
+    expect(helper.formatPayPalPrice(11.1)).toBe('11.10')
+    expect(helper.formatPayPalPrice(11.12)).toBe('11.12')
+  })
+})
+
+describe('delay', () => {
+  it('should delay in ms', async () => {
+    let res = true
+    try {
+      await helper.delay(100)
+    } catch {
+      res = false
+    }
+    expect(res).toBeTruthy()
+  })
+})
