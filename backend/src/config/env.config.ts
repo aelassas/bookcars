@@ -879,3 +879,18 @@ export interface BankDetails extends Document {
   swiftBic: string
   showBankDetailsPage: boolean
 }
+
+/**
+ * Setting Document.
+ *
+ * @export
+ * @interface BankDetails
+ * @typedef {BankDetails}
+ * @extends {Document}
+ */
+export interface Setting extends Document {
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
+}

@@ -13,6 +13,7 @@ import { GlobalProvider } from './context/GlobalContext'
 import * as env from './config/env.config'
 import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
 import { AuthProvider } from '@/context/AuthContext'
+import { SettingProvider } from '@/context/SettingContext'
 import NavigationWrapper from '@/components/NavigationWrapper'
 
 Notifications.setNotificationHandler({
@@ -102,22 +103,24 @@ const App = () => {
   }
 
   return (
-    <GlobalProvider>
-      <AuthProvider>
-        <SafeAreaProvider>
-          <Provider>
-            <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-              <AutocompleteDropdownContextProvider>
-                <NavigationWrapper
-                  ref={navigationRef}
-                  onReady={onReady}
-                />
-              </AutocompleteDropdownContextProvider>
-            </StripeProvider>
-          </Provider>
-        </SafeAreaProvider>
-      </AuthProvider>
-    </GlobalProvider>
+    <SettingProvider>
+      <GlobalProvider>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <Provider>
+              <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
+                <AutocompleteDropdownContextProvider>
+                  <NavigationWrapper
+                    ref={navigationRef}
+                    onReady={onReady}
+                  />
+                </AutocompleteDropdownContextProvider>
+              </StripeProvider>
+            </Provider>
+          </SafeAreaProvider>
+        </AuthProvider>
+      </GlobalProvider>
+    </SettingProvider>
   )
 }
 

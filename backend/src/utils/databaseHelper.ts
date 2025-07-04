@@ -17,6 +17,7 @@ import BankDetails from '../models/BankDetails'
 import DateBasedPrice from '../models/DateBasedPrice'
 import * as databaseTTLHelper from './databaseTTLHelper'
 import * as databaseLangHelper from './databaseLangHelper'
+import * as settingController from '../controllers/settingController'
 
 /**
  * Tracks the current database connection status to prevent redundant connections.
@@ -246,6 +247,7 @@ export const initialize = async (createIndexes: boolean = true): Promise<boolean
       databaseLangHelper.initializeLocations(),
       databaseLangHelper.initializeCountries(),
       databaseLangHelper.initializeParkingSpots(),
+      settingController.init(),
     ])
 
     const res = results.every(Boolean)
