@@ -4,6 +4,6 @@
     ],
     "ext": "ts",
     "ignore": [],
-    "exec": "tsx --experimental-specifier-resolution=node --import ./src/instrument.ts ./src",
+    "exec": "tsx --experimental-specifier-resolution=node --import ./src/monitoring/instrument.ts ./src",
     "legacyWatch": true
 }
