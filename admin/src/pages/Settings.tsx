@@ -19,12 +19,14 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/settings'
 import * as UserService from '@/services/UserService'
 import * as BankDetailsService from '@/services/BankDetailsService'
+import * as SettingService from '@/services/SettingService'
 import Backdrop from '@/components/SimpleBackdrop'
 import Avatar from '@/components/Avatar'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import BankDetailsForm from '@/components/BankDetailsForm'
 import { schema, FormFields } from '@/models/SettingsForm'
+import SettingForm from '@/components/SettingForm'
 
 import '@/assets/css/settings.css'
 
@@ -37,8 +39,8 @@ const Settings = () => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
-
   const [bankDetails, setBankDetails] = useState<bookcarsTypes.BankDetails | null>(null)
+  const [settings, setSettings] = useState<bookcarsTypes.Setting | null>(null)
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -126,6 +128,11 @@ const Settings = () => {
       const bankDetails = await BankDetailsService.getBankDetails()
       if (bankDetails) {
         setBankDetails(bankDetails)
+      }
+
+      const settings = await SettingService.getSettings()
+      if (settings) {
+        setSettings(settings)
       }
 
       setVisible(true)
@@ -216,6 +223,13 @@ const Settings = () => {
             <BankDetailsForm
               bankDetails={bankDetails}
               onSubmit={(data) => setBankDetails(data)}
+            />
+          )}
+
+          {user.type === bookcarsTypes.UserType.Admin && (
+            <SettingForm
+              settings={settings}
+              onSubmit={(data) => setSettings(data)}
             />
           )}
         </div>

@@ -11,6 +11,8 @@ interface DateTimePickerProps {
   label?: string
   minDate?: Date
   maxDate?: Date
+  minTime?: Date
+  maxTime?: Date
   required?: boolean
   language?: string
   variant?: TextFieldVariants
@@ -25,6 +27,8 @@ const DateTimePicker = ({
   label,
   minDate,
   maxDate,
+  minTime,
+  maxTime,
   required,
   variant,
   language,
@@ -73,6 +77,8 @@ const DateTimePicker = ({
         onError={onError}
         minDate={minDate}
         maxDate={maxDate}
+        minTime={minTime}
+        maxTime={maxTime}
         timeSteps={{ hours: 1, minutes: 5 }}
         slotProps={{
           textField: {

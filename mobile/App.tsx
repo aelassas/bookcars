@@ -6,13 +6,14 @@ import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import { StripeProvider } from '@stripe/stripe-react-native'
-import * as helper from './common/helper'
+import * as helper from './utils/helper'
 import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
 import { GlobalProvider } from './context/GlobalContext'
 import * as env from './config/env.config'
 import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
 import { AuthProvider } from '@/context/AuthContext'
+import { SettingProvider } from '@/context/SettingContext'
 import NavigationWrapper from '@/components/NavigationWrapper'
 
 Notifications.setNotificationHandler({
@@ -102,22 +103,24 @@ const App = () => {
   }
 
   return (
-    <GlobalProvider>
-      <AuthProvider>
-        <SafeAreaProvider>
-          <Provider>
-            <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-              <AutocompleteDropdownContextProvider>
-                <NavigationWrapper
-                  ref={navigationRef}
-                  onReady={onReady}
-                />
-              </AutocompleteDropdownContextProvider>
-            </StripeProvider>
-          </Provider>
-        </SafeAreaProvider>
-      </AuthProvider>
-    </GlobalProvider>
+    <SettingProvider>
+      <GlobalProvider>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <Provider>
+              <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
+                <AutocompleteDropdownContextProvider>
+                  <NavigationWrapper
+                    ref={navigationRef}
+                    onReady={onReady}
+                  />
+                </AutocompleteDropdownContextProvider>
+              </StripeProvider>
+            </Provider>
+          </SafeAreaProvider>
+        </AuthProvider>
+      </GlobalProvider>
+    </SettingProvider>
   )
 }
 

@@ -11,7 +11,7 @@ import Link from '@/components/Link'
 import i18n from '@/lang/i18n'
 import Error from '@/components/Error'
 import * as UserService from '@/services/UserService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Switch from '@/components/Switch'
 import Header from '@/components/Header'
 

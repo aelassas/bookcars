@@ -6,7 +6,7 @@ import {
   Cancel as CancelledIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 import '@/assets/css/booking-status.css'
 

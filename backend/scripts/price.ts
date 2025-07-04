@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import * as env from '../src/config/env.config'
-import * as logger from '../src/common/logger'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as logger from '../src/utils/logger'
+import * as databaseHelper from '../src/utils/databaseHelper'
 import Car from '../src/models/Car'
 
 if (

@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import request from 'supertest'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'

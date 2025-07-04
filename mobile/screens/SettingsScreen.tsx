@@ -17,7 +17,7 @@ import TextInput from '@/components/TextInput'
 import DateTimePicker from '@/components/DateTimePicker'
 import Switch from '@/components/Switch'
 import Button from '@/components/Button'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as env from '@/config/env.config'
 import DriverLicense from '@/components/DriverLicense'
 

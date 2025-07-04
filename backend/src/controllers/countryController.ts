@@ -2,13 +2,13 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '../common/helper'
+import * as helper from '../utils/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import Country from '../models/Country'
 import LocationValue from '../models/LocationValue'
 import Location from '../models/Location'
-import * as logger from '../common/logger'
+import * as logger from '../utils/logger'
 
 /**
  * Validate a Country name with language code.

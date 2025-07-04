@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
-import * as helper from '../common/helper'
-import * as authHelper from '../common/authHelper'
-import * as logger from '../common/logger'
+import * as helper from '../utils/helper'
+import * as authHelper from '../utils/authHelper'
+import * as logger from '../utils/logger'
 import User from '../models/User'
 
 /**

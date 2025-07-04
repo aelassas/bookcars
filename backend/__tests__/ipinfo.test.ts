@@ -3,7 +3,7 @@ import { jest } from '@jest/globals'
 import request from 'supertest'
 import * as env from '../src/config/env.config'
 import app from '../src/app'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
 
 const ip = '51.91.60.241' // OVH France (Roubaix Data Center)
@@ -64,7 +64,7 @@ describe('GET /api/country-code', () => {
     }))
 
     await jest.isolateModulesAsync(async () => {
-      const ipinfoHelper = await import('../src/common/ipinfoHelper.js')
+      const ipinfoHelper = await import('../src/utils/ipinfoHelper.js')
       const country = await ipinfoHelper.getCountryCode(ip)
       expect(country).toBe('US')
     })

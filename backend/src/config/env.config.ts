@@ -2,7 +2,7 @@ import process from 'node:process'
 import { Document, Types } from 'mongoose'
 import { CookieOptions } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '../common/helper'
+import * as helper from '../utils/helper'
 
 /**
  * Get environment variable value.
@@ -878,4 +878,19 @@ export interface BankDetails extends Document {
   iban: string
   swiftBic: string
   showBankDetailsPage: boolean
+}
+
+/**
+ * Setting Document.
+ *
+ * @export
+ * @interface BankDetails
+ * @typedef {BankDetails}
+ * @extends {Document}
+ */
+export interface Setting extends Document {
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
 }

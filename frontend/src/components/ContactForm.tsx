@@ -17,7 +17,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/contact-form'
 import * as UserService from '@/services/UserService'
 import { useRecaptchaContext, RecaptchaContextType } from '@/context/RecaptchaContext'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/ContactForm'
 
 import '@/assets/css/contact-form.css'

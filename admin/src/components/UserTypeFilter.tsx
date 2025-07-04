@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 import '@/assets/css/user-type-filter.css'
 

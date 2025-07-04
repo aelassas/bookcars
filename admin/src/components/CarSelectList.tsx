@@ -15,7 +15,7 @@ import { strings as blStrings } from '@/lang/booking-list'
 import { strings } from '@/lang/booking-car-list'
 import * as CarService from '@/services/CarService'
 import MultipleSelect from './MultipleSelect'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 interface CarSelectListProps {
   label?: string

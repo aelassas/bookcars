@@ -43,8 +43,8 @@ import { strings as commonStrings } from '@/lang/common'
 import * as UserService from '@/services/UserService'
 import * as BankDetailsService from '@/services/BankDetailsService'
 import Avatar from './Avatar'
-import * as langHelper from '@/common/langHelper'
-import * as helper from '@/common/helper'
+import * as langHelper from '@/utils/langHelper'
+import * as helper from '@/utils/helper'
 import { useNotificationContext, NotificationContextType } from '@/context/NotificationContext'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 
@@ -387,32 +387,41 @@ const Header = ({
                 )}
                 <ListItem
                   onClick={() => {
-                    navigate('/about')
+                    navigate('/settings')
                     handleSideMenuClose()
                   }}
                 >
-                  <ListItemIcon><AboutIcon /></ListItemIcon>
-                  <ListItemText primary={strings.ABOUT} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/tos')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><TosIcon /></ListItemIcon>
-                  <ListItemText primary={strings.TOS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/contact')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><MailIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CONTACT} />
+                  <ListItemIcon><SettingsIcon /></ListItemIcon>
+                  <ListItemText primary={strings.SETTINGS} />
                 </ListItem>
               </List>
+              <ListItem
+                onClick={() => {
+                  navigate('/about')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><AboutIcon /></ListItemIcon>
+                <ListItemText primary={strings.ABOUT} />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  navigate('/tos')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><TosIcon /></ListItemIcon>
+                <ListItemText primary={strings.TOS} />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  navigate('/contact')
+                  handleSideMenuClose()
+                }}
+              >
+                <ListItemIcon><MailIcon /></ListItemIcon>
+                <ListItemText primary={strings.CONTACT} />
+              </ListItem>
             </Drawer>
           </>
           <div style={classes.grow} />

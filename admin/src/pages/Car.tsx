@@ -32,7 +32,7 @@ import NoMatch from './NoMatch'
 import Error from './Error'
 import Avatar from '@/components/Avatar'
 import BookingList from '@/components/BookingList'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 import DoorsIcon from '@/assets/img/car-door.png'
 import '@/assets/css/car.css'

@@ -1,4 +1,4 @@
-import './instrument'
+import './monitoring/instrument'
 import * as Sentry from '@sentry/node'
 import express from 'express'
 import compression from 'compression'
@@ -20,7 +20,8 @@ import countryRoutes from './routes/countryRoutes'
 import paypalRoutes from './routes/paypalRoutes'
 import ipinfoRoutes from './routes/ipinfoRoutes'
 import bankDetailsRoutes from './routes/bankDetailsRoutes'
-import * as helper from './common/helper'
+import settingRoutes from './routes/settingRoutes'
+import * as helper from './utils/helper'
 
 const app = express()
 
@@ -63,6 +64,7 @@ app.use('/', countryRoutes)
 app.use('/', paypalRoutes)
 app.use('/', ipinfoRoutes)
 app.use('/', bankDetailsRoutes)
+app.use('/', settingRoutes)
 
 if (env.ENABLE_SENTRY) {
   Sentry.setupExpressErrorHandler(app)

@@ -6,11 +6,12 @@ import { addHours } from 'date-fns'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Switch from '@/components/Switch'
 import Button from '@/components/Button'
 import LocationSelectList from '@/components/LocationSelectList'
 import DateTimePicker from '@/components/DateTimePicker'
+import { useSetting } from '@/context/SettingContext'
 
 export interface SearchFormProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
@@ -44,6 +45,13 @@ const SearchForm = (
 ) => {
   const isFocused = useIsFocused()
 
+  const { settings } = useSetting()
+  const minTime = new Date()
+  minTime.setHours(settings!.minPickupDropoffHour, 0, 0, 0)
+
+  const maxTime = new Date()
+  maxTime.setHours(settings!.maxPickupDropoffHour, 0, 0, 0)
+
   const [pickupLocationId, setPickupLocationId] = useState(pickupLocation || '')
   const [dropOffLocationId, setDropOffLocationId] = useState(dropOffLocation || '')
   const [sameLocation, setSameLocation] = useState(pickupLocation === dropOffLocation)
@@ -62,6 +70,8 @@ const SearchForm = (
   const [visible, setVisible] = useState(false)
   const [minPickupHoursError, setMinPickupHoursError] = useState(false)
   const [minRentalHoursError, setMinRentalHoursError] = useState(false)
+  const [fromHourError, setFromHourError] = useState(false)
+  const [toToError, setToHourError] = useState(false)
 
   useEffect(() => {
     if (pickupLocation) {
@@ -80,10 +90,10 @@ const SearchForm = (
 
     const _fromDate = __fromDate || new Date()
     if (!__fromDate) {
-      if (env.MIN_PICK_UP_HOURS < 72) {
+      if (settings!.minPickupHours < 72) {
         _fromDate.setDate(_fromDate.getDate() + 3)
       } else {
-        _fromDate.setDate(_fromDate.getDate() + Math.ceil(env.MIN_PICK_UP_HOURS / 24) + 1)
+        _fromDate.setDate(_fromDate.getDate() + Math.ceil(settings!.minPickupHours / 24) + 1)
       }
       _fromDate.setHours(0)
       _fromDate.setMinutes(0)
@@ -98,10 +108,10 @@ const SearchForm = (
 
     const _toDate = __toDate || new Date(_fromDate)
     if (!__toDate) {
-      if (env.MIN_RENTAL_HOURS < 72) {
+      if (settings!.minRentalHours < 72) {
         _toDate.setDate(_toDate.getDate() + 3)
       } else {
-        _toDate.setDate(_toDate.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+        _toDate.setDate(_toDate.getDate() + Math.ceil(settings!.minRentalHours / 24) + 1)
       }
     }
 
@@ -111,7 +121,7 @@ const SearchForm = (
     }
 
     let _minDate = new Date(_fromDate)
-    _minDate = addHours(_minDate, env.MIN_RENTAL_HOURS)
+    _minDate = addHours(_minDate, settings!.minRentalHours)
 
     setMinDate(_minDate)
     setFromDate(_fromDate)
@@ -120,7 +130,7 @@ const SearchForm = (
     setToTime(_toTime)
 
     let __minDate = new Date()
-    __minDate = addHours(__minDate, env.MIN_PICK_UP_HOURS)
+    __minDate = addHours(__minDate, settings!.minPickupHours)
     setFromMinDate(__minDate)
 
     setInit(true)
@@ -166,18 +176,18 @@ const SearchForm = (
     }
   }
 
+  const validateHour = (hour: number) => {
+    if (!settings) {
+      return false
+    }
+    if (hour >= settings.minPickupDropoffHour && hour <= settings.maxPickupDropoffHour) {
+      return true
+    }
+    return false
+  }
+
   const handleSearch = () => {
     blurLocations()
-
-    if (!pickupLocationId) {
-      helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
-      return
-    }
-
-    if (!dropOffLocationId) {
-      helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
-      return
-    }
 
     if (!fromDate) {
       helper.toast(i18n.t('FROM_DATE_EMPTY'))
@@ -203,13 +213,45 @@ const SearchForm = (
     const from = helper.dateTime(fromDate, fromTime)
     const to = helper.dateTime(toDate, toTime)
 
-    if (from.getTime() - now < env.MIN_PICK_UP_HOURS * 60 * 60 * 1000) {
-      setMinPickupHoursError(true)
+    // check hours
+    const fromHour = from.getHours()
+    const fromHourValid = validateHour(fromHour)
+    if (!fromHourValid) {
+      setFromHourError(true)
+    }
+
+    const toHour = to.getHours()
+    const toHourValid = validateHour(toHour)
+    if (!toHourValid) {
+      setToHourError(true)
+    }
+
+    if (!fromHourValid || !toHourValid) {
       return
     }
 
-    if (to.getTime() - from.getTime() < env.MIN_RENTAL_HOURS * 60 * 60 * 1000) {
+    // check dates
+    const fromValid = from.getTime() - now >= settings!.minPickupHours * 60 * 60 * 1000
+    if (!fromValid) {
+      setMinPickupHoursError(true)
+    }
+
+    const toValid = to.getTime() - from.getTime() >= settings!.minRentalHours * 60 * 60 * 1000
+    if (!toValid) {
       setMinRentalHoursError(true)
+    }
+
+    if (!fromValid || !toValid) {
+      return
+    }
+
+    if (!pickupLocationId) {
+      helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
+      return
+    }
+
+    if (!dropOffLocationId) {
+      helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
       return
     }
 
@@ -273,22 +315,23 @@ const SearchForm = (
             if (date) {
               setMinPickupHoursError(false)
               setMinRentalHoursError(false)
+              setFromHourError(false)
               if (date.getTime() > toDate!.getTime()) {
                 const _to = new Date(date)
-                if (env.MIN_RENTAL_HOURS < 24) {
+                if (settings!.minRentalHours < 24) {
                   _to.setDate(_to.getDate() + 1)
                 } else {
-                  _to.setDate(_to.getDate() + Math.ceil(env.MIN_RENTAL_HOURS / 24) + 1)
+                  _to.setDate(_to.getDate() + Math.ceil(settings!.minRentalHours / 24) + 1)
                 }
                 setToDate(_to)
               }
 
               let __minDate = new Date(date)
-              __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+              __minDate = addHours(__minDate, settings!.minRentalHours)
               setMinDate(__minDate)
             } else {
               let __minDate = new Date()
-              __minDate = addHours(__minDate, env.MIN_RENTAL_HOURS)
+              __minDate = addHours(__minDate, settings!.minRentalHours)
               setMinDate(__minDate)
             }
 
@@ -301,21 +344,28 @@ const SearchForm = (
         <DateTimePicker
           mode="time"
           locale={language}
-          style={minPickupHoursError ? styles.timeComponent : styles.component}
+          style={minPickupHoursError || fromHourError ? styles.timeComponent : styles.component}
           label={i18n.t('FROM_TIME')}
           value={fromTime}
+          minDate={minTime}
+          maxDate={maxTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
             setMinPickupHoursError(false)
             setMinRentalHoursError(false)
+            setFromHourError(false)
 
             setFromTime(time)
           }}
           onPress={blurLocations}
           backgroundColor={backgroundColor}
-          error={minPickupHoursError}
-          helperText={(minPickupHoursError && i18n.t('MIN_PICK_UP_HOURS_ERROR')) || ''}
+          error={minPickupHoursError || fromHourError}
+          helperText={
+            (minPickupHoursError && i18n.t('MIN_PICK_UP_HOURS_ERROR'))
+            || (fromHourError && i18n.t('INVALID_PICK_UP_TIME'))
+            || ''
+          }
         />
 
         <DateTimePicker
@@ -329,8 +379,8 @@ const SearchForm = (
           size={size || undefined}
           onChange={(date) => {
             if (date) {
-              setMinPickupHoursError(false)
               setMinRentalHoursError(false)
+              setToHourError(false)
 
               setToDate(date)
             }
@@ -342,21 +392,27 @@ const SearchForm = (
         <DateTimePicker
           mode="time"
           locale={language}
-          style={minRentalHoursError ? styles.timeComponent : styles.component}
+          style={minRentalHoursError || toToError ? styles.timeComponent : styles.component}
           label={i18n.t('TO_TIME')}
           value={toTime}
+          minDate={minTime}
+          maxDate={maxTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
-            setMinPickupHoursError(false)
             setMinRentalHoursError(false)
+            setToHourError(false)
 
             setToTime(time)
           }}
           onPress={blurLocations}
           backgroundColor={backgroundColor}
-          error={minRentalHoursError}
-          helperText={(minRentalHoursError && i18n.t('MIN_RENTAL_HOURS_ERROR')) || ''}
+          error={minRentalHoursError || toToError}
+          helperText={
+            (minRentalHoursError && i18n.t('MIN_RENTAL_HOURS_ERROR'))
+            || (toToError && i18n.t('INVALID_DROP_OFF_TIME'))
+            || ''
+          }
         />
 
         <Button

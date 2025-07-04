@@ -4,7 +4,7 @@ import { Upload as UploadIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { strings } from '@/lang/contract-list'
 import * as SupplierService from '@/services/SupplierService'
 
