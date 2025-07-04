@@ -7,7 +7,7 @@ import {
 import * as bookcarsTypes from ':bookcars-types'
 import Const from '@/config/const'
 import env from '@/config/env.config'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { strings } from '@/lang/cars'
 import * as CarService from '@/services/CarService'
 import Pager from '@/components/Pager'

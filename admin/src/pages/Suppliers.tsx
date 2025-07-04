@@ -7,7 +7,7 @@ import { strings } from '@/lang/suppliers'
 import Search from '@/components/Search'
 import SupplierList from '@/components/SupplierList'
 import InfoBox from '@/components/InfoBox'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 import '@/assets/css/suppliers.css'
 

@@ -4,9 +4,9 @@ import fs from 'node:fs/promises'
 import http from 'node:http'
 import https, { ServerOptions } from 'node:https'
 import * as env from './config/env.config'
-import * as databaseHelper from './common/databaseHelper'
+import * as databaseHelper from './utils/databaseHelper'
 import app from './app'
-import * as logger from './common/logger'
+import * as logger from './utils/logger'
 
 /**
  * Creates and returns an HTTP or HTTPS server based on environment configuration.

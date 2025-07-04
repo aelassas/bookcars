@@ -7,7 +7,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Button from './Button'
 import i18n from '@/lang/i18n'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Header from './Header'
 import { useAuth } from '@/context/AuthContext'
 

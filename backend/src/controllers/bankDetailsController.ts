@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
-import * as logger from '../common/logger'
+import * as logger from '../utils/logger'
 import i18n from '../lang/i18n'
 import BankDetails from '../models/BankDetails'
 

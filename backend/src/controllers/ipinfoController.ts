@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import * as ipinfoHelper from '../common/ipinfoHelper'
+import * as ipinfoHelper from '../utils/ipinfoHelper'
 
 /**
  * Returns ISO 2 country code from IP.

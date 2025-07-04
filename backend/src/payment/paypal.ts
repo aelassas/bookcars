@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as env from '../config/env.config'
-import * as helper from '../common/helper'
+import * as helper from '../utils/helper'
 
 const PAYPAL_API = env.PAYPAL_SANDBOX
   ? 'https://api-m.sandbox.paypal.com' // PayPal sandbox host (for testing)

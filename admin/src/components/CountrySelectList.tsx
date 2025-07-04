@@ -4,7 +4,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import * as CountryService from '@/services/CountryService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import MultipleSelect from './MultipleSelect'
 
 interface CountrySelectListProps {

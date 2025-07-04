@@ -8,7 +8,7 @@ import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/reset-password'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
 import { schema, FormFields } from '@/models/ForgotPasswordForm'
 

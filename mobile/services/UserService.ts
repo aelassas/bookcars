@@ -3,8 +3,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as Localization from 'expo-localization'
 import axiosInstance from './axiosInstance'
 import * as env from '@/config/env.config'
-import * as AsyncStorage from '@/common/AsyncStorage'
-import * as toastHelper from '@/common/toastHelper'
+import * as AsyncStorage from '@/utils/AsyncStorage'
+import * as toastHelper from '@/utils/toastHelper'
 import * as bookcarsTypes from ':bookcars-types'
 
 /**

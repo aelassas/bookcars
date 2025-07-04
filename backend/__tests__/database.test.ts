@@ -2,8 +2,8 @@ import 'dotenv/config'
 import { jest } from '@jest/globals'
 import type { Model } from 'mongoose'
 import * as env from '../src/config/env.config'
-import * as databaseHelper from '../src/common/databaseHelper'
-import * as databaseLangHelper from '../src/common/databaseLangHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
+import * as databaseLangHelper from '../src/utils/databaseLangHelper'
 import * as testHelper from './testHelper'
 import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
@@ -184,11 +184,11 @@ describe('createTextIndex', () => {
       info: jest.fn(),
       error: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     jest.resetModules()
     await jest.isolateModulesAsync(async () => {
-      const dbh = await import('../src/common/databaseHelper.js')
+      const dbh = await import('../src/utils/databaseHelper.js')
       await dbh.createTextIndex(model, 'myField', 'myIndex')
 
       expect(logger.error).toHaveBeenCalledWith('Failed to create text index:', error)
@@ -205,7 +205,7 @@ describe('checkAndUpdateTTL', () => {
     // Mock databaseTTLHelper
     const createTTLIndexMock = jest.fn(async () => { })
 
-    jest.unstable_mockModule('../src/common/databaseTTLHelper.js', () => ({
+    jest.unstable_mockModule('../src/utils/databaseTTLHelper.js', () => ({
       createTTLIndex: createTTLIndexMock,
     }))
 
@@ -215,13 +215,13 @@ describe('checkAndUpdateTTL', () => {
       warn: jest.fn(),
       error: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     jest.resetModules() // reset module cache
 
     await jest.isolateModulesAsync(async () => {
       // Import databaseHelper after mocking logger and databaseTTLHelper
-      const { checkAndUpdateTTL } = await import('../src/common/databaseHelper.js')
+      const { checkAndUpdateTTL } = await import('../src/utils/databaseHelper.js')
 
       // Prepare a model mock with dropIndex throwing error
       const model = {
@@ -250,7 +250,7 @@ describe('checkAndUpdateTTL', () => {
 describe('initialize', () => {
   it('logs error when some routines fail', async () => {
     // Mock databaseLangHelper to simulate an error
-    jest.unstable_mockModule('../src/common/databaseLangHelper.js', () => ({
+    jest.unstable_mockModule('../src/utils/databaseLangHelper.js', () => ({
       initializeLocations: jest.fn(() => Promise.resolve(true)),
       initializeCountries: jest.fn(() => Promise.resolve(true)),
       initializeParkingSpots: jest.fn(() => Promise.resolve(false)),
@@ -262,13 +262,13 @@ describe('initialize', () => {
       warn: jest.fn(),
       error: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     jest.resetModules() // reset module cache
 
     await jest.isolateModulesAsync(async () => {
       // Import databaseHelper after mocking logger and databaseLangHelper
-      const dbh = await import('../src/common/databaseHelper.js')
+      const dbh = await import('../src/utils/databaseHelper.js')
 
       // test failure 
       const res = await dbh.connect(env.DB_URI, false, false)

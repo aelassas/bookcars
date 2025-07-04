@@ -1,5 +1,5 @@
 import LocalizedStrings from 'localized-strings'
-import * as langHelper from '@/common/langHelper'
+import * as langHelper from '@/utils/langHelper'
 import env from '@/config/env.config'
 
 const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} ${env.WEBSITE_NAME}`

@@ -1,4 +1,4 @@
-import * as helper from '../src/common/helper'
+import * as helper from '../src/utils/helper'
 
 describe('Test string to boolean', () => {
   it('should convert a string to boolean', () => {

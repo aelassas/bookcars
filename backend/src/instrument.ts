@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import * as Sentry from '@sentry/node'
 import * as env from './config/env.config'
-import * as logger from './common/logger'
+import * as logger from './utils/logger'
 
 if (env.ENABLE_SENTRY) {
   if (env.SENTRY_TRACES_SAMPLE_RATE === 0) {

@@ -15,8 +15,8 @@ import ParkingSpot from '../models/ParkingSpot'
 import AdditionalDriver from '../models/AdditionalDriver'
 import BankDetails from '../models/BankDetails'
 import DateBasedPrice from '../models/DateBasedPrice'
-import * as databaseTTLHelper from '../common/databaseTTLHelper'
-import * as databaseLangHelper from '../common/databaseLangHelper'
+import * as databaseTTLHelper from './databaseTTLHelper'
+import * as databaseLangHelper from './databaseLangHelper'
 
 /**
  * Tracks the current database connection status to prevent redundant connections.

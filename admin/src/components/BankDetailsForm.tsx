@@ -8,7 +8,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings as settingsStrings } from '@/lang/settings'
 import { strings } from '@/lang/bank-details-form'
 import * as BankDetailsService from '@/services/BankDetailsService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/BankDetailsForm'
 
 interface BankDetailsFormProps {
