@@ -39,6 +39,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Car fleet management
 * [Flexible Time-Based Car Availability](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked)
 * Booking management
+* [Flexible Rental Date Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
@@ -82,7 +83,7 @@ If this project helped you, saved you time, or inspired you in any way, please c
 
 <!--<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>-->
 <a href="https://www.paypal.me/aelassaspp"><img src="https://aelassas.github.io/content/paypal-button-v2.png" alt="PayPal" width="208"></a>
-<a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" height="38"></a>
+<a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" width="160"></a>
 
 To contribute code or report issues, please read the [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md) to learn about the process, coding standards, and how to submit pull requests.
 
@@ -140,6 +141,7 @@ You can install the Android App by downloading the APK and installing it on any 
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
 7. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)
+7. [Rental Date and Time Configuration](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
 7. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 8. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 9. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
@@ -173,6 +175,7 @@ You can install the Android App by downloading the APK and installing it on any 
 24. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)
 25. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)
 26. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
+
 
 ## License
 
