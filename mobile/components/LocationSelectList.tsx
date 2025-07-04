@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as env from '@/config/env.config'
 import * as LocationService from '@/services/LocationService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { AutocompleteDropdown, AutocompleteDropdownItem } from './AutocompleteDropdown-v4.3.1'
 
 interface LocationSelectListProps {

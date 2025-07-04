@@ -11,7 +11,7 @@ import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import * as NotificationService from '@/services/NotificationService'
 import * as env from '@/config/env.config'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Checkbox from '@/components/Checkbox'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 

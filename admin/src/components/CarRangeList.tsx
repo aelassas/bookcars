@@ -6,7 +6,7 @@ import {
   SelectChangeEvent
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 interface CarRangeListProps {
   value?: string

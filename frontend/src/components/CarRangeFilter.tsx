@@ -3,7 +3,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/car-range-filter'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Accordion from './Accordion'
 
 import '@/assets/css/car-range-filter.css'

@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import i18n from '@/lang/i18n'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import SearchForm from '@/components/SearchForm'

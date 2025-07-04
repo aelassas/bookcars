@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
 
 jest.unstable_mockModule('@sentry/node', () => ({
   init: jest.fn(),
@@ -43,7 +43,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       // Import Sentry AFTER mocks applied
@@ -68,7 +68,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       const Sentry = await import('@sentry/node')
@@ -95,7 +95,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       const Sentry = await import('@sentry/node')
@@ -120,7 +120,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       const Sentry = await import('@sentry/node')
@@ -145,7 +145,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       const Sentry = await import('@sentry/node')
@@ -168,7 +168,7 @@ describe('instrument.ts ESM', () => {
     const logger = {
       info: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       await import('../src/instrument.js')
@@ -208,7 +208,7 @@ describe('Sentry initialization in app.ts', () => {
       warn: jest.fn(),
       error: jest.fn(),
     }
-    jest.unstable_mockModule('../src/common/logger.js', () => logger)
+    jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
     await jest.isolateModulesAsync(async () => {
       const Sentry = await import('@sentry/node')

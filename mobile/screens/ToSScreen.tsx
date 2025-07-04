@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ToS'>) => {
   const isFocused = useIsFocused()

@@ -17,7 +17,7 @@ import {
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { strings as commonStrings } from '@/lang/common'
 import * as UserService from '@/services/UserService'
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FormControl, Input, InputLabel, Paper } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as BankDetailsService from '@/services/BankDetailsService'
 import { strings } from '@/lang/bank-details-form'
 import Layout from '@/components/Layout'

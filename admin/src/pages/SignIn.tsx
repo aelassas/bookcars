@@ -16,7 +16,7 @@ import { strings } from '@/lang/sign-in'
 import * as UserService from '@/services/UserService'
 import Header from '@/components/Header'
 import Error from '@/components/Error'
-import * as langHelper from '@/common/langHelper'
+import * as langHelper from '@/utils/langHelper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import { schema, FormFields } from '@/models/SignInForm'
 

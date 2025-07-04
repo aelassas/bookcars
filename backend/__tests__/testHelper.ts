@@ -12,9 +12,9 @@ import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
-import * as logger from '../src/common/logger'
-import * as helper from '../src/common/helper'
-import * as authHelper from '../src/common/authHelper'
+import * as logger from '../src/utils/logger'
+import * as helper from '../src/utils/helper'
+import * as authHelper from '../src/utils/authHelper'
 
 export const getName = (prefix: string) => {
   expect(prefix.length).toBeGreaterThan(1)

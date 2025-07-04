@@ -27,7 +27,7 @@ describe('mail module', () => {
 
     // Now import nodemailer and mailHelper after mocks are set
     const nodemailer = await import('nodemailer')
-    const { sendMail } = await import('../src/common/mailHelper.js')
+    const { sendMail } = await import('../src/utils/mailHelper.js')
 
     const sendMailMock = jest.fn(() => Promise.resolve({ messageId: '123' }))
     const createTransportMock = nodemailer.createTransport as jest.Mock
@@ -72,7 +72,7 @@ describe('mail module', () => {
 
     // Now import nodemailer and mailHelper after mocks are set
     const nodemailer = await import('nodemailer')
-    const { sendMail } = await import('../src/common/mailHelper.js')
+    const { sendMail } = await import('../src/utils/mailHelper.js')
 
     const sendMailMock = jest.fn(() => Promise.resolve({ messageId: 'abc' }))
     const createTransportMock = nodemailer.createTransport as jest.Mock

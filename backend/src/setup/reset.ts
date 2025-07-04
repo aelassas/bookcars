@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
-import * as databaseHelper from '../common/databaseHelper'
+import * as databaseHelper from '../utils/databaseHelper'
 import User from '../models/User'
-import * as logger from '../common/logger'
+import * as logger from '../utils/logger'
 import NotificationCounter from '../models/NotificationCounter'
 import Notification from '../models/Notification'
 

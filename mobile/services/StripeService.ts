@@ -2,7 +2,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import axiosInstance from './axiosInstance'
 import * as env from '@/config/env.config'
-import * as AsyncStorage from '@/common/AsyncStorage'
+import * as AsyncStorage from '@/utils/AsyncStorage'
 
 /**
  * Order item name max length 250 characters

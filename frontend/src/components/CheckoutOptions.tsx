@@ -11,7 +11,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as csStrings } from '@/lang/cars'
 import { strings } from '@/lang/checkout'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as PaymentService from '@/services/PaymentService'
 
 import '@/assets/css/checkout-options.css'

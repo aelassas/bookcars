@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as BookingService from '@/services/BookingService'
 import Booking from './Booking'
 

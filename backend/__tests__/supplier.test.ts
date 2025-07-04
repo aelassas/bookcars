@@ -6,12 +6,12 @@ import path from 'path'
 import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
-import * as helper from '../src/common/helper'
-import * as authHelper from '../src/common/authHelper'
+import * as helper from '../src/utils/helper'
+import * as authHelper from '../src/utils/authHelper'
 import User from '../src/models/User'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
@@ -182,7 +182,7 @@ describe('POST /api/validate-supplier', () => {
       const testHelper = await import('./testHelper.js')
       const { default: User } = await import('../src/models/User.js')
 
-      const dbh = await import('../src/common/databaseHelper.js')
+      const dbh = await import('../src/utils/databaseHelper.js')
       await dbh.close()
       await dbh.connect(env.DB_URI, false, false)
 

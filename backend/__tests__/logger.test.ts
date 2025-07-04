@@ -5,7 +5,7 @@ describe('Test logging', () => {
   it('should test logging', async () => {
     let res = true
     try {
-      let logger = await import('../src/common/logger.js')
+      let logger = await import('../src/utils/logger.js')
       const obj = { ffo: 'bar' }
 
       // should show logs
@@ -73,7 +73,7 @@ describe('Test logger with sentry', () => {
     }))
 
     await jest.isolateModulesAsync(async () => {
-      const logger = await import('../src/common/logger.js')
+      const logger = await import('../src/utils/logger.js')
       logger.error('test error', new Error('boom'))
       logger.error('test error', { message: 'boom' })
       logger.error('test error')
@@ -110,7 +110,7 @@ describe('Test logger with sentry', () => {
     }))
 
     await jest.isolateModulesAsync(async () => {
-      const logger = await import('../src/common/logger.js')
+      const logger = await import('../src/utils/logger.js')
       logger.error('test error', new Error('boom'))
       logger.error('test error', { message: 'boom' })
       logger.error('test error')

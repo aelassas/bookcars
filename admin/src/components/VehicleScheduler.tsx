@@ -7,7 +7,7 @@ import {
   SchedulerRef,
 } from '@/components/scheduler/types'
 import * as bookcarsTypes from ':bookcars-types'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as BookingService from '@/services/BookingService'
 
 interface VehicleSchedulerProps {

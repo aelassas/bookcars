@@ -1,5 +1,5 @@
 import LocalizedStrings from 'localized-strings'
-import * as langHelper from '@/common/langHelper'
+import * as langHelper from '@/utils/langHelper'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'

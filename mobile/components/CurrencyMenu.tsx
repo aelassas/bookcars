@@ -4,7 +4,7 @@ import { RouteProp, useIsFocused, useNavigation } from '@react-navigation/native
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as StripeService from '@/services/StripeService'
 import { CURRENCIES } from '@/config/env.config'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 interface CurrencyMenuProps {
   route: RouteProp<StackParams, keyof StackParams>

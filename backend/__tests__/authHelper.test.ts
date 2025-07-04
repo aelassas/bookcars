@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { jest } from '@jest/globals'
 import { SignJWT } from 'jose'
 import * as bookcarsTypes from ':bookcars-types'
-import * as authHelper from '../src/common/authHelper'
+import * as authHelper from '../src/utils/authHelper'
 import * as env from '../src/config/env.config'
 
 const jwtSecret = new TextEncoder().encode(env.JWT_SECRET)
@@ -48,7 +48,7 @@ describe('Test validateAccessToken', () => {
       jest.resetModules()
 
       // Import modules after mock is set (inside isolateModulesAsync)
-      const authHelper = await import('../src/common/authHelper')
+      const authHelper = await import('../src/utils/authHelper')
 
       payload = { data: { email } }
       token = await encryptJWT(payload)
