@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { strings as commonStrings } from '@/lang/common'
 
-const numberRegex = /^\d+(\.\d+)?$/
+// const numberRegex = /^\d+(\.\d+)?$/
+const numberRegex = /^\d+$/
 
 const validateHour = (val: string) => {
   const hour = parseFloat(val)
