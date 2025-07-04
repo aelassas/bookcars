@@ -38,8 +38,8 @@ Customers can register through the web frontend or mobile app, search for availa
 * Ready for single or multiple suppliers
 * Car fleet management
 * [Flexible Time-Based Car Availability](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked)
-* Booking management
 * [Flexible Rental Date Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
+* Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
