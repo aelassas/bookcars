@@ -11,7 +11,7 @@ import * as UserService from '@/services/UserService'
 import * as StripeService from '@/services/StripeService'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import * as toastHelper from '@/common/toastHelper'
+import * as toastHelper from '@/utils/toastHelper'
 import * as env from '@/config/env.config'
 
 /**

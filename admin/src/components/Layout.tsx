@@ -4,7 +4,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '@/lang/master'
 import * as UserService from '@/services/UserService'
 import Unauthorized from './Unauthorized'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 
 interface LayoutProps {

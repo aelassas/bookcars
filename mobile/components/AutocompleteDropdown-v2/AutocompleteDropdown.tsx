@@ -7,7 +7,7 @@ import { withFadeAnimation } from './HOC/withFadeAnimation'
 import { NothingFound } from './NothingFound'
 import { RightButton } from './RightButton'
 import { ScrollViewListItem } from './ScrollViewListItem'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 export interface AutocompleteOption {
   id: string

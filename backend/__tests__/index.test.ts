@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import * as databaseHelper from '../src/common/databaseHelper'
+import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
 import * as env from '../src/config/env.config'
 import Booking, { BOOKING_EXPIRE_AT_INDEX_NAME } from '../src/models/Booking'

@@ -1,6 +1,6 @@
 import LocalizedStrings from 'localized-strings'
 import env from '@/config/env.config'
-import * as langHelper from '@/common/langHelper'
+import * as langHelper from '@/utils/langHelper'
 import * as PaymentService from '@/services/PaymentService'
 
 const strings = new LocalizedStrings({

@@ -16,7 +16,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/change-password'
 import * as UserService from '@/services/UserService'
 import Footer from '@/components/Footer'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/ChangePasswordForm'
 
 import '@/assets/css/change-password.css'

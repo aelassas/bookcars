@@ -8,7 +8,7 @@ import { frFR as corefrFR, enUS as coreenUS, esES as coresES } from '@mui/materi
 import { frFR, enUS, esES } from '@mui/x-date-pickers/locales'
 import { frFR as dataGridfrFR, enUS as dataGridenUS, esES as dataGridesEs } from '@mui/x-data-grid/locales'
 import { disableDevTools } from ':disable-react-devtools'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'

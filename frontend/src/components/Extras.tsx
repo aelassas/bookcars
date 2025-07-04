@@ -3,7 +3,7 @@ import { Check as CheckIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as csStrings } from '@/lang/cars'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 
 import '@/assets/css/extras.css'

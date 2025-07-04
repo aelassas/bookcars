@@ -14,8 +14,8 @@ import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 import DateBasedPrice from '../models/DateBasedPrice'
-import * as helper from '../common/helper'
-import * as logger from '../common/logger'
+import * as helper from '../utils/helper'
+import * as logger from '../utils/logger'
 import Location from '../models/Location'
 
 /**

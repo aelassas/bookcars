@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import * as bookcarsTypes from ':bookcars-types'
 
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 
 interface BookingStatusProps {
   style: object

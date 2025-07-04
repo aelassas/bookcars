@@ -7,7 +7,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import TextInput from '@/components/TextInput'
 import Button from '@/components/Button'
 

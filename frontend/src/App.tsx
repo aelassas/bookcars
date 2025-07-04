@@ -5,7 +5,7 @@ import { NotificationProvider } from '@/context/NotificationContext'
 import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import { PayPalProvider } from '@/context/PayPalContext'
-import { init as initGA } from '@/common/ga4'
+import { init as initGA } from '@/utils/ga4'
 import ScrollToTop from '@/components/ScrollToTop'
 import NProgressIndicator from '@/components/NProgressIndicator'
 
