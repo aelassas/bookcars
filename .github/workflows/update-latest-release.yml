@@ -19,11 +19,11 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Update latest-release.json
+      - name: Update .github/latest-release.json
         run: |
-          echo "{\"latestApkUrl\": \"https://github.com/aelassas/bookcars/releases/download/${TAG_NAME}/bookcars-${VERSION}.apk\"}" > latest-release.json
+          echo "{\"latestApkUrl\": \"https://github.com/aelassas/bookcars/releases/download/${TAG_NAME}/bookcars-${VERSION}.apk\"}" > .github/latest-release.json
 
-      - name: Commit and push latest-release.json
+      - name: Commit and push .github/latest-release.json
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
