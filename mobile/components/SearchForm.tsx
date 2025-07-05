@@ -46,11 +46,6 @@ const SearchForm = (
   const isFocused = useIsFocused()
 
   const { settings } = useSetting()
-  const minTime = new Date()
-  minTime.setHours(settings!.minPickupDropoffHour, 0, 0, 0)
-
-  const maxTime = new Date()
-  maxTime.setHours(settings!.maxPickupDropoffHour, 0, 0, 0)
 
   const [pickupLocationId, setPickupLocationId] = useState(pickupLocation || '')
   const [dropOffLocationId, setDropOffLocationId] = useState(dropOffLocation || '')
@@ -347,8 +342,6 @@ const SearchForm = (
           style={minPickupHoursError || fromHourError ? styles.timeComponent : styles.component}
           label={i18n.t('FROM_TIME')}
           value={fromTime}
-          minDate={minTime}
-          maxDate={maxTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
@@ -395,8 +388,6 @@ const SearchForm = (
           style={minRentalHoursError || toToError ? styles.timeComponent : styles.component}
           label={i18n.t('TO_TIME')}
           value={toTime}
-          minDate={minTime}
-          maxDate={maxTime}
           hideClearButton
           size={size || undefined}
           onChange={(time) => {
