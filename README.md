@@ -141,7 +141,7 @@ You can install the Android App by downloading the APK and installing it on any 
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
 7. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)
-7. [Rental Date and Time Configuration](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
+7. [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
 7. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 8. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 9. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
@@ -175,7 +175,6 @@ You can install the Android App by downloading the APK and installing it on any 
 24. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)
 25. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)
 26. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
-
 
 ## License
 
