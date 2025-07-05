@@ -184,6 +184,16 @@ const SearchForm = ({
         } else {
           _to.setDate(_to.getDate() + Math.ceil(settings.minRentalHours / 24) + 1)
         }
+        const _from = new Date(from)
+        const fromHourValid = validateHour(_from.getHours())
+        if (!fromHourValid) {
+          _from.setHours(settings.minPickupDropoffHour)
+          setValue('from', _from)
+        }
+        const toHourValid = validateHour(_to.getHours())
+        if (!toHourValid) {
+          _to.setHours(settings.minPickupDropoffHour)
+        }
         setValue('to', _to)
       } else if (rentalDuration < minRentalDuration) {
         setError('to', { message: strings.MIN_RENTAL_HOURS_ERROR })
