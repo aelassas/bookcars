@@ -38,7 +38,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Ready for single or multiple suppliers
 * Car fleet management
 * [Flexible Time-Based Car Availability](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked)
-* [Flexible Rental Date Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
+* [Flexible Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
 * Booking management
 * [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
@@ -141,7 +141,7 @@ You can install the Android App by downloading the APK and installing it on any 
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)
 7. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)
-7. [Rental Date and Time Configuration](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Configuration)
+7. [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
 7. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
 8. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 9. [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)
@@ -175,7 +175,6 @@ You can install the Android App by downloading the APK and installing it on any 
 24. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)
 25. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)
 26. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
-
 
 ## License
 
