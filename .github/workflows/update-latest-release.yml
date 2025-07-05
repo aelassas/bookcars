@@ -2,8 +2,8 @@ name: Update Mobile App URL
 
 on:
   release:
-    types: [published] # Trigger on new release
-  workflow_dispatch:   # Manual trigger
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   update-latest-release-json:
@@ -14,7 +14,13 @@ jobs:
 
       - name: Set TAG_NAME and VERSION
         run: |
-          TAG_NAME=${GITHUB_REF##*/}
+          # If triggered manually, use a default or input tag
+          if [ -z "${{ github.event.release.tag_name }}" ]; then
+            echo "No release tag found, use input or default"
+            TAG_NAME="v0.0.0"  # You can customize this default or read input
+          else
+            TAG_NAME=${{ github.event.release.tag_name }}
+          fi
           VERSION=${TAG_NAME#v}
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
