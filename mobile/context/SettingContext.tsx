@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as SettingService from '@/services/SettingService'
+import * as helper from '@/utils/helper'
 
 interface SettingContextType {
   settings?: bookcarsTypes.Setting
@@ -13,12 +14,15 @@ export const SettingProvider = ({ children }: { children: React.ReactNode }) => 
   const [settings, setSettings] = useState<bookcarsTypes.Setting>()
 
   const refresh = async () => {
-    const _settings = await SettingService.getSettings()
-    if (!_settings) {
-      console.error('No settings returned from API')
-      throw new Error('Settings not found')
+    try {
+      const _settings = await SettingService.getSettings()
+      if (!_settings) {
+        throw new Error('No settings returned from API')
+      }
+      setSettings(_settings)
+    } catch (err) {
+      helper.error(err)
     }
-    setSettings(_settings)
   }
 
   useEffect(() => {
