@@ -97,7 +97,7 @@ Some features are locked down on the demo links provided. To have access to all 
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-### Admin Dashboard
+### Admin Panel
 
 * URL: https://bookcars.dynv6.net:3001/
 * Login: admin@bookcars.ma
