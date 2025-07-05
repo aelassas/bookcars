@@ -1,5 +1,39 @@
 # Releases
 
+## [BookCars 7.8](https://github.com/aelassas/bookcars/releases/tag/v7.8) – 2025-07-05
+
+* feat(admin): add flexible [rental date and time constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints) #81
+* feat(admin): add flexible [time-based car availability](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked)
+* feat(backend): integrate [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry) for error tracking and performance monitoring with configurable tracesSampleRate
+* feat(tests): add Sentry integration tests for initialization and tracing behavior
+* feat(tests): add tests for mail module with nodemailer mocks
+* feat(tests): enhance logging tests with Sentry integration
+* feat(tests): enhance access token validation tests with additional failure scenarios
+* feat(tests): enhance PayPal and Stripe test coverage with mocks and improved error handling
+* feat(tests): improve helper tests with JWT encryption and access token validation
+* feat(tests): enhance database tests with multilingual support and TTL index handling
+* feat(tests): add dateBetween filter test for bookings API
+* feat(tests): add comprehensive tests for JWT and reCAPTCHA validation
+* feat(tests): improve code coverage
+* refactor(models): move manual index creation from models to initialization script
+* refactor: rename `common` folder to `utils`
+* fix(backend): improve TTL index handling and logging for updates
+* fix(frontend): wrong minDate in CarFilter when updating from date
+* fix(tests): increase test timeout to improve stability of test execution
+* fix(tests): cleanup test data
+* chore(backend): organize and document .env.example
+* chore: update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.7...v7.8
+
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.8/bookcars-db.zip) (8.64 MB)
+- [bookcars.apk](https://github.com/aelassas/bookcars/releases/download/v7.8/bookcars.apk) (92.12 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.8)
+
 ## [BookCars 7.7](https://github.com/aelassas/bookcars/releases/tag/v7.7) – 2025-06-28
 
 * feat(backend): add setup script to create admin user
