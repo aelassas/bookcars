@@ -164,6 +164,7 @@ describe('POST /api/create-car', () => {
     expect(car.rating).toBe(payload.rating)
     expect(car.blockOnPay).toBe(true)
     CAR1_ID = res.body._id
+    await testHelper.deleteCarNotifications(CAR1_ID)
 
     // test success date based price
     if (!(await helper.pathExists(tempImage))) {
@@ -206,6 +207,7 @@ describe('POST /api/create-car', () => {
     }
     payload.isDateBasedPrice = false
     payload.dateBasedPrices = []
+    await testHelper.deleteCarNotifications(CAR2_ID)
 
     // reset notificationCount
     notificationCounter = await NotificationCounter.findOne({ user: admin!.id })

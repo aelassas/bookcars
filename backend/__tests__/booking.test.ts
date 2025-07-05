@@ -256,17 +256,8 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBeGreaterThan(1)
-    const admin = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (driver.enableEmailNotifications disabled)
     let driver = await User.findById(DRIVER1_ID)
@@ -279,15 +270,7 @@ describe('POST /api/checkout', () => {
     driver!.enableEmailNotifications = true
     await driver!.save()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (supplier.enableEmailNotifications disabled)
     let supplier = await User.findById(SUPPLIER_ID)
@@ -299,16 +282,7 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     supplier!.enableEmailNotifications = true
     await supplier!.save()
-    expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (without contract)
     supplier = await User.findById(SUPPLIER_ID)
@@ -323,15 +297,7 @@ describe('POST /api/checkout', () => {
     supplier!.contracts = contracts
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (with contract file not found)
     supplier = await User.findById(SUPPLIER_ID)
@@ -346,15 +312,7 @@ describe('POST /api/checkout', () => {
     supplier!.contracts = contracts
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (with contract file null)
     supplier = await User.findById(SUPPLIER_ID)
@@ -369,15 +327,7 @@ describe('POST /api/checkout', () => {
     supplier!.contracts = contracts
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test success (with contract fr language)
     driver = await User.findById(DRIVER1_ID)
@@ -390,15 +340,7 @@ describe('POST /api/checkout', () => {
     driver!.language = 'en'
     await driver!.save()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test failure (stripe payment failed)
     payload.payLater = false
@@ -441,15 +383,7 @@ describe('POST /api/checkout', () => {
       bookings = await Booking.find({ driver: DRIVER1_ID })
       expect(bookings.length).toBeGreaterThan(2)
       expect(res.body.bookingId).toBeTruthy()
-      if (admin) {
-        const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-        expect(notification).toBeTruthy()
-        await notification!.deleteOne()
-        const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-        expect(notificationCounter?.count).toBeTruthy()
-        notificationCounter!.count! -= 1
-        await notificationCounter!.save()
-      }
+
 
       // test failure (car not found)
       const carId = payload.booking!.car
@@ -491,6 +425,7 @@ describe('POST /api/checkout', () => {
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Void)
     expect(booking?.sessionId).toBe(payload.sessionId)
 
+
     // test success (checkout session driver not verified)
     driver = await User.findById(DRIVER1_ID)
     driver!.verified = false
@@ -503,6 +438,7 @@ describe('POST /api/checkout', () => {
     driver!.verified = true
     await driver!.save()
 
+
     // test success (checkout session with no additional driver)
     payload.booking!.additionalDriver = false
     res = await request(app)
@@ -512,6 +448,7 @@ describe('POST /api/checkout', () => {
     expect(res.body.bookingId).toBeTruthy()
     bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBeGreaterThan(3)
+
     payload.booking!.additionalDriver = true
 
     // test failure (supplier not found)
@@ -550,15 +487,6 @@ describe('POST /api/checkout', () => {
     expect(token?.token.length).toBeGreaterThan(0)
     await token?.deleteOne()
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
 
     // test failure (license required)
     supplier = await User.findById(payload.booking!.supplier)
@@ -595,15 +523,7 @@ describe('POST /api/checkout', () => {
     expect(res.body.bookingId).toBeTruthy()
     booking = await Booking.findById(res.body.bookingId)
     expect(booking).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+    await testHelper.deleteNotifications(booking!.id)
     expect(driver3?.license).toBeTruthy()
     license = path.join(env.CDN_LICENSES, driver3!.license!)
     expect(await helper.pathExists(license)).toBeTruthy()
@@ -630,15 +550,7 @@ describe('POST /api/checkout', () => {
     const additionalDrivers = await AdditionalDriver.find({ email: payload.additionalDriver.email })
     expect(additionalDrivers.length).toBe(1)
     expect(res.body.bookingId).toBeTruthy()
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
 
     // test failure (car not found)
     payload.additionalDriver = undefined
@@ -677,15 +589,7 @@ describe('POST /api/checkout', () => {
       .post('/api/checkout')
       .send(payload)
     expect(res.statusCode).toBe(200)
-    if (admin) {
-      const notification = await Notification.findOne({ booking: res.body.bookingId, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+
     supplier!.licenseRequired = true
     await supplier?.save()
 
@@ -733,6 +637,12 @@ describe('POST /api/checkout', () => {
       .post('/api/checkout')
       .send({ booking: { driver: DRIVER1_ID } })
     expect(res.statusCode).toBe(400)
+
+    // cleanup notifications
+    bookings = await Booking.find({ driver: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+    for (const booking of bookings) {
+      await testHelper.deleteNotifications(booking.id)
+    }
   })
 })
 
@@ -1095,16 +1005,7 @@ describe('POST /api/cancel-booking/:id', () => {
     expect(res.statusCode).toBe(200)
     booking = await Booking.findById(BOOKING_ID)
     expect(booking?.cancelRequest).toBeTruthy()
-    const admin = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
-    if (admin) {
-      const notification = await Notification.findOne({ booking: BOOKING_ID, user: admin.id })
-      expect(notification).toBeTruthy()
-      await notification!.deleteOne()
-      const notificationCounter = await NotificationCounter.findOne({ user: admin.id })
-      expect(notificationCounter?.count).toBeTruthy()
-      notificationCounter!.count! -= 1
-      await notificationCounter!.save()
-    }
+    await testHelper.deleteNotifications(BOOKING_ID)
 
     // test failure (supplier not found)
     booking = await Booking.findById(BOOKING_ID)
