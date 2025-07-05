@@ -1,4 +1,4 @@
-name: Update Latest Release URL
+name: update mobile app url
 
 on:
   release:
