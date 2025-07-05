@@ -136,10 +136,7 @@ const SearchForm = ({
     if (!settings) {
       return false
     }
-    if (hour >= settings.minPickupDropoffHour && hour <= settings.maxPickupDropoffHour) {
-      return true
-    }
-    return false
+    return hour >= settings.minPickupDropoffHour && hour <= settings.maxPickupDropoffHour
   }
 
   const validateTimes = () => {
