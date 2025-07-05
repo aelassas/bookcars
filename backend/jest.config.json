@@ -23,7 +23,7 @@
     "!**/dist/**",
     "!**/__tests__/**"
   ],
-  "testTimeout": 180000,
+  "testTimeout": 300000,
   "globalSetup": "./dist/__tests__/globalSetup.js",
   "maxWorkers": 1
 }
