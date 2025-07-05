@@ -13,12 +13,15 @@ export const SettingProvider = ({ children }: { children: React.ReactNode }) => 
   const [settings, setSettings] = useState<bookcarsTypes.Setting>()
 
   const refresh = async () => {
-    const _settings = await SettingService.getSettings()
-    if (!_settings) {
-      console.error('No settings returned from API')
-      throw new Error('Settings not found')
+    try {
+      const _settings = await SettingService.getSettings()
+      if (!_settings) {
+        throw new Error('No settings returned from API')
+      }
+      setSettings(_settings)
+    } catch (err) {
+      console.error(err)
     }
-    setSettings(_settings)
   }
 
   useEffect(() => {
