@@ -127,6 +127,18 @@ You can install the Android App by downloading the APK and installing it on any 
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
+## Website Source Code (bookcars.github.io)
+
+The source code for the official BookCars website is available here:
+
+[https://github.com/bookcars/bookcars.github.io](https://github.com/bookcars/bookcars.github.io)
+
+It features a clean landing page with multilingual support, dark mode, and SEO optimizations to help it reach users in different languages and regions.
+
+The codebase is modular and follows SOLID, DRY, and separation of concerns principles. It uses GitHub Actions for automatic builds and deployments. The Android demo app download link is dynamically fetched and updated on the site.
+
+Feel free to explore the code, suggest improvements, or use it as a template for your own landing page.
+
 ## Documentation
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
