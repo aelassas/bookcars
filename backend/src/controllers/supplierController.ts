@@ -532,7 +532,6 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
                           bookcarsTypes.BookingStatus.Deposit,
                         ]]
                       },
-                      { $ne: ['$status', bookcarsTypes.BookingStatus.Cancelled] } // exclude cancelled bookings
                     ]
                   }
                 }
@@ -545,9 +544,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
           $match: {
             $expr: {
               $or: [
-                { $eq: ['$blockOnPay', false] },
-                { $eq: ['$blockOnPay', null] },
-                { $eq: ['$blockOnPay', undefined] },
+                { $eq: [{ $ifNull: ['$blockOnPay', false] }, false] },
                 { $eq: [{ $size: '$overlappingBookings' }, 0] }
               ]
             }
