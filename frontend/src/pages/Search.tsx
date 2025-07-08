@@ -212,8 +212,8 @@ const Search = () => {
         multimedia,
         rating,
         seats,
-        from,
-        to,
+        from: _from,
+        to: _to,
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
