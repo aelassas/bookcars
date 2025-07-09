@@ -135,7 +135,7 @@ The source code for the official BookCars website is available here:
 
 It features a clean landing page with multilingual support, dark mode, and SEO optimizations to help it reach users in different languages and regions.
 
-The codebase is modular and follows SOLID, and separation of concerns principles. It uses GitHub Actions for automatic builds and deployments. The Android demo app download link is dynamically fetched and updated on the site.
+The codebase follows the Separation of Concerns (SoC) principle, with a modular and maintainable architecture that aligns with the Single Responsibility Principle (SRP), modularity, and modern frontend best practices. It uses GitHub Actions for automatic builds and deployments. The Android demo app download link is dynamically fetched and updated on the site.
 
 Feel free to explore the code, suggest improvements, or use it as a template for your own landing page.
 
