@@ -11,7 +11,7 @@ const config = [
       '.github/',
       '.husky/',
       '.vscode/',
-      'api/',
+      'backend/',
       'admin/',
       'frontend/',
       'mobile/',
