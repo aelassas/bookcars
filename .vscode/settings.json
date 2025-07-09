@@ -1,16 +1,16 @@
 {
   "eslint.validate": [
-    "typescript",
     "javascript",
-    "typescriptreact",
-    "javascriptreact"
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
   ],
   "eslint.run": "onType",
   "eslint.workingDirectories": [
-    { "directory": "backend", "changeProcessCWD": true, "pattern": "**/*.{js,ts}" },
-    { "directory": "admin", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
-    { "directory": "frontend", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
-    { "directory": "mobile", "changeProcessCWD": true, "pattern": "**/*.{js,jsx,ts,tsx}" },
+    { "directory": "backend" },
+    { "directory": "admin" },
+    { "directory": "frontend" },
+    { "directory": "mobile" }
   ],
   "files.insertFinalNewline": true
 }
