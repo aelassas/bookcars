@@ -9,15 +9,21 @@ export const init = () => {
     return
   }
   let fired = false
-  const loadAnalyticsScript = () => {
+  const loadAnalytics = () => {
     if (!fired) {
       ga4.initialize(TRACKING_ID, { testMode: !isProduction })
       fired = true
     }
   }
 
-  window.addEventListener('mousemove', loadAnalyticsScript, { once: true })
-  window.addEventListener('touchstart', loadAnalyticsScript, { once: true })
+  const startAnalytics = () => {
+    window.removeEventListener('mousemove', startAnalytics)
+    window.removeEventListener('touchstart', startAnalytics)
+    loadAnalytics()
+  }
+
+  window.addEventListener('mousemove', startAnalytics, { once: true })
+  window.addEventListener('touchstart', startAnalytics, { once: true })
 }
 
 export const sendEvent = (name: string) => ga4.event('screen_view', {
