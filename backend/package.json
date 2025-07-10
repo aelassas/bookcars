@@ -8,6 +8,7 @@
     "dev": "nodemon",
     "build": "rimraf dist && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node --import ./dist/src/monitoring/instrument.js dist/src",
+    "start:setup": "npm run build && node dist/src/setup/setup.js && node --import ./dist/src/monitoring/instrument.js dist/src",
     "setup": "npm run build && node dist/src/setup/setup.js",
     "reset": "npm run build && node dist/src/setup/reset.js",
     "test": "rimraf coverage && npm run build && cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --coverage --no-cache",
