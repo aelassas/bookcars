@@ -1,7 +1,5 @@
 {
-    "watch": [
-        "src"
-    ],
+    "watch": ["src"],
     "ext": "ts",
     "ignore": [],
     "exec": "tsx --experimental-specifier-resolution=node --import ./src/monitoring/instrument.ts ./src",
