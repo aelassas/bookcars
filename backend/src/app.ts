@@ -1,4 +1,3 @@
-import './monitoring/instrument'
 import * as Sentry from '@sentry/node'
 import express from 'express'
 import compression from 'compression'

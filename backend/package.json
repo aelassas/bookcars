@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon --config nodemon.json",
+    "dev:setup": "npm run setup && nodemon --config nodemon.json",
     "build": "rimraf dist && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node --import ./dist/src/monitoring/instrument.js dist/src",
     "start:setup": "npm run build && node dist/src/setup/setup.js && node --import ./dist/src/monitoring/instrument.js dist/src",
@@ -20,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^9.35.0",
+    "@sentry/node": "^9.36.0",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.0",
