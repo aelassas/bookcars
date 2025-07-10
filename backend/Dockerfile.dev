@@ -33,8 +33,6 @@ COPY --from=packages /bookcars/packages /bookcars/packages
 COPY ./backend ./
 COPY ./backend/.env.docker .env
 
-RUN npm run setup
-
 EXPOSE 4002
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev:setup"]
