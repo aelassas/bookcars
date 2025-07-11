@@ -1,5 +1,25 @@
 # Releases
 
+## [BookCars 7.9](https://github.com/aelassas/bookcars/releases/tag/v7.9) – 2025-07-11
+
+* fix(docker): .env.docker file not loaded in backend container and setup issues
+* fix(backend): remove unecessary sentry imports
+* fix(backend): include cars missing `blockOnPay` field in overlap booking query
+* fix(backend): remove `maxDate` constraint from create and update booking froms
+* fix(backend): hide prices when dates are invalid in update booking page
+* fix(frontend): remove event listeners when analytics script starts
+* chore: update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.8...v7.9
+
+### Assets
+- [bookcars-7.9.apk](https://github.com/aelassas/bookcars/releases/download/v7.9/bookcars-7.9.apk) (92.12 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.9/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v7.9)
+
 ## [BookCars 7.8](https://github.com/aelassas/bookcars/releases/tag/v7.8) – 2025-07-05
 
 * feat(admin): add flexible [rental date and time constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints) #81
@@ -27,8 +47,8 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.7...v7.8
 
 ### Assets
+- [bookcars-7.8.apk](https://github.com/aelassas/bookcars/releases/download/v7.8/bookcars-7.8.apk) (92.12 MB)
 - [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v7.8/bookcars-db.zip) (8.64 MB)
-- [bookcars.apk](https://github.com/aelassas/bookcars/releases/download/v7.8/bookcars.apk) (92.12 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v7.8)
