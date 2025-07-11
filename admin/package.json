@@ -2,7 +2,7 @@
   "name": "bookcars-admin",
   "description": "Admin panel for managing BookCars",
   "private": true,
-  "version": "7.9.0",
+  "version": "8.0.0",
   "type": "module",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
