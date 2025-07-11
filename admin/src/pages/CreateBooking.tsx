@@ -48,7 +48,6 @@ const CreateBooking = () => {
   const [visible, setVisible] = useState(false)
   const [carObj, setCarObj] = useState<bookcarsTypes.Car>()
   const [minDate, setMinDate] = useState<Date>()
-  const [maxDate, setMaxDate] = useState<Date>()
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
 
@@ -97,16 +96,6 @@ const CreateBooking = () => {
       setMinDate(undefined)
     }
   }, [from])
-
-  useEffect(() => {
-    if (to) {
-      const _maxDate = new Date(to)
-      _maxDate.setDate(_maxDate.getDate() - 1)
-      setMaxDate(_maxDate)
-    } else {
-      setMaxDate(undefined)
-    }
-  }, [to])
 
   const onSubmit = async (data: FormFields) => {
     if (!carObj || fromError || toError) {
@@ -241,11 +230,14 @@ const CreateBooking = () => {
               <DateTimePicker
                 label={commonStrings.FROM}
                 value={from}
-                maxDate={maxDate}
                 showClear
                 required
                 onChange={(date) => {
                   setValue('from', date || undefined)
+
+                  if (date && to && date > to) {
+                    setValue('to', undefined)
+                  }
                 }}
                 onError={(err: DateTimeValidationError) => {
                   if (err) {

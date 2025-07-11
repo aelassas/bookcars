@@ -164,7 +164,6 @@ const UpdateBooking = () => {
   const [carObj, setCarObj] = useState<bookcarsTypes.Car>()
   const [isSupplier, setIsSupplier] = useState(false)
   const [minDate, setMinDate] = useState<Date>()
-  const [maxDate, setMaxDate] = useState<Date>()
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fromError, setFromError] = useState(false)
@@ -378,9 +377,7 @@ const UpdateBooking = () => {
               _minDate.setDate(_minDate.getDate() + 1)
               setMinDate(_minDate)
               setValue('to', new Date(_booking.to))
-              const _maxDate = new Date(_booking.to)
-              _maxDate.setDate(_maxDate.getDate() - 1)
-              setMaxDate(_maxDate)
+
               setValue('status', _booking.status)
               setValue('cancellation', _booking.cancellation || false)
               setValue('amendments', _booking.amendments || false)
@@ -522,7 +519,6 @@ const UpdateBooking = () => {
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
-                  maxDate={maxDate}
                   showClear
                   required
                   onChange={async (date) => {
@@ -548,6 +544,10 @@ const UpdateBooking = () => {
                       _minDate.setDate(_minDate.getDate() + 1)
                       setMinDate(_minDate)
                       setFromError(false)
+
+                      if (to && date > to) {
+                        setValue('to', undefined)
+                      }
                     } else {
                       setValue('from', undefined)
                       setMinDate(undefined)
@@ -592,11 +592,9 @@ const UpdateBooking = () => {
 
                       const _maxDate = new Date(date)
                       _maxDate.setDate(_maxDate.getDate() - 1)
-                      setMaxDate(_maxDate)
                       setToError(false)
                     } else {
                       setValue('to', undefined)
-                      setMaxDate(undefined)
                     }
                   }}
                   onError={(err: DateTimeValidationError) => {
