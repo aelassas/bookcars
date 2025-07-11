@@ -867,8 +867,8 @@ const UpdateBooking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
+                <span className="price-main">{bookcarsHelper.formatPrice(days === 0 ? 0 : (price as number), commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${days === 0 ? 0 : bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList
