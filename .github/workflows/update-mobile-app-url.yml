@@ -34,4 +34,4 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add .github/latest-release.json
           git diff --cached --quiet || git commit -m "chore: update latest-release.json for ${TAG_NAME}"
-          git push
+          git push origin HEAD:main
