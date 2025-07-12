@@ -6,7 +6,7 @@ import { CommonActions, NavigationRoute, RouteProp } from '@react-navigation/nat
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
@@ -129,7 +129,8 @@ const CarList = ({
           deposit: _deposit,
           includeAlreadyBookedCars,
           includeComingSoonCars,
-          days: bookcarsHelper.days(from, to),
+          from,
+          to,
         }
 
         const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)

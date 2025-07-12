@@ -3,8 +3,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as Localization from 'expo-localization'
 import axiosInstance from './axiosInstance'
 import * as env from '@/config/env.config'
-import * as AsyncStorage from '@/common/AsyncStorage'
-import * as toastHelper from '@/common/toastHelper'
+import * as AsyncStorage from '@/utils/AsyncStorage'
+import * as toastHelper from '@/utils/toastHelper'
 import * as bookcarsTypes from ':bookcars-types'
 
 /**
@@ -224,6 +224,12 @@ export const validateAccessToken = async (): Promise<number> => {
       }
     )
     .then((res) => res.status)
+    .catch((err) => {
+      if (err.response?.status) {
+        return err.response.status
+      }
+      return 500
+    })
 }
 
 /**
@@ -276,10 +282,16 @@ export const getLanguage = async () => {
     return lang
   }
 
-  const locales = Localization.getLocales()
-  lang = locales.length > 0 && locales[0].languageCode === 'fr' ? 'fr' : env.DEFAULT_LANGUAGE
+  lang = getDefaultLanguage()
   return lang
 }
+
+export const getDefaultLanguage = () => {
+  const locales = Localization.getLocales()
+  const lang = locales.length > 0 && locales[0].languageCode === 'fr' ? 'fr' : env.DEFAULT_LANGUAGE
+  return lang
+}
+
 
 /**
  * Update user's langauge.
@@ -483,18 +495,21 @@ export const deleteAvatar = async (userId: string): Promise<number> => {
  * @returns {unknown}
  */
 export const loggedIn = async () => {
-  const currentUser = await getCurrentUser()
-  if (currentUser) {
-    const status = await validateAccessToken()
-    if (status === 200 && currentUser._id) {
-      const user = await getUser(currentUser._id)
-      if (user) {
-        return true
+  try {
+    const currentUser = await getCurrentUser()
+    if (currentUser) {
+      const status = await validateAccessToken()
+      if (status === 200 && currentUser._id) {
+        const user = await getUser(currentUser._id)
+        if (user) {
+          return true
+        }
       }
     }
+    return false
+  } catch {
+    return false
   }
-
-  return false
 }
 
 /**

@@ -1,0 +1,50 @@
+# This workflow will update the `.github/RELEASES.md` file whenever a new release is published.
+name: Update RELEASES.md
+
+on:
+  release:
+    types: [published] # Trigger on new release
+  workflow_dispatch:   # Manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-releases-md:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate RELEASES.md
+        run: npm run releases
+
+      - name: Commit and push .github/RELEASES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Switch to the default branch
+          git fetch origin
+          DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
+          git checkout $DEFAULT_BRANCH
+          git pull origin $DEFAULT_BRANCH
+
+          git add .github/RELEASES.md
+          git commit -m "docs: update RELEASES.md on new release" || echo "No changes"
+          
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push origin $DEFAULT_BRANCH

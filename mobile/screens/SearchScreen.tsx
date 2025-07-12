@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -52,6 +52,9 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   const [rating, setRating] = useState(-1)
   const [showFilters, setShowFilters] = useState(false)
 
+  const from = useMemo(() => new Date(route.params.from), [route.params.from])
+  const to = useMemo(() => new Date(route.params.to), [route.params.to])
+
   useEffect(() => {
     const updateSuppliers = async () => {
       if (pickupLocation) {
@@ -67,6 +70,8 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           multimedia,
           rating,
           seats,
+          from,
+          to,
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
@@ -74,7 +79,7 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     }
 
     updateSuppliers()
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats])
+  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
 
   const _init = async () => {
     const _language = await UserService.getLanguage()
@@ -110,6 +115,8 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
       multimedia,
       rating,
       seats,
+      from,
+      to,
     }
     const _suppliers = await SupplierService.getFrontendSuppliers(payload)
     const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)

@@ -11,7 +11,7 @@ import Link from '@/components/Link'
 import i18n from '@/lang/i18n'
 import Error from '@/components/Error'
 import * as UserService from '@/services/UserService'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import Switch from '@/components/Switch'
 import Header from '@/components/Header'
 
@@ -166,6 +166,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           setBlacklisted(true)
         } else {
           await helper.registerPushToken(res.data._id as string)
+          await UserService.setLanguage(res.data.language || UserService.getDefaultLanguage())
 
           setPasswordError(false)
           setBlacklisted(false)

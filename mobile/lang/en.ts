@@ -249,6 +249,8 @@ export const en = {
   HIDE_FILTERS: 'Hide filters',
   COMING_SOON: 'Coming Soon',
   FULLY_BOOKED: 'Fully Booked',
-  MIN_PICK_UP_HOURS_ERROR: `Pick up time must be at least ${env.MIN_PICK_UP_HOURS} hour${env.MIN_PICK_UP_HOURS > 1 ? 's' : ''} in the future`,
-  MIN_RENTAL_HOURS_ERROR: `There must be at least ${env.MIN_RENTAL_HOURS} hour${env.MIN_RENTAL_HOURS > 1 ? 's' : ''} between pick up and drop off`,
+  MIN_PICK_UP_HOURS_ERROR: 'Pick-up time must be at least a few hours in the future',
+  MIN_RENTAL_HOURS_ERROR: 'Rental duration is too short',
+  INVALID_PICK_UP_TIME: 'Invalid pick-up time',
+  INVALID_DROP_OFF_TIME: 'Invalid drop-off time',
 }

@@ -1,77 +1,72 @@
+import eslint from '@eslint/js'
+import tseslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
-import tsPlugin from '@typescript-eslint/eslint-plugin'
-import reactPlugin from 'eslint-plugin-react'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import reactRefreshPlugin from 'eslint-plugin-react-refresh'
-import reactCompilerPlugin from 'eslint-plugin-react-compiler'
+import globals from 'globals'
+import jestPlugin from 'eslint-plugin-jest'
 
 const config = [
-  { ...reactPlugin.configs.flat.recommended, settings: { react: { version: 'detect' } } },
-  reactCompilerPlugin.configs.recommended,
+  // Global ignores
   {
     ignores: [
       'node_modules/',
-      'build/',
-      'vite.config.js',
-      'vite.config.d.ts',
+      'dist/',
+      'coverage/',
+      'logs/',
     ]
   },
+  // Main configuration
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    files: ['**/*.ts', '**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       parser: tsParser,
+      globals: {
+        ...globals.node,
+        ...globals.jest
+      }
     },
     plugins: {
-      '@typescript-eslint': tsPlugin,
-      'react': reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      'react-refresh': reactRefreshPlugin,
+      '@typescript-eslint': tseslint,
+      'jest': jestPlugin
     },
     rules: {
-      'semi': ['error', 'never'],
-      'brace-style': ['error', '1tbs'],
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'react/jsx-filename-extension': ['warn', { extensions: ['.tsx', '.ts'] }],
-      'react/function-component-definition': ['warn', { namedComponents: 'arrow-function' }],
-      'curly': 'error',
+      // Include rules from preset configurations
+      ...eslint.configs.recommended.rules,
+      ...tseslint.configs['eslint-recommended'].rules,
+      ...tseslint.configs.recommended.rules,
+      ...jestPlugin.configs.recommended.rules,
+
+      // ESLint core rules
       'linebreak-style': 'off',
       'no-underscore-dangle': 'off',
       'no-restricted-syntax': 'off',
-      'import/no-unresolved': 'off',
-      'import/extensions': 'off',
       'max-len': 'off',
       'indent': 'off',
-      'import/prefer-default-export': 'off',
       'no-await-in-loop': 'off',
-      'comma-dangle': 'off',
-      'implicit-arrow-linebreak': 'off',
-      'func-names': 'off',
-      'jsx-a11y/no-noninteractive-element-interactions': 'off',
-      'jsx-a11y/click-events-have-key-events': 'off',
-      'no-param-reassign': 'off',
-      'react/require-default-props': 'off',
-      'react/jsx-props-no-spreading': 'off',
-      'react/display-name': 'off',
-      'no-nested-ternary': 'off',
-      'react/jsx-no-useless-fragment': 'off',
-      'object-curly-newline': 'off',
-      'no-empty-function': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
-      'react/prop-types': 'off',
       'no-console': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      'import/no-extraneous-dependencies': 'off',
+      'object-curly-newline': 'off',
+      'semi': ['error', 'never'],
+      'brace-style': ['error', '1tbs'],
+      'curly': 'error',
       'quotes': ['error', 'single', { 'avoidEscape': true }],
-      'jsx-quotes': ['error', 'prefer-double'],
-      '@typescript-eslint/no-unused-vars': 'warn',
       'no-multiple-empty-lines': 'error',
       'no-multi-spaces': 'error',
       'padded-blocks': ['error', 'never'],
       'no-irregular-whitespace': 'error',
-      'react-compiler/react-compiler': 'error',
+
+      // Import plugin rules
+      'import/no-unresolved': 'off',
+      'import/extensions': 'off',
+      'import/no-extraneous-dependencies': 'off',
+      'import/prefer-default-export': 'off',
+
+      // TypeScript rules
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+
+      // jest rules
+      'jest/no-conditional-expect': 'off',
     },
   }
 ]

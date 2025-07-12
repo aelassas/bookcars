@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:lts-alpine as build
+FROM node:lts-alpine AS build
 WORKDIR /bookcars/frontend
 COPY ./frontend ./
 COPY ./frontend/.env.docker .env

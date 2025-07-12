@@ -11,8 +11,8 @@ const config = [
       '.github/',
       '.husky/',
       '.vscode/',
-      'api/',
       'backend/',
+      'admin/',
       'frontend/',
       'mobile/',
       'packages/',
@@ -30,6 +30,9 @@ const config = [
     },
     plugins: {},
     rules: {
+      // Include rules from preset configurations
+      ...eslint.configs.recommended.rules,
+
       // ESLint core rules
       'linebreak-style': 'off',
       'no-underscore-dangle': 'off',
@@ -47,15 +50,13 @@ const config = [
       'no-multi-spaces': 'error',
       'padded-blocks': ['error', 'never'],
       'no-irregular-whitespace': 'error',
+      'no-unused-vars': 'warn',
 
       // Import plugin rules
       'import/no-unresolved': 'off',
       'import/extensions': 'off',
       'import/no-extraneous-dependencies': 'off',
       'import/prefer-default-export': 'off',
-
-      // Include rules from preset configurations
-      ...eslint.configs.recommended.rules,
     },
   }
 ]

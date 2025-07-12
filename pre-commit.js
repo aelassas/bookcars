@@ -19,14 +19,14 @@ const checkTypes = Object.freeze({
 // Configuration for the pre-commit checks
 const config = {
   projects: {
-    api: {
-      folder: 'api',
-      container: 'bc-dev-api',
-      checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
-    },
     backend: {
       folder: 'backend',
       container: 'bc-dev-backend',
+      checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
+    },
+    admin: {
+      folder: 'admin',
+      container: 'bc-dev-admin',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
     frontend: {
@@ -51,27 +51,22 @@ const config = {
 
 // Logger utilities
 const logger = (() => {
-  const _fixMessage = (message) => {
-    const isVSCodeTerminal = process.env.TERM_PROGRAM?.includes('vscode')
-    return isVSCodeTerminal ? message.replace(/(ℹ️|⚠️)/g, '$1 ') : message
-  }
-
   const _formatMessage = (folder, message) => {
     return `[${chalk.cyan(folder)}] ${message}`
   }
 
   return {
     log(message) {
-      console.log(_fixMessage(message))
+      console.log(message)
     },
     logProject(project, message) {
-      console.log(_fixMessage(_formatMessage(project.folder, message)))
+      console.log(_formatMessage(project.folder, message))
     },
     logError(message, ...args) {
-      console.error(chalk.red(_fixMessage(message)), ...args)
+      console.error(chalk.red(message), ...args)
     },
     logProjectError(project, message, ...args) {
-      console.error(chalk.red(_fixMessage(_formatMessage(project.folder, message))), ...args)
+      console.error(chalk.red(_formatMessage(project.folder, message)), ...args)
     }
   }
 })()
@@ -117,7 +112,7 @@ const git = {
       const { stdout } = await execAsync('git diff --cached --name-only --diff-filter=ACM')
       return stdout.trim().split('\n').filter(Boolean)
     } catch (err) {
-      logger.logError('❌ Failed to get changed files:', err.message)
+      logger.logError('Failed to get changed files:', err.message)
       return []
     }
   },
@@ -127,7 +122,7 @@ const git = {
       const { stdout } = await execAsync(`git diff --cached --name-only --diff-filter=ACM ${folder}/`)
       return stdout.trim().split('\n').filter(Boolean).map((file) => file.replace(`${folder}/`, ''))
     } catch (err) {
-      logger.logProjectError(project, '❌ Failed to get changed files:', err)
+      logger.logProjectError(project, 'Failed to get changed files:', err)
       return []
     }
   }
@@ -264,11 +259,11 @@ const checks = {
     const targets = processFiles.filterFiles(files, config.lintFilter)
 
     if (targets.length === 0) {
-      logger.logProject(project, 'ℹ️ No lintable files.')
+      logger.logProject(project, 'No lintable files.')
       return
     }
 
-    logger.logProject(project, `🔍 Running ESLint on ${targets.length} file(s) with concurrency ${config.concurrencyLimit}...`)
+    logger.logProject(project, `Running ESLint on ${targets.length} file(s) with concurrency ${config.concurrencyLimit}...`)
 
     // Split into file batches to handle command line length limits
     const batches = []
@@ -280,7 +275,7 @@ const checks = {
 
     const tasks = batches.map((batch, index) =>
       limit(async () => {
-        logger.logProject(project, `🧪 Linting batch ${index + 1} of ${batches.length}...`)
+        logger.logProject(project, `Linting batch ${index + 1} of ${batches.length}...`)
         await cmd.runInContext(
           project,
           `npx eslint ${batch.join(' ')} --cache --cache-location .eslintcache --quiet`,
@@ -291,9 +286,9 @@ const checks = {
 
     try {
       await Promise.all(tasks)
-      logger.logProject(project, `${chalk.green('✅ ESLint passed.')}`)
+      logger.logProject(project, `${chalk.green('ESLint passed.')}`)
     } catch (err) {
-      logger.logProjectError(project, '❌ ESLint failed.')
+      logger.logProjectError(project, 'ESLint failed.')
       throw err
     }
   },
@@ -306,11 +301,11 @@ const checks = {
     const targets = processFiles.filterFiles(files, config.typeCheckFilter)
 
     if (targets.length === 0) {
-      logger.logProject(project, 'ℹ️ No TypeScript files to check.')
+      logger.logProject(project, 'No TypeScript files to check.')
       return
     }
 
-    logger.logProject(project, '🔍 Running TypeScript check...')
+    logger.logProject(project, 'Running TypeScript check...')
 
     try {
       await cmd.runInContext(
@@ -318,9 +313,9 @@ const checks = {
         'npx tsc --noEmit --incremental --pretty',
         runInDocker,
       )
-      logger.logProject(project, `${chalk.green('✅ TypeScript check passed.')}`)
+      logger.logProject(project, `${chalk.green('TypeScript check passed.')}`)
     } catch (err) {
-      logger.logProjectError(project, '❌ TypeScript check failed.')
+      logger.logProjectError(project, 'TypeScript check failed.')
       throw err
     }
   },
@@ -331,7 +326,7 @@ const checks = {
     }
 
     const { folder } = project
-    logger.logProject(project, '📏 Checking file sizes...')
+    logger.logProject(project, 'Checking file sizes...')
 
     const oversizedFiles = []
 
@@ -349,14 +344,14 @@ const checks = {
     })
 
     if (oversizedFiles.length > 0) {
-      logger.logProjectError(project, `❌ Found ${oversizedFiles.length} files exceeding size limit (${config.maxFileSizeKB}KB):`)
+      logger.logProjectError(project, `Found ${oversizedFiles.length} files exceeding size limit (${config.maxFileSizeKB}KB):`)
       oversizedFiles.forEach(({ file, sizeKB }) => {
         logger.logProjectError(project, `  - ${file} (${sizeKB}KB)`)
       })
       throw new Error(`Oversized files detected in ${folder}`)
     }
 
-    logger.logProject(project, `${chalk.green('✅ All files are within size limits.')}`)
+    logger.logProject(project, `${chalk.green('All files are within size limits.')}`)
   }
 }
 
@@ -364,7 +359,7 @@ const checks = {
 const main = async () => {
   const label = 'pre-commit'
   console.time(label)
-  logger.log('🚀 Starting pre-commit checks...')
+  logger.log('Starting pre-commit checks...')
 
   try {
     // Run these checks in parallel to save time
@@ -378,7 +373,7 @@ const main = async () => {
     let runInDocker = false
 
     if (insideDocker) {
-      logger.log('🐳 Inside Docker environment. Running checks locally...')
+      logger.log('Inside Docker environment. Running checks locally...')
     } else if (dockerRunning) {
       const containersNeeded = Object.values(config.projects)
         .filter((project) => project.container)
@@ -388,12 +383,12 @@ const main = async () => {
       runInDocker = runningContainers.every(Boolean)
 
       if (runInDocker) {
-        logger.log('🐳 Docker and containers are running. Running checks inside Docker...')
+        logger.log('Docker and containers are running. Running checks inside Docker...')
       } else {
-        logger.log('⚠️ Docker is running, but some containers are not. Running checks locally...')
+        logger.log('Docker is running, but some containers are not. Running checks locally...')
       }
     } else {
-      logger.log('⚠️ Docker is not running. Running checks locally...')
+      logger.log('Docker is not running. Running checks locally...')
     }
 
     // Group files by project folder
@@ -405,24 +400,24 @@ const main = async () => {
       const { folder, checks: projectChecks } = project
 
       if (!folder) {
-        logger.logProject({ folder: projectName }, '⚠️ Missing folder config. Skipping.')
+        logger.logProject({ folder: projectName }, 'Missing folder config. Skipping.')
         continue
       }
 
       if (!(await fs.pathExists(folder))) {
-        logger.logProject(project, '⚠️ Folder not found. Skipping.')
+        logger.logProject(project, 'Folder not found. Skipping.')
         continue
       }
 
       const files = projectFiles[folder]
 
       if (files.length === 0) {
-        logger.logProject(project, 'ℹ️ No changed files. Skipping.')
+        logger.logProject(project, 'No changed files. Skipping.')
         continue
       }
 
       if (!projectChecks || projectChecks.length === 0) {
-        logger.logProject(project, 'ℹ️ No checks configured. Skipping.')
+        logger.logProject(project, 'No checks configured. Skipping.')
         continue
       }
 
@@ -447,11 +442,11 @@ const main = async () => {
     // Wait for all tasks to complete, and if any fails, it will throw an error
     await Promise.all(tasks)
 
-    logger.log(`\n${chalk.green('✅ All checks passed. Proceeding with commit.')}`)
+    logger.log(`\n${chalk.green('All checks passed. Proceeding with commit.')}`)
     console.timeEnd(label)
     process.exit(0)
   } catch {
-    logger.logError('\n🚫 Commit aborted due to pre-commit errors.')
+    logger.logError('\nCommit aborted due to pre-commit errors.')
     console.timeEnd(label)
     process.exit(1)
   }

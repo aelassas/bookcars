@@ -5,7 +5,7 @@ export enum UserType {
 }
 
 export enum AppType {
-  Backend = 'backend',
+  Admin = 'admin',
   Frontend = 'frontend',
 }
 
@@ -165,6 +165,7 @@ export interface UpsertLocationPayload {
   image?: string | null
   parkingSpots?: ParkingSpot[]
   supplier?: string
+  parentLocation?: string
 }
 
 export interface UpdateSupplierPayload {
@@ -224,6 +225,7 @@ export interface CreateCarPayload {
   multimedia: string[]
   rating?: number
   co2?: number
+  blockOnPay?: boolean
 }
 
 export interface UpdateCarPayload extends CreateCarPayload {
@@ -250,9 +252,10 @@ export interface GetCarsPayload {
   multimedia?: string[]
   rating?: number
   seats?: number
-  days?: number
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
+  from?: Date
+  to?: Date
 }
 
 export interface SignUpPayload {
@@ -430,6 +433,7 @@ export interface Location {
   image?: string
   parkingSpots?: ParkingSpot[]
   supplier?: User
+  parentLocation?: Location
 }
 
 export interface Country {
@@ -499,6 +503,7 @@ export interface Car {
   rating?: number
   trips: number
   co2?: number
+  blockOnPay?: boolean
   [propKey: string]: any
 }
 
@@ -606,6 +611,21 @@ export interface UpsertBankDetailsPayload {
   iban: string
   swiftBic: string
   showBankDetailsPage: boolean
+}
+
+export interface Setting {
+  _id: string
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
+}
+
+export interface UpdateSettingsPayload {
+  minPickupHours: number
+  minRentalHours: number
+  minPickupDropoffHour: number
+  maxPickupDropoffHour: number
 }
 
 // 

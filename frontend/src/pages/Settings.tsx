@@ -10,7 +10,7 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -21,7 +21,7 @@ import * as UserService from '@/services/UserService'
 import Backdrop from '@/components/SimpleBackdrop'
 import DatePicker from '@/components/DatePicker'
 import Avatar from '@/components/Avatar'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import DriverLicense from '@/components/DriverLicense'
 import Footer from '@/components/Footer'
 import { useUserContext, UserContextType } from '@/context/UserContext'
@@ -37,11 +37,12 @@ const Settings = () => {
   const [loading, setLoading] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const { register, getValues, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
+  const { register, control, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setValue } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit',
   })
 
+  const birthDate = useWatch({ control, name: 'birthDate' })
 
   const handleEmailNotificationsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -166,13 +167,13 @@ const Settings = () => {
                     label={commonStrings.BIRTH_DATE}
                     variant="standard"
                     required
-                    value={getValues('birthDate') || undefined}
-                    onChange={(birthDate) => {
-                      if (birthDate) {
+                    value={birthDate || undefined}
+                    onChange={(date) => {
+                      if (date) {
                         if (errors.birthDate) {
                           clearErrors('birthDate')
                         }
-                        setValue('birthDate', birthDate, { shouldValidate: true })
+                        setValue('birthDate', date, { shouldValidate: true })
                       }
                     }}
                     language={user.language}

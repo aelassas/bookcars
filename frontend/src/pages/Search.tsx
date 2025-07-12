@@ -5,7 +5,7 @@ import { Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/search'
-import * as helper from '@/common/helper'
+import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
 import * as LocationService from '@/services/LocationService'
 import * as SupplierService from '@/services/SupplierService'
@@ -90,7 +90,8 @@ const Search = () => {
           multimedia,
           rating,
           seats,
-          days: bookcarsHelper.days(from, to),
+          from,
+          to,
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
@@ -211,7 +212,8 @@ const Search = () => {
         multimedia,
         rating,
         seats,
-        days: bookcarsHelper.days(from, to),
+        from: _from,
+        to: _to,
       }
       const _suppliers = await SupplierService.getFrontendSuppliers(payload)
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
