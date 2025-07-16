@@ -27,6 +27,7 @@ import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
 import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/SignUpForm'
+import PasswordInput from '@/components/PasswordInput'
 
 import '@/assets/css/signup.css'
 
@@ -171,48 +172,48 @@ const SignUp = () => {
                 />
                 <FormHelperText error={!!errors.birthDate}>{errors.birthDate?.message || ''}</FormHelperText>
               </FormControl>
-              <FormControl fullWidth margin="dense" error={!!errors.password}>
-                <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
-                <OutlinedInput
-                  {...register('password')}
-                  type="password"
-                  label={commonStrings.PASSWORD}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                  onChange={() => {
-                    if (errors.password) {
-                      clearErrors('password')
-                    }
-                  }}
-                  required
-                />
-                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
-                <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                <OutlinedInput
-                  {...register('confirmPassword')}
-                  type="password"
-                  label={commonStrings.CONFIRM_PASSWORD}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                  onChange={() => {
-                    if (errors.confirmPassword) {
-                      clearErrors('confirmPassword')
-                    }
-                  }}
-                  required
-                />
-                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
-              </FormControl>
+
+              <PasswordInput
+                label={commonStrings.PASSWORD}
+                variant="outlined"
+                {...register('password')}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                onChange={(e) => {
+                  if (errors.password) {
+                    clearErrors('password')
+                  }
+                  setValue('password', e.target.value)
+                }}
+                required
+                inputProps={{
+                  autoComplete: 'new-password',
+                  form: {
+                    autoComplete: 'off',
+                  },
+                }}
+              />
+
+              <PasswordInput
+                label={commonStrings.CONFIRM_PASSWORD}
+                variant="outlined"
+                {...register('confirmPassword')}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
+                onChange={(e) => {
+                  if (errors.confirmPassword) {
+                    clearErrors('confirmPassword')
+                  }
+                  setValue('confirmPassword', e.target.value)
+                }}
+                required
+                inputProps={{
+                  autoComplete: 'new-password',
+                  form: {
+                    autoComplete: 'off',
+                  },
+                }}
+              />
 
               <div className="signup-tos">
                 <table>
