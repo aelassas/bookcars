@@ -73,6 +73,7 @@ const PasswordInput: React.FC<CombinedProps> = ({
       margin="dense"
       error={error}
       variant={variant}
+      size={inputProps.size}
       {...formControlProps}
     >
       <InputLabel
