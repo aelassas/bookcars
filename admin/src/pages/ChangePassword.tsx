@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Paper,
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
+  Paper,  
   Button
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
@@ -20,6 +16,7 @@ import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/ChangePasswordForm'
 
 import '@/assets/css/change-password.css'
+import PasswordInput from '@/components/PasswordInput'
 
 const ChangePassword = () => {
   const navigate = useNavigate()
@@ -30,7 +27,7 @@ const ChangePassword = () => {
   const [visible, setVisible] = useState(false)
   const [hasPassword, setHasPassword] = useState(false)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, clearErrors, setError, reset } = useForm<FormFields>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, clearErrors, setError, reset } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit',
   })
@@ -94,54 +91,54 @@ const ChangePassword = () => {
         <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
           <h1 className="password-reset-form-title">{strings.CHANGE_PASSWORD_HEADING}</h1>
           <form className="form" onSubmit={handleSubmit(onSubmit)}>
+
             {hasPassword && (
-              <FormControl fullWidth margin="dense" error={!!errors.currentPassword}>
-                <InputLabel className="required">{strings.CURRENT_PASSWORD}</InputLabel>
-                <Input
-                  {...register('currentPassword')}
-                  type="password"
-                  required
-                  onChange={() => {
-                    if (errors.currentPassword) {
-                      clearErrors('currentPassword')
-                    }
-                  }}
-                />
-                <FormHelperText>{errors.currentPassword?.message || ''}</FormHelperText>
-              </FormControl>
+              <PasswordInput
+                label={strings.CURRENT_PASSWORD}
+                variant="standard"
+                {...register('currentPassword')}
+                error={!!errors.currentPassword}
+                helperText={errors.currentPassword?.message}
+                onChange={(e) => {
+                  if (errors.currentPassword) {
+                    clearErrors('currentPassword')
+                  }
+                  setValue('currentPassword', e.target.value)
+                }}
+                required
+              />
             )}
-            <FormControl fullWidth margin="dense" error={!!errors.newPassword}>
-              <InputLabel className="required">
-                {strings.NEW_PASSWORD}
-              </InputLabel>
-              <Input
-                {...register('newPassword')}
-                type="password"
-                required
-                onChange={() => {
-                  if (errors.newPassword) {
-                    clearErrors('newPassword')
-                  }
-                }}
-              />
-              <FormHelperText>{errors.newPassword?.message || ''}</FormHelperText>
-            </FormControl>
-            <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
-              <InputLabel className="required">
-                {commonStrings.CONFIRM_PASSWORD}
-              </InputLabel>
-              <Input
-                {...register('confirmPassword')}
-                type="password"
-                required
-                onChange={() => {
-                  if (errors.confirmPassword) {
-                    clearErrors('confirmPassword')
-                  }
-                }}
-              />
-              <FormHelperText>{errors.confirmPassword?.message || ''}</FormHelperText>
-            </FormControl>
+
+            <PasswordInput
+              label={strings.NEW_PASSWORD}
+              variant="standard"
+              {...register('newPassword')}
+              error={!!errors.newPassword}
+              helperText={errors.newPassword?.message}
+              onChange={(e) => {
+                if (errors.newPassword) {
+                  clearErrors('newPassword')
+                }
+                setValue('newPassword', e.target.value)
+              }}
+              required
+            />
+
+            <PasswordInput
+              label={commonStrings.CONFIRM_PASSWORD}
+              variant="standard"
+              {...register('confirmPassword')}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+              onChange={(e) => {
+                if (errors.confirmPassword) {
+                  clearErrors('confirmPassword')
+                }
+                setValue('confirmPassword', e.target.value)
+              }}
+              required
+            />
+
             <div className="buttons">
               <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained" disabled={isSubmitting}>
                 {commonStrings.RESET_PASSWORD}

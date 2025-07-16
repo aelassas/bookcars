@@ -19,6 +19,7 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import { schema, FormFields } from '@/models/SignUpForm'
+import PasswordInput from '@/components/PasswordInput'
 
 import '@/assets/css/signup.css'
 
@@ -113,48 +114,49 @@ const SignUp = () => {
                 />
                 <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
               </FormControl>
-              <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
-                <Input
-                  {...register('password')}
-                  type="password"
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                  onChange={(e) => {
-                    if (errors.password) {
-                      clearErrors('password')
-                    }
-                    setValue('password', e.target.value)
-                  }}
-                  required
-                />
-                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="confirm-password">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                <Input
-                  {...register('confirmPassword')}
-                  type="password"
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                  onChange={(e) => {
-                    if (errors.confirmPassword) {
-                      clearErrors('confirmPassword')
-                    }
-                    setValue('confirmPassword', e.target.value)
-                  }}
-                  required
-                />
-                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
-              </FormControl>
+
+              <PasswordInput
+                label={commonStrings.PASSWORD}
+                variant="standard"
+                {...register('password')}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                onChange={(e) => {
+                  if (errors.password) {
+                    clearErrors('password')
+                  }
+                  setValue('password', e.target.value)
+                }}
+                required
+                inputProps={{
+                  autoComplete: 'new-password',
+                  form: {
+                    autoComplete: 'off',
+                  },
+                }}
+              />
+
+              <PasswordInput
+                label={commonStrings.CONFIRM_PASSWORD}
+                variant="standard"
+                {...register('confirmPassword')}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
+                onChange={(e) => {
+                  if (errors.confirmPassword) {
+                    clearErrors('confirmPassword')
+                  }
+                  setValue('confirmPassword', e.target.value)
+                }}
+                required
+                inputProps={{
+                  autoComplete: 'new-password',
+                  form: {
+                    autoComplete: 'off',
+                  },
+                }}
+              />
+
               <div className="buttons">
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
                   {strings.SIGN_UP}
