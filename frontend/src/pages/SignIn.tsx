@@ -21,6 +21,7 @@ import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
 import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/SignInForm'
+import PasswordInput from '@/components/PasswordInput'
 
 import '@/assets/css/signin.css'
 
@@ -125,22 +126,21 @@ const SignIn = () => {
               />
               <FormHelperText error={!!errors.email}>{errors.email?.message || ''}</FormHelperText>
             </FormControl>
-            <FormControl fullWidth margin="dense" error={!!errors.password}>
-              <InputLabel>{commonStrings.PASSWORD}</InputLabel>
-              <Input
-                {...register('password')}
-                onChange={(e) => {
-                  if (errors.password) {
-                    clearErrors('password')
-                  }
-                  setValue('password', e.target.value)
-                }}
-                type="password"
-                autoComplete="password"
-                required
-              />
-              <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
-            </FormControl>
+
+            <PasswordInput
+              label={commonStrings.PASSWORD}
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              onChange={(e) => {
+                if (errors.password) {
+                  clearErrors('password')
+                }
+                setValue('password', e.target.value)
+              }}
+              required
+              autoComplete="password"
+            />
 
             <div className="stay-connected">
               <input
