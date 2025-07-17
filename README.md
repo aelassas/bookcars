@@ -156,6 +156,7 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)  
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)  
+1. [Free SSL Setup Guide](https://github.com/aelassas/bookcars/wiki/Free-SSL-Setup-Guide)
 1. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)  
 1. [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)  
 1. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)  
@@ -191,6 +192,7 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)  
 1. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)  
 1. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
+
 
 ## License
 
