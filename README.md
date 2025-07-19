@@ -128,7 +128,7 @@ You can install the Android App by downloading the APK and installing it on any 
 * [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.9/bookcars-7.9.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
-
+<!--
 ## Website Source Code (bookcars.github.io)
 
 The source code for the official BookCars website is available here:
@@ -144,7 +144,7 @@ The codebase follows the Separation of Concerns (SoC) principle, with a modular 
 The website loads in under 1.5 seconds on slow 4G with **0ms blocking**, **0 layout shift**, and a blazing **Speed Index of 0.8**.
 
 Feel free to explore the code, suggest improvements, or use it as a template for your own landing page.
-
+-->
 ## Documentation
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
