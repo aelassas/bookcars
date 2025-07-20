@@ -191,6 +191,8 @@ export interface CreateCarPayload {
   locations: string[]
 
   // price fields
+  hourlyPrice: number | null
+  discountedHourlyPrice: number | null
   dailyPrice: number
   discountedDailyPrice: number | null
   biWeeklyPrice: number | null
@@ -469,6 +471,8 @@ export interface Car {
   // price fields
   dailyPrice: number
   discountedDailyPrice: number | null
+  hourlyPrice: number | null
+  discountedHourlyPrice: number | null
   biWeeklyPrice: number | null
   discountedBiWeeklyPrice: number | null
   weeklyPrice: number | null

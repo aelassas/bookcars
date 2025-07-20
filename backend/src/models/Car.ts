@@ -36,6 +36,12 @@ const carSchema = new Schema<env.Car>(
     discountedDailyPrice: {
       type: Number,
     },
+    hourlyPrice: {
+      type: Number,
+    },
+    discountedHourlyPrice: {
+      type: Number,
+    },
     biWeeklyPrice: {
       type: Number,
     },
