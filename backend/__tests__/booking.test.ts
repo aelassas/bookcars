@@ -94,6 +94,8 @@ beforeAll(async () => {
     locations: [LOCATION_ID],
     dailyPrice: 78,
     discountedDailyPrice: null,
+    hourlyPrice: null,
+    discountedHourlyPrice: null,
     biWeeklyPrice: null,
     discountedBiWeeklyPrice: null,
     weeklyPrice: null,

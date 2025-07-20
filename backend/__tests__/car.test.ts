@@ -96,6 +96,8 @@ describe('POST /api/create-car', () => {
       locations: [LOCATION1_ID],
       dailyPrice: 78,
       discountedDailyPrice: 70,
+      hourlyPrice: 10,
+      discountedHourlyPrice: 9,
       biWeeklyPrice: 210,
       discountedBiWeeklyPrice: 200,
       weeklyPrice: 490,
@@ -138,6 +140,8 @@ describe('POST /api/create-car', () => {
     expect(car.locations).toStrictEqual(payload.locations)
     expect(car.dailyPrice).toBe(payload.dailyPrice)
     expect(car.discountedDailyPrice).toBe(payload.discountedDailyPrice)
+    expect(car.hourlyPrice).toBe(payload.hourlyPrice)
+    expect(car.discountedHourlyPrice).toBe(payload.discountedHourlyPrice)
     expect(car.biWeeklyPrice).toBe(payload.biWeeklyPrice)
     expect(car.discountedBiWeeklyPrice).toBe(payload.discountedBiWeeklyPrice)
     expect(car.weeklyPrice).toBe(payload.weeklyPrice)
@@ -286,6 +290,8 @@ describe('PUT /api/update-car', () => {
       locations: [LOCATION2_ID],
       dailyPrice: 98,
       discountedDailyPrice: 90,
+      hourlyPrice: 12,
+      discountedHourlyPrice: 11,
       biWeeklyPrice: 270,
       discountedBiWeeklyPrice: 250,
       weeklyPrice: 630,
@@ -328,6 +334,10 @@ describe('PUT /api/update-car', () => {
     expect(car.locations).toStrictEqual(payload.locations)
     expect(car.dailyPrice).toBe(payload.dailyPrice)
     expect(car.discountedDailyPrice).toBe(payload.discountedDailyPrice)
+
+    expect(car.hourlyPrice).toBe(payload.hourlyPrice)
+    expect(car.discountedHourlyPrice).toBe(payload.discountedHourlyPrice)
+
     expect(car.biWeeklyPrice).toBe(payload.biWeeklyPrice)
     expect(car.discountedBiWeeklyPrice).toBe(payload.discountedBiWeeklyPrice)
     expect(car.weeklyPrice).toBe(payload.weeklyPrice)

@@ -618,6 +618,8 @@ export interface Car extends Document {
   minimumAge: number
   locations: Types.ObjectId[]
 
+  hourlyPrice: number | null
+  discountedHourlyPrice: number | null
   dailyPrice: number
   discountedDailyPrice: number | null
   biWeeklyPrice: number | null
