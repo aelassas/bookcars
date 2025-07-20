@@ -368,7 +368,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     }
   }
 
-  // apply price change rate if provided
+  // apply price change rate
   totalPrice += totalPrice * (priceChangeRate / 100)
 
   return totalPrice
