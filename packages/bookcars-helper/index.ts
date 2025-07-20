@@ -309,7 +309,6 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
 
     let remainingDays = totalDays
 
-
     if (remainingDays >= 30) {
       if (car.discountedMonthlyPrice || car.monthlyPrice) {
         totalPrice += (car.discountedMonthlyPrice || car.monthlyPrice)! * Math.floor(remainingDays / 30)
@@ -369,6 +368,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     }
   }
 
+  // apply price change rate if provided
   totalPrice += totalPrice * (priceChangeRate / 100)
 
   return totalPrice
