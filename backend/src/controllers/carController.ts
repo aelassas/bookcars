@@ -163,6 +163,8 @@ export const update = async (req: Request, res: Response) => {
         locations,
         dailyPrice,
         discountedDailyPrice,
+        hourlyPrice,
+        discountedHourlyPrice,
         biWeeklyPrice,
         discountedBiWeeklyPrice,
         weeklyPrice,
@@ -201,6 +203,8 @@ export const update = async (req: Request, res: Response) => {
       car.type = type as bookcarsTypes.CarType
       car.dailyPrice = dailyPrice
       car.discountedDailyPrice = discountedDailyPrice
+      car.hourlyPrice = hourlyPrice
+      car.discountedHourlyPrice = discountedHourlyPrice
       car.biWeeklyPrice = biWeeklyPrice
       car.discountedBiWeeklyPrice = discountedBiWeeklyPrice
       car.weeklyPrice = weeklyPrice

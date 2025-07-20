@@ -72,6 +72,8 @@ const CreateCar = () => {
       locations: [],
       dailyPrice: '',
       discountedDailyPrice: '',
+      hourlyPrice: '',
+      discountedHourlyPrice: '',
       biWeeklyPrice: '',
       discountedBiWeeklyPrice: '',
       weeklyPrice: '',
@@ -167,6 +169,8 @@ const CreateCar = () => {
         locations: data.locations.map((l) => l._id),
         dailyPrice: Number(data.dailyPrice),
         discountedDailyPrice: getPrice(data.discountedDailyPrice || ''),
+        hourlyPrice: getPrice(data.hourlyPrice || ''),
+        discountedHourlyPrice: getPrice(data.discountedHourlyPrice || ''),
         biWeeklyPrice: getPrice(data.biWeeklyPrice || ''),
         discountedBiWeeklyPrice: getPrice(data.discountedBiWeeklyPrice || ''),
         weeklyPrice: getPrice(data.weeklyPrice || ''),
@@ -385,6 +389,38 @@ const CreateCar = () => {
 
             {!isDateBasedPrice && (
               <>
+                <FormControl fullWidth margin="dense">
+                  <TextField
+                    label={`${strings.HOURLY_PRICE} (${commonStrings.CURRENCY})`}
+                    {...register('hourlyPrice')}
+                    error={!!errors.hourlyPrice}
+                    helperText={errors.hourlyPrice?.message}
+                    variant="standard"
+                    autoComplete="off"
+                    onChange={() => {
+                      if (errors.hourlyPrice) {
+                        clearErrors('hourlyPrice')
+                      }
+                    }}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth margin="dense">
+                  <TextField
+                    label={`${strings.DISCOUNTED_HOURLY_PRICE} (${commonStrings.CURRENCY})`}
+                    {...register('discountedHourlyPrice')}
+                    variant="standard"
+                    autoComplete="off"
+                    error={!!errors.discountedHourlyPrice}
+                    helperText={errors.discountedHourlyPrice?.message}
+                    onChange={() => {
+                      if (errors.discountedHourlyPrice) {
+                        clearErrors('discountedHourlyPrice')
+                      }
+                    }}
+                  />
+                </FormControl>
+
                 <FormControl fullWidth margin="dense">
                   <TextField
                     label={`${strings.BI_WEEKLY_PRICE} (${commonStrings.CURRENCY})`}
