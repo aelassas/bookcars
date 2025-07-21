@@ -75,6 +75,9 @@ const SearchForm = (
   }, [pickupLocation])
 
   const _init = async () => {
+    if (!settings) {
+      return
+    }
     const _language = await UserService.getLanguage()
     i18n.locale = _language
     setLanguage(_language)
