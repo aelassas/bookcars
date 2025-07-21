@@ -1,5 +1,23 @@
 # Releases
 
+## [BookCars 8.0](https://github.com/aelassas/bookcars/releases/tag/v8.0) – 2025-07-21
+
+* feat(admin,frontend): add password visibility toggle with eye icon (#82)
+* feat(pricing): add hourly and discounted hourly price support (#83)
+* feat(pricing): optimize [price calculation algorithm](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* fix(frontend,mobile): gracefully handle settings context loading
+* chore: update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v7.9...v8.0
+
+### Assets
+- [bookcars-8.0.apk](https://github.com/aelassas/bookcars/releases/download/v8.0/bookcars-8.0.apk) (92.12 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.0/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.0)
+
 ## [BookCars 7.9](https://github.com/aelassas/bookcars/releases/tag/v7.9) – 2025-07-11
 
 * fix(docker): .env.docker file not loaded in backend container and setup issues
