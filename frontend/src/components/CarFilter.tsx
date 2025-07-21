@@ -92,7 +92,7 @@ const CarFilter = ({
   const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
-    if (filterFrom) {
+    if (settings && filterFrom) {
       let __minDate = new Date(filterFrom)
       __minDate = addHours(__minDate, settings!.minRentalHours)
       setMinDate(__minDate)
@@ -190,7 +190,7 @@ const CarFilter = ({
     validateTimes()
   }, [from, to]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Guard against using `minDate` before it's ready
+  // Guard against using `minDate` before it's ready
   if (!settings || !minDate || !fromMinDate || !minTime || !maxTime) {
     return null
   }
