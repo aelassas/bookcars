@@ -40,17 +40,30 @@ const CarFilter = ({
 }: CarFilterProps) => {
   const { settings } = useSetting()
 
-  const minTime = new Date()
-  minTime.setHours(settings!.minPickupDropoffHour, 0, 0, 0)
-
-  const maxTime = new Date()
-  maxTime.setHours(settings!.maxPickupDropoffHour, 0, 0, 0)
-
-  let _minDate = new Date()
-  _minDate = addHours(_minDate, settings!.minPickupHours)
-
-  const [minDate, setMinDate] = useState<Date>()
+  const [minTime, setMinTime] = useState<Date | null>(null)
+  const [maxTime, setMaxTime] = useState<Date | null>(null)
+  const [minDate, setMinDate] = useState<Date | null>(null)
+  const [fromMinDate, setFromMinDate] = useState<Date | null>(null)
   const [offsetHeight, setOffsetHeight] = useState(OFFSET_HEIGHT)
+
+  useEffect(() => {
+    if (settings) {
+      const _minTime = new Date()
+      _minTime.setHours(settings.minPickupDropoffHour, 0, 0, 0)
+      setMinTime(_minTime)
+
+      const _maxTime = new Date()
+      _maxTime.setHours(settings.maxPickupDropoffHour, 0, 0, 0)
+      setMaxTime(_maxTime)
+
+      let _minDate = new Date()
+      _minDate = addHours(_minDate, settings.minPickupHours)
+
+      setFromMinDate(_minDate)
+      setMinDate(_minDate)
+    }
+  }, [settings])
+
 
   const {
     register,
@@ -177,6 +190,11 @@ const CarFilter = ({
     validateTimes()
   }, [from, to]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Guard against using `minDate` before it's ready
+  if (!settings || !minDate || !fromMinDate || !minTime || !maxTime) {
+    return null
+  }
+
   const handleSameLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue('sameLocation', e.target.checked)
 
@@ -279,7 +297,7 @@ const CarFilter = ({
                 variant="standard"
                 label={strings.PICK_UP_DATE}
                 value={field.value || undefined}
-                minDate={_minDate}
+                minDate={fromMinDate}
                 minTime={minTime}
                 maxTime={maxTime}
                 onChange={(date) => {
