@@ -48,7 +48,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Payment management
-* [Multiple payment gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
+* [Multiple payment gateways supported](https://github.com/aelassas/bookcars/wiki/Payment-Gateways): Stripe, PayPal
 * Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
 
 ### Locations & Search
