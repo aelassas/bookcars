@@ -44,7 +44,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
 ### Pricing & Payments
-* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation): Hourly, daily, weekly, bi-weekly, and monthly rates
 * [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Payment management
