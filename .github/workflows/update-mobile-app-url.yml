@@ -24,10 +24,6 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "VERSION=${TAG_NAME#v}" >> $GITHUB_ENV
 
-      - name: Update .github/latest-release.json
-        run: |
-          echo "{\"latestApkUrl\": \"https://github.com/aelassas/bookcars/releases/download/${TAG_NAME}/bookcars-${VERSION}.apk\"}" > .github/latest-release.json
-
       - name: Commit and push latest-release.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,14 +31,26 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Switch to the default branch
+          # Fetch and switch to default branch
           git fetch origin
           DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
           git checkout $DEFAULT_BRANCH
-          git pull origin $DEFAULT_BRANCH
+          git pull --rebase origin $DEFAULT_BRANCH
+
+          # Generate the JSON file after pull
+          echo "{\"latestApkUrl\": \"https://github.com/aelassas/bookcars/releases/download/${TAG_NAME}/bookcars-${VERSION}.apk\"}" > .github/latest-release.json
 
           git add .github/latest-release.json
           git diff --cached --quiet || git commit -m "chore: update latest-release.json for ${TAG_NAME}"
-          
+
+          # Push with retry
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git push origin $DEFAULT_BRANCH
+          n=0
+          until [ $n -ge 3 ]
+          do
+            git push origin $DEFAULT_BRANCH && break
+            echo "Push failed, retrying in 5 seconds..."
+            sleep 5
+            git pull --rebase origin $DEFAULT_BRANCH
+            n=$((n+1))
+          done
