@@ -35,6 +35,8 @@ export const schema = z.object({
   locations: z.array(optionSchema),
   dailyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }),
   discountedDailyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }).optional(),
+  hourlyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }),
+  discountedHourlyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }).optional(),
   biWeeklyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }).optional(),
   discountedBiWeeklyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }).optional(),
   weeklyPrice: z.string().refine((val) => !val || numberRegex.test(val), { message: commonStrings.FIELD_NOT_VALID }).optional(),

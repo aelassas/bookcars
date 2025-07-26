@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
   Button,
   Paper
 } from '@mui/material'
@@ -14,7 +10,6 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as cpStrings } from '@/lang/change-password'
 import { strings as rpStrings } from '@/lang/reset-password'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import * as helper from '@/utils/helper'
@@ -24,6 +19,7 @@ import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/ResetPasswordForm'
 
 import '@/assets/css/reset-password.css'
+import PasswordInput from '@/components/PasswordInput'
 
 const ResetPassword = () => {
   const navigate = useNavigate()
@@ -36,7 +32,7 @@ const ResetPassword = () => {
   const [noMatch, setNoMatch] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<FormFields>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, setError, clearErrors } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit',
   })
@@ -115,36 +111,44 @@ const ResetPassword = () => {
           <Paper className="reset-password-form" elevation={10}>
             <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl fullWidth margin="dense" error={!!errors.password}>
-                <InputLabel className="required">{cpStrings.NEW_PASSWORD}</InputLabel>
-                <Input
-                  {...register('password')}
-                  type="password"
-                  required
-                  autoComplete="new-password"
-                  onChange={() => {
-                    if (errors.password) {
-                      clearErrors('password')
-                    }
-                  }}
-                />
-                <FormHelperText error={!!errors.password}>{errors.password?.message || ''}</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth margin="dense" error={!!errors.confirmPassword}>
-                <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                <Input
-                  type="password"
-                  {...register('confirmPassword')}
-                  required
-                  autoComplete="new-password"
-                  onChange={() => {
-                    if (errors.confirmPassword) {
-                      clearErrors('confirmPassword')
-                    }
-                  }}
-                />
-                <FormHelperText error={!!errors.confirmPassword}>{errors.confirmPassword?.message || ''}</FormHelperText>
-              </FormControl>
+
+              <PasswordInput
+                label={commonStrings.PASSWORD}
+                variant="standard"
+                {...register('password')}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                onChange={(e) => {
+                  if (errors.password) {
+                    clearErrors('password')
+                  }
+                  setValue('password', e.target.value)
+                }}
+                required
+                autoComplete="new-password"
+              />
+
+              <PasswordInput
+                label={commonStrings.CONFIRM_PASSWORD}
+                variant="standard"
+                {...register('confirmPassword')}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
+                onChange={(e) => {
+                  if (errors.confirmPassword) {
+                    clearErrors('confirmPassword')
+                  }
+                  setValue('confirmPassword', e.target.value)
+                }}
+                required
+                inputProps={{
+                  autoComplete: 'new-password',
+                  form: {
+                    autoComplete: 'off',
+                  },
+                }}
+              />
+
               <div className="buttons">
                 <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disabled={isSubmitting}>
                   {commonStrings.SAVE}

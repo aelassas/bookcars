@@ -44,11 +44,11 @@ Customers can register through the web frontend or mobile app, search for availa
 * [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
 
 ### Pricing & Payments
-* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation): Hourly, daily, weekly, bi-weekly, and monthly rates
 * [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
 * [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
 * Payment management
-* [Multiple payment gateways supported (Stripe, PayPal)](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
+* [Multiple payment gateways supported](https://github.com/aelassas/bookcars/wiki/Payment-Gateways): Stripe, PayPal
 * Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
 
 ### Locations & Search
@@ -87,6 +87,8 @@ If this project helped you, saved you time, or inspired you in any way, please c
 
 To contribute code or report issues, please read the [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md) to learn about the process, coding standards, and how to submit pull requests.
 
+If you want to customize BookCars while keeping your fork up to date with the latest changes, check out the [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync) guide in the Wiki.
+
 ## Live Demo
 <!--
 Some features are locked down on the demo links provided. To have access to all the features contact me by email. You can find it on my [profile page](https://github.com/aelassas) (requires login).
@@ -111,7 +113,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-7.9.png">
+<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-8.0.png">
 
 #### How to install the Mobile App on Android
 
@@ -123,10 +125,10 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v7.9/bookcars-7.9.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.0/bookcars-8.0.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
-
+<!--
 ## Website Source Code (bookcars.github.io)
 
 The source code for the official BookCars website is available here:
@@ -137,8 +139,12 @@ It features a clean landing page with multilingual support, dark mode, and SEO o
 
 The codebase follows the Separation of Concerns (SoC) principle, with a modular and maintainable architecture that aligns with the Single Responsibility Principle (SRP), modularity, and modern frontend best practices. It uses GitHub Actions for automatic builds and deployments. The Android demo app download link is dynamically fetched and updated on the site.
 
-Feel free to explore the code, suggest improvements, or use it as a template for your own landing page.
+⚡ **Ultra-fast performance**
 
+The website loads in under 1.5 seconds on slow 4G with **0ms blocking**, **0 layout shift**, and a blazing **Speed Index of 0.8**.
+
+Feel free to explore the code, suggest improvements, or use it as a template for your own landing page.
+-->
 ## Documentation
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
@@ -152,6 +158,7 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)  
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)  
+1. [Free SSL Setup Guide](https://github.com/aelassas/bookcars/wiki/Free-SSL-Setup-Guide)
 1. [Setup Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)  
 1. [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)  
 1. [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)  
@@ -168,14 +175,26 @@ Feel free to explore the code, suggest improvements, or use it as a template for
    1. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)  
    1. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)  
    1. [Run iOS App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#run-ios-app)  
+1. [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync)
 1. [Locations](https://github.com/aelassas/bookcars/wiki/Locations)  
 1. [Auto‐Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)  
 1. [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)  
    1. [Pricing Fields](https://github.com/aelassas/bookcars/wiki/Price-Calculation#pricing-fields)  
    1. [Discounted Prices](https://github.com/aelassas/bookcars/wiki/Price-Calculation#discounted-prices)  
-   1. [Date Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)  
+   1. [Date-Based Price Rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)  
+      1. [How to Set](https://github.com/aelassas/bookcars/wiki/Price-Calculation#how-to-set)  
+      1. [Behavior](https://github.com/aelassas/bookcars/wiki/Price-Calculation#behavior)  
    1. [Price Change Rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)  
    1. [Calculation Algorithm](https://github.com/aelassas/bookcars/wiki/Price-Calculation#calculation-algorithm)  
+      1. [Date-Based Price Rates Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates-calculation)  
+      1. [Default Pricing Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation#default-pricing-calculation)  
+         1. [Basic Rules](https://github.com/aelassas/bookcars/wiki/Price-Calculation#basic-rules)  
+         1. [Examples](https://github.com/aelassas/bookcars/wiki/Price-Calculation#examples)  
+            1. [Example 1: 10 Hours](https://github.com/aelassas/bookcars/wiki/Price-Calculation#example-1-rental-for-10-hours)  
+            1. [Example 2: 36 Hours](https://github.com/aelassas/bookcars/wiki/Price-Calculation#example-2-rental-for-36-hours-1-day-and-12-hours)  
+            1. [Example 3: 10 Days](https://github.com/aelassas/bookcars/wiki/Price-Calculation#example-3-rental-for-10-days)  
+            1. [Example 4: 42 Days](https://github.com/aelassas/bookcars/wiki/Price-Calculation#example-4-rental-for-42-days)  
+      1. [Function Reference](https://github.com/aelassas/bookcars/wiki/Price-Calculation#function-reference)  
 1. [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)  
 1. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)  
 1. [Add New Currency](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)  

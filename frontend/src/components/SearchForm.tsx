@@ -40,19 +40,31 @@ const SearchForm = ({
 
   const { settings } = useSetting()
 
-  const minTime = new Date()
-  minTime.setHours(settings!.minPickupDropoffHour, 0, 0, 0)
-
-  const maxTime = new Date()
-  maxTime.setHours(settings!.maxPickupDropoffHour, 0, 0, 0)
-
-  let _minDate = new Date()
-  _minDate = addHours(_minDate, settings!.minPickupHours)
-
   const [pickupLocationId, setPickupLocationId] = useState('')
   const [dropOffLocationId, setDropOffLocationId] = useState('')
-  const [minDate, setMinDate] = useState(_minDate)
+  const [minTime, setMinTime] = useState<Date | null>(null)
+  const [maxTime, setMaxTime] = useState<Date | null>(null)
+  const [minDate, setMinDate] = useState<Date | null>(null)
+  const [fromMinDate, setFromMinDate] = useState<Date | null>(null)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
+
+  useEffect(() => {
+    if (settings) {
+      const _minTime = new Date()
+      _minTime.setHours(settings.minPickupDropoffHour, 0, 0, 0)
+      setMinTime(_minTime)
+
+      const _maxTime = new Date()
+      _maxTime.setHours(settings.maxPickupDropoffHour, 0, 0, 0)
+      setMaxTime(_maxTime)
+
+      let _minDate = new Date()
+      _minDate = addHours(_minDate, settings.minPickupHours)
+
+      setFromMinDate(_minDate)
+      setMinDate(_minDate)
+    }
+  }, [settings])
 
   const {
     register,
@@ -77,30 +89,32 @@ const SearchForm = ({
   const sameLocation = useWatch({ control, name: 'sameLocation' })
 
   useEffect(() => {
-    const _from = new Date()
-    if (settings!.minPickupHours < 72) {
-      _from.setDate(_from.getDate() + 3)
-    } else {
-      _from.setDate(_from.getDate() + Math.ceil(settings!.minPickupHours / 24) + 1)
+    if (settings) {
+      const _from = new Date()
+      if (settings!.minPickupHours < 72) {
+        _from.setDate(_from.getDate() + 3)
+      } else {
+        _from.setDate(_from.getDate() + Math.ceil(settings!.minPickupHours / 24) + 1)
+      }
+      _from.setHours(10)
+      _from.setMinutes(0)
+      _from.setSeconds(0)
+      _from.setMilliseconds(0)
+
+      const _to = new Date(_from)
+      if (settings!.minRentalHours < 72) {
+        _to.setDate(_to.getDate() + 3)
+      } else {
+        _to.setDate(_to.getDate() + Math.ceil(settings!.minRentalHours / 24) + 1)
+      }
+
+      let __minDate = new Date()
+      __minDate = addHours(__minDate, settings!.minRentalHours)
+
+      setMinDate(__minDate)
+      setValue('from', _from)
+      setValue('to', _to)
     }
-    _from.setHours(10)
-    _from.setMinutes(0)
-    _from.setSeconds(0)
-    _from.setMilliseconds(0)
-
-    const _to = new Date(_from)
-    if (settings!.minRentalHours < 72) {
-      _to.setDate(_to.getDate() + 3)
-    } else {
-      _to.setDate(_to.getDate() + Math.ceil(settings!.minRentalHours / 24) + 1)
-    }
-
-    let __minDate = new Date()
-    __minDate = addHours(__minDate, settings!.minRentalHours)
-
-    setMinDate(__minDate)
-    setValue('from', _from)
-    setValue('to', _to)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -131,6 +145,10 @@ const SearchForm = ({
     }
     init()
   }, [__dropOffLocation]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setRanges(__ranges || bookcarsHelper.getAllRanges())
+  }, [__ranges])
 
   const validateHour = (hour: number) => {
     if (!settings) {
@@ -215,9 +233,10 @@ const SearchForm = ({
     validateTimes()
   }, [from, to]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    setRanges(__ranges || bookcarsHelper.getAllRanges())
-  }, [__ranges])
+  // Guard against using `minDate` before it's ready
+  if (!settings || !minDate || !fromMinDate || !minTime || !maxTime) {
+    return null
+  }
 
   const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {
     const _pickupLocationId = (values.length > 0 && values[0]._id) || ''
@@ -313,7 +332,7 @@ const SearchForm = ({
               variant="outlined"
               label={strings.PICK_UP_DATE}
               value={field.value || undefined}
-              minDate={_minDate}
+              minDate={fromMinDate}
               minTime={minTime}
               maxTime={maxTime}
               onChange={(date) => {
