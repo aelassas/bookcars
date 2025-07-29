@@ -29,6 +29,24 @@ The admin panel allows admins to manage suppliers, cars, countries, locations, p
 
 Customers can register through the web frontend or mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process in a few clicks.
 
+## Quick Links
+* [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
+* [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
+* [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)  
+* [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
+* [Locations](https://github.com/aelassas/bookcars/wiki/Locations)
+* [Auto‐Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)  
+* [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
+* [Supplier Contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)  
+* [Social Login Setup](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup)  
+* [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
+* [Free SSL Setup Guide](https://github.com/aelassas/bookcars/wiki/Free-SSL-Setup-Guide)
+* [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+* [Run from Source (Docker)](https://github.com/aelassas/bookcars/wiki/Run-from-Source-(Docker))
+* [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
+* [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync)
+* [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)  
+
 ## Features
 
 ### Supplier & Fleet Management
