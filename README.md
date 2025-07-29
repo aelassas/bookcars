@@ -165,6 +165,7 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 -->
 ## Documentation
 
+<!--
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
    1. [Frontend](https://github.com/aelassas/bookcars/wiki/Overview#frontend)  
    1. [Admin Panel](https://github.com/aelassas/bookcars/wiki/Overview#admin-panel)  
@@ -172,8 +173,9 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)  
 1. [Software Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)  
 1. [Advanced Features](https://github.com/aelassas/bookcars/wiki/Advanced-Features)  
-1. [Installing (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))  
-1. [Installing (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
+-->
+1. [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))  
+1. [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)  
    1. [SSL](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#ssl)  
 1. [Free SSL Setup Guide](https://github.com/aelassas/bookcars/wiki/Free-SSL-Setup-Guide)
@@ -220,10 +222,12 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Testing](https://github.com/aelassas/bookcars/wiki/Testing)  
    1. [Integration Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Integration-Tests-and-Coverage)  
    1. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)  
-1. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)  
+1. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
+<!-- 
 1. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)  
 1. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)  
 1. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
+-->
 
 ## License
 
