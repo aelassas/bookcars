@@ -224,11 +224,9 @@ Feel free to explore the code, suggest improvements, or use it as a template for
    1. [Integration Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Integration-Tests-and-Coverage)  
    1. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)  
 1. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)  
-<!--
 1. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)  
 1. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)  
 1. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
--->
 
 ## License
 
