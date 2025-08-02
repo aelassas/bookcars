@@ -30,6 +30,7 @@ The admin panel allows admins to manage suppliers, cars, countries, locations, p
 Customers can register through the web frontend or mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process in a few clicks.
 
 ## Quick Links
+* [Software Architecture](https://github.com/aelassas/bookcars/wiki/Software-Architecture)  
 * [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
 * [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
 * [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)  
@@ -171,9 +172,9 @@ Feel free to explore the code, suggest improvements, or use it as a template for
    1. [Admin Panel](https://github.com/aelassas/bookcars/wiki/Overview#admin-panel)  
    1. [Mobile App](https://github.com/aelassas/bookcars/wiki/Overview#mobile-app)  
 1. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)  
-1. [Software Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)  
 1. [Advanced Features](https://github.com/aelassas/bookcars/wiki/Advanced-Features)  
 -->
+1. [Software Architecture](https://github.com/aelassas/bookcars/wiki/Software-Architecture)  
 1. [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))  
 1. [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)#docker-image)  
@@ -222,8 +223,8 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Testing](https://github.com/aelassas/bookcars/wiki/Testing)  
    1. [Integration Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Integration-Tests-and-Coverage)  
    1. [Manual Tests](https://github.com/aelassas/bookcars/wiki/Manual-Tests)  
-1. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
-<!-- 
+1. [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)  
+<!--
 1. [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md)  
 1. [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md)  
 1. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
