@@ -30,6 +30,7 @@ The admin panel allows admins to manage suppliers, cars, countries, locations, p
 Customers can register through the web frontend or mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process in a few clicks.
 
 ## Quick Links
+* [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
 * [Software Architecture](https://github.com/aelassas/bookcars/wiki/Software-Architecture)  
 * [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
 * [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
@@ -174,6 +175,7 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Why Use BookCars](https://github.com/aelassas/bookcars/wiki/Why-Use-BookCars)  
 1. [Advanced Features](https://github.com/aelassas/bookcars/wiki/Advanced-Features)  
 -->
+1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
 1. [Software Architecture](https://github.com/aelassas/bookcars/wiki/Software-Architecture)  
 1. [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))  
 1. [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))  
