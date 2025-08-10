@@ -101,10 +101,10 @@ jobs:
         BC_PAYPAL_CLIENT_SECRET: ${{ secrets.BC_PAYPAL_CLIENT_SECRET }}
         BC_ADMIN_EMAIL: ${{ vars.BC_ADMIN_EMAIL }}
 
-    - name: Show coverage report content
-      run: |
-          echo "----- coverage.cobertura.xml -----"
-          cat ./backend/coverage/cobertura-coverage.xml
+    # - name: Show coverage report content
+    #   run: |
+    #       echo "----- coverage.cobertura.xml -----"
+    #       cat ./backend/coverage/cobertura-coverage.xml
 
     - name: Upload coverage reports to Codecov
       id: codecov
