@@ -1,0 +1,27 @@
+name: containerize
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        component: [frontend, backend, admin]
+    env:
+      REPO_PREFIX: ghcr.io/cariiDev/bookcars/${{ matrix.component }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: login-ghcr
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: build-docker-image
+        run: |
+          docker build -t $REPO_PREFIX:${{ github.sha }} -f ${{ matrix.component }}/Dockerfile
+          docker push $REPO_PREFIX:${{ github.sha }}
+          docker tag $REPO_PREFIX:${{ github.sha }} $REPO_PREFIX:latest
+          docker push $REPO_PREFIX:latest
