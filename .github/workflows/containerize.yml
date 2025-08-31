@@ -25,7 +25,7 @@ jobs:
       matrix:
         component: [frontend, backend, admin]
     env:
-      REPO_PREFIX: ghcr.io/${{ github.repository }}/${{ github.events.inputs.environment }}/${{ matrix.component }}
+      REPO_PREFIX: ghcr.io/${{ github.repository }}/${{ github.events.inputs.environment || 'development' }}/${{ matrix.component }}
 
     steps:
       - uses: actions/checkout@v4
