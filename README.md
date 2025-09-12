@@ -233,5 +233,6 @@ Feel free to explore the code, suggest improvements, or use it as a template for
 1. [Code of Conduct](https://github.com/aelassas/bookcars/blob/main/.github/CODE_OF_CONDUCT.md)
 
 ## License
+Developed by Bashar Alkhawlani
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
