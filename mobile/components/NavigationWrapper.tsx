@@ -19,7 +19,7 @@ const NavigationWrapper: React.FC<NavigationWrapperProps> = ({ onReady, ref: nav
       onReady={onReady}
       onStateChange={refresh}
     >
-      <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+      <ExpoStatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
       <DrawerNavigator key={language} />
       <Toast />
     </NavigationContainer>

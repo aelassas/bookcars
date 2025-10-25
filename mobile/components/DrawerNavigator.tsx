@@ -124,6 +124,7 @@ const DrawerNavigator = () => {
     container: {
       flex: 1,
       marginTop: insets.top,
+      marginBottom: insets.bottom,
     },
   })
 
