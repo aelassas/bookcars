@@ -253,4 +253,5 @@ export const fr = {
   MIN_RENTAL_HOURS_ERROR: 'La durée de location est trop courte',
   INVALID_PICK_UP_TIME: 'Heure de prise en charge invalide',
   INVALID_DROP_OFF_TIME: 'Heure de restitution invalide',
+  SETTINGS_NOT_LOADED: 'Échec du chargement des paramètres. Veuillez réessayer plus tard.',
 }

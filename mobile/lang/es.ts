@@ -253,4 +253,5 @@ export const es = {
   MIN_RENTAL_HOURS_ERROR: 'La duración del alquiler es demasiado corta',
   INVALID_PICK_UP_TIME: 'Hora de recogida no válida',
   INVALID_DROP_OFF_TIME: 'Hora de devolución no válida',
+  SETTINGS_NOT_LOADED: 'Error al cargar la configuración. Por favor, inténtelo de nuevo más tarde.',
 }

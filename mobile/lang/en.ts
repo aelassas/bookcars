@@ -253,4 +253,5 @@ export const en = {
   MIN_RENTAL_HOURS_ERROR: 'Rental duration is too short',
   INVALID_PICK_UP_TIME: 'Invalid pick-up time',
   INVALID_DROP_OFF_TIME: 'Invalid drop-off time',
+  SETTINGS_NOT_LOADED: 'Failed to load settings. Please try again later.',
 }
