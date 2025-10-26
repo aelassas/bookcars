@@ -635,6 +635,9 @@ const BookingList = ({
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             onRowSelectionModelChange={(_selectedIds) => {
+              if (_selectedIds.type === 'exclude' && _selectedIds.ids.size === 0) {
+                _selectedIds = { type: 'include', ids: new Set(rows.map((row) => row._id as GridRowId)) }
+              }
               setSelectedIds(Array.from(new Set(_selectedIds.ids)).map((id) => id.toString()))
             }}
             disableRowSelectionOnClick
