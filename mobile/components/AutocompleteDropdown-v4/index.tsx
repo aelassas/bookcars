@@ -11,6 +11,8 @@ import React, {
 } from 'react'
 import debounce from 'lodash.debounce'
 import type {
+  BlurEvent,
+  FocusEvent,
   GestureResponderEvent,
   ListRenderItem,
   NativeSyntheticEvent,
@@ -409,7 +411,7 @@ export const AutocompleteDropdown = memo<
     }, [onChevronPressProp, toggle])
 
     const onFocus = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: FocusEvent) => {
         if (clearOnFocus) {
           setSearchText('')
           setInputValue('')
@@ -423,7 +425,7 @@ export const AutocompleteDropdown = memo<
     )
 
     const onBlur = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: BlurEvent) => {
         if (typeof onBlurProp === 'function') {
           onBlurProp(e)
         }
@@ -446,7 +448,6 @@ export const AutocompleteDropdown = memo<
     )
 
     const onPressOut = useCallback(
-       
       (e: GestureResponderEvent) => {
         if (editable) {
           inputRef?.current?.focus()
@@ -457,7 +458,6 @@ export const AutocompleteDropdown = memo<
       [editable, toggle],
     )
 
-     
     useEffect(() => {
       if ((!content && !inputRef.current?.isFocused()) || loading) {
         const db = debounce(() => {

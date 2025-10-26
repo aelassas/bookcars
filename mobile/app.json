@@ -52,7 +52,9 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font"
     ],
     "owner": "aelassas",
     "extra": {
@@ -71,4 +73,3 @@
     }
   }
 }
-
