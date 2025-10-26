@@ -1,5 +1,22 @@
 # Releases
 
+## [BookCars 8.1](https://github.com/aelassas/bookcars/releases/tag/v8.1) – 2025-10-26
+
+* chore(mobile): upgrade to expo 54
+* chore(deps): update dependencies
+* fix(admin): select all checkbox not working in booking list and user list
+* fix(mobile): prevent search component from hiding on startup
+* fix(mobile): update dependencies to resolve expo doctor warnings
+* fix(mobile): status bar background color and text color not applied on android
+* fix(mobile): drawer navigator bottom inset for devices with home indicator
+
+### Assets
+- [bookcars-8.1.apk](https://github.com/aelassas/bookcars/releases/download/v8.1/bookcars-8.1.apk) (99.41 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.1)
+
 ## [BookCars 8.0](https://github.com/aelassas/bookcars/releases/tag/v8.0) – 2025-07-21
 
 * feat(admin,frontend): add password visibility toggle with eye icon (#82)
