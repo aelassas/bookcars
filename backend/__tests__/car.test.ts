@@ -4,6 +4,7 @@ import url from 'url'
 import path from 'path'
 import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
+import { jest } from '@jest/globals'
 import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/utils/databaseHelper'
 import app from '../src/app'
@@ -91,6 +92,7 @@ describe('POST /api/create-car', () => {
     const payload: bookcarsTypes.CreateCarPayload = {
       loggedUser: SUPPLIER1_ID,
       name: 'BMW X1',
+      licensePlate: 'ABC-1234',
       supplier: SUPPLIER1_ID,
       minimumAge: 21,
       locations: [LOCATION1_ID],
@@ -135,6 +137,7 @@ describe('POST /api/create-car', () => {
     expect(res.statusCode).toBe(200)
     const car = res.body
     expect(car.name).toBe(payload.name)
+    expect(car.licensePlate).toBe(payload.licensePlate)
     expect(car.supplier).toBe(payload.supplier)
     expect(car.minimumAge).toBe(payload.minimumAge)
     expect(car.locations).toStrictEqual(payload.locations)
@@ -285,6 +288,7 @@ describe('PUT /api/update-car', () => {
       loggedUser: testHelper.GetRandromObjectIdAsString(),
       _id: CAR2_ID,
       name: 'BMW X5',
+      licensePlate: 'DEF-5678',
       supplier: SUPPLIER2_ID,
       minimumAge: 23,
       locations: [LOCATION2_ID],
@@ -329,6 +333,7 @@ describe('PUT /api/update-car', () => {
     expect(res.statusCode).toBe(200)
     const car = res.body
     expect(car.name).toBe(payload.name)
+    expect(car.licensePlate).toBe(payload.licensePlate)
     expect(car.supplier).toBe(payload.supplier)
     expect(car.minimumAge).toBe(payload.minimumAge)
     expect(car.locations).toStrictEqual(payload.locations)
@@ -1017,6 +1022,48 @@ describe('GET /api/check-car/:id', () => {
       .get('/api/check-car/0')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
+
+    await testHelper.signout(token)
+  })
+})
+
+
+describe('GET /api/validate-license-plate/:licensePlate', () => {
+  it('should check a car', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    // test success (valid license plate)
+    let res = await request(app)
+      .get(`/api/validate-license-plate/${`LP-${nanoid()}`}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (not valid license plate)
+    const lp = `LP-${nanoid()}`
+    const car = await Car.findById(CAR1_ID)
+    car!.licensePlate = lp
+    await car?.save()
+    res = await request(app)
+      .get(`/api/validate-license-plate/${lp}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+    car!.licensePlate = ''
+    await car?.save()
+
+    // test failure (simulate DB error)
+    const spy = jest.spyOn(Car, 'findOne').mockImplementationOnce(() => {
+      throw new Error('DB failure')
+    })
+
+    res = await request(app)
+      .get(`/api/validate-license-plate/${`LP-${nanoid()}`}`)
+      .set(env.X_ACCESS_TOKEN, token)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('DB') // or the localized DB_ERROR message
+
+    // restore original function
+    spy.mockRestore()
 
     await testHelper.signout(token)
   })
