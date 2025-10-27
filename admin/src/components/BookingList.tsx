@@ -491,7 +491,7 @@ const BookingList = ({
 
               return (
                 <div key={booking._id} className="booking-details">
-                  <div className={`bs bs-${booking.status}`}>
+                  <div className={`bs bs-${booking.status.toLowerCase()}`}>
                     <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>

@@ -64,7 +64,7 @@ const StatusList = ({
             required={required}
             fullWidth
             renderValue={(_value) => (
-              <span className={`bs-s-sv bs-s-${_value}`}>
+              <span className={`bs-s-sv bs-s-${_value.toLowerCase()}`}>
                 {helper.getBookingStatus(_value as bookcarsTypes.BookingStatus)}
               </span>
             )}
@@ -80,6 +80,9 @@ const StatusList = ({
             </MenuItem>
             <MenuItem value={bookcarsTypes.BookingStatus.Paid} className="bs-s bs-s-paid">
               {commonStrings.BOOKING_STATUS_PAID}
+            </MenuItem>
+            <MenuItem value={bookcarsTypes.BookingStatus.PaidInFull} className="bs-s bs-s-paidinfull">
+              {commonStrings.BOOKING_STATUS_PAID_IN_FULL}
             </MenuItem>
             <MenuItem value={bookcarsTypes.BookingStatus.Reserved} className="bs-s bs-s-reserved">
               {commonStrings.BOOKING_STATUS_RESERVED}

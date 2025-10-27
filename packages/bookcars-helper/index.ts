@@ -502,6 +502,7 @@ export const getAllBookingStatuses = () => [
   bookcarsTypes.BookingStatus.Pending,
   bookcarsTypes.BookingStatus.Deposit,
   bookcarsTypes.BookingStatus.Paid,
+  bookcarsTypes.BookingStatus.PaidInFull,
   bookcarsTypes.BookingStatus.Reserved,
   bookcarsTypes.BookingStatus.Cancelled,
 ]

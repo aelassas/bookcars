@@ -587,6 +587,7 @@ export interface Booking extends Document {
   customerId?: string
   expireAt?: Date
   isDeposit: boolean
+  isPayedInFull?: boolean
   paypalOrderId?: string
 }
 

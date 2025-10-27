@@ -284,7 +284,13 @@ export const checkout = async (req: Request, res: Response) => {
         }
 
         body.booking.paymentIntentId = paymentIntentId
-        body.booking.status = body.booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
+        let status = bookcarsTypes.BookingStatus.Paid
+        if (body.booking.isDeposit) {
+          status = bookcarsTypes.BookingStatus.Deposit
+        } else if (body.booking.isPayedInFull) {
+          status = bookcarsTypes.BookingStatus.PaidInFull
+        }
+        body.booking.status = status
       } else {
         //
         // Bookings created from checkout with Stripe are temporary
@@ -553,6 +559,7 @@ export const update = async (req: Request, res: Response) => {
         additionalDriver,
         price,
         isDeposit,
+        isPayedInFull
       } = body.booking
 
       const previousStatus = booking.status
@@ -573,6 +580,7 @@ export const update = async (req: Request, res: Response) => {
       booking.additionalDriver = additionalDriver
       booking.price = price as number
       booking.isDeposit = isDeposit || false
+      booking.isPayedInFull = isPayedInFull || false
 
       if (!additionalDriver && booking._additionalDriver) {
         booking._additionalDriver = undefined

@@ -33,6 +33,11 @@ li.bs-s {
   background: #77bc23 !important;
 }
 
+.bs-s-paidinfull,
+.bs-s-paidinfull:hover {
+  background: #77bc23 !important;
+}
+
 .bs-s-reserved,
 .bs-s-reserved:hover {
   background: #188ace !important;

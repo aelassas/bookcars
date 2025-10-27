@@ -279,6 +279,8 @@ const UpdateBooking = () => {
         fullInsurance: data.fullInsurance,
         additionalDriver: additionalDriverSet,
         price,
+        isDeposit: booking.isDeposit,
+        isPayedInFull: booking.isPayedInFull,
       }
 
       let payload: bookcarsTypes.UpsertBookingPayload

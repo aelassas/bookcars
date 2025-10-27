@@ -52,6 +52,7 @@ export enum BookingStatus {
   Pending = 'pending',
   Deposit = 'deposit',
   Paid = 'paid',
+  PaidInFull = 'paidInFull',
   Reserved = 'reserved',
   Cancelled = 'cancelled',
 }
@@ -104,6 +105,7 @@ export interface Booking {
   customerId?: string
   expireAt?: Date
   isDeposit?: boolean
+  isPayedInFull?: boolean
   paypalOrderId?: string
 }
 

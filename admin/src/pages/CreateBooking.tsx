@@ -150,7 +150,7 @@ const CreateBooking = () => {
         booking,
         additionalDriver: _additionalDriver,
       })
-      console.log(_booking)
+      
       if (_booking && _booking._id) {
         navigate('/')
       } else {

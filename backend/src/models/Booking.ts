@@ -48,6 +48,7 @@ const bookingSchema = new Schema<env.Booking>(
         bookcarsTypes.BookingStatus.Pending,
         bookcarsTypes.BookingStatus.Deposit,
         bookcarsTypes.BookingStatus.Paid,
+        bookcarsTypes.BookingStatus.PaidInFull,
         bookcarsTypes.BookingStatus.Reserved,
         bookcarsTypes.BookingStatus.Cancelled,
       ],
@@ -100,6 +101,10 @@ const bookingSchema = new Schema<env.Booking>(
       type: String,
     },
     isDeposit: {
+      type: Boolean,
+      default: false,
+    },
+    isPayedInFull: {
       type: Boolean,
       default: false,
     },
