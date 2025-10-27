@@ -60,7 +60,7 @@ div.bookings {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 300px;
+    width: 330px;
     padding: 12px 0 0 12px;
     background: #fefefe;
     overflow: auto;
@@ -91,12 +91,12 @@ div.bookings {
   }
 
   div.bookings div.col-1 .cl-new-booking {
-    width: 265px;
+    width: 300px;
     margin-left: 5px;
   }
 
   div.bookings div.col-2 {
     position: absolute;
-    inset: 0 0 0 300px;
+    inset: 0 0 0 330px;
   }
 }

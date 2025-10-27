@@ -32,6 +32,7 @@ const baseSchema = z.object({
     // Payment options
     payLater: z.boolean().default(false).optional(),
     payDeposit: z.boolean().default(false).optional(),
+    payInFull: z.boolean().default(false).optional(),
 
     // Booking options
     cancellation: z.boolean().default(false).optional(),
