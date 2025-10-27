@@ -47,6 +47,34 @@ export const check = (id: string): Promise<number> =>
     .then((res) => res.status)
 
 /**
+ * Validate a Car license plate.
+ *
+ * @param {string} id
+ * @returns {Promise<number>}
+ */
+export const validateLicensePlate = (licensePlate: string): Promise<number> =>
+  axiosInstance
+    .get(
+      `/api/validate-license-plate/${encodeURIComponent(licensePlate)}`,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+
+/**
+ * Validate a Car license plate for update.
+ *
+ * @param {string} id
+ * @returns {Promise<number>}
+ */
+export const validateCarLicensePlate = (carId: string, licensePlate: string): Promise<number> =>
+  axiosInstance
+    .get(
+      `/api/validate-license-plate/${carId}/${encodeURIComponent(licensePlate)}`,
+      { withCredentials: true }
+    )
+    .then((res) => res.status)
+
+/**
  * Delete a Car.
  *
  * @param {string} id

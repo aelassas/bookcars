@@ -444,6 +444,7 @@ const CarList = ({
                       <div className="name"><h2>{car.name}</h2></div>
                       {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
                     </div>
+                    {car.licensePlate && <div className="license-plate">{car.licensePlate}</div>}
                     <ul className="car-info-list">
                       {car.type !== bookcarsTypes.CarType.Unknown && (
                         <li className="car-type">

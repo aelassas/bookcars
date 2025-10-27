@@ -38,6 +38,11 @@ div.car section.car-sec div.car-img div.car-supplier span.car-supplier-logo img 
   max-height: 100%;
 }
 
+div.car section.car-sec div.license-plate {
+  font-size: 0.9em;
+  color: #666;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <= 960px) {

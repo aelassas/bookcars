@@ -179,6 +179,7 @@ const Car = () => {
               <div className="name">
                 <h2>{car.name}</h2>
               </div>
+              {car.licensePlate && <div className="license-plate">{car.licensePlate}</div>}
               <div className="car-img">
                 <Avatar
                   type={bookcarsTypes.RecordType.Car}

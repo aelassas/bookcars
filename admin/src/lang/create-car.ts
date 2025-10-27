@@ -6,6 +6,8 @@ const strings = new LocalizedStrings({
   fr: {
     NEW_CAR_HEADING: 'Nouvelle voiture',
     NAME: 'Nom',
+    LICENSE_PLATE: 'Plaque d\'immatriculation',
+    LICENSE_PLATE_ALREADY_EXISTS: 'Cette plaque d\'immatriculation existe déjà.',
     CAR_IMAGE_SIZE_ERROR: `L'image doit être au format ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Taille d'image recommandée : ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Fournisseur',
@@ -41,6 +43,8 @@ const strings = new LocalizedStrings({
   en: {
     NEW_CAR_HEADING: 'New car',
     NAME: 'Name',
+    LICENSE_PLATE: 'License Plate',
+    LICENSE_PLATE_ALREADY_EXISTS: 'This license plate already exists.',
     CAR_IMAGE_SIZE_ERROR: `The image must be in the format ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Supplier',
@@ -76,6 +80,8 @@ const strings = new LocalizedStrings({
   es: {
     NEW_CAR_HEADING: 'Nuevo coche',
     NAME: 'Nombre',
+    LICENSE_PLATE: 'Matrícula',
+    LICENSE_PLATE_ALREADY_EXISTS: 'Esta matrícula ya existe.',
     CAR_IMAGE_SIZE_ERROR: `La imagen debe tener el formato ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Tamaño de imagen recomendado: ${env.CAR_IMAGE_WIDTH}x${env.CAR_IMAGE_HEIGHT}`,
     SUPPLIER: 'Proveedor',
