@@ -614,6 +614,7 @@ export interface DateBasedPrice extends Document {
  */
 export interface Car extends Document {
   name: string
+  licensePlate?: string
   supplier: Types.ObjectId
   minimumAge: number
   locations: Types.ObjectId[]

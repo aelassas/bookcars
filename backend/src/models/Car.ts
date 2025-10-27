@@ -10,6 +10,11 @@ const carSchema = new Schema<env.Car>(
       index: true,
       trim: true,
     },
+    licensePlate: {
+      type: String,
+      index: true,
+      trim: true,
+    },
     supplier: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
