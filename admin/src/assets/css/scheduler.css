@@ -59,7 +59,7 @@ div.scheduler {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 300px;
+    width: 320px;
     padding: 12px 0 0 12px;
     background: #fefefe;
     overflow: auto;
@@ -70,7 +70,7 @@ div.scheduler {
     top: 0;
     right: 0;
     bottom: 0;
-    left: 300px;
+    left: 320px;
   }
 
   div.scheduler div.col-1 .cl-supplier-filter label.accordion,
@@ -98,7 +98,7 @@ div.scheduler {
   }
 
   div.scheduler div.col-1 .cl-new-booking {
-    width: 265px;
+    width: 290px;
     margin-left: 5px;
   }
 }

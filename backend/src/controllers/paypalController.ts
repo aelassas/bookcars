@@ -79,7 +79,15 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     if (order.status === 'COMPLETED') {
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
-      booking.status = booking.isDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid
+
+      let status = bookcarsTypes.BookingStatus.Paid
+      if (booking.isDeposit) {
+        status = bookcarsTypes.BookingStatus.Deposit
+      } else if (booking.isPayedInFull) {
+        status = bookcarsTypes.BookingStatus.PaidInFull
+      }
+      booking.status = status
+
       await booking.save()
 
       const car = await Car.findById(booking.car)

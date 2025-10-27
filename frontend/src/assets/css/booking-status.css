@@ -12,7 +12,7 @@ div.booking-status .bs-icon {
 
 div.booking-status span.bs {
   padding: 3px;
-  width: 80px;
+  width: 108px;
   text-align: center;
   color: #fff;
   display: inline-flex;
@@ -57,6 +57,15 @@ div.booking-status span.bs-paid {
 }
 
 div.booking-status .bs-icon-paid {
+  color: #77BC23;
+}
+
+div.booking-status span.bs-paidinfull {
+  background: #D1F9D1;
+  color: #77BC23;
+}
+
+div.booking-status .bs-icon-paidinfull {
   color: #77BC23;
 }
 

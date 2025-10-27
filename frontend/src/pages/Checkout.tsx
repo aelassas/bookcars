@@ -22,7 +22,7 @@ import {
   AssignmentTurnedIn as ChecklistIcon,
 } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr, enUS } from 'date-fns/locale'
+import { fr, enUS, es } from 'date-fns/locale'
 import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
@@ -116,8 +116,9 @@ const Checkout = () => {
   const additionalDriverPhoneRef = useRef<HTMLInputElement | null>(null)
 
   const _fr = language === 'fr'
-  const _locale = _fr ? fr : enUS
-  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _es = language === 'es'
+  const _locale = _fr ? fr : _es ? es : enUS
+  const _format = _fr ? 'eee d LLL yyyy kk:mm' : _es ? 'eee, d LLLL yyyy HH:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
   const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
@@ -143,12 +144,13 @@ const Checkout = () => {
     }
   })
 
-  const additionalDriverEmail= useWatch({ control, name: 'additionalDriverEmail' })
+  const additionalDriverEmail = useWatch({ control, name: 'additionalDriverEmail' })
   const additionalDriverPhone = useWatch({ control, name: 'additionalDriverPhone' })
 
   const additionalDriver = useWatch({ control, name: 'additionalDriver' })
   const payLater = useWatch({ control, name: 'payLater' })
   const payDeposit = useWatch({ control, name: 'payDeposit' })
+  const payInFull = useWatch({ control, name: 'payInFull' })
 
   const validateEmail = (email: string) => {
     return validator.isEmail(email)
@@ -252,8 +254,15 @@ const Checkout = () => {
           const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
+          let finalPrice = price
+          if (payDeposit) {
+            finalPrice = depositPrice
+          } else if (payInFull) {
+            finalPrice = price + depositPrice
+          }
+
           const payload: bookcarsTypes.CreatePaymentPayload = {
-            amount: payDeposit ? depositPrice : price,
+            amount: finalPrice,
             currency: PaymentService.getCurrency(),
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
@@ -271,6 +280,7 @@ const Checkout = () => {
       }
 
       booking.isDeposit = payDeposit
+      booking.isPayedInFull = payInFull
 
       const payload: bookcarsTypes.CheckoutPayload = {
         driver,
@@ -767,21 +777,24 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {car.supplier.payLater && (
-                      <div className="payment-options-container">
-                        <div className="checkout-info">
-                          <PaymentOptionsIcon />
-                          <span>{strings.PAYMENT_OPTIONS}</span>
-                        </div>
-                        <div className="payment-options">
-                          <FormControl>
-                            <RadioGroup
-                              defaultValue="payOnline"
-                              onChange={(e) => {
-                                setValue('payLater', e.target.value === 'payLater')
-                                setValue('payDeposit', e.target.value === 'payDeposit')
-                              }}
-                            >
+                    {/* Payment options */}
+
+                    <div className="payment-options-container">
+                      <div className="checkout-info">
+                        <PaymentOptionsIcon />
+                        <span>{strings.PAYMENT_OPTIONS}</span>
+                      </div>
+                      <div className="payment-options">
+                        <FormControl>
+                          <RadioGroup
+                            defaultValue={depositPrice > 0 ? 'payOnline' : 'payInFull'}
+                            onChange={(e) => {
+                              setValue('payLater', e.target.value === 'payLater')
+                              setValue('payDeposit', e.target.value === 'payDeposit')
+                              setValue('payInFull', e.target.value === 'payInFull')
+                            }}
+                          >
+                            {car.supplier.payLater && (
                               <FormControlLabel
                                 value="payLater"
                                 control={<Radio />}
@@ -790,43 +803,61 @@ const Checkout = () => {
                                 label={(
                                   <span className="payment-button">
                                     <span>{strings.PAY_LATER}</span>
-                                    <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
+                                    <span className="payment-info">{strings.PAY_LATER_INFO}</span>
                                   </span>
                                 )}
                               />
-                              {
-                                car.deposit > 0 && (
-                                  <FormControlLabel
-                                    value="payDeposit"
-                                    control={<Radio />}
-                                    disabled={!!clientSecret || payPalLoaded}
-                                    className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
-                                    label={(
-                                      <span className="payment-button">
-                                        <span>{strings.PAY_DEPOSIT}</span>
-                                        <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
-                                      </span>
-                                    )}
-                                  />
-                                )
-                              }
-                              <FormControlLabel
-                                value="payOnline"
-                                control={<Radio />}
-                                disabled={!!clientSecret || payPalLoaded}
-                                className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
-                                label={(
-                                  <span className="payment-button">
-                                    <span>{strings.PAY_ONLINE}</span>
-                                    <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
-                                  </span>
-                                )}
-                              />
-                            </RadioGroup>
-                          </FormControl>
-                        </div>
+                            )}
+                            {
+                              car.deposit > 0 && (
+                                <FormControlLabel
+                                  value="payDeposit"
+                                  control={<Radio />}
+                                  disabled={!!clientSecret || payPalLoaded}
+                                  className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
+                                  label={(
+                                    <span className="payment-button">
+                                      <span>{strings.PAY_DEPOSIT}</span>
+                                      <span className="payment-info">{strings.PAY_DEPOSIT_INFO}</span>
+                                    </span>
+                                  )}
+                                />
+                              )
+                            }
+                            {
+                              depositPrice > 0 && (
+                                <FormControlLabel
+                                  value="payOnline"
+                                  control={<Radio />}
+                                  disabled={!!clientSecret || payPalLoaded}
+                                  className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
+                                  label={(
+                                    <span className="payment-button">
+                                      <span>{strings.PAY_ONLINE}</span>
+                                      <span className="payment-info">{strings.PAY_ONLINE_INFO}</span>
+                                    </span>
+                                  )}
+                                />
+                              )
+                            }
+                            <FormControlLabel
+                              value="payInFull"
+                              control={<Radio />}
+                              disabled={!!clientSecret || payPalLoaded}
+                              className={clientSecret || payPalLoaded ? 'payment-radio-disabled' : ''}
+                              label={(
+                                <span className="payment-button">
+                                  <span>{strings.PAY_IN_FULL}</span>
+                                  <span className="payment-info">{strings.PAY_IN_FULL_INFO}</span>
+                                </span>
+                              )}
+                            />
+                          </RadioGroup>
+                        </FormControl>
                       </div>
-                    )}
+                    </div>
+
+                    {/* Checkout checklist */}
 
                     <div className="checkout-details-container">
                       <div className="checkout-info">
@@ -849,6 +880,8 @@ const Checkout = () => {
                       </div>
                     </div>
 
+                    {/* Total price */}
+
                     <div className="payment-info">
                       <div className="payment-info-title">
                         {
@@ -857,7 +890,11 @@ const Checkout = () => {
                       </div>
                       <div className="payment-info-price">
                         {
-                          bookcarsHelper.formatPrice(payDeposit ? depositPrice : price, commonStrings.CURRENCY, language)
+                          bookcarsHelper.formatPrice(
+                            payDeposit ? depositPrice
+                              : payInFull ? (price + depositPrice)
+                                : price
+                            , commonStrings.CURRENCY, language)
                         }
                       </div>
                     </div>
@@ -883,7 +920,12 @@ const Checkout = () => {
                                 const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
                                 const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
                                 const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
-                                const amount = payDeposit ? depositPrice : price
+                                let amount = price
+                                if (payDeposit) {
+                                  amount = depositPrice
+                                } else if (payInFull) {
+                                  amount = price + depositPrice
+                                }
                                 const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
                                 return orderId
                               }}

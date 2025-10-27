@@ -409,6 +409,9 @@ export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
     case bookcarsTypes.BookingStatus.Paid:
       return commonStrings.BOOKING_STATUS_PAID
 
+    case bookcarsTypes.BookingStatus.PaidInFull:
+      return commonStrings.BOOKING_STATUS_PAID_IN_FULL
+
     case bookcarsTypes.BookingStatus.Reserved:
       return commonStrings.BOOKING_STATUS_RESERVED
 
@@ -441,6 +444,10 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
   {
     value: bookcarsTypes.BookingStatus.Paid,
     label: commonStrings.BOOKING_STATUS_PAID,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.PaidInFull,
+    label: commonStrings.BOOKING_STATUS_PAID_IN_FULL,
   },
   {
     value: bookcarsTypes.BookingStatus.Reserved,

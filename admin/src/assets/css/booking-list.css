@@ -85,6 +85,11 @@ div.bs-list div.booking-details div.bs-paid {
   color: #77BC23;
 }
 
+div.bs-list div.booking-details div.bs-paidinfull {
+  background: #D1F9D1;
+  color: #77BC23;
+}
+
 div.bs-list div.booking-details div.bs-reserved {
   background: #D9E7F4;
   color: #1E88E5;
