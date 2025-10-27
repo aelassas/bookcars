@@ -3,6 +3,7 @@ const routes = {
   update: '/api/update-car',
   delete: '/api/delete-car/:id',
   validateLicensePlate: '/api/validate-license-plate/:licensePlate',
+  validateCarLicensePlate: '/api/validate-license-plate/:id/:licensePlate',
   createImage: '/api/create-car-image',
   updateImage: '/api/update-car-image/:id',
   deleteImage: '/api/delete-car-image/:id',
