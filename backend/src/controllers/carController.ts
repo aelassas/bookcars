@@ -155,6 +155,7 @@ export const update = async (req: Request, res: Response) => {
       const {
         supplier,
         name,
+        licensePlate,
         minimumAge,
         available,
         fullyBooked,
@@ -197,6 +198,7 @@ export const update = async (req: Request, res: Response) => {
       car.minimumAge = minimumAge
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
+      car.licensePlate = licensePlate
       car.available = available
       car.fullyBooked = fullyBooked
       car.comingSoon = comingSoon
@@ -306,6 +308,31 @@ export const checkCar = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+ * Validate if a license plate is unique.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const validateLicensePlate = async (req: Request, res: Response) => {
+  const { licensePlate } = req.params
+
+  try {
+    const car = await Car.findOne({ licensePlate: licensePlate })
+    if (car) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
+  } catch (err) {
+    logger.error(`[car.validateLicensePlate] ${i18n.t('DB_ERROR')} ${licensePlate}`, err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 

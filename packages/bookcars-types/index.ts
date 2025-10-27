@@ -186,6 +186,7 @@ export interface UpdateSupplierPayload {
 export interface CreateCarPayload {
   loggedUser: string
   name: string
+  licensePlate?: string
   supplier: string
   minimumAge: number
   locations: string[]
@@ -464,6 +465,7 @@ export interface DateBasedPrice {
 export interface Car {
   _id: string
   name: string
+  licensePlate?: string
   supplier: User
   minimumAge: number
   locations: Location[]
