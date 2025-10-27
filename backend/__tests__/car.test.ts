@@ -1027,7 +1027,6 @@ describe('GET /api/check-car/:id', () => {
   })
 })
 
-
 describe('GET /api/validate-license-plate/:licensePlate', () => {
   it('should check a car', async () => {
     const token = await testHelper.signinAsAdmin()
@@ -1057,6 +1056,47 @@ describe('GET /api/validate-license-plate/:licensePlate', () => {
 
     res = await request(app)
       .get(`/api/validate-license-plate/${`LP-${nanoid()}`}`)
+      .set(env.X_ACCESS_TOKEN, token)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('DB') // or the localized DB_ERROR message
+
+    // restore original function
+    spy.mockRestore()
+
+    await testHelper.signout(token)
+  })
+})
+
+describe('GET /api/validate-license-plate/:id/:licensePlate', () => {
+  it('should check a car', async () => {
+    const token = await testHelper.signinAsAdmin()
+
+    // test success (valid license plate for update)
+    let res = await request(app)
+      .get(`/api/validate-license-plate/${CAR1_ID}/${`LP-${nanoid()}`}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(200)
+
+    // test success (not valid license plate for update)
+    const lp = `LP-${nanoid()}`
+    const car = await Car.findById(CAR2_ID)
+    car!.licensePlate = lp
+    await car?.save()
+    res = await request(app)
+      .get(`/api/validate-license-plate/${CAR1_ID}/${lp}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(204)
+    car!.licensePlate = ''
+    await car?.save()
+
+    // test failure (simulate DB error)
+    const spy = jest.spyOn(Car, 'findOne').mockImplementationOnce(() => {
+      throw new Error('DB failure')
+    })
+
+    res = await request(app)
+      .get(`/api/validate-license-plate/${CAR1_ID}/${`LP-${nanoid()}`}`)
       .set(env.X_ACCESS_TOKEN, token)
 
     expect(res.statusCode).toBe(400)

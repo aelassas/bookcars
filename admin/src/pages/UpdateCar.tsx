@@ -70,6 +70,7 @@ const UpdateCar = () => {
     mode: 'onBlur',
     defaultValues: {
       name: '',
+      licensePlate: '',
       supplier: undefined,
       minimumAge: String(env.MINIMUM_AGE),
       locations: [],
@@ -169,10 +170,19 @@ const UpdateCar = () => {
         return
       }
 
+      if (data.licensePlate && data.licensePlate !== car.licensePlate) {
+        const res = await CarService.validateCarLicensePlate(car._id!, data.licensePlate)
+        if (res === 204) {
+          helper.error(null, strings.LICENSE_PLATE_ALREADY_EXISTS)
+          return
+        }
+      }
+
       const payload: bookcarsTypes.UpdateCarPayload = {
         loggedUser: user!._id!,
         _id: car._id,
         name: data.name,
+        licensePlate: data.licensePlate,
         supplier: supplier._id!,
         minimumAge: Number.parseInt(data.minimumAge, 10),
         locations: data.locations.map((l) => l._id),
@@ -260,6 +270,7 @@ const UpdateCar = () => {
               setCar(_car)
               setImageRequired(!_car.image)
               setValue('name', _car.name)
+              setValue('licensePlate', _car.licensePlate || '')
               setValue('supplier', _supplier)
               setValue('minimumAge', _car.minimumAge.toString())
               const lcs: Option[] = []
@@ -369,6 +380,15 @@ const UpdateCar = () => {
                   type="text"
                   {...register('name')}
                   required
+                  autoComplete="off"
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{strings.LICENSE_PLATE}</InputLabel>
+                <Input
+                  type="text"
+                  {...register('licensePlate')}
                   autoComplete="off"
                 />
               </FormControl>

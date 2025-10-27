@@ -337,6 +337,31 @@ export const validateLicensePlate = async (req: Request, res: Response) => {
 }
 
 /**
+ * Validate if a license plate is unique for updating car.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const validateCarLicensePlate = async (req: Request, res: Response) => {
+  const { id, licensePlate } = req.params
+
+  try {
+    const car = await Car.findOne({ _id: { $ne: id }, licensePlate: licensePlate })
+    if (car) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
+  } catch (err) {
+    logger.error(`[car.validateLicensePlate] ${i18n.t('DB_ERROR')} ${licensePlate}`, err)
+    res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
  * Delete a Car by ID.
  *
  * @export
@@ -605,7 +630,7 @@ export const getCars = async (req: Request, res: Response) => {
 
     const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
       $and: [
-        { name: { $regex: keyword, $options: options } },
+        { $or: [{ name: { $regex: keyword, $options: options } }, { licensePlate: { $regex: keyword, $options: options } }] },
         { supplier: { $in: suppliers } },
       ],
     }

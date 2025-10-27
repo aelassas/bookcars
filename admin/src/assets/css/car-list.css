@@ -182,6 +182,12 @@ section.car-list article div.price {
   white-space: nowrap;
 }
 
+section.car-list article div.license-plate {
+  font-size: 0.9em;
+  color: #666;
+  padding: 0 11px;
+}
+
 section.car-list article div.car-info ul.car-info-list {
   position: relative;
   list-style: none;

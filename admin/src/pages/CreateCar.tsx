@@ -67,6 +67,7 @@ const CreateCar = () => {
     mode: 'onBlur',
     defaultValues: {
       name: '',
+      licensePlate: '',
       supplier: undefined,
       minimumAge: String(env.MINIMUM_AGE),
       locations: [],
@@ -161,9 +162,18 @@ const CreateCar = () => {
         return
       }
 
+      if (data.licensePlate) {
+        const res = await CarService.validateLicensePlate(data.licensePlate)
+        if (res === 204) {
+          helper.error(null, strings.LICENSE_PLATE_ALREADY_EXISTS)
+          return
+        }
+      }
+
       const payload: bookcarsTypes.CreateCarPayload = {
         loggedUser: user!._id!,
         name: data.name,
+        licensePlate: data.licensePlate || '',
         supplier: data.supplier?._id!,
         minimumAge: Number.parseInt(data.minimumAge, 10),
         locations: data.locations.map((l) => l._id),
@@ -275,6 +285,15 @@ const CreateCar = () => {
                 type="text"
                 {...register('name')}
                 required
+                autoComplete="off"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <InputLabel>{strings.LICENSE_PLATE}</InputLabel>
+              <Input
+                type="text"
+                {...register('licensePlate')}
                 autoComplete="off"
               />
             </FormControl>
