@@ -185,6 +185,7 @@ section.car-list article div.price {
 section.car-list article div.license-plate {
   font-size: 0.9em;
   color: #666;
+  margin-top: 5px;
   padding: 0 11px;
 }
 
