@@ -8,13 +8,16 @@
   "scripts": {
     "build": "rimraf ./dist && tsc --build --verbose"
   },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "@types/react": "^19.1.7",
+    "@types/node": "^24.9.2",
+    "@types/react": "^19.2.2",
     "microbundle-crl": "^0.13.11",
-    "react": "^19.1.0",
+    "react": "^19.2.0",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   },
   "files": [
     "dist/"

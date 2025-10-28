@@ -28,7 +28,11 @@ export default ({ mode }: { mode: string }) => {
     ],
 
     resolve: {
+      preserveSymlinks: true,
       alias: {
+        'react': path.resolve(__dirname, 'node_modules/react'),
+        'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+
         '@': path.resolve(__dirname, './src'),
         ':bookcars-types': path.resolve(__dirname, '../packages/bookcars-types'),
         ':bookcars-helper': path.resolve(__dirname, '../packages/bookcars-helper'),

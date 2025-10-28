@@ -4,3 +4,6 @@
 /**/*.pem-chain
 /**/*.ca.pem
 /**/.DS_Store
+/**/dist
+/node_modules
+.eslintcache
