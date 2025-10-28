@@ -50,6 +50,7 @@ const Car = ({
   const [loading, setLoading] = useState(true)
   const [currencySymbol, setCurrencySymbol] = useState('')
   const [totalPrice, setTotalPrice] = useState<number>()
+  const [deposit, setDeposit] = useState(0)
   const [cancellation, setCancellation] = useState('')
   const [amendments, setAmendments] = useState('')
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
@@ -64,6 +65,7 @@ const Car = ({
         setCurrencySymbol(await StripeService.getCurrencySymbol())
         setDays(bookcarsHelper.days(from, to))
         setTotalPrice(await StripeService.convertPrice(bookcarsHelper.calculateTotalPrice(car, from as Date, to as Date, priceChangeRate)))
+        setDeposit(await StripeService.convertPrice(car.deposit))
         setCancellation(await helper.getCancellation(car.cancellation, language, priceChangeRate))
         setAmendments(await helper.getAmendments(car.amendments, language, priceChangeRate))
         setCollisionDamageWaiver(await helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language, priceChangeRate))
@@ -376,6 +378,12 @@ const Car = ({
             <View style={styles.extra}>
               <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
               <Text style={styles.text}>{additionalDriver}</Text>
+            </View>
+          )}
+          {car.deposit > 0 && (
+            <View style={styles.extra}>
+              <MaterialIcons name="info" color="rgba(0, 0, 0, 0.35)" size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{`${i18n.t('DEPOSIT')}: ${bookcarsHelper.formatPrice(deposit, currencySymbol, language)}`}</Text>
             </View>
           )}
         </View>

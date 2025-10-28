@@ -29,11 +29,13 @@ const BookingStatus = ({
             ? '#3CB371'
             : status === bookcarsTypes.BookingStatus.Paid
               ? '#77BC23'
-              : status === bookcarsTypes.BookingStatus.Reserved
-                ? '#1E88E5'
-                : status === bookcarsTypes.BookingStatus.Cancelled
-                  ? '#E53935'
-                  : 'transparent',
+              : status === bookcarsTypes.BookingStatus.PaidInFull
+                ? '#FFF'
+                : status === bookcarsTypes.BookingStatus.Reserved
+                  ? '#1E88E5'
+                  : status === bookcarsTypes.BookingStatus.Cancelled
+                    ? '#E53935'
+                    : 'transparent',
       fontSize: 13,
       fontWeight: '400',
     },
@@ -53,11 +55,13 @@ const BookingStatus = ({
                 ? '#CDECDA'
                 : status === bookcarsTypes.BookingStatus.Paid
                   ? '#D1F9D1'
-                  : status === bookcarsTypes.BookingStatus.Reserved
-                    ? '#D9E7F4'
-                    : status === bookcarsTypes.BookingStatus.Cancelled
-                      ? '#FBDFDE'
-                      : 'transparent',
+                  : status === bookcarsTypes.BookingStatus.PaidInFull
+                    ? '#77BC23'
+                    : status === bookcarsTypes.BookingStatus.Reserved
+                      ? '#D9E7F4'
+                      : status === bookcarsTypes.BookingStatus.Cancelled
+                        ? '#FBDFDE'
+                        : 'transparent',
       }}
     >
       <Text style={styles.text}>{helper.getBookingStatus(status)}</Text>
