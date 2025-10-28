@@ -447,6 +447,9 @@ export const getBookingStatusBackgroundColor = (status?: bookcarsTypes.BookingSt
     case bookcarsTypes.BookingStatus.Paid:
       return '#D1F9D1'
 
+    case bookcarsTypes.BookingStatus.PaidInFull:
+      return '#77BC23'
+
     case bookcarsTypes.BookingStatus.Reserved:
       return '#D9E7F4'
 
