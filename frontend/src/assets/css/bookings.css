@@ -12,7 +12,7 @@ div.bookings div.col-1 {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 330px;
+  width: 336px;
   padding: 12px 0 0 12px;
   background-color: #FAFAFA;
   overflow: auto;
@@ -37,7 +37,7 @@ div.bookings div.col-1 .cl-booking-filter {
 
 div.bookings div.col-2 {
   position: absolute;
-  inset: 0 0 0 330px;
+  inset: 0 0 0 336px;
 }
 
 /* Device width is lower than or equal to 960px */
