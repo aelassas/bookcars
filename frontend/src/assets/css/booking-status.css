@@ -61,8 +61,8 @@ div.booking-status .bs-icon-paid {
 }
 
 div.booking-status span.bs-paidinfull {
-  background: #D1F9D1;
-  color: #77BC23;
+  background: #77BC23;
+  color: #FFF;
 }
 
 div.booking-status .bs-icon-paidinfull {
