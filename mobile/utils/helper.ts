@@ -540,6 +540,10 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
     label: i18n.t('BOOKING_STATUS_PAID')
   },
   {
+    value: bookcarsTypes.BookingStatus.PaidInFull,
+    label: i18n.t('BOOKING_STATUS_PAID_IN_FULL')
+  },
+  {
     value: bookcarsTypes.BookingStatus.Reserved,
     label: i18n.t('BOOKING_STATUS_RESERVED'),
   },
@@ -568,6 +572,9 @@ export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
 
     case bookcarsTypes.BookingStatus.Paid:
       return i18n.t('BOOKING_STATUS_PAID')
+
+    case bookcarsTypes.BookingStatus.PaidInFull:
+      return i18n.t('BOOKING_STATUS_PAID_IN_FULL')
 
     case bookcarsTypes.BookingStatus.Reserved:
       return i18n.t('BOOKING_STATUS_RESERVED')

@@ -98,6 +98,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [license, setLicense] = useState<string | null>(null)
   const [depositPrice, setDepositPrice] = useState(0)
   const [payDeposit, setPayDeposit] = useState(false)
+  const [payInFull, setPayInFull] = useState(false)
   const adRequired = true
 
   const { presentPaymentSheet } = useStripe()
@@ -196,6 +197,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setTosError(false)
       setError(false)
       setPayLater(false)
+      setPayDeposit(false)
+      setPayInFull(false)
       setSuccess(false)
 
       if (cardNameRef.current) {
@@ -664,8 +667,15 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
+          let amount = price
+          if (payDeposit) {
+            amount = depositPrice
+          } else if (payInFull) {
+            amount = price + depositPrice
+          }
+
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
-            amount: payDeposit ? depositPrice : price,
+            amount,
             currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
@@ -730,7 +740,23 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         return
       }
 
-      const basePrice = await bookcarsHelper.convertPrice(price, currency, env.BASE_CURRENCY)
+      let amount = price
+      if (payDeposit) {
+        amount = depositPrice
+      } else if (payInFull) {
+        amount = price + depositPrice
+      }
+
+      const basePrice = await bookcarsHelper.convertPrice(amount, currency, env.BASE_CURRENCY)
+
+      let bookingStatus = bookcarsTypes.BookingStatus.Paid
+      if (payLater) {
+        bookingStatus = bookcarsTypes.BookingStatus.Pending
+      } else if (payDeposit) {
+        bookingStatus = bookcarsTypes.BookingStatus.Deposit
+      } else if (payInFull) {
+        bookingStatus = bookcarsTypes.BookingStatus.PaidInFull
+      }
 
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
@@ -740,7 +766,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         dropOffLocation: dropOffLocation._id as string,
         from,
         to,
-        status: payLater ? bookcarsTypes.BookingStatus.Pending : payDeposit ? bookcarsTypes.BookingStatus.Deposit : bookcarsTypes.BookingStatus.Paid,
+        status: bookingStatus,
         cancellation,
         amendments,
         theftProtection,
@@ -749,6 +775,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         additionalDriver,
         price: basePrice,
         isDeposit: payDeposit,
+        isPayedInFull: payInFull,
       }
 
       if (adRequired && additionalDriver && addtionalDriverBirthDate) {
@@ -1079,49 +1106,76 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     </View>
                   )}
 
-                  {car.supplier.payLater && (
-                    <View style={styles.section}>
-                      <View style={styles.sectionHeader}>
-                        <MaterialIcons name="settings" size={iconSize} color={iconColor} />
-                        <Text style={styles.sectionHeaderText}>{i18n.t('PAYMENT_OPTIONS')}</Text>
-                      </View>
+                  {/* Checkout options */}
 
+                  <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                      <MaterialIcons name="settings" size={iconSize} color={iconColor} />
+                      <Text style={styles.sectionHeaderText}>{i18n.t('PAYMENT_OPTIONS')}</Text>
+                    </View>
+
+                    {car.supplier.payLater && (
+                      <>
+                        <RadioButton
+                          label={i18n.t('PAY_LATER')}
+                          checked={payLater}
+                          onValueChange={(checked: boolean) => {
+                            setPayLater(checked)
+                            setPayDeposit(!checked)
+                            setPayInFull(!checked)
+                          }}
+                        />
+                        <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
+                      </>
+                    )}
+
+                    {
+                      car.deposit > 0 && (
+                        <>
+                          <RadioButton
+                            label={i18n.t('PAY_DEPOSIT')}
+                            checked={payDeposit}
+                            onValueChange={(checked: boolean) => {
+                              setPayDeposit(checked)
+                              setPayLater(!checked)
+                              setPayInFull(!checked)
+                            }}
+                          />
+                          <Text style={styles.paymentInfo}>{i18n.t('PAY_DEPOSIT_INFO')}</Text>
+                        </>
+                      )}
+
+                    {
+                      car.deposit > 0 && (
+                        <>
+                          <RadioButton
+                            label={i18n.t('PAY_ONLINE')}
+                            checked={!payLater && !payDeposit && !payInFull}
+                            onValueChange={(checked: boolean) => {
+                              setPayLater(!checked)
+                              setPayDeposit(!checked)
+                              setPayInFull(!checked)
+                            }}
+                          />
+                          <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
+                        </>
+                      )}
+
+                    <>
                       <RadioButton
-                        label={i18n.t('PAY_LATER')}
-                        checked={payLater}
+                        label={i18n.t('PAY_IN_FULL')}
+                        checked={payInFull || car.deposit === 0}
                         onValueChange={(checked: boolean) => {
-                          setPayLater(checked)
-                          setPayDeposit(!checked)
-                        }}
-                      />
-                      <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
-
-                      {
-                        car.deposit > 0 && (
-                          <>
-                            <RadioButton
-                              label={i18n.t('PAY_DEPOSIT')}
-                              checked={payDeposit}
-                              onValueChange={(checked: boolean) => {
-                                setPayDeposit(checked)
-                                setPayLater(!checked)
-                              }}
-                            />
-                            <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
-                          </>
-                        )}
-
-                      <RadioButton
-                        label={i18n.t('PAY_ONLINE')}
-                        checked={!payLater && !payDeposit}
-                        onValueChange={(checked: boolean) => {
+                          setPayInFull(checked)
                           setPayLater(!checked)
                           setPayDeposit(!checked)
                         }}
                       />
-                      <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
-                    </View>
-                  )}
+                      <Text style={styles.paymentInfo}>{i18n.t('PAY_IN_FULL_INFO')}</Text>
+                    </>
+
+                  </View>
+
 
                   <View style={styles.footer}>
                     <Button style={styles.component} label={i18n.t('BOOK_NOW')} onPress={handleCheckout} />

@@ -83,36 +83,36 @@ const StatusFilter = ({
                 </View>
               )
             ))}
-
-            <Link
-              style={styles.link}
-              textStyle={styles.linkText}
-              label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')}
-              onPress={() => {
-                let _checkedStatuses: bookcarsTypes.BookingStatus[] = []
-                if (allChecked) {
-                  statuses.forEach((status) => {
-                    status.checked = false
-                  })
-                  setAllChecked(false)
-                  setStatuses(bookcarsHelper.clone(statuses))
-                  setCheckedStatuses(_checkedStatuses)
-                } else {
-                  statuses.forEach((status) => {
-                    status.checked = true
-                  })
-                  setAllChecked(true)
-                  setStatuses(bookcarsHelper.clone(statuses))
-                  _checkedStatuses = bookcarsHelper.clone(statuses.map((status) => status.value))
-                  setCheckedStatuses(_checkedStatuses)
-
-                  if (onChange) {
-                    onChange(_checkedStatuses)
-                  }
-                }
-              }}
-            />
           </View>
+
+          <Link
+            style={styles.link}
+            textStyle={styles.linkText}
+            label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')}
+            onPress={() => {
+              let _checkedStatuses: bookcarsTypes.BookingStatus[] = []
+              if (allChecked) {
+                statuses.forEach((status) => {
+                  status.checked = false
+                })
+                setAllChecked(false)
+                setStatuses(bookcarsHelper.clone(statuses))
+                setCheckedStatuses(_checkedStatuses)
+              } else {
+                statuses.forEach((status) => {
+                  status.checked = true
+                })
+                setAllChecked(true)
+                setStatuses(bookcarsHelper.clone(statuses))
+                _checkedStatuses = bookcarsHelper.clone(statuses.map((status) => status.value))
+                setCheckedStatuses(_checkedStatuses)
+
+                if (onChange) {
+                  onChange(_checkedStatuses)
+                }
+              }
+            }}
+          />
         </Accordion>
       </View>
     )
@@ -133,18 +133,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    justifyContent: 'center',
-    width: 300,
+    justifyContent: 'flex-start',
+    width: '100%',
+    padding: 5,
   },
   status: {
     width: '50%',
-    marginBottom: 7,
+    marginBottom: 4,
   },
   bookingStatus: {
-    width: 85,
+    width: 128,
   },
   link: {
-    marginTop: 10,
+    marginVertical: 10,
   },
   linkText: {
     fontSize: 12,

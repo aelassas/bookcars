@@ -611,7 +611,7 @@ const CarList = ({
                       )}
                       <li>
                         <div className="car-info-list-item">
-                          {getExtraIcon('additionalDriver', car.additionalDriver)}
+                          <InfoIcon className="extra-info" />
                           <span className="car-info-list-text">{`${strings.DEPOSIT}: ${bookcarsHelper.formatPrice(car.deposit, commonStrings.CURRENCY, language as string)}`}</span>
                         </div>
                       </li>

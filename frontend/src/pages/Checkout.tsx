@@ -214,7 +214,14 @@ const Checkout = () => {
         }
       }
 
-      const basePrice = await bookcarsHelper.convertPrice(price, PaymentService.getCurrency(), env.BASE_CURRENCY)
+      let amount = price
+      if (payDeposit) {
+        amount = depositPrice
+      } else if (payInFull) {
+        amount = price + depositPrice
+      }
+
+      const basePrice = await bookcarsHelper.convertPrice(amount, PaymentService.getCurrency(), env.BASE_CURRENCY)
 
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
