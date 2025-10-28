@@ -24,7 +24,7 @@ const strings = new LocalizedStrings({
     SUCCESS: 'Votre paiement a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     PAY_LATER_SUCCESS: 'Votre réservation a été effectuée avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     PAYMENT_OPTIONS: 'Options de paiement',
-    PAY_LATER: 'Payer sans acompte et réserver la voiture',
+    PAY_LATER: 'Payer sur place',
     PAY_LATER_INFO: 'Payez le montant total lors de la prise en charge. Un acompte peut être appliqué.',
     PAY_DEPOSIT: "Payer l'acompte en ligne et confirmer la réservation",
     PAY_DEPOSIT_INFO: "Payez l'acompte en ligne pour confirmer votre réservation. Le solde restant est dû lors de la prise en charge.",
