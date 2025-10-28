@@ -13,7 +13,7 @@
     "dev": "npm run ts:build && vite",
     "ts:docker-build": "tsc --build --verbose",
     "dev:docker": "npm run ts:docker-build && vite",
-    "preview": "vite preview",
+    "preview": "npm run build && vite preview --port 3002",
     "fix": "eslint --fix .",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "ncu": "ncu -u",
