@@ -159,7 +159,7 @@ const SignIn = () => {
               <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
             </div>
 
-            <SocialLogin />
+            {/* <SocialLogin /> */}
 
             <div className="signin-buttons">
               <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">
