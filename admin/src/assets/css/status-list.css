@@ -15,44 +15,50 @@ li.bs-s {
 
 .bs-s-void,
 .bs-s-void:hover {
-  background: #999 !important;
+  background: #D9D9D9 !important;
+  color: #6E7C86 !important;
 }
 
 .bs-s-pending,
 .bs-s-pending:hover {
-  background: #e98003 !important;
+  background: #FBDCC2 !important;
+  color: #EF6C00 !important;
 }
 
 .bs-s-deposit,
 .bs-s-deposit:hover {
-  background: #22bba7 !important;
+  background: #CDECDA !important;
+  color: #3CB371 !important;
 }
 
 .bs-s-paid,
 .bs-s-paid:hover {
-  background: #77bc23 !important;
+  background: #D1F9D1 !important;
+  color: #77BC23 !important;
 }
 
 .bs-s-paidinfull,
 .bs-s-paidinfull:hover {
-  background: #77bc23 !important;
+  background: #77BC23 !important;
+  color: #FFF !important;
 }
 
 .bs-s-reserved,
 .bs-s-reserved:hover {
-  background: #188ace !important;
+  background: #D9E7F4 !important;
+  color: #1E88E5 !important;
 }
 
 .bs-s-cancelled,
 .bs-s-cancelled:hover {
-  background: #bc2143 !important;
+  background: #FBDFDE !important;
+  color: #E53935 !important;
 }
 
 .bs-s-sv {
   display: inherit;
   text-align: center;
   font-weight: 200;
-  color: #fff;
   padding: 3px;
   opacity: 0.93;
 }
