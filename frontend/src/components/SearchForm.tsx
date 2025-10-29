@@ -115,7 +115,7 @@ const SearchForm = ({
       setValue('from', _from)
       setValue('to', _to)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [settings]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const init = async () => {
