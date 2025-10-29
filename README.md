@@ -50,44 +50,49 @@ Customers can register through the web frontend or mobile app, search for availa
 ## Features
 
 ### Supplier & Fleet Management
+
 * Supplier management
-* [Supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts)
-* [Supplier search result limit](https://github.com/aelassas/bookcars/wiki/FAQ#how-do-i-limit-the-number-of-cars-for-a-supplier-in-search-results)
+* Supplier contracts
+* Supplier search result limit
 * Ready for single or multiple suppliers
 * Car fleet management
-* [Flexible Time-Based Car Availability](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked)
-* [Flexible Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
+* Flexible time-based car availability
+* Flexible rental date and time constraints
 * Booking management
-* [Vehicle scheduler](https://bookcars.github.io/content/screenshots/v5.5/backend-scheduler.png?raw=true)
-* [Auto-Notification System](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System)
+* Vehicle scheduler
+* Auto-notification system
 
 ### Pricing & Payments
-* [Dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation): Hourly, daily, weekly, bi-weekly, and monthly rates
-* [Date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates)
-* [Price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate)
+
+* Dynamic price calculation: hourly, daily, weekly, bi-weekly, and monthly rates
+* Date-based price rates
+* Price change rate
 * Payment management
-* [Multiple payment gateways supported](https://github.com/aelassas/bookcars/wiki/Payment-Gateways): Stripe, PayPal
+* Multiple payment gateways supported: Stripe, PayPal
 * Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
 
 ### Locations & Search
-* [Hierarchical locations with country, map, and parking integration](https://github.com/aelassas/bookcars/wiki/Locations)
+
+* Hierarchical locations with country, map, and parking integration
 * Location-based search with nested child location support
 * Map display for locations and parking spots
 
 ### User Experience
+
 * Customer management
-* [Multiple login options](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): Google, Facebook, Apple, Email
+* Multiple login options: Google, Facebook, Apple, Email
 * Multiple language support: English, French, Spanish
-* [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
+* Multiple currencies support
 * Multiple pagination styles: classic (next/previous), infinite scroll
 * Push notifications
 
 ### Security & Performance
+
 * Secure against XSS, XST, CSRF, MITM, and DDoS attacks
 * Responsive admin panel and frontend
 * Native mobile app for Android and iOS (single codebase)
-* [Docker](https://www.docker.com/) support for easy deployment and a better developer experience
-* Error monitoring and performance tracing with [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry)
+* Docker support for easy deployment and better developer experience
+* Error monitoring and performance tracing
 
 ### Supported Platforms
 * iOS
