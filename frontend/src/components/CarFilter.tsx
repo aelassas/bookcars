@@ -64,7 +64,6 @@ const CarFilter = ({
     }
   }, [settings])
 
-
   const {
     register,
     handleSubmit,
