@@ -1,5 +1,5 @@
 # Example usage:
-# .\update-version.ps1 5.8.0
+# .\bump-version.ps1 5.8.0
 
 param(
     [Parameter(Mandatory=$true)]
