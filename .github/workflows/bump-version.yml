@@ -92,7 +92,7 @@ jobs:
               $major++
               $minor = 0
           }
-          $next_version = "$major.$minor"
+          $next_version = "$major.$minor.0"
           Write-Host "Next version: $next_version"
 
           # Persist variables for later steps
