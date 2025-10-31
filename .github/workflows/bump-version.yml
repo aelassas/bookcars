@@ -119,7 +119,7 @@ jobs:
           if (git diff --quiet) {
               Write-Host "No changes detected, skipping commit."
           } else {
-              git add .
+              git add --all
               git commit -m "chore: bump version from $env:VERSION to $env:NEXT_VERSION"
               git push origin main
           }
@@ -146,7 +146,7 @@ jobs:
           if (git diff --quiet) {
               Write-Host "No changes detected on demo branch, skipping commit."
           } else {
-              git add .
+              git add --all
               git commit -m "chore: bump version from $env:VERSION to $env:NEXT_VERSION"
               git push origin demo
           }
