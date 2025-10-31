@@ -73,7 +73,7 @@ jobs:
           }
 
           # Remove leading "v" if present
-          $version = $tag.TrimStart("v")
+          $version = "$($tag.TrimStart('v')).0"
           Write-Host "Using tag: $tag"
           Write-Host "Current version: $version"
 
