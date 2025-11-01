@@ -947,6 +947,19 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         : payInFull ? bookcarsHelper.formatPrice(price + depositPrice, currencySymbol, language)
                           : bookcarsHelper.formatPrice(price, currencySymbol, language)
                     }</Text>
+
+                    {(payLater || (!payDeposit && !payInFull)) && depositPrice > 0 && (
+                      <>
+                        <Text style={styles.detailTitle}>{i18n.t('DEPOSIT')}</Text>
+                        <Text style={styles.detailTextBold}>{
+                          bookcarsHelper.formatPrice(depositPrice, currencySymbol, language)
+                        }</Text>
+                      </>
+                    )}
+
+                    {payDeposit && (<>
+                      <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
+                      <Text style={styles.detailTextBold}>{bookcarsHelper.formatPrice(price, currencySymbol, language)}</Text></>)}
                   </View>
 
                   {!authenticated && (

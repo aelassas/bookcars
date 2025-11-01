@@ -147,7 +147,7 @@ export const en = {
   BOOKING_OPTIONS: 'Your booking options',
   BOOKING_DETAILS: 'Your booking details',
   DAYS: 'Days',
-  COST: 'COST',
+  COST: 'Cost',
   DRIVER_DETAILS: 'Driver details',
   EMAIL_INFO: 'You will receive a confirmation email at this address.',
   PHONE_INFO: 'If we need to contact you urgently.',
