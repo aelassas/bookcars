@@ -1,5 +1,24 @@
 # Releases
 
+## [BookCars 8.2](https://github.com/aelassas/bookcars/releases/tag/v8.2) – 2025-11-01
+
+* feat(admin,frontend,mobile): add "pay in full" (deposit included) checkout option (#91)
+* feat(admin): add license plate optional property to cars
+* feat(admin,frontend,mobile): show deposit in car info cards
+* fix(frontend): date pickers not set after page reload in homepage
+* fix(frontend): spanish localization issues in checkout page
+* chore: update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v8.1...v8.2
+
+### Assets
+- [bookcars-8.2.apk](https://github.com/aelassas/bookcars/releases/download/v8.2/bookcars-8.2.apk) (99.40 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.2/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.2)
+
 ## [BookCars 8.1](https://github.com/aelassas/bookcars/releases/tag/v8.1) – 2025-10-26
 
 * chore(mobile): upgrade to expo 54
@@ -12,6 +31,7 @@
 
 ### Assets
 - [bookcars-8.1.apk](https://github.com/aelassas/bookcars/releases/download/v8.1/bookcars-8.1.apk) (99.41 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.1/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
 - [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.1)
