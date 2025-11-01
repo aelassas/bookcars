@@ -941,8 +941,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       <Text style={styles.supplierText} numberOfLines={2} ellipsizeMode="tail">{car.supplier.fullName}</Text>
                     </View>
 
-                    <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                    <Text style={styles.detailTextBold}>{bookcarsHelper.formatPrice(price, currencySymbol, language)}</Text>
+                    <Text style={styles.detailTitle}>{payDeposit ? i18n.t('DEPOSIT') : i18n.t('COST')}</Text>
+                    <Text style={styles.detailTextBold}>{
+                      payDeposit ? bookcarsHelper.formatPrice(depositPrice, currencySymbol, language)
+                        : payInFull ? bookcarsHelper.formatPrice(price + depositPrice, currencySymbol, language)
+                          : bookcarsHelper.formatPrice(price, currencySymbol, language)
+                    }</Text>
                   </View>
 
                   {!authenticated && (
