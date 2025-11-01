@@ -230,6 +230,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const _car = await CarService.getCar(route.params.car)
       setCar(_car)
 
+      setPayInFull(_car.deposit === 0)
+
       const _pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
       setPickupLocation(_pickupLocation)
 
@@ -1181,7 +1183,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <>
                       <RadioButton
                         label={i18n.t('PAY_IN_FULL')}
-                        checked={payInFull || car.deposit === 0}
+                        checked={payInFull}
                         onValueChange={(checked: boolean) => {
                           setPayInFull(checked)
                           setPayLater(!checked)
