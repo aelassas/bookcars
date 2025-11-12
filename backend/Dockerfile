@@ -8,4 +8,4 @@ COPY ./packages /bookcars/packages
 RUN npm install
 
 CMD [ "npm", "run", "start:setup"]
-EXPOSE 4002
+EXPOSE 3000

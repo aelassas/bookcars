@@ -121,6 +121,11 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
       localStorage.setItem('bc-be-user', JSON.stringify(res.data))
       return { status: res.status, data: res.data }
     })
+    .catch((err) => {
+      console.error('Signin error:', err)
+      console.error('Error response:', err.response)
+      throw err
+    })
 
 /**
  * Sign out.
@@ -150,7 +155,7 @@ export const signout = async (redirect = true) => {
     )
 
   if (redirect) {
-    window.location.href = '/sign-in'
+    window.location.href = '/admin/sign-in'
   }
 }
 

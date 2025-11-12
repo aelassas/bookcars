@@ -154,9 +154,15 @@ export const AUTH_COOKIE_DOMAIN = __env__('BC_AUTH_COOKIE_DOMAIN', false, 'local
  * This will prevent MITM attacks by only allowing the cookie to be sent over HTTPS.
  * Authentication cookies are protected against XST attacks as well by disabling TRACE HTTP method via allowedMethods middleware.
  *
+ * Note: Domain is only set if AUTH_COOKIE_DOMAIN is provided and not empty.
+ * If not set, the browser will automatically set the domain to the current domain.
+ *
  * @type {CookieOptions}
  */
-export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, signed: true, sameSite: 'strict', domain: AUTH_COOKIE_DOMAIN }
+const baseCookieOptions: CookieOptions = { httpOnly: true, secure: HTTPS, signed: true, sameSite: 'lax' }
+export const COOKIE_OPTIONS: CookieOptions = AUTH_COOKIE_DOMAIN && AUTH_COOKIE_DOMAIN.trim() !== ''
+  ? { ...baseCookieOptions, domain: AUTH_COOKIE_DOMAIN }
+  : baseCookieOptions
 
 /**
  * frontend authentication cookie name.

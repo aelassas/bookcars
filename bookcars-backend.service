@@ -1,0 +1,20 @@
+[Unit]
+Description=BookCars Backend Service
+After=network.target mongodb.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/bookcars/backend
+Environment=NODE_ENV=production
+Environment="NVM_DIR=/home/ubuntu/.nvm"
+Environment="PATH=/home/ubuntu/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/home/ubuntu/.nvm/versions/node/v20.19.5/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

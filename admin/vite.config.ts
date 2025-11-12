@@ -8,6 +8,7 @@ export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), '') }
 
   return defineConfig({
+    base: '/admin/', // Set base path for admin panel
     plugins: [
       react({
         // Babel optimizations

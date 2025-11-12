@@ -32,7 +32,7 @@ services:
     env_file: ./backend/.env.docker
     restart: always
     ports:
-      - 4002:4002
+      - 3000:3000
     depends_on:
       - mongo
     volumes:

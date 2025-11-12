@@ -471,6 +471,13 @@ export const signin = async (req: Request, res: Response) => {
   const { email: emailFromBody, password, stayConnected, mobile } = body
 
   try {
+    // Temporary debug logging
+    logger.info(`[user.signin] DEBUG - Request received`)
+    logger.info(`[user.signin] DEBUG - req.params.type: ${req.params.type}`)
+    logger.info(`[user.signin] DEBUG - body: ${JSON.stringify(body)}`)
+    logger.info(`[user.signin] DEBUG - emailFromBody: ${emailFromBody}`)
+    logger.info(`[user.signin] DEBUG - password: ${password ? 'present' : 'missing'}`)
+
     if (!emailFromBody) {
       throw new Error('body.email not found')
     }
@@ -484,6 +491,15 @@ export const signin = async (req: Request, res: Response) => {
     const user = await User.findOne({ email })
     const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
+    logger.info(`[user.signin] DEBUG - type: ${type}`)
+    logger.info(`[user.signin] DEBUG - user found: ${!!user}`)
+    logger.info(`[user.signin] DEBUG - user type: ${user?.type}`)
+    logger.info(`[user.signin] DEBUG - has password: ${!!password}`)
+    logger.info(`[user.signin] DEBUG - user has password: ${!!user?.password}`)
+    logger.info(`[user.signin] DEBUG - type valid: ${[bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)}`)
+    logger.info(`[user.signin] DEBUG - type check: ${!(type === bookcarsTypes.AppType.Admin && user?.type === bookcarsTypes.UserType.User)}`)
+    logger.info(`[user.signin] DEBUG - frontend check: ${!(type === bookcarsTypes.AppType.Frontend && user?.type !== bookcarsTypes.UserType.User)}`)
+
     if (
       !password
       || !user
@@ -492,18 +508,23 @@ export const signin = async (req: Request, res: Response) => {
       || (type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
       || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
     ) {
+      logger.info(`[user.signin] DEBUG - Returning 204 - Validation failed`)
       res.sendStatus(204)
       return
     }
+    logger.info(`[user.signin] DEBUG - All validations passed, checking password...`)
     const passwordMatch = await bcrypt.compare(password, user.password)
+    logger.info(`[user.signin] DEBUG - Password match: ${passwordMatch}`)
 
     if (passwordMatch) {
+      logger.info(`[user.signin] DEBUG - Password matched, creating response...`)
       //
       // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
       // These options prevent XSS, CSRF and MITM attacks.
       // Authentication cookies are protected against XST attacks as well via allowedMethods middleware.
       //
       const cookieOptions: CookieOptions = helper.clone(env.COOKIE_OPTIONS)
+      logger.info(`[user.signin] DEBUG - Cookie options cloned`)
 
       if (stayConnected) {
         //
@@ -519,9 +540,12 @@ export const signin = async (req: Request, res: Response) => {
         //
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
+      logger.info(`[user.signin] DEBUG - Cookie maxAge set: ${cookieOptions.maxAge}`)
 
       const payload: authHelper.SessionData = { id: user.id }
+      logger.info(`[user.signin] DEBUG - Creating JWT token...`)
       const token = await authHelper.encryptJWT(payload, stayConnected)
+      logger.info(`[user.signin] DEBUG - JWT token created`)
 
       const loggedUser: bookcarsTypes.User = {
         _id: user.id,
@@ -532,6 +556,7 @@ export const signin = async (req: Request, res: Response) => {
         blacklisted: user.blacklisted,
         avatar: user.avatar,
       }
+      logger.info(`[user.signin] DEBUG - User object created: ${JSON.stringify(loggedUser)}`)
 
       //
       // On mobile, we return the token in the response body.
@@ -539,6 +564,7 @@ export const signin = async (req: Request, res: Response) => {
       if (mobile) {
         loggedUser.accessToken = token
 
+        logger.info(`[user.signin] DEBUG - Mobile request, returning 200 with token in body`)
         res
           .status(200)
           .send(loggedUser)
@@ -549,15 +575,19 @@ export const signin = async (req: Request, res: Response) => {
       // On web, we return the token in a httpOnly, signed, secure and strict sameSite cookie.
       //
       const cookieName = authHelper.getAuthCookieName(req)
+      logger.info(`[user.signin] DEBUG - Web request, cookie name: ${cookieName}`)
+      logger.info(`[user.signin] DEBUG - Sending response with cookie and user data...`)
 
       res
         .clearCookie(cookieName)
         .cookie(cookieName, token, cookieOptions)
         .status(200)
         .send(loggedUser)
+      logger.info(`[user.signin] DEBUG - Response sent with status 200`)
       return
     }
 
+    logger.info(`[user.signin] DEBUG - Password mismatch, returning 204`)
     res.sendStatus(204)
   } catch (err) {
     logger.error(`[user.signin] ${i18n.t('DB_ERROR')} ${emailFromBody}`, err)
