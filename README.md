@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 
 ## BookCars
 
-BookCars is an open-source and cross-platform car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 It comes with built-in support for Stripe and PayPal payment gateways, allowing you to choose the one best suited for your country or business model. If Stripe isn't available in your region, PayPal serves as a secure and reliable alternative.
 
