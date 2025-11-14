@@ -84,7 +84,13 @@ const SignIn = () => {
       } else {
         signinError()
       }
-    } catch {
+    } catch (err) {
+      console.error('SignIn error:', err)
+      const errorMessage = (err as Error)?.message || String(err) || 'Unknown error'
+      console.error('Error details:', errorMessage)
+      if (err && typeof err === 'object' && 'response' in err) {
+        console.error('Error response:', (err as { response?: unknown }).response)
+      }
       signinError()
     }
   }

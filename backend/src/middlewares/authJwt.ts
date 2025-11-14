@@ -19,12 +19,28 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   const isAdmin = authHelper.isAdmin(req)
   const isFrontend = authHelper.isFrontend(req)
 
-  if (isAdmin) {
-    token = req.signedCookies[env.ADMIN_AUTH_COOKIE_NAME] as string // admin
-  } else if (isFrontend) {
-    token = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
+  // Debug logging
+  logger.info(`[authJwt] DEBUG - Origin: ${req.headers.origin}`)
+  logger.info(`[authJwt] DEBUG - isAdmin: ${isAdmin}`)
+  logger.info(`[authJwt] DEBUG - isFrontend: ${isFrontend}`)
+  logger.info(`[authJwt] DEBUG - ADMIN_HOST: ${env.ADMIN_HOST}`)
+  logger.info(`[authJwt] DEBUG - FRONTEND_HOST: ${env.FRONTEND_HOST}`)
+  logger.info(`[authJwt] DEBUG - Signed cookies: ${JSON.stringify(Object.keys(req.signedCookies || {}))}`)
+  logger.info(`[authJwt] DEBUG - Regular cookies: ${JSON.stringify(Object.keys(req.cookies || {}))}`)
+
+  // Check for admin cookie first (even if origin doesn't match, as fallback)
+  const adminToken = req.signedCookies[env.ADMIN_AUTH_COOKIE_NAME] as string
+  const frontendToken = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string
+
+  if (isAdmin || adminToken) {
+    token = adminToken
+    logger.info(`[authJwt] DEBUG - Admin token found: ${!!token}`)
+  } else if (isFrontend || frontendToken) {
+    token = frontendToken
+    logger.info(`[authJwt] DEBUG - Frontend token found: ${!!token}`)
   } else {
     token = req.headers[env.X_ACCESS_TOKEN] as string // mobile app and unit tests
+    logger.info(`[authJwt] DEBUG - Mobile token found: ${!!token}`)
   }
 
   if (token) {
