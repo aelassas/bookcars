@@ -31,6 +31,8 @@ const routes = {
   verifyRecaptcha: '/api/verify-recaptcha/:token/:ip',
   sendEmail: '/api/send-email',
   hasPassword: '/api/has-password/:id',
+  sendOTP: '/api/send-otp',
+  verifyOTP: '/api/verify-otp',
   createLicense: '/api/create-license',
   updateLicense: '/api/update-license/:id',
   deleteLicense: '/api/delete-license/:id',

@@ -875,6 +875,25 @@ export interface Token extends Document {
 }
 
 /**
+ * OTP Document.
+ *
+ * @export
+ * @interface OTP
+ * @typedef {OTP}
+ * @extends {Document}
+ */
+export interface OTP extends Document {
+  identifier: string // email or phone number
+  otp: string
+  type: 'email' | 'sms'
+  purpose: 'signup' | 'signin' | 'password-reset' | 'phone-verification'
+  verified: boolean
+  verifiedAt?: Date
+  attempts: number
+  expireAt?: Date
+}
+
+/**
  * BankDetails Document.
  *
  * @export

@@ -3,6 +3,7 @@ import multer from 'multer'
 import routeNames from '../config/userRoutes.config'
 import authJwt from '../middlewares/authJwt'
 import * as userController from '../controllers/userController'
+import * as otpController from '../controllers/otpController'
 
 const routes = express.Router()
 
@@ -38,6 +39,8 @@ routes.route(routeNames.delete).post(authJwt.verifyToken, userController.deleteU
 routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)
 routes.route(routeNames.sendEmail).post(userController.sendEmail)
 routes.route(routeNames.hasPassword).get(authJwt.verifyToken, userController.hasPassword)
+routes.route(routeNames.sendOTP).post(otpController.sendOTP)
+routes.route(routeNames.verifyOTP).post(otpController.verifyOTP)
 routes.route(routeNames.createLicense).post([multer({ storage: multer.memoryStorage() }).single('file')], userController.createLicense)
 routes.route(routeNames.updateLicense).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('file')], userController.updateLicense)
 routes.route(routeNames.deleteLicense).post(authJwt.verifyToken, userController.deleteLicense)

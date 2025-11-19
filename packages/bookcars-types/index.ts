@@ -598,6 +598,19 @@ export interface SendEmailPayload {
   isContactForm: boolean
 }
 
+export interface SendOTPPayload {
+  identifier: string // email or phone number
+  type: 'email' | 'sms'
+  purpose: 'signup' | 'signin' | 'password-reset' | 'phone-verification'
+}
+
+export interface VerifyOTPPayload {
+  identifier: string // email or phone number
+  otp: string
+  type: 'email' | 'sms'
+  purpose: 'signup' | 'signin' | 'password-reset' | 'phone-verification'
+}
+
 export interface Response<T> {
   status: number
   data: T

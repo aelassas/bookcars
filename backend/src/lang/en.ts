@@ -48,4 +48,13 @@ export const en = {
   LOCATION_IMAGE_NOT_FOUND: 'Location image not found',
   NEW_CAR_NOTIFICATION_PART1: 'The supplier ',
   NEW_CAR_NOTIFICATION_PART2: ' created a new car.',
+  OTP_SIGNUP_SUBJECT: 'Your Sign Up Verification Code',
+  OTP_SIGNUP_MESSAGE: 'Your verification code is: {OTP}. This code will expire in 10 minutes.',
+  OTP_SIGNIN_SUBJECT: 'Your Sign In Verification Code',
+  OTP_SIGNIN_MESSAGE: 'Your verification code is: {OTP}. This code will expire in 10 minutes.',
+  OTP_PASSWORD_RESET_SUBJECT: 'Your Password Reset Code',
+  OTP_PASSWORD_RESET_MESSAGE: 'Your password reset code is: {OTP}. This code will expire in 10 minutes.',
+  OTP_PHONE_VERIFICATION_SUBJECT: 'Your Phone Verification Code',
+  OTP_PHONE_VERIFICATION_MESSAGE: 'Your phone verification code is: {OTP}. This code will expire in 10 minutes.',
+  OTP_EXPIRY_NOTICE: 'This code will expire in 10 minutes. If you did not request this code, please ignore this email.',
 }

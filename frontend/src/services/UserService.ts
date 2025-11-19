@@ -445,6 +445,42 @@ export const sendEmail = (payload: bookcarsTypes.SendEmailPayload): Promise<numb
     .then((res) => res.status)
 
 /**
+ * Send OTP.
+ *
+ * @param {bookcarsTypes.SendOTPPayload} data
+ * @returns {Promise<{ status: number, message?: string }>}
+ */
+export const sendOTP = (data: bookcarsTypes.SendOTPPayload): Promise<{ status: number, message?: string }> =>
+  axiosInstance
+    .post(
+      '/api/send-otp',
+      data,
+      { withCredentials: true }
+    )
+    .then((res) => ({ status: res.status, message: res.data?.message }))
+    .catch((err) => {
+      throw { status: err.response?.status || 400, message: err.response?.data?.message || 'Failed to send OTP' }
+    })
+
+/**
+ * Verify OTP.
+ *
+ * @param {bookcarsTypes.VerifyOTPPayload} data
+ * @returns {Promise<{ status: number, verified?: boolean, message?: string }>}
+ */
+export const verifyOTP = (data: bookcarsTypes.VerifyOTPPayload): Promise<{ status: number, verified?: boolean, message?: string }> =>
+  axiosInstance
+    .post(
+      '/api/verify-otp',
+      data,
+      { withCredentials: true }
+    )
+    .then((res) => ({ status: res.status, verified: res.data?.verified, message: res.data?.message }))
+    .catch((err) => {
+      throw { status: err.response?.status || 400, message: err.response?.data?.message || 'Failed to verify OTP' }
+    })
+
+/**
 * Parse JWT token.
 * @param {string} token
 * @returns {any}
