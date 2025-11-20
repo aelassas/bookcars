@@ -44,7 +44,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
 * [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
 * [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
-* [Payment Setup Guide](./PAYMENT_SETUP.md) - Complete guide for setting up Stripe and PayPal
+* [Payment Setup Guide](./docs/PAYMENT_SETUP.md) - Complete guide for setting up Stripe and PayPal
 * [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 * [Full Documentation](https://github.com/aelassas/bookcars/wiki)
 
