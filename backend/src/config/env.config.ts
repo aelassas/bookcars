@@ -360,6 +360,14 @@ export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
  */
 export const STRIPE_SECRET_KEY = __env__('BC_STRIPE_SECRET_KEY', false, 'STRIPE_SECRET_KEY')
 
+/**
+ * Stripe webhook secret for verifying webhook signatures.
+ * Get this from your Stripe Dashboard > Developers > Webhooks > Add endpoint
+ *
+ * @type {string}
+ */
+export const STRIPE_WEBHOOK_SECRET = __env__('BC_STRIPE_WEBHOOK_SECRET', false, 'STRIPE_WEBHOOK_SECRET')
+
 let stripeSessionExpireAt = Number.parseInt(__env__('BC_STRIPE_SESSION_EXPIRE_AT', false, '82800'), 10)
 stripeSessionExpireAt = stripeSessionExpireAt < 1800 ? 1800 : stripeSessionExpireAt
 stripeSessionExpireAt = stripeSessionExpireAt <= 82800 ? stripeSessionExpireAt : 82800

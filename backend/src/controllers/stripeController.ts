@@ -236,7 +236,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     //
     const paymentIntent = await stripeAPI.paymentIntents.create({
       //
-      // All API requests expect amounts to be provided in a currency’s smallest unit.
+      // All API requests expect amounts to be provided in a currency's smallest unit.
       // For example, to charge 10 USD, provide an amount value of 1000 (that is, 1000 cents).
       //
       amount: Math.floor(amount * 100),
@@ -262,5 +262,162 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[stripe.createPaymentIntent] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+ * Handle Stripe webhook events.
+ * This provides reliable payment confirmation even if the user doesn't complete the redirect flow.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const handleWebhook = async (req: Request, res: Response) => {
+  const stripeAPI = (await import('../payment/stripe.js')).default
+  const sig = req.headers['stripe-signature']
+
+  if (!sig) {
+    logger.error('[stripe.handleWebhook] Missing stripe-signature header')
+    res.status(400).send('Missing stripe-signature header')
+    return
+  }
+
+  let event: Stripe.Event
+
+  try {
+    // Verify webhook signature
+    event = stripeAPI.webhooks.constructEvent(
+      req.body,
+      sig,
+      env.STRIPE_WEBHOOK_SECRET
+    )
+  } catch (err: any) {
+    logger.error(`[stripe.handleWebhook] Webhook signature verification failed: ${err.message}`)
+    res.status(400).send(`Webhook Error: ${err.message}`)
+    return
+  }
+
+  try {
+    // Handle the event
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+
+        if (session.payment_status === 'paid') {
+          const booking = await Booking.findOne({ sessionId: session.id, expireAt: { $ne: null } })
+
+          if (booking) {
+            booking.expireAt = undefined
+
+            let status = bookcarsTypes.BookingStatus.Paid
+            if (booking.isDeposit) {
+              status = bookcarsTypes.BookingStatus.Deposit
+            } else if (booking.isPayedInFull) {
+              status = bookcarsTypes.BookingStatus.PaidInFull
+            }
+            booking.status = status
+
+            await booking.save()
+
+            const car = await Car.findById(booking.car)
+            if (car) {
+              car.trips += 1
+              await car.save()
+            }
+
+            const supplier = await User.findById(booking.supplier)
+            const user = await User.findById(booking.driver)
+
+            if (user && supplier) {
+              user.expireAt = undefined
+              await user.save()
+
+              // Send confirmation email
+              await bookingController.confirm(user, supplier, booking, false)
+
+              // Notify supplier
+              i18n.locale = supplier.language
+              const message = i18n.t('BOOKING_PAID_NOTIFICATION')
+              await bookingController.notify(user, booking.id, supplier, message)
+
+              // Notify admin
+              const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+              if (admin) {
+                i18n.locale = admin.language
+                await bookingController.notify(user, booking.id, admin, message)
+              }
+            }
+
+            logger.info(`[stripe.handleWebhook] Booking ${booking.id} confirmed via webhook for session ${session.id}`)
+          }
+        }
+        break
+      }
+
+      case 'payment_intent.succeeded': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent
+
+        // Find booking by paymentIntentId
+        const booking = await Booking.findOne({ paymentIntentId: paymentIntent.id })
+
+        if (booking && booking.status === bookcarsTypes.BookingStatus.Pending) {
+          let status = bookcarsTypes.BookingStatus.Paid
+          if (booking.isDeposit) {
+            status = bookcarsTypes.BookingStatus.Deposit
+          } else if (booking.isPayedInFull) {
+            status = bookcarsTypes.BookingStatus.PaidInFull
+          }
+          booking.status = status
+
+          await booking.save()
+
+          const car = await Car.findById(booking.car)
+          if (car) {
+            car.trips += 1
+            await car.save()
+          }
+
+          const supplier = await User.findById(booking.supplier)
+          const user = await User.findById(booking.driver)
+
+          if (user && supplier) {
+            // Send confirmation email
+            await bookingController.confirm(user, supplier, booking, false)
+
+            // Notify supplier
+            i18n.locale = supplier.language
+            const message = i18n.t('BOOKING_PAID_NOTIFICATION')
+            await bookingController.notify(user, booking.id, supplier, message)
+
+            // Notify admin
+            const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+            if (admin) {
+              i18n.locale = admin.language
+              await bookingController.notify(user, booking.id, admin, message)
+            }
+          }
+
+          logger.info(`[stripe.handleWebhook] Booking ${booking.id} confirmed via webhook for payment intent ${paymentIntent.id}`)
+        }
+        break
+      }
+
+      case 'payment_intent.payment_failed': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent
+        logger.info(`[stripe.handleWebhook] Payment failed for payment intent ${paymentIntent.id}`)
+        break
+      }
+
+      default:
+        logger.info(`[stripe.handleWebhook] Unhandled event type: ${event.type}`)
+    }
+
+    // Return a response to acknowledge receipt of the event
+    res.json({ received: true })
+  } catch (err) {
+    logger.error(`[stripe.handleWebhook] ${i18n.t('ERROR')}`, err)
+    res.status(500).send(i18n.t('ERROR') + err)
   }
 }
