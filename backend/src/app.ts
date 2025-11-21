@@ -20,6 +20,8 @@ import paypalRoutes from './routes/paypalRoutes'
 import ipinfoRoutes from './routes/ipinfoRoutes'
 import bankDetailsRoutes from './routes/bankDetailsRoutes'
 import settingRoutes from './routes/settingRoutes'
+import * as stripeController from './controllers/stripeController'
+import routeNames from './config/stripeRoutes.config'
 import * as helper from './utils/helper'
 
 const app = express()
@@ -41,6 +43,15 @@ app.use(helmet.crossOriginOpenerPolicy())
 
 app.use(nocache())
 app.use(compression({ threshold: 0 }))
+
+// Stripe webhook must be registered before JSON body parser
+// because it needs raw body for signature verification
+app.post(
+  routeNames.webhook,
+  express.raw({ type: 'application/json' }),
+  stripeController.handleWebhook
+)
+
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(express.json({ limit: '50mb' }))
 
