@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     RATING_3: '(3 y más)',
     RATING_4: '(4 y más)',
   },
+  ja: {
+    RATING: '評価',
+    RATING_1: '（1以上）',
+    RATING_2: '（2以上）',
+    RATING_3: '（3以上）',
+    RATING_4: '（4以上）',
+  },
 })
 
 langHelper.setLanguage(strings)

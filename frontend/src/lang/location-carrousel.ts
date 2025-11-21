@@ -17,6 +17,11 @@ const strings = new LocalizedStrings({
     AVALIABLE_LOCATION: 'ubicación disponible',
     AVALIABLE_LOCATIONS: 'ubicaciones disponibles',
   },
+  ja: {
+    SELECT_LOCATION: '場所を選択',
+    AVALIABLE_LOCATION: '利用可能な場所',
+    AVALIABLE_LOCATIONS: '利用可能な場所',
+  },
 })
 
 langHelper.setLanguage(strings)

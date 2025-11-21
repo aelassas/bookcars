@@ -11,6 +11,11 @@ type Language = { code: string, countryCode: string, label: string }
  */
 const LANGUAGES: Language[] = [
   {
+    code: 'ja',
+    countryCode: 'jp',
+    label: '日本語',
+  },
+  {
     code: 'en',
     countryCode: 'us',
     label: 'English',
@@ -78,7 +83,7 @@ const env = {
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
-  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
+  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'ja'),
   BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
   CURRENCIES,
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,

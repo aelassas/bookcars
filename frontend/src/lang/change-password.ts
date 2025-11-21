@@ -29,6 +29,15 @@ const strings = new LocalizedStrings({
     PASSWORD_UPDATE_ERROR: 'Ocurrió un error al actualizar la contraseña.',
     PASSWORD_UPDATE: 'Contraseña modificada con éxito.',
   },
+  ja: {
+    CHANGE_PASSWORD_HEADING: 'パスワードの変更',
+    CURRENT_PASSWORD: '現在のパスワード',
+    CURRENT_PASSWORD_ERROR: 'パスワードが正しくありません',
+    NEW_PASSWORD: '新しいパスワード',
+    NEW_PASSWORD_ERROR: '新しいパスワードを選択してください',
+    PASSWORD_UPDATE_ERROR: 'パスワードの更新中にエラーが発生しました。',
+    PASSWORD_UPDATE: 'パスワードが正常に変更されました。',
+  },
 })
 
 langHelper.setLanguage(strings)

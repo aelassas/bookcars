@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     MAXI: 'Maxi',
     SCOOTER: 'Scooter',
   },
+  ja: {
+    RANGE: '範囲',
+    MINI: 'ミニ',
+    MIDI: 'ミディ',
+    MAXI: 'マキシ',
+    SCOOTER: 'スクーター',
+  },
 })
 
 langHelper.setLanguage(strings)

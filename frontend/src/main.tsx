@@ -169,6 +169,7 @@ if (lang) {
 language = UserService.getLanguage()
 const isFr = language === 'fr'
 const isEs = language === 'es'
+const isJa = language === 'ja'
 
 const theme = createTheme(
   {
@@ -251,9 +252,9 @@ const theme = createTheme(
       },
     },
   },
-  isFr ? frFR : isEs ? esES : enUS,
-  isFr ? dataGridfrFR : isEs ? dataGridesEs : dataGridenUS,
-  isFr ? corefrFR : isEs ? coresES : coreenUS,
+  isFr ? frFR : isEs ? esES : isJa ? enUS : enUS,
+  isFr ? dataGridfrFR : isEs ? dataGridesEs : isJa ? dataGridenUS : dataGridenUS,
+  isFr ? corefrFR : isEs ? coresES : isJa ? coreenUS : coreenUS,
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
