@@ -14,6 +14,10 @@ const strings = new LocalizedStrings({
     PICK_UP_LOCATION: 'Lugar de recogida',
     DROP_OFF_LOCATION: 'Lugar de devolución',
   },
+  ja: {
+    PICK_UP_LOCATION: '受取場所',
+    DROP_OFF_LOCATION: '返却場所',
+  },
 })
 
 langHelper.setLanguage(strings)

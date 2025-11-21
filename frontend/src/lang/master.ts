@@ -20,6 +20,12 @@ const strings = new LocalizedStrings({
     VALIDATION_EMAIL_SENT: 'Correo electrónico de validación enviado.',
     VALIDATION_EMAIL_ERROR: 'Se produjo un error al enviar el correo electrónico de validación.',
   },
+  ja: {
+    VALIDATE_EMAIL: '確認メールがあなたのメールアドレスに送信されました。メールボックスを確認し、メール内のリンクをクリックしてアカウントを確認してください。1日後に期限切れになります。確認メールが届かなかった場合は、再送信をクリックしてください。',
+    RESEND: '再送信',
+    VALIDATION_EMAIL_SENT: '確認メールを送信しました。',
+    VALIDATION_EMAIL_ERROR: '確認メールの送信中にエラーが発生しました。',
+  },
 })
 
 langHelper.setLanguage(strings)

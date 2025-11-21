@@ -14,6 +14,10 @@ const strings = new LocalizedStrings({
     REQUIRED_FIELD: 'Por favor, complete el campo: ',
     REQUIRED_FIELDS: 'Por favor, complete los campos: ',
   },
+  ja: {
+    REQUIRED_FIELD: 'フィールドを入力してください：',
+    REQUIRED_FIELDS: 'フィールドを入力してください：',
+  },
 })
 
 langHelper.setLanguage(strings)

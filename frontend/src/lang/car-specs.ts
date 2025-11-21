@@ -20,6 +20,12 @@ const strings = new LocalizedStrings({
     MORE_THAN_FOOR_DOORS: '4+ puertas',
     MORE_THAN_FIVE_SEATS: '5+ asientos',
   },
+  ja: {
+    CAR_SPECS: '車の仕様',
+    AIRCON: 'エアコン',
+    MORE_THAN_FOOR_DOORS: '4ドア以上',
+    MORE_THAN_FIVE_SEATS: '5席以上',
+  },
 })
 
 langHelper.setLanguage(strings)

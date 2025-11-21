@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     SEND: 'Enviar',
     MESSAGE_SENT: 'Mensaje enviado',
   },
+  ja: {
+    CONTACT_HEADING: 'お問い合わせ',
+    SUBJECT: '件名',
+    MESSAGE: 'メッセージ',
+    SEND: '送信',
+    MESSAGE_SENT: 'メッセージを送信しました',
+  },
 })
 
 langHelper.setLanguage(strings)

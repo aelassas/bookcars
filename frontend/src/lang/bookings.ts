@@ -11,6 +11,9 @@ const strings = new LocalizedStrings({
   es: {
     NEW_BOOKING: 'Nueva reserva',
   },
+  ja: {
+    NEW_BOOKING: '新しい予約',
+  },
 })
 
 langHelper.setLanguage(strings)

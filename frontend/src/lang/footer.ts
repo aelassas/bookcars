@@ -53,6 +53,22 @@ const strings = new LocalizedStrings({
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
   },
+  ja: {
+    COPYRIGHT_PART1,
+    COPYRIGHT_PART2: '。全著作権所有。',
+    CORPORATE: '企業情報',
+    ABOUT: '私たちについて',
+    TOS: '利用規約',
+    RENT: '車をレンタル',
+    SUPPLIERS: 'サプライヤー',
+    LOCATIONS: '場所',
+    SUPPORT: 'サポート',
+    CONTACT: 'お問い合わせ',
+    SECURE_PAYMENT: `${env.WEBSITE_NAME}で100%安全な支払い`,
+    PRIVACY_POLICY: 'プライバシーポリシー',
+    FAQ: 'よくある質問',
+    COOKIE_POLICY: 'Cookieポリシー',
+  },
 })
 
 langHelper.setLanguage(strings)

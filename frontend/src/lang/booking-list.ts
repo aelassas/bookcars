@@ -65,6 +65,27 @@ const strings = new LocalizedStrings({
     CANCEL_BOOKING: '¿Está seguro de que desea cancelar esta reserva?',
     CANCEL_BOOKING_REQUEST_SENT: 'Su solicitud de cancelación ha sido recibida. Nos pondremos en contacto con usted para finalizar el procedimiento de cancelación.',
   },
+  ja: {
+    CAR: '車',
+    SUPPLIER: 'サプライヤー',
+    DRIVER: 'ドライバー',
+    PRICE: '価格',
+    STATUS: 'ステータス',
+    UPDATE_SELECTION: '選択を編集',
+    DELETE_SELECTION: '選択を削除',
+    UPDATE_STATUS: 'ステータスの変更',
+    NEW_STATUS: '新しいステータス',
+    DELETE_BOOKING: 'この予約を削除してもよろしいですか？',
+    DELETE_BOOKINGS: '選択した予約を削除してもよろしいですか？',
+    EMPTY_LIST: '予約がありません。',
+    VIEW: 'この予約を表示',
+    UPDATE: 'この予約を編集',
+    DAYS: '日数',
+    COST: '費用',
+    CANCEL: 'この予約をキャンセル',
+    CANCEL_BOOKING: 'この予約をキャンセルしてもよろしいですか？',
+    CANCEL_BOOKING_REQUEST_SENT: 'キャンセルリクエストが送信されました。キャンセル手続きを完了するためにご連絡いたします。',
+  },
 })
 
 langHelper.setLanguage(strings)

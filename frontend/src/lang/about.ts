@@ -30,6 +30,15 @@ const strings = new LocalizedStrings({
     CONTENT2: 'Disfruta de una comodidad, fiabilidad y valor inigualables con nuestro servicio de alquiler de coches de primera calidad. Desde reservas sencillas hasta vehículos de alta calidad, somos tu socio de viajes de confianza.',
     FIND_DEAL: 'Buscar oferta',
   },
+  ja: {
+    TITLE1: `${env.WEBSITE_NAME} - プレミアムレンタカーサービス`,
+    SUBTITLE1: 'レンタカーの信頼できるパートナー',
+    CONTENT1: `${env.WEBSITE_NAME}では、すべての旅がユニークであることを理解しています。お客様に多様な車両の選択肢を提供し、あらゆる旅行ニーズに対応することに取り組んでいます。都市を探索する、ビジネスのために通勤する、冒険を求めるなど、信頼性の高いレンタカーサービスにより、あなたの冒険がシームレスに始まります。私たちの使命は、優れたカスタマーサービスを提供し、お客様の体験を楽しくストレスフリーにすることです。競争力のある料金、よく整備された多様な車両、そしてお客様をサポートする準備ができた専任チームにより、私たちは路上での信頼できるパートナーになることを目指しています。すべてのレンタカー需要に${env.WEBSITE_NAME}を選択し、自分のペースで探索する自由を体験してください。`,
+    TITLE2: `${env.WEBSITE_NAME}を選ぶ理由`,
+    SUBTITLE2: 'すべての旅で卓越性を体験',
+    CONTENT2: 'プレミアムレンタカーサービスで、比類のない利便性、信頼性、価値をお楽しみください。簡単な予約から高品質な車両まで、私たちは信頼できる旅行パートナーです。',
+    FIND_DEAL: 'お得な情報を見つける',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -27,6 +27,14 @@ const strings = new LocalizedStrings({
     STATUS_TITLE: `${env.WEBSITE_NAME} Confirmación de reserva`,
     STATUS_MESSAGE: 'Revise su buzón de correo y siga los pasos descritos en el correo electrónico de confirmación de reserva para reservar su vehículo.',
   },
+  ja: {
+    CONGRATULATIONS: 'おめでとうございます！',
+    SUCCESS: '支払いが正常に完了しました。確認メールを送信しました。',
+    SUCCESS_PAY_LATER: '予約が正常に完了しました。確認メールを送信しました。',
+    ERROR: 'エラーが発生しました！後でもう一度お試しください',
+    STATUS_TITLE: `${env.WEBSITE_NAME} 予約確認`,
+    STATUS_MESSAGE: 'メールボックスを確認し、予約確認メールに記載されている手順に従って車を予約してください。',
+  },
 })
 
 langHelper.setLanguage(strings)
