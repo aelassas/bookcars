@@ -156,7 +156,9 @@ if (lang) {
   if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
     const country = await IpInfoService.getCountryCode()
 
-    if (['FR', 'MA'].includes(country)) {
+    if (['JP'].includes(country)) {
+      updateLang('ja')
+    } else if (['FR', 'MA'].includes(country)) {
       updateLang('fr')
     } else if (['US', 'GB', 'AU'].includes(country)) {
       updateLang('en')

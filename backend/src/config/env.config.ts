@@ -30,6 +30,7 @@ export const __env__ = (name: string, required?: boolean, defaultValue?: string)
  * @type {string[]}
  */
 export const LANGUAGES = [
+  'ja',
   'en',
   'fr',
   'es',
@@ -333,11 +334,11 @@ export const ADMIN_HOST = __env__('BC_ADMIN_HOST', true)
 export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', true)
 
 /**
- * Default language. Default is en. Available options: en, fr, es.
+ * Default language. Default is ja. Available options: ja, en, fr, es.
  *
  * @type {string}
  */
-export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'en')
+export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'ja')
 
 /**
  * Default Minimum age for rental. Default is 21 years.
