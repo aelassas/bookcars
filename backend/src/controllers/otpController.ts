@@ -3,7 +3,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import * as helper from '../utils/helper'
 import * as logger from '../utils/logger'
-import * as i18n from '../utils/i18n'
+import i18n from '../lang/i18n'
 import * as mailHelper from '../utils/mailHelper'
 import OTP from '../models/OTP'
 import validator from 'validator'
@@ -133,7 +133,7 @@ export const sendOTP = async (req: Request, res: Response) => {
       expireAt: { $gt: new Date() },
     })
 
-    if (existingOTP) {
+    if (existingOTP && existingOTP.createdAt) {
       const timeSinceCreation = Date.now() - existingOTP.createdAt.getTime()
       const cooldownPeriod = 60000 // 1 minute cooldown
 

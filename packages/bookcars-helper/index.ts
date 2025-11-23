@@ -236,7 +236,7 @@ export const hours = (from?: Date, to?: Date): number => {
  * @returns {*}
  */
 export const currencyRTL = (currencySymbol: string) => {
-  const isRTL = ['$', '£'].includes(currencySymbol)
+  const isRTL = ['$', '£', '¥'].includes(currencySymbol)
   return isRTL
 }
 

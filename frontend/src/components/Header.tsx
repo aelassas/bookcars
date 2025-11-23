@@ -473,7 +473,7 @@ const Header = ({
 
             {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
-              {isLoaded && (
+              {isLoaded && env.CURRENCIES.length > 1 && (
                 <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn bold">
                   {PaymentService.getCurrency()}
                 </Button>
@@ -509,9 +509,11 @@ const Header = ({
               )}
             </div>
             <div className="header-mobile">
-              <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn bold">
-                {PaymentService.getCurrency()}
-              </Button>
+              {env.CURRENCIES.length > 1 && (
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn bold">
+                  {PaymentService.getCurrency()}
+                </Button>
+              )}
               <Button variant="contained" onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
                 <div className="language">
                   <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />

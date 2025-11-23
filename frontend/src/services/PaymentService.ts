@@ -31,7 +31,7 @@ export const getCurrency = () => {
  * @param {string} code
  * @returns {string|undefined}
  */
-export const getCurrencySymbol = () => env.CURRENCIES.find((c) => c.code === getCurrency())?.symbol || '$'
+export const getCurrencySymbol = () => env.CURRENCIES.find((c) => c.code === getCurrency())?.symbol || '¥'
 
 /**
  * Convert a price to a given currency.
