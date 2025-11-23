@@ -899,6 +899,8 @@ export interface OTP extends Document {
   verifiedAt?: Date
   attempts: number
   expireAt?: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 /**

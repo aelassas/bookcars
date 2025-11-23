@@ -42,20 +42,8 @@ type Currency = { code: string, symbol: string }
  */
 const CURRENCIES: Currency[] = [
   {
-    code: 'USD',
-    symbol: '$',
-  },
-  {
-    code: 'EUR',
-    symbol: '€',
-  },
-  {
-    code: 'GBP',
-    symbol: '£',
-  },
-  {
-    code: 'AUD',
-    symbol: '$',
+    code: 'JPY',
+    symbol: '¥',
   },
 ]
 
