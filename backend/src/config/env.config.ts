@@ -247,77 +247,77 @@ export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
  *
  * @type {string}
  */
-export const CDN_ROOT = __env__('BC_CDN_ROOT', false, '/var/www/cdn')
+export const CDN_ROOT = __env__('BC_CDN_ROOT', false, './cdn')
 
 /**
  * Users' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_USERS = __env__('BC_CDN_USERS', true)
+export const CDN_USERS = __env__('BC_CDN_USERS', false, `${CDN_ROOT}/users`)
 
 /**
  * Users' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', true)
+export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', false, `${CDN_ROOT}/temp/users`)
 
 /**
  * Cars' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_CARS = __env__('BC_CDN_CARS', true)
+export const CDN_CARS = __env__('BC_CDN_CARS', false, `${CDN_ROOT}/cars`)
 
 /**
  * Cars' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
+export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', false, `${CDN_ROOT}/temp/cars`)
 
 /**
  * Locations' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', true)
+export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', false, `${CDN_ROOT}/locations`)
 
 /**
  * Locations' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', true)
+export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', false, `${CDN_ROOT}/temp/locations`)
 
 /**
  * Contracts' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', true)
+export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', false, `${CDN_ROOT}/contracts`)
 
 /**
  * Contracts' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', true)
+export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', false, `${CDN_ROOT}/temp/contracts`)
 
 /**
  * Licenses' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
+export const CDN_LICENSES = __env__('BC_CDN_LICENSES', false, `${CDN_ROOT}/licenses`)
 
 /**
  * Licenses' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
+export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', false, `${CDN_ROOT}/temp/licenses`)
 
 /**
  * Admin host.

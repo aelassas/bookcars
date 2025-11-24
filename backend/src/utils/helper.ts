@@ -48,7 +48,25 @@ export const pathExists = async (filePath: string): Promise<boolean> => {
  * @returns {Promise<void>}
  */
 export const mkdir = async (folder: string) => {
-  await asyncFs.mkdir(folder, { recursive: true })
+  // Check if directory already exists
+  if (await pathExists(folder)) {
+    return
+  }
+  
+  try {
+    await asyncFs.mkdir(folder, { recursive: true })
+  } catch (error: any) {
+    // If permission denied, provide helpful error message
+    if (error.code === 'EACCES') {
+      throw new Error(
+        `Permission denied creating directory: ${folder}\n` +
+        `For development, use a local directory (e.g., ./cdn) instead of system directories like /var/www.\n` +
+        `Set environment variables like BC_CDN_ROOT=./cdn or configure proper permissions.`
+      )
+    }
+    // Re-throw other errors
+    throw error
+  }
 }
 
 /**
