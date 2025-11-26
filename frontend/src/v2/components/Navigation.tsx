@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Menu, X, Moon, Sun } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import env from '@/config/env.config'
-import '@/assets/css/navigation.css'
+import '@/v2/assets/css/navigation.css'
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -140,3 +140,4 @@ const Navigation = () => {
 }
 
 export default Navigation
+

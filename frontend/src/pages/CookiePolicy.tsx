@@ -17,4 +17,4 @@ const CookiePolicy = () => {
   )
 }
 
-export default ToS
+export default CookiePolicy

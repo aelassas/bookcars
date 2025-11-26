@@ -14,14 +14,14 @@ if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
 }
 
-const Navigation = lazy(() => import('@/components/Navigation'))
-const HomeFooter = lazy(() => import('@/components/HomeFooter'))
+const Navigation = lazy(() => import('@/v2/components/Navigation'))
+const HomeFooter = lazy(() => import('@/v2/components/HomeFooter'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
 const SignUp = lazy(() => import('@/pages/SignUp'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
-const HomePage = lazy(() => import('@/pages/HomePage'))
+const HomePage = lazy(() => import('@/v2/pages/HomePage'))
 const Search = lazy(() => import('@/pages/Search'))
 const Checkout = lazy(() => import('@/pages/Checkout'))
 const CheckoutSession = lazy(() => import('@/pages/CheckoutSession'))

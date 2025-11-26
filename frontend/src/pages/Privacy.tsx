@@ -17,4 +17,4 @@ const Privacy = () => {
   )
 }
 
-export default ToS
+export default Privacy

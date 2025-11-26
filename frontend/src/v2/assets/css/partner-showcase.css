@@ -1,0 +1,158 @@
+.partner-showcase {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: var(--card);
+}
+
+.partner-showcase-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.partner-showcase-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.partner-showcase-tab {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+}
+
+.partner-showcase-tab:hover {
+  color: var(--foreground);
+}
+
+.partner-showcase-tab-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.partner-showcase-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.partner-showcase-subtitle {
+  color: var(--muted-foreground);
+  margin-bottom: 3rem;
+  font-size: 1.125rem;
+}
+
+.partner-showcase-brands-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.partner-showcase-brand-card {
+  padding: 1.5rem;
+  background-color: var(--background);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.partner-showcase-brand-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.partner-showcase-brand-logo {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.partner-showcase-brand-name {
+  font-weight: 600;
+  color: var(--foreground);
+  transition: color 150ms;
+}
+
+.partner-showcase-brand-card:hover .partner-showcase-brand-name {
+  color: var(--accent);
+}
+
+.partner-showcase-testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.partner-showcase-testimonial-card {
+  padding: 2rem;
+  background-color: var(--background);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  transition: box-shadow 150ms;
+}
+
+.partner-showcase-testimonial-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.partner-showcase-rating {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.partner-showcase-star {
+  color: var(--accent);
+  font-size: 1.125rem;
+}
+
+.partner-showcase-testimonial-text {
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.partner-showcase-testimonial-name {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.partner-showcase-testimonial-role {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 768px) {
+  .partner-showcase-title {
+    font-size: 2.25rem;
+  }
+
+  .partner-showcase-brands-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .partner-showcase-testimonials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .partner-showcase-brands-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
