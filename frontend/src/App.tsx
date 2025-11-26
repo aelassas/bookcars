@@ -14,13 +14,13 @@ if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
 }
 
-const Header = lazy(() => import('@/components/Header'))
+const Navigation = lazy(() => import('@/components/Navigation'))
+const HomeFooter = lazy(() => import('@/components/HomeFooter'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
 const SignUp = lazy(() => import('@/pages/SignUp'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
-const Home = lazy(() => import('@/pages/Home'))
 const HomePage = lazy(() => import('@/pages/HomePage'))
 const Search = lazy(() => import('@/pages/Search'))
 const Checkout = lazy(() => import('@/pages/Checkout'))
@@ -57,8 +57,9 @@ const AppLayout = () => {
               <ScrollToTop />
               <div className="app">
                 <Suspense fallback={<NProgressIndicator />}>
-                  <Header />
+                  <Navigation />
                   <Outlet />
+                  <HomeFooter />
                 </Suspense>
               </div>
             </PayPalProvider>

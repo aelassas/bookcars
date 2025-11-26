@@ -59,7 +59,6 @@ import Progress from '@/components/Progress'
 import CheckoutStatus from '@/components/CheckoutStatus'
 import NoMatch from './NoMatch'
 import CheckoutOptions from '@/components/CheckoutOptions'
-import Footer from '@/components/Footer'
 import ViewOnMapButton from '@/components/ViewOnMapButton'
 import MapDialog from '@/components/MapDialog'
 import Backdrop from '@/components/SimpleBackdrop'
@@ -1030,8 +1029,6 @@ const Checkout = () => {
                 </form>
               </Paper>
             </div>
-
-            <Footer />
           </>
         )}
 

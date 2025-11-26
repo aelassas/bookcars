@@ -23,7 +23,6 @@ import DatePicker from '@/components/DatePicker'
 import Avatar from '@/components/Avatar'
 import * as helper from '@/utils/helper'
 import DriverLicense from '@/components/DriverLicense'
-import Footer from '@/components/Footer'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import { schema, FormFields } from '@/models/SettingsForm'
 
@@ -231,8 +230,6 @@ const Settings = () => {
             </Paper>
 
           </div>
-
-          <Footer />
         </>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}

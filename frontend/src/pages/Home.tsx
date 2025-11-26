@@ -38,7 +38,6 @@ import TabPanel, { a11yProps } from '@/components/TabPanel'
 import LocationCarrousel from '@/components/LocationCarrousel'
 import SearchForm from '@/components/SearchForm'
 import Map from '@/components/Map'
-import Footer from '@/components/Footer'
 import FaqList from '@/components/FaqList'
 
 import Mini from '@/assets/img/mini.png'
@@ -597,8 +596,6 @@ const Home = () => {
           />
         </DialogContent>
       </Dialog>
-
-      <Footer />
     </Layout>
   )
 }

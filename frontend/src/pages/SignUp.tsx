@@ -25,7 +25,6 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/SimpleBackdrop'
 import DatePicker from '@/components/DatePicker'
 import SocialLogin from '@/components/SocialLogin'
-import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/SignUpForm'
 import PasswordInput from '@/components/PasswordInput'
 
@@ -263,8 +262,6 @@ const SignUp = () => {
           </form>
         </Paper>
       </div>
-
-      <Footer />
 
       {isSubmitting && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>

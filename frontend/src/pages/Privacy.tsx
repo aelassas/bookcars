@@ -1,11 +1,10 @@
 import React from 'react'
 import { strings } from '@/lang/privacy'
 import Layout from '@/components/Layout'
-import Footer from '@/components/Footer'
 
 import '@/assets/css/privacy.css'
 
-const ToS = () => {
+const Privacy = () => {
   const onLoad = () => { }
 
   return (
@@ -14,7 +13,6 @@ const ToS = () => {
         <h1>{strings.TITLE}</h1>
         <p>{strings.PRIVACY_POLICY}</p>
       </div>
-      <Footer />
     </Layout>
   )
 }

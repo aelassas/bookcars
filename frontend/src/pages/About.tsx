@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import { strings } from '@/lang/about'
 import Layout from '@/components/Layout'
-import Footer from '@/components/Footer'
 
 import '@/assets/css/about.css'
 
@@ -32,8 +31,6 @@ const About = () => {
           {strings.FIND_DEAL}
         </Button>
       </div>
-
-      <Footer />
     </Layout>
   )
 }

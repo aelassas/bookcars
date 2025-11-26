@@ -9,7 +9,6 @@ import Layout from '@/components/Layout'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/reset-password'
 import SocialLogin from '@/components/SocialLogin'
-import Footer from '@/components/Footer'
 import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/ForgotPasswordForm'
 
@@ -112,8 +111,6 @@ const ForgotPassword = () => {
           )}
         </Paper>
       </div>
-
-      <Footer />
     </Layout>
   )
 }

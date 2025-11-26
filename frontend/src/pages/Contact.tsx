@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
 import ContactForm from '@/components/ContactForm'
-import Footer from '@/components/Footer'
 
 import '@/assets/css/contact.css'
 
@@ -18,7 +17,6 @@ const Contact = () => {
       <div className="contact">
         <ContactForm user={user} className="form" />
       </div>
-      <Footer />
     </Layout>
   )
 }

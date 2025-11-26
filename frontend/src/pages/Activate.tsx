@@ -16,7 +16,6 @@ import { strings } from '@/lang/activate'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import NoMatch from './NoMatch'
 import * as helper from '@/utils/helper'
-import Footer from '@/components/Footer'
 import Error from './Error'
 import { schema, FormFields } from '@/models/ActivateForm'
 import PasswordInput from '@/components/PasswordInput'
@@ -203,8 +202,6 @@ const Activate = () => {
         </div>
       )}
       {!isAuthenticated && noMatch && <NoMatch hideHeader />}
-
-      {(resend || visible) && <Footer />}
 
       {errors.root && <Error />}
     </Layout>

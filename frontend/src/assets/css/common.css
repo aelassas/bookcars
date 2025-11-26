@@ -241,7 +241,7 @@ div.content {
   flex-direction: column;
   flex: 1 0 auto;
   margin: 0;
-  padding: 0;
+  padding-top: 4rem; /* Account for fixed navigation */
   background-color: #FAFAFA;
 }
 

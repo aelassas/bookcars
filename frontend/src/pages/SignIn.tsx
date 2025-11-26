@@ -19,7 +19,6 @@ import { useUserContext, UserContextType } from '@/context/UserContext'
 import Error from '@/components/Error'
 import Layout from '@/components/Layout'
 import SocialLogin from '@/components/SocialLogin'
-import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/SignInForm'
 import PasswordInput from '@/components/PasswordInput'
 
@@ -175,9 +174,6 @@ const SignIn = () => {
           </form>
         </Paper>
       </div>
-
-      <Footer />
-
     </Layout>
   )
 }

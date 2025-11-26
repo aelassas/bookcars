@@ -8,7 +8,6 @@ import * as LocationService from '@/services/LocationService'
 import Layout from '@/components/Layout'
 import Map from '@/components/Map'
 import SearchForm from '@/components/SearchForm'
-import Footer from '@/components/Footer'
 
 import '@/assets/css/locations.css'
 
@@ -54,8 +53,6 @@ const Locations = () => {
           />
         </DialogContent>
       </Dialog>
-
-      <Footer />
     </Layout>
   )
 }

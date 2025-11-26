@@ -15,7 +15,6 @@ import { useUserContext, UserContextType } from '@/context/UserContext'
 import * as helper from '@/utils/helper'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/ResetPasswordForm'
 
 import '@/assets/css/reset-password.css'
@@ -160,8 +159,6 @@ const ResetPassword = () => {
             </form>
           </Paper>
         </div>
-
-        <Footer />
       </div>
 
       {errors.root && <Error />}
