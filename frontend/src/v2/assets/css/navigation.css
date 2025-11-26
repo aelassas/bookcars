@@ -163,6 +163,151 @@
   background-color: rgba(0, 188, 212, 0.9);
 }
 
+/* Notifications Button */
+.navigation-notifications-button {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color 150ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-notifications-button:hover {
+  background-color: rgba(0, 188, 212, 0.1);
+}
+
+.navigation-notifications-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+  transform: translate(25%, -25%);
+}
+
+/* User Menu */
+.navigation-user-menu {
+  position: relative;
+}
+
+.navigation-user-button {
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+}
+
+.navigation-user-button:hover {
+  background-color: rgba(0, 188, 212, 0.1);
+}
+
+.navigation-user-button .avatar-small,
+.navigation-user-button .avatar,
+.navigation-user-button .MuiAvatar-root {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 1rem !important;
+}
+
+.navigation-user-button .MuiSvgIcon-root {
+  width: 2rem;
+  height: 2rem;
+}
+
+.navigation-user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 12rem;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dark .navigation-user-dropdown {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.navigation-user-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color 150ms;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.navigation-user-dropdown-item:hover {
+  background-color: var(--muted);
+}
+
+.navigation-user-dropdown-item:first-child {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.navigation-user-dropdown-item:last-child {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+/* Mobile Menu Button Styles */
+.navigation-mobile-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 0;
+  background: transparent;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+  transition: color 150ms;
+  position: relative;
+}
+
+.navigation-mobile-menu-button:hover {
+  color: var(--accent);
+}
+
+.navigation-mobile-menu-button .navigation-notifications-badge {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 @media (min-width: 768px) {
   .navigation-container {
     padding-left: 1.5rem;

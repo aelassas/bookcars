@@ -17,7 +17,7 @@ if (env.GOOGLE_ANALYTICS_ENABLED) {
 const Navigation = lazy(() => import('@/v2/components/Navigation'))
 const HomeFooter = lazy(() => import('@/v2/components/HomeFooter'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
-const SignUp = lazy(() => import('@/pages/SignUp'))
+const SignUp = lazy(() => import('@/v2/pages/SignUp'))
 const Activate = lazy(() => import('@/pages/Activate'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))

@@ -1,0 +1,326 @@
+/* Signup Page */
+.signup-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  padding: 6rem 1rem 5rem;
+}
+
+.signup-page-container {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.signup-page-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.signup-page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.signup-page-subtitle {
+  color: var(--muted-foreground);
+  margin-bottom: 2rem;
+}
+
+.signup-page-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.signup-page-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signup-page-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.signup-page-required {
+  color: var(--accent);
+}
+
+.signup-page-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.signup-page-input::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.signup-page-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent),
+    0 0 0 3px rgba(var(--accent-rgb, 0, 188, 212), 0.1);
+}
+
+.signup-page-input-error {
+  border-color: #ef4444;
+}
+
+.signup-page-input-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444, 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.signup-page-error {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.signup-page-datepicker-wrapper {
+  width: 100%;
+}
+
+.signup-page-datepicker-wrapper .MuiFormControl-root {
+  width: 100%;
+}
+
+.signup-page-datepicker-wrapper .MuiOutlinedInput-root {
+  background-color: var(--background);
+  border-radius: 0.5rem;
+}
+
+.signup-page-datepicker-wrapper
+  .MuiOutlinedInput-root
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signup-page-datepicker-wrapper
+  .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signup-page-datepicker-wrapper
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--accent);
+}
+
+.signup-page-datepicker-wrapper .MuiInputBase-input {
+  color: var(--foreground);
+}
+
+.signup-page-password-wrapper {
+  width: 100%;
+}
+
+.signup-page-password-wrapper .MuiFormControl-root {
+  width: 100%;
+}
+
+.signup-page-password-wrapper .MuiOutlinedInput-root {
+  background-color: var(--background);
+  border-radius: 0.5rem;
+}
+
+.signup-page-password-wrapper
+  .MuiOutlinedInput-root
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signup-page-password-wrapper
+  .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signup-page-password-wrapper
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--accent);
+}
+
+.signup-page-password-wrapper .MuiInputBase-input {
+  color: var(--foreground);
+}
+
+.signup-page-password-wrapper .MuiInputBase-input::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.signup-page-password-wrapper .MuiFormLabel-root {
+  color: var(--foreground);
+}
+
+.signup-page-password-wrapper .MuiFormLabel-root.Mui-focused {
+  color: var(--accent);
+}
+
+.signup-page-password-wrapper .MuiFormHelperText-root {
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+.signup-page-password-wrapper .MuiFormHelperText-root.Mui-error {
+  color: #ef4444;
+}
+
+.signup-page-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding-top: 0.5rem;
+}
+
+.signup-page-checkbox {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.125rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.signup-page-checkbox-text {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+.signup-page-link {
+  color: var(--accent);
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+}
+
+.signup-page-link:hover {
+  text-decoration: underline;
+}
+
+.signup-page-social {
+  margin-top: 0.5rem;
+}
+
+.signup-page-social .social-login {
+  margin-top: 0;
+}
+
+.signup-page-form-errors {
+  margin-top: 0.5rem;
+}
+
+.signup-page-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.signup-page-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.signup-page-button-primary {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.signup-page-button-primary:hover:not(:disabled) {
+  background-color: var(--accent);
+  opacity: 0.9;
+}
+
+.signup-page-button-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signup-page-button-secondary {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.signup-page-button-secondary:hover {
+  background-color: var(--muted);
+  opacity: 0.8;
+}
+
+.signup-page-footer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.signup-page-footer-text {
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+
+.signup-page-footer-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: text-decoration 0.2s;
+}
+
+.signup-page-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Dark mode adjustments */
+.dark .signup-page-input {
+  background-color: var(--input);
+}
+
+.dark .signup-page-datepicker-wrapper .MuiOutlinedInput-root {
+  background-color: var(--input);
+}
+
+.dark .signup-page-password-wrapper .MuiOutlinedInput-root {
+  background-color: var(--input);
+}
+
+/* Responsive */
+@media only screen and (max-width: 640px) {
+  .signup-page {
+    padding: 5rem 1rem 4rem;
+  }
+
+  .signup-page-card {
+    padding: 1.5rem;
+  }
+
+  .signup-page-title {
+    font-size: 1.5rem;
+  }
+}
