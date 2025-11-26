@@ -533,7 +533,7 @@ const BookingList = ({
                     </div>
                   </div>
 
-                  {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver) && (
+                  {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver || booking.infantSeat || booking.toddlerSeat || booking.boosterSeat) && (
                     <>
                       <div className="extras">
                         <span className="extras-title">{commonStrings.OPTIONS}</span>
@@ -582,6 +582,27 @@ const BookingList = ({
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
                             <span className="extra-text">{helper.getAdditionalDriverOption((booking.car as bookcarsTypes.Car).additionalDriver, days, language as string, true)}</span>
+                          </div>
+                        )}
+
+                        {booking.infantSeat && (
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <span className="extra-title">{csStrings.INFANT_SEAT}</span>
+                          </div>
+                        )}
+
+                        {booking.toddlerSeat && (
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <span className="extra-title">{csStrings.TODDLER_SEAT}</span>
+                          </div>
+                        )}
+
+                        {booking.boosterSeat && (
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <span className="extra-title">{csStrings.BOOSTER_SEAT}</span>
                           </div>
                         )}
                       </div>

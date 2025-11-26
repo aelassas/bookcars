@@ -278,6 +278,9 @@ const UpdateBooking = () => {
         collisionDamageWaiver: data.collisionDamageWaiver,
         fullInsurance: data.fullInsurance,
         additionalDriver: additionalDriverSet,
+        infantSeat: data.infantSeat,
+        toddlerSeat: data.toddlerSeat,
+        boosterSeat: data.boosterSeat,
         price,
         isDeposit: booking.isDeposit,
         isPayedInFull: booking.isPayedInFull,
@@ -387,6 +390,9 @@ const UpdateBooking = () => {
               setValue('collisionDamageWaiver', _booking.collisionDamageWaiver || false)
               setValue('fullInsurance', _booking.fullInsurance || false)
               setValue('additionalDriver', (_booking.additionalDriver && !!_booking._additionalDriver) || false)
+              setValue('infantSeat', _booking.infantSeat || false)
+              setValue('toddlerSeat', _booking.toddlerSeat || false)
+              setValue('boosterSeat', _booking.boosterSeat || false)
               if (_booking.additionalDriver && _booking._additionalDriver) {
                 const _additionalDriver = _booking._additionalDriver as bookcarsTypes.AdditionalDriver
                 setValue('additionalDriverFullName', _additionalDriver.fullName)
@@ -849,6 +855,45 @@ const UpdateBooking = () => {
                   language={language}
                 />
               )}
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      {...register('infantSeat')}
+                      color="primary"
+                    />
+                  }
+                  label={csStrings.INFANT_SEAT}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      {...register('toddlerSeat')}
+                      color="primary"
+                    />
+                  }
+                  label={csStrings.TODDLER_SEAT}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      {...register('boosterSeat')}
+                      color="primary"
+                    />
+                  }
+                  label={csStrings.BOOSTER_SEAT}
+                  className="checkbox-fcl"
+                />
+              </FormControl>
 
               <div>
                 <div className="buttons">

@@ -75,6 +75,9 @@ const CreateBooking = () => {
       collisionDamageWaiver: false,
       fullInsurance: false,
       additionalDriver: false,
+      infantSeat: false,
+      toddlerSeat: false,
+      boosterSeat: false,
       additionalDriverFullName: '',
       additionalDriverEmail: '',
       additionalDriverPhone: '',
@@ -120,6 +123,9 @@ const CreateBooking = () => {
       collisionDamageWaiver: data.collisionDamageWaiver,
       fullInsurance: data.fullInsurance,
       additionalDriver: additionalDriverSet,
+      infantSeat: data.infantSeat,
+      toddlerSeat: data.toddlerSeat,
+      boosterSeat: data.boosterSeat,
     }
 
     let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
@@ -369,6 +375,45 @@ const CreateBooking = () => {
                   />
                 }
                 label={csStrings.ADDITIONAL_DRIVER}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={
+                  <Switch
+                    {...register('infantSeat')}
+                    color="primary"
+                  />
+                }
+                label={csStrings.INFANT_SEAT}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={
+                  <Switch
+                    {...register('toddlerSeat')}
+                    color="primary"
+                  />
+                }
+                label={csStrings.TODDLER_SEAT}
+                className="checkbox-fcl"
+              />
+            </FormControl>
+
+            <FormControl fullWidth margin="dense" className="checkbox-fc">
+              <FormControlLabel
+                control={
+                  <Switch
+                    {...register('boosterSeat')}
+                    color="primary"
+                  />
+                }
+                label={csStrings.BOOSTER_SEAT}
                 className="checkbox-fcl"
               />
             </FormControl>

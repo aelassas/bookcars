@@ -98,6 +98,9 @@ export interface Booking {
   fullInsurance?: boolean
   additionalDriver?: boolean
   _additionalDriver?: string | AdditionalDriver
+  infantSeat?: boolean
+  toddlerSeat?: boolean
+  boosterSeat?: boolean
   cancelRequest?: boolean
   price?: number
   sessionId?: string

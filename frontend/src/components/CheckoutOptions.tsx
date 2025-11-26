@@ -31,6 +31,9 @@ interface CheckoutOptionsProps {
   onCollisionDamageWaiverChange: (value: boolean) => void
   onFullInsuranceChange: (value: boolean) => void
   onAdditionalDriverChange: (value: boolean) => void
+  onInfantSeatChange: (value: boolean) => void
+  onToddlerSeatChange: (value: boolean) => void
+  onBoosterSeatChange: (value: boolean) => void
 }
 
 const CheckoutOptions = ({
@@ -48,6 +51,9 @@ const CheckoutOptions = ({
   onCollisionDamageWaiverChange,
   onFullInsuranceChange,
   onAdditionalDriverChange,
+  onInfantSeatChange,
+  onToddlerSeatChange,
+  onBoosterSeatChange,
 }: CheckoutOptionsProps) => {
   const days = useMemo(() => {
     if (from && to) {
@@ -61,6 +67,9 @@ const CheckoutOptions = ({
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
+  const [infantSeat, setInfantSeat] = useState(false)
+  const [toddlerSeat, setToddlerSeat] = useState(false)
+  const [boosterSeat, setBoosterSeat] = useState(false)
 
   const [cancellationOption, setCancellationOption] = useState('')
   const [amendmentsOption, setAmendmentsOption] = useState('')
@@ -215,6 +224,24 @@ const CheckoutOptions = ({
     }
   }
 
+  const handleInfantSeatChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const _infantSeat = e.target.checked
+    setInfantSeat(_infantSeat)
+    onInfantSeatChange(_infantSeat)
+  }
+
+  const handleToddlerSeatChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const _toddlerSeat = e.target.checked
+    setToddlerSeat(_toddlerSeat)
+    onToddlerSeatChange(_toddlerSeat)
+  }
+
+  const handleBoosterSeatChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const _boosterSeat = e.target.checked
+    setBoosterSeat(_boosterSeat)
+    onBoosterSeatChange(_boosterSeat)
+  }
+
   return (
     <div className="checkout-options-container">
       <div className="checkout-info">
@@ -295,6 +322,42 @@ const CheckoutOptions = ({
               <span>
                 <span className="checkout-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
                 <span className="checkout-option-value">{additionalDriverOption}</span>
+              </span>
+            )}
+          />
+        </FormControl>
+
+        <FormControl fullWidth margin="dense">
+          <FormControlLabel
+            disabled={!!clientSecret || payPalLoaded}
+            control={<Switch checked={infantSeat} onChange={handleInfantSeatChange} color="primary" />}
+            label={(
+              <span>
+                <span className="checkout-option-label">{csStrings.INFANT_SEAT}</span>
+              </span>
+            )}
+          />
+        </FormControl>
+
+        <FormControl fullWidth margin="dense">
+          <FormControlLabel
+            disabled={!!clientSecret || payPalLoaded}
+            control={<Switch checked={toddlerSeat} onChange={handleToddlerSeatChange} color="primary" />}
+            label={(
+              <span>
+                <span className="checkout-option-label">{csStrings.TODDLER_SEAT}</span>
+              </span>
+            )}
+          />
+        </FormControl>
+
+        <FormControl fullWidth margin="dense">
+          <FormControlLabel
+            disabled={!!clientSecret || payPalLoaded}
+            control={<Switch checked={boosterSeat} onChange={handleBoosterSeatChange} color="primary" />}
+            label={(
+              <span>
+                <span className="checkout-option-label">{csStrings.BOOSTER_SEAT}</span>
               </span>
             )}
           />

@@ -21,6 +21,9 @@ export const schema = z.object({
   collisionDamageWaiver: z.boolean().default(false).optional(),
   fullInsurance: z.boolean().default(false).optional(),
   additionalDriver: z.boolean().default(false).optional(),
+  infantSeat: z.boolean().default(false).optional(),
+  toddlerSeat: z.boolean().default(false).optional(),
+  boosterSeat: z.boolean().default(false).optional(),
   additionalDriverFullName: z.string().optional(),
   additionalDriverEmail: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }).optional().or(z.literal('')),
   additionalDriverPhone: z.string().refine(val => !val || validator.isMobilePhone(val), {

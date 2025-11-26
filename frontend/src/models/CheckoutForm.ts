@@ -41,6 +41,9 @@ const baseSchema = z.object({
     collisionDamageWaiver: z.boolean().default(false).optional(),
     fullInsurance: z.boolean().default(false).optional(),
     additionalDriver: z.boolean().default(false).optional(),
+    infantSeat: z.boolean().default(false).optional(),
+    toddlerSeat: z.boolean().default(false).optional(),
+    boosterSeat: z.boolean().default(false).optional(),
 
     // Additional driver details
     additionalDriverFullName: z.string().optional(),

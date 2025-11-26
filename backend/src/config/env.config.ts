@@ -595,6 +595,9 @@ export interface Booking extends Document {
   fullInsurance?: boolean
   additionalDriver?: boolean
   _additionalDriver?: Types.ObjectId
+  infantSeat?: boolean
+  toddlerSeat?: boolean
+  boosterSeat?: boolean
   cancelRequest?: boolean
   price: number
   sessionId?: string
@@ -731,6 +734,9 @@ export interface BookingInfo {
   fullInsurance?: boolean
   additionalDriver?: boolean
   _additionalDriver?: Types.ObjectId
+  infantSeat?: boolean
+  toddlerSeat?: boolean
+  boosterSeat?: boolean
   cancelRequest?: boolean
   price: number
 }

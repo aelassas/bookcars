@@ -82,6 +82,18 @@ const bookingSchema = new Schema<env.Booking>(
       type: Schema.Types.ObjectId,
       ref: 'AdditionalDriver',
     },
+    infantSeat: {
+      type: Boolean,
+      default: false,
+    },
+    toddlerSeat: {
+      type: Boolean,
+      default: false,
+    },
+    boosterSeat: {
+      type: Boolean,
+      default: false,
+    },
     price: {
       type: Number,
       required: [true, "can't be blank"],

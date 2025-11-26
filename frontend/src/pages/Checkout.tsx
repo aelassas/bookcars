@@ -238,6 +238,9 @@ const Checkout = () => {
         collisionDamageWaiver: data.collisionDamageWaiver,
         fullInsurance: data.fullInsurance,
         additionalDriver,
+        infantSeat: data.infantSeat,
+        toddlerSeat: data.toddlerSeat,
+        boosterSeat: data.boosterSeat,
         price: basePrice,
       }
 
@@ -469,6 +472,9 @@ const Checkout = () => {
                       onCollisionDamageWaiverChange={(value) => setValue('collisionDamageWaiver', value)}
                       onFullInsuranceChange={(value) => setValue('fullInsurance', value)}
                       onAdditionalDriverChange={(value) => setValue('additionalDriver', value)}
+                      onInfantSeatChange={(value) => setValue('infantSeat', value)}
+                      onToddlerSeatChange={(value) => setValue('toddlerSeat', value)}
+                      onBoosterSeatChange={(value) => setValue('boosterSeat', value)}
                     />
 
                     <div className="checkout-details-container">
