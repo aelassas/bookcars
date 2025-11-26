@@ -1,0 +1,111 @@
+.booking-widget {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: var(--card);
+}
+
+.booking-widget-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.booking-widget-card {
+  background: linear-gradient(to right, var(--primary), rgba(26, 26, 26, 0.8));
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.booking-widget-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--card);
+  margin-bottom: 2rem;
+}
+
+.booking-widget-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: end;
+}
+
+.booking-widget-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.booking-widget-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--card);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-widget-input,
+.booking-widget-select {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.booking-widget-input:focus,
+.booking-widget-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.booking-widget-button {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 700;
+  white-space: nowrap;
+  height: 3rem;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.booking-widget-button:hover {
+  background-color: rgba(0, 188, 212, 0.9);
+}
+
+@media (min-width: 768px) {
+  .booking-widget-title {
+    font-size: 2.25rem;
+  }
+
+  .booking-widget-card {
+    padding: 3rem;
+  }
+
+  .booking-widget-form {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-form {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+

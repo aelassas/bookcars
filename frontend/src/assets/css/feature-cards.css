@@ -1,0 +1,100 @@
+.feature-cards {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: var(--background);
+}
+
+.feature-cards-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-cards-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.feature-cards-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.feature-cards-description {
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.feature-card {
+  padding: 2rem;
+  background-color: var(--card);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  transition: all 150ms;
+}
+
+.feature-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card-icon-wrapper {
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(0, 188, 212, 0.2);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: background-color 150ms;
+}
+
+.feature-card:hover .feature-card-icon-wrapper {
+  background-color: rgba(0, 188, 212, 0.3);
+}
+
+.feature-card-icon {
+  color: var(--accent);
+}
+
+.feature-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card-description {
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 768px) {
+  .feature-cards-title {
+    font-size: 3rem;
+  }
+
+  .feature-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feature-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+

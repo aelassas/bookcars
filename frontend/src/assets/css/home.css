@@ -44,7 +44,7 @@ div.home div.home-content div.video-background {
   width: 100%;
   top: 0;
   left: 0;
-  background-image: url('/cover.webp');
+  background-image: url("/cover.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 50%;
@@ -82,7 +82,7 @@ div.home div.home-content::after {
 }
 
 div.home-title {
-  color: #F7B644;
+  color: #f7b644;
   font-size: 28px;
   font-weight: 500;
   text-align: center;
@@ -94,7 +94,7 @@ div.home div.home-cover {
   color: #fff;
   text-align: center;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: .065rem;
+  letter-spacing: 0.065rem;
   padding: 0 20px;
 }
 
@@ -114,7 +114,7 @@ div.home div.search {
 
 div.home div.search div.home-search {
   /* box-shadow: 0 3px 5px -1px #0003, 0 1px 18px 0 #0000001F, 0 6px 10px 0 #00000024; */
-  box-shadow: 0px 2px 16px 0px rgba(26, 26, 26, .24);
+  box-shadow: 0px 2px 16px 0px rgba(26, 26, 26, 0.24);
   /* box-shadow: 0px 2px 8px 0px rgba(26, 26, 26, .16); */
   display: flex;
   flex-direction: column;
@@ -196,25 +196,43 @@ div.home div.services div.services-boxes div.services-box {
   align-items: center;
   width: 400px;
   margin: 20px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   padding: 25px;
   text-align: center;
 }
 
-div.home div.services div.services-boxes div.services-box div.services-icon-wrapper {
+div.home
+  div.services
+  div.services-boxes
+  div.services-box
+  div.services-icon-wrapper {
   padding: 20px;
 }
 
-div.home div.services div.services-boxes div.services-box div.services-icon-wrapper .services-icon {
+div.home
+  div.services
+  div.services-boxes
+  div.services-box
+  div.services-icon-wrapper
+  .services-icon {
   font-size: 48px;
 }
 
-div.home div.services div.services-boxes div.services-box div.services-text-wrapper {
+div.home
+  div.services
+  div.services-boxes
+  div.services-box
+  div.services-text-wrapper {
   display: flex;
   flex-direction: column;
 }
 
-div.home div.services div.services-boxes div.services-box div.services-text-wrapper span.services-title {
+div.home
+  div.services
+  div.services-boxes
+  div.services-box
+  div.services-text-wrapper
+  span.services-title {
   font-weight: bold;
   margin-bottom: 15px;
 }
@@ -253,7 +271,7 @@ div.home div.car-size {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   padding: 50px 0;
 }
 
@@ -367,7 +385,11 @@ div.home div.customer-care div.customer-care-text div.customer-care-boxes {
   margin-bottom: 40px;
 }
 
-div.home div.customer-care div.customer-care-text div.customer-care-boxes div.customer-care-box {
+div.home
+  div.customer-care
+  div.customer-care-text
+  div.customer-care-boxes
+  div.customer-care-box {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -375,7 +397,11 @@ div.home div.customer-care div.customer-care-text div.customer-care-boxes div.cu
   margin: 5px 0;
 }
 
-div.home div.customer-care div.customer-care-text div.customer-care-boxes .customer-care-icon {
+div.home
+  div.customer-care
+  div.customer-care-text
+  div.customer-care-boxes
+  .customer-care-icon {
   margin-right: 10px;
 }
 
@@ -486,4 +512,8 @@ div.home div.customer-care div.customer-care-img img {
   div.home div.car-size div.boxes div.box {
     margin-right: 30px;
   }
+}
+
+.home-main {
+  background-color: var(--background);
 }

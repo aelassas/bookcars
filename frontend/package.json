@@ -38,6 +38,7 @@
     "leaflet": "^1.9.4",
     "leaflet-boundary-canvas": "^1.0.0",
     "localized-strings": "^2.0.3",
+    "lucide-react": "^0.555.0",
     "nprogress": "^0.2.0",
     "react": "^19.2.0",
     "react-circle-flags": "^0.0.23",

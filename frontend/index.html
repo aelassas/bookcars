@@ -9,6 +9,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="<%= WEBSITE_NAME %> Rental Service" />
   <title><%= WEBSITE_NAME %> Rental Service</title>
+  <script>
+    try {
+      const theme = localStorage.getItem('theme') || 'system';
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  </script>
 </head>
 
 <body>

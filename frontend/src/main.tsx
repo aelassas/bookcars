@@ -52,6 +52,7 @@ import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
+import '@/assets/css/home-theme.css'
 
 if (env.isProduction) {
   disableDevTools()
