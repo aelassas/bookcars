@@ -219,11 +219,35 @@
 }
 
 .signup-page-social {
-  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .signup-page-social .social-login {
   margin-top: 0;
+}
+
+.signup-page-social .social-login .separator {
+  display: none;
+}
+
+.signup-page-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.signup-page-divider hr {
+  flex: 1;
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.signup-page-divider span {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-transform: lowercase;
 }
 
 .signup-page-form-errors {

@@ -110,6 +110,18 @@ const SignUp = () => {
                     <p className="signup-page-subtitle">Join Tokyo Drive and start your premium rental experience</p>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="signup-page-form">
+                        {/* Social Login */}
+                        <div className="signup-page-social">
+                            <SocialLogin redirectToHomepage />
+                        </div>
+
+                        {/* Divider */}
+                        <div className="signup-page-divider">
+                            <hr />
+                            <span>or</span>
+                            <hr />
+                        </div>
+
                         {/* Full Name */}
                         <div className="signup-page-field">
                             <label className="signup-page-label">
@@ -282,11 +294,6 @@ const SignUp = () => {
                             {errors.tos && (
                                 <span className="signup-page-error">{errors.tos.message}</span>
                             )}
-                        </div>
-
-                        {/* Social Login */}
-                        <div className="signup-page-social">
-                            <SocialLogin redirectToHomepage />
                         </div>
 
                         {/* Form Errors */}

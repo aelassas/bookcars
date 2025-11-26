@@ -1,0 +1,294 @@
+/* Signin Page */
+.signin-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  padding: 6rem 1rem 5rem;
+}
+
+.signin-page-container {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.signin-page-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.signin-page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.signin-page-subtitle {
+  color: var(--muted-foreground);
+  margin-bottom: 2rem;
+}
+
+.signin-page-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.signin-page-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signin-page-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.signin-page-required {
+  color: var(--accent);
+}
+
+.signin-page-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.signin-page-input::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.signin-page-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 0 3px rgba(var(--accent-rgb, 0, 188, 212), 0.1);
+}
+
+.signin-page-input-error {
+  border-color: #ef4444;
+}
+
+.signin-page-input-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444, 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.signin-page-error {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.signin-page-password-wrapper {
+  width: 100%;
+}
+
+.signin-page-password-wrapper .MuiFormControl-root {
+  width: 100%;
+}
+
+.signin-page-password-wrapper .MuiOutlinedInput-root {
+  background-color: var(--background);
+  border-radius: 0.5rem;
+}
+
+.signin-page-password-wrapper .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signin-page-password-wrapper .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border);
+}
+
+.signin-page-password-wrapper .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--accent);
+}
+
+.signin-page-password-wrapper .MuiInputBase-input {
+  color: var(--foreground);
+}
+
+.signin-page-password-wrapper .MuiFormLabel-root {
+  color: var(--foreground);
+}
+
+.signin-page-password-wrapper .MuiFormLabel-root.Mui-focused {
+  color: var(--accent);
+}
+
+.signin-page-password-wrapper .MuiFormHelperText-root {
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+.signin-page-password-wrapper .MuiFormHelperText-root.Mui-error {
+  color: #ef4444;
+}
+
+.signin-page-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.signin-page-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.signin-page-checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.signin-page-checkbox-text {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.signin-page-forgot-link {
+  font-size: 0.875rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+}
+
+.signin-page-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.signin-page-social {
+  margin-bottom: 1rem;
+}
+
+.signin-page-social .social-login {
+  margin-top: 0;
+}
+
+.signin-page-social .social-login .separator {
+  display: none;
+}
+
+.signin-page-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.signin-page-divider hr {
+  flex: 1;
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.signin-page-divider span {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-transform: lowercase;
+}
+
+.signin-page-form-errors {
+  margin-top: 0.5rem;
+}
+
+.signin-page-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1.5rem;
+}
+
+.signin-page-button-primary {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.signin-page-button-primary:hover:not(:disabled) {
+  background-color: var(--accent);
+  opacity: 0.9;
+}
+
+.signin-page-button-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signin-page-footer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.signin-page-footer-text {
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+
+.signin-page-footer-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: text-decoration 0.2s;
+}
+
+.signin-page-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Dark mode adjustments */
+.dark .signin-page-input {
+  background-color: var(--input);
+}
+
+.dark .signin-page-password-wrapper .MuiOutlinedInput-root {
+  background-color: var(--input);
+}
+
+/* Responsive */
+@media only screen and (max-width: 640px) {
+  .signin-page {
+    padding: 5rem 1rem 4rem;
+  }
+
+  .signin-page-card {
+    padding: 1.5rem;
+  }
+
+  .signin-page-title {
+    font-size: 1.5rem;
+  }
+
+  .signin-page-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
