@@ -136,6 +136,30 @@ jobs:
         run: |
           kubectl create namespace bookcars --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Create GitHub Container Registry imagePullSecret
+        run: |
+          # Determine which token to use (prefer GHCR_TOKEN, fallback to GITHUB_TOKEN)
+          if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
+            GHCR_PASSWORD="${{ secrets.GHCR_TOKEN }}"
+            echo "✅ Using GHCR_TOKEN for image pull authentication"
+          elif [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+            GHCR_PASSWORD="${{ secrets.GITHUB_TOKEN }}"
+            echo "⚠️  Using GITHUB_TOKEN (recommended: create GHCR_TOKEN PAT for production)"
+          else
+            echo "❌ Error: Neither GHCR_TOKEN nor GITHUB_TOKEN is available"
+            echo "Create a GitHub Personal Access Token with 'read:packages' permission and add it as GHCR_TOKEN secret."
+            exit 1
+          fi
+
+          # Create docker registry secret for pulling images
+          kubectl create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.repository_owner }} \
+            --docker-password="$GHCR_PASSWORD" \
+            --namespace=bookcars \
+            --dry-run=client -o yaml | kubectl apply -f -
+          echo "✅ GHCR imagePullSecret created/updated"
+
       - name: Deploy ConfigMap
         run: |
           kubectl apply -f k8s/configmap.yml

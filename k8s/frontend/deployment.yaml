@@ -15,10 +15,12 @@ spec:
       labels:
         app: frontend
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
-        - name: frontend
-          image: IMAGE_REGISTRY-frontend:IMAGE_TAG
-          imagePullPolicy: Always
+      - name: frontend
+        image: IMAGE_REGISTRY-frontend:IMAGE_TAG
+        imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:

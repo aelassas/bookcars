@@ -111,6 +111,20 @@ Choose **ONE** of the following options:
 - **Value**: Base64-encoded kubeconfig file content
   - Generate: `cat ~/.kube/config | base64 -w 0` (Linux) or `cat ~/.kube/config | base64` (macOS)
 
+## GitHub Container Registry (GHCR) Authentication
+
+- **Name**: `GHCR_TOKEN`
+- **Value**: GitHub Personal Access Token (PAT) with `read:packages` permission
+  - **Required**: Yes (if images are private in GHCR)
+  - **How to create**:
+    1. Go to GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+    2. Click "Generate new token (classic)"
+    3. Give it a name (e.g., "GHCR Pull Token")
+    4. Select scope: `read:packages` (to pull container images)
+    5. Click "Generate token"
+    6. Copy the token and add it as `GHCR_TOKEN` secret
+  - **Note**: This token is used by Kubernetes to pull images from GitHub Container Registry
+
 ## Quick Setup Script
 
 You can use this script to generate random secrets for authentication:

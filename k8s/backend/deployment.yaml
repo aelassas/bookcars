@@ -15,10 +15,12 @@ spec:
       labels:
         app: backend
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
-        - name: backend
-          image: IMAGE_REGISTRY-backend:IMAGE_TAG
-          imagePullPolicy: Always
+      - name: backend
+        image: IMAGE_REGISTRY-backend:IMAGE_TAG
+        imagePullPolicy: Always
           ports:
             - containerPort: 3000
           envFrom:
