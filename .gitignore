@@ -9,3 +9,4 @@
 .eslintcache
 
 frontendTemplate
+**/MONGODB_CONNECTION_STRING.txt

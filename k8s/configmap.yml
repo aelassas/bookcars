@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookcars-config
+  namespace: bookcars
+data:
+  BC_PORT: "3000"
+  BC_WEBSITE_NAME: "BookCars"
+  BC_DEFAULT_LANGUAGE: "en"
+  BC_MINIMUM_AGE: "21"
+  BC_BATCH_SIZE: "1000"
+  BC_CDN_ROOT: "/var/www/cdn/bookcars"
+  BC_CDN_USERS: "/var/www/cdn/bookcars/users"
+  BC_CDN_CARS: "/var/www/cdn/bookcars/cars"
+  BC_CDN_LOCATIONS: "/var/www/cdn/bookcars/locations"
+  BC_CDN_CONTRACTS: "/var/www/cdn/bookcars/contracts"
+  BC_CDN_LICENSES: "/var/www/cdn/bookcars/licenses"
+  BC_TIMEZONE: "UTC"
+  BC_IPINFO_DEFAULT_COUNTRY: "US"

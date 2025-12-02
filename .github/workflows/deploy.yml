@@ -1,0 +1,325 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository_owner }}/bookcars
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest
+          build-args: |
+            VITE_BC_API_HOST=${{ secrets.VITE_BC_API_HOST }}
+            VITE_BC_WEBSITE_NAME=${{ secrets.VITE_BC_WEBSITE_NAME }}
+            VITE_BC_DEFAULT_LANGUAGE=${{ secrets.VITE_BC_DEFAULT_LANGUAGE }}
+            VITE_BC_BASE_CURRENCY=${{ secrets.VITE_BC_BASE_CURRENCY }}
+            VITE_BC_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_BC_STRIPE_PUBLISHABLE_KEY }}
+            VITE_BC_PAYPAL_CLIENT_ID=${{ secrets.VITE_BC_PAYPAL_CLIENT_ID }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push admin image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./admin/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-admin:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-admin:latest
+          build-args: |
+            VITE_BC_API_HOST=${{ secrets.VITE_BC_API_HOST }}
+            VITE_BC_WEBSITE_NAME=${{ secrets.VITE_BC_WEBSITE_NAME }}
+            VITE_BC_DEFAULT_LANGUAGE=${{ secrets.VITE_BC_DEFAULT_LANGUAGE }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      - name: Configure kubectl for VPS
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Get MongoDB credentials
+        id: mongo-creds
+        run: |
+          # If BC_DB_URI is provided, use it directly
+          if [ -n "${{ secrets.BC_DB_URI }}" ]; then
+            echo "db_uri=${{ secrets.BC_DB_URI }}" >> $GITHUB_OUTPUT
+            echo "use_provided_uri=true" >> $GITHUB_OUTPUT
+          # If BC_MONGO_USER and BC_MONGO_PASS are provided, construct URI
+          elif [ -n "${{ secrets.BC_MONGO_USER }}" ] && [ -n "${{ secrets.BC_MONGO_PASS }}" ]; then
+            MONGO_URI="mongodb://${{ secrets.BC_MONGO_USER }}:${{ secrets.BC_MONGO_PASS }}@mongodb.mongodb.svc.cluster.local:27017/bookcars?authSource=admin&appName=bookcars"
+            echo "db_uri=$MONGO_URI" >> $GITHUB_OUTPUT
+            echo "use_provided_uri=false" >> $GITHUB_OUTPUT
+          # Otherwise, try to get from existing MongoDB secret
+          else
+            MONGO_USER=$(kubectl get secret mongodb -n mongodb -o jsonpath='{.data.mongodb-root-username}' 2>/dev/null | base64 -d || echo "admin")
+            MONGO_PASS=$(kubectl get secret mongodb -n mongodb -o jsonpath='{.data.mongodb-root-password}' 2>/dev/null | base64 -d || echo "")
+            
+            if [ -z "$MONGO_PASS" ]; then
+              MONGO_PASS=$(kubectl get secret mongodb -n mongodb -o jsonpath='{.data.password}' 2>/dev/null | base64 -d || echo "")
+            fi
+            
+            if [ -n "$MONGO_PASS" ]; then
+              MONGO_URI="mongodb://$MONGO_USER:$MONGO_PASS@mongodb.mongodb.svc.cluster.local:27017/bookcars?authSource=admin&appName=bookcars"
+              echo "db_uri=$MONGO_URI" >> $GITHUB_OUTPUT
+              echo "use_provided_uri=false" >> $GITHUB_OUTPUT
+            else
+              echo "⚠️  Warning: Could not determine MongoDB connection string"
+              echo "db_uri=" >> $GITHUB_OUTPUT
+              echo "use_provided_uri=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Update image tags in Kubernetes manifests
+        run: |
+          # Update backend deployment
+          sed -i.bak "s|IMAGE_REGISTRY-backend:IMAGE_TAG|${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:${{ github.sha }}|g" k8s/backend/deployment.yaml
+          # Update frontend deployment
+          sed -i.bak "s|IMAGE_REGISTRY-frontend:IMAGE_TAG|${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}|g" k8s/frontend/deployment.yaml
+          # Update admin deployment
+          sed -i.bak "s|IMAGE_REGISTRY-admin:IMAGE_TAG|${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-admin:${{ github.sha }}|g" k8s/admin/deployment.yaml
+          # Clean up backup files
+          find k8s -name "*.bak" -delete
+
+      - name: Create namespace if not exists
+        run: |
+          kubectl create namespace bookcars --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy ConfigMap
+        run: |
+          kubectl apply -f k8s/configmap.yml
+
+      - name: Create Kubernetes Secret from GitHub Secrets
+        run: |
+          # Start building the kubectl create secret command
+          SECRET_ARGS=()
+
+          # MongoDB URI (required)
+          if [ -n "${{ steps.mongo-creds.outputs.db_uri }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_DB_URI=${{ steps.mongo-creds.outputs.db_uri }}")
+          else
+            echo "❌ Error: MongoDB connection string is required"
+            exit 1
+          fi
+
+          # Authentication (required)
+          if [ -n "${{ secrets.BC_COOKIE_SECRET }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_COOKIE_SECRET=${{ secrets.BC_COOKIE_SECRET }}")
+          else
+            echo "❌ Error: BC_COOKIE_SECRET is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_JWT_SECRET }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_JWT_SECRET=${{ secrets.BC_JWT_SECRET }}")
+          else
+            echo "❌ Error: BC_JWT_SECRET is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_AUTH_COOKIE_DOMAIN }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_AUTH_COOKIE_DOMAIN=${{ secrets.BC_AUTH_COOKIE_DOMAIN }}")
+          else
+            echo "❌ Error: BC_AUTH_COOKIE_DOMAIN is required"
+            exit 1
+          fi
+
+          # SMTP (required)
+          if [ -n "${{ secrets.BC_SMTP_HOST }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SMTP_HOST=${{ secrets.BC_SMTP_HOST }}")
+          else
+            echo "❌ Error: BC_SMTP_HOST is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_SMTP_PORT }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SMTP_PORT=${{ secrets.BC_SMTP_PORT }}")
+          else
+            echo "❌ Error: BC_SMTP_PORT is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_SMTP_USER }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SMTP_USER=${{ secrets.BC_SMTP_USER }}")
+          else
+            echo "❌ Error: BC_SMTP_USER is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_SMTP_PASS }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SMTP_PASS=${{ secrets.BC_SMTP_PASS }}")
+          else
+            echo "❌ Error: BC_SMTP_PASS is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_SMTP_FROM }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SMTP_FROM=${{ secrets.BC_SMTP_FROM }}")
+          else
+            echo "❌ Error: BC_SMTP_FROM is required"
+            exit 1
+          fi
+
+          # Hosts (required)
+          if [ -n "${{ secrets.BC_ADMIN_HOST }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_ADMIN_HOST=${{ secrets.BC_ADMIN_HOST }}")
+          else
+            echo "❌ Error: BC_ADMIN_HOST is required"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.BC_FRONTEND_HOST }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_FRONTEND_HOST=${{ secrets.BC_FRONTEND_HOST }}")
+          else
+            echo "❌ Error: BC_FRONTEND_HOST is required"
+            exit 1
+          fi
+
+          # Payment Gateways (optional)
+          if [ -n "${{ secrets.BC_STRIPE_SECRET_KEY }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_STRIPE_SECRET_KEY=${{ secrets.BC_STRIPE_SECRET_KEY }}")
+          fi
+
+          if [ -n "${{ secrets.BC_STRIPE_WEBHOOK_SECRET }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_STRIPE_WEBHOOK_SECRET=${{ secrets.BC_STRIPE_WEBHOOK_SECRET }}")
+          fi
+
+          if [ -n "${{ secrets.BC_PAYPAL_CLIENT_ID }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_PAYPAL_CLIENT_ID=${{ secrets.BC_PAYPAL_CLIENT_ID }}")
+          fi
+
+          if [ -n "${{ secrets.BC_PAYPAL_CLIENT_SECRET }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_PAYPAL_CLIENT_SECRET=${{ secrets.BC_PAYPAL_CLIENT_SECRET }}")
+          fi
+
+          if [ -n "${{ secrets.BC_PAYPAL_SANDBOX }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_PAYPAL_SANDBOX=${{ secrets.BC_PAYPAL_SANDBOX }}")
+          else
+            SECRET_ARGS+=("--from-literal=BC_PAYPAL_SANDBOX=true")
+          fi
+
+          # Other optional settings
+          if [ -n "${{ secrets.BC_ADMIN_EMAIL }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_ADMIN_EMAIL=${{ secrets.BC_ADMIN_EMAIL }}")
+          fi
+
+          if [ -n "${{ secrets.BC_EXPO_ACCESS_TOKEN }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_EXPO_ACCESS_TOKEN=${{ secrets.BC_EXPO_ACCESS_TOKEN }}")
+          fi
+
+          if [ -n "${{ secrets.BC_RECAPTCHA_SECRET }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_RECAPTCHA_SECRET=${{ secrets.BC_RECAPTCHA_SECRET }}")
+          fi
+
+          if [ -n "${{ secrets.BC_IPINFO_API_KEY }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_IPINFO_API_KEY=${{ secrets.BC_IPINFO_API_KEY }}")
+          fi
+
+          if [ -n "${{ secrets.BC_ENABLE_SENTRY }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_ENABLE_SENTRY=${{ secrets.BC_ENABLE_SENTRY }}")
+          else
+            SECRET_ARGS+=("--from-literal=BC_ENABLE_SENTRY=false")
+          fi
+
+          if [ -n "${{ secrets.BC_SENTRY_DSN_BACKEND }}" ]; then
+            SECRET_ARGS+=("--from-literal=BC_SENTRY_DSN_BACKEND=${{ secrets.BC_SENTRY_DSN_BACKEND }}")
+          fi
+
+          # Create or update the secret
+          kubectl create secret generic bookcars-secrets \
+            --namespace=bookcars \
+            "${SECRET_ARGS[@]}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+          echo "✅ Kubernetes secret created/updated successfully"
+
+      - name: Deploy PersistentVolumeClaim
+        run: |
+          kubectl apply -f k8s/pvc.yaml
+
+      - name: Deploy Backend
+        run: |
+          kubectl apply -f k8s/backend/
+
+      - name: Deploy Frontend
+        run: |
+          kubectl apply -f k8s/frontend/
+
+      - name: Deploy Admin
+        run: |
+          kubectl apply -f k8s/admin/
+
+      - name: Deploy Ingress
+        run: |
+          kubectl apply -f k8s/ingress.yaml
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/backend -n bookcars --timeout=5m || true
+          kubectl rollout status deployment/frontend -n bookcars --timeout=5m || true
+          kubectl rollout status deployment/admin -n bookcars --timeout=5m || true
+
+      - name: Verify deployment
+        run: |
+          echo "=== Pods ==="
+          kubectl get pods -n bookcars
+          echo ""
+          echo "=== Services ==="
+          kubectl get services -n bookcars
+          echo ""
+          echo "=== Ingress ==="
+          kubectl get ingress -n bookcars
+          echo ""
+          echo "=== PVCs ==="
+          kubectl get pvc -n bookcars

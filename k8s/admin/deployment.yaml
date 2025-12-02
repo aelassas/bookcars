@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin
+  namespace: bookcars
+  labels:
+    app: admin
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: admin
+          image: IMAGE_REGISTRY-admin:IMAGE_TAG
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "200m"
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 3001
+                initialDelaySeconds: 10
+                periodSeconds: 10
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 3001
+                initialDelaySeconds: 5
+                periodSeconds: 5
