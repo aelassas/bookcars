@@ -21,22 +21,26 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3001
-              resources:
-                requests:
-                  memory: "128Mi"
-                  cpu: "100m"
-                limits:
-                  memory: "256Mi"
-                  cpu: "200m"
-              livenessProbe:
-                httpGet:
-                  path: /
-                  port: 3001
-                initialDelaySeconds: 10
-                periodSeconds: 10
-              readinessProbe:
-                httpGet:
-                  path: /
-                  port: 3001
-                initialDelaySeconds: 5
-                periodSeconds: 5
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
