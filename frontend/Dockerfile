@@ -13,10 +13,12 @@ ARG VITE_BC_PAYPAL_CLIENT_ID
 
 # Copy files
 COPY ./frontend ./
-COPY ./frontend/.env.docker .env
 COPY ./packages /bookcars/packages
 
-# Create .env file from build args (overrides .env.docker if args are provided)
+# Create .env file (start with .env.docker if it exists, otherwise create empty)
+RUN if [ -f .env.docker ]; then cp .env.docker .env; else touch .env; fi
+
+# Add build args to .env file (overrides .env.docker values if provided)
 RUN if [ -n "$VITE_BC_API_HOST" ]; then echo "VITE_BC_API_HOST=$VITE_BC_API_HOST" >> .env; fi && \
     if [ -n "$VITE_BC_WEBSITE_NAME" ]; then echo "VITE_BC_WEBSITE_NAME=$VITE_BC_WEBSITE_NAME" >> .env; fi && \
     if [ -n "$VITE_BC_DEFAULT_LANGUAGE" ]; then echo "VITE_BC_DEFAULT_LANGUAGE=$VITE_BC_DEFAULT_LANGUAGE" >> .env; fi && \
