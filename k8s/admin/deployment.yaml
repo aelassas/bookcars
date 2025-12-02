@@ -16,11 +16,11 @@ spec:
         app: admin
     spec:
       imagePullSecrets:
-      - name: ghcr-secret
+        - name: ghcr-secret
       containers:
-      - name: admin
-        image: IMAGE_REGISTRY-admin:IMAGE_TAG
-        imagePullPolicy: Always
+        - name: admin
+          image: IMAGE_REGISTRY-admin:IMAGE_TAG
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           resources:
