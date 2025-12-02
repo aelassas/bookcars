@@ -63,6 +63,11 @@ app.use(allowedMethods)
 // Serve static files from the CDN directory
 app.use('/cdn', express.static(env.CDN_ROOT))
 
+// Health check endpoint for Kubernetes probes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
+})
+
 app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)
 app.use('/', locationRoutes)

@@ -1,16 +1,16 @@
 {
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.run": "onType",
-  "eslint.workingDirectories": [
-    { "directory": "backend" },
-    { "directory": "admin" },
-    { "directory": "frontend" },
-    { "directory": "mobile" }
-  ],
-  "files.insertFinalNewline": true
+  "[yaml]": {
+    "editor.autoIndent": "none",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
+  },
+  "[yml]": {
+    "editor.autoIndent": "none",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
+  }
 }
