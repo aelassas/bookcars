@@ -21,41 +21,41 @@ spec:
       - name: backend
         image: IMAGE_REGISTRY-backend:IMAGE_TAG
         imagePullPolicy: Always
-          ports:
-            - containerPort: 3000
-          envFrom:
-            - configMapRef:
-                name: bookcars-config
-            - secretRef:
-                name: bookcars-secrets
-          volumeMounts:
-            - name: cdn-storage
-              mountPath: /var/www/cdn/bookcars
-            - name: logs
-              mountPath: /bookcars/backend/logs
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
-          livenessProbe:
-            httpGet:
-              path: /api/health
-              port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: bookcars-config
+        - secretRef:
+            name: bookcars-secrets
+        volumeMounts:
+        - name: cdn-storage
+          mountPath: /var/www/cdn/bookcars
+        - name: logs
+          mountPath: /bookcars/backend/logs
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
       volumes:
         - name: cdn-storage
           persistentVolumeClaim:
