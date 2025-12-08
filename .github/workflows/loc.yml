@@ -1,7 +1,7 @@
-on: [push]
 name: loc
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
