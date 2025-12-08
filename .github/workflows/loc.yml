@@ -1,6 +1,9 @@
 on: [push]
 name: loc
 
+on:
+  workflow_dispatch:
+
 jobs:
   loc_job:
     runs-on: ubuntu-latest
