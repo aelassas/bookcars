@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 
 ## BookCars
 
-BookCars is an open-source and cross-platform car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 It comes with built-in support for Stripe and PayPal payment gateways, allowing you to choose the one best suited for your country or business model. If Stripe isn't available in your region, PayPal serves as a secure and reliable alternative.
 
@@ -107,11 +107,11 @@ If this project helped you, saved you time, or inspired you in any way, please c
 <!--<a href="https://github.com/sponsors/aelassas"><img src="https://aelassas.github.io/content/github-sponsor-button.png" alt="GitHub" width="210"></a>
 <a href="https://www.paypal.me/aelassaspp"><img src="https://aelassas.github.io/content/paypal-button-v2.png" alt="PayPal" width="208"></a>
 <a href="https://www.buymeacoffee.com/aelassas"><img src="https://aelassas.github.io/content/bmc-button.png" alt="Buy Me A Coffee" width="160"></a>-->
-
+<!--
 To contribute code or report issues, please read the [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md) to learn about the process, coding standards, and how to submit pull requests.
 
 If you want to customize BookCars while keeping your fork up to date with the latest changes, check out the [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync) guide in the Wiki.
-
+-->
 ## Live Demo
 <!--
 Some features are locked down on the demo links provided. To have access to all the features contact me by email. You can find it on my [profile page](https://github.com/aelassas) (requires login).
@@ -136,7 +136,7 @@ You can install the Android app on any Android device.
 
 Open the Camera app and point it at this code. Then tap the notification that appears.
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-8.1.png">
+<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-8.2.png">
 
 #### How to install the Mobile App on Android
 
@@ -148,7 +148,7 @@ Open the Camera app and point it at this code. Then tap the notification that ap
 
 You can install the Android App by downloading the APK and installing it on any Android device.
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.1/bookcars-8.1.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.2/bookcars-8.2.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 <!--
