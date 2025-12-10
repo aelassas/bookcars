@@ -14,11 +14,11 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - yourdomain.com
-        - admin.yourdomain.com
+        - tokyodrivingclub.com
+        - admin.tokyodrivingclub.com
       secretName: bookcars-tls
   rules:
-    - host: yourdomain.com
+    - host: tokyodrivingclub.com
       http:
         paths:
           - path: /
@@ -42,7 +42,7 @@ spec:
                 name: backend-service
                 port:
                   number: 3000
-    - host: admin.yourdomain.com
+    - host: admin.tokyodrivingclub.com
       http:
         paths:
           - path: /
