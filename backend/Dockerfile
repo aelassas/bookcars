@@ -9,5 +9,10 @@ RUN if [ -f .env.docker ]; then cp .env.docker .env; else touch .env; fi
 COPY ./packages /bookcars/packages
 RUN npm install
 
-CMD [ "npm", "run", "start:setup"]
+# Build the application during image creation (not at runtime)
+RUN npm run build
+
+# Use the new start-with-setup entry point that handles both setup and server startup
+# This avoids rebuilding on every container start and handles setup properly
+CMD [ "node", "--import", "./dist/src/monitoring/instrument.js", "dist/src/start-with-setup.js" ]
 EXPOSE 3000
