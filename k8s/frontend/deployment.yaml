@@ -23,6 +23,15 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        # Load all environment variables from ConfigMap and Secrets
+        # Note: Vite apps primarily use build-time env vars baked into the build,
+        # but these runtime env vars are available in the container for logging/debugging
+        # and potential future runtime configuration support
+        envFrom:
+        - configMapRef:
+            name: bookcars-config
+        - secretRef:
+            name: bookcars-secrets
         resources:
           requests:
             memory: "128Mi"

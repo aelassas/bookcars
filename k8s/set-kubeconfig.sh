@@ -88,3 +88,4 @@ kubectl cluster-info 2>&1 | head -3 || echo "⚠️  Could not connect (may need
 echo ""
 echo "✅ Done! You can now use kubectl commands."
 
+

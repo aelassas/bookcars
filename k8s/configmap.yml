@@ -4,6 +4,7 @@ metadata:
   name: bookcars-config
   namespace: bookcars
 data:
+  # Backend configuration
   BC_PORT: "3000"
   BC_WEBSITE_NAME: "BookCars"
   BC_DEFAULT_LANGUAGE: "en"
@@ -17,3 +18,47 @@ data:
   BC_CDN_LICENSES: "/var/www/cdn/bookcars/licenses"
   BC_TIMEZONE: "UTC"
   BC_IPINFO_DEFAULT_COUNTRY: "US"
+  
+  # Frontend configuration (VITE_BC_* prefixed)
+  # Core settings
+  VITE_BC_API_HOST: "https://tokyodrivingclub.com/api"
+  VITE_BC_WEBSITE_NAME: "BookCars"
+  VITE_BC_DEFAULT_LANGUAGE: "ja"
+  VITE_BC_BASE_CURRENCY: "JPY"
+  VITE_NODE_ENV: "production"
+  
+  # Payment gateway
+  VITE_BC_PAYMENT_GATEWAY: "stripe"
+  
+  # Pagination
+  VITE_BC_PAGE_SIZE: "30"
+  VITE_BC_CARS_PAGE_SIZE: "15"
+  VITE_BC_BOOKINGS_PAGE_SIZE: "20"
+  VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE: "10"
+  VITE_BC_PAGINATION_MODE: "CLASSIC"
+  
+  # CDN paths (these should match backend CDN paths)
+  VITE_BC_CDN_USERS: "/cdn/users"
+  VITE_BC_CDN_CARS: "/cdn/cars"
+  VITE_BC_CDN_LOCATIONS: "/cdn/locations"
+  VITE_BC_CDN_LICENSES: "/cdn/licenses"
+  VITE_BC_CDN_TEMP_LICENSES: "/cdn/temp-licenses"
+  
+  # Image dimensions
+  VITE_BC_SUPPLIER_IMAGE_WIDTH: "60"
+  VITE_BC_SUPPLIER_IMAGE_HEIGHT: "30"
+  VITE_BC_CAR_IMAGE_WIDTH: "300"
+  VITE_BC_CAR_IMAGE_HEIGHT: "200"
+  
+  # reCAPTCHA
+  VITE_BC_RECAPTCHA_ENABLED: "false"
+  
+  # Other settings
+  VITE_BC_MINIMUM_AGE: "21"
+  VITE_BC_SET_LANGUAGE_FROM_IP: "false"
+  VITE_BC_GOOGLE_ANALYTICS_ENABLED: "false"
+  VITE_BC_MIN_LOCATIONS: "4"
+  VITE_BC_HIDE_SUPPLIERS: "false"
+  VITE_BC_MAP_LATITUDE: "34.0268755"
+  VITE_BC_MAP_LONGITUDE: "1.6528399999999976"
+  VITE_BC_MAP_ZOOM: "5"

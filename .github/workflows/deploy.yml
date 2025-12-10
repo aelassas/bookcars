@@ -53,12 +53,47 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest
           build-args: |
+            VITE_NODE_ENV=production
             VITE_BC_API_HOST=${{ secrets.VITE_BC_API_HOST }}
             VITE_BC_WEBSITE_NAME=${{ secrets.VITE_BC_WEBSITE_NAME }}
             VITE_BC_DEFAULT_LANGUAGE=${{ secrets.VITE_BC_DEFAULT_LANGUAGE }}
             VITE_BC_BASE_CURRENCY=${{ secrets.VITE_BC_BASE_CURRENCY }}
+            VITE_BC_PAYMENT_GATEWAY=${{ secrets.VITE_BC_PAYMENT_GATEWAY }}
             VITE_BC_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_BC_STRIPE_PUBLISHABLE_KEY }}
             VITE_BC_PAYPAL_CLIENT_ID=${{ secrets.VITE_BC_PAYPAL_CLIENT_ID }}
+            VITE_BC_PAYPAL_DEBUG=${{ secrets.VITE_BC_PAYPAL_DEBUG }}
+            VITE_BC_PAGE_SIZE=${{ secrets.VITE_BC_PAGE_SIZE }}
+            VITE_BC_CARS_PAGE_SIZE=${{ secrets.VITE_BC_CARS_PAGE_SIZE }}
+            VITE_BC_BOOKINGS_PAGE_SIZE=${{ secrets.VITE_BC_BOOKINGS_PAGE_SIZE }}
+            VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE=${{ secrets.VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE }}
+            VITE_BC_PAGINATION_MODE=${{ secrets.VITE_BC_PAGINATION_MODE }}
+            VITE_BC_CDN_USERS=${{ secrets.VITE_BC_CDN_USERS }}
+            VITE_BC_CDN_CARS=${{ secrets.VITE_BC_CDN_CARS }}
+            VITE_BC_CDN_LOCATIONS=${{ secrets.VITE_BC_CDN_LOCATIONS }}
+            VITE_BC_CDN_LICENSES=${{ secrets.VITE_BC_CDN_LICENSES }}
+            VITE_BC_CDN_TEMP_LICENSES=${{ secrets.VITE_BC_CDN_TEMP_LICENSES }}
+            VITE_BC_SUPPLIER_IMAGE_WIDTH=${{ secrets.VITE_BC_SUPPLIER_IMAGE_WIDTH }}
+            VITE_BC_SUPPLIER_IMAGE_HEIGHT=${{ secrets.VITE_BC_SUPPLIER_IMAGE_HEIGHT }}
+            VITE_BC_CAR_IMAGE_WIDTH=${{ secrets.VITE_BC_CAR_IMAGE_WIDTH }}
+            VITE_BC_CAR_IMAGE_HEIGHT=${{ secrets.VITE_BC_CAR_IMAGE_HEIGHT }}
+            VITE_BC_RECAPTCHA_ENABLED=${{ secrets.VITE_BC_RECAPTCHA_ENABLED }}
+            VITE_BC_RECAPTCHA_SITE_KEY=${{ secrets.VITE_BC_RECAPTCHA_SITE_KEY }}
+            VITE_BC_MINIMUM_AGE=${{ secrets.VITE_BC_MINIMUM_AGE }}
+            VITE_BC_SET_LANGUAGE_FROM_IP=${{ secrets.VITE_BC_SET_LANGUAGE_FROM_IP }}
+            VITE_BC_GOOGLE_ANALYTICS_ENABLED=${{ secrets.VITE_BC_GOOGLE_ANALYTICS_ENABLED }}
+            VITE_BC_GOOGLE_ANALYTICS_ID=${{ secrets.VITE_BC_GOOGLE_ANALYTICS_ID }}
+            VITE_BC_CONTACT_EMAIL=${{ secrets.VITE_BC_CONTACT_EMAIL }}
+            VITE_BC_DEPOSIT_FILTER_VALUE_1=${{ secrets.VITE_BC_DEPOSIT_FILTER_VALUE_1 }}
+            VITE_BC_DEPOSIT_FILTER_VALUE_2=${{ secrets.VITE_BC_DEPOSIT_FILTER_VALUE_2 }}
+            VITE_BC_DEPOSIT_FILTER_VALUE_3=${{ secrets.VITE_BC_DEPOSIT_FILTER_VALUE_3 }}
+            VITE_BC_FB_APP_ID=${{ secrets.VITE_BC_FB_APP_ID }}
+            VITE_BC_APPLE_ID=${{ secrets.VITE_BC_APPLE_ID }}
+            VITE_BC_GG_APP_ID=${{ secrets.VITE_BC_GG_APP_ID }}
+            VITE_BC_MIN_LOCATIONS=${{ secrets.VITE_BC_MIN_LOCATIONS }}
+            VITE_BC_HIDE_SUPPLIERS=${{ secrets.VITE_BC_HIDE_SUPPLIERS }}
+            VITE_BC_MAP_LATITUDE=${{ secrets.VITE_BC_MAP_LATITUDE }}
+            VITE_BC_MAP_LONGITUDE=${{ secrets.VITE_BC_MAP_LONGITUDE }}
+            VITE_BC_MAP_ZOOM=${{ secrets.VITE_BC_MAP_ZOOM }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

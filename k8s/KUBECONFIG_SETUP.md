@@ -123,3 +123,4 @@ Once you've set the Vultr kubeconfig and switched contexts, you can:
    bash k8s/get-cluster-ip.sh
    ```
 
+
