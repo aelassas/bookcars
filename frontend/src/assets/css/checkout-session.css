@@ -1,20 +1,139 @@
+/* ============================================
+   CHECKOUT SESSION - Booking Session Container
+   ============================================ */
+
 div.checkout-session {
-  background-color: #F5F5F5;
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 80px);
   transform: translate3d(0, 0, 0);
+  background: var(--background, #f8fafc);
+  position: relative;
 }
 
+/* Subtle background pattern */
+div.checkout-session::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: var(--gradient-primary, linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%));
+  z-index: 0;
+}
+
+div.checkout-session::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 300px;
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(0, 212, 255, 0.15) 0%,
+    transparent 50%
+  );
+  z-index: 0;
+}
+
+/* Status Container */
 div.checkout-session .status {
-  margin: 40px 0 0 30px;
+  position: relative;
+  z-index: 1;
+  margin: var(--space-10, 2.5rem) auto 0;
+  padding: 0 var(--space-6, 1.5rem);
+  max-width: 1200px;
+  width: 100%;
 }
 
-@media only screen and (width <=960px) {
-  div.checkout-session .status {
-    margin: 40px 10px 0 10px;
+/* Page Title in Session */
+div.checkout-session .session-title {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-3xl, 1.875rem);
+  font-weight: var(--font-bold, 700);
+  color: white;
+  margin-bottom: var(--space-6, 1.5rem);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+}
+
+div.checkout-session .session-title svg {
+  width: 32px;
+  height: 32px;
+  color: var(--accent, #00d4ff);
+}
+
+/* Session Breadcrumb */
+div.checkout-session .session-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  font-size: var(--text-sm, 0.875rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-8, 2rem);
+}
+
+div.checkout-session .session-breadcrumb a {
+  color: var(--accent, #00d4ff);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+div.checkout-session .session-breadcrumb a:hover {
+  color: white;
+}
+
+div.checkout-session .session-breadcrumb svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 959px) {
+  div.checkout-session::before {
+    height: 200px;
   }
+
+  div.checkout-session::after {
+    height: 200px;
+  }
+
+  div.checkout-session .status {
+    margin: var(--space-6, 1.5rem) var(--space-4, 1rem) 0;
+    padding: 0;
+  }
+
+  div.checkout-session .session-title {
+    font-size: var(--text-2xl, 1.5rem);
+  }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.checkout-session {
+  background: var(--background, #0a1628);
+}
+
+[data-theme="dark"] div.checkout-session::before {
+  background: linear-gradient(135deg, #0a0f1a 0%, #0f1d2e 100%);
+}
+
+[data-theme="dark"] div.checkout-session::after {
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(0, 212, 255, 0.1) 0%,
+    transparent 50%
+  );
 }

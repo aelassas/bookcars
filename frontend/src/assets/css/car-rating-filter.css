@@ -1,33 +1,125 @@
+/* ============================================
+   CAR RATING FILTER - Star Rating Selection
+   ============================================ */
+
+div.rating-filter {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Filter Elements */
 div.rating-filter div.filter-elements {
-  padding: 7px 5px;
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
 }
 
 div.rating-filter div.filter-elements div.filter-element {
-  margin: 5px;
-  width: fit-content;
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin: 0;
+}
+
+div.rating-filter div.filter-elements div.filter-element:hover {
+  background: var(--muted, #f8fafc);
+}
+
+div.rating-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.08);
 }
 
 div.rating-filter div.filter-elements div.filter-element input[type='radio'].rating-checkbox {
   cursor: pointer;
-  margin-left: 5px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #00d4ff);
+  flex-shrink: 0;
+  margin: 0;
 }
 
 div.rating-filter div.filter-elements div.filter-element span.ratings {
   cursor: pointer;
-  display: inline-block;
-  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+  padding: 0;
 }
 
 div.rating-filter div.filter-elements div.filter-element .rating {
   position: relative;
-  bottom: -4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+div.rating-filter div.filter-elements div.filter-element .rating svg,
+div.rating-filter div.filter-elements div.filter-element .rating .star-icon {
+  width: 16px;
+  height: 16px;
+  color: #fbbf24;
+}
+
+div.rating-filter div.filter-elements div.filter-element .rating .star-empty {
+  color: var(--muted, #d1d5db);
 }
 
 div.rating-filter div.filter-elements div.filter-element span.rating-text {
-  font-size: 12px;
-  color: #a3a3a3;
-  margin-top: 4px;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--muted-foreground, #64748b);
+  margin: 0;
+  margin-left: var(--space-2, 0.5rem);
+}
+
+div.rating-filter div.filter-elements div.filter-element:hover span.rating-text {
+  color: var(--foreground, #0f172a);
+}
+
+/* Rating Count Badge */
+div.rating-filter div.filter-elements div.filter-element .rating-count {
+  margin-left: auto;
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--muted-foreground, #64748b);
+  background: var(--muted, #f1f5f9);
+  padding: var(--space-1, 0.25rem) var(--space-2, 0.5rem);
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.rating-filter {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.rating-filter div.filter-elements div.filter-element:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] div.rating-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="dark"] div.rating-filter div.filter-elements div.filter-element span.rating-text {
+  color: var(--muted-foreground, #94a3b8);
+}
+
+[data-theme="dark"] div.rating-filter div.filter-elements div.filter-element:hover span.rating-text {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.rating-filter div.filter-elements div.filter-element .rating-count {
+  background: var(--muted, #1e293b);
 }

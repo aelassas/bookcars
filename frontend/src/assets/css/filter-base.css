@@ -1,0 +1,363 @@
+/* ============================================
+   FILTER BASE - Shared Filter Component Styles
+   ============================================ */
+
+/* Filter Container Base */
+.filter-container {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Filter Header (Collapsible) */
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+}
+
+.filter-header:hover {
+  background: var(--muted, #f8fafc);
+}
+
+.filter-header.expanded {
+  border-bottom-color: var(--border, #e2e8f0);
+}
+
+.filter-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+  margin: 0;
+}
+
+.filter-header-title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent, #00d4ff);
+}
+
+.filter-header-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-2, 0.5rem);
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-bold, 700);
+  color: white;
+  background: var(--accent, #00d4ff);
+  border-radius: var(--radius-full, 9999px);
+  margin-left: var(--space-2, 0.5rem);
+}
+
+.filter-header-toggle {
+  width: 20px;
+  height: 20px;
+  color: var(--muted-foreground, #64748b);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.filter-header.collapsed .filter-header-toggle {
+  transform: rotate(-90deg);
+}
+
+/* Filter Content */
+.filter-content {
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+}
+
+.filter-header.collapsed + .filter-content {
+  display: none;
+}
+
+/* Filter Elements Container */
+.filter-elements {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+/* Filter Element (Checkbox Item) */
+.filter-element {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-element:hover {
+  background: var(--muted, #f8fafc);
+}
+
+.filter-element.selected {
+  background: rgba(0, 212, 255, 0.08);
+}
+
+.filter-element input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #00d4ff);
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm, 0.25rem);
+}
+
+.filter-element label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  cursor: pointer;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--foreground, #0f172a);
+  transition: color 0.2s ease;
+}
+
+.filter-element:hover label {
+  color: var(--accent, #00d4ff);
+}
+
+.filter-element-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground, #64748b);
+}
+
+.filter-element-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.filter-element-text {
+  flex: 1;
+  font-weight: var(--font-medium, 500);
+}
+
+.filter-element-count {
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--muted-foreground, #64748b);
+  background: var(--muted, #f1f5f9);
+  padding: var(--space-1, 0.25rem) var(--space-2, 0.5rem);
+  border-radius: var(--radius-full, 9999px);
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Filter Actions */
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+  border-top: 1px solid var(--border, #e2e8f0);
+  background: var(--muted, #f8fafc);
+}
+
+.filter-actions-left {
+  display: flex;
+  gap: var(--space-3, 0.75rem);
+}
+
+.filter-action-btn {
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--accent, #00d4ff);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-1, 0.25rem) 0;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.filter-action-btn:hover {
+  color: var(--primary, #0a1628);
+  text-decoration: underline;
+}
+
+.filter-action-btn.uncheckall,
+.filter-action-btn.checkall {
+  text-decoration: underline;
+}
+
+/* Price Range Slider */
+.filter-range {
+  padding: var(--space-2, 0.5rem) 0;
+}
+
+.filter-range-track {
+  position: relative;
+  height: 6px;
+  background: var(--muted, #e2e8f0);
+  border-radius: var(--radius-full, 9999px);
+  margin: var(--space-4, 1rem) 0;
+}
+
+.filter-range-fill {
+  position: absolute;
+  height: 100%;
+  background: var(--gradient-accent, linear-gradient(135deg, #00d4ff 0%, #00a3cc 100%));
+  border-radius: var(--radius-full, 9999px);
+}
+
+.filter-range-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 3px solid var(--accent, #00d4ff);
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease;
+}
+
+.filter-range-thumb:hover {
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+}
+
+.filter-range-thumb:active {
+  cursor: grabbing;
+}
+
+.filter-range-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+}
+
+.filter-range-value {
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+}
+
+/* Rating Filter Stars */
+.filter-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+}
+
+.filter-rating-star {
+  width: 16px;
+  height: 16px;
+  color: var(--muted, #d1d5db);
+  transition: color 0.2s ease;
+}
+
+.filter-rating-star.filled {
+  color: #fbbf24;
+}
+
+.filter-rating-text {
+  margin-left: var(--space-2, 0.5rem);
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+}
+
+/* Supplier Logo */
+.filter-supplier-logo {
+  width: 60px;
+  height: 30px;
+  object-fit: contain;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-md, 0.5rem);
+  padding: var(--space-1, 0.25rem);
+  background: white;
+}
+
+/* Color Swatches */
+.filter-color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.filter-color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.filter-color-swatch.selected {
+  box-shadow: 0 0 0 2px var(--accent, #00d4ff);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] .filter-container {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-header.expanded {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-header-title {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] .filter-element:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-element.selected {
+  background: rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="dark"] .filter-element label {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] .filter-element-count {
+  background: var(--muted, #1e293b);
+  color: var(--muted-foreground, #94a3b8);
+}
+
+[data-theme="dark"] .filter-actions {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .filter-range-track {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] .filter-range-value {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] .filter-supplier-logo {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}

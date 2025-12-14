@@ -1,92 +1,121 @@
+/* ============================================
+   FEATURE CARDS - Premium Benefits Section
+   ============================================ */
+
 .feature-cards {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background-color: var(--background);
+  position: relative;
+  padding: var(--space-24) var(--space-4);
+  background: var(--background);
+  overflow: hidden;
 }
 
-.feature-cards-container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
+/* Subtle background decoration */
+.feature-cards::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at 100% 50%,
+    rgba(0, 212, 255, 0.03) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
 }
+
+.dark .feature-cards::before {
+  background: radial-gradient(
+    ellipse at 100% 50%,
+    rgba(0, 212, 255, 0.06) 0%,
+    transparent 60%
+  );
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+
+.feature-cards-container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .feature-cards-container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feature-cards-container {
+    padding: 0 var(--space-8);
+  }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 
 .feature-cards-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: var(--space-16);
+}
+
+.feature-cards-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
 }
 
 .feature-cards-title {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
   color: var(--foreground);
-  margin-bottom: 1rem;
-}
-
-.feature-cards-description {
-  font-size: 1.125rem;
-  color: var(--muted-foreground);
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.feature-cards-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-.feature-card {
-  padding: 2rem;
-  background-color: var(--card);
-  border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  transition: all 150ms;
-}
-
-.feature-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.feature-card-icon-wrapper {
-  width: 3rem;
-  height: 3rem;
-  background-color: rgba(0, 188, 212, 0.2);
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  transition: background-color 150ms;
-}
-
-.feature-card:hover .feature-card-icon-wrapper {
-  background-color: rgba(0, 188, 212, 0.3);
-}
-
-.feature-card-icon {
-  color: var(--accent);
-}
-
-.feature-card-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--foreground);
-  margin-bottom: 0.5rem;
-}
-
-.feature-card-description {
-  color: var(--muted-foreground);
+  margin: 0 0 var(--space-4) 0;
+  line-height: var(--leading-tight);
 }
 
 @media (min-width: 768px) {
   .feature-cards-title {
-    font-size: 3rem;
+    font-size: var(--text-4xl);
   }
+}
 
+.feature-cards-description {
+  font-size: var(--text-lg);
+  color: var(--muted-foreground);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: var(--leading-relaxed);
+}
+
+/* ============================================
+   GRID
+   ============================================ */
+
+.feature-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 640px) {
   .feature-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -95,6 +124,385 @@
 @media (min-width: 1024px) {
   .feature-cards-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
   }
 }
 
+/* ============================================
+   INDIVIDUAL CARD
+   ============================================ */
+
+.feature-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  transition: all var(--transition-normal) var(--ease-default);
+  overflow: hidden;
+}
+
+/* Hover gradient overlay */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.05) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-normal) var(--ease-default);
+  pointer-events: none;
+}
+
+/* Accent border on hover */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal) var(--ease-default);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: var(--shadow-xl), 0 20px 40px -20px rgba(0, 212, 255, 0.2);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   ICON WRAPPER
+   ============================================ */
+
+.feature-card-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--space-6);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-normal) var(--ease-default);
+}
+
+.feature-card:hover .feature-card-icon-wrapper {
+  background: var(--gradient-accent);
+  border-color: transparent;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 20px -8px rgba(0, 212, 255, 0.5);
+}
+
+.feature-card-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--accent);
+  transition: color var(--transition-fast) var(--ease-default);
+}
+
+.feature-card:hover .feature-card-icon {
+  color: var(--accent-foreground);
+}
+
+/* ============================================
+   CONTENT
+   ============================================ */
+
+.feature-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--foreground);
+  margin: 0 0 var(--space-3) 0;
+  transition: color var(--transition-fast) var(--ease-default);
+}
+
+.feature-card:hover .feature-card-title {
+  color: var(--accent);
+}
+
+.feature-card-description {
+  font-size: var(--text-base);
+  color: var(--muted-foreground);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* ============================================
+   CARD LINK (Optional - for clickable cards)
+   ============================================ */
+
+.feature-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap var(--transition-fast) var(--ease-default);
+}
+
+.feature-card-link:hover {
+  gap: var(--space-3);
+}
+
+.feature-card-link svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--transition-fast) var(--ease-default);
+}
+
+.feature-card:hover .feature-card-link svg {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   NUMBERED VARIANT
+   ============================================ */
+
+.feature-card--numbered {
+  counter-increment: feature-counter;
+}
+
+.feature-card--numbered .feature-card-icon-wrapper::before {
+  content: counter(feature-counter);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--accent);
+}
+
+.feature-card--numbered:hover .feature-card-icon-wrapper::before {
+  color: var(--accent-foreground);
+}
+
+/* ============================================
+   HIGHLIGHTED CARD VARIANT
+   ============================================ */
+
+.feature-card--highlighted {
+  background: var(--gradient-primary);
+  border-color: transparent;
+}
+
+.feature-card--highlighted .feature-card-title,
+.feature-card--highlighted .feature-card-description {
+  color: white;
+}
+
+.feature-card--highlighted .feature-card-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.feature-card--highlighted .feature-card-icon-wrapper {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.feature-card--highlighted .feature-card-icon {
+  color: var(--accent);
+}
+
+.feature-card--highlighted:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-2xl);
+}
+
+/* ============================================
+   HORIZONTAL CARD VARIANT
+   ============================================ */
+
+.feature-card--horizontal {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.feature-card--horizontal .feature-card-icon-wrapper {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.feature-card--horizontal .feature-card-content {
+  flex: 1;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+.feature-cards-header {
+  animation: fadeInUp 0.6s var(--ease-out) forwards;
+}
+
+.feature-card {
+  opacity: 0;
+  animation: fadeInUp 0.5s var(--ease-out) forwards;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+.feature-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   LARGE CARDS VARIANT (2-column layout)
+   ============================================ */
+
+.feature-cards-grid--large {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .feature-cards-grid--large {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.feature-cards-grid--large .feature-card {
+  padding: var(--space-10);
+}
+
+.feature-cards-grid--large .feature-card-icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+}
+
+.feature-cards-grid--large .feature-card-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.feature-cards-grid--large .feature-card-title {
+  font-size: var(--text-2xl);
+}
+
+/* ============================================
+   STATS SECTION (Optional addition)
+   ============================================ */
+
+.feature-cards-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  margin-top: var(--space-16);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 768px) {
+  .feature-cards-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.feature-cards-stat {
+  text-align: center;
+}
+
+.feature-cards-stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-extrabold);
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .feature-cards-stat-value {
+    font-size: var(--text-4xl);
+  }
+}
+
+.feature-cards-stat-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--muted-foreground);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 639px) {
+  .feature-cards {
+    padding: var(--space-16) var(--space-4);
+  }
+
+  .feature-cards-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .feature-card {
+    padding: var(--space-6);
+  }
+
+  .feature-card-icon-wrapper {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .feature-card-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+.dark .feature-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+.dark .feature-card:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+  box-shadow: var(--shadow-xl), 0 20px 40px -20px rgba(0, 229, 255, 0.15);
+}
+
+.dark .feature-card-icon-wrapper {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.2) 0%, rgba(0, 229, 255, 0.05) 100%);
+  border-color: rgba(0, 229, 255, 0.25);
+}

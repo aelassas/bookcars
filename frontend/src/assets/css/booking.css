@@ -1,47 +1,176 @@
+/* ============================================
+   BOOKING DETAIL - Individual Booking View
+   ============================================ */
+
 div.booking {
   display: flex;
   flex-direction: row;
   transform: translate3d(0, 0, 0);
+  background: var(--background, #f8fafc);
+  min-height: 100%;
 }
 
-div.booking div.col-2 div.col-2-header {
+/* Left Column - Booking Details */
+div.booking div.col-1 {
+  background: white;
+  border-right: 1px solid var(--border, #e2e8f0);
+  padding: var(--space-6, 1.5rem);
+  flex: 0 1 380px;
+  overflow-y: auto;
+}
+
+/* Booking Actions */
+div.booking div.col-1 div.booking-buttons {
+  display: flex;
+  gap: var(--space-3, 0.75rem);
+  justify-content: flex-end;
+  margin-bottom: var(--space-5, 1.25rem);
+  padding-bottom: var(--space-5, 1.25rem);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+/* Booking Status Badge */
+div.booking .booking-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  border-radius: var(--radius-full, 9999px);
+  margin-bottom: var(--space-4, 1rem);
+}
+
+div.booking .booking-status.confirmed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+div.booking .booking-status.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+div.booking .booking-status.cancelled {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Booking Info Sections */
+div.booking .booking-section {
+  margin-bottom: var(--space-5, 1.25rem);
+  padding-bottom: var(--space-5, 1.25rem);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+div.booking .booking-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+div.booking .booking-section h3 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--muted-foreground, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--space-3, 0.75rem) 0;
+}
+
+div.booking .booking-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-2, 0.5rem) 0;
+}
+
+div.booking .booking-detail-row .label {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+}
+
+div.booking .booking-detail-row .value {
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--foreground, #0f172a);
   text-align: right;
 }
 
-div.booking div.col-1 div.booking-buttons {
-  float: right;
+/* Right Column - Car Preview & Price */
+div.booking div.col-2 {
+  flex: 1;
+  padding: var(--space-6, 1.5rem);
+  display: flex;
+  flex-direction: column;
 }
 
+div.booking div.col-2 div.col-2-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-right: 0;
+  margin-bottom: var(--space-6, 1.5rem);
+}
+
+/* Price Display */
 div.booking div.col-2 div.col-2-header div.price {
   width: fit-content;
-  float: right;
+  text-align: right;
+  background: white;
+  padding: var(--space-5, 1.25rem);
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 div.booking div.col-2 div.col-2-header span.price-main {
-  color: #383838;
-  font-size: 2em;
-  font-weight: 700;
-  line-height: 1em;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-3xl, 1.875rem);
+  font-weight: var(--font-bold, 700);
+  color: var(--accent, #00d4ff);
+  line-height: 1;
   white-space: nowrap;
-  display: table-row;
+  display: block;
   text-align: right;
 }
 
 div.booking div.col-2 div.col-2-header span.price-days,
 div.booking div.col-2 div.col-2-header span.price-day {
-  font-size: 13px;
-  color: #a1a1a1;
-  display: table-row;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+  display: block;
   text-align: right;
+  margin-top: var(--space-1, 0.25rem);
 }
 
-/* Device width is less than or equal to 960px */
+/* Car Preview in Booking */
+div.booking div.col-2 .car {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  padding: var(--space-6, 1.5rem);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-@media only screen and (width <=960px) {
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 960px) {
+  div.booking {
+    flex-direction: column;
+  }
+
   div.booking div.col-1 {
-    padding: 20px;
-    background: #fefefe;
-    border-bottom: #eee solid 1px;
+    border-right: none;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+    padding: var(--space-5, 1.25rem);
+    flex: none;
   }
 
   div.booking div.col-2 {
@@ -49,31 +178,57 @@ div.booking div.col-2 div.col-2-header span.price-day {
   }
 }
 
-@media only screen and (width <=1270px) {
+@media only screen and (max-width: 1270px) {
   div.booking div.col-2 .car {
     display: none;
   }
 }
 
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >=960px) {
+@media only screen and (min-width: 961px) {
   div.booking div.col-1 {
-    background: #fefefe;
-    border-right: #eee solid 1px;
-    padding: 25px;
-    flex: 0 1 30%;
+    padding: var(--space-8, 2rem);
   }
 
   div.booking div.col-2 {
-    flex: 1 1;
-    padding-top: 10px;
+    padding: var(--space-8, 2rem);
   }
+}
 
-  div.booking div.col-2 div.col-2-header {
-    padding-right: 25px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.booking {
+  background: var(--background, #0a1628);
+}
+
+[data-theme="dark"] div.booking div.col-1 {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.booking div.col-1 div.booking-buttons {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.booking .booking-section {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.booking .booking-detail-row .value {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.booking div.col-2 div.col-2-header div.price {
+  background: var(--card, #111827);
+}
+
+[data-theme="dark"] div.booking div.col-2 .car {
+  background: var(--card, #111827);
+}
+
+@media only screen and (max-width: 960px) {
+  [data-theme="dark"] div.booking div.col-1 {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
   }
 }

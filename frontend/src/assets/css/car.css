@@ -1,153 +1,189 @@
+/* ============================================
+   CAR LISTING CARD - Premium Vehicle Display
+   ============================================ */
+
 div.car-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 900px;
+  padding-top: var(--space-4);
 }
 
-div.car-container article .btn-book {
-  border: 0;
-  border-radius: 5px;
-  color: #fff;
-  height: 42px;
-  margin: 0;
-  white-space: nowrap;
-  /* font-size: 1.5em; */
-  /* font-weight: 400; */
-  padding: 0 20px;
-}
-
-div.car-container article span.coming-soon,
-div.car-container article span.fully-booked {
-  font-size: 12px;
-  font-weight: bold;
-  display: table-row;
-  text-align: right;
-}
-
-div.car-container article span.coming-soon {
-  color: #FD3446;
-}
-
-div.car-container article span.fully-booked {
-  color: #FD3446;
-}
+/* ============================================
+   LOCATION HEADER
+   ============================================ */
 
 div.car-container div.car-header {
-  padding: 10px 0;
-  border-bottom: #d9d8d9 2px solid;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
+  padding: var(--space-4) 0;
+  margin-bottom: var(--space-4);
+  border-bottom: 2px solid var(--border);
 }
 
 div.car-container div.car-header div.location {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #232323;
-  font-size: 18px;
+  gap: var(--space-2);
+  color: var(--foreground);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+}
+
+div.car-container div.car-header div.location svg {
+  color: var(--accent);
 }
 
 div.car-container div.car-header div.location span.location-name {
-  margin-left: 5px;
+  margin-left: var(--space-1);
 }
 
 div.car-container div.car-header div.distance {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: var(--space-2);
 }
 
 div.car-container div.car-header div.distance img {
-  max-width: 16px;
-  max-height: 16px;
-  margin-right: 5px;
+  max-width: 18px;
+  max-height: 18px;
+  opacity: 0.7;
 }
 
-div.car-container {
-  padding-top: 10px;
-}
+/* ============================================
+   MAIN CARD ARTICLE
+   ============================================ */
 
 div.car-container article {
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 5px;
-  color: #333;
-  font-size: 12px;
-  margin-bottom: 10px;
-  width: 800px;
+  position: relative;
   display: flex;
   flex-direction: row;
-  padding: 15px;
-}
-
-div.car-container article div.car {
-  padding: 10px;
-  width: 290px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  position: relative;
-  top: 0;
+  width: 100%;
+  padding: var(--space-6);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-4);
+  transition: all var(--transition-normal) var(--ease-default);
   overflow: hidden;
 }
 
-div.car-container article div.car .car-img {
-  margin-top: 15px;
-  margin-bottom: 0;
-  max-width: 100%;
-  max-height: 100%;
+div.car-container article::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal) var(--ease-default);
 }
 
+div.car-container article:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+div.car-container article:hover::before {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   CAR IMAGE SECTION
+   ============================================ */
+
+div.car-container article div.car {
+  position: relative;
+  width: 320px;
+  min-width: 280px;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+div.car-container article div.car .car-img {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  margin-top: var(--space-3);
+  transition: transform var(--transition-normal) var(--ease-default);
+}
+
+div.car-container article:hover div.car .car-img {
+  transform: scale(1.05);
+}
+
+/* ============================================
+   SUPPLIER INFO
+   ============================================ */
+
 div.car-container article div.car div.car-row {
-  margin-top: 10px;
+  margin-top: var(--space-4);
 }
 
 div.car-container article div.car div.car-supplier {
   display: flex;
   align-items: center;
-  color: rgb(0 0 0 / 60%);
-  font-size: 1em;
-  line-height: 1em;
-  max-width: 300px;
+  gap: var(--space-2);
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  max-width: 100%;
 }
 
 div.car-container article div.car div.car-supplier span.car-supplier-logo {
-  border: 1px solid #e6e6e6;
-  border-radius: 3px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 62px;
+  width: 60px;
   height: 32px;
+  padding: var(--space-1);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
 }
 
 div.car-container article div.car div.car-supplier span.car-supplier-logo img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 }
 
 div.car-container article div.car div.car-supplier span.car-supplier-info {
-  color: rgb(0 0 0 / 60%);
-  font-size: 0.9em;
-  line-height: 1em;
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
   white-space: nowrap;
-  margin-left: 5px;
-  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 200px;
+  max-width: 180px;
 }
+
+/* ============================================
+   RATING & CO2 FOOTER
+   ============================================ */
 
 div.car-container article div.car .car-footer {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 10px;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
 }
 
 div.car-container article div.car .car-footer div.rating,
@@ -155,104 +191,135 @@ div.car-container article div.car .car-footer div.co2 {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: var(--space-1);
 }
 
 div.car-container article div.car .car-footer div.rating img {
-  max-width: 16px;
-  max-height: 16px;
-  margin: 0 5px;
+  width: 16px;
+  height: 16px;
 }
 
 div.car-container article div.car .car-footer div.rating span.value {
-  font-weight: 600;
+  font-weight: var(--font-bold);
+  color: var(--foreground);
 }
 
 div.car-container article div.car .car-footer div.rating span.trips {
-  color: #A2A2A2;
-  font-size: 11px;
-}
-
-div.car-container article div.car .car-footer div.co2 {
-  margin-left: 20px;
-}
-
-div.car-container article div.car .car-footer div.co2 span {
-  font-weight: 600;
+  color: var(--muted-foreground);
+  font-size: var(--text-xs);
+  margin-left: var(--space-1);
 }
 
 div.car-container article div.car .car-footer div.co2 img {
-  max-width: 19px;
-  max-height: 5px;
-  margin-right: 5px;
+  width: 20px;
+  height: auto;
 }
+
+div.car-container article div.car .car-footer div.co2 span {
+  font-weight: var(--font-semibold);
+  color: var(--foreground);
+  font-size: var(--text-sm);
+}
+
+/* ============================================
+   CAR INFO SECTION
+   ============================================ */
 
 div.car-container article div.car-info {
-  /* width: 100%; */
-  width: 510px;
+  flex: 1;
+  min-width: 0;
+  padding-left: var(--space-6);
 }
 
+/* Header with Name & Price */
 div.car-container article div.car-info div.car-info-header {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 div.car-container article div.car-info div.car-info-header div.name {
-  padding: 0 11px;
-  pointer-events: none;
-
-  font-size: 1.8em;
-  font-weight: 700;
-  text-size-adjust: none;
-  line-height: 1.3em;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--foreground);
+  line-height: var(--leading-tight);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ============================================
+   PRICE DISPLAY
+   ============================================ */
 
 div.car-container article div.price {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  flex-shrink: 0;
 }
 
 div.car-container article span.price-main {
-  color: #383838;
-  font-size: 2.5em;
-  font-weight: 700;
-  line-height: 1em;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-extrabold);
+  color: var(--foreground);
+  line-height: var(--leading-none);
   white-space: nowrap;
-  display: table-row;
-  text-align: right;
 }
 
-div.car-container article span.price-days,
+div.car-container article span.price-days {
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+  margin-bottom: var(--space-1);
+}
+
 div.car-container article span.price-day {
-  font-size: 13px;
-  color: #C1C1C1;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  width: max-content;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+  margin-top: var(--space-1);
 }
 
 div.car-container article span.price-day span.price-day-value {
-  color: #575757;
-  font-weight: 500;
-  margin-left: 5px;
+  color: var(--accent);
+  font-weight: var(--font-semibold);
 }
 
+div.car-container article span.coming-soon,
+div.car-container article span.fully-booked {
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: white;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ============================================
+   SPECS LIST (Icons)
+   ============================================ */
+
 div.car-container article div.car-info ul.car-info-list {
-  position: relative;
-  list-style: none;
-  padding: 0;
   display: flex;
   flex-flow: row wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4) 0;
 }
 
 div.car-container article div.car-info ul.car-info-list li.car-type,
@@ -260,112 +327,328 @@ div.car-container article div.car-info ul.car-info-list li.gearbox,
 div.car-container article div.car-info ul.car-info-list li.seats,
 div.car-container article div.car-info ul.car-info-list li.doors,
 div.car-container article div.car-info ul.car-info-list li.aircon {
-  width: 60px;
-  margin-bottom: 10px;
-  padding-top: 3px;
-  box-shadow: 0 0 0 1px #ddd inset;
-  margin-left: 5px;
-  border-radius: 5px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 56px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--background-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--foreground);
+  transition: all var(--transition-fast) var(--ease-default);
 }
 
-div.car-container article div.car-info .accordion {
-  box-shadow: none;
-  border: none;
-  margin-bottom: 20px;
-}
-
-div.car-container article div.car-info .accordion::before {
-  background-color: #fff;
-}
-
-div.car-container article div.car-info .accordion-summary {
-  border-bottom: #CFD8DC 1px solid;
-  font-weight: 600;
-}
-
-div.car-container article div.car-info ul.extras-list {
-  position: relative;
-  list-style: none;
-  padding: 0;
-}
-
-div.car-container article div.car-info ul.extras-list li {
-  margin: 5px;
-  width: 100%;
-}
-
-div.car-container article div.car-info ul.extras-list .available {
-  /* color: #1f9201; */
-  /* color: #006CE4; */
-  /* color: #003B95; */
-}
-
-div.car-container article div.car-info ul.extras-list .unavailable {
-  color: #f44336;
-}
-
-div.car-container article div.car-info ul.extras-list .extra-info {
-  /* color: rgb(0 0 0 / 35%); */
-  /* color: #006CE4; */
-  /* color: #003B95; */
-}
-
-div.car-container article div.car-info ul.extras-list span.car-info-list-text {
-  vertical-align: super;
-  margin-left: 3px;
+div.car-container article div.car-info ul.car-info-list li:hover {
+  border-color: var(--accent);
+  background: rgba(0, 212, 255, 0.05);
 }
 
 div.car-container article div.car-info ul.car-info-list div.car-info-list-item {
-  color: #000;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--foreground);
 }
 
-div.car-container article div.car-info ul.car-info-list li.mileage div.car-info-list-item,
-div.car-container article div.car-info ul.car-info-list li.fuel-policy div.car-info-list-item {
-  width: fit-content;
+div.car-container article div.car-info ul.car-info-list div.car-info-list-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--muted-foreground);
 }
 
 div.car-container article div.car-info ul.car-info-list span.car-info-list-text {
-  vertical-align: super;
-  margin-left: 3px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
 }
 
 div.car-container article div.car-info ul.car-info-list li .car-doors {
-  width: 20px;
-  height: 20px;
-  margin: 2px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
 }
+
+/* ============================================
+   EXTRAS LIST
+   ============================================ */
+
+div.car-container article div.car-info ul.extras-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+div.car-container article div.car-info ul.extras-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--background);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast) var(--ease-default);
+}
+
+div.car-container article div.car-info ul.extras-list li:hover {
+  background: var(--background-alt);
+}
+
+div.car-container article div.car-info ul.extras-list div.car-info-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+div.car-container article div.car-info ul.extras-list div.car-info-list-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+div.car-container article div.car-info ul.extras-list .available svg {
+  color: var(--success);
+}
+
+div.car-container article div.car-info ul.extras-list .unavailable svg {
+  color: var(--error);
+}
+
+div.car-container article div.car-info ul.extras-list .extra-info svg {
+  color: var(--accent);
+}
+
+div.car-container article div.car-info ul.extras-list span.car-info-list-text {
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+  line-height: var(--leading-snug);
+}
+
+/* ============================================
+   BOOK BUTTON
+   ============================================ */
 
 div.car-container article div.action {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
 }
 
-/* Device width is less than or equal to 960px */
+div.car-container article .btn-book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-8);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--accent-foreground);
+  background: var(--gradient-accent);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(0, 212, 255, 0.4);
+  transition: all var(--transition-normal) var(--ease-default);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
 
-@media only screen and (width <=960px) {
+div.car-container article .btn-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -8px rgba(0, 212, 255, 0.5);
+}
+
+div.car-container article .btn-book:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   ACCORDION STYLING
+   ============================================ */
+
+div.car-container article div.car-info .accordion {
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  margin-bottom: var(--space-4);
+}
+
+div.car-container article div.car-info .accordion::before {
+  display: none;
+}
+
+div.car-container article div.car-info .accordion-summary {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-semibold);
+  min-height: auto;
+}
+
+div.car-container article div.car-info .accordion-summary:hover {
+  background: var(--background-alt);
+}
+
+/* ============================================
+   RESPONSIVE - TABLET & MOBILE
+   ============================================ */
+
+@media only screen and (max-width: 960px) {
   div.car-container {
-    width: 100%;
-    max-width: 600px;
+    max-width: 100%;
+    padding: var(--space-4);
   }
 
   div.car-container article {
     flex-direction: column;
+    padding: var(--space-5);
+  }
+
+  div.car-container article div.car {
+    width: 100%;
+    min-width: 100%;
+    padding: 0;
+    margin-bottom: var(--space-4);
+  }
+
+  div.car-container article div.car .car-img {
+    max-height: 200px;
+    margin: var(--space-4) auto;
+    display: block;
+  }
+
+  div.car-container article div.car-info {
+    width: 100%;
+    padding-left: 0;
+  }
+
+  div.car-container article div.car-info div.car-info-header {
+    flex-direction: column;
     align-items: flex-start;
-    width: calc(100% - 20px);
+    gap: var(--space-3);
+  }
+
+  div.car-container article div.price {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  div.car-container article span.price-main {
+    font-size: var(--text-2xl);
+  }
+
+  div.car-container article div.car-info ul.extras-list {
+    grid-template-columns: 1fr;
+  }
+
+  div.car-container article div.action {
+    justify-content: stretch;
+  }
+
+  div.car-container article .btn-book {
+    width: 100%;
   }
 
   div.car-container div.car-header {
-    width: calc(100% - 20px);
-  }
-
-  div.car-container article div.car .car-footer {
-    margin-bottom: 20px;
-  }
-
-  section.car-list article div.car-info {
     width: 100%;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  div.car-container article {
+    padding: var(--space-4);
+  }
+
+  div.car-container article div.car-info div.car-info-header div.name {
+    font-size: var(--text-xl);
+  }
+
+  div.car-container article div.car-info ul.car-info-list {
+    gap: var(--space-1);
+  }
+
+  div.car-container article div.car-info ul.car-info-list li.car-type,
+  div.car-container article div.car-info ul.car-info-list li.gearbox,
+  div.car-container article div.car-info ul.car-info-list li.seats,
+  div.car-container article div.car-info ul.car-info-list li.doors,
+  div.car-container article div.car-info ul.car-info-list li.aircon {
+    min-width: 48px;
+    padding: var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  div.car-container article div.car-info ul.extras-list li {
+    padding: var(--space-2);
+  }
+
+  div.car-container article div.car-info ul.extras-list span.car-info-list-text {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+.dark div.car-container article {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+.dark div.car-container article:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.dark div.car-container article div.car div.car-supplier span.car-supplier-logo {
+  background: var(--background);
+  border-color: var(--border);
+}
+
+.dark div.car-container article div.car-info ul.car-info-list li.car-type,
+.dark div.car-container article div.car-info ul.car-info-list li.gearbox,
+.dark div.car-container article div.car-info ul.car-info-list li.seats,
+.dark div.car-container article div.car-info ul.car-info-list li.doors,
+.dark div.car-container article div.car-info ul.car-info-list li.aircon {
+  background: var(--background);
+  border-color: var(--border);
+}
+
+.dark div.car-container article div.car-info ul.extras-list li {
+  background: var(--background);
+}
+
+.dark div.car-container article div.car-info ul.extras-list li:hover {
+  background: var(--background-alt);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+div.car-container article {
+  animation: fadeInUp 0.4s var(--ease-out) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

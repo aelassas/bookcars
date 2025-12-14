@@ -1,62 +1,249 @@
+/* ============================================
+   CHECKOUT OPTIONS - Rental Options Selection
+   ============================================ */
+
 div.checkout-options-container {
-  background: #fbfbfb;
-  border: 1px solid #d9d8d9;
-  border-radius: 5px;
-  padding: 25px;
-  margin-bottom: 15px;
+  background: white;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-xl, 1rem);
+  padding: var(--space-6, 1.5rem);
+  margin-bottom: var(--space-5, 1.25rem);
+  transition: all 0.2s ease;
 }
 
+div.checkout-options-container:hover {
+  border-color: var(--accent, #00d4ff);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.08);
+}
+
+/* Options Header */
+div.checkout-options-container .options-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  margin-bottom: var(--space-5, 1.25rem);
+  padding-bottom: var(--space-4, 1rem);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+div.checkout-options-container .options-header svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent, #00d4ff);
+}
+
+div.checkout-options-container .options-header h3 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+  margin: 0;
+}
+
+/* Checkout Info Banner */
 div.checkout-info {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   width: 100%;
-  margin-bottom: 20px;
+  padding: var(--space-4, 1rem);
+  margin-bottom: var(--space-6, 1.5rem);
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-xl, 1rem);
+}
+
+div.checkout-info svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent, #00d4ff);
+  margin-right: var(--space-3, 0.75rem);
+  flex-shrink: 0;
 }
 
 div.checkout-info span {
-  color: #1a1a1a;
+  color: var(--foreground, #0f172a);
   display: inline-block;
-  font-size: 17px;
-  font-weight: 700;
-  margin-left: 5px;
+  font-size: var(--text-base, 1rem);
+  font-weight: var(--font-semibold, 600);
 }
 
+/* Checkout Options Grid */
 div.checkout-options,
 div.payment-options {
-  color: #333;
+  color: var(--foreground, #0f172a);
   user-select: none;
 }
 
+div.checkout-options .option-group {
+  margin-bottom: var(--space-5, 1.25rem);
+}
+
+div.checkout-options .option-group:last-child {
+  margin-bottom: 0;
+}
+
+div.checkout-options .option-group-title {
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground, #64748b);
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+/* Option Items */
+div.checkout-options .checkout-option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  background: var(--muted, #f8fafc);
+  border-radius: var(--radius-lg, 0.75rem);
+  margin-bottom: var(--space-2, 0.5rem);
+  transition: all 0.2s ease;
+}
+
+div.checkout-options .checkout-option:hover {
+  background: rgba(0, 212, 255, 0.05);
+}
+
 div.checkout-options span.checkout-option-label {
-  font-weight: 700;
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+  font-size: var(--text-sm, 0.875rem);
 }
 
 div.checkout-options span.checkout-option-label::after {
-  content: ' ';
+  content: ':';
 }
 
 div.checkout-options span.checkout-option-value {
-  color: rgb(0 0 0 / 55%);
+  color: var(--muted-foreground, #64748b);
+  font-size: var(--text-sm, 0.875rem);
 }
 
-/* Device width is less than or equal to 960px */
+/* Option Price Badge */
+div.checkout-options .checkout-option-price {
+  margin-left: auto;
+  padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--accent, #00d4ff);
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: var(--radius-full, 9999px);
+}
 
-@media only screen and (width <=960px) {
+/* Included Badge */
+div.checkout-options .checkout-option-included {
+  margin-left: auto;
+  padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-semibold, 600);
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* Option with Checkbox */
+div.checkout-options .checkout-option-selectable {
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+div.checkout-options .checkout-option-selectable:hover {
+  border-color: var(--accent, #00d4ff);
+}
+
+div.checkout-options .checkout-option-selectable.selected {
+  border-color: var(--accent, #00d4ff);
+  background: rgba(0, 212, 255, 0.08);
+}
+
+div.checkout-options .checkout-option-selectable input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #00d4ff);
+  cursor: pointer;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 959px) {
+  div.checkout-options-container {
+    padding: var(--space-4, 1rem);
+  }
+
+  div.checkout-options .checkout-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2, 0.5rem);
+  }
 
   div.checkout-options span.checkout-option-value {
-    display: table-row;
+    width: 100%;
   }
 
+  div.checkout-options .checkout-option-price,
+  div.checkout-options .checkout-option-included {
+    margin-left: 0;
+  }
 }
 
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >=960px) {
-
+@media only screen and (min-width: 960px) {
   div.checkout-options-container {
-    width: 800px;
+    width: 100%;
+    max-width: 800px;
   }
+}
 
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.checkout-options-container {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.checkout-options-container:hover {
+  border-color: var(--accent, #00d4ff);
+}
+
+[data-theme="dark"] div.checkout-options-container .options-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.checkout-options-container .options-header h3 {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-info {
+  background: rgba(0, 212, 255, 0.1);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+[data-theme="dark"] div.checkout-info span {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-options span.checkout-option-label {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-options .checkout-option {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] div.checkout-options .checkout-option:hover {
+  background: rgba(0, 212, 255, 0.05);
+}
+
+[data-theme="dark"] div.checkout-options .checkout-option-selectable:hover,
+[data-theme="dark"] div.checkout-options .checkout-option-selectable.selected {
+  background: rgba(0, 212, 255, 0.1);
 }

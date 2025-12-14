@@ -1,105 +1,165 @@
+/* ============================================
+   BOOKING WIDGET - Premium Search Component
+   ============================================ */
+
 .booking-widget {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background-color: var(--card);
+  position: relative;
+  padding: var(--space-16) var(--space-4);
+  background: var(--background-alt);
+  overflow: hidden;
 }
+
+/* Subtle background pattern */
+.booking-widget::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 20% 50%,
+    rgba(0, 212, 255, 0.05) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.dark .booking-widget {
+  background: var(--background-alt);
+}
+
+.dark .booking-widget::before {
+  background-image: radial-gradient(
+    circle at 20% 50%,
+    rgba(0, 212, 255, 0.08) 0%,
+    transparent 50%
+  );
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
 
 .booking-widget-container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
 }
 
+@media (min-width: 768px) {
+  .booking-widget-container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-container {
+    padding: 0 var(--space-8);
+  }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+
 .booking-widget-card {
-  background: linear-gradient(to right, var(--primary), rgba(26, 26, 26, 0.8));
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-2xl);
+  overflow: hidden;
+}
+
+/* Decorative accent line */
+.booking-widget-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+}
+
+/* Subtle pattern overlay */
+.booking-widget-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 100% 0%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba(0, 212, 255, 0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .booking-widget-card {
+    padding: var(--space-10);
+    border-radius: var(--radius-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-card {
+    padding: var(--space-12);
+  }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.booking-widget-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--space-8);
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-header {
+    text-align: left;
+  }
 }
 
 .booking-widget-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--card);
-  margin-bottom: 2rem;
-}
-
-.booking-widget-form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  align-items: end;
-}
-
-.booking-widget-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.booking-widget-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--card);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.booking-widget-input,
-.booking-widget-select {
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-radius: 0.5rem;
-  background-color: var(--background);
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  font-size: 1rem;
-}
-
-.booking-widget-input:focus,
-.booking-widget-select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent);
-}
-
-.booking-widget-button {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  background-color: var(--accent);
-  color: var(--accent-foreground);
-  border-radius: 0.5rem;
-  border: none;
-  font-weight: 700;
-  white-space: nowrap;
-  height: 3rem;
-  cursor: pointer;
-  transition: background-color 150ms;
-}
-
-.booking-widget-button:hover {
-  background-color: rgba(0, 188, 212, 0.9);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: white;
+  margin: 0 0 var(--space-2) 0;
 }
 
 @media (min-width: 768px) {
   .booking-widget-title {
-    font-size: 2.25rem;
+    font-size: var(--text-3xl);
   }
+}
 
-  .booking-widget-card {
-    padding: 3rem;
-  }
+.booking-widget-subtitle {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
 
+/* ============================================
+   FORM
+   ============================================ */
+
+.booking-widget-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: end;
+}
+
+@media (min-width: 640px) {
   .booking-widget-form {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    gap: var(--space-5);
   }
 }
 
@@ -109,3 +169,358 @@
   }
 }
 
+/* ============================================
+   FORM FIELD
+   ============================================ */
+
+.booking-widget-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.booking-widget-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.booking-widget-label svg {
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.8;
+}
+
+/* ============================================
+   INPUT & SELECT STYLES
+   ============================================ */
+
+.booking-widget-input,
+.booking-widget-select {
+  width: 100%;
+  padding: var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--foreground);
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 2px solid transparent;
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast) var(--ease-default);
+  appearance: none;
+  cursor: pointer;
+}
+
+.booking-widget-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.booking-widget-input:hover,
+.booking-widget-select:hover {
+  background-color: white;
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.booking-widget-input:focus,
+.booking-widget-select:focus {
+  outline: none;
+  background-color: white;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
+}
+
+/* Select arrow styling */
+.booking-widget-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 1.25rem;
+  padding-right: var(--space-10);
+}
+
+/* Date input styling */
+.booking-widget-input[type="date"] {
+  position: relative;
+}
+
+.booking-widget-input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: var(--space-3);
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.booking-widget-input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Dark mode adjustments */
+.dark .booking-widget-input,
+.dark .booking-widget-select {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .booking-widget-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dark .booking-widget-input:hover,
+.dark .booking-widget-select:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+
+.dark .booking-widget-input:focus,
+.dark .booking-widget-select:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent);
+}
+
+.dark .booking-widget-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   SEARCH BUTTON
+   ============================================ */
+
+.booking-widget-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--accent-foreground);
+  background: var(--gradient-accent);
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(0, 212, 255, 0.5);
+  transition: all var(--transition-normal) var(--ease-default);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.booking-widget-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -8px rgba(0, 212, 255, 0.6);
+}
+
+.booking-widget-button:active {
+  transform: translateY(0);
+}
+
+.booking-widget-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .booking-widget-button {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-button {
+    grid-column: auto;
+    height: 100%;
+  }
+}
+
+/* ============================================
+   FIELD ICON WRAPPER (Optional enhancement)
+   ============================================ */
+
+.booking-widget-field-wrapper {
+  position: relative;
+}
+
+.booking-widget-field-icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.booking-widget-field-wrapper .booking-widget-input,
+.booking-widget-field-wrapper .booking-widget-select {
+  padding-left: var(--space-12);
+}
+
+/* ============================================
+   INLINE VARIANT (Alternative layout)
+   ============================================ */
+
+.booking-widget--inline .booking-widget-card {
+  padding: var(--space-6);
+}
+
+.booking-widget--inline .booking-widget-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.booking-widget--inline .booking-widget-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.booking-widget--inline .booking-widget-button {
+  flex: 0 0 auto;
+  min-width: 160px;
+}
+
+/* ============================================
+   COMPACT VARIANT
+   ============================================ */
+
+.booking-widget--compact {
+  padding: var(--space-8) var(--space-4);
+}
+
+.booking-widget--compact .booking-widget-card {
+  padding: var(--space-6);
+}
+
+.booking-widget--compact .booking-widget-header {
+  margin-bottom: var(--space-6);
+}
+
+.booking-widget--compact .booking-widget-title {
+  font-size: var(--text-xl);
+}
+
+.booking-widget--compact .booking-widget-input,
+.booking-widget--compact .booking-widget-select {
+  padding: var(--space-3);
+}
+
+/* ============================================
+   FLOATING VARIANT (For overlaying hero)
+   ============================================ */
+
+.booking-widget--floating {
+  position: relative;
+  margin-top: calc(-1 * var(--space-24));
+  padding-top: 0;
+  padding-bottom: var(--space-16);
+  background: transparent;
+}
+
+.booking-widget--floating::before {
+  display: none;
+}
+
+.booking-widget--floating .booking-widget-card {
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   TRUST INDICATORS (Optional section)
+   ============================================ */
+
+.booking-widget-trust {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 1024px) {
+  .booking-widget-trust {
+    justify-content: flex-start;
+  }
+}
+
+.booking-widget-trust-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.booking-widget-trust-item svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--accent);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+.booking-widget-card {
+  animation: fadeInUp 0.6s var(--ease-out) forwards;
+}
+
+.booking-widget-field {
+  opacity: 0;
+  animation: fadeInUp 0.4s var(--ease-out) forwards;
+}
+
+.booking-widget-field:nth-child(1) { animation-delay: 0.1s; }
+.booking-widget-field:nth-child(2) { animation-delay: 0.15s; }
+.booking-widget-field:nth-child(3) { animation-delay: 0.2s; }
+.booking-widget-field:nth-child(4) { animation-delay: 0.25s; }
+
+.booking-widget-button {
+  opacity: 0;
+  animation: fadeInUp 0.4s var(--ease-out) 0.3s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 639px) {
+  .booking-widget {
+    padding: var(--space-12) var(--space-4);
+  }
+
+  .booking-widget-card {
+    padding: var(--space-6);
+  }
+
+  .booking-widget-input,
+  .booking-widget-select,
+  .booking-widget-button {
+    padding: var(--space-4);
+  }
+}

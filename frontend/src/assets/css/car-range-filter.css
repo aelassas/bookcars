@@ -1,27 +1,188 @@
+/* ============================================
+   CAR RANGE FILTER - Vehicle Price Range
+   ============================================ */
+
+div.range-filter {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Filter Elements */
 div.range-filter div.filter-elements {
-  padding: 7px 5px;
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+div.range-filter div.filter-elements div.filter-element {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+div.range-filter div.filter-elements div.filter-element:hover {
+  background: var(--muted, #f8fafc);
+}
+
+div.range-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.08);
 }
 
 div.range-filter div.filter-elements div.filter-element input[type='checkbox'].range-checkbox {
   cursor: pointer;
-  margin-left: 5px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #00d4ff);
+  flex-shrink: 0;
 }
 
 div.range-filter div.filter-elements div.filter-element span {
-  margin-left: 5px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 400;
-  /* text-transform: uppercase; */
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--foreground, #0f172a);
+  transition: color 0.2s ease;
 }
 
+div.range-filter div.filter-elements div.filter-element:hover span {
+  color: var(--accent, #00d4ff);
+}
+
+/* Price Range Badge */
+div.range-filter div.filter-elements div.filter-element .range-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+  padding: var(--space-1, 0.25rem) var(--space-2, 0.5rem);
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--accent, #00d4ff);
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: var(--radius-full, 9999px);
+  margin-left: auto;
+}
+
+/* Filter Actions */
 div.range-filter div.filter-actions {
-  text-align: center;
-  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+  border-top: 1px solid var(--border, #e2e8f0);
+  background: var(--muted, #f8fafc);
 }
 
 div.range-filter div.filter-actions span.uncheckall {
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-medium, 500);
   text-decoration: underline;
   cursor: pointer;
-  color: #0064c8;
+  color: var(--accent, #00d4ff);
+  transition: color 0.2s ease;
+}
+
+div.range-filter div.filter-actions span.uncheckall:hover {
+  color: var(--primary, #0a1628);
+}
+
+/* ============================================
+   PRICE SLIDER VARIANT
+   ============================================ */
+
+div.range-filter .price-slider {
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+}
+
+div.range-filter .price-slider-track {
+  position: relative;
+  height: 6px;
+  background: var(--muted, #e2e8f0);
+  border-radius: var(--radius-full, 9999px);
+  margin: var(--space-6, 1.5rem) 0;
+}
+
+div.range-filter .price-slider-fill {
+  position: absolute;
+  height: 100%;
+  background: var(--gradient-accent, linear-gradient(135deg, #00d4ff 0%, #00a3cc 100%));
+  border-radius: var(--radius-full, 9999px);
+}
+
+div.range-filter .price-slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  background: white;
+  border: 3px solid var(--accent, #00d4ff);
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease;
+}
+
+div.range-filter .price-slider-thumb:hover {
+  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.4);
+}
+
+div.range-filter .price-slider-thumb:active {
+  cursor: grabbing;
+}
+
+div.range-filter .price-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2, 0.5rem);
+}
+
+div.range-filter .price-slider-label {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+}
+
+div.range-filter .price-slider-value {
+  font-weight: var(--font-bold, 700);
+  color: var(--foreground, #0f172a);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.range-filter {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.range-filter div.filter-elements div.filter-element:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] div.range-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="dark"] div.range-filter div.filter-elements div.filter-element span {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.range-filter div.filter-actions {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.range-filter .price-slider-track {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] div.range-filter .price-slider-value {
+  color: var(--foreground, #f8fafc);
 }

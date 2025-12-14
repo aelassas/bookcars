@@ -1,27 +1,130 @@
+/* ============================================
+   CAR SEATS FILTER - Passenger Capacity
+   ============================================ */
+
+div.seats-filter {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Filter Elements */
 div.seats-filter div.filter-elements {
-  padding: 7px 5px;
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+div.seats-filter div.filter-elements div.filter-element {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+div.seats-filter div.filter-elements div.filter-element:hover {
+  background: var(--muted, #f8fafc);
+}
+
+div.seats-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.08);
 }
 
 div.seats-filter div.filter-elements div.filter-element input[type='checkbox'].seats-checkbox {
   cursor: pointer;
-  margin-left: 5px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent, #00d4ff);
+  flex-shrink: 0;
 }
 
 div.seats-filter div.filter-elements div.filter-element span {
-  margin-left: 5px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--foreground, #0f172a);
   text-transform: capitalize;
+  transition: color 0.2s ease;
 }
 
+div.seats-filter div.filter-elements div.filter-element:hover span {
+  color: var(--accent, #00d4ff);
+}
+
+/* Seats Icon */
+div.seats-filter div.filter-elements div.filter-element .seats-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--muted, #f1f5f9);
+  border-radius: var(--radius-md, 0.5rem);
+  color: var(--muted-foreground, #64748b);
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-bold, 700);
+  transition: all 0.2s ease;
+}
+
+div.seats-filter div.filter-elements div.filter-element:hover .seats-icon {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent, #00d4ff);
+}
+
+/* Filter Actions */
 div.seats-filter div.filter-actions {
-  text-align: center;
-  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+  border-top: 1px solid var(--border, #e2e8f0);
+  background: var(--muted, #f8fafc);
 }
 
 div.seats-filter div.filter-actions span.uncheckall {
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-medium, 500);
   text-decoration: underline;
   cursor: pointer;
-  color: #0064c8;
+  color: var(--accent, #00d4ff);
+  transition: color 0.2s ease;
+}
+
+div.seats-filter div.filter-actions span.uncheckall:hover {
+  color: var(--primary, #0a1628);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.seats-filter {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.seats-filter div.filter-elements div.filter-element:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] div.seats-filter div.filter-elements div.filter-element.selected {
+  background: rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="dark"] div.seats-filter div.filter-elements div.filter-element span {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.seats-filter div.filter-elements div.filter-element .seats-icon {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] div.seats-filter div.filter-actions {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
 }

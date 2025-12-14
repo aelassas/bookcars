@@ -1,94 +1,205 @@
+/* ============================================
+   BOOKINGS PAGE - User Booking List
+   ============================================ */
+
 div.bookings {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   position: absolute;
-  inset: 64px 0 0;
+  inset: 80px 0 0;
   transform: translate3d(0, 0, 0);
+  background: var(--background, #f8fafc);
 }
 
+/* Filter Sidebar (Left Column) */
 div.bookings div.col-1 {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 336px;
-  padding: 12px 0 0 12px;
-  background-color: #FAFAFA;
-  overflow: auto;
+  position: relative;
+  width: 320px;
+  flex-shrink: 0;
+  padding: var(--space-5, 1.25rem);
+  background: white;
+  border-right: 1px solid var(--border, #e2e8f0);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 1rem);
 }
 
+/* Filter Components */
 div.bookings div.col-1 .cl-supplier-filter,
 div.bookings div.col-1 .cl-status-filter,
 div.bookings div.col-1 .cl-booking-filter {
-  margin: 10px 10px 10px 0;
+  margin: 0;
+  background: var(--muted, #f8fafc);
+  border-radius: var(--radius-lg, 0.75rem);
+  overflow: hidden;
 }
 
 div.bookings div.col-1 .cl-booking-filter div.panel,
 div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
-  padding-right: 15px;
-  padding-left: 15px;
+  padding: var(--space-4, 1rem);
 }
 
-div.bookings div.col-1 .cl-status-filter,
-div.bookings div.col-1 .cl-booking-filter {
-  margin-bottom: 10px;
+/* New Booking Button */
+div.bookings div.col-1 .cl-new-booking {
+  margin-top: auto;
+  padding-top: var(--space-4, 1rem);
+  border-top: 1px solid var(--border, #e2e8f0);
 }
 
+div.bookings div.col-1 .cl-new-booking button {
+  width: 100%;
+  padding: var(--space-3, 0.75rem);
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--accent-foreground, #0a1628);
+  background: var(--gradient-accent, linear-gradient(135deg, #00d4ff 0%, #00a3cc 100%));
+  border: none;
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px -3px rgba(0, 212, 255, 0.4);
+}
+
+div.bookings div.col-1 .cl-new-booking button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(0, 212, 255, 0.5);
+}
+
+/* Main Content (Right Column) */
 div.bookings div.col-2 {
-  position: absolute;
-  inset: 0 0 0 336px;
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5, 1.25rem);
 }
 
-/* Device width is lower than or equal to 960px */
+/* Booking List Header */
+div.bookings .bookings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5, 1.25rem);
+  padding-bottom: var(--space-4, 1rem);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
 
-@media only screen and (width <=960px) {
+div.bookings .bookings-header h1 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-xl, 1.25rem);
+  font-weight: var(--font-bold, 700);
+  color: var(--foreground, #0f172a);
+  margin: 0;
+}
+
+div.bookings .bookings-count {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--muted-foreground, #64748b);
+  background: var(--muted, #f8fafc);
+  padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 960px) {
   div.bookings {
     position: relative;
     top: 0;
+    flex-direction: column;
+    inset: auto;
+    min-height: calc(100vh - 80px);
     overflow-y: auto;
   }
 
-  div.bookings div.col-1,
-  div.bookings div.col-2 {
-    width: 100%;
-    max-width: 480px;
-  }
-
   div.bookings div.col-1 {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+    padding: var(--space-4, 1rem);
     position: relative;
-    inset: 0;
-    padding-top: 15px;
-  }
-
-  div.bookings div.col-2 {
-    position: relative;
-    inset: 0;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter label.accordion,
-  div.bookings div.col-1 .cl-status-filter label.accordion,
-  div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fff;
+    overflow: visible;
   }
 
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
-    background-color: #fff;
-    width: calc(100% - 10px);
-    max-width: 480px;
+    background: white;
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: var(--radius-lg, 0.75rem);
   }
 
-  div.bookings div.col-1 .cl-booking-filter div.panel,
-  div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
+  div.bookings div.col-1 .cl-supplier-filter label.accordion,
+  div.bookings div.col-1 .cl-status-filter label.accordion,
+  div.bookings div.col-1 .cl-booking-filter label.accordion {
+    background: white;
+  }
+
+  div.bookings div.col-2 {
+    position: relative;
+    inset: auto;
+    padding: var(--space-4, 1rem);
   }
 
   div.bookings div.col-1 .cl-new-booking {
-    width: calc(100% - 20px);
-    max-width: 480px;
-    margin: 15px 10px 5px;
+    width: 100%;
+    margin: var(--space-4, 1rem) 0 0;
+    padding-top: var(--space-4, 1rem);
+  }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.bookings {
+  background: var(--background, #0a1628);
+}
+
+[data-theme="dark"] div.bookings div.col-1 {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.bookings div.col-1 .cl-supplier-filter,
+[data-theme="dark"] div.bookings div.col-1 .cl-status-filter,
+[data-theme="dark"] div.bookings div.col-1 .cl-booking-filter {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] div.bookings div.col-1 .cl-new-booking {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.bookings .bookings-header {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.bookings .bookings-header h1 {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.bookings .bookings-count {
+  background: var(--muted, #1e293b);
+}
+
+@media only screen and (max-width: 960px) {
+  [data-theme="dark"] div.bookings div.col-1 {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] div.bookings div.col-1 .cl-supplier-filter,
+  [data-theme="dark"] div.bookings div.col-1 .cl-status-filter,
+  [data-theme="dark"] div.bookings div.col-1 .cl-booking-filter {
+    background: var(--card, #111827);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] div.bookings div.col-1 .cl-supplier-filter label.accordion,
+  [data-theme="dark"] div.bookings div.col-1 .cl-status-filter label.accordion,
+  [data-theme="dark"] div.bookings div.col-1 .cl-booking-filter label.accordion {
+    background: var(--card, #111827);
   }
 }

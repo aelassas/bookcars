@@ -1,14 +1,153 @@
+/* ============================================
+   BOOKING FILTER - Booking Management Filter
+   ============================================ */
+
 div.booking-filter {
-  background: #fff;
-  margin: 10px 10px 0 0;
-  border: 1px solid #dadada;
-  font-size: 13px;
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  font-size: var(--text-sm, 0.875rem);
 }
 
+/* Search Field */
 div.booking-filter .bf-search {
-  margin-top: 7px;
+  margin: 0;
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
 }
 
+div.booking-filter .bf-search input[type="text"] {
+  width: 100%;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--foreground, #0f172a);
+  background: var(--muted, #f8fafc);
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg, 0.75rem);
+  transition: all 0.2s ease;
+}
+
+div.booking-filter .bf-search input[type="text"]:hover {
+  border-color: var(--accent, #00d4ff);
+  background: white;
+}
+
+div.booking-filter .bf-search input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent, #00d4ff);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+div.booking-filter .bf-search input[type="text"]::placeholder {
+  color: var(--muted-foreground, #94a3b8);
+}
+
+/* Search Button */
 div.booking-filter .btn-search {
-  margin: 20px 0;
+  margin: 0 var(--space-5, 1.25rem) var(--space-5, 1.25rem);
+  width: calc(100% - 2.5rem);
+  min-height: 44px;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--accent-foreground, #0a1628);
+  background: var(--gradient-accent, linear-gradient(135deg, #00d4ff 0%, #00a3cc 100%));
+  border: none;
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 0.5rem);
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+}
+
+div.booking-filter .btn-search:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+}
+
+div.booking-filter .btn-search:active {
+  transform: translateY(0);
+}
+
+div.booking-filter .btn-search svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Date Range Filters */
+div.booking-filter .date-filter {
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+  border-top: 1px solid var(--border, #e2e8f0);
+}
+
+div.booking-filter .date-filter-label {
+  display: block;
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground, #64748b);
+  margin-bottom: var(--space-2, 0.5rem);
+}
+
+div.booking-filter .date-filter-inputs {
+  display: flex;
+  gap: var(--space-2, 0.5rem);
+}
+
+div.booking-filter .date-filter-inputs input[type="date"] {
+  flex: 1;
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--foreground, #0f172a);
+  background: var(--muted, #f8fafc);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md, 0.5rem);
+  transition: all 0.2s ease;
+}
+
+div.booking-filter .date-filter-inputs input[type="date"]:focus {
+  outline: none;
+  border-color: var(--accent, #00d4ff);
+  background: white;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.booking-filter {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.booking-filter .bf-search input[type="text"] {
+  background: var(--muted, #1e293b);
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.booking-filter .bf-search input[type="text"]:hover,
+[data-theme="dark"] div.booking-filter .bf-search input[type="text"]:focus {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] div.booking-filter .bf-search input[type="text"]::placeholder {
+  color: var(--muted-foreground, #64748b);
+}
+
+[data-theme="dark"] div.booking-filter .date-filter {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.booking-filter .date-filter-inputs input[type="date"] {
+  background: var(--muted, #1e293b);
+  color: var(--foreground, #f8fafc);
 }

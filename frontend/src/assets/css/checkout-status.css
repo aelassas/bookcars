@@ -1,84 +1,407 @@
+/* ============================================
+   CHECKOUT STATUS - Booking Confirmation Page
+   ============================================ */
+
 div.checkout-status {
   display: flex;
   flex-direction: column;
+  gap: var(--space-6, 1.5rem);
 }
 
-div.checkout-status div.details {
+/* Status Header - Success/Pending/Error States */
+div.checkout-status .status-header {
   display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-  background-color: #fff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-10, 2.5rem);
+  background: white;
+  border-radius: var(--radius-2xl, 1.5rem);
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.1),
+    0 4px 16px -4px rgba(0, 0, 0, 0.05);
 }
 
+div.checkout-status .status-header .status-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full, 9999px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5, 1.25rem);
+}
+
+div.checkout-status .status-header .status-icon.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+div.checkout-status .status-header .status-icon.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+div.checkout-status .status-header .status-icon.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+div.checkout-status .status-header .status-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+div.checkout-status .status-header h2 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-2xl, 1.5rem);
+  font-weight: var(--font-bold, 700);
+  color: var(--foreground, #0f172a);
+  margin: 0 0 var(--space-2, 0.5rem) 0;
+}
+
+div.checkout-status .status-header p {
+  font-size: var(--text-base, 1rem);
+  color: var(--muted-foreground, #64748b);
+  margin: 0;
+  max-width: 400px;
+}
+
+/* Booking Reference */
+div.checkout-status .booking-reference {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  margin-top: var(--space-5, 1.25rem);
+  padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+  background: var(--muted, #f8fafc);
+  border-radius: var(--radius-lg, 0.75rem);
+  font-size: var(--text-sm, 0.875rem);
+}
+
+div.checkout-status .booking-reference span {
+  color: var(--muted-foreground, #64748b);
+}
+
+div.checkout-status .booking-reference strong {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+  letter-spacing: 0.05em;
+}
+
+/* Details Container */
+div.checkout-status div.details {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-6, 1.5rem);
+  margin-top: 0;
+  background: transparent;
+}
+
+/* Status Details Container (Left Side) */
 div.checkout-status div.details div.status-details-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  gap: var(--space-5, 1.25rem);
+  padding: 0;
 }
 
+/* Status Info Card */
 div.checkout-status div.details div.status-info {
   display: flex;
-  justify-content: flex-start;
-  text-align: left;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  padding: var(--space-5, 1.25rem);
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+div.checkout-status div.details div.status-info svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent, #00d4ff);
+  flex-shrink: 0;
 }
 
 div.checkout-status div.details div.status-info span {
-  color: #444;
+  color: var(--foreground, #0f172a);
   display: inline-block;
-  font-size: 17px;
-  font-weight: 700;
-  margin-left: 5px;
+  font-size: var(--text-base, 1rem);
+  font-weight: var(--font-semibold, 600);
+  margin-left: 0;
 }
 
+/* Status Details Card */
 div.checkout-status div.details div.status-details {
-  display: table;
-  color: #333;
-  font-size: 15px;
-  padding: 0 40px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+  color: var(--foreground, #0f172a);
+  font-size: var(--text-sm, 0.875rem);
+  padding: var(--space-6, 1.5rem);
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-div.checkout-status div.details div.status-details div.status-detail span.status-detail-title,
-div.checkout-status div.details div.status-details div.status-detail-value {
-  display: table-cell;
+/* Detail Row */
+div.checkout-status div.details div.status-details div.status-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-3, 0.75rem) 0;
+  border-bottom: 1px solid var(--border, #e2e8f0);
 }
 
-div.checkout-status div.details div.status-details div.status-detail div.status-detail-value {
-  color: rgb(0 0 0 / 55%);
-  word-break: break-word;
-  vertical-align: middle;
+div.checkout-status div.details div.status-details div.status-detail:last-child {
+  border-bottom: none;
 }
 
 div.checkout-status div.details div.status-details div.status-detail span.status-detail-title {
-  font-weight: 700;
-  width: 170px;
+  display: block;
+  font-weight: var(--font-medium, 500);
+  color: var(--muted-foreground, #64748b);
+  font-size: var(--text-sm, 0.875rem);
+  flex-shrink: 0;
 }
 
+div.checkout-status div.details div.status-details div.status-detail div.status-detail-value {
+  display: block;
+  text-align: right;
+  color: var(--foreground, #0f172a);
+  word-break: break-word;
+  font-weight: var(--font-medium, 500);
+}
+
+/* Price Highlight */
 div.checkout-status div.details div.status-details div.status-detail div.status-price {
-  font-size: 17px;
-  font-weight: 700;
-  color: #333;
+  font-size: var(--text-xl, 1.25rem);
+  font-weight: var(--font-bold, 700);
+  color: var(--accent, #00d4ff);
 }
 
+/* Side Panel (Right Side) */
 div.checkout-status div.details div.side-panel {
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* background-color: #1a1a1a; */
-  background-color: #121212;
+  background: var(--gradient-primary, linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%));
   color: #fff;
-  padding: 40px;
+  padding: var(--space-8, 2rem);
+  border-radius: var(--radius-2xl, 1.5rem);
+  position: relative;
+  overflow: hidden;
 }
 
+div.checkout-status div.details div.side-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(
+    circle at 100% 0%,
+    rgba(0, 212, 255, 0.2) 0%,
+    transparent 60%
+  );
+}
 
-@media only screen and (width <=960px) {
+div.checkout-status div.details div.side-panel h3 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: var(--font-semibold, 600);
+  margin: 0 0 var(--space-4, 1rem) 0;
+}
+
+div.checkout-status div.details div.side-panel p {
+  font-size: var(--text-sm, 0.875rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin: 0 0 var(--space-5, 1.25rem) 0;
+}
+
+/* Action Buttons in Side Panel */
+div.checkout-status div.details div.side-panel .panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+  margin-top: auto;
+}
+
+div.checkout-status div.details div.side-panel .panel-actions button,
+div.checkout-status div.details div.side-panel .panel-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 0.5rem);
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  border-radius: var(--radius-lg, 0.75rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+div.checkout-status div.details div.side-panel .panel-actions .btn-primary {
+  color: var(--accent-foreground, #0a1628);
+  background: var(--accent, #00d4ff);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+div.checkout-status div.details div.side-panel .panel-actions .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
+}
+
+div.checkout-status div.details div.side-panel .panel-actions .btn-secondary {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+div.checkout-status div.details div.side-panel .panel-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile App Download Section */
+div.checkout-status div.details div.mobile-app {
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: var(--radius-lg, 0.75rem);
+  padding: var(--space-5, 1.25rem);
+  margin-top: var(--space-5, 1.25rem);
+}
+
+div.checkout-status div.details div.mobile-app div.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 1rem);
+}
+
+div.checkout-status div.details div.mobile-app .app-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg, 0.75rem);
+  background: rgba(0, 212, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+div.checkout-status div.details div.mobile-app .app-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent, #00d4ff);
+}
+
+div.checkout-status div.details div.mobile-app .app-info {
+  flex: 1;
+}
+
+div.checkout-status div.details div.mobile-app .app-info h4 {
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-semibold, 600);
+  margin: 0 0 var(--space-1, 0.25rem) 0;
+}
+
+div.checkout-status div.details div.mobile-app .app-info p {
+  font-size: var(--text-xs, 0.75rem);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 959px) {
   div.checkout-status div.details {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  div.checkout-status div.details div.side-panel {
+    order: -1;
+    padding: var(--space-6, 1.5rem);
   }
 
   div.checkout-status div.details div.mobile-app div.wrapper {
     flex-direction: column;
-    padding: 60px 10px;
+    text-align: center;
+    padding: var(--space-4, 1rem);
   }
+
+  div.checkout-status .status-header {
+    padding: var(--space-6, 1.5rem);
+  }
+
+  div.checkout-status .status-header .status-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  div.checkout-status .status-header .status-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  div.checkout-status .status-header h2 {
+    font-size: var(--text-xl, 1.25rem);
+  }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.checkout-status .status-header {
+  background: var(--card, #111827);
+}
+
+[data-theme="dark"] div.checkout-status .status-header h2 {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-status .booking-reference {
+  background: var(--muted, #1e293b);
+}
+
+[data-theme="dark"] div.checkout-status .booking-reference strong {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.status-info {
+  background: var(--card, #111827);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.status-info span {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.status-details {
+  background: var(--card, #111827);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.status-details div.status-detail {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.status-details div.status-detail div.status-detail-value {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.checkout-status div.details div.side-panel {
+  background: linear-gradient(135deg, #0a0f1a 0%, #162033 100%);
 }

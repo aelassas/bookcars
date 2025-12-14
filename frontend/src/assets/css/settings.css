@@ -1,64 +1,232 @@
-/* Create settings */
+/* ============================================
+   SETTINGS PAGE - User Account Settings
+   ============================================ */
+
 div.settings {
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  margin: 45px 0;
+  padding: var(--space-10, 2.5rem) var(--space-6, 1.5rem);
   transform: translate3d(0, 0, 0);
-  margin: 80px 0 200px 0;
   min-height: 100vh;
+  background: var(--background, #f8fafc);
 }
 
-div.settings .settings-form-wrapper {
-  margin: 32px 0;
-}
-
-div.settings .settings-form-title {
+/* Page Header */
+div.settings .settings-header {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: var(--space-8, 2rem);
   text-align: center;
-  text-transform: capitalize;
-  color: #232323;
 }
 
+div.settings .settings-header h1 {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-3xl, 1.875rem);
+  font-weight: var(--font-bold, 700);
+  color: var(--foreground, #0f172a);
+  margin: 0 0 var(--space-2, 0.5rem) 0;
+}
+
+div.settings .settings-header p {
+  font-size: var(--text-base, 1rem);
+  color: var(--muted-foreground, #64748b);
+  margin: 0;
+}
+
+/* Form Wrapper */
+div.settings .settings-form-wrapper {
+  margin: 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Form Title */
+div.settings .settings-form-title {
+  text-align: left;
+  text-transform: none;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: var(--font-semibold, 600);
+  color: var(--foreground, #0f172a);
+  margin: 0 0 var(--space-4, 1rem) 0;
+}
+
+/* Settings Form Card */
+div.settings .settings-form {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: var(--space-6, 1.5rem);
+  margin-bottom: var(--space-6, 1.5rem);
+  border: 1px solid var(--border, #e2e8f0);
+  transition: all 0.2s ease;
+}
+
+div.settings .settings-form:hover {
+  border-color: var(--accent, #00d4ff);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.08);
+}
+
+/* Avatar Container in Settings */
+div.settings .settings-ctn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6, 1.5rem) 0;
+}
+
+/* Form Fields */
+div.settings .settings-form .form-field {
+  margin-bottom: var(--space-4, 1rem);
+}
+
+div.settings .settings-form .form-field:last-child {
+  margin-bottom: 0;
+}
+
+div.settings .settings-form label {
+  display: block;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-medium, 500);
+  color: var(--foreground, #0f172a);
+  margin-bottom: var(--space-2, 0.5rem);
+}
+
+div.settings .settings-form input[type="text"],
+div.settings .settings-form input[type="email"],
+div.settings .settings-form input[type="tel"],
+div.settings .settings-form input[type="password"] {
+  width: 100%;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  font-size: var(--text-base, 1rem);
+  color: var(--foreground, #0f172a);
+  background: var(--muted, #f8fafc);
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg, 0.75rem);
+  transition: all 0.2s ease;
+}
+
+div.settings .settings-form input:hover {
+  border-color: var(--accent, #00d4ff);
+}
+
+div.settings .settings-form input:focus {
+  outline: none;
+  border-color: var(--accent, #00d4ff);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+}
+
+/* Network Settings */
 div.settings .settings-net-wrapper {
-  margin: 32px 0;
+  margin: var(--space-6, 1.5rem) 0 0 0;
+  width: 100%;
+  max-width: 600px;
 }
 
-/* Device width is less than or equal to 960px */
+div.settings .settings-net {
+  background: white;
+  border-radius: var(--radius-xl, 1rem);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: var(--space-6, 1.5rem);
+  border: 1px solid var(--border, #e2e8f0);
+}
 
-@media only screen and (width <=960px) {
-  div.settings .settings-form {
-    width: 360px;
-    padding: 30px;
+/* Section Divider */
+div.settings .settings-divider {
+  height: 1px;
+  background: var(--border, #e2e8f0);
+  margin: var(--space-6, 1.5rem) 0;
+}
+
+/* Buttons in Settings */
+div.settings .settings-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3, 0.75rem);
+  margin-top: var(--space-5, 1.25rem);
+  padding-top: var(--space-5, 1.25rem);
+  border-top: 1px solid var(--border, #e2e8f0);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 960px) {
+  div.settings {
+    padding: var(--space-6, 1.5rem) var(--space-4, 1rem);
+  }
+
+  div.settings .settings-form,
+  div.settings .settings-net {
+    padding: var(--space-5, 1.25rem);
   }
 
   div.settings .settings-ctn {
-    height: 240px;
+    padding: var(--space-5, 1.25rem) 0;
   }
 
-  div.settings .settings-net {
-    width: 360px;
-    height: 200px;
-    padding: 30px;
+  div.settings .settings-header h1 {
+    font-size: var(--text-2xl, 1.5rem);
   }
 }
 
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >=960px) {
-  div.settings .settings-form {
-    width: 550px;
-    padding: 30px;
-  }
-
-  div.settings .settings-ctn {
-    height: 190px;
-  }
-
+@media only screen and (min-width: 961px) {
+  div.settings .settings-form,
   div.settings .settings-net {
-    width: 550px;
-    height: 200px;
-    padding: 30px;
+    padding: var(--space-8, 2rem);
   }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] div.settings {
+  background: var(--background, #0a1628);
+}
+
+[data-theme="dark"] div.settings .settings-header h1 {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.settings .settings-form-title {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.settings .settings-form,
+[data-theme="dark"] div.settings .settings-net {
+  background: var(--card, #111827);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] div.settings .settings-form:hover {
+  border-color: var(--accent, #00d4ff);
+}
+
+[data-theme="dark"] div.settings .settings-form label {
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.settings .settings-form input {
+  background: var(--muted, #1e293b);
+  color: var(--foreground, #f8fafc);
+}
+
+[data-theme="dark"] div.settings .settings-form input:focus {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] div.settings .settings-divider,
+[data-theme="dark"] div.settings .settings-buttons {
+  border-color: rgba(255, 255, 255, 0.1);
 }
