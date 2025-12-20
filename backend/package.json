@@ -1,7 +1,7 @@
 {
   "name": "bookcars-backend",
   "description": "Backend server for BookCars",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
