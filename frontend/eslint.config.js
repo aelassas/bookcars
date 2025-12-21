@@ -12,8 +12,9 @@ const config = [
     ignores: [
       'node_modules/',
       'build/',
+      'dist/',
       'vite.config.js',
-      'vite.config.d.ts',
+      'vite.config.d.ts'
     ]
   },
   {

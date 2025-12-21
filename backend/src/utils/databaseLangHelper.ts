@@ -1,10 +1,15 @@
-import mongoose, { Model } from 'mongoose'
+import mongoose, { Document, Model } from 'mongoose'
+import { Filter } from 'mongodb'
 import * as env from '../config/env.config'
 import * as logger from './logger'
 import Country from '../models/Country'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import ParkingSpot from '../models/ParkingSpot'
+
+interface MyDoc extends Document {
+  values: string[]
+}
 
 /**
  * Synchronizes multilingual LocationValue entries for a given collection (such as Location, Country, or ParkingSpot) 
@@ -33,7 +38,7 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
       // Ensure English value exists to copy from
       const en = doc.values.find((v) => v.language === 'en')
       if (!en) {
-        logger.warn(`English value missing for ${label} document:`, doc.id)
+        logger.warn(`English value missing for ${label} document:`, (doc._id as mongoose.Types.ObjectId).toString())
         continue
       }
 
@@ -46,9 +51,9 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
           // Create new LocationValue with English value as fallback
           const val = new LocationValue({ language: lang, value: en.value })
           newValues.push(val)
-          additions.push(val.id)
+          additions.push(val._id.toString())
         }
-        updates.push({ id: doc.id, pushIds: additions })
+        updates.push({ id: (doc._id as mongoose.Types.ObjectId).toString(), pushIds: additions })
       }
     }
 
@@ -62,7 +67,7 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
     if (updates.length > 0) {
       const bulkOps = updates.map(({ id, pushIds }) => ({
         updateOne: {
-          filter: { _id: id },
+          filter: { _id: new mongoose.Types.ObjectId(id) } as Filter<MyDoc>,
           update: { $push: { values: { $each: pushIds } } },
         },
       }))
@@ -75,7 +80,7 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
     let obsoleteIdsBatch: string[] = []
 
     for await (const obsoleteVal of cursor) {
-      obsoleteIdsBatch.push(obsoleteVal.id)
+      obsoleteIdsBatch.push(obsoleteVal._id.toString())
 
       if (obsoleteIdsBatch.length >= env.BATCH_SIZE) {
         await Promise.all([

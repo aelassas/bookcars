@@ -9,6 +9,7 @@ import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
 import Country from '../src/models/Country'
 import ParkingSpot from '../src/models/ParkingSpot'
+import mongoose from 'mongoose'
 
 beforeAll(() => {
   // testHelper.initializeLogger()
@@ -43,9 +44,9 @@ describe('Test database initialization', () => {
     await lv1.save()
     const lv2 = new LocationValue({ language: 'pt', value: 'localização' })
     await lv2.save()
-    const l1 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv1.id, lv2.id] })
+    const l1 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv1._id, lv2._id] })
     await l1.save()
-    const l2 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv2.id] })
+    const l2 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv2._id] })
     await l2.save()
 
     // test batch deletion pf unsupported languages
@@ -58,18 +59,18 @@ describe('Test database initialization', () => {
     await cv1.save()
     const cv2 = new LocationValue({ language: 'pt', value: 'país' })
     await cv2.save()
-    const c1 = new Country({ values: [cv1.id, cv2.id] })
+    const c1 = new Country({ values: [cv1._id, cv2._id] })
     await c1.save()
-    const c2 = new Country({ values: [cv2.id] })
+    const c2 = new Country({ values: [cv2._id] })
     await c2.save()
 
     const pv1 = new LocationValue({ language: 'en', value: 'parking' })
     await pv1.save()
     const pv2 = new LocationValue({ language: 'pt', value: 'estacionamento' })
     await pv2.save()
-    const ps1 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv1.id, pv2.id] })
+    const ps1 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv1._id, pv2._id] })
     await ps1.save()
-    const ps2 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv2.id] })
+    const ps2 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv2._id] })
     await ps2.save()
 
     // test success (initialization)
@@ -77,21 +78,21 @@ describe('Test database initialization', () => {
     res = await databaseHelper.initialize()
     expect(res).toBeTruthy()
 
-    const location1 = await Location.findById(l1.id)
-    const location2 = await Location.findById(l2.id)
+    const location1 = await Location.findById(l1._id)
+    const location2 = await Location.findById(l2._id)
     await LocationValue.deleteMany({ _id: { $in: [...location1!.values, ...location2!.values] } })
     await location1?.deleteOne()
     await location2?.deleteOne()
 
-    const country1 = await Country.findById(c1.id)
-    const country2 = await Country.findById(c2.id)
+    const country1 = await Country.findById(c1._id)
+    const country2 = await Country.findById(c2._id)
     await LocationValue.deleteMany({ _id: { $in: [...country1!.values, ...country2!.values] } })
     await country1?.deleteOne()
     await country2?.deleteOne()
 
-    const parkingSpot1 = await ParkingSpot.findById(ps1.id)
-    const parkingSpot2 = await ParkingSpot.findById(ps2.id)
-    await LocationValue.deleteMany({ _id: { $in: [...parkingSpot1!.values, parkingSpot2!.values] } })
+    const parkingSpot1 = await ParkingSpot.findById(ps1._id)
+    const parkingSpot2 = await ParkingSpot.findById(ps2._id)
+    await LocationValue.deleteMany({ _id: { $in: [...(parkingSpot1!.values as mongoose.Types.ObjectId[]), parkingSpot2!.values as mongoose.Types.ObjectId[]] } })
     await parkingSpot1?.deleteOne()
     await parkingSpot2?.deleteOne()
 

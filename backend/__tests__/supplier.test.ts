@@ -81,7 +81,7 @@ beforeAll(async () => {
     ],
   })
   await car1.save()
-  CAR1_ID = car1.id
+  CAR1_ID = car1._id.toString()
 
   const car2 = new Car({
     name: 'Fiat 500',
@@ -112,7 +112,7 @@ beforeAll(async () => {
     ],
   })
   await car2.save()
-  CAR2_ID = car2.id
+  CAR2_ID = car2._id.toString()
 })
 
 //
@@ -464,7 +464,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
       additionalDriver: 20,
       range: bookcarsTypes.CarRange.Midi,
       isDateBasedPrice: true,
-      dateBasedPrices: [dbp1.id, dbp2.id],
+      dateBasedPrices: [dbp1._id.toString(), dbp2._id.toString()],
     })
     const carImage = path.join(env.CDN_CARS, carImageName)
     if (!(await helper.pathExists(carImage))) {
@@ -506,7 +506,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
     expect(await helper.pathExists(avatar)).toBeFalsy()
     expect(await helper.pathExists(contractFile)).toBeFalsy()
     await testHelper.deleteLocation(locationId)
-    const dateBasedPrices = await DateBasedPrice.find({ _id: { $in: [dbp1.id, dbp2.id] } })
+    const dateBasedPrices = await DateBasedPrice.find({ _id: { $in: [dbp1._id.toString(), dbp2._id.toString()] } })
     expect(dateBasedPrices.length).toBe(0)
 
     // test success (supplier not found)

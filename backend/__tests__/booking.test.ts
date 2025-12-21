@@ -80,7 +80,7 @@ beforeAll(async () => {
     type: bookcarsTypes.UserType.User,
   })
   await driver1.save()
-  DRIVER1_ID = driver1.id
+  DRIVER1_ID = driver1._id.toString()
 
   // create a location
   LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
@@ -127,12 +127,12 @@ beforeAll(async () => {
   // car 1
   let car = new Car(payload)
   await car.save()
-  CAR1_ID = car.id
+  CAR1_ID = car._id.toString()
 
   // car 2
   car = new Car({ ...payload, name: 'BMW X5', dailyPrice: 88 })
   await car.save()
-  CAR2_ID = car.id
+  CAR2_ID = car._id.toString()
 })
 
 //
@@ -205,7 +205,7 @@ describe('POST /api/create-booking', () => {
     BOOKING_ID = res.body._id
     const additionalDriver = await AdditionalDriver.findOne({ email: ADDITIONAL_DRIVER_EMAIL })
     expect(additionalDriver).not.toBeNull()
-    ADDITIONAL_DRIVER_ID = additionalDriver?.id
+    ADDITIONAL_DRIVER_ID = additionalDriver?._id.toString() || ''
 
     // test success (without additional driver)
     payload.booking!.additionalDriver = false
@@ -483,7 +483,7 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     const driver2 = await User.findOne({ email: payload.driver.email })
     expect(driver2).toBeTruthy()
-    DRIVER2_ID = driver2!.id
+    DRIVER2_ID = driver2!._id.toString()
     let token = await Token.findOne({ user: DRIVER2_ID })
     expect(token).not.toBeNull()
     expect(token?.token.length).toBeGreaterThan(0)
@@ -519,13 +519,13 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     const driver3 = await User.findOne({ email: payload.driver.email })
     expect(driver3).toBeTruthy()
-    token = await Token.findOne({ user: driver3!.id })
+    token = await Token.findOne({ user: driver3!._id })
     expect(token).not.toBeNull()
     expect(token?.token.length).toBeGreaterThan(0)
     expect(res.body.bookingId).toBeTruthy()
     booking = await Booking.findById(res.body.bookingId)
     expect(booking).toBeTruthy()
-    await testHelper.deleteNotifications(booking!.id)
+    await testHelper.deleteNotifications(booking!._id.toString())
     expect(driver3?.license).toBeTruthy()
     license = path.join(env.CDN_LICENSES, driver3!.license!)
     expect(await helper.pathExists(license)).toBeTruthy()
@@ -643,7 +643,7 @@ describe('POST /api/checkout', () => {
     // cleanup notifications
     bookings = await Booking.find({ driver: { $in: [DRIVER1_ID, DRIVER2_ID] } })
     for (const booking of bookings) {
-      await testHelper.deleteNotifications(booking.id)
+      await testHelper.deleteNotifications(booking._id.toString())
     }
   })
 })
@@ -876,7 +876,7 @@ describe('GET /api/booking-id/:sessionId', () => {
     let res = await request(app)
       .get(`/api/booking-id/${sessionId}`)
     expect(res.statusCode).toBe(200)
-    expect(res.body).toBe(booking!.id)
+    expect(res.body).toBe(booking!._id.toString())
 
     // test success (booking not found)
     res = await request(app)
@@ -1046,7 +1046,7 @@ describe('POST /api/delete-bookings', () => {
     const drivers = [DRIVER1_ID, DRIVER2_ID]
     let bookings = await Booking.find({ driver: { $in: drivers } })
     expect(bookings.length).toBeGreaterThan(0)
-    const payload: string[] = bookings.map((u) => u.id)
+    const payload: string[] = bookings.map((u) => u._id.toString())
     let res = await request(app)
       .post('/api/delete-bookings')
       .set(env.X_ACCESS_TOKEN, token)
@@ -1085,7 +1085,7 @@ describe('DELETE /api/delete-temp-booking', () => {
     const booking = new Booking({
       supplier: SUPPLIER_ID,
       car: CAR1_ID,
-      driver: driver.id,
+      driver: driver._id,
       pickupLocation: LOCATION_ID,
       dropOffLocation: LOCATION_ID,
       from: new Date(2024, 2, 1),

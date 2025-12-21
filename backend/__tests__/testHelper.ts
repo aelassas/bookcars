@@ -56,8 +56,8 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.Admin,
   })
   await admin.save()
-  expect(admin.id).toBeTruthy()
-  ADMIN_USER_ID = admin.id
+  expect(admin._id.toString()).toBeTruthy()
+  ADMIN_USER_ID = admin._id.toString()
 
   // user
   const user = new User({
@@ -68,8 +68,8 @@ export const initialize = async () => {
     type: bookcarsTypes.UserType.User,
   })
   await user.save()
-  expect(user.id).toBeTruthy()
-  USER_ID = user.id
+  expect(user._id.toString()).toBeTruthy()
+  USER_ID = user._id.toString()
 }
 
 export const getAdminUserId = () => ADMIN_USER_ID
@@ -86,9 +86,9 @@ export const close = async () => {
 export const deleteNotifications = async (bookingId: string) => {
   const admin = await User.findOne({ email: env.ADMIN_EMAIL })
   if (admin) {
-    const notification = await Notification.findOne({ user: admin.id, booking: bookingId })
+    const notification = await Notification.findOne({ user: admin._id.toString(), booking: bookingId })
     if (notification) {
-      const nc = await NotificationCounter.findOne({ user: admin.id })
+      const nc = await NotificationCounter.findOne({ user: admin._id.toString() })
       if (nc?.count) {
         nc.count -= 1
         await nc.save()
@@ -101,9 +101,9 @@ export const deleteNotifications = async (bookingId: string) => {
 export const deleteCarNotifications = async (carId: string) => {
   const admin = await User.findOne({ email: env.ADMIN_EMAIL })
   if (admin) {
-    const notification = await Notification.findOne({ user: admin.id, car: carId })
+    const notification = await Notification.findOne({ user: admin._id.toString(), car: carId })
     if (notification) {
-      const nc = await NotificationCounter.findOne({ user: admin.id })
+      const nc = await NotificationCounter.findOne({ user: admin._id.toString() })
       if (nc?.count) {
         nc.count -= 1
         await nc.save()
@@ -167,8 +167,8 @@ export const createSupplier = async (email: string, fullName: string) => {
   }
   const supplier = new User(body)
   await supplier.save()
-  expect(supplier.id).toBeDefined()
-  return supplier.id as string
+  expect(supplier._id.toString()).toBeDefined()
+  return supplier._id.toString() as string
 }
 
 export const deleteSupplier = async (id: string) => {
@@ -224,6 +224,6 @@ export const createLocation = async (nameEN: string, nameFR: string, country?: s
   const values = [locationValueEN._id, locationValueFR._id]
   const location = new Location({ country: country || GetRandromObjectIdAsString(), values })
   await location.save()
-  expect(location.id).toBeDefined()
-  return location.id as string
+  expect(location._id.toString()).toBeDefined()
+  return location._id.toString() as string
 }

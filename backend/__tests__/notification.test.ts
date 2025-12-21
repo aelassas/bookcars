@@ -28,10 +28,10 @@ beforeAll(async () => {
   // create admin user notifications and notification counter
   let notification = new Notification({ user: ADMIN_USER_ID, message: 'Message 1' })
   await notification.save()
-  NOTIFICATION1_ID = notification.id
+  NOTIFICATION1_ID = notification._id.toString()
   notification = new Notification({ user: ADMIN_USER_ID, message: 'Message 2' })
   await notification.save()
-  NOTIFICATION2_ID = notification.id
+  NOTIFICATION2_ID = notification._id.toString()
   const notificationCounter = new NotificationCounter({ user: ADMIN_USER_ID, count: 2 })
   await notificationCounter.save()
 })

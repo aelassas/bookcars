@@ -87,7 +87,7 @@ export const create = async (req: Request, res: Response) => {
         value: name.name,
       })
       await countryValue.save()
-      values.push(countryValue.id)
+      values.push(countryValue._id.toString())
     }
 
     const country = new Country({ values, supplier })
@@ -312,7 +312,7 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
     const imageRequired = helper.StringToBoolean(_imageRequired)
     const minLocations = Number(_minLocations)
 
-    let $locationMatch: mongoose.FilterQuery<bookcarsTypes.Location> = {}
+    let $locationMatch: mongoose.QueryFilter<env.Location> = {}
     if (imageRequired) {
       $locationMatch = { image: { $ne: null } }
     }
@@ -450,8 +450,8 @@ export const getCountryId = async (req: Request, res: Response) => {
     }
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
-      const country = await Country.findOne({ values: lv.id })
-      res.status(200).json(country?.id)
+      const country = await Country.findOne({ values: lv._id.toString() })
+      res.status(200).json(country?._id.toString())
       return
     }
     res.sendStatus(204)

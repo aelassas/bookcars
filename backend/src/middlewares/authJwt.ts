@@ -31,9 +31,9 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     // Check token
     try {
       const sessionData = await authHelper.decryptJWT(token)
-      const $match: mongoose.FilterQuery<bookcarsTypes.User> = {
+      const $match: mongoose.QueryFilter<env.User> = {
         $and: [
-          { _id: sessionData?.id },
+          { _id: new mongoose.Types.ObjectId(sessionData?.id) },
           // { blacklisted: false },
         ],
       }

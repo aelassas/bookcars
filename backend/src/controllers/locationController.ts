@@ -89,7 +89,7 @@ const createParkingSpot = async (parkingSpot: bookcarsTypes.ParkingSpot): Promis
     values: parkinSpotValues,
   })
   await ps.save()
-  return ps.id
+  return ps._id.toString()
 }
 
 /**
@@ -138,7 +138,7 @@ export const create = async (req: Request, res: Response) => {
         value: name.name,
       })
       await locationValue.save()
-      values.push(locationValue.id)
+      values.push(locationValue._id.toString())
     }
 
     const location = new Location({
@@ -221,9 +221,9 @@ export const update = async (req: Request, res: Response) => {
       // Parking spots
       //
       if (!parkingSpots) {
-        const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: location.parkingSpots?.map((ps) => ps.id) } })
+        const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: location.parkingSpots?.map((ps) => ps._id.toString()) } })
         for (const ps of parkingSpotsToDelete) {
-          await LocationValue.deleteMany({ _id: { $in: ps.values } })
+          await LocationValue.deleteMany({ _id: { $in: ps.values as mongoose.Types.ObjectId[] } })
           await ps.deleteOne()
         }
         location.parkingSpots = []
@@ -242,7 +242,7 @@ export const update = async (req: Request, res: Response) => {
 
           const parkingSpotsToDelete = await ParkingSpot.find({ _id: { $in: parkingSpotIdsToDelete } })
           for (const ps of parkingSpotsToDelete) {
-            await LocationValue.deleteMany({ _id: { $in: ps.values } })
+            await LocationValue.deleteMany({ _id: { $in: ps.values as mongoose.Types.ObjectId[] } })
             await ps.deleteOne()
           }
         }
@@ -268,7 +268,7 @@ export const update = async (req: Request, res: Response) => {
                   value: value.value,
                 })
                 await v.save()
-                ps.values.push(new mongoose.Types.ObjectId(v.id as string))
+                ps.values.push(new mongoose.Types.ObjectId(v._id.toString() as string))
               }
 
               // Update existing values
@@ -324,7 +324,7 @@ export const deleteLocation = async (req: Request, res: Response) => {
     await Location.deleteOne({ _id: id })
 
     if (location.parkingSpots && location.parkingSpots.length > 0) {
-      const values = location.parkingSpots.map((ps) => ps.values).flat()
+      const values = location.parkingSpots.map((ps) => ps.values).flat() as mongoose.Types.ObjectId[]
       await LocationValue.deleteMany({ _id: { $in: values } })
       const parkingSpots = location.parkingSpots.map((ps) => ps._id)
       await ParkingSpot.deleteMany({ _id: { $in: parkingSpots } })
@@ -663,8 +663,8 @@ export const getLocationId = async (req: Request, res: Response) => {
     }
     const lv = await LocationValue.findOne({ language, value: { $regex: new RegExp(`^${escapeStringRegexp(helper.trim(name, ' '))}$`, 'i') } })
     if (lv) {
-      const location = await Location.findOne({ values: lv.id })
-      res.status(200).json(location?.id)
+      const location = await Location.findOne({ values: lv._id.toString() })
+      res.status(200).json(location?._id.toString())
       return
     }
     res.sendStatus(204)

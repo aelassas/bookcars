@@ -101,7 +101,7 @@ describe('POST /api/create-checkout-session', () => {
       // const customers = await stripeAPI.customers.list({ email: receiptEmail })
       // if (customers.data.length > 0) {
       //   for (const customer of customers.data) {
-      //     await stripeAPI.customers.del(customer.id)
+      //     await stripeAPI.customers.del(customer._id.toString())
       //   }
       // }
     }
@@ -258,8 +258,8 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
 
     let booking = new Booking({
       supplier: supplierId,
-      car: car.id,
-      driver: driver.id,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
       pickupLocation: locationId,
       dropOffLocation: locationId,
       from,
@@ -300,7 +300,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
-      await testHelper.deleteNotifications(booking.id)
+      await testHelper.deleteNotifications(booking._id.toString())
 
       // test failure (booking not found)
       res = await request(app)
@@ -311,8 +311,8 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -333,14 +333,14 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
-await testHelper.deleteNotifications(booking.id)
+await testHelper.deleteNotifications(booking._id.toString())
 
       // test failure (stripe order error)
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -392,8 +392,8 @@ await testHelper.deleteNotifications(booking.id)
       const sessionId2 = nanoid()
       booking2 = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -429,7 +429,7 @@ await testHelper.deleteNotifications(booking.id)
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId2}`)
       expect(res.statusCode).toBe(400)
-      const b = await Booking.findById(booking2.id)
+      const b = await Booking.findById(booking2._id.toString())
       expect(b).toBeFalsy()
       booking2 = undefined
       jest.resetModules()
@@ -439,7 +439,7 @@ await testHelper.deleteNotifications(booking.id)
       booking3 = new Booking({
         supplier: supplierId,
         car: testHelper.GetRandromObjectId(),
-        driver: driver.id,
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -480,8 +480,8 @@ await testHelper.deleteNotifications(booking.id)
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: testHelper.GetRandromObjectId(),
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -505,7 +505,7 @@ await testHelper.deleteNotifications(booking.id)
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car.id,
+        car: car._id.toString(),
         driver: testHelper.GetRandromObjectId(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -530,7 +530,7 @@ await testHelper.deleteNotifications(booking.id)
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car.id,
+        car: car._id.toString(),
         driver: driver,
         pickupLocation: testHelper.GetRandromObjectId(),
         dropOffLocation: locationId,
@@ -565,8 +565,8 @@ await testHelper.deleteNotifications(booking.id)
       }
       await car.deleteOne()
       await driver.deleteOne()
-      await Notification.deleteMany({ user: driver.id })
-      await NotificationCounter.deleteMany({ user: driver.id })
+      await Notification.deleteMany({ user: driver._id.toString() })
+      await NotificationCounter.deleteMany({ user: driver._id.toString() })
       await testHelper.deleteLocation(locationId)
       await testHelper.deleteSupplier(supplierId)
     }
@@ -662,7 +662,7 @@ describe('POST /api/create-payment-intent', () => {
       // const customers = await stripeAPI.customers.list({ email: receiptEmail })
       // if (customers.data.length > 0) {
       //   for (const customer of customers.data) {
-      //     await stripeAPI.customers.del(customer.id)
+      //     await stripeAPI.customers.del(customer._id.toString())
       //   }
       // }
     }

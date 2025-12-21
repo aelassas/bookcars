@@ -85,9 +85,9 @@ describe('POST /api/create-car', () => {
     }
     const admin = await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
     expect(admin).toBeTruthy()
-    let notificationCounter = await NotificationCounter.findOne({ user: admin!.id })
+    let notificationCounter = await NotificationCounter.findOne({ user: admin!._id })
     const notificationCount = notificationCounter?.count || 0
-    await NotificationCounter.deleteMany({ user: admin!.id })
+    await NotificationCounter.deleteMany({ user: admin!._id })
 
     const payload: bookcarsTypes.CreateCarPayload = {
       loggedUser: SUPPLIER1_ID,
@@ -217,11 +217,11 @@ describe('POST /api/create-car', () => {
     await testHelper.deleteCarNotifications(CAR2_ID)
 
     // reset notificationCount
-    notificationCounter = await NotificationCounter.findOne({ user: admin!.id })
+    notificationCounter = await NotificationCounter.findOne({ user: admin!._id })
     if (notificationCounter) {
       notificationCounter.count = notificationCount
     } else {
-      notificationCounter = new NotificationCounter({ user: admin!.id, count: notificationCount })
+      notificationCounter = new NotificationCounter({ user: admin!._id, count: notificationCount })
     }
     await notificationCounter.save()
 
@@ -400,7 +400,7 @@ describe('PUT /api/update-car', () => {
     })
     await car3.save()
 
-    payload._id = car3.id
+    payload._id = car3._id.toString()
     payload.dateBasedPrices[0] = {
       _id: testHelper.GetRandromObjectIdAsString(),
       startDate: startDate1,
@@ -1157,7 +1157,7 @@ describe('DELETE /api/delete-car/:id', () => {
     })
     await car.save()
     res = await request(app)
-      .delete(`/api/delete-car/${car.id}`)
+      .delete(`/api/delete-car/${car._id.toString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 
@@ -1188,7 +1188,7 @@ describe('DELETE /api/delete-car/:id', () => {
     })
     await car.save()
     res = await request(app)
-      .delete(`/api/delete-car/${car.id}`)
+      .delete(`/api/delete-car/${car._id.toString()}`)
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(200)
 

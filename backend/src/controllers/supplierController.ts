@@ -404,7 +404,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
 
     const locationIds = locIds.map((loc) => loc._id)
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
         // { locations: pickupLocation },
         { locations: { $in: locationIds } },
@@ -467,7 +467,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       }
     }
 
-    let $supplierMatch: mongoose.FilterQuery<any> = {}
+    let $supplierMatch: mongoose.QueryFilter<any> = {}
     const days = helper.days(from, to)
     if (days) {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
@@ -643,7 +643,7 @@ export const getAdminSuppliers = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
         { name: { $regex: keyword, $options: options } },
         { fuelPolicy: { $in: fuelPolicy } },

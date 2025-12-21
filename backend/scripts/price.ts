@@ -21,7 +21,7 @@ if (
       car.discountedMonthlyPrice = null
       car.price = undefined
       await car.save()
-      logger.info(`${car.id} affected`)
+      logger.info(`${car._id.toString()} affected`)
     }
   }
 
