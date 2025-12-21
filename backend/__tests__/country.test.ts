@@ -58,7 +58,7 @@ describe('POST /api/validate-country', () => {
     const name = nanoid()
     const countryValue = new LocationValue({ language, value: name })
     await countryValue.save()
-    const country = new Country({ values: [countryValue.id] })
+    const country = new Country({ values: [countryValue._id] })
     await country.save()
     const payload: bookcarsTypes.ValidateCountryPayload = {
       language,
@@ -264,7 +264,7 @@ describe('GET /api/countries-with-locations/:language/:imageRequired/:minLocatio
     const locationValueFr = new LocationValue({ language: 'fr', value: 'Location 1 fr' })
     await locationValueFr.save()
 
-    const location = new Location({ country: COUNTRY_ID, values: [locationValueEn.id, locationValueFr.id] })
+    const location = new Location({ country: COUNTRY_ID, values: [locationValueEn._id, locationValueFr._id] })
     await location.save()
 
     // test success (image not required)

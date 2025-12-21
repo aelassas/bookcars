@@ -98,7 +98,7 @@ describe('POST /api/sign-up', () => {
     expect(res.statusCode).toBe(200)
     let user = await User.findOne({ email: USER1_EMAIL })
     expect(user).not.toBeNull()
-    USER1_ID = user?.id
+    USER1_ID = user?._id.toString() || ''
     expect(user?.type).toBe(bookcarsTypes.UserType.User)
     expect(user?.email).toBe(payload.email)
     expect(user?.fullName).toBe(payload.fullName)
@@ -225,7 +225,7 @@ describe('POST /api/admin-sign-up', () => {
     expect(res.statusCode).toBe(200)
     const user = await User.findOne({ email: ADMIN_EMAIL })
     expect(user).not.toBeNull()
-    ADMIN_ID = user?.id
+    ADMIN_ID = user?._id.toString() || ''
     expect(user?.type).toBe(bookcarsTypes.UserType.Admin)
     expect(user?.email).toBe(payload.email)
     expect(user?.fullName).toBe(payload.fullName)
@@ -283,7 +283,7 @@ describe('POST /api/create-user', () => {
     expect(res.statusCode).toBe(200)
     let user = await User.findOne({ email: USER2_EMAIL })
     expect(user).not.toBeNull()
-    USER2_ID = user?.id
+    USER2_ID = user?._id.toString() || ''
     expect(user?.type).toBe(bookcarsTypes.UserType.User)
     expect(user?.email).toBe(payload.email)
     expect(user?.fullName).toBe(payload.fullName)
@@ -1810,7 +1810,7 @@ describe('POST /api/delete-users', () => {
     user1!.license = `${nanoid()}.pdf`
     await user1?.save()
     const user2 = await User.findById(USER2_ID)
-    const licenseFilename = `${user2!.id}.pdf`
+    const licenseFilename = `${user2!._id.toString()}.pdf`
     const license = path.join(env.CDN_LICENSES, licenseFilename)
     if (!(await helper.pathExists(license))) {
       await asyncFs.copyFile(LICENSE1_PATH, license)

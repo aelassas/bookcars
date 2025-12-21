@@ -138,8 +138,8 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
 
     let booking = new Booking({
       supplier: supplierId,
-      car: car.id,
-      driver: driver.id,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
       pickupLocation: locationId,
       dropOffLocation: locationId,
       from,
@@ -175,16 +175,16 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       expect(paypal.getOrder).toHaveBeenCalledWith('123')
 
       let res = await request(app)
-        .post(`/api/check-paypal-order/${booking.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(200)
-      await testHelper.deleteNotifications(booking.id)
+      await testHelper.deleteNotifications(booking._id.toString())
 
       // test success (deposit)
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -202,16 +202,16 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       })
       await booking.save()
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(200)
-      await testHelper.deleteNotifications(booking.id)
+      await testHelper.deleteNotifications(booking._id.toString())
 
       // test failure (paypal order error)
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -240,20 +240,20 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       expect(paypal.getOrder).toHaveBeenCalledWith('123')
 
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(204)
       jest.resetModules()
 
       // test failure (booking exists, order does not exist)
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking.id}/${testHelper.GetRandromObjectIdAsString()}`)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${testHelper.GetRandromObjectIdAsString()}`)
       expect(res.statusCode).toBe(204)
 
       // test failure (payment expired)
       booking2 = new Booking({
         supplier: supplierId,
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -282,9 +282,9 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       expect(paypal.getOrder).toHaveBeenCalledWith('123')
 
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking2.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking2._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
-      const b = await Booking.findById(booking2.id)
+      const b = await Booking.findById(booking2._id.toString())
       expect(b).toBeFalsy()
       booking2 = undefined
       jest.resetModules()
@@ -293,7 +293,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       booking3 = new Booking({
         supplier: supplierId,
         car: testHelper.GetRandromObjectId(),
-        driver: driver.id,
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -323,14 +323,14 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
 
       // car missing
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking3.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking3._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
       // supplier missing
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: testHelper.GetRandromObjectId(),
-        car: car.id,
-        driver: driver.id,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
         from,
@@ -347,13 +347,13 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       })
       await booking3.save()
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking3.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking3._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
       // driver missing
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car.id,
+        car: car._id.toString(),
         driver: testHelper.GetRandromObjectId(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -371,13 +371,13 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       })
       await booking3.save()
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking3.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking3._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
       // pickupLocation missing
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car.id,
+        car: car._id.toString(),
         driver: driver,
         pickupLocation: testHelper.GetRandromObjectId(),
         dropOffLocation: locationId,
@@ -395,7 +395,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       })
       await booking3.save()
       res = await request(app)
-        .post(`/api/check-paypal-order/${booking3.id}/${orderId}`)
+        .post(`/api/check-paypal-order/${booking3._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
       jest.resetModules()
     } catch (err) {
@@ -411,8 +411,8 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       }
       await car.deleteOne()
       await driver.deleteOne()
-      await Notification.deleteMany({ user: driver.id })
-      await NotificationCounter.deleteMany({ user: driver.id })
+      await Notification.deleteMany({ user: driver._id.toString() })
+      await NotificationCounter.deleteMany({ user: driver._id.toString() })
       await testHelper.deleteLocation(locationId)
       await testHelper.deleteSupplier(supplierId)
     }

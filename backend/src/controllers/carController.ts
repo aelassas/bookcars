@@ -43,7 +43,7 @@ export const create = async (req: Request, res: Response) => {
       for (const dateBasePrice of dateBasedPrices) {
         const dbp = new DateBasedPrice(dateBasePrice)
         await dbp.save()
-        dateBasedPriceIds.push(dbp.id)
+        dateBasedPriceIds.push(dbp._id.toString())
       }
     }
 
@@ -81,7 +81,7 @@ export const create = async (req: Request, res: Response) => {
             const notification = new Notification({
               user: admin._id,
               message,
-              car: car.id,
+              car: car._id.toString(),
             })
 
             await notification.save()
@@ -103,7 +103,7 @@ export const create = async (req: Request, res: Response) => {
                 html: `<p>
 ${i18n.t('HELLO')}${admin.fullName},<br><br>
 ${message}<br><br>
-${helper.joinURL(env.ADMIN_HOST, `update-car?cr=${car.id}`)}<br><br>
+${helper.joinURL(env.ADMIN_HOST, `update-car?cr=${car._id.toString()}`)}<br><br>
 ${i18n.t('REGARDS')}<br>
 </p>`,
               }
@@ -129,7 +129,7 @@ const createDateBasedPrice = async (dateBasedPrice: bookcarsTypes.DateBasedPrice
     dailyPrice: dateBasedPrice.dailyPrice,
   })
   await dbp.save()
-  return dbp.id
+  return dbp._id.toString()
 }
 
 /**
@@ -628,7 +628,7 @@ export const getCars = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
         { $or: [{ name: { $regex: keyword, $options: options } }, { licensePlate: { $regex: keyword, $options: options } }] },
         { supplier: { $in: suppliers } },
@@ -931,7 +931,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     const locationIds = locIds.map((loc) => loc._id)
 
-    const $match: mongoose.FilterQuery<bookcarsTypes.Car> = {
+    const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
         { supplier: { $in: suppliers } },
         // { locations: pickupLocation },
@@ -1006,7 +1006,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
-    let $supplierMatch: mongoose.FilterQuery<any> = {}
+    let $supplierMatch: mongoose.QueryFilter<any> = {}
     const days = helper.days(from, to)
     if (days) {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
