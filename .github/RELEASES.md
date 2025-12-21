@@ -1,5 +1,18 @@
 # Releases
 
+## [BookCars 8.3](https://github.com/aelassas/bookcars/releases/tag/v8.3) – 2025-12-21
+
+* chore(backend): migrate to `mongoose` 9.0.2
+* chore(deps): update dependencies
+
+### Assets
+- [bookcars-8.3.apk](https://github.com/aelassas/bookcars/releases/download/v8.3/bookcars-8.3.apk) (99.41 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.3/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.3)
+
 ## [BookCars 8.2](https://github.com/aelassas/bookcars/releases/tag/v8.2) – 2025-11-01
 
 * feat(admin,frontend,mobile): add "pay in full" (deposit included) checkout option (#91)
