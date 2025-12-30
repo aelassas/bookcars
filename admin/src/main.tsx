@@ -14,8 +14,8 @@ import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import App from '@/App'
 
-import '@/assets/css/common.css'
 import '@/assets/css/index.css'
+import '@/assets/css/common.css'
 
 if (import.meta.env.VITE_NODE_ENV === 'production') {
   disableDevTools()

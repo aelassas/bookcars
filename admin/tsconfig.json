@@ -28,7 +28,7 @@
       ":bookcars-types": ["../packages/bookcars-types"],
       ":bookcars-helper": ["../packages/bookcars-helper"],
       ":disable-react-devtools": ["../packages/disable-react-devtools"]
-    },
+    }
   },
   "include": ["src"],
   "references": [
