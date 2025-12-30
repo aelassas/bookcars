@@ -141,13 +141,95 @@ const HomeScreen = () => {
 
   const fetchCarsCount = useCallback(async (_suppliers: string[]) => {
     try {
-      const data = await CarService.getCars('', { suppliers: _suppliers }, 1, 1)
-      const total = Number(data?.[0]?.pageInfo?.totalRecords ?? 0)
-      setAvailableCarsCount(Math.max(total - activeBookingsCount, 0))
+      // Get total cars count
+      let totalCars = 0
+      let allSupplierIds = _suppliers
+      
+      // Try to get all suppliers for accurate fleet count
+      try {
+        const allSuppliersData = await SupplierService.getAllSuppliers()
+        allSupplierIds = bookcarsHelper.flattenSuppliers(allSuppliersData)
+      } catch (err) {
+        // Fall back to user's suppliers if can't get all
+      }
+      
+      // Fetch cars with a large page size to get accurate count
+      try {
+        // Try with all suppliers first
+        if (allSupplierIds.length > 0) {
+          const carsData = await CarService.getCars('', { suppliers: allSupplierIds }, 1, 500)
+          
+          if (carsData && carsData.length > 0 && carsData[0]) {
+            const pageInfo = carsData[0].pageInfo
+            const resultData = carsData[0].resultData || []
+            
+            // Try to get total from pageInfo
+            if (Array.isArray(pageInfo) && pageInfo.length > 0) {
+              totalCars = Number(pageInfo[0]?.totalRecords ?? resultData.length)
+            } else {
+              totalCars = resultData.length
+            }
+          }
+        }
+        
+        // If still 0, try without supplier filter
+        if (totalCars === 0) {
+          const carsData = await CarService.getCars('', { suppliers: [] }, 1, 500)
+          
+          if (carsData && carsData.length > 0 && carsData[0]) {
+            const resultData = carsData[0].resultData || []
+            totalCars = resultData.length
+          }
+        }
+      } catch (err) {
+        helper.error(err)
+      }
+      
+      // Get bookings that are active TODAY
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const endOfToday = new Date(today)
+      endOfToday.setHours(23, 59, 59, 999)
+      
+      const payload: bookcarsTypes.GetBookingsPayload = {
+        suppliers: allSupplierIds.length > 0 ? allSupplierIds : _suppliers,
+        statuses: activeStatuses,
+      }
+      
+      const bookingsData = await BookingService.getBookings(payload, 1, 500)
+      const allBookings = bookingsData && bookingsData.length > 0 ? bookingsData[0]?.resultData || [] : []
+      
+      // Filter bookings that are active today (rental period includes today)
+      const todayTimestamp = today.getTime()
+      const endOfTodayTimestamp = endOfToday.getTime()
+      
+      const bookingsActiveToday = allBookings.filter((booking) => {
+        const fromDate = new Date(booking.from)
+        fromDate.setHours(0, 0, 0, 0)
+        const toDate = new Date(booking.to)
+        toDate.setHours(23, 59, 59, 999)
+        
+        const fromTimestamp = fromDate.getTime()
+        const toTimestamp = toDate.getTime()
+        
+        // Check if today falls within the rental period
+        return fromTimestamp <= endOfTodayTimestamp && toTimestamp >= todayTimestamp
+      })
+      
+      // Get unique car IDs that are rented today
+      const rentedCarIds = new Set(
+        bookingsActiveToday
+          .map((b) => (typeof b.car === 'string' ? b.car : b.car?._id))
+          .filter(Boolean) as string[]
+      )
+      
+      // Calculate available cars: total cars - cars rented today
+      const availableToday = Math.max(totalCars - rentedCarIds.size, 0)
+      setAvailableCarsCount(availableToday)
     } catch (err) {
       helper.error(err)
     }
-  }, [activeBookingsCount])
+  }, [])
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     if (_user && _user.verified) {
@@ -253,10 +335,10 @@ const HomeScreen = () => {
             {/* Cars Available */}
             <Card>
               <CardContent className="p-6">
-                <p className="text-sm text-neutral-500 mb-1">Cars Available</p>
+                <p className="text-sm text-neutral-500 mb-1">Cars Available Today</p>
                 <p className="text-3xl font-semibold text-neutral-900">{availableCarsCount}</p>
-                <p className="text-xs text-green-600 mt-2">
-                  +{availableTrend}% vs last month
+                <p className="text-xs text-neutral-400 mt-2">
+                  Not rented today
                 </p>
               </CardContent>
             </Card>
