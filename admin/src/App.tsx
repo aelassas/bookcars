@@ -43,6 +43,7 @@ const UpdateCountry = lazy(() => import('@/pages/UpdateCountry'))
 const Scheduler = lazy(() => import('@/pages/Scheduler'))
 const BankDetails = lazy(() => import('@/pages/BankDetails'))
 const Pricing = lazy(() => import('@/pages/Pricing'))
+const HomeScreen = lazy(() => import('@/pages/HomeScreen'))
 
 const AppLayout = () => {
   const location = useLocation()
@@ -74,7 +75,9 @@ const router = createBrowserRouter([
     path: '/',
     element: <AppLayout />,
     children: [
-      { index: true, element: <Bookings /> },
+      { index: true, element: <HomeScreen /> },
+      { path: 'home', element: <HomeScreen /> },
+      { path: 'bookings', element: <Bookings /> },
       { path: 'sign-in', element: <SignIn /> },
       { path: 'activate', element: <Activate /> },
       { path: 'forgot-password', element: <ForgotPassword /> },

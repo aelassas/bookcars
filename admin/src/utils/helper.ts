@@ -16,6 +16,16 @@ import * as UserService from '@/services/UserService'
 export const getLanguage = (code: string) => env._LANGUAGES.find((l) => l.code === code)
 
 /**
+ * Format currency using shared helper with current language.
+ *
+ * @param {number} amount
+ * @param {string} currency
+ * @returns {string}
+ */
+export const formatCurrency = (amount: number, currency: string) =>
+  bookcarsHelper.formatPrice(amount, currency, UserService.getLanguage())
+
+/**
  * Toast info message.
  *
  * @param {string} message

@@ -1,0 +1,97 @@
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.home-screen .section {
+  width: 100%;
+}
+
+.home-screen .section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.home-screen .card {
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.home-screen .table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-screen .table-header,
+.home-screen .table-row {
+  display: grid;
+  grid-template-columns: 60px 120px 1fr 140px 120px 100px;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-screen .table-header {
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.home-screen .table-row {
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+}
+
+.home-screen .driver {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-screen .metric-card {
+  height: 100%;
+}
+
+.home-screen .chart-placeholder {
+  padding: 12px 4px 4px;
+}
+
+.home-screen .chart-labels {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+}
+
+.home-screen .chart-line {
+  height: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.home-screen .chart-line.secondary {
+  opacity: 0.5;
+}
+
+@media (max-width: 900px) {
+  .home-screen {
+    padding: 12px;
+  }
+
+  .home-screen .table-header,
+  .home-screen .table-row {
+    grid-template-columns: 40px 90px 1fr;
+  }
+
+  .home-screen .table-row > :nth-child(n+4),
+  .home-screen .table-header > :nth-child(n+4) {
+    display: none;
+  }
+}
+

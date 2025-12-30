@@ -313,6 +313,15 @@ const Header = ({
                 </ListItem>
                 <ListItem
                   onClick={() => {
+                    navigate('/bookings')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><DashboardIcon /></ListItemIcon>
+                  <ListItemText primary="Bookings" />
+                </ListItem>
+                <ListItem
+                  onClick={() => {
                     navigate('/scheduler')
                     handleSideMenuClose()
                   }}

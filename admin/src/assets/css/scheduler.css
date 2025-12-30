@@ -1,104 +1,343 @@
 div.scheduler {
   position: absolute;
-  bottom: 0;
+  top: 64px;
   right: 0;
+  bottom: 0;
   left: 0;
+  display: flex;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+div.scheduler .col-1 {
+  width: 320px;
+  min-width: 280px;
+  max-width: 340px;
+  padding: 12px 12px 16px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  overflow-y: auto;
+}
+
+div.scheduler .col-2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+div.scheduler .col-1 .cl-new-booking {
+  width: 100%;
+  margin: 8px 0 12px;
+}
+
+div.scheduler .col-1 .cl-supplier-filter,
+div.scheduler .col-1 .cl-status-filter,
+div.scheduler .col-1 .cl-scheduler-filter {
+  margin: 8px 0 12px;
+  background-color: #f8fafc;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.02);
+}
+
+div.scheduler .col-1 .cl-supplier-filter label.accordion,
+div.scheduler .col-1 .cl-status-filter label.accordion,
+div.scheduler .col-1 .cl-scheduler-filter label.accordion {
+  background: transparent;
+}
+
+div.scheduler .col-1 .cl-scheduler-filter div.panel,
+div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 @media only screen and (width <=960px) {
   div.scheduler {
     top: 56px;
-    overflow-y: auto;
-  }
-
-  div.scheduler div.col-1 {
-    display: flex;
     flex-direction: column;
-    align-items: center;
+    overflow: hidden;
   }
 
-  div.scheduler div.col-2 {
-    display: flex;
+  div.scheduler .col-1 {
+    width: 100%;
+    max-width: none;
+    border-right: 0;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: none;
   }
 
-  div.scheduler div.col-1 .cl-supplier-filter label.accordion,
-  div.scheduler div.col-1 .cl-status-filter label.accordion,
-  div.scheduler div.col-1 .cl-scheduler-filter label.accordion {
-    background: #fff;
+  div.scheduler .col-2 {
+    height: calc(100% - 56px);
   }
 
-  div.scheduler div.col-1 .cl-supplier-filter,
-  div.scheduler div.col-1 .cl-status-filter,
-  div.scheduler div.col-1 .cl-scheduler-filter {
-    margin: 5px 10px;
-    background-color: #fff;
+  div.scheduler .col-1 .cl-new-booking {
     max-width: 480px;
-    width: calc(100% - 20px);
-  }
-
-  div.scheduler div.col-1 .cl-scheduler-filter div.panel,
-  div.scheduler div.col-1 .cl-scheduler-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  div.scheduler div.col-1 .cl-new-booking {
-    width: calc(100% - 20px);
-    max-width: 480px;
-    margin: 15px 10px 5px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
-@media only screen and (width >=960px) {
-  div.scheduler {
-    top: 64px;
-  }
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafc;
+}
 
-  div.scheduler div.col-1 {
-    position: absolute;
+.timeline-header {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.timeline-month {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timeline-zoom {
+  display: flex;
+  gap: 6px;
+}
+
+.timeline-chip {
+  border: 1px solid #d9e1ec;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.timeline-chip.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.timeline-chip:hover {
+  border-color: #94a3b8;
+}
+
+.timeline-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-btn {
+  border: 1px solid #d9e1ec;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.timeline-btn:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.timeline-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.timeline-scale {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  min-width: 100%;
+}
+
+.timeline-row-label.scale {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+}
+
+.timeline-days {
+  display: grid;
+  min-width: 100%;
+}
+
+.timeline-day {
+  text-align: center;
+  padding: 6px 4px;
+  border-left: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.timeline-day.weekend {
+  background: #f8fafc;
+}
+
+.timeline-day.today {
+  background: #e0f2fe;
+}
+
+.timeline-day-number {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.timeline-day-weekday {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  background: #ffffff;
+}
+
+.timeline-row + .timeline-row {
+  border-top: 1px solid #e2e8f0;
+}
+
+.timeline-row-label {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  padding: 12px;
+  border-right: 1px solid #e2e8f0;
+  background: linear-gradient(90deg, #ffffff 75%, rgba(255, 255, 255, 0.75) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-car-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.timeline-car-meta {
+  font-size: 12px;
+  color: #475569;
+}
+
+.timeline-car-meta.subtle {
+  color: #94a3b8;
+}
+
+.timeline-row-grid {
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-day-columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  pointer-events: none;
+}
+
+.timeline-day-cell {
+  border-left: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.timeline-day-cell.weekend {
+  background: #f8fafc;
+}
+
+.timeline-day-cell.today {
+  background: #e0f2fe;
+}
+
+.timeline-booking-lanes {
+  position: relative;
+  display: grid;
+  align-content: flex-start;
+  gap: 6px 0;
+  padding: 8px 4px 10px;
+}
+
+.timeline-booking {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.timeline-booking:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+}
+
+.timeline-booking-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-empty {
+  padding: 16px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+@media only screen and (width <=960px) {
+  .timeline-header {
+    position: sticky;
     top: 0;
-    bottom: 0;
-    left: 0;
-    width: 320px;
-    padding: 12px 0 0 12px;
-    background: #fefefe;
-    overflow: auto;
   }
 
-  div.scheduler div.col-2 {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 320px;
-  }
-
-  div.scheduler div.col-1 .cl-supplier-filter label.accordion,
-  div.scheduler div.col-1 .cl-status-filter label.accordion,
-  div.scheduler div.col-1 .cl-scheduler-filter label.accordion {
-    background: #fafafa;
-  }
-
-  div.scheduler div.col-1 .cl-supplier-filter,
-  div.scheduler div.col-1 .cl-status-filter,
-  div.scheduler div.col-1 .cl-scheduler-filter {
-    margin: 10px 10px 10px 0;
-    background-color: #fafafa;
-  }
-
-  div.scheduler div.col-1 .cl-scheduler-filter div.panel,
-  div.scheduler div.col-1 .cl-scheduler-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  div.scheduler div.col-1 .cl-status-filter,
-  div.scheduler div.col-1 .cl-scheduler-filter {
-    margin-bottom: 10px;
-  }
-
-  div.scheduler div.col-1 .cl-new-booking {
-    width: 290px;
-    margin-left: 5px;
+  .timeline-scale,
+  .timeline-row {
+    grid-template-columns: 200px 1fr;
   }
 }
