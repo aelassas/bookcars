@@ -6,6 +6,13 @@ div.car {
   overflow: auto;
 }
 
+/* Desktop: Account for fixed navigation sidebar */
+@media only screen and (width >= 960px) {
+  div.car {
+    left: 250px;
+  }
+}
+
 div.car section.car-sec div.car-info ul.locations-list {
   position: relative;
   list-style: none;

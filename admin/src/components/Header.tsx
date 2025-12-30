@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import {
@@ -10,31 +12,30 @@ import {
   Menu,
   Button,
   Drawer,
-  List,
-  ListItemIcon,
-  ListItemText,
-  ListItem
 } from '@mui/material'
 import {
   Menu as MenuIcon,
-  Mail as MailIcon,
-  Notifications as NotificationsIcon,
   More as MoreIcon,
   Language as LanguageIcon,
   Settings as SettingsIcon,
-  Dashboard as DashboardIcon,
-  CorporateFare as SuppliersIcon,
-  LocationOn as LocationsIcon,
-  DirectionsCar as CarsIcon,
-  People as UsersIcon,
-  InfoTwoTone as AboutIcon,
-  DescriptionTwoTone as TosIcon,
   ExitToApp as SignoutIcon,
-  Flag as CountriesIcon,
-  CalendarMonth as SchedulerIcon,
-  AccountBalance as BankDetailsIcon,
-  MonetizationOn as PricingIcon,
 } from '@mui/icons-material'
+import {
+  LayoutDashboard,
+  Calendar,
+  Building2,
+  Flag,
+  MapPin,
+  Car,
+  Users,
+  DollarSign,
+  Landmark,
+  Settings as SettingsLucide,
+  Info,
+  FileText,
+  Mail,
+  Bell,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
@@ -290,155 +291,179 @@ const Header = ({
     </Menu>
   )
 
+  const sidebarContent = (
+    <nav className="flex flex-col py-2">
+      <button
+        onClick={() => {
+          navigate('/')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <LayoutDashboard className="nav-icon" />
+        <span>{strings.DASHBOARD}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/bookings')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Calendar className="nav-icon" />
+        <span>Bookings</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/scheduler')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Calendar className="nav-icon" />
+        <span>{strings.SCHEDULER}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/suppliers')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Building2 className="nav-icon" />
+        <span>{strings.COMPANIES}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/countries')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Flag className="nav-icon" />
+        <span>{strings.COUNTRIES}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/locations')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <MapPin className="nav-icon" />
+        <span>{strings.LOCATIONS}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/cars')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Car className="nav-icon" />
+        <span>{strings.CARS}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/users')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Users className="nav-icon" />
+        <span>{strings.USERS}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/pricing')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <DollarSign className="nav-icon" />
+        <span>{strings.PRICING}</span>
+      </button>
+      {bankDetails?.showBankDetailsPage && (
+        <button
+          onClick={() => {
+            navigate('/bank-details')
+            handleSideMenuClose()
+          }}
+          className="nav-item"
+        >
+          <Landmark className="nav-icon" />
+          <span>{strings.BANK_DETAILS}</span>
+        </button>
+      )}
+      <button
+        onClick={() => {
+          navigate('/settings')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <SettingsLucide className="nav-icon" />
+        <span>{strings.SETTINGS}</span>
+      </button>
+      
+      <div className="my-2 border-t border-neutral-200" />
+      
+      <button
+        onClick={() => {
+          navigate('/about')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Info className="nav-icon" />
+        <span>{strings.ABOUT}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/tos')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <FileText className="nav-icon" />
+        <span>{strings.TOS}</span>
+      </button>
+      <button
+        onClick={() => {
+          navigate('/contact')
+          handleSideMenuClose()
+        }}
+        className="nav-item"
+      >
+        <Mail className="nav-icon" />
+        <span>{strings.CONTACT}</span>
+      </button>
+    </nav>
+  )
+
   return !hidden && (
     <div style={classes.grow} className="header">
-      <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
+      <AppBar position="fixed" sx={{ bgcolor: '#121212' }} className="top-header">
         <Toolbar className="toolbar">
+          {/* Mobile burger menu - only visible on mobile */}
           {isLoaded && isSignedIn && (
-            <IconButton edge="start" sx={classes.menuButton} color="inherit" aria-label="open drawer" onClick={handleSideMenuOpen}>
+            <IconButton 
+              edge="start" 
+              sx={classes.menuButton} 
+              color="inherit" 
+              aria-label="open drawer" 
+              onClick={handleSideMenuOpen}
+              className="mobile-menu-button"
+            >
               <MenuIcon />
             </IconButton>
           )}
-          <>
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu  side-menu">
-              <List sx={classes.list}>
-                <ListItem
-                  onClick={() => {
-                    navigate('/')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><DashboardIcon /></ListItemIcon>
-                  <ListItemText primary={strings.DASHBOARD} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/bookings')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><DashboardIcon /></ListItemIcon>
-                  <ListItemText primary="Bookings" />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/scheduler')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SchedulerIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SCHEDULER} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/suppliers')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SuppliersIcon /></ListItemIcon>
-                  <ListItemText primary={strings.COMPANIES} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/countries')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CountriesIcon /></ListItemIcon>
-                  <ListItemText primary={strings.COUNTRIES} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/locations')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><LocationsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.LOCATIONS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/cars')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CarsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CARS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/users')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><UsersIcon /></ListItemIcon>
-                  <ListItemText primary={strings.USERS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/pricing')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><PricingIcon /></ListItemIcon>
-                  <ListItemText primary={strings.PRICING} />
-                </ListItem>
-                {bankDetails?.showBankDetailsPage && (
-                  <ListItem
-                    onClick={() => {
-                      navigate('/bank-details')
-                      handleSideMenuClose()
-                    }}
-                  >
-                    <ListItemIcon><BankDetailsIcon /></ListItemIcon>
-                    <ListItemText primary={strings.BANK_DETAILS} />
-                  </ListItem>
-                )}
-                <ListItem
-                  onClick={() => {
-                    navigate('/settings')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SettingsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SETTINGS} />
-                </ListItem>
-              </List>
-              <ListItem
-                onClick={() => {
-                  navigate('/about')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><AboutIcon /></ListItemIcon>
-                <ListItemText primary={strings.ABOUT} />
-              </ListItem>
-              <ListItem
-                onClick={() => {
-                  navigate('/tos')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><TosIcon /></ListItemIcon>
-                <ListItemText primary={strings.TOS} />
-              </ListItem>
-              <ListItem
-                onClick={() => {
-                  navigate('/contact')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><MailIcon /></ListItemIcon>
-                <ListItemText primary={strings.CONTACT} />
-              </ListItem>
-            </Drawer>
-          </>
           <div style={classes.grow} />
           <div className="header-desktop">
             {isSignedIn && (
               <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
                 <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                  <NotificationsIcon />
+                  <Bell />
                 </Badge>
               </IconButton>
             )}
@@ -462,7 +487,7 @@ const Header = ({
             {isSignedIn && (
               <IconButton color="inherit" onClick={handleNotificationsClick}>
                 <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                  <NotificationsIcon />
+                  <Bell />
                 </Badge>
               </IconButton>
             )}
@@ -474,6 +499,18 @@ const Header = ({
           </div>
         </Toolbar>
       </AppBar>
+
+      {/* Mobile Drawer - only visible on mobile */}
+      <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu mobile-drawer">
+        {sidebarContent}
+      </Drawer>
+
+      {/* Desktop Fixed Sidebar - only visible on desktop */}
+      {isLoaded && isSignedIn && (
+        <div className="desktop-sidebar">
+          {sidebarContent}
+        </div>
+      )}
 
       {renderMobileMenu}
       {renderMenu}

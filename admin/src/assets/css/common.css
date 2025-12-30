@@ -257,6 +257,13 @@ div.content {
   padding: 0;
 }
 
+/* Desktop: Account for fixed navigation sidebar */
+@media only screen and (width >= 960px) {
+  div.content {
+    margin-left: 250px;
+  }
+}
+
 .form-label {
   color: rgb(0 0 0 / 60%);
   font-weight: 400;

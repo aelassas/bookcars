@@ -1,102 +1,289 @@
+/* Bookings Page - New Figma Design */
+
+/* New layout container */
+.bookings-new-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media only screen and (width <= 768px) {
+  .bookings-new-layout {
+    padding: 1rem;
+  }
+  
+  /* Stack table on mobile - enable horizontal scroll */
+  .bookings-new-layout table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .bookings-new-layout thead,
+  .bookings-new-layout tbody,
+  .bookings-new-layout tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Adjust column widths for mobile */
+  .bookings-new-layout th:nth-child(1),
+  .bookings-new-layout td:nth-child(1) {
+    min-width: 180px;
+  }
+  
+  .bookings-new-layout th:nth-child(2),
+  .bookings-new-layout td:nth-child(2) {
+    min-width: 150px;
+  }
+  
+  .bookings-new-layout th:nth-child(3),
+  .bookings-new-layout td:nth-child(3) {
+    min-width: 140px;
+  }
+  
+  .bookings-new-layout th:nth-child(4),
+  .bookings-new-layout td:nth-child(4),
+  .bookings-new-layout th:nth-child(5),
+  .bookings-new-layout td:nth-child(5) {
+    min-width: 100px;
+  }
+  
+  .bookings-new-layout th:nth-child(6),
+  .bookings-new-layout td:nth-child(6) {
+    min-width: 120px;
+  }
+  
+  .bookings-new-layout th:nth-child(7),
+  .bookings-new-layout td:nth-child(7) {
+    min-width: 100px;
+  }
+}
+
+/* Table styling enhancements */
+.bookings-new-layout table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.bookings-new-layout tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.bookings-new-layout tbody tr:hover {
+  background-color: rgb(250, 250, 250);
+}
+
+/* Badge pill styling */
+.bookings-new-layout .inline-flex {
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+/* Action buttons */
+.bookings-new-layout button[class*="ghost"] {
+  color: #6b7280;
+  transition: color 0.15s ease;
+}
+
+.bookings-new-layout button[class*="ghost"]:hover {
+  color: #171717;
+}
+
+/* ============================================ */
+/* OLD LAYOUT STYLES (keeping for backwards compatibility) */
+/* ============================================ */
+
+/* Main wrapper for bookings page */
+.bookings-page-wrapper {
+  display: flex;
+  height: calc(100vh - 64px);
+  background-color: rgb(250, 250, 250);
+}
+
+/* Bookings filter sidebar */
+.bookings-sidebar {
+  width: 320px;
+  background-color: #fafafa;
+  border-right: 1px solid rgb(229, 229, 229);
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Main content area */
+.bookings-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Legacy support for BookingList component */
 div.bookings {
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
+  top: 0;
 }
 
-/* Device width is lower than or equal to 960px */
+/* Filter Card Styles */
+.bookings-sidebar .cl-supplier-filter,
+.bookings-sidebar .cl-status-filter,
+.bookings-sidebar .cl-booking-filter {
+  width: 100%;
+}
 
+.bookings-sidebar .cl-supplier-filter label.accordion,
+.bookings-sidebar .cl-status-filter label.accordion,
+.bookings-sidebar .cl-booking-filter label.accordion {
+  background: transparent;
+  font-weight: 600;
+  font-size: 14px;
+  color: #171717;
+  padding: 0.75rem 1rem;
+}
+
+/* Card content spacing */
+.bookings-sidebar > div[class*="card"] {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Filter sections spacing */
+.bookings-sidebar .cl-supplier-filter > div,
+.bookings-sidebar .cl-status-filter > div,
+.bookings-sidebar .cl-booking-filter > div {
+  padding: 1rem;
+}
+
+/* Status filter items */
+.bookings-sidebar .cl-status-filter .panel,
+.bookings-sidebar .cl-booking-filter .panel {
+  padding: 0.75rem;
+}
+
+/* Accordion modernization */
+.bookings-sidebar label.accordion {
+  background: white !important;
+  border: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  margin: 0 !important;
+}
+
+.bookings-sidebar .panel,
+.bookings-sidebar .panel-collapse {
+  background: white !important;
+  border: none !important;
+  margin: 0 !important;
+  border-radius: 0 0 6px 6px !important;
+}
+
+/* Material UI form overrides */
+.bookings-sidebar .MuiFormControl-root {
+  margin: 8px 0 !important;
+}
+
+.bookings-sidebar .MuiTextField-root {
+  background: white;
+}
+
+.bookings-sidebar .MuiInputBase-root {
+  border-radius: 6px !important;
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  font-size: 14px !important;
+}
+
+.bookings-sidebar .MuiInputBase-root:hover {
+  border-color: #d1d5db !important;
+  background: white !important;
+}
+
+.bookings-sidebar .MuiInputBase-root.Mui-focused {
+  border-color: #171717 !important;
+  background: white !important;
+}
+
+.bookings-sidebar .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.bookings-sidebar .MuiInputLabel-root {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+}
+
+.bookings-sidebar .MuiInputLabel-root.Mui-focused {
+  color: #171717 !important;
+}
+
+/* Button styling */
+.bookings-sidebar button.MuiButton-root {
+  background: #171717 !important;
+  color: white !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+}
+
+.bookings-sidebar button.MuiButton-root:hover {
+  background: #404040 !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Checkbox styling */
+.bookings-sidebar input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+}
+
+.bookings-sidebar input[type="checkbox"]:checked {
+  background-color: #171717;
+  border-color: #171717;
+}
+
+/* Status badges modernization */
+.bookings-sidebar .booking-status {
+  border-radius: 12px !important;
+  padding: 4px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Mobile Responsive - Device width is lower than or equal to 960px */
 @media only screen and (width <= 960px) {
-  div.bookings {
-    top: 56px;
-    overflow-y: auto;
-  }
-
-  div.bookings div.col-1,
-  div.bookings div.col-2 {
-    display: flex;
+  .bookings-page-wrapper {
     flex-direction: column;
-    align-items: center;
+    height: calc(100vh - 56px);
   }
 
-  div.bookings div.col-1 .cl-supplier-filter label.accordion,
-  div.bookings div.col-1 .cl-status-filter label.accordion,
-  div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fff;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter,
-  div.bookings div.col-1 .cl-status-filter,
-  div.bookings div.col-1 .cl-booking-filter {
-    margin: 5px 10px;
-    background-color: #fff;
-    max-width: 480px;
-    width: calc(100% - 20px);
-  }
-
-  div.bookings div.col-1 .cl-booking-filter div.panel,
-  div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  div.bookings div.col-1 .cl-new-booking {
-    width: calc(100% - 20px);
-    max-width: 480px;
-    margin: 15px 10px 5px;
+  .bookings-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgb(229, 229, 229);
+    max-height: 40vh;
   }
 }
 
-/* Device width is greater than or equal to 960px */
-
+/* Desktop - account for fixed navigation sidebar */
 @media only screen and (width >= 960px) {
-  div.bookings {
-    top: 64px;
-  }
-
-  div.bookings div.col-1 {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 336px;
-    padding: 12px 0 0 12px;
-    background: #fefefe;
-    overflow: auto;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter label.accordion,
-  div.bookings div.col-1 .cl-status-filter label.accordion,
-  div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fafafa;
-  }
-
-  div.bookings div.col-1 .cl-supplier-filter,
-  div.bookings div.col-1 .cl-status-filter,
-  div.bookings div.col-1 .cl-booking-filter {
-    margin: 10px 10px 10px 0;
-    background-color: #fafafa;
-  }
-
-  div.bookings div.col-1 .cl-booking-filter div.panel,
-  div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  div.bookings div.col-1 .cl-status-filter,
-  div.bookings div.col-1 .cl-booking-filter {
-    margin-bottom: 10px;
-  }
-
-  div.bookings div.col-1 .cl-new-booking {
-    width: 306px;
-    margin-left: 5px;
-  }
-
-  div.bookings div.col-2 {
-    position: absolute;
-    inset: 0 0 0 336px;
-  }
+  /* The parent .bookings-content with position: relative contains the absolute div.bookings */
 }

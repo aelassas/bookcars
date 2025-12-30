@@ -8,6 +8,13 @@ div.notifications {
   align-items: center;
 }
 
+/* Desktop: Account for fixed navigation sidebar */
+@media only screen and (width >= 960px) {
+  div.notifications {
+    left: 250px;
+  }
+}
+
 div.notifications .empty-list {
   width: 100%;
   max-width: 380px;

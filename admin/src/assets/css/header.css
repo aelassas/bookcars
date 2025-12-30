@@ -10,12 +10,37 @@
   z-index: 1401 !important;
 }
 
-.side-menu li {
+/* Navigation items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #525252;
+  transition: all 0.15s ease;
 }
 
-.side-menu li:hover {
-  background-color: #f1f1f1;
+.nav-item:hover {
+  background-color: #f5f5f5;
+  color: #171717;
+}
+
+.nav-item:active {
+  background-color: #e5e5e5;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .header-action {
@@ -31,6 +56,40 @@
   margin-right: -13px;
 }
 
+/* Desktop Fixed Sidebar */
+.desktop-sidebar {
+  position: fixed;
+  left: 0;
+  top: 64px;
+  width: 250px;
+  height: calc(100vh - 64px);
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+  z-index: 1200;
+  display: none;
+}
+
+/* Desktop sidebar specific styling */
+.desktop-sidebar .nav-item {
+  margin: 2px 8px;
+}
+
+.desktop-sidebar .nav-item:hover {
+  background-color: #fafafa;
+  color: #171717;
+}
+
+/* Mobile Drawer - only show on mobile */
+.mobile-drawer {
+  display: block;
+}
+
+/* Mobile burger menu button */
+.mobile-menu-button {
+  display: flex !important;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
@@ -40,6 +99,14 @@
 
   .toolbar {
     min-height: 56px !important;
+  }
+
+  .desktop-sidebar {
+    display: none !important;
+  }
+
+  .mobile-menu-button {
+    display: flex !important;
   }
 }
 
@@ -60,5 +127,26 @@
 
   .header-mobile {
     display: none;
+  }
+
+  /* Show desktop sidebar on desktop */
+  .desktop-sidebar {
+    display: block !important;
+  }
+
+  /* Hide mobile drawer on desktop */
+  .mobile-drawer {
+    display: none !important;
+  }
+
+  /* Hide burger menu on desktop */
+  .mobile-menu-button {
+    display: none !important;
+  }
+
+  /* Adjust AppBar to account for sidebar */
+  .top-header {
+    left: 250px !important;
+    width: calc(100% - 250px) !important;
   }
 }

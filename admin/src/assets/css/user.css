@@ -5,6 +5,13 @@ div.user {
   left: 0;
 }
 
+/* Desktop: Account for fixed navigation sidebar */
+@media only screen and (width >= 960px) {
+  div.user {
+    left: 250px;
+  }
+}
+
 div.user div.col-1 .user-name {
   text-align: center;
   font-weight: 600;

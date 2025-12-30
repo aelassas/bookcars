@@ -70,7 +70,7 @@ const Layout = ({
   return (
     <>
       {((!user && !loading) || (user && user.verified) || !strict) && !unauthorized ? (
-        <div className="content" style={style || {}}>
+        <div className="content main-content-wrapper" style={style || {}}>
           {userLoaded && children}
         </div>
       ) : (

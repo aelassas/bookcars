@@ -9,6 +9,13 @@ div.scheduler {
   color: #0f172a;
 }
 
+/* Desktop: Account for fixed navigation sidebar */
+@media only screen and (width >= 960px) {
+  div.scheduler {
+    left: 250px;
+  }
+}
+
 div.scheduler .col-1 {
   width: 320px;
   min-width: 280px;

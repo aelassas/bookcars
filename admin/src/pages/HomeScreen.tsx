@@ -310,6 +310,150 @@ const HomeScreen = () => {
             </CardContent>
           </Card>
 
+          {/* Recent Bookings - Full Width */}
+          <Card className="mb-6">
+            <CardHeader className="p-6 pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-medium">Recent Bookings</CardTitle>
+                <Button variant="ghost" size="sm" className="text-xs">
+                  View all →
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6 pt-0">
+              {loadingCards ? (
+                <div className="h-[200px] flex items-center justify-center text-neutral-500">
+                  Loading bookings...
+                </div>
+              ) : recentBookings.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Customer</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Vehicle</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Rental Period</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Status</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Payment</TableHead>
+                      <TableHead className="text-xs uppercase tracking-wide text-neutral-500 text-right">Amount</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentBookings.map((booking) => {
+                      const driver = typeof booking.driver === 'string' ? booking.driver : booking.driver?.fullName || '—'
+                      const driverEmail = typeof booking.driver !== 'string' ? booking.driver?.email : ''
+                      const carName = typeof booking.car === 'string' ? booking.car : booking.car?.name || 'Unknown'
+                      const fromDate = format(new Date(booking.from), 'MMM d, yyyy')
+                      const toDate = format(new Date(booking.to), 'MMM d, yyyy')
+
+                      return (
+                        <TableRow key={booking._id}>
+                          <TableCell>
+                            <div>
+                              <p className="text-sm font-medium text-neutral-900">{driver}</p>
+                              {driverEmail && <p className="text-xs text-neutral-500">{driverEmail}</p>}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-sm text-neutral-900">{carName}</TableCell>
+                          <TableCell>
+                            <div className="text-xs text-neutral-600">
+                              <p>{fromDate}</p>
+                              <p>to {toDate}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={getStatusVariant(booking.status)} className="text-xs">
+                              {getStatusLabel(booking.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={getStatusVariant(booking.status)} className="text-xs">
+                              {getPaymentLabel(booking.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm font-medium text-neutral-900 text-right">
+                            {helper.formatCurrency(booking.price || 0, env.CURRENCY || 'USD')}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              ) : (
+                <div className="h-[200px] flex items-center justify-center text-neutral-500">
+                  No recent bookings
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Reminders and New Customers - 60/40 Split */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+            {/* Reminders - 60% width (3/5) */}
+            <Card className="lg:col-span-3">
+              <CardHeader className="p-6 pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-medium">Reminders</CardTitle>
+                  <span className="text-xs text-neutral-500">4 tasks today</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-0 space-y-4">
+                <div className="border-l-2 border-neutral-900 pl-3">
+                  <p className="text-sm text-neutral-900">Confirm customer bookings and update rental status</p>
+                  <p className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Today 10:00 AM
+                  </p>
+                </div>
+                <div className="border-l-2 border-neutral-300 pl-3">
+                  <p className="text-sm text-neutral-900">Follow up with customers for outstanding payments</p>
+                  <p className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Today 1:00 PM
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* New Customers - 40% width (2/5) */}
+            <Card className="lg:col-span-2">
+              <CardHeader className="p-6 pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-medium">New Customers</CardTitle>
+                  <span className="text-xs text-neutral-500">43 this month</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-0 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                      OK
+                    </div>
+                    <span className="text-sm text-neutral-900">Olivia Kortonen</span>
+                  </div>
+                  <span className="text-xs text-neutral-500">15m ago</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                      SR
+                    </div>
+                    <span className="text-sm text-neutral-900">Sophia Rossi</span>
+                  </div>
+                  <span className="text-xs text-neutral-500">1hr ago</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                      ED
+                    </div>
+                    <span className="text-sm text-neutral-900">Eric Diaz</span>
+                  </div>
+                  <span className="text-xs text-neutral-500">3hr ago</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Revenue Chart Card */}
           <Card className="mb-6">
             <CardHeader className="p-6 pb-4">
@@ -392,153 +536,6 @@ const HomeScreen = () => {
               )}
             </CardContent>
           </Card>
-
-          {/* Bottom Grid: Recent Bookings + Reminders */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Recent Bookings - 2/3 width */}
-            <Card className="lg:col-span-2">
-              <CardHeader className="p-6 pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-medium">Recent Bookings</CardTitle>
-                  <Button variant="ghost" size="sm" className="text-xs">
-                    View all →
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 pt-0">
-                {loadingCards ? (
-                  <div className="h-[200px] flex items-center justify-center text-neutral-500">
-                    Loading bookings...
-                  </div>
-                ) : recentBookings.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Customer</TableHead>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Vehicle</TableHead>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Rental Period</TableHead>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Status</TableHead>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500">Payment</TableHead>
-                        <TableHead className="text-xs uppercase tracking-wide text-neutral-500 text-right">Amount</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentBookings.map((booking) => {
-                        const driver = typeof booking.driver === 'string' ? booking.driver : booking.driver?.fullName || '—'
-                        const driverEmail = typeof booking.driver !== 'string' ? booking.driver?.email : ''
-                        const carName = typeof booking.car === 'string' ? booking.car : booking.car?.name || 'Unknown'
-                        const fromDate = format(new Date(booking.from), 'MMM d, yyyy')
-                        const toDate = format(new Date(booking.to), 'MMM d, yyyy')
-
-                        return (
-                          <TableRow key={booking._id}>
-                            <TableCell>
-                              <div>
-                                <p className="text-sm font-medium text-neutral-900">{driver}</p>
-                                {driverEmail && <p className="text-xs text-neutral-500">{driverEmail}</p>}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-sm text-neutral-900">{carName}</TableCell>
-                            <TableCell>
-                              <div className="text-xs text-neutral-600">
-                                <p>{fromDate}</p>
-                                <p>to {toDate}</p>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={getStatusVariant(booking.status)} className="text-xs">
-                                {getStatusLabel(booking.status)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={getStatusVariant(booking.status)} className="text-xs">
-                                {getPaymentLabel(booking.status)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-sm font-medium text-neutral-900 text-right">
-                              {helper.formatCurrency(booking.price || 0, env.CURRENCY || 'USD')}
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="h-[200px] flex items-center justify-center text-neutral-500">
-                    No recent bookings
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Reminders - 1/3 width */}
-            <div className="space-y-6">
-              {/* Reminders Card */}
-              <Card>
-                <CardHeader className="p-6 pb-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-medium">Reminders</CardTitle>
-                    <span className="text-xs text-neutral-500">4 tasks today</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6 pt-0 space-y-4">
-                  <div className="border-l-2 border-neutral-900 pl-3">
-                    <p className="text-sm text-neutral-900">Confirm customer bookings and update rental status</p>
-                    <p className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      Today 10:00 AM
-                    </p>
-                  </div>
-                  <div className="border-l-2 border-neutral-300 pl-3">
-                    <p className="text-sm text-neutral-900">Follow up with customers for outstanding payments</p>
-                    <p className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      Today 1:00 PM
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* New Customers Card */}
-              <Card>
-                <CardHeader className="p-6 pb-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-medium">New Customers</CardTitle>
-                    <span className="text-xs text-neutral-500">43 this month</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6 pt-0 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
-                        OK
-                      </div>
-                      <span className="text-sm text-neutral-900">Olivia Kortonen</span>
-                    </div>
-                    <span className="text-xs text-neutral-500">15m ago</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
-                        SR
-                      </div>
-                      <span className="text-sm text-neutral-900">Sophia Rossi</span>
-                    </div>
-                    <span className="text-xs text-neutral-500">1hr ago</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
-                        ED
-                      </div>
-                      <span className="text-sm text-neutral-900">Eric Diaz</span>
-                    </div>
-                    <span className="text-xs text-neutral-500">3hr ago</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
         </div>
       </div>
     </Layout>
