@@ -1,34 +1,11 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react'
-import {
-  Avatar,
-  Button,
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  Toolbar,
-  TextField,
-  Typography,
-  AppBar,
-  Box,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material'
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import React, { useMemo, useState, useCallback } from 'react'
+import MetricCard from '@/components/MetricCard'
+import AvailabilityCard from '@/components/AvailabilityCard'
+import EarningsChart from '@/components/EarningsChart'
+import RecentBookingsTable from '@/components/RecentBookingsTable'
+import AvailableCarsDialog from '@/components/AvailableCarsDialog'
+import RemindersCard from '@/components/RemindersCard'
+import DashboardHeader from '@/components/DashboardHeader'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -38,19 +15,11 @@ import * as CarService from '@/services/CarService'
 import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
 
-type MetricCard = { label: string, value: string }
+type MetricCardType = { label: string, value: string }
 
 const reminders = [
   { title: 'Confirm customer bookings and update rental status', time: 'Today 10:00 AM' },
   { title: 'Follow up with customers for outstanding payments', time: 'Today 1:00 PM' },
-]
-
-const carRangeOptions = [
-  { label: 'Car', value: 'car' },
-  { label: 'SUV', value: 'suv' },
-  { label: 'Van', value: 'van' },
-  { label: 'Scooter', value: 'scooter' },
-  { label: 'Bus', value: 'bus' },
 ]
 
 const activeStatuses: bookcarsTypes.BookingStatus[] = [
@@ -62,7 +31,6 @@ const activeStatuses: bookcarsTypes.BookingStatus[] = [
 ]
 
 const HomeScreen = () => {
-  const [user, setUser] = useState<bookcarsTypes.User>()
   const [suppliers, setSuppliers] = useState<string[]>([])
   const [from, setFrom] = useState<Date | null>(null)
   const [to, setTo] = useState<Date | null>(null)
@@ -80,8 +48,8 @@ const HomeScreen = () => {
   const [loadingAvailability, setLoadingAvailability] = useState(false)
   const [loadingCards, setLoadingCards] = useState(false)
 
-  const metrics: MetricCard[] = useMemo(() => ([
-    { label: 'Total Revenue', value: helper.formatCurrency(totalRevenue, env.BASE_CURRENCY || 'USD') },
+  const metrics: MetricCardType[] = useMemo(() => ([
+    { label: 'Total Revenue', value: helper.formatCurrency(totalRevenue, env.CURRENCY || 'USD') },
     { label: 'Rented Cars', value: `${activeBookingsCount} Units` },
     { label: 'Available Cars', value: `${availableCarsCount} Units` },
   ]), [totalRevenue, activeBookingsCount, availableCarsCount])
@@ -95,8 +63,12 @@ const HomeScreen = () => {
     try {
       setLoadingCards(true)
       const filter: bookcarsTypes.Filter = {}
-      if (from) filter.from = from
-      if (to) filter.to = to
+      if (from) {
+        filter.from = from
+      }
+      if (to) {
+        filter.to = to
+      }
 
       const payload: bookcarsTypes.GetBookingsPayload = {
         suppliers: _suppliers,
@@ -105,7 +77,7 @@ const HomeScreen = () => {
       }
 
       const data = await BookingService.getBookings(payload, 1, 200)
-      const result = data && data.length > 0 ? data[0].resultData : []
+      const result = data && data.length > 0 ? data[0]?.resultData || [] : []
 
       const sorted = [...result].sort((a, b) => new Date(b.from).getTime() - new Date(a.from).getTime())
       setRecentBookings(sorted.slice(0, 4))
@@ -151,7 +123,7 @@ const HomeScreen = () => {
         filter: { from, to },
       }
       const bookingData = await BookingService.getBookings(payload, 1, 500)
-      const bookings = bookingData && bookingData.length > 0 ? bookingData[0].resultData : []
+      const bookings = bookingData && bookingData.length > 0 ? bookingData[0]?.resultData || [] : []
       const bookedCarIds = new Set(bookings.map((b) => (typeof b.car === 'string' ? b.car : b.car._id)).filter(Boolean) as string[])
 
       const carsData = await CarService.getCars('', {
@@ -163,7 +135,7 @@ const HomeScreen = () => {
       }, 1, 200)
       const carsPage = carsData && carsData.length > 0 ? carsData[0] : undefined
       const cars = carsPage?.resultData || []
-      const totalCars = Number(carsPage?.pageInfo?.totalRecords ?? carsPage?.pageInfo?.totalRecord ?? cars.length ?? 0)
+      const totalCars = Number(carsPage?.pageInfo?.totalRecords ?? 0)
       const filtered = cars.filter((c) => !bookedCarIds.has(c._id || ''))
       setAvailableCars(filtered)
       setOpenAvailability(true)
@@ -179,7 +151,7 @@ const HomeScreen = () => {
   const fetchCarsCount = useCallback(async (_suppliers: string[]) => {
     try {
       const data = await CarService.getCars('', { suppliers: _suppliers }, 1, 1)
-      const total = Number(data?.[0]?.pageInfo?.totalRecords ?? data?.[0]?.pageInfo?.totalRecord ?? 0)
+      const total = Number(data?.[0]?.pageInfo?.totalRecords ?? 0)
       setAvailableCarsCount(Math.max(total - activeBookingsCount, 0))
     } catch (err) {
       helper.error(err)
@@ -187,7 +159,6 @@ const HomeScreen = () => {
   }, [activeBookingsCount])
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
-    setUser(_user)
     if (_user && _user.verified) {
       const supplierIds = helper.admin(_user)
         ? await loadSuppliers()
@@ -202,255 +173,69 @@ const HomeScreen = () => {
 
   return (
     <Layout strict onLoad={onLoad}>
-      <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50' }}>
-        <AppBar
-          position="fixed"
-          color="inherit"
-          elevation={0}
-          sx={{ height: 64, width: '100%', borderBottom: '1px solid', borderColor: 'divider' }}
-        >
-          <Toolbar sx={{ height: 64, px: 3 }}>
-            <Typography variant="h6" fontWeight={600}>Dashboard</Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Button variant="contained" size="small" sx={{ height: 36 }} onClick={() => suppliers.length && fetchBookings(suppliers)} disabled={loadingCards}>
-              Refresh
-            </Button>
-          </Toolbar>
-        </AppBar>
+      <div className="min-h-screen bg-gray-50">
+        <DashboardHeader
+          onRefresh={() => suppliers.length && fetchBookings(suppliers)}
+          loading={loadingCards}
+        />
 
-        <Box component="main" sx={{ pt: 10, pb: 4 }}>
-          <Container maxWidth={false} disableGutters sx={{ maxWidth: 1200, mx: 'auto', px: 3, py: 3 }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Grid container spacing={3}>
-                {metrics.map((metric) => (
-                  <Grid item xs={12} md={4} key={metric.label}>
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        borderRadius: 2,
-                        height: '100%',
-                      }}
-                    >
-                      <Typography variant="body2" color="text.secondary">{metric.label}</Typography>
-                      <Typography variant="h5" fontWeight={600} sx={{ mt: 1 }}>{metric.value}</Typography>
-                    </Paper>
-                  </Grid>
-                ))}
+        <main className="pt-20 pb-8">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {metrics.map((metric) => (
+                <MetricCard key={metric.label} label={metric.label} value={metric.value} />
+              ))}
+            </div>
 
-                <Grid item xs={12}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-                      <Box>
-                        <Typography variant="h6" fontWeight={600}>Availability</Typography>
-                        <Typography variant="body2" color="text.secondary">{new Date().toLocaleString()}</Typography>
-                      </Box>
-                    </Stack>
-                    <Grid container spacing={2} alignItems="center">
-                      <Grid item xs={12} sm={6} md={3}>
-                        <DatePicker
-                          label="From"
-                          value={from}
-                          onChange={(date) => setFrom(date)}
-                          slotProps={{ textField: { size: 'small', fullWidth: true, sx: { height: 40 } } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={3}>
-                        <DatePicker
-                          label="To"
-                          value={to}
-                          onChange={(date) => setTo(date)}
-                          slotProps={{ textField: { size: 'small', fullWidth: true, sx: { height: 40 } } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={3}>
-                        <Select
-                          size="small"
-                          fullWidth
-                          value={carRange}
-                          onChange={(e) => setCarRange(String(e.target.value))}
-                          sx={{ height: 40 }}
-                        >
-                          {carRangeOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                          ))}
-                        </Select>
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button variant="contained" onClick={fetchAvailableCars} disabled={loadingAvailability} sx={{ minWidth: 160, height: 40 }}>
-                          {loadingAvailability ? 'Loading...' : 'Check Availability'}
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
+            <div className="mt-6">
+              <AvailabilityCard
+                from={from}
+                to={to}
+                carRange={carRange}
+                onFromChange={setFrom}
+                onToChange={setTo}
+                onCarRangeChange={setCarRange}
+                onCheckAvailability={fetchAvailableCars}
+                loading={loadingAvailability}
+              />
+            </div>
 
-                <Grid item xs={12}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-                      <Typography variant="h6" fontWeight={600}>Total Earnings</Typography>
-                      <Chip label={`Total: ${helper.formatCurrency(earningsTotal, env.BASE_CURRENCY || 'USD')}`} size="small" />
-                    </Stack>
-                    <Box sx={{ height: 220 }}>
-                      <svg width="100%" height="160">
-                        {earningsSeries.length > 0 && (
-                          <polyline
-                            fill="none"
-                            stroke="#6c63ff"
-                            strokeWidth="3"
-                            points={earningsSeries.map((value, idx) => {
-                              const x = (idx / Math.max(earningsSeries.length - 1, 1)) * 100
-                              const max = Math.max(...earningsSeries)
-                              const y = 120 - (value / (max || 1)) * 100
-                              return `${x},${y}`
-                            }).join(' ')}
-                          />
-                        )}
-                        {earningsSeries.length === 0 && <text x="10" y="50" fill="#9e9e9e">No data</text>}
-                      </svg>
-                      <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
-                        {earningsLabels.map((label) => (
-                          <Chip key={label} label={label} size="small" variant="outlined" />
-                        ))}
-                      </Stack>
-                    </Box>
-                  </Paper>
-                </Grid>
+            <div className="mt-6">
+              <EarningsChart
+                labels={earningsLabels}
+                series={earningsSeries}
+                total={earningsTotal}
+                currency={env.CURRENCY}
+                loading={loadingCards}
+              />
+            </div>
 
-                <Grid item xs={12} md={8}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-                      <Typography variant="h6" fontWeight={600}>Recent Bookings</Typography>
-                    </Stack>
-                    <Table size="small" sx={{ minWidth: 650 }}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell width={60}>No</TableCell>
-                          <TableCell>Car</TableCell>
-                          <TableCell>Driver</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell align="right">Earnings</TableCell>
-                          <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {recentBookings.map((booking, index) => {
-                          const carName = typeof booking.car === 'string' ? booking.car : booking.car.name
-                          const driver = typeof booking.driver === 'string' ? booking.driver : booking.driver?.fullName || '—'
-                          const price = helper.formatCurrency(booking.price || 0, env.BASE_CURRENCY || 'USD')
-                          return (
-                            <TableRow key={booking._id || index} hover>
-                              <TableCell>{index + 1}</TableCell>
-                              <TableCell>{carName}</TableCell>
-                              <TableCell>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                  <Avatar src={typeof booking.driver !== 'string' ? booking.driver?.avatar : undefined} alt={driver} sx={{ width: 28, height: 28 }} />
-                                  <Typography variant="body2">{driver}</Typography>
-                                </Stack>
-                              </TableCell>
-                              <TableCell>
-                                <Chip label={booking.status} size="small" color="info" sx={{ borderRadius: 999 }} />
-                              </TableCell>
-                              <TableCell align="right">{price}</TableCell>
-                              <TableCell align="right">
-                                <Button size="small" variant="contained">Details</Button>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Paper>
-                </Grid>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+              <div className="md:col-span-2">
+                <RecentBookingsTable
+                  bookings={recentBookings}
+                  formatCurrency={helper.formatCurrency}
+                  currency={env.CURRENCY}
+                  loading={loadingCards}
+                />
+              </div>
 
-                <Grid item xs={12} md={4}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 2,
-                      height: '100%',
-                    }}
-                  >
-                    <Typography variant="h6" fontWeight={600} gutterBottom>Reminders</Typography>
-                    <List dense>
-                      {reminders.map((reminder) => (
-                        <React.Fragment key={reminder.title}>
-                          <ListItem>
-                            <ListItemText primary={reminder.title} secondary={reminder.time} />
-                          </ListItem>
-                          <Divider component="li" />
-                        </React.Fragment>
-                      ))}
-                    </List>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </LocalizationProvider>
-          </Container>
-        </Box>
-      </Box>
+              <div>
+                <RemindersCard reminders={reminders} className="h-full" />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
 
-      <Dialog open={openAvailability} onClose={() => setOpenAvailability(false)} fullWidth maxWidth="lg">
-        <DialogTitle>Available Cars</DialogTitle>
-        <DialogContent dividers>
-          {loadingAvailability && <Typography>Loading...</Typography>}
-          {!loadingAvailability && availableCars.length === 0 && <Typography>No cars available for the selected dates.</Typography>}
-          <Grid container spacing={2}>
-            {availableCars.map((car) => (
-              <Grid item xs={12} md={6} key={car._id}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 2,
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: 2,
-                  }}
-                >
-                  <Typography variant="h6">{car.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">{car.licensePlate}</Typography>
-                  <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                    <Chip label={car.range} size="small" />
-                    <Chip label={`${car.seats} seats`} size="small" />
-                  </Stack>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        </DialogContent>
-      </Dialog>
+      <AvailableCarsDialog
+        open={openAvailability}
+        onOpenChange={setOpenAvailability}
+        cars={availableCars}
+        loading={loadingAvailability}
+      />
     </Layout>
   )
 }
 
 export default HomeScreen
-
