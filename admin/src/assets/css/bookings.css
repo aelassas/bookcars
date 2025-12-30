@@ -1,83 +1,23 @@
-/* Bookings Page - New Figma Design */
+/* Bookings Page - Shadcn Design */
 
-/* New layout container */
-.bookings-new-layout {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-/* Responsive adjustments */
-@media only screen and (width <= 768px) {
-  .bookings-new-layout {
-    padding: 1rem;
-  }
-  
-  /* Stack table on mobile - enable horizontal scroll */
-  .bookings-new-layout table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .bookings-new-layout thead,
-  .bookings-new-layout tbody,
-  .bookings-new-layout tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  /* Adjust column widths for mobile */
-  .bookings-new-layout th:nth-child(1),
-  .bookings-new-layout td:nth-child(1) {
-    min-width: 180px;
-  }
-  
-  .bookings-new-layout th:nth-child(2),
-  .bookings-new-layout td:nth-child(2) {
-    min-width: 150px;
-  }
-  
-  .bookings-new-layout th:nth-child(3),
-  .bookings-new-layout td:nth-child(3) {
-    min-width: 140px;
-  }
-  
-  .bookings-new-layout th:nth-child(4),
-  .bookings-new-layout td:nth-child(4),
-  .bookings-new-layout th:nth-child(5),
-  .bookings-new-layout td:nth-child(5) {
-    min-width: 100px;
-  }
-  
-  .bookings-new-layout th:nth-child(6),
-  .bookings-new-layout td:nth-child(6) {
-    min-width: 120px;
-  }
-  
-  .bookings-new-layout th:nth-child(7),
-  .bookings-new-layout td:nth-child(7) {
-    min-width: 100px;
-  }
-}
+/* Note: Layout (max-width, padding, background) is now handled by PageContainer component */
 
 /* Table styling enhancements */
-.bookings-new-layout table {
+table {
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.bookings-new-layout tbody tr {
+tbody tr {
   transition: background-color 0.15s ease;
 }
 
-.bookings-new-layout tbody tr:hover {
+tbody tr:hover {
   background-color: rgb(250, 250, 250);
 }
 
 /* Badge pill styling */
-.bookings-new-layout .inline-flex {
+.inline-flex {
   border-radius: 12px;
   font-weight: 600;
   font-size: 12px;
@@ -85,13 +25,63 @@
 }
 
 /* Action buttons */
-.bookings-new-layout button[class*="ghost"] {
+button[class*="ghost"] {
   color: #6b7280;
   transition: color 0.15s ease;
 }
 
-.bookings-new-layout button[class*="ghost"]:hover {
+button[class*="ghost"]:hover {
   color: #171717;
+}
+
+/* Mobile table horizontal scroll */
+@media only screen and (width <= 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  thead,
+  tbody,
+  tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Adjust column widths for mobile */
+  th:nth-child(1),
+  td:nth-child(1) {
+    min-width: 180px;
+  }
+  
+  th:nth-child(2),
+  td:nth-child(2) {
+    min-width: 150px;
+  }
+  
+  th:nth-child(3),
+  td:nth-child(3) {
+    min-width: 140px;
+  }
+  
+  th:nth-child(4),
+  td:nth-child(4),
+  th:nth-child(5),
+  td:nth-child(5) {
+    min-width: 100px;
+  }
+  
+  th:nth-child(6),
+  td:nth-child(6) {
+    min-width: 120px;
+  }
+  
+  th:nth-child(7),
+  td:nth-child(7) {
+    min-width: 100px;
+  }
 }
 
 /* ============================================ */

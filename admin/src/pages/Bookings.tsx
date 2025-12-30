@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import PageContainer from '@/components/PageContainer'
 import {
   Select,
   SelectContent,
@@ -200,7 +201,7 @@ const Bookings = () => {
   return (
     <Layout onLoad={onLoad} strict>
       {user && (
-        <div className="bookings-new-layout">
+        <PageContainer>
           {/* Page Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -344,7 +345,7 @@ const Bookings = () => {
               </Table>
             </CardContent>
           </Card>
-        </div>
+        </PageContainer>
       )}
     </Layout>
   )

@@ -1,84 +1,98 @@
+/* Users Page - Shadcn Design */
+
+/* Note: Layout (max-width, padding, background) is now handled by PageContainer component */
+
+/* Table styling enhancements */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+  background-color: rgb(250, 250, 250);
+}
+
+/* Avatar styling */
+.avatar-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Badge pill styling */
+.inline-flex {
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+/* Action buttons */
+button[class*="ghost"] {
+  color: #6b7280;
+  transition: color 0.15s ease;
+}
+
+button[class*="ghost"]:hover {
+  color: #171717;
+}
+
+/* Mobile table horizontal scroll */
+@media only screen and (width <= 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  thead,
+  tbody,
+  tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* Adjust column widths for mobile */
+  th:nth-child(1),
+  td:nth-child(1) {
+    min-width: 200px;
+  }
+  
+  th:nth-child(2),
+  td:nth-child(2) {
+    min-width: 120px;
+  }
+  
+  th:nth-child(3),
+  td:nth-child(3) {
+    min-width: 180px;
+  }
+  
+  th:nth-child(4),
+  td:nth-child(4) {
+    min-width: 120px;
+  }
+  
+  th:nth-child(5),
+  td:nth-child(5) {
+    min-width: 100px;
+  }
+}
+
+/* ============================================ */
+/* OLD LAYOUT STYLES (keeping for backwards compatibility) */
+/* ============================================ */
+
 div.users {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-}
-
-/* Desktop: Account for fixed navigation sidebar */
-@media only screen and (width >= 960px) {
-  div.users {
-    left: 250px;
-  }
-}
-
-/* Device width is lower than or equal to 960px */
-
-@media only screen and (width <= 960px) {
-  div.users {
-    top: 56px;
-  }
-
-  div.users div.col-1 {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-  }
-
-  div.users div.col-1 div.col-1-container {
-    width: 100%;
-    max-width: 480px;
-  }
-
-  div.users div.col-1 .user-type-filter {
-    display: none;
-  }
-
-  div.users div.col-1 .search,
-  div.users div.col-1 .new-user {
-    width: 100%;
-  }
-
-  div.users div.col-2 {
-    position: absolute;
-    inset: 90px 0 0;
-  }
-}
-
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >= 960px) {
-  div.users {
-    top: 64px;
-  }
-
-  div.users div.col-1 {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 300px;
-    padding: 20px 0 0 12px;
-    background: #fefefe;
-  }
-
-  div.users div.col-1 .user-type-filter {
-    margin-left: 5px;
-    width: 265px;
-  }
-
-  div.users div.col-1 .new-user {
-    width: 265px;
-    margin-left: 5px;
-    margin-top: 15px;
-  }
-
-  div.users div.col-2 {
-    position: absolute;
-    inset: 0 0 0 300px;
-  }
+  flex: 1;
 }

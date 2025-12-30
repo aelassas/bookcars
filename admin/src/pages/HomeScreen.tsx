@@ -10,6 +10,7 @@ import { Clock } from 'lucide-react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
+import PageContainer from '@/components/PageContainer'
 import * as BookingService from '@/services/BookingService'
 import * as SupplierService from '@/services/SupplierService'
 import * as CarService from '@/services/CarService'
@@ -298,10 +299,9 @@ const HomeScreen = () => {
 
   return (
     <Layout strict onLoad={onLoad}>
-      <div className="min-h-screen bg-neutral-50">
-        <div className="mx-auto max-w-[1200px] px-6 py-8">
-          {/* Page Header */}
-          <div className="mb-8">
+      <PageContainer>
+        {/* Page Header */}
+        <div className="mb-8">
             <h1 className="text-2xl font-semibold text-neutral-900">Dashboard</h1>
             <p className="text-sm text-neutral-500 mt-1">{currentDate}</p>
           </div>
@@ -618,8 +618,7 @@ const HomeScreen = () => {
               )}
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </PageContainer>
     </Layout>
   )
 }
