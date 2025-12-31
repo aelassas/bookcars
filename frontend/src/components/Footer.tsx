@@ -39,6 +39,7 @@ const Footer = () => {
           <div className="title">{strings.RENT}</div>
           <ul className="links">
             {!env.HIDE_SUPPLIERS && <li onClick={() => navigate('/suppliers')}>{strings.SUPPLIERS}</li>}
+            <li onClick={() => navigate('/users')}>{strings.DRIVERS}</li>
             <li onClick={() => navigate('/locations')}>{strings.LOCATIONS}</li>
           </ul>
         </div>

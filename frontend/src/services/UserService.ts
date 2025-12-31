@@ -567,3 +567,21 @@ export const deleteTempLicense = (file: string): Promise<number> =>
       { withCredentials: true }
     )
     .then((res) => res.status)
+
+/**
+ * Get users (drivers).
+ *
+ * @param {bookcarsTypes.GetUsersBody} payload
+ * @param {string} keyword
+ * @param {number} page
+ * @param {number} size
+ * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.User>>}
+ */
+export const getUsers = (payload: bookcarsTypes.GetUsersBody, keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
+  axiosInstance
+    .post(
+      `/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      payload,
+      { withCredentials: true }
+    )
+    .then((res) => res.data)

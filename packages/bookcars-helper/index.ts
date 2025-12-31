@@ -1,6 +1,8 @@
 import * as bookcarsTypes from ':bookcars-types'
 import CurrencyConverter, { currencies } from ':currency-converter'
 
+export * from './countries'
+
 /**
  * Format a number.
  *

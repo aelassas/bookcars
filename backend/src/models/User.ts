@@ -121,6 +121,10 @@ const userSchema = new Schema<env.User>(
     license: {
       type: String,
     },
+    country: {
+      type: String,
+      trim: true,
+    },
     minimumRentalDays: {
       type: Number,
     },

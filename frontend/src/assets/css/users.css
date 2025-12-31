@@ -1,0 +1,33 @@
+div.users {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+div.users div.users-header {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 30px;
+}
+
+div.users div.users-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+@media only screen and (width <=960px) {
+  div.users {
+    padding: 10px;
+  }
+
+  div.users div.users-header h1 {
+    font-size: 24px;
+  }
+}
+

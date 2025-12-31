@@ -36,6 +36,7 @@ const Contact = lazy(() => import('@/pages/Contact'))
 const NoMatch = lazy(() => import('@/pages/NoMatch'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
+const Users = lazy(() => import('@/pages/Users'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
 
@@ -95,6 +96,7 @@ const router = createBrowserRouter([
       { path: 'faq', element: <Faq /> },
       { path: 'cookie-policy', element: <CookiePolicy /> },
       ...(env.HIDE_SUPPLIERS ? [] : [{ path: 'suppliers', element: <Suppliers /> }]),
+      { path: 'users', element: <Users /> },
       { path: '*', element: <NoMatch /> }
     ]
   }

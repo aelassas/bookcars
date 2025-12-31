@@ -33,6 +33,7 @@ import {
   QuestionAnswer as FaqIcon,
   PersonOutline as SignUpIcon,
   Cookie as CookiePolicyIcon,
+  People as UsersIcon,
 } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { CircleFlag } from 'react-circle-flags'
@@ -383,6 +384,15 @@ const Header = ({
                     <ListItemText primary={strings.SUPPLIERS} />
                   </ListItem>
                 )}
+                <ListItem
+                  onClick={() => {
+                    navigate('/users')
+                    handleSideMenuClose()
+                  }}
+                >
+                  <ListItemIcon><UsersIcon /></ListItemIcon>
+                  <ListItemText primary={strings.DRIVERS} />
+                </ListItem>
                 <ListItem
                   onClick={() => {
                     navigate('/locations')

@@ -501,6 +501,7 @@ export interface User extends Document {
   contracts?: bookcarsTypes.Contract[]
   licenseRequired?: boolean
   license?: string | null
+  country?: string
   minimumRentalDays?: number
   expireAt?: Date
   priceChangeRate?: number

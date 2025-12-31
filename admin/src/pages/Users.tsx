@@ -3,15 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Plus, Search as SearchIcon, Edit, Trash2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -20,6 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -36,28 +38,25 @@ const Users = () => {
   const navigate = useNavigate()
 
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [admin, setAdmin] = useState(false)
   const [users, setUsers] = useState<bookcarsTypes.User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<bookcarsTypes.User[]>([])
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [typeFilter, setTypeFilter] = useState<string>('all')
   const [page] = useState(0)
   const [pageSize] = useState(20)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<bookcarsTypes.User | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const fetchUsers = async (_user: bookcarsTypes.User, _page: number = 0) => {
     try {
       setLoading(true)
-      const _admin = helper.admin(_user)
       
-      const _types = _admin
-        ? helper.getUserTypes().map((userType) => userType.value)
-        : [bookcarsTypes.UserType.Supplier, bookcarsTypes.UserType.User]
-
+      // Only fetch drivers (UserType.User)
       const payload: bookcarsTypes.GetUsersBody = {
         user: _user._id || '',
-        types: _types,
+        types: [bookcarsTypes.UserType.User],
       }
 
       const data = await UserService.getUsers(payload, '', _page + 1, pageSize)
@@ -82,14 +81,48 @@ const Users = () => {
 
   const onLoad = (_user?: bookcarsTypes.User) => {
     if (_user) {
-      const _admin = helper.admin(_user)
       setUser(_user)
-      setAdmin(_admin)
       fetchUsers(_user, 0)
     }
   }
 
-  // Filter users based on search and type
+  const handleDeleteClick = (userToDelete: bookcarsTypes.User) => {
+    setUserToDelete(userToDelete)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete || !userToDelete._id) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      const status = await UserService.deleteUsers([userToDelete._id])
+      
+      if (status === 200) {
+        // Refresh the users list
+        if (user) {
+          await fetchUsers(user, page)
+        }
+        setDeleteDialogOpen(false)
+        setUserToDelete(null)
+      } else {
+        helper.error()
+      }
+    } catch (err) {
+      helper.error(err)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false)
+    setUserToDelete(null)
+  }
+
+  // Filter users based on search
   useEffect(() => {
     let filtered = [...users]
 
@@ -104,39 +137,8 @@ const Users = () => {
       })
     }
 
-    // Apply type filter
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((u) => u.type === typeFilter)
-    }
-
     setFilteredUsers(filtered)
-  }, [searchQuery, typeFilter, users])
-
-  const getUserTypeBadge = (type: bookcarsTypes.UserType) => {
-    switch (type) {
-      case bookcarsTypes.UserType.Admin:
-        return 'bg-purple-100 text-purple-700 hover:bg-purple-100'
-      case bookcarsTypes.UserType.Supplier:
-        return 'bg-blue-100 text-blue-700 hover:bg-blue-100'
-      case bookcarsTypes.UserType.User:
-        return 'bg-green-100 text-green-700 hover:bg-green-100'
-      default:
-        return 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-    }
-  }
-
-  const getUserTypeLabel = (type: bookcarsTypes.UserType) => {
-    switch (type) {
-      case bookcarsTypes.UserType.Admin:
-        return 'Admin'
-      case bookcarsTypes.UserType.Supplier:
-        return 'Supplier'
-      case bookcarsTypes.UserType.User:
-        return 'Customer'
-      default:
-        return type
-    }
-  }
+  }, [searchQuery, users])
 
   return (
     <Layout onLoad={onLoad} strict>
@@ -172,19 +174,6 @@ const Users = () => {
                 className="pl-10"
               />
             </div>
-            {admin && (
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full md:w-[200px]">
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value={bookcarsTypes.UserType.Admin}>Admin</SelectItem>
-                  <SelectItem value={bookcarsTypes.UserType.Supplier}>Supplier</SelectItem>
-                  <SelectItem value={bookcarsTypes.UserType.User}>Customer</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
           </div>
 
           {/* Table Card */}
@@ -194,7 +183,6 @@ const Users = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-semibold">USER</TableHead>
-                    <TableHead className="font-semibold">TYPE</TableHead>
                     <TableHead className="font-semibold">EMAIL</TableHead>
                     <TableHead className="font-semibold">VERIFIED</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
@@ -203,13 +191,13 @@ const Users = () => {
                 <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                      <TableCell colSpan={4} className="text-center py-8 text-gray-500">
                         Loading users...
                       </TableCell>
                     </TableRow>
                   ) : filteredUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                      <TableCell colSpan={4} className="text-center py-8 text-gray-500">
                         No users found
                       </TableCell>
                     </TableRow>
@@ -237,11 +225,6 @@ const Users = () => {
                             </div>
                             <span className="font-semibold text-gray-900">{u.fullName}</span>
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getUserTypeBadge(u.type as bookcarsTypes.UserType)}>
-                            {getUserTypeLabel(u.type as bookcarsTypes.UserType)}
-                          </Badge>
                         </TableCell>
                         <TableCell className="text-gray-600">{u.email}</TableCell>
                         <TableCell>
@@ -271,10 +254,10 @@ const Users = () => {
                               size="icon"
                               onClick={(e) => {
                                 e.stopPropagation()
-                                // TODO: Implement delete functionality
+                                handleDeleteClick(u)
                               }}
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
                           </div>
                         </TableCell>
@@ -285,6 +268,31 @@ const Users = () => {
               </Table>
             </CardContent>
           </Card>
+
+          {/* Delete Confirmation Dialog */}
+          <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete User</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete <strong>{userToDelete?.fullName}</strong>? 
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleDeleteCancel} disabled={deleting}>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleDeleteConfirm}
+                  disabled={deleting}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </PageContainer>
       )}
     </Layout>

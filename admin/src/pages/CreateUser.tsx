@@ -1,149 +1,95 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Switch,
-} from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
+import { ArrowLeft } from 'lucide-react'
 import validator from 'validator'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import Layout from '@/components/Layout'
+import PageContainer from '@/components/PageContainer'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
-import { strings as csStrings } from '@/lang/create-supplier'
 import { strings } from '@/lang/create-user'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
-import * as SupplierService from '@/services/SupplierService'
-import Error from '@/components/Error'
-import Backdrop from '@/components/SimpleBackdrop'
+import DatePickerField from '@/components/DatePickerField'
+import CountrySelect from '@/components/CountrySelect'
 import Avatar from '@/components/Avatar'
-import DatePicker from '@/components/DatePicker'
-import DriverLicense from '@/components/DriverLicense'
-import { schema, FormFields } from '@/models/UserForm'
 
 import '@/assets/css/create-user.css'
+
+// Form validation schema
+const formSchema = z.object({
+  fullName: z.string().min(1, { message: 'Full name is required' }),
+  email: z.string().email({ message: commonStrings.EMAIL_NOT_VALID }),
+  phone: z.string().refine((val) => !val || validator.isMobilePhone(val), { message: commonStrings.PHONE_NOT_VALID }).optional(),
+  birthDate: z.date().refine((value) => {
+    if (value) {
+      const sub = intervalToDuration({ start: value, end: new Date() }).years ?? 0
+      return sub >= env.MINIMUM_AGE
+    }
+    return true
+  }, { message: commonStrings.BIRTH_DATE_NOT_VALID }),
+  licenseId: z.string().optional(),
+  country: z.string().min(1, { message: 'Country is required' }),
+})
+
+type FormFields = z.infer<typeof formSchema>
 
 const CreateUser = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [admin, setAdmin] = useState(false)
-  const [formError, setFormError] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [avatar, setAvatar] = useState('')
-  const [avatarError, setAvatarError] = useState(false)
-  const [license, setLicense] = useState<string | undefined>()
+  const [formError, setFormError] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState<string>('')
+  const [avatar, setAvatar] = useState<string>('')
+  const [birthDate, setBirthDate] = useState<Date | undefined>()
 
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-    setFocus,
-    clearErrors,
     setValue,
-    trigger,
+    clearErrors,
   } = useForm<FormFields>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(formSchema),
     mode: 'onBlur',
     defaultValues: {
-      type: '',
       fullName: '',
       email: '',
       phone: '',
-      location: '',
-      bio: '',
-      payLater: false,
-      licenseRequired: false,
-      minimumRentalDays: '',
-      priceChangeRate: '',
-      supplierCarLimit: '',
-      notifyAdminOnNewCar: false
+      licenseId: '',
     },
   })
 
-  const type = useWatch({ control, name: 'type' })
-  const payLater = useWatch({ control, name: 'payLater' })
-  const licenseRequired = useWatch({ control, name: 'licenseRequired' })
-  const notifyAdminOnNewCar = useWatch({ control, name: 'notifyAdminOnNewCar' })
-
-  const onBeforeUpload = () => {
-    setLoading(true)
-  }
-
-  const onAvatarChange = (_avatar: string) => {
-    setLoading(false)
-    setAvatar(_avatar)
-
-    if (_avatar !== null && type === bookcarsTypes.UserType.Supplier) {
-      setAvatarError(false)
-    }
-  }
-
-  const handleCancel = async () => {
-    try {
-      if (avatar) {
-        await UserService.deleteTempAvatar(avatar)
-      }
-
-      if (license) {
-        await UserService.deleteTempLicense(license)
-      }
-
-      navigate('/users')
-    } catch {
-      navigate('/users')
-    }
-  }
-
   const onLoad = (_user?: bookcarsTypes.User) => {
     if (_user && _user.verified) {
-      const _admin = helper.admin(_user)
       setUser(_user)
-      setAdmin(_admin)
-      setValue('type', _admin ? '' : bookcarsTypes.UserType.User)
       setVisible(true)
     }
   }
 
-  const validateFullName = async (value?: string) => {
-    if (!!value && type === bookcarsTypes.UserType.Supplier) {
-      const status = await SupplierService.validate({ fullName: value })
+  const validateEmail = async (value: string) => {
+    if (value && validator.isEmail(value)) {
+      const status = await UserService.validateEmail({ email: value })
       if (status !== 200) {
-        setError('fullName', { message: csStrings.INVALID_SUPPLIER_NAME })
-        setFocus('fullName')
+        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
         return false
       }
     }
     return true
   }
 
-  const validateEmail = async (value?: string) => {
-    if (value) {
-      trigger('email')
-
-      if (validator.isEmail(value)) {
-        const status = await UserService.validateEmail({ email: value })
-        if (status != 200) {
-          setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
-          return false
-        }
-      }
-      return false
-    }
-    return true
+  const handleCancel = () => {
+    navigate('/users')
   }
 
   const onSubmit = async (data: FormFields) => {
@@ -153,36 +99,24 @@ const CreateUser = () => {
         return
       }
 
-      if (type === bookcarsTypes.UserType.Supplier && !avatar) {
-        setAvatarError(true)
-        setFormError(false)
-        return
-      }
-
       const language = UserService.getLanguage()
-      const supplier = admin ? undefined : user._id
 
+      // Generate a random temporary password
+      const tempPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+      
       const payload: bookcarsTypes.CreateUserPayload = {
         email: data.email,
         phone: data.phone || '',
-        location: data.location || '',
-        bio: data.bio || '',
+        location: '', // Keep location empty
+        bio: '',
         fullName: data.fullName,
-        type: data.type,
-        avatar,
+        type: bookcarsTypes.UserType.User, // Always create as driver
+        avatar: avatar || '', // Optional avatar
         birthDate: data.birthDate,
         language,
-        supplier,
-        license,
-        minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
-        priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
-        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: type === bookcarsTypes.UserType.Supplier ? data.notifyAdminOnNewCar : undefined,
-      }
-
-      if (type === bookcarsTypes.UserType.Supplier) {
-        payload.payLater = data.payLater
-        payload.licenseRequired = data.licenseRequired
+        license: data.licenseId || undefined, // Store license ID
+        country: selectedCountry, // Store country in dedicated field
+        password: tempPassword, // Temporary password to skip email activation
       }
 
       const formStatus = await UserService.create(payload)
@@ -194,299 +128,192 @@ const CreateUser = () => {
       }
     } catch (err) {
       helper.error(err)
+      setFormError(true)
     }
   }
 
-  const supplier = type === bookcarsTypes.UserType.Supplier
-  const driver = type === bookcarsTypes.UserType.User
-
   return (
     <Layout onLoad={onLoad} strict>
-      {user && (
-        <div className="create-user">
-          <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="user-form-title">{strings.CREATE_USER_HEADING}</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Avatar
-                type={type}
-                mode="create"
-                record={null}
-                size="large"
-                readonly={false}
-                onBeforeUpload={onBeforeUpload}
-                onChange={onAvatarChange}
-                color="disabled"
-                className="avatar-ctn"
-              />
+      {user && visible && (
+        <PageContainer>
+          {/* Header */}
+          <div className="mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/users')}
+              className="mb-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Users
+            </Button>
+            <h1 className="text-2xl font-semibold text-gray-900">Create New Driver</h1>
+            <p className="text-sm text-gray-500 mt-1">Add a new driver to the system</p>
+          </div>
 
-              {supplier && (
-                <div className="info">
-                  <InfoIcon />
-                  <span>{csStrings.RECOMMENDED_IMAGE_SIZE}</span>
+          {/* Form Card */}
+          <Card className="max-w-2xl">
+            <CardHeader>
+              <CardTitle>Driver Information</CardTitle>
+              <CardDescription>Enter the driver's details below</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                
+                {/* Profile Picture - Optional */}
+                <div className="space-y-2">
+                  <Label>Profile Picture (Optional)</Label>
+                  <div className="flex justify-center">
+                    <Avatar
+                      type={bookcarsTypes.RecordType.User}
+                      mode="create"
+                      size="large"
+                      readonly={false}
+                      onChange={(avatar) => {
+                        setAvatar(avatar)
+                      }}
+                      color="disabled"
+                      className="avatar-ctn"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 text-center">Optional: Upload a profile picture for the driver</p>
                 </div>
-              )}
 
-              {admin && (
-                <FormControl fullWidth margin="dense" style={{ marginTop: supplier ? 0 : 39 }}>
-                  <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
-                  <Select
-                    label={commonStrings.TYPE}
-                    value={type}
-                    onChange={(e) => {
-                      if (errors.fullName) {
-                        clearErrors('fullName')
-                      }
-                      setValue('type', e.target.value)
-                    }}
-                    variant="standard"
-                    required
-                    fullWidth
-                  >
-                    <MenuItem value={bookcarsTypes.UserType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.UserType.Supplier}>{helper.getUserType(bookcarsTypes.UserType.Supplier)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.UserType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input
-                  // {...register('fullName')}
-                  type="text"
-                  error={!!errors.fullName}
-                  required
-                  autoComplete="off"
-                  onChange={(e) => {
-                    if (errors.fullName) {
-                      clearErrors('fullName')
-                    }
-                    setValue('fullName', e.target.value)
-                  }}
-                  onBlur={async (e) => {
-                    await validateFullName(e.target.value)
-                  }}
-                />
-                <FormHelperText error={!!errors.fullName}>
-                  {errors.fullName?.message || ''}
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input
-                  // {...register('email')}
-                  onChange={(e) => {
-                    if (errors.email) {
-                      clearErrors('email')
-                    }
-                    setValue('email', e.target.value)
-                  }}
-                  onBlur={async (e) => {
-                    await validateEmail(e.target.value)
-                  }}
-                  type="text"
-                  autoComplete="off"
-                  required
-                  error={!!errors.email}
-                />
-                <FormHelperText error={!!errors.email}>
-                  {errors.email?.message || ''}
-                </FormHelperText>
-              </FormControl>
-
-              {driver && (
-                <>
-                  <FormControl fullWidth margin="dense">
-                    <DatePicker
-                      label={commonStrings.BIRTH_DATE}
-                      variant="standard"
-                      required
-                      onChange={(birthDate) => {
-                        if (birthDate) {
-                          if (errors.birthDate) {
-                            clearErrors('birthDate')
-                          }
-                          setValue('birthDate', birthDate, { shouldValidate: true })
-                        }
-                      }}
-                      language={(user && user.language) || env.DEFAULT_LANGUAGE}
-                    />
-                    <FormHelperText error={!!errors.birthDate}>{errors.birthDate?.message || ''}</FormHelperText>
-                  </FormControl>
-
-                  <DriverLicense
-                    className="driver-license-field"
-                    onUpload={(filename: string) => {
-                      setLicense(filename)
-                    }}
+                {/* Full Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">
+                    Full Name <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="fullName"
+                    {...register('fullName')}
+                    placeholder="Enter full name"
+                    className={errors.fullName ? 'border-red-500' : ''}
                   />
-                </>
-              )}
+                  {errors.fullName && (
+                    <p className="text-sm text-red-500">{errors.fullName.message}</p>
+                  )}
+                </div>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input
-                  {...register('phone', {
-                    onBlur: () => trigger('phone'),
-                  })}
-                  type="text"
-                  autoComplete="off"
-                  error={!!errors.phone}
-                  onChange={() => {
-                    if (errors.phone) {
-                      clearErrors('phone')
-                    }
-                  }}
-                />
-                <FormHelperText error={!!errors.phone}>
-                  {errors.phone?.message || ''}
-                </FormHelperText>
-              </FormControl>
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label htmlFor="email">
+                    Email <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register('email')}
+                    onBlur={(e) => validateEmail(e.target.value)}
+                    placeholder="driver@example.com"
+                    className={errors.email ? 'border-red-500' : ''}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">{errors.email.message}</p>
+                  )}
+                </div>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input
-                  {...register('location')}
-                  type="text"
-                  autoComplete="off"
-                />
-              </FormControl>
+                {/* Phone */}
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    {...register('phone')}
+                    placeholder="+1234567890"
+                    className={errors.phone ? 'border-red-500' : ''}
+                  />
+                  {errors.phone && (
+                    <p className="text-sm text-red-500">{errors.phone.message}</p>
+                  )}
+                </div>
 
-              <FormControl fullWidth margin="dense">
-                <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input
-                  {...register('bio')}
-                  type="text"
-                  autoComplete="off"
-                />
-              </FormControl>
-
-              {supplier && (
-                <>
-                  <FormControl fullWidth margin="dense">
-                    <FormControlLabel
-                      control={(
-                        <Switch
-                          {...register('payLater')}
-                          checked={payLater}
-                          onChange={(e) => {
-                            setValue('payLater', e.target.checked)
-                          }}
-                          color="primary"
-                        />
-                      )}
-                      label={commonStrings.PAY_LATER}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth margin="dense">
-                    <FormControlLabel
-                      control={(
-                        <Switch
-                          {...register('licenseRequired')}
-                          checked={licenseRequired}
-                          onChange={(e) => {
-                            setValue('licenseRequired', e.target.checked)
-                          }}
-                          color="primary"
-                        />
-                      )}
-                      label={commonStrings.LICENSE_REQUIRED}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth margin="dense">
-                    <FormControlLabel
-                      control={(
-                        <Switch
-                          {...register('notifyAdminOnNewCar')}
-                          checked={notifyAdminOnNewCar}
-                          disabled={user?.type === bookcarsTypes.UserType.Supplier}
-                          onChange={(e) => {
-                            setValue('notifyAdminOnNewCar', e.target.checked)
-                          }}
-                          color="primary"
-                        />
-                      )}
-                      label={commonStrings.NOTIFY_ADMIN_ON_NEW_CAR}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel>{commonStrings.SUPPLIER_CAR_LIMIT}</InputLabel>
-                    <Input
-                      {...register('supplierCarLimit')}
-                      type="text"
-                      autoComplete="off"
-                      error={!!errors.supplierCarLimit}
-                      onChange={() => {
-                        if (errors.supplierCarLimit) {
-                          clearErrors('supplierCarLimit')
+                {/* Birth Date */}
+                <div className="space-y-2">
+                  <Label>
+                    Birth Date <span className="text-red-500">*</span>
+                  </Label>
+                  <DatePickerField
+                    value={birthDate}
+                    placeholder="Select birth date"
+                    onChange={(date) => {
+                      if (date) {
+                        setBirthDate(date)
+                        if (errors.birthDate) {
+                          clearErrors('birthDate')
                         }
-                      }}
-                    />
-                    <FormHelperText error={!!errors.supplierCarLimit}>
-                      {errors.supplierCarLimit?.message || ''}
-                    </FormHelperText>
-                  </FormControl>
+                        setValue('birthDate', date, { shouldValidate: true })
+                      }
+                    }}
+                    className={errors.birthDate ? 'border-red-500' : ''}
+                  />
+                  {errors.birthDate && (
+                    <p className="text-sm text-red-500">{errors.birthDate.message}</p>
+                  )}
+                </div>
 
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel>{commonStrings.MIN_RENTAL_DAYS}</InputLabel>
-                    <Input
-                      {...register('minimumRentalDays')}
-                      type="text"
-                      autoComplete="off"
-                      error={!!errors.minimumRentalDays}
-                      onChange={() => {
-                        if (errors.minimumRentalDays) {
-                          clearErrors('minimumRentalDays')
-                        }
-                      }}
-                    />
-                    <FormHelperText error={!!errors.minimumRentalDays}>
-                      {errors.minimumRentalDays?.message || ''}
-                    </FormHelperText>
-                  </FormControl>
+                {/* License ID */}
+                <div className="space-y-2">
+                  <Label htmlFor="licenseId">License ID</Label>
+                  <Input
+                    id="licenseId"
+                    {...register('licenseId')}
+                    placeholder="Enter driver's license ID"
+                  />
+                  <p className="text-sm text-gray-500">Optional: Driver's license identification number</p>
+                </div>
 
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel>{commonStrings.PRICE_CHANGE_RATE}</InputLabel>
-                    <Input
-                      {...register('priceChangeRate')}
-                      type="text"
-                      autoComplete="off"
-                      error={!!errors.priceChangeRate}
-                      onChange={() => {
-                        if (errors.priceChangeRate) {
-                          clearErrors('priceChangeRate')
-                        }
-                      }}
-                    />
-                    <FormHelperText error={!!errors.priceChangeRate}>
-                      {errors.priceChangeRate?.message || ''}
-                    </FormHelperText>
-                  </FormControl>
-                </>
-              )}
+                {/* Country */}
+                <div className="space-y-2">
+                  <Label htmlFor="country">
+                    Country <span className="text-red-500">*</span>
+                  </Label>
+                  <CountrySelect
+                    value={selectedCountry}
+                    onChange={(country) => {
+                      setSelectedCountry(country)
+                      setValue('country', country, { shouldValidate: true })
+                      if (country && errors.country) {
+                        clearErrors('country')
+                      }
+                    }}
+                    placeholder="Select a country"
+                    className={errors.country ? 'border-red-500' : ''}
+                  />
+                  {errors.country && (
+                    <p className="text-sm text-red-500">{errors.country.message}</p>
+                  )}
+                </div>
 
-              <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
-                  {commonStrings.CREATE}
+                {/* Form Error */}
+                {formError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{commonStrings.GENERIC_ERROR}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1"
+                  >
+                    {isSubmitting ? 'Creating...' : 'Create Driver'}
                 </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={handleCancel}>
-                  {commonStrings.CANCEL}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancel}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
                 </Button>
-              </div>
-
-              <div className="form-error">
-                {formError && <Error message={commonStrings.GENERIC_ERROR} />}
-                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
-          </Paper>
-        </div>
+            </CardContent>
+          </Card>
+        </PageContainer>
       )}
-      {(loading || isSubmitting) && <Backdrop text={commonStrings.PLEASE_WAIT} disableMargin />}
     </Layout>
   )
 }

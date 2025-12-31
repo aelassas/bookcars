@@ -298,6 +298,7 @@ export interface CreateUserPayload {
   licenseRequired?: boolean
   minimumRentalDays?: number
   license?: string
+  country?: string
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
@@ -402,6 +403,7 @@ export interface User {
   contracts?: Contract[]
   licenseRequired?: boolean
   license?: string | null
+  country?: string
   minimumRentalDays?: number
   priceChangeRate?: number
   supplierCarLimit?: number
