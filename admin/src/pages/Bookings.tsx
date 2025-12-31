@@ -194,8 +194,8 @@ const Bookings = () => {
     return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
   }
 
-  const formatPrice = (price: number) => {
-    return bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, user?.language || 'en')
+  const formatPrice = (price?: number) => {
+    return bookcarsHelper.formatPrice(price || 0, commonStrings.CURRENCY, user?.language || 'en')
   }
 
   return (

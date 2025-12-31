@@ -60,7 +60,7 @@ const Users = () => {
         types: _types,
       }
 
-      const data = await UserService.getUsers(payload, _page + 1, pageSize, '')
+      const data = await UserService.getUsers(payload, '', _page + 1, pageSize)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       
       if (!_data) {
