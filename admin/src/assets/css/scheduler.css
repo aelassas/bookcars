@@ -10,7 +10,7 @@ div.scheduler {
 }
 
 /* Desktop: Account for fixed navigation sidebar */
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.scheduler {
     left: 250px;
   }
@@ -238,7 +238,7 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   background: #ffffff;
 }
 
-.timeline-row + .timeline-row {
+.timeline-row+.timeline-row {
   border-top: 1px solid #e2e8f0;
 }
 
@@ -246,12 +246,12 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   position: sticky;
   left: 0;
   z-index: 6;
-  padding: 12px;
+  padding: 8px 12px;
   border-right: 1px solid #e2e8f0;
   background: linear-gradient(90deg, #ffffff 75%, rgba(255, 255, 255, 0.75) 100%);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .timeline-car-name {
@@ -298,8 +298,8 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   position: relative;
   display: grid;
   align-content: flex-start;
-  gap: 6px 0;
-  padding: 8px 4px 10px;
+  gap: 4px 0;
+  padding: 4px 4px 6px;
 }
 
 .timeline-booking {
@@ -346,5 +346,33 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   .timeline-scale,
   .timeline-row {
     grid-template-columns: 200px 1fr;
+  }
+}
+
+.timeline-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.timeline-loading-spinner {
+  height: 100%;
+  width: 50%;
+  background: #0f172a;
+  animation: loading-bar 1s infinite linear;
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(200%);
   }
 }
