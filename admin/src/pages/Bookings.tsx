@@ -244,12 +244,11 @@ const Bookings = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Pending}>Pending</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Deposit}>Deposit</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Paid}>Confirmed</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Reserved}>Reserved</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Cancelled}>Cancelled</SelectItem>
-                <SelectItem value={bookcarsTypes.BookingStatus.Void}>Void</SelectItem>
+                {helper.getBookingStatuses().map((status) => (
+                  <SelectItem key={status.value} value={status.value}>
+                    {status.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -266,6 +265,7 @@ const Bookings = () => {
                     <TableHead className="font-semibold">RETURN DATE</TableHead>
                     <TableHead className="font-semibold">DAYS</TableHead>
                     <TableHead className="font-semibold">EARNINGS</TableHead>
+                    <TableHead className="font-semibold">PAYMENT STATUS</TableHead>
                     <TableHead className="font-semibold">INVOICE</TableHead>
                     <TableHead className="font-semibold">USERS RECEIPT</TableHead>
                     <TableHead className="font-semibold">SENT TO AADE MYDATA</TableHead>
@@ -311,6 +311,17 @@ const Bookings = () => {
                           </TableCell>
                           <TableCell className="text-gray-900 font-medium">
                             {formatPrice(booking.price)}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              style={{
+                                backgroundColor: helper.getBookingStatusBackgroundColor(booking.status),
+                                color: helper.getBookingStatusTextColor(booking.status)
+                              }}
+                              className="hover:opacity-80 transition-opacity"
+                            >
+                              {helper.getBookingStatus(booking.status)}
+                            </Badge>
                           </TableCell>
                           <TableCell className="text-gray-500 text-sm">
                             {booking.invoice ? booking.invoice : 'No invoice'}

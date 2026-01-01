@@ -845,12 +845,21 @@ export const getBookings = async (req: Request, res: Response) => {
           { to: { $gte: dateBetweenStart } },
         ],
       })
-    } else if (from) {
-      $match.$and!.push({ from: { $gte: from } }) // $from >= from
-    }
+    } else if (from || to) {
+      // Use overlap detection: booking overlaps with [from, to] if:
+      // booking.from <= to AND booking.to >= from
+      const overlapConditions: any[] = []
 
-    if (to) {
-      $match.$and!.push({ to: { $lte: to } })// $to < to
+      if (from) {
+        overlapConditions.push({ to: { $gte: from } })
+      }
+      if (to) {
+        overlapConditions.push({ from: { $lte: to } })
+      }
+
+      if (overlapConditions.length > 0) {
+        $match.$and!.push({ $and: overlapConditions })
+      }
     }
     if (pickupLocation) {
       $match.$and!.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })

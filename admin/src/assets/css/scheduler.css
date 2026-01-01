@@ -7,6 +7,7 @@ div.scheduler {
   display: flex;
   background: #f8fafc;
   color: #0f172a;
+  overflow: hidden;
 }
 
 /* Desktop: Account for fixed navigation sidebar */
@@ -93,6 +94,8 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   flex-direction: column;
   height: 100%;
   background: #f8fafc;
+  width: 100%;
+  min-width: 0;
 }
 
 .timeline-header {
@@ -172,6 +175,8 @@ div.scheduler .col-1 .cl-scheduler-filter div.panel-collapse {
   flex: 1;
   overflow: auto;
   position: relative;
+  min-width: 0;
+  width: 100%;
 }
 
 .timeline-scale {

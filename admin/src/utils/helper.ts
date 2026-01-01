@@ -432,6 +432,12 @@ export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
     case bookcarsTypes.BookingStatus.Cancelled:
       return commonStrings.BOOKING_STATUS_CANCELLED
 
+    case bookcarsTypes.BookingStatus.Partial:
+      return commonStrings.BOOKING_STATUS_PARTIAL
+
+    case bookcarsTypes.BookingStatus.Unpaid:
+      return commonStrings.BOOKING_STATUS_UNPAID
+
     default:
       return ''
   }
@@ -466,6 +472,13 @@ export const getBookingStatusBackgroundColor = (status?: bookcarsTypes.BookingSt
     case bookcarsTypes.BookingStatus.Cancelled:
       return '#FBDFDE'
 
+    case bookcarsTypes.BookingStatus.Partial:
+    case bookcarsTypes.BookingStatus.Pending:
+      return '#FFF9C4' // Yellow
+
+    case bookcarsTypes.BookingStatus.Unpaid:
+      return '#FFCDD2' // Red
+
     default:
       return ''
   }
@@ -496,6 +509,13 @@ export const getBookingStatusTextColor = (status?: bookcarsTypes.BookingStatus) 
 
     case bookcarsTypes.BookingStatus.Cancelled:
       return '#E53935'
+
+    case bookcarsTypes.BookingStatus.Partial:
+    case bookcarsTypes.BookingStatus.Pending:
+      return '#F57F17' // Darker yellow
+
+    case bookcarsTypes.BookingStatus.Unpaid:
+      return '#C62828' // Dark red
 
     default:
       return ''
@@ -535,6 +555,14 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
   {
     value: bookcarsTypes.BookingStatus.Cancelled,
     label: commonStrings.BOOKING_STATUS_CANCELLED,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Partial,
+    label: commonStrings.BOOKING_STATUS_PARTIAL,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Unpaid,
+    label: commonStrings.BOOKING_STATUS_UNPAID,
   },
 ]
 

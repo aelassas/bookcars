@@ -55,6 +55,8 @@ export enum BookingStatus {
   PaidInFull = 'paidInFull',
   Reserved = 'reserved',
   Cancelled = 'cancelled',
+  Partial = 'partial',
+  Unpaid = 'unpaid',
 }
 
 export enum Mileage {
