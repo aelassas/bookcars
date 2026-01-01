@@ -1,50 +1,14 @@
 /* Create Booking */
 
-div.create-booking {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  align-items: center;
-  transform: translate3d(0, 0, 0);
-  margin: 45px 0;
-}
-
 .booking-form-wrapper {
   margin: 32px 0;
 }
 
-.booking-form-title {
-  text-align: center;
-  text-transform: capitalize;
-  color: #121212;
+/* MUI overrides for standard variants to match Shadcn better if needed */
+.MuiInput-root:before {
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
-.checkbox-fc {
-  margin: 13px 0 !important;
-}
-
-.checkbox-fc .checkbox-fcl {
-  color: rgb(0 0 0 / 60%);
-  font-size: 0.9em;
-  line-height: 1em;
-}
-
-/* Device width is less than or equal to 960px */
-
-@media only screen and (width <=960px) {
-  .booking-form {
-    width: 360px;
-    padding: 30px;
-    display: inline-block;
-  }
-}
-
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (width >=960px) {
-  .booking-form {
-    width: 550px;
-    padding: 30px;
-    display: inline-block;
-  }
+.MuiInput-root:hover:not(.Mui-disabled):before {
+  border-bottom: 2px solid #94a3b8 !important;
 }

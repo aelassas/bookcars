@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  FormControl,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-  FormHelperText,
-  InputLabel,
-  Input
-} from '@mui/material'
-import {
   Info as InfoIcon,
   Person as DriverIcon
 } from '@mui/icons-material'
@@ -38,6 +28,19 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
 import { Option, Supplier } from '@/models/common'
 import { schema, FormFields } from '@/models/BookingForm'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 
 import '@/assets/css/create-booking.css'
 
@@ -51,15 +54,7 @@ const CreateBooking = () => {
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors, isSubmitting },
-    clearErrors,
-    getValues,
-  } = useForm<FormFields>({
+  const form = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit',
     defaultValues: {
@@ -80,6 +75,14 @@ const CreateBooking = () => {
       additionalDriverPhone: '',
     }
   })
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { isSubmitting, errors }, // Destructure errors here for birthdate check
+    getValues,
+  } = form
 
   const supplier = useWatch({ control, name: 'supplier' })
   const pickupLocation = useWatch({ control, name: 'pickupLocation' })
@@ -174,280 +177,381 @@ const CreateBooking = () => {
 
   return (
     <Layout onLoad={onLoad} strict>
-      <div className="create-booking">
-        <Paper className="booking-form booking-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="booking-form-title">{strings.NEW_BOOKING_HEADING}</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {!isSupplier && (
-              <FormControl fullWidth margin="dense">
-                <SupplierSelectList
-                  label={blStrings.SUPPLIER}
-                  required
-                  variant="standard"
-                  onChange={(values) => setValue('supplier', values.length > 0 ? values[0] as Option : undefined)}
-                />
-              </FormControl>
-            )}
-
-            <UserSelectList
-              label={blStrings.DRIVER}
-              required
-              variant="standard"
-              onChange={(values) => setValue('driver', values.length > 0 ? values[0] as Option : undefined)}
-            />
-
-            <FormControl fullWidth margin="dense">
-              <LocationSelectList
-                label={bfStrings.PICK_UP_LOCATION}
-                required
-                variant="standard"
-                onChange={(values) => setValue('pickupLocation', values.length > 0 ? values[0] as Option : undefined)}
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense">
-              <LocationSelectList
-                label={bfStrings.DROP_OFF_LOCATION}
-                required
-                variant="standard"
-                onChange={(values) => setValue('dropOffLocation', values.length > 0 ? values[0] as Option : undefined)}
-              />
-            </FormControl>
-
-            <CarSelectList
-              label={blStrings.CAR}
-              supplier={supplier?._id!}
-              pickupLocation={pickupLocation?._id!}
-              onChange={(values) => {
-                const _car = values.length > 0 ? values[0] as bookcarsTypes.Car : undefined
-                setValue('car', _car)
-                setCarObj(_car)
-              }}
-              required
-            />
-
-            <FormControl fullWidth margin="dense">
-              <DateTimePicker
-                label={commonStrings.FROM}
-                value={from}
-                showClear
-                required
-                onChange={(date) => {
-                  setValue('from', date || undefined)
-
-                  if (date && to && date > to) {
-                    setValue('to', undefined)
-                  }
-                }}
-                onError={(err: DateTimeValidationError) => {
-                  if (err) {
-                    setFromError(true)
-                  } else {
-                    setFromError(false)
-                  }
-                }}
-                language={UserService.getLanguage()}
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense">
-              <DateTimePicker
-                label={commonStrings.TO}
-                value={to}
-                minDate={minDate}
-                showClear
-                required
-                onChange={(date) => {
-                  setValue('to', date || undefined)
-                }}
-                onError={(err: DateTimeValidationError) => {
-                  if (err) {
-                    setToError(true)
-                  } else {
-                    setToError(false)
-                  }
-                }}
-                language={UserService.getLanguage()}
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense">
-              <StatusList
-                label={blStrings.STATUS}
-                onChange={(value) => {
-                  const currentValue = getValues('status')
-                  if (currentValue !== value) {
-                    setValue('status', value)
-                  }
-                }}
-                required
-              />
-            </FormControl>
-
-            <div className="info">
-              <InfoIcon />
-              <span>{commonStrings.OPTIONAL}</span>
-            </div>
-
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('cancellation')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
+      <div className="create-booking p-6">
+        <Card className="mx-auto max-w-3xl" style={visible ? {} : { display: 'none' }}>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">{strings.NEW_BOOKING_HEADING}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {!isSupplier && (
+                  <FormField
+                    control={control}
+                    name="supplier"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="required">{blStrings.SUPPLIER}</FormLabel>
+                        <FormControl>
+                          <SupplierSelectList
+                            variant="standard"
+                            onChange={(values) => setValue('supplier', values.length > 0 ? values[0] as Option : undefined)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                }
-                label={csStrings.CANCELLATION}
-                className="checkbox-fcl"
-              />
-            </FormControl>
+                )}
 
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('amendments')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
-                  />
-                }
-                label={csStrings.AMENDMENTS}
-                className="checkbox-fcl"
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('theftProtection')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
-                  />
-                }
-                label={csStrings.THEFT_PROTECTION}
-                className="checkbox-fcl"
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('collisionDamageWaiver')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
-                  />
-                }
-                label={csStrings.COLLISION_DAMAGE_WAVER}
-                className="checkbox-fcl"
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('fullInsurance')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
-                  />
-                }
-                label={csStrings.FULL_INSURANCE}
-                className="checkbox-fcl"
-              />
-            </FormControl>
-
-            <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register('additionalDriver')}
-                    color="primary"
-                    disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
-                  />
-                }
-                label={csStrings.ADDITIONAL_DRIVER}
-                className="checkbox-fcl"
-              />
-            </FormControl>
-
-            {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriverEnabled && (
-              <>
-                <div className="info">
-                  <DriverIcon />
-                  <span>{csStrings.ADDITIONAL_DRIVER}</span>
-                </div>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                  <Input
-                    {...register('additionalDriverFullName')}
-                    type="text"
-                    required
-                    autoComplete="off"
-                  />
-                  {errors.additionalDriverFullName && <FormHelperText error>{commonStrings.REQUIRED}</FormHelperText>}
-                </FormControl>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                  <Input
-                    {...register('additionalDriverEmail')}
-                    type="text"
-                    error={!!errors.additionalDriverEmail}
-                    required
-                    autoComplete="off"
-                  />
-                  {errors.additionalDriverEmail && <FormHelperText error>{errors.additionalDriverEmail.message}</FormHelperText>}
-                </FormControl>
-
-                <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <Input
-                    {...register('additionalDriverPhone')}
-                    type="text"
-                    error={!!errors.additionalDriverPhone}
-                    required
-                    autoComplete="off"
-                  />
-                  {errors.additionalDriverPhone && <FormHelperText error>{errors.additionalDriverPhone.message}</FormHelperText>}
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                  <DatePicker
-                    label={commonStrings.BIRTH_DATE}
-                    required
-                    onChange={(birthDate) => {
-                      if (birthDate) {
-                        if (errors.additionalDriverBirthDate) {
-                          clearErrors('additionalDriverBirthDate')
-                        }
-                        setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
-                      }
-                    }}
-                    language={UserService.getLanguage()}
-                  />
-                  {errors.additionalDriverBirthDate && (
-                    <FormHelperText error>
-                      {helper.getBirthDateError(env.MINIMUM_AGE)}
-                    </FormHelperText>
+                <FormField
+                  control={control}
+                  name="driver"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel className="required">{blStrings.DRIVER}</FormLabel>
+                      <FormControl>
+                        <UserSelectList
+                          variant="standard"
+                          onChange={(values) => setValue('driver', values.length > 0 ? values[0] as Option : undefined)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </FormControl>
-              </>
-            )}
+                />
 
-            <div>
-              <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
-                  {commonStrings.CREATE}
-                </Button>
-                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
-                  {commonStrings.CANCEL}
-                </Button>
-              </div>
-            </div>
-          </form>
-        </Paper>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={control}
+                    name="pickupLocation"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="required">{bfStrings.PICK_UP_LOCATION}</FormLabel>
+                        <FormControl>
+                          <LocationSelectList
+                            variant="standard"
+                            onChange={(values) => setValue('pickupLocation', values.length > 0 ? values[0] as Option : undefined)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="dropOffLocation"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="required">{bfStrings.DROP_OFF_LOCATION}</FormLabel>
+                        <FormControl>
+                          <LocationSelectList
+                            variant="standard"
+                            onChange={(values) => setValue('dropOffLocation', values.length > 0 ? values[0] as Option : undefined)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={control}
+                  name="car"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel className="required">{blStrings.CAR}</FormLabel>
+                      <FormControl>
+                        <CarSelectList
+                          supplier={supplier?._id!}
+                          pickupLocation={pickupLocation?._id!}
+                          onChange={(values) => {
+                            const _car = values.length > 0 ? values[0] as bookcarsTypes.Car : undefined
+                            setValue('car', _car)
+                            setCarObj(_car)
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={control}
+                    name="from"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="required">{commonStrings.FROM}</FormLabel>
+                        <FormControl>
+                          <DateTimePicker
+                            value={from}
+                            showClear
+                            onChange={(date) => {
+                              setValue('from', date || undefined)
+                              if (date && to && date > to) {
+                                setValue('to', undefined)
+                              }
+                            }}
+                            onError={(err: DateTimeValidationError) => {
+                              setFromError(!!err)
+                            }}
+                            language={UserService.getLanguage()}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="to"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel className="required">{commonStrings.TO}</FormLabel>
+                        <FormControl>
+                          <DateTimePicker
+                            value={to}
+                            minDate={minDate}
+                            showClear
+                            onChange={(date) => {
+                              setValue('to', date || undefined)
+                            }}
+                            onError={(err: DateTimeValidationError) => {
+                              setToError(!!err)
+                            }}
+                            language={UserService.getLanguage()}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={control}
+                  name="status"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel className="required">{blStrings.STATUS}</FormLabel>
+                      <FormControl>
+                        <StatusList
+                          onChange={(value) => {
+                            const currentValue = getValues('status')
+                            if (currentValue !== value) {
+                              setValue('status', value)
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex items-center gap-2 p-2 bg-neutral-50 rounded-md">
+                  <InfoIcon className="text-neutral-500 w-4 h-4" />
+                  <span className="text-xs text-neutral-500">{commonStrings.OPTIONAL}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FormField
+                    control={control}
+                    name="cancellation"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.CANCELLATION}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'cancellation')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="amendments"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.AMENDMENTS}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'amendments')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="theftProtection"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.THEFT_PROTECTION}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'theftProtection')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="collisionDamageWaiver"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.COLLISION_DAMAGE_WAVER}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'collisionDamageWaiver')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="fullInsurance"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.FULL_INSURANCE}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'fullInsurance')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="additionalDriver"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <Label>{csStrings.ADDITIONAL_DRIVER}</Label>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={!carObj || !helper.carOptionAvailable(carObj, 'additionalDriver')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {carObj && helper.carOptionAvailable(carObj, 'additionalDriver') && additionalDriverEnabled && (
+                  <div className="space-y-6 pt-4 border-t">
+                    <div className="flex items-center gap-2">
+                      <DriverIcon className="text-neutral-500" />
+                      <span className="font-semibold">{csStrings.ADDITIONAL_DRIVER}</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={control}
+                        name="additionalDriverFullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="required">{commonStrings.FULL_NAME}</FormLabel>
+                            <FormControl>
+                              <Input {...field} autoComplete="off" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={control}
+                        name="additionalDriverEmail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="required">{commonStrings.EMAIL}</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="email" autoComplete="off" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={control}
+                        name="additionalDriverPhone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="required">{commonStrings.PHONE}</FormLabel>
+                            <FormControl>
+                              <Input {...field} autoComplete="off" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={control}
+                        name="additionalDriverBirthDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="required">{commonStrings.BIRTH_DATE}</FormLabel>
+                            <FormControl>
+                              <DatePicker
+                                value={field.value}
+                                onChange={(birthDate) => {
+                                  if (birthDate) {
+                                    setValue('additionalDriverBirthDate', birthDate, { shouldValidate: true })
+                                  }
+                                }}
+                                language={UserService.getLanguage()}
+                              />
+                            </FormControl>
+                            <FormMessage>
+                              {errors.additionalDriverBirthDate && helper.getBirthDateError(env.MINIMUM_AGE)}
+                            </FormMessage>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-4 pt-6">
+                  <Button type="submit" disabled={isSubmitting} className="flex-1">
+                    {commonStrings.CREATE}
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/')} className="flex-1">
+                    {commonStrings.CANCEL}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   )

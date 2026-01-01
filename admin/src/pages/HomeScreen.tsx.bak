@@ -18,7 +18,7 @@ import * as CarService from '@/services/CarService'
 import * as UserService from '@/services/UserService'
 import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
-import { format, differenceInCalendarDays } from 'date-fns'
+import { format, differenceInCalendarDays, formatDistanceToNow } from 'date-fns'
 
 const activeStatuses: bookcarsTypes.BookingStatus[] = [
   bookcarsTypes.BookingStatus.Pending,
@@ -31,8 +31,8 @@ const activeStatuses: bookcarsTypes.BookingStatus[] = [
 const HomeScreen = () => {
   const navigate = useNavigate()
   const [suppliers, setSuppliers] = useState<string[]>([])
-  const [from, setFrom] = useState<Date | null>(new Date())
-  const [to, setTo] = useState<Date | null>(new Date())
+  const [from, setFrom] = useState<Date | null>(null)
+  const [to, setTo] = useState<Date | null>(null)
   const [carRange, setCarRange] = useState<string>('all')
 
   const [recentBookings, setRecentBookings] = useState<bookcarsTypes.Booking[]>([])
@@ -46,11 +46,12 @@ const HomeScreen = () => {
   const [loadingAvailability, setLoadingAvailability] = useState(false)
   const [loadingCards, setLoadingCards] = useState(false)
   const [recentCustomers, setRecentCustomers] = useState<bookcarsTypes.User[]>([])
+  const [newCustomersCount, setNewCustomersCount] = useState(0)
 
   // Calculate trend percentages (mock data for now)
-  const [revenueTrend, setRevenueTrend] = useState(0)
-  const [startsToday, setStartsToday] = useState(0)
-  const [rentEndsToday, setRentEndsToday] = useState(0)
+  const revenueTrend = 12.5
+  const rentedTrend = 8.2
+  const availableTrend = 5.7
 
   const loadSuppliers = useCallback(async () => {
     const data = await SupplierService.getAllSuppliers()
@@ -60,101 +61,40 @@ const HomeScreen = () => {
   const fetchBookings = useCallback(async (_suppliers: string[]) => {
     try {
       setLoadingCards(true)
-
-      // 1. Calculate boundaries for this month and last month
-      const today = new Date()
-      const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-      const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-      const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59, 999)
-
-      // To get accurate stats, we fetch from the start of last month until the end of THIS month
-      const fetchFrom = startOfLastMonth
-      const fetchTo = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+      const filter: bookcarsTypes.Filter = {}
+      if (from) {
+        filter.from = from
+      }
+      if (to) {
+        filter.to = to
+      }
 
       const payload: bookcarsTypes.GetBookingsPayload = {
         suppliers: _suppliers,
         statuses: activeStatuses,
-        filter: {
-          from: fetchFrom,
-          to: fetchTo
-        },
+        filter,
       }
 
-      // We fetch a larger amount to ensure we cover the 2 months
-      const data = await BookingService.getBookings(payload, 1, 1000)
+      const data = await BookingService.getBookings(payload, 1, 200)
       const result = data && data.length > 0 ? data[0]?.resultData || [] : []
 
-      // Latest bookings for the "Recent Bookings" table (sorted by newest)
       const sorted = [...result].sort((a, b) => new Date(b.from).getTime() - new Date(a.from).getTime())
       setRecentBookings(sorted.slice(0, 3))
 
-      // 2. Calculate Revenue for this month/last month and rentals for TODAY/YESTERDAY
-      let thisMonthRevenue = 0
-      let lastMonthRevenue = 0
+      const revenue = result.reduce((sum, b) => sum + (b.price || 0), 0)
+      setTotalRevenue(revenue)
 
-      const startOfToday = new Date(today)
-      startOfToday.setHours(0, 0, 0, 0)
-      const endOfToday = new Date(today)
-      endOfToday.setHours(23, 59, 59, 999)
+      const now = new Date().getTime()
+      const active = result.filter((b) => {
+        const fromDate = new Date(b.from).getTime()
+        const toDate = new Date(b.to).getTime()
+        return fromDate <= now && now <= toDate
+      }).length
+      setActiveBookingsCount(active)
 
-      const startOfYesterday = new Date(today)
-      startOfYesterday.setDate(today.getDate() - 1)
-      startOfYesterday.setHours(0, 0, 0, 0)
-      const endOfYesterday = new Date(today)
-      endOfYesterday.setDate(today.getDate() - 1)
-      endOfYesterday.setHours(23, 59, 59, 999)
-
-      let rentedTodayCount = 0
-      let collectionTodayCount = 0
-      let startTodayCount = 0
-
-      result.forEach((b) => {
-        const fromDate = new Date(b.from)
-        const toDate = new Date(b.to)
-
-        // Monthly Revenue (keep as is)
-        if (fromDate >= startOfThisMonth) {
-          thisMonthRevenue += (b.price || 0)
-        } else if (fromDate >= startOfLastMonth && fromDate <= endOfLastMonth) {
-          lastMonthRevenue += (b.price || 0)
-        }
-
-        // Cars Rented TODAY (active periods)
-        if (fromDate <= endOfToday && toDate >= startOfToday) {
-          rentedTodayCount++
-        }
-
-        // 1. Rent ends today (Car to be collected today)
-        // Check if toDate is today (ignoring time)
-        if (toDate >= startOfToday && toDate <= endOfToday) {
-          collectionTodayCount++
-        }
-
-        // 2. Reservation starts today (booking start date = today)
-        // Check if fromDate is today (ignoring time)
-        if (fromDate >= startOfToday && fromDate <= endOfToday) {
-          startTodayCount++
-        }
-      })
-
-      setTotalRevenue(thisMonthRevenue)
-      setActiveBookingsCount(rentedTodayCount)
-      setRentEndsToday(collectionTodayCount)
-      setStartsToday(startTodayCount)
-
-      // 3. Calculate Trends
-      const calculateTrend = (current: number, previous: number) => {
-        if (previous === 0) {
-          return current > 0 ? 100 : 0
-        }
-        return Math.round(((current - previous) / previous) * 100)
-      }
-
-      setRevenueTrend(calculateTrend(thisMonthRevenue, lastMonthRevenue))
-
-      // earnings series over current month (group by day)
+      // earnings series over selected period (group by day)
       const byDay = new Map<string, number>()
-      result.filter(b => new Date(b.from) >= startOfThisMonth).forEach((b) => {
+      result.forEach((b) => {
         const day = new Date(b.from)
         const key = day.toISOString().slice(0, 10)
         byDay.set(key, (byDay.get(key) || 0) + (b.price || 0))
@@ -167,7 +107,7 @@ const HomeScreen = () => {
     } finally {
       setLoadingCards(false)
     }
-  }, [])
+  }, [from, to])
 
   const fetchAvailableCars = useCallback(async () => {
     if (!from || !to) {
@@ -215,7 +155,7 @@ const HomeScreen = () => {
       try {
         const allSuppliersData = await SupplierService.getAllSuppliers()
         allSupplierIds = bookcarsHelper.flattenSuppliers(allSuppliersData)
-      } catch {
+      } catch (err) {
         // Fall back to user's suppliers if can't get all
       }
 
@@ -305,7 +245,7 @@ const HomeScreen = () => {
 
       const payload: bookcarsTypes.GetUsersBody = {
         user: '',
-        types: [bookcarsTypes.UserType.User],
+        types: [bookcarsTypes.UserType.User], // Only drivers/customers
       }
 
       const data = await UserService.getUsers(payload, '', 1, 100)
@@ -314,9 +254,7 @@ const HomeScreen = () => {
       // Filter by creation date (last 30 days) and sort by newest first
       const recentUsers = users
         .filter((user) => {
-          if (!user.createdAt) {
-            return false
-          }
+          if (!user.createdAt) return false
           const createdDate = new Date(user.createdAt)
           return createdDate >= thirtyDaysAgo
         })
@@ -327,6 +265,7 @@ const HomeScreen = () => {
         })
 
       setRecentCustomers(recentUsers.slice(0, 3)) // Show top 3
+      setNewCustomersCount(recentUsers.length)
     } catch (err) {
       helper.error(err)
     }
@@ -351,6 +290,50 @@ const HomeScreen = () => {
       revenue: earningsSeries[index] || 0,
     }))
   }, [earningsLabels, earningsSeries])
+
+  const getStatusVariant = (status: bookcarsTypes.BookingStatus): 'default' | 'secondary' | 'destructive' | 'outline' => {
+    switch (status) {
+      case bookcarsTypes.BookingStatus.Paid:
+      case bookcarsTypes.BookingStatus.PaidInFull:
+        return 'default'
+      case bookcarsTypes.BookingStatus.Pending:
+      case bookcarsTypes.BookingStatus.Deposit:
+      case bookcarsTypes.BookingStatus.Reserved:
+        return 'secondary'
+      case bookcarsTypes.BookingStatus.Cancelled:
+      case bookcarsTypes.BookingStatus.Void:
+        return 'destructive'
+      default:
+        return 'outline'
+    }
+  }
+
+  const getStatusLabel = (status: bookcarsTypes.BookingStatus): string => {
+    switch (status) {
+      case bookcarsTypes.BookingStatus.Paid:
+        return 'Confirmed'
+      case bookcarsTypes.BookingStatus.PaidInFull:
+        return 'Confirmed'
+      case bookcarsTypes.BookingStatus.Pending:
+        return 'Reserved'
+      case bookcarsTypes.BookingStatus.Deposit:
+        return 'Partial'
+      default:
+        return status
+    }
+  }
+
+  const getPaymentLabel = (status: bookcarsTypes.BookingStatus): string => {
+    switch (status) {
+      case bookcarsTypes.BookingStatus.Paid:
+      case bookcarsTypes.BookingStatus.PaidInFull:
+        return 'Paid'
+      case bookcarsTypes.BookingStatus.Deposit:
+        return 'Partial'
+      default:
+        return 'Pending'
+    }
+  }
 
   const currentDate = format(new Date(), 'EEEE, MMMM d, yyyy · h:mm a')
 
@@ -381,18 +364,11 @@ const HomeScreen = () => {
           {/* Cars Rented */}
           <Card>
             <CardContent className="p-6">
-              <p className="text-sm text-neutral-500 mb-1">Cars Rented Today</p>
+              <p className="text-sm text-neutral-500 mb-1">Cars Rented</p>
               <p className="text-3xl font-semibold text-neutral-900">{activeBookingsCount}</p>
-              <div className="mt-3 space-y-1">
-                <p className="text-xs text-neutral-500 flex justify-between">
-                  <span>Rent ends today:</span>
-                  <span className="font-medium text-neutral-900">{rentEndsToday}</span>
-                </p>
-                <p className="text-xs text-neutral-500 flex justify-between">
-                  <span>Starts today:</span>
-                  <span className="font-medium text-neutral-900">{startsToday}</span>
-                </p>
-              </div>
+              <p className="text-xs text-green-600 mt-2">
+                +{rentedTrend}% vs last month
+              </p>
             </CardContent>
           </Card>
 
@@ -577,37 +553,33 @@ const HomeScreen = () => {
               </div>
             </CardHeader>
             <CardContent className="p-6 pt-0 space-y-3">
-              {recentCustomers.length > 0 ? (
-                recentCustomers.map((customer) => {
-                  const initials = customer.fullName
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .toUpperCase()
-                    .slice(0, 2)
-
-                  return (
-                    <div key={customer._id} className="flex items-center gap-2">
-                      {customer.avatar ? (
-                        <img
-                          src={customer.avatar}
-                          alt={customer.fullName}
-                          className="h-8 w-8 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
-                          {initials}
-                        </div>
-                      )}
-                      <span className="text-sm text-neutral-900">{customer.fullName}</span>
-                    </div>
-                  )
-                })
-              ) : (
-                <div className="text-center text-sm text-neutral-500 py-4">
-                  No new customers in the last 30 days
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                    OK
+                  </div>
+                  <span className="text-sm text-neutral-900">Olivia Kortonen</span>
                 </div>
-              )}
+                <span className="text-xs text-neutral-500">15m ago</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                    SR
+                  </div>
+                  <span className="text-sm text-neutral-900">Sophia Rossi</span>
+                </div>
+                <span className="text-xs text-neutral-500">1hr ago</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                    ED
+                  </div>
+                  <span className="text-sm text-neutral-900">Eric Diaz</span>
+                </div>
+                <span className="text-xs text-neutral-500">3hr ago</span>
+              </div>
             </CardContent>
           </Card>
         </div>

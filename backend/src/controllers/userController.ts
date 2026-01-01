@@ -49,7 +49,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
   //
   // Create user
   //
-  let user: env.User
+  let user: mongoose.HydratedDocument<env.User>
   try {
     body.email = helper.trim(body.email, ' ')
     body.active = true
@@ -1471,6 +1471,8 @@ export const getUsers = async (req: Request, res: Response) => {
             blacklisted: 1,
             birthDate: 1,
             customerId: 1,
+            createdAt: 1,
+            updatedAt: 1,
           },
         },
         {
@@ -1547,7 +1549,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
               )
               .select('_additionalDriver -_id')
               .lean()
-          ).map((b) => b._additionalDriver)
+          ).map((b: any) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
           await Booking.deleteMany({ supplier: id })
           const cars = await Car.find({ supplier: id })

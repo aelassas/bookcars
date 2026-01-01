@@ -413,6 +413,8 @@ export interface User {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface Option {
