@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Edit, Trash2 } from 'lucide-react'
+import { Plus, Search, MoreVertical, Edit, Trash2 } from 'lucide-react'
+import { differenceInCalendarDays } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -21,6 +22,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import Layout from '@/components/Layout'
@@ -50,14 +56,14 @@ const Bookings = () => {
     try {
       setLoading(true)
       const _admin = helper.admin(_user)
-      
+
       // Get all suppliers
       const allSuppliers = await SupplierService.getAllSuppliers()
       const suppliers = _admin ? bookcarsHelper.flattenSuppliers(allSuppliers) : [_user._id ?? '']
-      
+
       // Get all statuses
       const statuses = helper.getBookingStatuses().map((status) => status.value)
-      
+
       const payload: bookcarsTypes.GetBookingsPayload = {
         suppliers,
         statuses,
@@ -65,14 +71,14 @@ const Bookings = () => {
 
       const data = await BookingService.getBookings(payload, _page + 1, pageSize)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
-      
+
       if (!_data) {
         helper.error()
         return
       }
-      
+
       const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-      
+
       setBookings(_data.resultData)
       setFilteredBookings(_data.resultData)
       setTotalCount(totalRecords)
@@ -106,7 +112,7 @@ const Bookings = () => {
         const customerEmail = driver?.email?.toLowerCase() || ''
         const vehicleName = car?.name?.toLowerCase() || ''
         const bookingId = booking._id?.toLowerCase() || ''
-        
+
         return (
           customerName.includes(query) ||
           customerEmail.includes(query) ||
@@ -210,7 +216,7 @@ const Bookings = () => {
                 {totalCount} total booking{totalCount !== 1 ? 's' : ''}
               </p>
             </div>
-            <Button 
+            <Button
               onClick={() => navigate('/create-booking')}
               className="gap-2"
               size="default"
@@ -254,13 +260,16 @@ const Bookings = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="font-semibold">CUSTOMER</TableHead>
-                    <TableHead className="font-semibold">VEHICLE</TableHead>
-                    <TableHead className="font-semibold">RENTAL PERIOD</TableHead>
-                    <TableHead className="font-semibold">STATUS</TableHead>
-                    <TableHead className="font-semibold">PAYMENT</TableHead>
-                    <TableHead className="font-semibold text-right">AMOUNT</TableHead>
-                    <TableHead className="w-[100px]"></TableHead>
+                    <TableHead className="font-semibold">BOOKERS NAME</TableHead>
+                    <TableHead className="font-semibold">CAR BOOKED</TableHead>
+                    <TableHead className="font-semibold">PICKUP DATE</TableHead>
+                    <TableHead className="font-semibold">RETURN DATE</TableHead>
+                    <TableHead className="font-semibold">DAYS</TableHead>
+                    <TableHead className="font-semibold">EARNINGS</TableHead>
+                    <TableHead className="font-semibold">INVOICE</TableHead>
+                    <TableHead className="font-semibold">USERS RECEIPT</TableHead>
+                    <TableHead className="font-semibold">SENT TO AADE MYDATA</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -280,12 +289,13 @@ const Bookings = () => {
                     filteredBookings.map((booking) => {
                       const driver = booking.driver as bookcarsTypes.User
                       const car = booking.car as bookcarsTypes.Car
-                      
+                      const days = differenceInCalendarDays(new Date(booking.to), new Date(booking.from)) + 1
+
                       return (
-                        <TableRow 
+                        <TableRow
                           key={booking._id}
-                          className="cursor-pointer"
-                          onClick={() => navigate(`/booking?b=${booking._id}`)}
+                          className="cursor-pointer hover:bg-muted/50 group"
+                          onClick={() => navigate(`/bookings/${booking._id}`)}
                         >
                           <TableCell>
                             <div className="flex flex-col">
@@ -294,47 +304,57 @@ const Bookings = () => {
                             </div>
                           </TableCell>
                           <TableCell className="text-gray-900">{car?.name}</TableCell>
-                          <TableCell>
-                            <div className="flex flex-col">
-                              <span className="font-medium text-gray-900">{formatDate(booking.from)}</span>
-                              <span className="text-sm text-gray-500">to {formatDate(booking.to)}</span>
-                            </div>
+                          <TableCell className="text-gray-900">{formatDate(booking.from)}</TableCell>
+                          <TableCell className="text-gray-900">{formatDate(booking.to)}</TableCell>
+                          <TableCell className="text-gray-900 font-medium">
+                            {days}
                           </TableCell>
-                          <TableCell>
-                            <Badge className={getStatusBadgeVariant(booking.status)}>
-                              {getStatusLabel(booking.status)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={getPaymentBadgeVariant(booking.status)}>
-                              {getPaymentLabel(booking.status)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right font-semibold text-gray-900">
+                          <TableCell className="text-gray-900 font-medium">
                             {formatPrice(booking.price)}
                           </TableCell>
+                          <TableCell className="text-gray-500 text-sm">
+                            {booking.invoice ? booking.invoice : 'No invoice'}
+                          </TableCell>
+                          <TableCell className="text-gray-500 text-sm">
+                            {booking.receipt ? booking.receipt : 'No receipt'}
+                          </TableCell>
+                          <TableCell className="text-gray-500 text-sm">
+                            {/* TODO: Replace with real status when available in backend */}
+                            {booking.aadeMyData ? 'Yes' : 'No'}
+                          </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  navigate(`/update-booking?b=${booking._id}`)
-                                }}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  // TODO: Implement delete functionality
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent align="end" className="w-[160px] p-1">
+                                  <div className="flex flex-col gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="justify-start font-normal"
+                                      onClick={() => navigate(`/update-booking?b=${booking._id}`)}
+                                    >
+                                      <Edit className="mr-2 h-4 w-4" />
+                                      Edit
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="justify-start font-normal text-red-600 hover:text-red-600 hover:bg-red-50"
+                                      onClick={() => {
+                                        // TODO: Delete
+                                      }}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete
+                                    </Button>
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
                             </div>
                           </TableCell>
                         </TableRow>
