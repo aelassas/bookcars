@@ -762,7 +762,6 @@ export const getBooking = async (req: Request, res: Response) => {
 
     if (booking) {
       // begin of security check
-      console.log('Session user:', req.user)
       const sessionUserId = req.user?._id
       const sessionUser = await User.findById(sessionUserId)
       if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier._id?.toString())) {
