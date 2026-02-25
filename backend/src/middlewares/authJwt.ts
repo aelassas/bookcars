@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
@@ -7,9 +7,9 @@ import * as authHelper from '../utils/authHelper'
 import * as logger from '../utils/logger'
 import User from '../models/User'
 
-declare module 'Express' {
-    interface Request {
-      user?: { _id: string }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: { _id: string }
   }
 }
 
