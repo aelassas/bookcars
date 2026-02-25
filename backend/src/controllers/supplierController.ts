@@ -70,7 +70,7 @@ export const update = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== _id)) {
+    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== _id)) {
       logger.error(`[supplier.update] Unauthorized attempt to update supplier ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot update supplier information')
       return

@@ -194,6 +194,7 @@ const UpdateUser = () => {
   const validateFullName = async (value?: string) => {
     if (!!value && type === bookcarsTypes.UserType.Supplier && user?.fullName !== value) {
       const status = await SupplierService.validate({ fullName: value })
+      
       if (status !== 200) {
         setError('fullName', { message: csStrings.INVALID_SUPPLIER_NAME })
         setFocus('fullName')
@@ -207,6 +208,12 @@ const UpdateUser = () => {
     try {
       if (!user) {
         helper.error()
+        return
+      }
+
+      if (type === bookcarsTypes.RecordType.Supplier && !avatar) {
+        setAvatarError(true)
+        setFormError(false)
         return
       }
 
@@ -241,6 +248,8 @@ const UpdateUser = () => {
         _user.type = type
         setUser(_user)
         helper.info(commonStrings.UPDATED)
+        setAvatarError(false)
+        setFormError(false)
       } else {
         helper.error()
 
@@ -309,7 +318,7 @@ const UpdateUser = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                 <Input
-                  // {...register('fullName')}
+                  {...register('fullName')}
                   value={fullName}
                   type="text"
                   error={!!errors.fullName}
