@@ -927,12 +927,24 @@ export const deleteTempContract = async (req: Request, res: Response) => {
   const { file } = req.params
 
   try {
-    if (!file.includes('.')) {
-      throw new Error('Filename not valid')
+    // prevent null bytes
+    if (file.includes('\0')) {
+      res.status(400).send('Invalid filename')
+      return
     }
-    const contractFile = path.join(env.CDN_TEMP_CONTRACTS, file)
-    if (await helper.pathExists(contractFile)) {
-      await asyncFs.unlink(contractFile)
+
+    const baseDir = path.resolve(env.CDN_TEMP_CONTRACTS)
+    const targetPath = path.resolve(baseDir, file)
+
+    // critical security check: prevent directory traversal
+    if (!targetPath.startsWith(baseDir + path.sep)) {
+      logger.warn(`Directory traversal attempt: ${file}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+
+    if (await helper.pathExists(targetPath)) {
+      await asyncFs.unlink(targetPath)
     }
 
     res.sendStatus(200)
