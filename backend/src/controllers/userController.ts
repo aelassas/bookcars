@@ -163,6 +163,16 @@ export const create = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.CreateUserPayload } = req
 
   try {
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User) {
+      logger.error(`[user.create] Unauthorized attempt to create user by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot create user')
+      return
+    }
+    // end of security check
+
     body.verified = false
     body.blacklisted = false
 
@@ -993,6 +1003,16 @@ export const update = async (req: Request, res: Response) => {
       return
     }
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+      logger.error(`[user.update] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot update user information')
+      return
+    }
+    // end of security check
+
     const {
       fullName,
       phone,
@@ -1337,6 +1357,18 @@ export const changePassword = async (req: Request, res: Response) => {
       return
     }
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser
+      || (sessionUser.type == bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
+      || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+      logger.error(`[user.changePassword] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot change user password')
+      return
+    }
+    // end of security check
+
     if (strict && !user.password) {
       logger.error('[user.changePassword] User.password not found:', _id)
       res.sendStatus(204)
@@ -1508,10 +1540,23 @@ export const deleteUsers = async (req: Request, res: Response) => {
     const { body }: { body: string[] } = req
     const ids: mongoose.Types.ObjectId[] = body.map((id: string) => new mongoose.Types.ObjectId(id))
 
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+
+    let unauthorizedAttemptLogged = false
     for (const id of ids) {
       const user = await User.findById(id)
 
       if (user) {
+        // begin of security check
+        if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+          logger.error(`[user.delete] Unauthorized attempt to delete user ${id} by user ${sessionUserId}`)
+          unauthorizedAttemptLogged = true
+          continue
+        }
+        // end of security check
+
+
         await User.deleteOne({ _id: id })
 
         if (user.avatar) {
@@ -1568,6 +1613,11 @@ export const deleteUsers = async (req: Request, res: Response) => {
       } else {
         logger.error('User not found:', id)
       }
+    }
+
+    if (unauthorizedAttemptLogged) {
+      res.status(403).send('Forbidden: You cannot delete some of the users')
+      return
     }
 
     res.sendStatus(200)

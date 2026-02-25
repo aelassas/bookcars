@@ -49,7 +49,7 @@ export const getBooking = async (id: string): Promise<bookcarsTypes.Booking> => 
   const language = await UserService.getLanguage()
   return axiosInstance
     .get(
-`/api/booking/${encodeURIComponent(id)}/${language}`,
+      `/api/booking/${encodeURIComponent(id)}/${language}`,
       { headers }
     )
     .then((res) => res.data)

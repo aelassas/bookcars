@@ -65,6 +65,7 @@ const UpdateUser = () => {
       type: '',
       fullName: '',
       email: '',
+      birthDate: undefined,
       phone: '',
       location: '',
       bio: '',
@@ -80,6 +81,7 @@ const UpdateUser = () => {
   const type = useWatch({ control, name: 'type' })
   const fullName = useWatch({ control, name: 'fullName' })
   const email = useWatch({ control, name: 'email' })
+  const birthDate = useWatch({ control, name: 'birthDate' })
   const blacklisted = useWatch({ control, name: 'blacklisted' })
   const payLater = useWatch({ control, name: 'payLater' })
   const licenseRequired = useWatch({ control, name: 'licenseRequired' })
@@ -159,7 +161,7 @@ const UpdateUser = () => {
               setValue('phone', _user.phone || '')
               setValue('location', _user.location || '')
               setValue('bio', _user.bio || '')
-              setValue('birthDate', _user && _user.birthDate ? new Date(_user.birthDate) : undefined)
+              setValue('birthDate', _user.birthDate ? new Date(_user.birthDate) : undefined)
               setValue('payLater', _user.payLater || false)
               setValue('licenseRequired', _user.licenseRequired || false)
               setValue('minimumRentalDays', _user.minimumRentalDays?.toString() || '')
@@ -359,14 +361,15 @@ const UpdateUser = () => {
                   <FormControl fullWidth margin="dense">
                     <DatePicker
                       label={commonStrings.BIRTH_DATE}
+                      value={birthDate}
                       variant="standard"
                       required
-                      onChange={(birthDate) => {
-                        if (birthDate) {
+                      onChange={(date) => {
+                        if (date) {
                           if (errors.birthDate) {
                             clearErrors('birthDate')
                           }
-                          setValue('birthDate', birthDate, { shouldValidate: true })
+                          setValue('birthDate', date, { shouldValidate: true })
                         }
                       }}
                       language={(user && user.language) || env.DEFAULT_LANGUAGE}

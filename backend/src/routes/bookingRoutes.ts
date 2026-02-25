@@ -11,7 +11,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, bookingController.updat
 routes.route(routeNames.updateStatus).post(authJwt.verifyToken, bookingController.updateStatus)
 routes.route(routeNames.delete).post(authJwt.verifyToken, bookingController.deleteBookings)
 routes.route(routeNames.deleteTempBooking).delete(bookingController.deleteTempBooking)
-routes.route(routeNames.getBooking).get(bookingController.getBooking)
+routes.route(routeNames.getBooking).get(authJwt.verifyToken, bookingController.getBooking)
 routes.route(routeNames.getBookingId).get(bookingController.getBookingId)
 routes.route(routeNames.getBookings).post(authJwt.verifyToken, bookingController.getBookings)
 routes.route(routeNames.hasBookings).get(authJwt.verifyToken, bookingController.hasBookings)

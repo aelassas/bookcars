@@ -460,7 +460,7 @@ const UpdateSupplier = () => {
                 </FormControl>
               )}
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${supplier && supplier._id}`)}>
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" onClick={() => navigate(`/change-password?u=${supplier && supplier._id}`)}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>

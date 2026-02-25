@@ -504,6 +504,16 @@ export const update = async (req: Request, res: Response) => {
     const booking = await Booking.findById(body.booking._id)
 
     if (booking) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
+        logger.error(`[booking.update] Unauthorized attempt to update booking ${booking._id.toString()} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update booking information')
+        return
+      }
+      // end of security check
+
       if (!body.booking.additionalDriver && booking._additionalDriver) {
         await AdditionalDriver.deleteOne({ _id: booking._additionalDriver })
       }
@@ -651,15 +661,32 @@ export const deleteBookings = async (req: Request, res: Response) => {
   try {
     const { body }: { body: string[] } = req
     const ids = body.map((id) => new mongoose.Types.ObjectId(id))
-    const bookings = await Booking.find({
-      _id: { $in: ids },
-      additionalDriver: true,
-      _additionalDriver: { $ne: null },
-    })
 
-    await Booking.deleteMany({ _id: { $in: ids } })
-    const additionalDivers = bookings.map((booking) => new mongoose.Types.ObjectId(booking._additionalDriver))
-    await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+
+    let unauthorizedAttemptLogged = false
+    for (const id of ids) {
+      const booking = await Booking.findById(id)
+
+      if (booking) {
+        // begin of security check
+        if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
+          logger.error(`[booking.deleteBookings] Unauthorized attempt to delete booking ${booking._id.toString()} by user ${sessionUserId}`)
+          unauthorizedAttemptLogged = true
+          continue
+        }
+        // end of security check
+
+        await booking.deleteOne()
+        await AdditionalDriver.deleteOne({ _id: booking._additionalDriver })
+      }
+    }
+
+    if (unauthorizedAttemptLogged) {
+      res.status(403).send('Forbidden: You cannot delete some of the bookings')
+      return
+    }
 
     res.sendStatus(200)
   } catch (err) {
@@ -734,6 +761,17 @@ export const getBooking = async (req: Request, res: Response) => {
       .lean()
 
     if (booking) {
+      // begin of security check
+      console.log('Session user:', req.user)
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier._id?.toString())) {
+        logger.error(`[booking.getBooking] Unauthorized attempt to get booking ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot get booking information')
+        return
+      }
+      // end of security check
+
       const { language } = req.params
 
       booking.supplier = {
@@ -808,7 +846,7 @@ export const getBookings = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
+    let suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       statuses,
       user,
@@ -821,6 +859,19 @@ export const getBookings = async (req: Request, res: Response) => {
     const dropOffLocation = (body.filter && body.filter.dropOffLocation) || null
     let keyword = (body.filter && body.filter.keyword) || ''
     const options = 'i'
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User) {
+      logger.error(`[booking.getBookings] Unauthorized attempt to get bookings by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot get booking information')
+      return
+    }
+    if (sessionUser.type == bookcarsTypes.UserType.Supplier) {
+      suppliers = [new mongoose.Types.ObjectId(sessionUserId)]
+    }
+    // end of security check
 
     const $match: mongoose.QueryFilter<any> = {
       $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
