@@ -802,12 +802,24 @@ export const deleteTempImage = async (req: Request, res: Response) => {
   const { image } = req.params
 
   try {
-    if (!image.includes('.')) {
-      throw new Error('Filename not valid')
+    // prevent null bytes
+    if (image.includes('\0')) {
+      res.status(400).send('Invalid filename')
+      return
     }
-    const imageFile = path.join(env.CDN_TEMP_LOCATIONS, image)
-    if (await helper.pathExists(imageFile)) {
-      await asyncFs.unlink(imageFile)
+
+    const baseDir = path.resolve(env.CDN_TEMP_LOCATIONS)
+    const targetPath = path.resolve(baseDir, image)
+
+    // critical security check: prevent directory traversal
+    if (!targetPath.startsWith(baseDir + path.sep)) {
+      logger.warn(`Directory traversal attempt: ${image}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+
+    if (await helper.pathExists(targetPath)) {
+      await asyncFs.unlink(targetPath)
     }
 
     res.sendStatus(200)
