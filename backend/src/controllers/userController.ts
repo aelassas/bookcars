@@ -166,7 +166,7 @@ export const create = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User) {
+    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User) {
       logger.error(`[user.create] Unauthorized attempt to create user by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot create user')
       return
@@ -1006,7 +1006,7 @@ export const update = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
       logger.error(`[user.update] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot update user information')
       return
@@ -1042,7 +1042,8 @@ export const update = async (req: Request, res: Response) => {
     user.supplierCarLimit = supplierCarLimit
     user.notifyAdminOnNewCar = notifyAdminOnNewCar
     user.blacklisted = !!blacklisted
-    if (type) {
+    // only admins can update user type
+    if (type && sessionUser.type === bookcarsTypes.UserType.Admin) {
       user.type = type as bookcarsTypes.UserType
     }
     if (typeof enableEmailNotifications !== 'undefined') {
@@ -1361,8 +1362,8 @@ export const changePassword = async (req: Request, res: Response) => {
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
     if (!sessionUser
-      || (sessionUser.type == bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
-      || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+      || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
       logger.error(`[user.changePassword] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot change user password')
       return
@@ -1549,7 +1550,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
 
       if (user) {
         // begin of security check
-        if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+        if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
           logger.error(`[user.delete] Unauthorized attempt to delete user ${id} by user ${sessionUserId}`)
           unauthorizedAttemptLogged = true
           continue

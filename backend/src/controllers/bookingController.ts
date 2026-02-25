@@ -507,7 +507,7 @@ export const update = async (req: Request, res: Response) => {
       // begin of security check
       const sessionUserId = req.user?._id
       const sessionUser = await User.findById(sessionUserId)
-      if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
+      if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
         logger.error(`[booking.update] Unauthorized attempt to update booking ${booking._id.toString()} by user ${sessionUserId}`)
         res.status(403).send('Forbidden: You cannot update booking information')
         return
@@ -671,7 +671,7 @@ export const deleteBookings = async (req: Request, res: Response) => {
 
       if (booking) {
         // begin of security check
-        if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
+        if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
           logger.error(`[booking.deleteBookings] Unauthorized attempt to delete booking ${booking._id.toString()} by user ${sessionUserId}`)
           unauthorizedAttemptLogged = true
           continue
@@ -765,8 +765,8 @@ export const getBooking = async (req: Request, res: Response) => {
       const sessionUserId = req.user?._id
       const sessionUser = await User.findById(sessionUserId)
       if (!sessionUser 
-        || (sessionUser.type == bookcarsTypes.UserType.User && sessionUserId !== booking.driver._id?.toString())
-        || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier._id?.toString())) {
+        || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== booking.driver._id?.toString())
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier._id?.toString())) {
         logger.error(`[booking.getBooking] Unauthorized attempt to get booking ${id} by user ${sessionUserId}`)
         res.status(403).send('Forbidden: You cannot get booking information')
         return
@@ -864,12 +864,12 @@ export const getBookings = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User) {
+    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User) {
       logger.error(`[booking.getBookings] Unauthorized attempt to get bookings by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot get booking information')
       return
     }
-    if (sessionUser.type == bookcarsTypes.UserType.Supplier) {
+    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
       suppliers = [new mongoose.Types.ObjectId(sessionUserId)]
     }
     // end of security check
