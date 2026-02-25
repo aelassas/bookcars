@@ -543,6 +543,8 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
     if (await helper.pathExists(targetPath)) {
       await asyncFs.unlink(targetPath)
+    } else {
+      throw new Error(`[car.deleteTempImage] temp image ${image} not found`)
     }
 
     res.sendStatus(200)

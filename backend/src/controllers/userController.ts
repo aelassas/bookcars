@@ -1358,6 +1358,8 @@ export const deleteTempAvatar = async (req: Request, res: Response) => {
 
     if (await helper.pathExists(targetPath)) {
       await asyncFs.unlink(targetPath)
+    } else {
+      throw new Error(`[user.deleteTempAvatar] temp avatar ${avatar} not found`)
     }
 
     res.sendStatus(200)
