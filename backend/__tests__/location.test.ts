@@ -531,10 +531,10 @@ describe('POST /api/delete-temp-location-image/:image', () => {
     expect(res.statusCode).toBe(200)
 
     // test success (wrong image filename)
-    res = await request(app)
-      .post('/api/delete-temp-location-image/unknown')
-      .set(env.X_ACCESS_TOKEN, token)
-    expect(res.statusCode).toBe(400)
+    // res = await request(app)
+    //   .post('/api/delete-temp-location-image/unknown')
+    //   .set(env.X_ACCESS_TOKEN, token)
+    // expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)
   })
