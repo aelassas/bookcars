@@ -66,6 +66,17 @@ export const update = async (req: Request, res: Response) => {
     if (!helper.isValidObjectId(_id)) {
       throw new Error('body._id is not valid')
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || sessionUser.type == bookcarsTypes.UserType.User || (sessionUser.type == bookcarsTypes.UserType.Supplier && sessionUserId !== _id)) {
+      logger.error(`[supplier.update] Unauthorized attempt to update supplier ${_id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot update supplier information')
+      return
+    }
+    // end of security check
+
     const supplier = await User.findById(_id)
 
     if (supplier) {
@@ -134,6 +145,16 @@ export const deleteSupplier = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || sessionUser.type != bookcarsTypes.UserType.Admin) {
+      logger.error(`[supplier.delete] Unauthorized attempt to delete supplier ${id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot delete supplier')
+      return
+    }
+    // end of security check
+
     const supplier = await User.findById(id)
     if (supplier) {
       await User.deleteOne({ _id: id })

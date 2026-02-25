@@ -7,6 +7,12 @@ import * as authHelper from '../utils/authHelper'
 import * as logger from '../utils/logger'
 import User from '../models/User'
 
+declare module 'Express' {
+    interface Request {
+      user?: { _id: string }
+  }
+}
+
 /**
  * Verify authentication token middleware.
  *
@@ -54,6 +60,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         res.status(401).send({ message: 'Unauthorized!' })
       } else {
         // Token valid!
+        req.user = { _id: sessionData.id }
         next()
       }
     } catch (err) {
