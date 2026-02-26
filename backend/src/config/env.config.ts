@@ -472,6 +472,34 @@ export const SENTRY_DSN_BACKEND = __env__('BC_SENTRY_DSN_BACKEND', ENABLE_SENTRY
 export const SENTRY_TRACES_SAMPLE_RATE = Number.parseFloat(__env__('BC_SENTRY_TRACES_SAMPLE_RATE', false, '1.0'))
 
 /**
+ * Apple client ID.
+ *
+ * @type {string}
+ */
+export const APPLE_CLIENT_ID = __env__('BC_APPLE_CLIENT_ID', false, 'APPLE_CLIENT_ID')
+
+/**
+ * Google client ID.
+ *
+ * @type {string}
+ */
+export const GOOGLE_CLIENT_ID = __env__('BC_GOOGLE_CLIENT_ID', false, 'GOOGLE_CLIENT_ID')
+
+/**
+ * Facebook App ID.
+ *
+ * @type {string}
+ */
+export const FACEBOOK_APP_ID = __env__('BC_FACEBOOK_APP_ID', false, 'FACEBOOK_APP_ID')
+
+/**
+ * Facebook App Secret.
+ *
+ * @type {string}
+ */
+export const FACEBOOK_APP_SECRET = __env__('BC_FACEBOOK_APP_SECRET', false, 'FACEBOOK_APP_SECRET')
+
+/**
  * User Document.
  *
  * @export
