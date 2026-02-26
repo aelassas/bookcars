@@ -49,7 +49,7 @@ export const upsert = async (req: Request, res: Response) => {
 
     res.json(bankDetails)
   } catch (err) {
-    logger.error(`[bankDetails.upsert] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
+    logger.error(`[bankDetails.upsert] ${i18n.t('ERROR')} ${JSON.stringify(body)}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -67,7 +67,7 @@ export const get = async (req: Request, res: Response) => {
     const bankDetails = await BankDetails.findOne()
     res.json(bankDetails)
   } catch (err) {
-    logger.error(`[bankDetails.get] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[bankDetails.get] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }

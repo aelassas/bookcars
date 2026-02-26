@@ -61,8 +61,8 @@ export const validate = async (req: Request, res: Response) => {
       res.sendStatus(200)
     }
   } catch (err) {
-    logger.error(`[country.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.validate]  ${i18n.t('ERROR')} ${name}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -94,8 +94,8 @@ export const create = async (req: Request, res: Response) => {
     await country.save()
     res.send(country)
   } catch (err) {
-    logger.error(`[country.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.create] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -139,8 +139,8 @@ export const update = async (req: Request, res: Response) => {
     logger.error('[country.update] Country not found:', id)
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[country.update] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.update] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -168,8 +168,8 @@ export const deleteCountry = async (req: Request, res: Response) => {
     await LocationValue.deleteMany({ _id: { $in: country.values } })
     res.sendStatus(200)
   } catch (err) {
-    logger.error(`[country.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.delete] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -205,8 +205,8 @@ export const getCountry = async (req: Request, res: Response) => {
     logger.error('[country.getCountry] Country not found:', id)
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[country.getCountry] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.getCountry] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -289,8 +289,8 @@ export const getCountries = async (req: Request, res: Response) => {
 
     res.json(countries)
   } catch (err) {
-    logger.error(`[country.getCountries] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.getCountries] ${i18n.t('ERROR')} ${req.query.s}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -396,8 +396,8 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
 
     res.json(countries)
   } catch (err) {
-    logger.error(`[country.getCountries] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.getCountries] ${i18n.t('ERROR')} ${req.query.s}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -428,8 +428,8 @@ export const checkCountry = async (req: Request, res: Response) => {
 
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[country.checkCountry] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.checkCountry] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -456,7 +456,7 @@ export const getCountryId = async (req: Request, res: Response) => {
     }
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[country.getCountryId] ${i18n.t('DB_ERROR')} ${name}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[country.getCountryId] ${i18n.t('ERROR')} ${name}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
