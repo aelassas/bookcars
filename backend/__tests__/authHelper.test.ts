@@ -1,58 +1,110 @@
-import 'dotenv/config'
 import { jest } from '@jest/globals'
-import { SignJWT } from 'jose'
-import * as bookcarsTypes from ':bookcars-types'
-import * as authHelper from '../src/utils/authHelper'
-import * as env from '../src/config/env.config'
 
-const jwtSecret = new TextEncoder().encode(env.JWT_SECRET)
-const jwtAlg = 'HS256'
+// 1. ALL MOCKS MUST BE AT THE TOP
+jest.unstable_mockModule('../src/config/env.config', () => ({
+    APPLE_CLIENT_ID: 'apple-client-id',
+    GOOGLE_CLIENT_ID: 'google-client-id',
+    FACEBOOK_APP_ID: 'fb-app-id',
+    FACEBOOK_APP_SECRET: 'fb-secret',
+}))
 
-const encryptJWT = async (payload: any) => {
-  const jwt = await new SignJWT(payload)
-    .setProtectedHeader({ alg: jwtAlg })
-    .setIssuedAt()
-  const token = jwt.sign(jwtSecret)
-  return token
-}
+jest.unstable_mockModule('jose', () => ({
+  __esModule: true,
+  createRemoteJWKSet: jest.fn(() => ({})),
+  jwtVerify: jest.fn(),
+}))
 
-afterEach(() => {
-  jest.clearAllMocks()
-  jest.resetModules()
-})
+jest.unstable_mockModule('axios', () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+  },
+}))
 
-describe('Test validateAccessToken', () => {
-  it('should test validateAccessToken', async () => {
-    const email = 'unknow@unknown.com'
+// 2. DYNAMIC IMPORTS - ORDER MATTERS
+await import('../src/config/env.config')
+const axios = (await import('axios')).default
+const jose = await import('jose')
 
-    // test failure
-    expect(await authHelper.validateAccessToken('unknown' as bookcarsTypes.SocialSignInType, 'token', email)).toBeFalsy()
+// Import the helper LAST so it picks up the mocked env
+const authHelper = await import('../src/utils/authHelper')
 
-    // test success (facebook)
-    let payload = {}
-    let token = await encryptJWT(payload)
-    expect(await authHelper.validateAccessToken(bookcarsTypes.SocialSignInType.Facebook, token, email)).toBeTruthy()
+const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedJose = jose as jest.Mocked<typeof jose>
 
-    // test success (apple)
-    payload = { email }
-    token = await encryptJWT(payload)
-    expect(await authHelper.validateAccessToken(bookcarsTypes.SocialSignInType.Apple, token, email)).toBeTruthy()
+describe('Social Auth Helper (ESM)', () => {
+  const mockEmail = 'test@example.com'
+  const mockToken = 'mock-token.header.payload.signature'
 
-    await jest.isolateModulesAsync(async () => {
-      // Mock axios with unstable_mockModule
-      await jest.unstable_mockModule('axios', () => ({
-        default: {
-          get: jest.fn(() => Promise.resolve({ data: { email } })),
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  describe('verifyAppleToken', () => {
+    it('should return true for a valid Apple token', async () => {
+      // @ts-expect-error - jwtVerify is replaced by a Jest mock function during unstable_mockModule
+      mockedJose.jwtVerify.mockResolvedValue({
+        payload: {
+          email: mockEmail,
+          email_verified: true,
+          sub: 'apple-user-id',
         },
-      }))
-      jest.resetModules()
+      })
 
-      // Import modules after mock is set (inside isolateModulesAsync)
-      const authHelper = await import('../src/utils/authHelper')
+      const result = await authHelper.verifyAppleToken(mockToken, mockEmail)
+      expect(result).toBe(true)
+    })
 
-      payload = { data: { email } }
-      token = await encryptJWT(payload)
-      expect(await authHelper.validateAccessToken(bookcarsTypes.SocialSignInType.Google, token, email)).toBeTruthy()
+    it('should return false if email_verified is false', async () => {
+      // @ts-expect-error - jwtVerify is replaced by a Jest mock function during unstable_mockModule
+      mockedJose.jwtVerify.mockResolvedValue({
+        payload: { email: mockEmail, email_verified: false, sub: 'id' },
+      })
+
+      const result = await authHelper.verifyAppleToken(mockToken, mockEmail)
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('verifyGoogleToken', () => {
+    it('should return true for valid Google response', async () => {
+      mockedAxios.get.mockResolvedValue({
+        data: {
+          email: mockEmail,
+          aud: 'google-client-id',
+        },
+      })
+
+      const result = await authHelper.verifyGoogleToken(mockToken, mockEmail)
+      expect(result).toBe(true)
+    })
+
+    it('should return false if audience is wrong', async () => {
+      mockedAxios.get.mockResolvedValue({
+        data: {
+          email: mockEmail,
+          aud: 'wrong-id',
+        },
+      })
+
+      const result = await authHelper.verifyGoogleToken(mockToken, mockEmail)
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('verifyFacebookToken', () => {
+    it('should return true for valid FB flow', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          data: { is_valid: true, app_id: 'fb-app-id' },
+        },
+      })
+      mockedAxios.get.mockResolvedValueOnce({
+        data: { email: mockEmail },
+      })
+
+      const result = await authHelper.verifyFacebookToken(mockToken, mockEmail)
+      expect(result).toBe(true)
     })
   })
 })
