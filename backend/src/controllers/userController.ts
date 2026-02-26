@@ -385,7 +385,8 @@ export const create = async (req: Request, res: Response) => {
       // -----------------------------
       if (!licensePath.startsWith(tempDir + path.sep)) {
         logger.warn(`[user.create] License source path escape attempt: ${licensePath}`)
-        return res.status(400).send('Invalid license path')
+        res.status(400).send('Invalid license path')
+        return
       }
 
       if (await helper.pathExists(licensePath)) {
