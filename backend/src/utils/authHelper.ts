@@ -173,13 +173,12 @@ export async function verifyGoogleToken(token: string, email: string): Promise<b
 }
 
 /**
- * FACEBOOK - Handles Opaque Access Tokens
+ * FACEBOOK: Handles Opaque Access Tokens
  */
 export async function verifyFacebookToken(token: string, email: string): Promise<boolean> {
   // Use the Graph API (Standard Opaque Token)
   const appToken = `${env.FACEBOOK_APP_ID}|${env.FACEBOOK_APP_SECRET}`
 
-  // This is where your error was happening because 'token' had dots
   const debugRes = await axios.get('https://graph.facebook.com/debug_token', {
     params: {
       input_token: token,
