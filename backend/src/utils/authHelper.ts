@@ -1,10 +1,11 @@
 import { Request } from 'express'
 import axios from 'axios'
-import { jwtVerify, SignJWT } from 'jose'
+import * as jose from 'jose'
 import bcrypt from 'bcrypt'
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from './helper'
 import * as env from '../config/env.config'
+import * as logger from '../utils/logger'
 
 const jwtSecret = new TextEncoder().encode(env.JWT_SECRET)
 const jwtAlg = 'HS256'
@@ -22,7 +23,7 @@ export type SessionData = {
  * @returns {Promise<string>}
  */
 export const encryptJWT = async (payload: SessionData, stayConnected?: boolean) => {
-  const jwt = await new SignJWT(payload)
+  const jwt = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: jwtAlg })
     .setIssuedAt()
 
@@ -41,7 +42,7 @@ export const encryptJWT = async (payload: SessionData, stayConnected?: boolean) 
  * @returns {Promise<SessionData>}
  */
 export const decryptJWT = async (input: string) => {
-  const { payload } = await jwtVerify(input, jwtSecret, {
+  const { payload } = await jose.jwtVerify(input, jwtSecret, {
     algorithms: [jwtAlg],
   })
   return payload as SessionData
@@ -99,51 +100,102 @@ export const hashPassword = async (password: string): Promise<string> => {
 }
 
 /**
- * Parse JWT token.
- *
- * @param {string} token
- * @returns {any}
- */
-export const parseJwt = (token: string) => JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
-
-/**
- * Validate JWT token structure.
+ * Validate Access token structure.
  *
  * @param {string} token
  * @returns {Promise<boolean>}
  */
-export const validateAccessToken = async (socialSignInType: bookcarsTypes.SocialSignInType, token: string, email: string): Promise<boolean> => {
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Facebook) {
-    try {
-      parseJwt(token)
-      return true
-    } catch {
-      return false
-    }
+export const validateAccessToken = async (
+  socialSignInType: bookcarsTypes.SocialSignInType,
+  token: string,
+  email: string
+): Promise<boolean> => {
+  if (!token) {
+    return false
   }
 
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Apple) {
-    try {
-      const res = parseJwt(token)
-      return res.email === email
-    } catch {
-      return false
+  try {
+    switch (socialSignInType) {
+      case bookcarsTypes.SocialSignInType.Apple:
+        return await verifyAppleToken(token, email)
+
+      case bookcarsTypes.SocialSignInType.Google:
+        return await verifyGoogleToken(token, email)
+
+      case bookcarsTypes.SocialSignInType.Facebook:
+        return await verifyFacebookToken(token, email)
+
+      default:
+        return false
     }
+  } catch (err: any) {
+    // Log the error but don't leak details to the client
+    logger.error(`[Security] Auth validation failed for ${socialSignInType}:`, err.message)
+    return false
+  }
+}
+
+// Cache JWKS for performance
+const APPLE_JWKS = jose.createRemoteJWKSet(new URL('https://appleid.apple.com/auth/keys'))
+
+/**
+ * APPLE: Always a JWT
+ */
+async function verifyAppleToken(token: string, email: string): Promise<boolean> {
+  try {
+    const { payload } = await jose.jwtVerify(token, APPLE_JWKS, {
+      issuer: 'https://appleid.apple.com',
+      audience: env.APPLE_CLIENT_ID,
+      clockTolerance: '2m' // 2-minute grace period
+    })
+
+    const emailMatches = typeof payload.email === 'string' && payload.email && payload.email.toLowerCase() === email.toLowerCase()
+    const isVerified = payload.email_verified === true || payload.email_verified === 'true'
+
+    return Boolean(payload.sub && emailMatches && isVerified)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * GOOGLE: Handles ID Tokens (JWT) or Access Tokens (Opaque)
+ */
+async function verifyGoogleToken(token: string, email: string): Promise<boolean> {
+  const res = await axios.get('https://www.googleapis.com/oauth2/v3/tokeninfo', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+
+  const emailMatches = res.data.email?.toLowerCase() === email.toLowerCase()
+  const audMatches = res.data.aud === env.GOOGLE_CLIENT_ID || res.data.azp === env.GOOGLE_CLIENT_ID
+
+  return emailMatches && audMatches
+}
+
+/**
+ * FACEBOOK - Handles Opaque Access Tokens
+ */
+async function verifyFacebookToken(token: string, email: string): Promise<boolean> {
+  // Use the Graph API (Standard Opaque Token)
+  const appToken = `${env.FACEBOOK_APP_ID}|${env.FACEBOOK_APP_SECRET}`
+
+  // This is where your error was happening because 'token' had dots
+  const debugRes = await axios.get('https://graph.facebook.com/debug_token', {
+    params: {
+      input_token: token,
+      access_token: appToken
+    }
+  })
+
+  if (!debugRes.data.data.is_valid || debugRes.data.data.app_id !== env.FACEBOOK_APP_ID) {
+    return false
   }
 
-  if (socialSignInType === bookcarsTypes.SocialSignInType.Google) {
-    try {
-      const res = await axios.get(
-        'https://www.googleapis.com/oauth2/v3/tokeninfo',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      )
-      return res.data.email === email
-    } catch {
-      return false
-    }
-  }
+  const userRes = await axios.get('https://graph.facebook.com/me', {
+    params: { fields: 'email', access_token: token }
+  })
 
-  return false
+  const emailMatches = userRes.data.email?.toLowerCase() === email.toLowerCase()
+
+  return emailMatches
 }

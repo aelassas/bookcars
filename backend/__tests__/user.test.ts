@@ -859,7 +859,6 @@ describe('POST /api/social-sign-in/:type', () => {
         isFrontend: jest.fn(realHelper.isFrontend),
         getAuthCookieName: jest.fn(realHelper.getAuthCookieName),
         hashPassword: jest.fn(realHelper.hashPassword),
-        parseJwt: jest.fn(realHelper.parseJwt),
       }))
       jest.resetModules()
       const env = await import('../src/config/env.config.js')
