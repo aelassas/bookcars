@@ -259,3 +259,12 @@ export const safeStringify = (obj: any) => {
  */
 export const days = (from?: Date, to?: Date) =>
   (from && to && Math.ceil(((new Date(to)).getTime() - (new Date(from)).getTime()) / (1000 * 3600 * 24))) || 0
+
+/**
+ * Validate language code (ISO 639-1).
+ *
+ * @param {string} lang 
+ * @returns {boolean} 
+ */
+export const validateLanguage = (lang: string) =>
+  /^[a-z]{2}$/.test(lang)

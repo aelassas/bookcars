@@ -44,8 +44,8 @@ export const validate = async (req: Request, res: Response) => {
       res.sendStatus(200)
     }
   } catch (err) {
-    logger.error(`[supplier.validate] ${i18n.t('DB_ERROR')} ${fullName}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.validate] ${i18n.t('ERROR')} ${fullName}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -127,8 +127,8 @@ export const update = async (req: Request, res: Response) => {
     logger.error('[supplier.update] Supplier not found:', _id)
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[supplier.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.update] ${i18n.t('ERROR')} ${_id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -209,8 +209,8 @@ export const deleteSupplier = async (req: Request, res: Response) => {
     }
     res.sendStatus(200)
   } catch (err) {
-    logger.error(`[supplier.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.delete] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -270,8 +270,8 @@ export const getSupplier = async (req: Request, res: Response) => {
       blacklisted,
     })
   } catch (err) {
-    logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.getSupplier] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -344,8 +344,8 @@ export const getSuppliers = async (req: Request, res: Response) => {
 
     res.json(data)
   } catch (err) {
-    logger.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.getSuppliers] ${i18n.t('ERROR')} ${req.query.s}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -375,8 +375,8 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
 
     res.json(data)
   } catch (err) {
-    logger.error(`[supplier.getAllSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.getAllSuppliers] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -632,8 +632,8 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     )
     res.json(data)
   } catch (err) {
-    logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -774,8 +774,8 @@ export const getAdminSuppliers = async (req: Request, res: Response) => {
 
     res.json(data)
   } catch (err) {
-    logger.error(`[supplier.getAdminSuppliers] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.getAdminSuppliers] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -805,10 +805,17 @@ export const createContract = async (req: Request, res: Response) => {
     const filename = `${nanoid()}_${language}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CONTRACTS, filename)
 
+    // security check: restrict allowed extensions
+    const ext = path.extname(filename)
+    if (!env.allowedContractExtensions.includes(ext.toLowerCase())) {
+      res.status(400).send('Invalid contract file type')
+      return
+    }
+
     await asyncFs.writeFile(filepath, req.file.buffer)
     res.json(filename)
   } catch (err) {
-    logger.error(`[supplier.createContract] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[supplier.createContract] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -854,6 +861,13 @@ export const updateContract = async (req: Request, res: Response) => {
       const filename = `${supplier._id}_${language}${path.extname(file.originalname)}`
       const filepath = path.join(env.CDN_CONTRACTS, filename)
 
+      // security check: restrict allowed extensions
+      const ext = path.extname(filename)
+      if (!env.allowedContractExtensions.includes(ext.toLowerCase())) {
+        res.status(400).send('Invalid contract file type')
+        return
+      }
+
       await asyncFs.writeFile(filepath, file.buffer)
       if (!contract) {
         supplier.contracts?.push({ language, file: filename })
@@ -867,8 +881,8 @@ export const updateContract = async (req: Request, res: Response) => {
 
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[supplier.updateContract] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.updateContract] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -909,8 +923,8 @@ export const deleteContract = async (req: Request, res: Response) => {
     }
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[supplier.deleteContract] ${i18n.t('DB_ERROR')} ${id}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[supplier.deleteContract] ${i18n.t('ERROR')} ${id}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -949,7 +963,7 @@ export const deleteTempContract = async (req: Request, res: Response) => {
 
     res.sendStatus(200)
   } catch (err) {
-    logger.error(`[supplier.deleteTempContract] ${i18n.t('DB_ERROR')} ${file}`, err)
+    logger.error(`[supplier.deleteTempContract] ${i18n.t('ERROR')} ${file}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }

@@ -898,3 +898,43 @@ export interface Setting extends Document {
   minPickupDropoffHour: number
   maxPickupDropoffHour: number
 }
+
+/**
+ * Allowed driver's license file extensions.
+ *
+ * @type {string[]}
+ */
+export const allowedImageExtensions = [
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.webp',
+  '.gif',
+  '.bmp',
+  '.tiff',
+]
+
+/**
+ * Allowed driver's license file extensions.
+ *
+ * @type {string[]}
+ */
+export const allowedLicenseExtensions = [
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.webp',
+  '.gif',
+  '.bmp',
+  '.tiff',
+  '.pdf',
+]
+
+/**
+ * Allowed supplier contract file extensions.
+ *
+ * @type {string[]}
+ */
+export const allowedContractExtensions = [
+  '.pdf',
+]

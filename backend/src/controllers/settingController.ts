@@ -20,7 +20,7 @@ export const init = async () => {
 
     return true
   } catch (err) {
-    logger.error(`[setting.init] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[setting.init] ${i18n.t('ERROR')}`, err)
     return false
   }
 }
@@ -39,8 +39,8 @@ export const getSettings = async (req: Request, res: Response) => {
 
     res.json(settings)
   } catch (err) {
-    logger.error(`[setting.getSettings] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[setting.getSettings] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -76,7 +76,7 @@ export const updateSettings = async (req: Request, res: Response) => {
 
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[setting.updateSettings] ${i18n.t('DB_ERROR')}`, err)
-    res.status(400).send(i18n.t('DB_ERROR') + err)
+    logger.error(`[setting.updateSettings] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
