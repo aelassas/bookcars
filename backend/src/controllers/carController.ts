@@ -190,6 +190,16 @@ export const update = async (req: Request, res: Response) => {
     const car = await Car.findById(_id)
 
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.update] Unauthorized attempt to update car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this location')
+        return
+      }
+      // end of security check
+
       const {
         supplier,
         name,
@@ -414,6 +424,16 @@ export const deleteCar = async (req: Request, res: Response) => {
   try {
     const car = await Car.findById(id)
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.delete] Unauthorized attempt to delete car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this car')
+        return
+      }
+      // end of security check
+
       await Car.deleteOne({ _id: id })
 
       if (car.dateBasedPrices?.length > 0) {
