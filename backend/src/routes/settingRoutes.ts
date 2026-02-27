@@ -6,6 +6,6 @@ import * as settingController from '../controllers/settingController'
 const routes = express.Router()
 
 routes.route(routeNames.getSettings).get(settingController.getSettings)
-routes.route(routeNames.updateSettings).put(authJwt.verifyToken, settingController.updateSettings)
+routes.route(routeNames.updateSettings).put(authJwt.verifyToken, authJwt.authAdmin, settingController.updateSettings)
 
 export default routes

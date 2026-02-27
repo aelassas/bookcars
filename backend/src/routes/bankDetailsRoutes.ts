@@ -5,7 +5,7 @@ import * as bankDetailsController from '../controllers/bankDetailsController'
 
 const routes = express.Router()
 
-routes.route(routeNames.upsert).post(authJwt.verifyToken, bankDetailsController.upsert)
-routes.route(routeNames.get).get(authJwt.verifyToken, bankDetailsController.get)
+routes.route(routeNames.upsert).post(authJwt.verifyToken, authJwt.authAdmin, bankDetailsController.upsert)
+routes.route(routeNames.get).get(authJwt.verifyToken, authJwt.authSupplier, bankDetailsController.get)
 
 export default routes

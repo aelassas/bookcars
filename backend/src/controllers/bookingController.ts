@@ -773,18 +773,6 @@ export const getBooking = async (req: Request, res: Response) => {
       .lean()
 
     if (booking) {
-      // begin of security check
-      const sessionUserId = req.user?._id
-      const sessionUser = await User.findById(sessionUserId)
-      if (!sessionUser
-        || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== booking.driver._id?.toString())
-        || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier._id?.toString())) {
-        logger.error(`[booking.getBooking] Unauthorized attempt to get booking ${id} by user ${sessionUserId}`)
-        res.status(403).send('Forbidden: You cannot get booking information')
-        return
-      }
-      // end of security check
-
       const { language } = req.params
 
       booking.supplier = {
@@ -862,7 +850,7 @@ export const getBookings = async (req: Request, res: Response) => {
     let suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       statuses,
-      user,
+      // user,
       car,
     } = body
     const from = (body.filter && body.filter.from && new Date(body.filter.from)) || null
@@ -873,10 +861,14 @@ export const getBookings = async (req: Request, res: Response) => {
     let keyword = (body.filter && body.filter.keyword) || ''
     const options = 'i'
 
+    const $match: mongoose.QueryFilter<any> = {
+      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
+    }
+
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User) {
+    if (!sessionUser) {
       logger.error(`[booking.getBookings] Unauthorized attempt to get bookings by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot get booking information')
       return
@@ -884,15 +876,14 @@ export const getBookings = async (req: Request, res: Response) => {
     if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
       suppliers = [new mongoose.Types.ObjectId(sessionUserId)]
     }
+    if (sessionUser.type === bookcarsTypes.UserType.User) {
+      $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(sessionUser._id) } })
+    }
     // end of security check
 
-    const $match: mongoose.QueryFilter<any> = {
-      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
-    }
-
-    if (user) {
-      $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
-    }
+    // if (user) {
+    //   $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
+    // }
     if (car) {
       $match.$and!.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
     }

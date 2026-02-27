@@ -1189,7 +1189,12 @@ export const update = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
+    if (!sessionUser
+      || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier
+        && ((user.type === bookcarsTypes.UserType.User && sessionUserId !== user.supplier?.toString())
+          || (user.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user._id.toString())))
+    ) {
       logger.error(`[user.update] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot update user information')
       return
@@ -1605,8 +1610,11 @@ export const changePassword = async (req: Request, res: Response) => {
     const sessionUser = await User.findById(sessionUserId)
     if (!sessionUser
       || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
-      || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user.supplier?.toString())) {
-      logger.error(`[user.changePassword] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier
+        && ((user.type === bookcarsTypes.UserType.User && sessionUserId !== user.supplier?.toString())
+          || (user.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user._id.toString())))
+    ) {
+      logger.error(`[user.changePassword] Unauthorized attempt to change user password ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot change user password')
       return
     }
@@ -1701,9 +1709,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
     if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User) {
-      logger.error(`[user.create] Unauthorized attempt to fetch users by user ${sessionUserId}`)
-      res.status(403).send('Forbidden: You cannot fetch user')
-      return
+      throw new Error('Forbidden: You cannot fetch users')
     }
     // end of security check
 
