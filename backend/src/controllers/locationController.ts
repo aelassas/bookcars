@@ -11,6 +11,7 @@ import i18n from '../lang/i18n'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
+import User from '../models/User'
 import ParkingSpot from '../models/ParkingSpot'
 import * as logger from '../utils/logger'
 
@@ -234,6 +235,16 @@ export const update = async (req: Request, res: Response) => {
       .populate<{ values: env.LocationValue[] }>('values')
 
     if (location) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && location.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[location.update] Unauthorized attempt to update location ${location._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this location')
+        return
+      }
+      // end of security check
+
       const {
         country,
         longitude,
@@ -360,12 +371,24 @@ export const deleteLocation = async (req: Request, res: Response) => {
 
   try {
     const location = await Location.findById(id).populate<{ parkingSpots: env.ParkingSpot[] }>('parkingSpots')
+
     if (!location) {
       const msg = `[location.delete] Location ${id} not found`
       logger.info(msg)
       res.status(204).send(msg)
       return
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && location.supplier?.toString() !== sessionUserId)) {
+      logger.error(`[location.delete] Unauthorized attempt to delete location ${location._id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot delete this location')
+      return
+    }
+    // end of security check
+
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     await Location.deleteOne({ _id: id })
 
