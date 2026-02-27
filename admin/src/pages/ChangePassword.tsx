@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Paper,  
+  Paper,
   Button
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
@@ -14,18 +14,22 @@ import * as UserService from '@/services/UserService'
 import Backdrop from '@/components/SimpleBackdrop'
 import * as helper from '@/utils/helper'
 import { schema, FormFields } from '@/models/ChangePasswordForm'
+import NoMatch from '@/pages/NoMatch'
+import PasswordInput from '@/components/PasswordInput'
 
 import '@/assets/css/change-password.css'
-import PasswordInput from '@/components/PasswordInput'
+
 
 const ChangePassword = () => {
   const navigate = useNavigate()
 
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [userId, setUserId] = useState<string>()
+  const [user, setUser] = useState<bookcarsTypes.User | null>()
   const [loading, setLoading] = useState(true)
   const [visible, setVisible] = useState(false)
-  const [hasPassword, setHasPassword] = useState(false)
+  const [strict, setStrict] = useState<boolean>(false)
+  const [noMatch, setNoMatch] = useState(false)
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, clearErrors, setError, reset } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -42,20 +46,23 @@ const ChangePassword = () => {
         return
       }
 
-      const status = hasPassword ? (await UserService.checkPassword(userId || loggedUser?._id as string, currentPassword!)) : 200
+      const status = strict ? (await UserService.checkPassword(userId || loggedUser?._id as string, currentPassword!)) : 200
 
       if (status === 200) {
         const data: bookcarsTypes.ChangePasswordPayload = {
           _id: userId || loggedUser?._id as string,
           password: currentPassword || '',
           newPassword,
-          strict: hasPassword,
+          strict,
         }
 
         const status = await UserService.changePassword(data)
 
         if (status === 200) {
-          setHasPassword(true)
+          setStrict(
+            (user?.type === bookcarsTypes.UserType.Admin && loggedUser?.type === bookcarsTypes.UserType.Admin)
+            || (user?.type === bookcarsTypes.UserType.Supplier && loggedUser?.type === bookcarsTypes.UserType.Supplier)
+          )
           reset()
           helper.info(strings.PASSWORD_UPDATE)
         } else {
@@ -69,17 +76,38 @@ const ChangePassword = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user) {
+  const onLoad = async (_loggedUser?: bookcarsTypes.User) => {
+    if (_loggedUser) {
       const params = new URLSearchParams(window.location.search)
-      let _userId = user?._id
+      let _userId = _loggedUser?._id
+      let __user: bookcarsTypes.User | null = null
       if (params.has('u')) {
         _userId = params.get('u') || undefined
         setUserId(_userId)
+        __user = await UserService.getUser(_userId)
+      } else {
+        setUserId(_loggedUser._id)
+        __user = _loggedUser
       }
+
+      if (_loggedUser.type === bookcarsTypes.UserType.Supplier
+        && (__user?.type === bookcarsTypes.UserType.Admin || (__user?.type === bookcarsTypes.UserType.Supplier && __user._id !== _loggedUser._id))
+      ) {
+        setNoMatch(true)
+        setLoading(false)
+        return
+      }
+
       const status = await UserService.hasPassword(_userId!)
-      setHasPassword(status === 200)
-      setLoggedUser(user)
+      const __hasPassword = status === 200
+      setStrict(__hasPassword
+        && (
+          (__user?.type === bookcarsTypes.UserType.Admin && _loggedUser.type === bookcarsTypes.UserType.Admin)
+          || (__user?.type === bookcarsTypes.UserType.Supplier && _loggedUser.type === bookcarsTypes.UserType.Supplier)
+        )
+      )
+      setLoggedUser(_loggedUser)
+      setUser(__user)
       setLoading(false)
       setVisible(true)
     }
@@ -87,12 +115,12 @@ const ChangePassword = () => {
 
   return (
     <Layout onLoad={onLoad} strict>
-      <div className="password-reset" style={visible ? {} : { display: 'none' }}>
+      {!noMatch && (<div className="password-reset" style={visible ? {} : { display: 'none' }}>
         <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
           <h1 className="password-reset-form-title">{strings.CHANGE_PASSWORD_HEADING}</h1>
           <form className="form" onSubmit={handleSubmit(onSubmit)}>
 
-            {hasPassword && (
+            {strict && (
               <PasswordInput
                 label={strings.CURRENT_PASSWORD}
                 variant="standard"
@@ -149,8 +177,9 @@ const ChangePassword = () => {
             </div>
           </form>
         </Paper>
-      </div>
+      </div>)}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+      {noMatch && <NoMatch hideHeader />}
     </Layout>
   )
 }

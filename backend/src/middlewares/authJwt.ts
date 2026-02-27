@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from 'express'
-import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import * as helper from '../utils/helper'
@@ -7,9 +6,10 @@ import * as authHelper from '../utils/authHelper'
 import * as logger from '../utils/logger'
 import User from '../models/User'
 
+// Extend Express Request interface to include user property
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: { _id: string }
+    user?: { _id: string, type: bookcarsTypes.UserType }
   }
 }
 
@@ -21,6 +21,7 @@ declare module 'express-serve-static-core' {
  * @param {NextFunction} next
  */
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  // 1. Get token from cookies or headers
   let token: string
   const isAdmin = authHelper.isAdmin(req)
   const isFrontend = authHelper.isFrontend(req)
@@ -33,45 +34,67 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     token = req.headers[env.X_ACCESS_TOKEN] as string // mobile app and unit tests
   }
 
-  if (token) {
-    // Check token
-    try {
-      const sessionData = await authHelper.decryptJWT(token)
-      const $match: mongoose.QueryFilter<env.User> = {
-        $and: [
-          { _id: new mongoose.Types.ObjectId(sessionData?.id) },
-          // { blacklisted: false },
-        ],
-      }
-
-      if (isAdmin) {
-        $match.$and?.push({ type: { $in: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier] } })
-      } else if (isFrontend) {
-        $match.$and?.push({ type: bookcarsTypes.UserType.User })
-      }
-
-      if (
-        !sessionData
-        || !helper.isValidObjectId(sessionData.id)
-        || !(await User.exists($match))
-      ) {
-        // Token not valid!
-        logger.info('Token not valid: User not found')
-        res.status(401).send({ message: 'Unauthorized!' })
-      } else {
-        // Token valid!
-        req.user = { _id: sessionData.id }
-        next()
-      }
-    } catch (err) {
-      // Token not valid!
-      logger.info('Token not valid', err)
-      res.status(401).send({ message: 'Unauthorized!' })
-    }
-  } else {
-    // Token not found!
+  if (!token) {
     res.status(403).send({ message: 'No token provided!' })
+    return
+  }
+
+  try {
+    // 2. Decrypt and verify the token
+    const sessionData = await authHelper.decryptJWT(token)
+
+    if (!sessionData || !helper.isValidObjectId(sessionData.id)) {
+      res.status(401).send({ message: 'Unauthorized!' })
+      return
+    }
+
+    // 3. Fetch the user and attach to the request object
+    const user = await User.findById(sessionData.id)
+
+    if (!user || user.blacklisted) {
+      res.status(401).send({ message: 'Unauthorized!' })
+      return
+    }
+
+    // 4. Attach user to request for use in the next middleware/controller
+    req.user = { _id: user._id.toString(), type: user.type as bookcarsTypes.UserType }
+    next()
+  } catch (err) {
+    logger.info('Token verification failed', err)
+    res.status(401).send({ message: 'Unauthorized!' })
   }
 }
 
-export default { verifyToken }
+/**
+ * Auth for Admin only.
+ *
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ */
+const authAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req
+  if (user && user.type === bookcarsTypes.UserType.Admin) {
+    next()
+  } else {
+    res.status(403).send({ message: 'Require Admin Role!' })
+  }
+}
+
+/**
+ * Auth for Admin and Supplier.
+ *
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ */
+const authSupplier = (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req
+  if (user && (user.type === bookcarsTypes.UserType.Admin || user.type === bookcarsTypes.UserType.Supplier)) {
+    next()
+  } else {
+    res.status(403).send({ message: 'Require Supplier or Admin Role!' })
+  }
+}
+
+export default { verifyToken, authAdmin, authSupplier }
