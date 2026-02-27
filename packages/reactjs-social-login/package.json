@@ -6,17 +6,21 @@
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
-    "build": "rimraf ./dist && tsc --build --verbose"
+    "build": "rimraf ./dist && tsc --build --verbose",
+    "lint": "eslint ."
   },
   "peerDependencies": {
     "react": ">=18.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "@types/react": "^19.2.7",
+    "@types/node": "^25.3.2",
+    "@types/react": "^19.2.14",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^9.39.2",
     "microbundle-crl": "^0.13.11",
-    "react": "^19.2.3",
-    "rimraf": "^6.1.2",
+    "react": "^19.2.4",
+    "rimraf": "^6.1.3",
     "typescript": "^5.9.3"
   },
   "files": [

@@ -1,4 +1,3 @@
- 
 import type { FC } from 'react'
 import React, { memo, useMemo } from 'react'
 import type { ViewProps } from 'react-native'
@@ -15,11 +14,11 @@ interface ScrollViewListItemProps {
   numberOfLines?: number
 }
 
- 
 export const ScrollViewListItem: FC<ScrollViewListItemProps> = memo(
   ({ highlight, title, style, onPress, ignoreAccents, numberOfLines = 2 }) => {
     const themeName = useColorScheme()
-    const styles = useMemo(() => getStyles(themeName || 'light'), [themeName])
+    const normalizedTheme: 'light' | 'dark' = themeName === 'dark' ? 'dark' : 'light'
+    const styles = useMemo(() => getStyles(normalizedTheme || 'light'), [normalizedTheme])
 
     const titleParts = useMemo(() => {
       let titleHighlighted = ''

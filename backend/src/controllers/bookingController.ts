@@ -444,7 +444,7 @@ const notifyDriver = async (booking: env.Booking) => {
   const pushToken = await PushToken.findOne({ user: driver._id })
   if (pushToken) {
     const { token } = pushToken
-    const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN, useFcmV1: true })
+    const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN })
 
     if (!Expo.isExpoPushToken(token)) {
       logger.info(`Push token ${token} is not a valid Expo push token.`)

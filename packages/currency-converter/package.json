@@ -6,17 +6,21 @@
   "type": "module",
   "scripts": {
     "build": "rimraf ./tsconfig.tsbuildinfo ./index.js ./index.d.ts ./check.js ./check.d.ts && tsc --build --verbose",
-    "check": "npm run build && node check.js"
+    "check": "npm run build && node check.js",
+    "lint": "eslint ."
   },
   "author": "Akram El Assas",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.28.4",
+    "@babel/runtime": "^7.28.6",
     "easy-currencies": "^1.8.3"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "rimraf": "^6.1.2",
+    "@types/node": "^25.3.2",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^9.39.2",
+    "rimraf": "^6.1.3",
     "typescript": "^5.9.3"
   }
 }
