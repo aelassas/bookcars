@@ -95,5 +95,6 @@ ios/
 
 *.tsbuildinfo
 
-# ESLint
 .eslintcache
+
+app.json.bak

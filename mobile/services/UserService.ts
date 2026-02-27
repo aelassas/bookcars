@@ -129,6 +129,24 @@ export const signin = async (data: bookcarsTypes.SignInPayload): Promise<{ statu
     })
 
 /**
+ * Social sign in.
+ *
+ * @param {bookcarsTypes.SignInPayload} data
+ * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
+ */
+export const socialSignin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
+  axiosInstance
+    .post(
+      '/api/social-sign-in',
+      data,
+      { withCredentials: true }
+    )
+    .then(async (res) => {
+      await AsyncStorage.storeObject('bc-user', res.data)
+      return { status: res.status, data: res.data }
+    })
+
+/**
  * Get push notification token.
  *
  * @async

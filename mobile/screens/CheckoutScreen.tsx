@@ -30,6 +30,7 @@ import * as env from '@/config/env.config'
 import Backdrop from '@/components/Backdrop'
 import Indicator from '@/components/Indicator'
 import DriverLicense from '@/components/DriverLicense'
+import SocialLogin from '@/components/SocialLogin'
 
 const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) => {
   const isFocused = useIsFocused()
@@ -1020,6 +1021,17 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         helperText={(birthDateRequired && i18n.t('REQUIRED')) || (!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}
                         onChange={onChangeBirthDate}
                         backgroundColor="#fbfbfb"
+                      />
+
+                      <SocialLogin
+                        checkoutParams={{
+                          car: car._id,
+                          pickupLocation: pickupLocation._id,
+                          dropOffLocation: dropOffLocation._id,
+                          from: from.getTime(),
+                          to: to.getTime(),
+                          d: Date.now()
+                        }}
                       />
 
                       <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
