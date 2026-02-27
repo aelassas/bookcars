@@ -17,6 +17,7 @@ import * as env from '@/config/env.config'
 import Error from '@/components/Error'
 import Backdrop from '@/components/Backdrop'
 import Header from '@/components/Header'
+import SocialLogin from '@/components/SocialLogin'
 
 const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignUp'>) => {
   const isFocused = useIsFocused()
@@ -388,6 +389,8 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
               helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
               onChangeText={onChangeConfirmPassword}
             />
+
+            <SocialLogin />
 
             <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 

@@ -12,6 +12,7 @@ import * as UserService from '@/services/UserService'
 import * as helper from '@/utils/helper'
 import Link from '@/components/Link'
 import Header from '@/components/Header'
+import SocialLogin from '@/components/SocialLogin'
 
 const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ForgotPassword'>) => {
   const isFocused = useIsFocused()
@@ -131,6 +132,8 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
               onSubmitEditing={onPressReset}
               onChangeText={onChangeEmail}
             />
+
+            <SocialLogin />
 
             <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
           </View>

@@ -14,6 +14,7 @@ import * as UserService from '@/services/UserService'
 import * as helper from '@/utils/helper'
 import Switch from '@/components/Switch'
 import Header from '@/components/Header'
+import SocialLogin from '@/components/SocialLogin'
 
 const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignIn'>) => {
   const isFocused = useIsFocused()
@@ -220,6 +221,8 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
             onChangeText={onChangePassword}
             onSubmitEditing={onPressSignIn}
           />
+
+          <SocialLogin stayConnected={stayConnected} />
 
           <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
 
