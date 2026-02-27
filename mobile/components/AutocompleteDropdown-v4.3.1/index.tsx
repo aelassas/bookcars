@@ -110,7 +110,8 @@ export const AutocompleteDropdown = memo<
       controllerRefs,
     } = useContext(AutocompleteDropdownContext)
     const themeName = useColorScheme() || 'light'
-    const styles = useMemo(() => getStyles(themeName), [themeName])
+    const normalizedTheme: 'light' | 'dark' = themeName === 'dark' ? 'dark' : 'light'
+    const styles = useMemo(() => getStyles(normalizedTheme), [normalizedTheme])
 
     useEffect(() => {
       setLoading(loadingProp)
@@ -533,7 +534,7 @@ export const AutocompleteDropdown = memo<
               onBlur={onBlur}
               onFocus={onFocus}
               onSubmitEditing={onSubmit}
-              placeholderTextColor={theme[themeName].inputPlaceholderColor}
+              placeholderTextColor={theme[normalizedTheme].inputPlaceholderColor}
               {...textInputProps}
               style={[styles.input, { height: inputHeight }, (textInputProps ?? {}).style]}
             />

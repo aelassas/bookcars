@@ -23,7 +23,8 @@ export const Dropdown = memo((props: DropdownProps) => {
     ...rest
   } = props
   const themeName = useColorScheme()
-  const styles = useMemo(() => getStyles(themeName || 'light'), [themeName])
+  const normalizedTheme: 'light' | 'dark' = themeName === 'dark' ? 'dark' : 'light'
+  const styles = useMemo(() => getStyles(normalizedTheme), [normalizedTheme])
 
   const defaultItemSeparator = useMemo(() => function () {
     return <View style={styles.itemSeparator} />

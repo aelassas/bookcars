@@ -35,8 +35,6 @@ interface DrawerContentProps {
   props: DrawerContentComponentProps
 }
 
-let yOffset = 0
-
 const DrawerContent = ({
   language: drawerLanguage,
   index,
@@ -54,6 +52,7 @@ const DrawerContent = ({
   const [openLanguageMenu, setOpenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(drawerLanguage)
   const ref = useRef<ScrollView>(null)
+  const yOffset = useRef(0)
 
   useEffect(() => {
     setLanguage(drawerLanguage)
@@ -94,11 +93,11 @@ const DrawerContent = ({
     <DrawerContentScrollView
       ref={ref}
       onScroll={(event) => {
-        yOffset = event.nativeEvent.contentOffset.y
+        yOffset.current = event.nativeEvent.contentOffset.y
       }}
       onContentSizeChange={() => {
         if (ref.current) {
-          ref.current.scrollTo({ x: 0, y: yOffset, animated: false })
+          ref.current.scrollTo({ x: 0, y: yOffset.current, animated: false })
         }
       }}
       contentContainerStyle={styles.drawer}

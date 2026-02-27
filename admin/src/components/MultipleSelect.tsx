@@ -300,7 +300,7 @@ const MultipleSelect = ({
         ))}
         renderOption={(props, option) => {
           if ('key' in props) {
-            delete props.key
+            delete (props as Partial<typeof props>).key
           }
           const _props = props as React.HTMLAttributes<HTMLLIElement>
 

@@ -62,7 +62,7 @@ const App = () => {
         if (navigationRef.current) {
           const { data } = response.notification.request.content
 
-          if (data.booking) {
+          if (data?.booking) {
             if (data.user && data.notification) {
               await NotificationService.markAsRead(data.user as string, [data.notification as string])
             }

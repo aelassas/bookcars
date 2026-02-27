@@ -1,5 +1,4 @@
-import mongoose, { Document, Model } from 'mongoose'
-import { Filter } from 'mongodb'
+import mongoose, { AnyBulkWriteOperation, Document, Model, QueryFilter } from 'mongoose'
 import * as env from '../config/env.config'
 import * as logger from './logger'
 import Country from '../models/Country'
@@ -65,12 +64,18 @@ const syncLanguageValues = async <T extends { values: (mongoose.Types.ObjectId |
 
     // Update documents by pushing the new LocationValue references
     if (updates.length > 0) {
-      const bulkOps = updates.map(({ id, pushIds }) => ({
-        updateOne: {
-          filter: { _id: new mongoose.Types.ObjectId(id) } as Filter<MyDoc>,
-          update: { $push: { values: { $each: pushIds } } },
-        },
-      }))
+      const bulkOps: AnyBulkWriteOperation<MyDoc>[] = updates.map(
+        ({ id, pushIds }) => ({
+          updateOne: {
+            filter: { _id: new mongoose.Types.ObjectId(id) } as QueryFilter<MyDoc>,
+            update: {
+              $push: {
+                values: { $each: pushIds },
+              },
+            },
+          },
+        })
+      )
       await collection.bulkWrite(bulkOps)
       logger.info(`Updated ${updates.length} ${label} documents with new language values`)
     }
