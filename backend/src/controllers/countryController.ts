@@ -6,6 +6,7 @@ import * as helper from '../utils/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import Country from '../models/Country'
+import User from '../models/User'
 import LocationValue from '../models/LocationValue'
 import Location from '../models/Location'
 import * as logger from '../utils/logger'
@@ -115,6 +116,16 @@ export const update = async (req: Request, res: Response) => {
     const country = await Country.findById(id).populate<{ values: env.LocationValue[] }>('values')
 
     if (country) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && country.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[country.update] Unauthorized attempt to update country ${country._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this country')
+        return
+      }
+      // end of security check
+
       const names: bookcarsTypes.CountryName[] = req.body
 
       for (const name of names) {
@@ -164,6 +175,16 @@ export const deleteCountry = async (req: Request, res: Response) => {
       res.status(204).send(msg)
       return
     }
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && country.supplier?.toString() !== sessionUserId)) {
+      logger.error(`[country.delete] Unauthorized attempt to delete country ${country._id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot delete this country')
+      return
+    }
+    // end of security check
+
     await Country.deleteOne({ _id: id })
     await LocationValue.deleteMany({ _id: { $in: country.values } })
     res.sendStatus(200)
