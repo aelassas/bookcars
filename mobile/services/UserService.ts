@@ -294,6 +294,7 @@ export const getLanguage = async () => {
   if (user && user.language) {
     return user.language
   }
+
   let lang = await AsyncStorage.getString('bc-language')
 
   if (lang && lang.length === 2) {
@@ -304,12 +305,22 @@ export const getLanguage = async () => {
   return lang
 }
 
+/**
+ * Returns the default application language based on device settings.
+ * Falls back to env.DEFAULT_LANGUAGE if unsupported.
+ *
+ * @returns {string} 
+ */
 export const getDefaultLanguage = () => {
   const locales = Localization.getLocales()
-  const lang = locales.length > 0 && locales[0].languageCode === 'fr' ? 'fr' : env.DEFAULT_LANGUAGE
-  return lang
-}
+  const languageCode = locales?.[0]?.languageCode?.toLowerCase() || ''
 
+  const supportedLanguages = ['en', 'fr', 'es']
+
+  return supportedLanguages.includes(languageCode)
+    ? languageCode
+    : env.DEFAULT_LANGUAGE
+}
 
 /**
  * Update user's langauge.
