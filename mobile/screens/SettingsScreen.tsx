@@ -64,7 +64,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setUser(_user)
       if (_user.avatar) {
-        setAvatar(_user.avatar.startsWith('https://') ? _user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
+        setAvatar((_user.avatar.startsWith('https://') || _user.avatar.startsWith('http://')) ? _user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
       } else {
         setAvatar(null)
       }
@@ -365,14 +365,14 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               <Button
                 style={styles.component}
                 label={i18n.t('SAVE')}
-                // onPress={onPressSave}
+              // onPress={onPressSave}
               />
 
               <Button
                 style={styles.component}
                 color="secondary"
                 label={i18n.t('CHANGE_PASSWORD')}
-                // onPress={onPressChangePassword}
+              // onPress={onPressChangePassword}
               />
             </View>
           </ScrollView>

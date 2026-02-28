@@ -167,7 +167,7 @@ const Avatar = ({
   }, [avatarUser])
 
   const avatarUrl = user?.avatar
-    ? (user.avatar?.startsWith('http') ? user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
+    ? (((user.avatar.startsWith('https://') || user.avatar.startsWith('http://'))) ? user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
     : ''
 
   return !error && loggedUser && user ? (

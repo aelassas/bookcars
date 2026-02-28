@@ -504,7 +504,7 @@ const Avatar = ({
   const locationImageStyle = { maxWidth: '100%', maxHeight: '100%' }
 
   const userAvatarUrl = avatar
-    ? (avatar.startsWith('http') ? avatar : bookcarsHelper.joinURL(cdn(), avatar))
+    ? (((avatar.startsWith('https://') || avatar.startsWith('http://'))) ? avatar : bookcarsHelper.joinURL(cdn(), avatar))
     : ''
 
   const userAvatar = avatar

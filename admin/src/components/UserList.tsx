@@ -150,7 +150,7 @@ const UserList = ({
               userAvatar = <img src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} alt={row.fullName} />
             } else {
               const userAvatarUrl = __user.avatar
-                ? (__user.avatar.startsWith('http') ? __user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, __user.avatar))
+                ? ((__user.avatar.startsWith('https://') || __user.avatar.startsWith('http://')) ? __user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, __user.avatar))
                 : ''
 
               const avatar = <Avatar src={userAvatarUrl} className="avatar-small" />
