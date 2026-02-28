@@ -117,7 +117,7 @@ const SocialLogin = (
               if (!user || !idToken) {
                 throw new Error('User details not found')
               }
-              console.log(user)
+              
               await loginSuccess(
                 bookcarsTypes.SocialSignInType.Google,
                 idToken,
