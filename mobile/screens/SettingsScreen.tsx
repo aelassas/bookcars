@@ -64,7 +64,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setUser(_user)
       if (_user.avatar) {
-        setAvatar(_user.avatar.startsWith('https://') ? _user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
+        setAvatar((_user.avatar.startsWith('https://') || _user.avatar.startsWith('http://')) ? _user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
       } else {
         setAvatar(null)
       }
