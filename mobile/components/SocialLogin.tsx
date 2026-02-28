@@ -115,9 +115,11 @@ const SocialLogin = (
               const idToken = userInfo.data?.idToken
 
               if (!user || !idToken) {
-                throw new Error('User details not found')
+                // user probably cancelled the login flow
+                console.log('Google login aborted before token received')
+                return
               }
-              
+
               await loginSuccess(
                 bookcarsTypes.SocialSignInType.Google,
                 idToken,
@@ -143,7 +145,6 @@ const SocialLogin = (
                     error = true
                     break
                   default:
-                    console.log(err.code)
                     console.error('Google login error:', err.message)
                     error = true
                     break
@@ -202,7 +203,7 @@ const SocialLogin = (
 
         {/* FACEBOOK */}
         <Pressable
-          style={{ display: 'none' }}
+          // style={{ display: 'none' }}
           onPress={async () => {
             LoginManager.logInWithPermissions(['public_profile', 'email'])
               .then(
