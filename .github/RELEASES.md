@@ -1,5 +1,34 @@
 # Releases
 
+## [BookCars 8.4](https://github.com/aelassas/bookcars/releases/tag/v8.4) – 2026-02-28
+
+* feat(mobile): add Apple, Google, and Facebook authentication
+* fix(security): unrestricted file uploads and renames (#98)
+* fix(security): prevent directory traversal in file delete routes (#98)
+* fix(security): prevent directory traversal in file rename routes (#98)
+* fix(security): unauthenticated admin registration (#99)
+* fix(security): move route authentication to dedicated middlewares (#99)
+* fix(security): verify Google, Facebook, and Apple tokens cryptographically in backend (#99)
+* fix(security): systemic cross-supplier IDOR and unauthenticated admin registration (#99)
+* fix(sercurity): prevent non admin users from modifying user roles (#99)
+* fix(security): prevent non admin users from modifying other users' language (#99)
+* fix(security): restrict change password page to authorized users only (#99)
+* fix(security): restrict fetching users to admin and supplier only (#99)
+* fix(security): restrict location update and delete operations to authorized users only
+* fix(security): restrict car update and delete operations to authorized users only
+* fix(security): get booking route not protected by auth middleware
+* fix(admin): birthDate field not set initially in update user form
+* fix(admin): supplier full name validation not working
+* chore(deps): update dependencies
+
+### Assets
+- [bookcars-8.4.apk](https://github.com/aelassas/bookcars/releases/download/v8.4/bookcars-8.4.apk) (100.77 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.4/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.4)
+
 ## [BookCars 8.3](https://github.com/aelassas/bookcars/releases/tag/v8.3) – 2025-12-21
 
 * chore(backend): migrate to `mongoose` 9.0.2
