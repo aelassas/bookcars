@@ -67,8 +67,16 @@ const DrawerNavigator = () => {
     { name: 'Notifications', title: '', iconName: 'notifications', hidden: true },
   ], [loggedIn])
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: insets.top,
+      marginBottom: insets.bottom,
+    },
+  })
+
   return (
-    <View style={[styles.container, { marginTop: insets.top, marginBottom: insets.bottom }]}>
+    <View style={styles.container}>
       <Drawer.Navigator
         initialRouteName="Home"
         backBehavior="history"
@@ -113,11 +121,5 @@ const DrawerNavigator = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
 
 export default DrawerNavigator
