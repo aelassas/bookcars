@@ -41,7 +41,7 @@ const Header = ({
         const user = await UserService.getUser(currentUser._id)
 
         if (user.avatar) {
-          setAvatar(bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
+          setAvatar(user.avatar.startsWith('https://') ? user.avatar : bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
         } else {
           setAvatar('')
         }
