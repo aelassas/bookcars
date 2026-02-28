@@ -2,6 +2,7 @@ import { Request } from 'express'
 import axios from 'axios'
 import * as jose from 'jose'
 import bcrypt from 'bcrypt'
+import { OAuth2Client } from 'google-auth-library'
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from './helper'
 import * as env from '../config/env.config'
@@ -158,18 +159,31 @@ export async function verifyAppleToken(token: string, email: string): Promise<bo
   }
 }
 
+// Cache OAuth2Client for performance
+const client = new OAuth2Client()
+
 /**
  * GOOGLE: Handles ID Tokens (JWT) or Access Tokens (Opaque)
  */
 export async function verifyGoogleToken(token: string, email: string): Promise<boolean> {
-  const res = await axios.get('https://www.googleapis.com/oauth2/v3/tokeninfo', {
-    headers: { Authorization: `Bearer ${token}` },
+  const allowedClientIds = [
+    env.GOOGLE_CLIENT_ID,
+    env.GOOGLE_MOBILE_CLIENT_ID,
+  ]
+
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: allowedClientIds,
   })
 
-  const emailMatches = res.data.email?.toLowerCase() === email.toLowerCase()
-  const audMatches = res.data.aud === env.GOOGLE_CLIENT_ID || res.data.azp === env.GOOGLE_CLIENT_ID
+  const payload = ticket.getPayload()
+  if (!payload) {
+    return false
+  }
 
-  return emailMatches && audMatches
+  const emailMatches = payload.email?.toLowerCase() === email.toLowerCase()
+
+  return emailMatches
 }
 
 /**

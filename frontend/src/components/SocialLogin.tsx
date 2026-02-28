@@ -140,11 +140,12 @@ const SocialLogin = ({
         {google && (
           <LoginSocialGoogle
             client_id={env.GG_APP_ID}
+            typeResponse="idToken"
             redirect_uri={REDIRECT_URI}
             scope="openid profile email"
             discoveryDocs="claims_supported"
             onResolve={({ data }: IResolveParams) => {
-              loginSuccess(bookcarsTypes.SocialSignInType.Google, data?.access_token, data?.email, data?.name || data?.email, data?.picture)
+              loginSuccess(bookcarsTypes.SocialSignInType.Google, data?.credential, data?.email, data?.name || data?.email, data?.picture)
             }}
             onReject={(err: any) => {
               loginError(err)

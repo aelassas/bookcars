@@ -782,30 +782,54 @@ describe('POST /api/social-sign-in/:type', () => {
       .send(payload)
     expect(res.statusCode).toBe(400)
 
-    // test success (mobile)
-    payload.mobile = true
-    res = await request(app)
-      .post('/api/social-sign-in')
-      .send(payload)
-    expect(res.statusCode).toBe(200)
+    await jest.isolateModulesAsync(async () => {
+      jest.unstable_mockModule('axios', () => ({
+        default: {
+          get: jest.fn(() => Promise.resolve({ data: { success: true } })),
+        },
+      }))
+      const realHelper = await import('../src/utils/authHelper.js')
+      jest.unstable_mockModule('../src/utils/authHelper.js', () => ({
+        validateAccessToken: jest.fn(() => Promise.resolve(true)),
+        encryptJWT: jest.fn(realHelper.encryptJWT),
+        decryptJWT: jest.fn(realHelper.decryptJWT),
+        isAdmin: jest.fn(realHelper.isAdmin),
+        isFrontend: jest.fn(realHelper.isFrontend),
+        hashPassword: jest.fn(realHelper.hashPassword)
+      }))
+      jest.resetModules()
+      const env = await import('../src/config/env.config.js')
+      const newApp = (await import('../src/app.js')).default
+      const dbh = await import('../src/utils/databaseHelper.js')
 
-    // test success (mobile stay connected)
-    payload.mobile = true
-    payload.stayConnected = true
-    res = await request(app)
-      .post('/api/social-sign-in')
-      .send(payload)
-    expect(res.statusCode).toBe(200)
+      await dbh.close()
+      await dbh.connect(env.DB_URI, false, false)
+      // test success (mobile)
+      payload.mobile = true
+      res = await request(newApp)
+        .post('/api/social-sign-in')
+        .send(payload)
+      expect(res.statusCode).toBe(200)
 
-    // test success (mobile new user)
-    payload.email = testHelper.GetRandomEmail()
-    payload.fullName = 'Random user'
-    res = await request(app)
-      .post('/api/social-sign-in')
-      .send(payload)
-    expect(res.statusCode).toBe(200)
-    await User.deleteOne({ email: payload.email })
-    payload.mobile = false
+      // test success (mobile stay connected)
+      payload.mobile = true
+      payload.stayConnected = true
+      res = await request(newApp)
+        .post('/api/social-sign-in')
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+
+      // test success (mobile new user)
+      payload.email = testHelper.GetRandomEmail()
+      payload.fullName = 'Random user'
+      res = await request(newApp)
+        .post('/api/social-sign-in')
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+      await User.deleteOne({ email: payload.email })
+      payload.mobile = false
+      await dbh.close()
+    })
 
     // test failure (no email)
     payload.email = undefined
