@@ -49,8 +49,8 @@ const DrawerNavigator = () => {
   const { loggedIn, language } = useAuth()
   const insets = useSafeAreaInsets()
 
-  // Define drawer items with useMemo so they only update when loggedIn/language changes
-  const drawerItems = useMemo(() => [
+  // Define drawer items with useMemo so they only update when loggedIn changes
+  const drawerItems: DrawerItem[] = useMemo(() => [
     { name: 'Home', title: i18n.t('HOME'), iconName: 'home' },
     { name: 'Cars', title: i18n.t('CARS'), iconName: 'directions-car', hidden: true },
     { name: 'Checkout', title: i18n.t('CREATE_BOOKING'), iconName: 'event-seat', hidden: true },
@@ -67,8 +67,16 @@ const DrawerNavigator = () => {
     { name: 'Notifications', title: '', iconName: 'notifications', hidden: true },
   ], [loggedIn])
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: insets.top,
+      marginBottom: insets.bottom,
+    },
+  })
+
   return (
-    <View style={[styles.container, { marginTop: insets.top, marginBottom: insets.bottom }]}>
+    <View style={styles.container}>
       <Drawer.Navigator
         initialRouteName="Home"
         backBehavior="history"
@@ -80,7 +88,7 @@ const DrawerNavigator = () => {
           <DrawerContent
             props={props}
             index={props.state.index}
-            drawerItems={drawerItems as any}
+            drawerItems={drawerItems}
             loggedIn={loggedIn}
             language={language}
             activeBackgroundColor="#feeee4"
@@ -88,17 +96,20 @@ const DrawerNavigator = () => {
           />
         )}
       >
-        {drawerItems.map((item) => (
+        {drawerItems.map((drawer) => (
           <Drawer.Screen
-            key={item.name}
-            name={item.name as keyof StackParams}
-            component={componentMap[item.name]}
+            key={drawer.name}
+            name={drawer.name as keyof StackParams}
+            component={componentMap[drawer.name]}
             options={{
-              title: item.title,
-              drawerItemStyle: (item.hidden) ? { display: 'none' } : {},
+              title: drawer.title,
+              drawerItemStyle: {
+                height: drawer.hidden ? 0 : 'auto',
+                display: drawer.hidden ? 'none' : 'flex', // Cleanly hide items
+              },
               drawerIcon: ({ color }) => (
                 <MaterialIcons
-                  name={item.iconName as any}
+                  name={drawer.iconName as any}
                   size={24}
                   color={color}
                 />
@@ -110,11 +121,5 @@ const DrawerNavigator = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
 
 export default DrawerNavigator

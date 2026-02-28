@@ -11,8 +11,13 @@ import * as bookcarsTypes from ':bookcars-types'
 import i18n from '@/lang/i18n'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
+import * as env from '@/config/env.config'
 
-GoogleSignin.configure()
+GoogleSignin.configure({
+  webClientId: env.GOOGLE_WEB_CLIENT_ID,
+  offlineAccess: true,
+  scopes: ['profile', 'email'],
+})
 
 interface SocialLoginProps {
   stayConnected?: boolean
@@ -100,11 +105,26 @@ const SocialLogin = (
           onPress={async () => {
             try {
               await GoogleSignin.hasPlayServices()
+
+              // Force account picker
+              await GoogleSignin.signOut()
+
               const userInfo = await GoogleSignin.signIn()
-              if (!userInfo.data) {
+
+              const user = userInfo.data?.user
+              const idToken = userInfo.data?.idToken
+
+              if (!user || !idToken) {
                 throw new Error('User details not found')
               }
-              await loginSuccess(bookcarsTypes.SocialSignInType.Google, userInfo.data.idToken || '', userInfo.data.user.email, userInfo.data.user.name || userInfo.data.user.email, userInfo.data.user.photo || '')
+              
+              await loginSuccess(
+                bookcarsTypes.SocialSignInType.Google,
+                idToken,
+                user.email,
+                user.name || user.email,
+                user.photo || ''
+              )
             } catch (err: any) {
               let error = false
               if (isErrorWithCode(err)) {
@@ -182,6 +202,7 @@ const SocialLogin = (
 
         {/* FACEBOOK */}
         <Pressable
+          // style={{ display: 'none' }}
           onPress={async () => {
             LoginManager.logInWithPermissions(['public_profile', 'email'])
               .then(

@@ -21,6 +21,7 @@ import {
   BC_DEPOSIT_FILTER_VALUE_2,
   BC_DEPOSIT_FILTER_VALUE_3,
   BC_WEBSITE_NAME,
+  BC_GOOGLE_WEB_CLIENT_ID,
 } from '@env'
 
 /**
@@ -259,3 +260,10 @@ export const DEPOSIT_FILTER_VALUE_2: number = Number(BC_DEPOSIT_FILTER_VALUE_2)
  * @type {number}
  */
 export const DEPOSIT_FILTER_VALUE_3: number = Number(BC_DEPOSIT_FILTER_VALUE_3)
+
+/**
+ * Google WebClientID.
+ *
+ * @type {string}
+ */
+export const GOOGLE_WEB_CLIENT_ID: string = String(BC_GOOGLE_WEB_CLIENT_ID)

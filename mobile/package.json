@@ -34,6 +34,7 @@
     "@react-navigation/native-stack": "^7.9.0",
     "@react-navigation/stack": "^7.6.13",
     "@stripe/stripe-react-native": "0.50.3",
+    "@types/react-native-google-signin": "^1.0.7",
     "axios": "^1.13.2",
     "axios-retry": "^4.5.0",
     "date-fns": "^4.1.0",
