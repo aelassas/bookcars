@@ -203,7 +203,7 @@ const SocialLogin = (
 
         {/* FACEBOOK */}
         <Pressable
-          // style={{ display: 'none' }}
+          style={{ display: 'none' }}
           onPress={async () => {
             LoginManager.logInWithPermissions(['public_profile', 'email'])
               .then(
