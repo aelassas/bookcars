@@ -198,19 +198,18 @@ describe('createTextIndex', () => {
 })
 
 describe('checkAndUpdateTTL', () => {
-  it('logs error when dropIndex throws', async () => {
+  it('logs error when dropIndex throws (non IndexNotFound)', async () => {
     const name = 'ttlIndex'
     const seconds = 100
     const error = new Error('Drop failed')
 
     // Mock databaseTTLHelper
-    const createTTLIndexMock = jest.fn(async () => { })
-
+    const createTTLIndexMock = jest.fn(async () => {})
     jest.unstable_mockModule('../src/utils/databaseTTLHelper.js', () => ({
       createTTLIndex: createTTLIndexMock,
     }))
 
-    // Mock logger module exports as jest.fn()
+    // Mock logger
     const logger = {
       info: jest.fn(),
       warn: jest.fn(),
@@ -218,32 +217,38 @@ describe('checkAndUpdateTTL', () => {
     }
     jest.unstable_mockModule('../src/utils/logger.js', () => logger)
 
-    jest.resetModules() // reset module cache
+    jest.resetModules()
 
     await jest.isolateModulesAsync(async () => {
-      // Import databaseHelper after mocking logger and databaseTTLHelper
-      const { checkAndUpdateTTL } = await import('../src/utils/databaseHelper.js')
+      const { checkAndUpdateTTL } = await import(
+        '../src/utils/databaseHelper.js'
+      )
 
-      // Prepare a model mock with dropIndex throwing error
       const model = {
         modelName: 'TestModel',
         collection: {
-          indexes: jest.fn(() => Promise.resolve([
-            { name, expireAfterSeconds: seconds - 1 }, // force existing = true
-          ])),
-          dropIndex: jest.fn(() => Promise.reject(error)), // triggers catch block
-          createIndex: jest.fn(() => Promise.resolve({}))
+          indexes: jest.fn(() =>
+            Promise.resolve([
+              { name, expireAfterSeconds: seconds - 1 }, // force TTL mismatch
+            ])
+          ),
+          dropIndex: jest.fn(() => Promise.reject(error)),
         },
       } as any
 
-      await checkAndUpdateTTL(model, name, seconds)
+      await expect(
+        checkAndUpdateTTL(model, name, seconds)
+      ).rejects.toThrow(error)
 
       expect(model.collection.dropIndex).toHaveBeenCalledWith(name)
+
       expect(logger.error).toHaveBeenCalledWith(
-        `Failed to drop TTL index "${name}":`,
+        `Failed to drop TTL index "TestModel.${name}":`,
         error
       )
-      expect(createTTLIndexMock).toHaveBeenCalledWith(model, name, seconds)
+
+      // Should NOT recreate because error is re-thrown
+      expect(createTTLIndexMock).not.toHaveBeenCalled()
     })
   })
 })
