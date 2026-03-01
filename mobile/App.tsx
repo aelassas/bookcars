@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { NavigationContainerRef } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -6,11 +7,12 @@ import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import { StripeProvider } from '@stripe/stripe-react-native'
-import * as helper from './utils/helper'
-import * as NotificationService from './services/NotificationService'
-import * as UserService from './services/UserService'
-import { GlobalProvider } from './context/GlobalContext'
-import * as env from './config/env.config'
+
+import * as helper from '@/utils/helper'
+import * as NotificationService from '@/services/NotificationService'
+import * as UserService from '@/services/UserService'
+import { GlobalProvider } from '@/context/GlobalContext'
+import * as env from '@/config/env.config'
 import { AutocompleteDropdownContextProvider } from '@/components/AutocompleteDropdown-v4.3.1'
 import { AuthProvider } from '@/context/AuthContext'
 import { SettingProvider } from '@/context/SettingContext'
@@ -103,24 +105,26 @@ const App = () => {
   }
 
   return (
-    <SettingProvider>
-      <GlobalProvider>
-        <AuthProvider>
-          <SafeAreaProvider>
-            <Provider>
-              <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
-                <AutocompleteDropdownContextProvider>
-                  <NavigationWrapper
-                    ref={navigationRef}
-                    onReady={onReady}
-                  />
-                </AutocompleteDropdownContextProvider>
-              </StripeProvider>
-            </Provider>
-          </SafeAreaProvider>
-        </AuthProvider>
-      </GlobalProvider>
-    </SettingProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SettingProvider>
+        <GlobalProvider>
+          <AuthProvider>
+            <SafeAreaProvider>
+              <Provider>
+                <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
+                  <AutocompleteDropdownContextProvider>
+                    <NavigationWrapper
+                      ref={navigationRef}
+                      onReady={onReady}
+                    />
+                  </AutocompleteDropdownContextProvider>
+                </StripeProvider>
+              </Provider>
+            </SafeAreaProvider>
+          </AuthProvider>
+        </GlobalProvider>
+      </SettingProvider>
+    </GestureHandlerRootView>
   )
 }
 

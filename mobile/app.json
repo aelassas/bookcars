@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "jsEngine": "hermes",
     "name": "BookCars",
     "version": "8.5.0",
@@ -88,4 +89,3 @@
     }
   }
 }
-
