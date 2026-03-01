@@ -130,21 +130,44 @@ export const createTextIndex = async <T>(model: Model<T>, field: string, indexNa
  * @param {number} seconds 
  * @returns {Promise<void>} 
  */
-export const checkAndUpdateTTL = async <T>(model: Model<T>, name: string, seconds: number) => {
+export const checkAndUpdateTTL = async <T>(
+  model: Model<T>,
+  name: string,
+  seconds: number
+) => {
   const indexTag = `${model.modelName}.${name}`
   const indexes = await model.collection.indexes()
-  const existing = indexes.find((index) => index.name === name && index.expireAfterSeconds !== seconds)
 
-  if (existing) {
+  const existing = indexes.find((index) => index.name === name)
+
+  // 1. Index does not exist → create it
+  if (!existing) {
+    logger.info(`Creating TTL index "${indexTag}" (${seconds}s)`)
+    await databaseTTLHelper.createTTLIndex(model, name, seconds)
+    return
+  }
+
+  // 2. TTL differs → update it
+  if (existing.expireAfterSeconds !== seconds) {
+    logger.info(
+      `Updating TTL index "${indexTag}" from ${existing.expireAfterSeconds} to ${seconds}`
+    )
+
     try {
       await model.collection.dropIndex(name)
-    } catch (err) {
-      logger.error(`Failed to drop TTL index "${name}":`, err)
+    } catch (err: any) {
+      if (err.codeName !== 'IndexNotFound') {
+        logger.error(`Failed to drop TTL index "${indexTag}":`, err)
+        throw err
+      }
     }
+
     await databaseTTLHelper.createTTLIndex(model, name, seconds)
-  } else {
-    logger.info(`TTL index "${indexTag}" is already up to date`)
+    return
   }
+
+  // 3. Already correct
+  logger.info(`TTL index "${indexTag}" is already up to date`)
 }
 
 /**
