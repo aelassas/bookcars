@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useRef } from 'react'
 import { Animated, Dimensions, Pressable, StyleSheet, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import CustomDrawerContent from '@/components/CustomDrawerContent'
 
 const DRAWER_WIDTH = 280
@@ -8,6 +9,7 @@ const DrawerContext = createContext({ toggle: () => { } })
 export const useDrawer = () => useContext(DrawerContext)
 
 export const SimpleDrawerProvider = ({ children }: { children: React.ReactNode }) => {
+  const insets = useSafeAreaInsets()
   const [visible, setVisible] = useState(false)
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current
   const opacityAnim = useRef(new Animated.Value(0)).current
@@ -50,7 +52,7 @@ export const SimpleDrawerProvider = ({ children }: { children: React.ReactNode }
       <View style={{ flex: 1 }}>
         {/* Dark Overlay */}
         {visible && (
-          <Animated.View style={[styles.overlay, { opacity: opacityAnim }]}>
+          <Animated.View style={[styles.overlay, { opacity: opacityAnim, marginTop: insets.top, marginBottom: insets.bottom }]}>
             <Pressable style={{ flex: 1 }} onPress={toggle} />
           </Animated.View>
         )}
