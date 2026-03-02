@@ -90,6 +90,12 @@ const SocialLogin = (
     }
   }
 
+  const getEmail = (jwtToken: string) => {
+    const jwt = UserService.parseJwt(jwtToken)
+    const { email } = jwt
+    return email
+  }
+
   return (
     <View style={styles.view}>
       <View style={styles.or}>
@@ -177,8 +183,21 @@ const SocialLogin = (
                   ],
                 })
 
-                if (credential.email && credential.fullName) {
-                  await loginSuccess(bookcarsTypes.SocialSignInType.Apple, credential.authorizationCode || '', credential.email, `${credential.fullName.givenName} ${credential.fullName.familyName}`, '')
+                // 1. Get the email from the credential OR decode it from the identityToken
+                const email = credential.email || getEmail(String(credential.identityToken))
+
+                // 2. Build the name (will be null on repeat logins)
+                const firstName = credential.fullName?.givenName || ''
+                const lastName = credential.fullName?.familyName || ''
+                const name = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : email
+
+                if (email) {
+                  // Use identityToken instead of authorizationCode for consistency with your web logic
+                  await loginSuccess(
+                    bookcarsTypes.SocialSignInType.Apple, credential.identityToken || '',
+                    email,
+                    name,
+                    '')
                 } else {
                   error = true
                 }
