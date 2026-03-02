@@ -456,7 +456,7 @@ const Car = ({
                   from: from.getTime(),
                   to: to.getTime(),
                 }
-                router.push({ pathname: 'checkout', params })
+                router.push({ pathname: '/checkout', params })
               }}
             />
           </View>

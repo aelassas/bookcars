@@ -261,7 +261,7 @@ const SearchForm = (
       d: now.toString(),
     }
 
-    router.push({ pathname: 'cars', params })
+    router.push({ pathname: '/cars', params })
   }
 
   return (
