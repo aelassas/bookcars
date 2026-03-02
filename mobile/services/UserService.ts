@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as Localization from 'expo-localization'
+import { decode as atob } from 'base-64'
 import axiosInstance from './axiosInstance'
 import * as env from '@/config/env.config'
 import * as AsyncStorage from '@/utils/AsyncStorage'
@@ -646,3 +647,39 @@ export const deleteTempLicense = (file: string): Promise<number> =>
       null,
     )
     .then((res) => res.status)
+
+/**
+* Parse JWT token.
+* @param {string} token
+* @returns {any}
+*/
+export const parseJwt = (token: string) => {
+  try {
+    // 1. Basic validation
+    if (!token || !token.includes('.')) {
+      return {}
+    }
+
+    // 2. Extract the payload (middle part)
+    const base64Url = token.split('.')[1]
+
+    // 3. Convert Base64URL to standard Base64
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+
+    // 4. Decode the string (works on web and native thanks to 'base-64' library)
+    const decoded = atob(base64)
+
+    // 5. Handle UTF-8 / Special characters
+    const jsonPayload = decodeURIComponent(
+      decoded
+        .split('')
+        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
+        .join('')
+    )
+
+    return JSON.parse(jsonPayload)
+  } catch (error) {
+    console.error('JWT Parse Error:', error)
+    return {}
+  }
+}

@@ -37,6 +37,7 @@
     "@types/react-native-google-signin": "^1.0.7",
     "axios": "^1.13.2",
     "axios-retry": "^4.5.0",
+    "base-64": "^1.0.0",
     "date-fns": "^4.1.0",
     "expo": "~54.0.33",
     "expo-apple-authentication": "~8.0.8",
@@ -79,6 +80,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
+    "@types/base-64": "^1.0.2",
     "@types/lodash.debounce": "^4.0.9",
     "@types/mime": "^4.0.0",
     "@types/prop-types": "^15.7.15",

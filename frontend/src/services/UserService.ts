@@ -450,11 +450,34 @@ export const sendEmail = (payload: bookcarsTypes.SendEmailPayload): Promise<numb
 * @returns {any}
 */
 export const parseJwt = (token: string) => {
-  const base64Url = token.split('.')[1]
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join(''))
+  try {
+    // 1. Basic validation
+    if (!token || !token.includes('.')) {
+      return {}
+    }
 
-  return JSON.parse(jsonPayload)
+    // 2. Extract the payload (middle part)
+    const base64Url = token.split('.')[1]
+
+    // 3. Convert Base64URL to standard Base64
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+
+    // 4. Decode the string (works on web and native thanks to 'base-64' library)
+    const decoded = atob(base64)
+
+    // 5. Handle UTF-8 / Special characters
+    const jsonPayload = decodeURIComponent(
+      decoded
+        .split('')
+        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
+        .join('')
+    )
+
+    return JSON.parse(jsonPayload)
+  } catch (error) {
+    console.error('JWT Parse Error:', error)
+    return {}
+  }
 }
 
 /**

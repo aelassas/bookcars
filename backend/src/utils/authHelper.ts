@@ -143,18 +143,28 @@ const APPLE_JWKS = jose.createRemoteJWKSet(new URL('https://appleid.apple.com/au
  * APPLE: Always a JWT
  */
 export async function verifyAppleToken(token: string, email: string): Promise<boolean> {
-  try {
+try {
+    // Define all valid identifiers
+    const validAudiences = [
+      env.APPLE_CLIENT_ID_WEB,
+      env.APPLE_CLIENT_ID_MOBILE
+    ]
+
     const { payload } = await jose.jwtVerify(token, APPLE_JWKS, {
       issuer: 'https://appleid.apple.com',
-      audience: env.APPLE_CLIENT_ID,
-      clockTolerance: '2m' // 2-minute grace period
+      audience: validAudiences, // Jose allows an array here
+      clockTolerance: '2m'
     })
 
-    const emailMatches = typeof payload.email === 'string' && payload.email && payload.email.toLowerCase() === email.toLowerCase()
+    const payloadEmail = String(payload.email).toLowerCase()
+    const emailMatches = payloadEmail === email.toLowerCase()
+    
+    // Apple sends email_verified as a boolean, but some libraries stringify it
     const isVerified = payload.email_verified === true || payload.email_verified === 'true'
 
     return Boolean(payload.sub && emailMatches && isVerified)
-  } catch {
+  } catch (err) {
+    console.error('Apple Token Verification Failed:', err)
     return false
   }
 }

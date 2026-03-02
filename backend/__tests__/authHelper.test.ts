@@ -2,7 +2,8 @@ import { jest } from '@jest/globals'
 
 // 1. ALL MOCKS MUST BE AT THE TOP
 jest.unstable_mockModule('../src/config/env.config', () => ({
-    APPLE_CLIENT_ID: 'apple-client-id',
+    APPLE_CLIENT_ID_WEB: 'apple-client-id-web',
+    APPLE_CLIENT_ID_MOBILE: 'apple-client-id-mobile',
     GOOGLE_CLIENT_ID: 'google-client-id',
     FACEBOOK_APP_ID: 'fb-app-id',
     FACEBOOK_APP_SECRET: 'fb-secret',
