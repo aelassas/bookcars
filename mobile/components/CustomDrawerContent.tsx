@@ -82,7 +82,6 @@ const CustomDrawerContent = ({ closeDrawer }: CustomDrawerContentProps) => {
   }
 
   return (
-    // <View style={styles.masterContainer}>
     <View
       style={[
         styles.drawerSurface,
@@ -203,15 +202,10 @@ const CustomDrawerContent = ({ closeDrawer }: CustomDrawerContentProps) => {
         </View>
       </ScrollView>
     </View>
-    // </View> 
   )
 }
 
 const styles = StyleSheet.create({
-  masterContainer: {
-    flex: 1,
-    backgroundColor: 'transparent', // Make the background transparent to see the "gap"
-  },
   drawerSurface: {
     flex: 1, // Takes available space but respects margins
     width: 280, // Ensure it doesn't span the full width
