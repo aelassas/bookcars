@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { RouteProp, useIsFocused, useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useLocalSearchParams, usePathname } from 'expo-router' // Replacement for route prop
 import * as StripeService from '@/services/StripeService'
 import { CURRENCIES } from '@/config/env.config'
 import * as helper from '@/utils/helper'
 
 interface CurrencyMenuProps {
-  route: RouteProp<StackParams, keyof StackParams>
+  // Removed route prop - we fetch it from the hook now
   textColor?: string
   style?: object
 }
 
 const CurrencyMenu = ({
-  route,
   textColor,
   style,
 }: CurrencyMenuProps) => {
-  const isFocused = useIsFocused()
-  const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
+  const params = useLocalSearchParams()
+  const pathname = usePathname() // Gets current path like '/bookings'
 
   const [value, setValue] = useState('')
   const [showMenu, setShowMenu] = useState(false)
@@ -30,7 +28,10 @@ const CurrencyMenu = ({
     }
 
     init()
-  }, [route.name, isFocused])
+  }, [pathname]) // Re-run when path changes
+
+  // Helper to convert pathname back to a Name for your helper.navigate
+
 
   const styles = StyleSheet.create({
     container: {
@@ -46,6 +47,7 @@ const CurrencyMenu = ({
       position: 'absolute',
       top: 39,
       left: -24,
+      zIndex: 100, // Ensure it stays above other elements
     },
     menuItem: {
       width: 70,
@@ -53,7 +55,6 @@ const CurrencyMenu = ({
       backgroundColor: '#fff',
       borderColor: '#f1f1f1',
       borderWidth: 1,
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -71,7 +72,7 @@ const CurrencyMenu = ({
 
   return (
     <>
-      <View style={{ ...styles.container, ...style }}>
+      <View style={[styles.container, style]}>
         <Pressable
           onPress={() => setShowMenu((prev) => !prev)}
         >
@@ -86,13 +87,24 @@ const CurrencyMenu = ({
                 key={currency.code}
                 onPress={async () => {
                   await StripeService.setCurrency(currency.code)
-                  helper.navigate(route, navigation, true)
+
+                  // Trigger refresh using the new helper
+                  // We pass existing params so the user stays on the same data (e.g. same booking ID)
+
+                  const currentRouteName = helper.getCurrentRouteName(pathname)
+                  helper.navigate(
+                    { name: currentRouteName, params: { ...params } },
+                    true
+                  )
+
                   setValue(currency.code)
                   setShowMenu(false)
                 }}
               >
-                <View style={{ ...styles.menuItem, ...(currency.code === value ? styles.selected : null) }}>
-                  <Text style={{ ...styles.menuItemText, ...(currency.code === value ? styles.textSelected : null) }}>{currency.code}</Text>
+                <View style={[styles.menuItem, currency.code === value && styles.selected]}>
+                  <Text style={[styles.menuItemText, currency.code === value && styles.textSelected]}>
+                    {currency.code}
+                  </Text>
                 </View>
               </Pressable>
             ))

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, ScrollView, View, TextInput as ReactTextInput } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { intervalToDuration } from 'date-fns'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 
@@ -18,9 +17,14 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/Backdrop'
 import Header from '@/components/Header'
 import SocialLogin from '@/components/SocialLogin'
+import { useAuth } from '@/context/AuthContext'
 
-const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignUp'>) => {
-  const isFocused = useIsFocused()
+
+const SignUpScreen = () => {
+  const { refresh } = useAuth()
+  const router = useRouter()
+  const { d } = useLocalSearchParams<{ d: string }>()
+
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -96,10 +100,8 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   }
 
   useEffect(() => {
-    if (isFocused) {
-      _init()
-    }
-  }, [route.params, isFocused])
+    _init()
+  }, [d])
 
   const validateFullName = () => {
     const valid = fullName !== ''
@@ -250,6 +252,56 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     setLoading(false)
   }
 
+  const clear = () => {
+    // 1. Reset Form Values
+    setFullName('')
+    setEmail('')
+    setPhone('')
+    setBirthDate(undefined)
+    setPassword('')
+    setConfirmPassword('')
+    setTosChecked(false)
+    setLoading(false)
+
+    // 2. Reset Validation/Error States
+    setFullNameRequired(false)
+
+    setEmailRequired(false)
+    setEmailValid(true)
+    setEmailError(false)
+
+    setPhoneRequired(false)
+    setPhoneValid(true)
+
+    setBirthDateRequired(false)
+    setBirthDateValid(true)
+
+    setPasswordRequired(false)
+    setPasswordLengthError(false)
+
+    setConfirmPasswordRequired(false)
+    setConfirmPasswordError(false)
+
+    setTosError(false)
+
+    // 3. Clear Native Input Refs
+    if (fullNameRef.current) {
+      fullNameRef.current.clear()
+    }
+    if (emailRef.current) {
+      emailRef.current.clear()
+    }
+    if (phoneRef.current) {
+      phoneRef.current.clear()
+    }
+    if (passwordRef.current) {
+      passwordRef.current.clear()
+    }
+    if (confirmPasswordRef.current) {
+      confirmPasswordRef.current.clear()
+    }
+  }
+
   const onPressSignUp = async () => {
     try {
       fullNameRef.current?.blur()
@@ -302,10 +354,18 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
       const status = await UserService.signup(data)
 
       if (status === 200) {
-        const result = await UserService.signin({ email, password })
+        const payload: bookcarsTypes.SignInPayload = {
+          email,
+          password,
+          mobile: true,
+        }
+
+        const result = await UserService.signin(payload)
 
         if (result.status === 200) {
-          navigation.navigate('Home', { d: new Date().getTime() })
+          clear()
+
+          router.push({ pathname: '/', params: { d: new Date().getTime().toString() } })
         } else {
           error()
         }
@@ -314,12 +374,14 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
       }
     } catch (err) {
       error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <View style={styles.master}>
-      <Header route={route} title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
+      <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
 
       {language && (
         <ScrollView
@@ -394,9 +456,9 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 
             <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 
-            <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
-
             {tosError && <Error message={i18n.t('TOS_ERROR')} />}
+
+            <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
           </View>
         </ScrollView>
       )}

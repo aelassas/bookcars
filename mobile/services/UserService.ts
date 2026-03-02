@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { router } from 'expo-router'
 import * as Localization from 'expo-localization'
 import { decode as atob } from 'base-64'
 import axiosInstance from './axiosInstance'
@@ -210,18 +210,37 @@ export const deletePushToken = async (userId: string): Promise<number> => {
  * @param {boolean} [redirectSignin=false]
  * @returns {void}
  */
-export const signout = async (
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-  redirect = true,
-  redirectSignin = false
-) => {
+// export const signout = async (
+//   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
+//   redirect = true,
+//   redirectSignin = false
+// ) => {
+//   await AsyncStorage.removeItem('bc-user')
+
+//   if (redirect) {
+//     navigation.navigate('Home', { d: new Date().getTime() })
+//   }
+//   if (redirectSignin) {
+//     navigation.navigate('SignIn', {})
+//   }
+// }
+
+/**
+ * Sign out.
+ *
+ * @async
+ * @param {boolean} [redirectHome=true]
+ * @param {boolean} [redirectSignin=false]
+ * @returns {void}
+ */
+export const signout = async (redirectHome = true, redirectSignin = false) => {
   await AsyncStorage.removeItem('bc-user')
 
-  if (redirect) {
-    navigation.navigate('Home', { d: new Date().getTime() })
-  }
-  if (redirectSignin) {
-    navigation.navigate('SignIn', {})
+  const now = new Date().getTime().toString()
+  if (redirectHome) {
+    router.push({ pathname: '/', params: { d: now } })
+  } else if (redirectSignin) {
+    router.push({ pathname: '/sign-in', params: { d: now } })
   }
 }
 

@@ -2,8 +2,7 @@ import { Platform } from 'react-native'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { CommonActions, DrawerActions, NavigationRoute, RouteProp } from '@react-navigation/native'
+import { router } from 'expo-router'
 import mime from 'mime'
 
 import i18n from '@/lang/i18n'
@@ -597,186 +596,49 @@ export const getBirthDateError = (minimumAge: number) =>
   `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t('BIRTH_DATE_NOT_VALID_PART2')} `
 
 /**
+ * Converts an Expo Router pathname into a capitalized Route Name.
+ * Handles nested routes and dynamic parameters.
+ * * @param {string} pathname - e.g., "/", "/bookings", "/booking/65e123"
+ * @returns {string} - e.g., "Home", "Bookings", "Booking"
+ */
+export const getCurrentRouteName = (pathname: string): string => {
+  // 1. Handle Root
+  if (!pathname || pathname === '/') {
+    return 'Home'
+  }
+
+  // 2. Remove leading and trailing slashes, then take the first segment
+  // e.g., "/booking/123/edit" -> "booking"
+  const segments = pathname.split('/').filter(Boolean)
+  const baseSegment = segments[0]
+
+  // 3. Special Case: Handle "sign-in" or "change-password" (kebab-case to PascalCase)
+  // e.g., "sign-in" -> "SignIn"
+  const formattedName = baseSegment
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('')
+
+  return formattedName
+}
+
+/**
  * Navigate to screen.
  *
- * @param {RouteProp<StackParams, keyof StackParams>} route
- * @param {NativeStackNavigationProp<StackParams, keyof StackParams>} navigation
+* @param {{ name: string; params?: any }} route 
+ * @param {?boolean} [reload] 
  */
-export const navigate = (
-  route: RouteProp<StackParams, keyof StackParams>,
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-  reload?: boolean,
-): void => {
-  switch (route.name) {
-    case 'About':
-    case 'Bookings':
-    case 'ChangePassword':
-    case 'Contact':
-    case 'ForgotPassword':
-    case 'Home':
-    case 'Notifications':
-    case 'Settings':
-    case 'SignIn':
-    case 'SignUp':
-    case 'ToS': {
-      const params = { d: Date.now() }
-      if (reload) {
-        navigation.dispatch((state) => {
-          const { routes } = state
-          const index = routes.findIndex((r) => r.name === route.name)
-          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
-          // _routes.splice(index, 1)
-          const now = Date.now()
-          _routes[index] = {
-            name: route.name,
-            key: `${route.name}-${now}`,
-            params,
-          }
-          // _routes.push({
-          //   name: route.name,
-          //   key: `${route.name}-${now}`,
-          //   params,
-          // })
+export const navigate = (route: { name: string; params?: any }, reload?: boolean) => {
+  // Normalize the name: if it's 'Home' or 'index', the path is '/'
+  const isHome = route.name.toLowerCase() === 'home' || route.name.toLowerCase() === 'index'
+  const pathname = isHome ? '/' : `/${route.name.toLowerCase()}`
 
-          return CommonActions.reset({
-            ...state,
-            routes: _routes,
-            // index: routes.length - 1,
-            index,
-          })
-        })
-        navigation.dispatch(DrawerActions.closeDrawer())
-      } else {
-        navigation.navigate(route.name, params)
-      }
-      break
-    }
-    case 'Booking': {
-      const params = {
-        d: Date.now(),
-        id: (route.params && 'id' in route.params && route.params.id as string) || '',
-      }
-      if (reload) {
-        navigation.dispatch((state) => {
-          const { routes } = state
-          const index = routes.findIndex((r) => r.name === 'Booking')
-          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
-          // _routes.splice(index, 1)
-          // const now = Date.now()
-          // _routes.push({
-          //   name: 'Booking',
-          //   key: `Booking-${now}`,
-          //   params,
-          // })
-          const now = Date.now()
-          _routes[index] = {
-            name: route.name,
-            key: `${route.name}-${now}`,
-            params,
-          }
+  const params = { ...route.params, d: Date.now().toString() }
 
-          return CommonActions.reset({
-            ...state,
-            routes: _routes,
-            // index: routes.length - 1,
-            index,
-          })
-        })
-        navigation.dispatch(DrawerActions.closeDrawer())
-      } else {
-        navigation.navigate(
-          route.name,
-          params
-        )
-      }
-      break
-    }
-    case 'Cars': {
-      const params = {
-        d: Date.now(),
-        pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
-        dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
-        from: (route.params && 'from' in route.params && route.params.from as number) || 0,
-        to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-      }
-      if (reload) {
-        navigation.dispatch((state) => {
-          const { routes } = state
-          const index = routes.findIndex((r) => r.name === 'Cars')
-          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
-          // _routes.splice(index, 1)
-          // const now = Date.now()
-          // _routes.push({
-          //   name: 'Cars',
-          //   key: `Cars-${now}`,
-          //   params,
-          // })
-          const now = Date.now()
-          _routes[index] = {
-            name: route.name,
-            key: `${route.name}-${now}`,
-            params,
-          }
-
-          return CommonActions.reset({
-            ...state,
-            routes: _routes,
-            // index: routes.length - 1,
-            index,
-          })
-        })
-        navigation.dispatch(DrawerActions.closeDrawer())
-      } else {
-        navigation.navigate(route.name, params)
-      }
-      break
-    }
-    case 'Checkout': {
-      const params = {
-        d: Date.now(),
-        car: (route.params && 'car' in route.params && route.params.car as string) || '',
-        pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
-        dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
-        from: (route.params && 'from' in route.params && route.params.from as number) || 0,
-        to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-      }
-      if (reload) {
-        navigation.dispatch((state) => {
-          const { routes } = state
-          const index = routes.findIndex((r) => r.name === 'Checkout')
-          const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
-          // _routes.splice(index, 1)
-          // const now = Date.now()
-          // _routes.push({
-          //   name: 'Checkout',
-          //   key: `Checkout-${now}`,
-          //   params,
-          // })
-          const now = Date.now()
-          _routes[index] = {
-            name: route.name,
-            key: `${route.name}-${now}`,
-            params,
-          }
-
-          return CommonActions.reset({
-            ...state,
-            routes: _routes,
-            // index: routes.length - 1,
-            index,
-          })
-        })
-        navigation.dispatch(DrawerActions.closeDrawer())
-      } else {
-        navigation.navigate(
-          route.name,
-          params
-        )
-      }
-      break
-    }
-    default:
-      break
+  if (reload) {
+    router.replace({ pathname: pathname as any, params })
+  } else {
+    router.push({ pathname: pathname as any, params })
   }
 }
 

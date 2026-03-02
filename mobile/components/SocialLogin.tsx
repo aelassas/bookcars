@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
 import { GoogleSignin, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import { AccessToken, GraphRequest, GraphRequestManager, LoginManager, Profile } from 'react-native-fbsdk-next'
@@ -12,6 +11,7 @@ import i18n from '@/lang/i18n'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 import * as env from '@/config/env.config'
+
 
 GoogleSignin.configure({
   webClientId: env.GOOGLE_WEB_CLIENT_ID,
@@ -34,7 +34,7 @@ const SocialLogin = (
     onBlackListed,
   }: SocialLoginProps
 ) => {
-  const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
+  const router = useRouter()
   const [openErrorDialog, setOpenErrorDialog] = useState(false)
 
   const longinError = () => {
@@ -61,17 +61,26 @@ const SocialLogin = (
       const res = await UserService.socialSignin(data)
       if (res.status === 200) {
         if (res.data.blacklisted) {
-          await UserService.signout(navigation, false, false)
+          await UserService.signout()
           if (onBlackListed) {
             onBlackListed()
           }
         } else {
           await helper.registerPushToken(res.data._id as string)
 
+          // 1. Ensure pathname starts with '/'
+          // 2. Remove the old navigation.navigate('Home') - router.push('/') does this now.
           if (checkoutParams) {
-            navigation.navigate('Checkout', checkoutParams)
+            router.push({
+              pathname: '/checkout',
+              params: {
+                ...checkoutParams,
+                d: Date.now().toString() // force a refresh on the checkout screen
+              }
+            })
           } else {
-            navigation.navigate('Home', {})
+            // router.replace is often better for going "Home" to clear the stack
+            router.replace('/')
           }
         }
       } else {

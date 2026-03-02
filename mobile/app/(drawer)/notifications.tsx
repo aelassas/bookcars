@@ -1,39 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
+import { enUS, fr } from 'date-fns/locale'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
 import * as bookcarsTypes from ':bookcars-types'
 
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
-import BookingList from '@/components/BookingList'
-import * as env from '@/config/env.config'
+import NotificationList from '@/components/NotificationList'
 
-const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Booking'>) => {
+
+const NotificationsScreen = () => {
   const isFocused = useIsFocused()
-  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
+  const { d } = useLocalSearchParams<{ d: string }>()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()
+  const [locale, setLoacle] = useState(fr)
 
   const _init = async () => {
     setVisible(false)
-    const _language = await UserService.getLanguage()
-    setLanguage(_language)
-    i18n.locale = _language
+    const language = await UserService.getLanguage()
+    i18n.locale = language
+    setLoacle(language === 'fr' ? fr : enUS)
 
     const currentUser = await UserService.getCurrentUser()
 
     if (!currentUser || !currentUser._id) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
       return
     }
 
     const _user = await UserService.getUser(currentUser._id)
 
     if (!_user) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
       return
     }
 
@@ -48,22 +51,17 @@ const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
-      {visible
-        && (
-          <BookingList
-            user={user?._id as string}
-            booking={route.params.id}
-            language={language}
-          />
-        )}
+    <Layout style={styles.master} onLoad={onLoad} reload={reload} strict>
+      {visible && (
+        <NotificationList user={user} locale={locale} />
+      )}
     </Layout>
   )
 }
@@ -74,4 +72,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default BookingScreen
+export default NotificationsScreen

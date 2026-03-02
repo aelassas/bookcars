@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RouteProp } from '@react-navigation/native'
+import { useLocalSearchParams } from 'expo-router' // Add this
 import * as bookcarsTypes from ':bookcars-types'
 
 import * as UserService from '@/services/UserService'
@@ -12,9 +11,8 @@ import Header from './Header'
 import { useAuth } from '@/context/AuthContext'
 
 interface LayoutProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  // navigation and route are no longer passed as props in Expo Router
   strict?: boolean
-  route?: RouteProp<StackParams, keyof StackParams>
   reload?: boolean
   style?: object
   title?: string
@@ -25,9 +23,7 @@ interface LayoutProps {
 }
 
 const Layout = ({
-  navigation,
   strict,
-  route,
   reload,
   style,
   title,
@@ -40,23 +36,27 @@ const Layout = ({
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const { loggedIn, refresh } = useAuth()
 
+  // Get current route params (specifically 'd' for reloads)
+  const params = useLocalSearchParams()
+
   const exit = async (_reload = false) => {
     if (strict) {
-      await UserService.signout(navigation, false, true)
-
+      await UserService.signout(false, true)
       if (onLoad) {
         onLoad()
       }
     } else {
-      await UserService.signout(navigation, false, false)
+      await UserService.signout(false, false)
       refresh()
 
       if (onLoad) {
         onLoad()
       }
 
-      if (_reload && route) {
-        helper.navigate(route, navigation)
+      if (_reload) {
+        // Use the new helper with the current route name
+        // We assume the caller knows the screen name or we use the pathname
+        helper.navigate({ name: params.screenName as string || 'Home' })
       } else {
         setLoading(false)
       }
@@ -107,17 +107,17 @@ const Layout = ({
     }
   }
 
+  // Triggered when 'reload' prop is true OR when the cache-buster 'd' changes
   useEffect(() => {
-    if (reload) {
+    if (reload || params.d) {
       _init()
     }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reload, params.d]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleResend = async () => {
     try {
       if (user) {
         const data = { email: user.email }
-
         const status = await UserService.resendLink(data)
 
         if (status === 200) {
@@ -132,17 +132,26 @@ const Layout = ({
   }
 
   return (
-    <View style={{ ...styles.container, ...style }}>
-      <Header route={route} title={title} hideTitle={hideTitle} loggedIn={loggedIn} reload={reload} _avatar={avatar} />
-      {(!loading
-        && ((!user && !strict) || (user && user.verified) ? (
-          children
-        ) : (
-          <View style={styles.validate}>
-            <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
-            <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
-          </View>
-        ))) || null}
+    <View style={[styles.container, style]}>
+      {/* Header also needs to be updated to stop relying on 'route' prop 
+         internally, using useLocalSearchParams instead.
+      */}
+      <Header
+        title={title}
+        hideTitle={hideTitle}
+        loggedIn={loggedIn}
+        _avatar={avatar}
+        reload={reload}
+      />
+
+      {(!loading && ((!user && !strict) || (user && user.verified) ? (
+        children
+      ) : (
+        <View style={styles.validate}>
+          <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
+          <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
+        </View>
+      ))) || null}
     </View>
   )
 }
@@ -150,6 +159,7 @@ const Layout = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5F5F5',
+    flex: 1, // Added flex: 1 to ensure it fills the screen
   },
   validate: {
     marginTop: 15,

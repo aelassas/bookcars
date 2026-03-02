@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
 import { CommonActions, NavigationRoute, RouteProp } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -13,8 +13,8 @@ import * as UserService from '@/services/UserService'
 import * as CarService from '@/services/CarService'
 import Car from './Car'
 
+
 interface CarListProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   from?: Date
   to?: Date
   suppliers?: string[]
@@ -37,14 +37,12 @@ interface CarListProps {
   hidePrice?: boolean
   footerComponent?: React.ReactElement
   routeName?: 'Cars' | 'Checkout',
-  route: RouteProp<StackParams, keyof StackParams>
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
 const CarList = ({
-  navigation,
   from,
   to,
   suppliers,
@@ -72,6 +70,7 @@ const CarList = ({
   includeComingSoonCars,
   onLoad,
 }: CarListProps) => {
+  const router = useRouter()
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -219,7 +218,6 @@ const CarList = ({
               dropOffLocation={dropOffLocation}
               pickupLocationName={pickupLocationName}
               distance={distance}
-              navigation={navigation}
               hidePrice={hidePrice}
             />
           )}
@@ -256,83 +254,36 @@ const CarList = ({
           }
           refreshing={loading}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={() => {
-              setRefreshing(true)
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true)
 
-              if ((routeName && pickupLocation && dropOffLocation && from && to) && ((routeName === 'Checkout' && cars && cars.length > 0) || routeName === 'Cars')) {
-                // helper.navigate(route, navigation, true)
+                const hasRequiredParams = pickupLocation && dropOffLocation && from && to
+                const isCarsRoute = routeName === 'Cars'
+                const isCheckoutRoute = routeName === 'Checkout' && cars && cars.length > 0
 
-                navigation.dispatch((state) => {
-                  const { routes } = state
-                  const _routes = bookcarsHelper.cloneArray(routes) as NavigationRoute<StackParams, keyof StackParams>[]
-                  let index = 0
-
-                  if (routeName === 'Cars') {
-                    index = routes.findIndex((r) => r.name === 'Cars')
-                    // routes.splice(index, 1)
-                    const now = Date.now()
-                    _routes[index] = {
-                      name: routeName,
-                      key: `${routeName}-${now}`,
-                      params: {
-                        pickupLocation: pickupLocation!,
-                        dropOffLocation: dropOffLocation!,
-                        from: from!.getTime(),
-                        to: to!.getTime(),
-                        d: now,
-                      },
-                    }
-                    // routes.push({
-                    //   name: 'Cars',
-                    //   key: `Cars-${now}`,
-                    //   params: {
-                    //     pickupLocation: pickupLocation!,
-                    //     dropOffLocation: dropOffLocation!,
-                    //     from: from!.getTime(),
-                    //     to: to!.getTime(),
-                    //     d: now,
-                    //   },
-                    // })
-                  } else {
-                    index = routes.findIndex((r) => r.name === 'Checkout')
-                    // routes.splice(index, 1)
-                    const now = Date.now()
-                    _routes[index] = {
-                      name: routeName,
-                      key: `${routeName}-${now}`,
-                      params: {
-                        car: cars![0]._id,
-                        pickupLocation: pickupLocation!,
-                        dropOffLocation: dropOffLocation!,
-                        from: from!.getTime(),
-                        to: to!.getTime(),
-                        d: now,
-                      },
-                    }
-                    // routes.push({
-                    //   name: 'Checkout',
-                    //   key: `Checkout-${now}`,
-                    //   params: {
-                    //     car: cars![0]._id,
-                    //     pickupLocation: pickupLocation!,
-                    //     dropOffLocation: dropOffLocation!,
-                    //     from: from!.getTime(),
-                    //     to: to!.getTime(),
-                    //     d: now,
-                    //   },
-                    // })
+                if (hasRequiredParams && (isCarsRoute || isCheckoutRoute)) {
+                  // 1. Prepare the params for the specific route
+                  const params: any = {
+                    pickupLocation,
+                    dropOffLocation,
+                    from: from.getTime().toString(),
+                    to: to.getTime().toString(),
+                    d: Date.now().toString(),
                   }
 
-                  return CommonActions.reset({
-                    ...state,
-                    routes: _routes,
-                    index,
-                  })
-                })
-              } else {
-                setRefreshing(false)
-              }
-            }}
+                  if (isCheckoutRoute) {
+                    params.car = cars[0]._id
+                  }
+
+                  // 2. Use the helper.navigate with reload = true
+                  // This internally calls router.replace and adds 'd: Date.now()'
+                  helper.navigate({ name: routeName, params }, true)
+                } else {
+                  setRefreshing(false)
+                }
+              }}
             />
           }
         />

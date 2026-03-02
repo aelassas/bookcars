@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, View, Text, RefreshControl } from 'react
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { Text as RNPText, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
@@ -12,7 +12,6 @@ import * as BookingService from '@/services/BookingService'
 import Booking from './Booking'
 
 interface BookingListProps {
-  navigation?: NativeStackNavigationProp<StackParams, keyof StackParams>
   suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter
@@ -23,7 +22,6 @@ interface BookingListProps {
 }
 
 const BookingList = ({
-  navigation,
   suppliers,
   statuses,
   filter,
@@ -32,6 +30,7 @@ const BookingList = ({
   language,
   header
 }: BookingListProps) => {
+  const router = useRouter()
   const [firstLoad, setFirstLoad] = useState(true)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -195,35 +194,29 @@ const BookingList = ({
         }
         refreshing={loading}
         refreshControl={
-          navigation && (
-            <RefreshControl refreshing={refreshing} onRefresh={() => {
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
               setRefreshing(true)
 
+              const now = Date.now().toString() // The "cache-buster"
+
               if (bookingId) {
-                navigation.navigate('Booking', { id: bookingId })
+                // 1. Use /booking (with leading slash)
+                // 2. Use router.replace to "overwrite" current state
+                // 3. Add the 'd' parameter to force useEffect to fire
+                router.replace({
+                  pathname: '/booking',
+                  params: { id: bookingId, d: now }
+                })
               } else {
-                navigation.navigate('Bookings', {})
+                router.replace({
+                  pathname: '/bookings',
+                  params: { d: now }
+                })
               }
-
-              // navigation.dispatch((state) => {
-              //   const { routes } = state
-              //   const index = routes.findIndex((r) => r.name === 'Bookings')
-              //   routes.splice(index, 1)
-              //   const now = Date.now()
-              //   routes.push({
-              //     name: 'Bookings',
-              //     key: `Bookings-${now}`,
-              //     params: {},
-              //   })
-
-              //   return CommonActions.reset({
-              //     ...state,
-              //     routes,
-              //     index: routes.length - 1,
-              //   })
-              // })
             }}
-            />)
+          />
         }
       />
 

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useLocalSearchParams } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 // import * as Location from 'expo-location'
+import { useIsFocused } from '@react-navigation/native'
+
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
@@ -27,8 +28,16 @@ import SearchFormFilter from '@/components/SearchFormFilter'
 import CarRatingFilter from '@/components/CarRatingFilter'
 import Indicator from '@/components/Indicator'
 
-const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
+
+const SearchScreen = () => {
   const isFocused = useIsFocused()
+  const { d, from, to, pickupLocation, dropOffLocation } = useLocalSearchParams<{
+    d: string
+    from: string
+    to: string
+    pickupLocation: string
+    dropOffLocation: string
+  }>()
 
   const [language, setLanguage] = useState('')
   const [reload, setReload] = useState(false)
@@ -44,22 +53,22 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [deposit, setDeposit] = useState(-1)
-  const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
-  const [dropoffLocation, setDropoffLocation] = useState<bookcarsTypes.Location>()
+  const [__pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
+  const [__dropOffLocation, setDropoffLocation] = useState<bookcarsTypes.Location>()
   const [carCount, setCarCount] = useState(0)
   const [fuelPolicy, setFuelPolicy] = useState(bookcarsHelper.getAllFuelPolicies())
   // const [distance, setDistance] = useState('')
   const [rating, setRating] = useState(-1)
   const [showFilters, setShowFilters] = useState(false)
 
-  const from = useMemo(() => new Date(route.params.from), [route.params.from])
-  const to = useMemo(() => new Date(route.params.to), [route.params.to])
+  const _from = useMemo(() => new Date(Number(from)), [from])
+  const _to = useMemo(() => new Date(Number(to)), [to])
 
   useEffect(() => {
     const updateSuppliers = async () => {
-      if (pickupLocation) {
+      if (__pickupLocation) {
         const payload: bookcarsTypes.GetCarsPayload = {
-          pickupLocation: pickupLocation._id,
+          pickupLocation: __pickupLocation._id,
           carSpecs,
           carType,
           gearbox,
@@ -70,8 +79,8 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           multimedia,
           rating,
           seats,
-          from,
-          to,
+          from: _from,
+          to: _to,
         }
         const _suppliers = await SupplierService.getFrontendSuppliers(payload)
         setSuppliers(_suppliers)
@@ -79,13 +88,13 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     }
 
     updateSuppliers()
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
+  }, [__pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, _from, _to])
 
   const _init = async () => {
     const _language = await UserService.getLanguage()
     i18n.locale = _language
     setLanguage(_language)
-    const _pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
+    const _pickupLocation = await LocationService.getLocation(pickupLocation)
     setPickupLocation(_pickupLocation)
 
     // const { status } = await Location.requestForegroundPermissionsAsync()
@@ -96,10 +105,10 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     // const d = bookcarsHelper.distance(_pickupLocation.latitude!, _pickupLocation.longitude!, location.coords.latitude, location.coords.longitude, 'K')
     // setDistance(bookcarsHelper.formatDistance(d, language))
 
-    if (route.params.pickupLocation === route.params.dropOffLocation) {
+    if (pickupLocation === dropOffLocation) {
       setDropoffLocation(bookcarsHelper.clone(_pickupLocation))
     } else {
-      const _dropoffLocation = await LocationService.getLocation(route.params.dropOffLocation)
+      const _dropoffLocation = await LocationService.getLocation(dropOffLocation)
       setDropoffLocation(_dropoffLocation)
     }
 
@@ -115,9 +124,10 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
       multimedia,
       rating,
       seats,
-      from,
-      to,
+      from: _from,
+      to: _to,
     }
+
     const _suppliers = await SupplierService.getFrontendSuppliers(payload)
     const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
     setSuppliers(_suppliers)
@@ -134,8 +144,8 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     } else {
       setVisible(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route.params, isFocused])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
@@ -186,12 +196,10 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   }
 
   return language && (
-    <Layout style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload}>
       {!visible && <Indicator style={{ marginVertical: 10 }} />}
-      {visible && pickupLocation && dropoffLocation && (
+      {visible && __pickupLocation && __dropOffLocation && (
         <CarList
-          route={route}
-          navigation={navigation}
           suppliers={supplierIds}
           rating={rating}
           ranges={ranges}
@@ -203,12 +211,12 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           mileage={mileage}
           fuelPolicy={fuelPolicy}
           deposit={deposit}
-          pickupLocation={route.params.pickupLocation}
-          dropOffLocation={route.params.dropOffLocation}
+          pickupLocation={pickupLocation}
+          dropOffLocation={dropOffLocation}
           // pickupLocationName={pickupLocation.name}
           // distance={distance}
-          from={new Date(route.params.from)}
-          to={new Date(route.params.to)}
+          from={new Date(_from)}
+          to={new Date(_to)}
           onLoad={(data) => {
             if (data) {
               setCarCount(data?.rowCount)
@@ -220,17 +228,16 @@ const SearchScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           header={(
             <View>
               <SearchFormFilter
-                navigation={navigation}
                 style={styles.filter}
                 visible={loaded}
-                pickupLocation={pickupLocation._id}
-                dropOffLocation={dropoffLocation._id}
-                pickupLocationText={pickupLocation.name}
-                dropOffLocationText={dropoffLocation.name}
-                fromDate={new Date(route.params.from)}
-                fromTime={new Date(route.params.from)}
-                toDate={new Date(route.params.to)}
-                toTime={new Date(route.params.to)}
+                pickupLocation={__pickupLocation._id}
+                dropOffLocation={__dropOffLocation._id}
+                pickupLocationText={__pickupLocation.name}
+                dropOffLocationText={__dropOffLocation.name}
+                fromDate={new Date(_from)}
+                fromTime={new Date(_from)}
+                toDate={new Date(_to)}
+                toTime={new Date(_to)}
               />
 
               <Pressable onPress={() => setShowFilters((prev) => !prev)}>

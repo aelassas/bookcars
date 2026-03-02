@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
 import { addHours } from 'date-fns'
+
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
@@ -14,7 +15,6 @@ import DateTimePicker from '@/components/DateTimePicker'
 import { useSetting } from '@/context/SettingContext'
 
 export interface SearchFormProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
   pickupLocation?: string
   dropOffLocation?: string
   pickupLocationText?: string,
@@ -29,7 +29,6 @@ export interface SearchFormProps {
 
 const SearchForm = (
   {
-    navigation,
     pickupLocation,
     dropOffLocation,
     pickupLocationText,
@@ -43,6 +42,7 @@ const SearchForm = (
   }:
     SearchFormProps
 ) => {
+  const router = useRouter()
   const isFocused = useIsFocused()
 
   const { settings } = useSetting()
@@ -256,11 +256,12 @@ const SearchForm = (
     const params = {
       pickupLocation: pickupLocationId,
       dropOffLocation: dropOffLocationId,
-      from: from.getTime(),
-      to: to.getTime(),
-      d: now
+      from: from.getTime().toString(),
+      to: to.getTime().toString(),
+      d: now.toString(),
     }
-    navigation.navigate('Cars', params)
+
+    router.push({ pathname: 'cars', params })
   }
 
   return (

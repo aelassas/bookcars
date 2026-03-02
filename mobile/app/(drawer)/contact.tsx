@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, ScrollView } from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import * as helper from '@/utils/helper'
 
-const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ToS'>) => {
+const ContactScreen = () => {
   const isFocused = useIsFocused()
-
+  const { d } = useLocalSearchParams<{ d: string }>()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
 
@@ -28,20 +28,20 @@ const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'T
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused])
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload}>
       {visible && (
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
         >
-          <Text style={{ fontSize: 16 }}>ToS!</Text>
+          <Text style={{ fontSize: 16 }}>Contact!</Text>
         </ScrollView>
       )}
     </Layout>
@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
   },
 })
 
-export default ToSScreen
+export default ContactScreen

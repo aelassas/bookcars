@@ -12,7 +12,6 @@ type SearchFormFilterProps = SearchFormProps & {
 
 const SearchFormFilter = (
   {
-    navigation,
     pickupLocation,
     dropOffLocation,
     pickupLocationText,
@@ -30,7 +29,6 @@ const SearchFormFilter = (
       <Accordion style={styles.accordion} title={i18n.t('LOCATION_TERM')}>
         <View style={styles.contentContainer}>
           <SearchForm
-            navigation={navigation}
             pickupLocation={pickupLocation}
             dropOffLocation={dropOffLocation}
             pickupLocationText={pickupLocationText}
