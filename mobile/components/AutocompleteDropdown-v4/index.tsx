@@ -370,7 +370,7 @@ export const AutocompleteDropdown = memo<
             key={item.id}
             title={item.title || ''}
             highlight={searchText}
-            style={suggestionsListTextStyle}
+            style={suggestionsListTextStyle as any}
             onPress={() => _onSelectItem(item)}
             ignoreAccents={ignoreAccents}
           />

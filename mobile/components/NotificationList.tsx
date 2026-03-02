@@ -223,7 +223,7 @@ const NotificationList = ({ user, locale }: NotificationListProps) => {
                           onPress={async () => {
                             try {
                               const navigate = () => {
-                                router.push({ pathname: 'booking', params: { id: row.booking || '' } })
+                                router.push({ pathname: '/booking', params: { id: row.booking || '' } })
                               }
 
                               if (!row.isRead) {

@@ -11,13 +11,29 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"],
-      ":bookcars-types": ["../packages/bookcars-types"],
-      ":bookcars-helper": ["../packages/bookcars-helper"]
+      "@/*": [
+        "./*"
+      ],
+      ":bookcars-types": [
+        "../packages/bookcars-types"
+      ],
+      ":bookcars-helper": [
+        "../packages/bookcars-helper"
+      ]
     }
   },
   "references": [
-    { "path": "../packages/bookcars-types" },
-    { "path": "../packages/bookcars-helper" }
-  ]  
+    {
+      "path": "../packages/bookcars-types"
+    },
+    {
+      "path": "../packages/bookcars-helper"
+    }
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }
