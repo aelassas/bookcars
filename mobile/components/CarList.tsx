@@ -279,7 +279,7 @@ const CarList = ({
 
                   // 2. Use the helper.navigate with reload = true
                   // This internally calls router.replace and adds 'd: Date.now()'
-                  helper.navigate({ name: routeName, params }, true)
+                  helper.navigate({ name: routeName, params: { ...params } }, true)
                 } else {
                   setRefreshing(false)
                 }

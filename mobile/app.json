@@ -1,6 +1,5 @@
 {
   "expo": {
-    "newArchEnabled": true,
     "jsEngine": "hermes",
     "name": "BookCars",
     "version": "8.6.0",
@@ -22,7 +21,8 @@
       "icon": "./assets/icon.png",
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.bookcars"
+      "package": "com.bookcars",
+      "backgroundColor": "#00000000"
     },
     "ios": {
       "buildNumber": "8.6.0",

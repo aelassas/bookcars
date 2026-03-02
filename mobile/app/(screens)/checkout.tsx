@@ -1218,13 +1218,13 @@ const CheckoutScreen = () => {
 
 
                   <View style={styles.footer}>
-                    <Button style={styles.component} label={i18n.t('BOOK_NOW')} onPress={handleCheckout} />
-
                     <View style={styles.error}>
                       {error && <Error message={i18n.t('FIX_ERRORS')} />}
                       {tosError && <Error message={i18n.t('TOS_ERROR')} />}
                       {licenseRequired && <Error message={i18n.t('LICENSE_REQUIRED')} />}
                     </View>
+
+                    <Button style={styles.component} label={i18n.t('BOOK_NOW')} onPress={handleCheckout} />
                   </View>
                 </View>
               }
@@ -1437,7 +1437,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   error: {
-    marginTop: 10,
+    marginBottom: 10,
   },
 })
 

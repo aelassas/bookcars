@@ -363,9 +363,18 @@ const SettingsScreen = () => {
                 onValueChange={onChangeEnableEmailNotificationsChecked}
               />
 
-              <Button style={styles.component} label={i18n.t('SAVE')} onPress={onPressSave} />
+              <Button
+                style={styles.component}
+                label={i18n.t('SAVE')}
+                onPress={onPressSave}
+              />
 
-              <Button style={styles.component} color="secondary" label={i18n.t('CHANGE_PASSWORD')} onPress={onPressChangePassword} />
+              <Button
+                style={styles.component}
+                color="secondary"
+                label={i18n.t('CHANGE_PASSWORD')}
+                onPress={onPressChangePassword}
+              />
             </View>
           </ScrollView>
 
