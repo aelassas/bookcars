@@ -1,5 +1,21 @@
 # Releases
 
+## [BookCars 8.5](https://github.com/aelassas/bookcars/releases/tag/v8.5) – 2026-03-01
+
+* feat(mobile): enable React Native New Architecture
+* fix(security): enforce backend verification of mobile social auth tokens
+* fix(db): properly detect, create and update TTL indexes
+* fix(mobile): ignore Google sign-in cancellation to prevent false error popup
+* fix(mobile): add Spanish default locale detection
+
+### Assets
+- [bookcars-8.5.apk](https://github.com/aelassas/bookcars/releases/download/v8.5/bookcars-8.5.apk) (100.77 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.5/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.5)
+
 ## [BookCars 8.4](https://github.com/aelassas/bookcars/releases/tag/v8.4) – 2026-02-28
 
 * feat(mobile): add Apple, Google, and Facebook authentication
