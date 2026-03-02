@@ -291,9 +291,9 @@ const SettingsScreen = () => {
                 <View style={styles.avatarActions}>
                   {avatar && (
                     <Pressable
+                      disabled
                       style={styles.deleteAvatar}
                       hitSlop={15}
-                      disabled
                       onPress={() => {
                         setOpenDeleteDialog(true)
                       }}
@@ -306,9 +306,9 @@ const SettingsScreen = () => {
                     </Pressable>
                   )}
                   <Pressable
+                    disabled
                     style={styles.updateAvatar}
                     hitSlop={15}
-                    disabled
                     onPress={handleUpdateAvatar}
                   >
                     {/* <Badge style={styles.badge} size={36}> */}
@@ -368,14 +368,14 @@ const SettingsScreen = () => {
               <Button
                 style={styles.component}
                 label={i18n.t('SAVE')}
-              // onPress={onPressSave}
+                // onPress={onPressSave}
               />
 
               <Button
                 style={styles.component}
                 color="secondary"
                 label={i18n.t('CHANGE_PASSWORD')}
-              // onPress={onPressChangePassword}
+                // onPress={onPressChangePassword}
               />
             </View>
           </ScrollView>

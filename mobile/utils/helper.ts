@@ -629,11 +629,26 @@ export const getCurrentRouteName = (pathname: string): string => {
  * @param {?boolean} [reload] 
  */
 export const navigate = (route: { name: string; params?: any }, reload?: boolean) => {
-  // Normalize the name: if it's 'Home' or 'index', the path is '/'
-  const isHome = route.name.toLowerCase() === 'home' || route.name.toLowerCase() === 'index'
-  const pathname = isHome ? '/' : `/${route.name.toLowerCase()}`
+  // 1. Normalize the name
+  const name = route.name || ''
+  const isHome = name.toLowerCase() === 'home' || name.toLowerCase() === 'index'
 
-  const params = { ...route.params, d: Date.now().toString() }
+  let pathname = '/'
+
+  if (!isHome) {
+    // 2. Convert PascalCase/CamelCase to kebab-case
+    // This regex finds uppercase letters and replaces them with "-letter"
+    const kebabName = name
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2') // Handles "SignIn" -> "Sign-In"
+      .toLowerCase() // Handles "Sign-In" -> "sign-in"
+
+    pathname = `/${kebabName}`
+  }
+
+  // 3. Add the reload timestamp if needed
+  const params = reload 
+    ? { ...route.params, d: Date.now().toString() } 
+    : route.params
 
   if (reload) {
     router.replace({ pathname: pathname as any, params })

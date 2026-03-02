@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation, DrawerActions } from '@react-navigation/native' // Keep these for Drawer
 import { useRouter, useLocalSearchParams } from 'expo-router' // Add these for Navigation
 import { Avatar, Badge } from 'react-native-paper'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -11,6 +10,7 @@ import * as env from '@/config/env.config'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 import * as NotificationService from '@/services/NotificationService'
 import CurrencyMenu from '@/components/CurrencyMenu'
+import { useDrawer } from '@/context/DrawerContext'
 
 interface HeaderProps {
   title?: string
@@ -28,8 +28,8 @@ const Header = ({
   _avatar
 }: HeaderProps) => {
   const router = useRouter()
-  const navigation = useNavigation()
   const params = useLocalSearchParams()
+  const { toggle } = useDrawer()
   
   const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
   const [avatar, setAvatar] = useState<string | null | undefined>(null)
@@ -69,7 +69,7 @@ const Header = ({
       <Pressable 
         hitSlop={15} 
         style={styles.menu} 
-        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+        onPress={toggle}
       >
         <MaterialIcons name="menu" size={24} color="#fff" />
       </Pressable>

@@ -1,5 +1,6 @@
+import { View } from 'react-native'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Slot, useRouter } from 'expo-router'
+import { Slot, Stack, useRouter } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider as PaperProvider } from 'react-native-paper'
@@ -17,7 +18,6 @@ import { AuthProvider } from '@/context/AuthContext'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { SettingProvider } from '@/context/SettingContext'
 import * as env from '@/config/env.config'
-import { View } from 'react-native'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -121,8 +121,9 @@ const RootLayout = () => {
                     merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}
                   >
                     <AutocompleteDropdownContextProvider>
-                      {/* Slot renders the child (drawer) layout */}
-                      <Slot />
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name="(screens)" />
+                      </Stack>
                     </AutocompleteDropdownContextProvider>
                   </StripeProvider>
                 </PaperProvider>

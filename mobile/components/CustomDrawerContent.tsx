@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
-import { StyleSheet, Text, View, Pressable, ScrollView, DimensionValue } from 'react-native'
-import { router, useNavigation, usePathname } from 'expo-router'
+import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native'
+import { router, useGlobalSearchParams, usePathname } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
-import { RouteProp } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import i18n from '@/lang/i18n'
 import * as env from '@/config/env.config'
@@ -12,15 +11,30 @@ import * as UserService from '@/services/UserService'
 import * as bookcarsTypes from ':bookcars-types'
 import { useAuth } from '@/context/AuthContext'
 
-const CustomDrawerContent = (props: any) => {
+interface CustomDrawerContentProps {
+  closeDrawer: () => void
+}
+
+const CustomDrawerContent = ({ closeDrawer }: CustomDrawerContentProps) => {
   const { loggedIn, language: authLanguage } = useAuth()
   const pathname = usePathname()
+  const params = useGlobalSearchParams()
+  const insets = useSafeAreaInsets()
 
   const [openLanguageMenu, setOpenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(authLanguage)
 
-  const ref = useRef<ScrollView>(null)
-  const yOffset = useRef(0)
+  const navigateTo = (path: string) => {
+    closeDrawer()
+
+    // If we are already on this path, don't do anything
+    if (pathname === path) {
+      return
+    }
+
+    // Use replace to avoid the "stack push" animation
+    router.replace(path as any)
+  }
 
   // Sync internal state with AuthContext language
   useEffect(() => {
@@ -34,18 +48,11 @@ const CustomDrawerContent = (props: any) => {
         await UserService.setLanguage(__language)
         setLanguage(__language)
 
-        // 1. Get current navigation state from props
-        const { index, routes } = props.state
-        const currentRoute = routes[index]
+        closeDrawer()
 
-        const getCurrentRouteName = () => currentRoute.name === 'index' ? 'Home' : currentRoute.name
-
-        // 2. Call the new simplified helper
-        // We pass 'true' for the reload parameter to trigger router.replace with the 'd' timestamp
-        helper.navigate(
-          { name: getCurrentRouteName(), params: currentRoute.params },
-          true
-        )
+        // Reload current page with new language data
+        const routeName = helper.getCurrentRouteName(pathname)
+        helper.navigate({ name: routeName, params: { ...params } }, true)
       }
 
       const currentUser = await UserService.getCurrentUser()
@@ -71,137 +78,224 @@ const CustomDrawerContent = (props: any) => {
 
   const handleSignOut = async () => {
     await UserService.signout()
+    closeDrawer()
   }
 
   return (
-    <DrawerContentScrollView
-      {...props}
-      ref={ref}
-      onScroll={(event) => {
-        yOffset.current = event.nativeEvent.contentOffset.y
-      }}
-      onContentSizeChange={() => {
-        if (ref.current) {
-          ref.current.scrollTo({ x: 0, y: yOffset.current, animated: false })
+    // <View style={styles.masterContainer}>
+    <View
+      style={[
+        styles.drawerSurface,
+        {
+          marginTop: insets.top,
+          marginBottom: insets.bottom
         }
-      }}
-      contentContainerStyle={styles.drawer}
+      ]}
     >
-      <View>
-        <DrawerItemList {...props} />
-
-        {loggedIn && (
-          <Pressable style={styles.signout} onPress={handleSignOut}>
-            <MaterialIcons name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
-            <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
+      <ScrollView contentContainerStyle={styles.drawer}>
+        <View style={styles.menuSection}>
+          {/* 1. Home - Always Visible */}
+          <Pressable
+            style={[styles.menuItem, pathname === '/' && styles.activeMenuItem]}
+            onPress={() => navigateTo('/')}
+          >
+            <MaterialIcons name="home" size={24} color={pathname === '/' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+            <Text style={[styles.text, pathname === '/' && styles.activeText]}>{i18n.t('HOME')}</Text>
           </Pressable>
-        )}
-      </View>
 
-      <View style={styles.language}>
-        <Pressable
-          style={styles.languageButton}
-          onPress={() => setOpenLanguageMenu((prev) => !prev)}
-        >
-          <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
-          <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
-        </Pressable>
+          {/* 2. Bookings - Conditional Visibility (Logged In Only) */}
+          {loggedIn && (
+            <Pressable
+              style={[styles.menuItem, pathname === '/bookings' && styles.activeMenuItem]}
+              onPress={() => navigateTo('/bookings')}
+            >
+              <MaterialIcons name="event-seat" size={24} color={pathname === '/bookings' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+              <Text style={[styles.text, pathname === '/bookings' && styles.activeText]}>{i18n.t('BOOKINGS')}</Text>
+            </Pressable>
+          )}
 
-        {openLanguageMenu && (
-          <View style={styles.languageMenu}>
-            {env.LANGUAGES.map((lang) => (
-              <Pressable
-                key={lang.code}
-                style={lang.code === language ? styles.languageMenuSelectedItem : styles.languageMenuItem}
-                onPress={async () => {
-                  if (lang.code !== language) {
-                    await updateLanguage(lang.code)
-                    setOpenLanguageMenu(false)
-                  }
-                }}
-              >
-                <Text style={lang.code === language ? styles.languageMenuSelectedText : styles.languageMenuText}>
-                  {lang.label}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        )}
-      </View>
-    </DrawerContentScrollView>
+          {/* 3. About - Always Visible */}
+          <Pressable
+            style={[styles.menuItem, pathname === '/about' && styles.activeMenuItem]}
+            onPress={() => navigateTo('/about')}
+          >
+            <MaterialIcons name="info" size={24} color={pathname === '/about' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+            <Text style={[styles.text, pathname === '/about' && styles.activeText]}>{i18n.t('ABOUT')}</Text>
+          </Pressable>
+
+          {/* 4. ToS - Always Visible */}
+          <Pressable
+            style={[styles.menuItem, pathname === '/tos' && styles.activeMenuItem]}
+            onPress={() => navigateTo('/tos')}
+          >
+            <MaterialIcons name="description" size={24} color={pathname === '/tos' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+            <Text style={[styles.text, pathname === '/tos' && styles.activeText]}>{i18n.t('TOS_MENU')}</Text>
+          </Pressable>
+
+          {/* 5. Contact - Always Visible */}
+          <Pressable
+            style={[styles.menuItem, pathname === '/contact' && styles.activeMenuItem]}
+            onPress={() => navigateTo('/contact')}
+          >
+            <MaterialIcons name="mail" size={24} color={pathname === '/contact' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+            <Text style={[styles.text, pathname === '/contact' && styles.activeText]}>{i18n.t('CONTACT')}</Text>
+          </Pressable>
+
+          {/* 6. Settings - Conditional Visibility (Logged In Only) */}
+          {loggedIn && (
+            <Pressable
+              style={[styles.menuItem, pathname === '/settings' && styles.activeMenuItem]}
+              onPress={() => navigateTo('/settings')}
+            >
+              <MaterialIcons name="settings" size={24} color={pathname === '/settings' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+              <Text style={[styles.text, pathname === '/settings' && styles.activeText]}>{i18n.t('SETTINGS')}</Text>
+            </Pressable>
+          )}
+
+          {/* 7. Sign In - Visible only when NOT logged in */}
+          {!loggedIn && (
+            <Pressable
+              style={[styles.menuItem, pathname === '/sign-in' && styles.activeMenuItem]}
+              onPress={() => navigateTo('/sign-in')}
+            >
+              <MaterialIcons name="login" size={24} color={pathname === '/sign-in' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+              <Text style={[styles.text, pathname === '/sign-in' && styles.activeText]}>{i18n.t('SIGN_IN_TITLE')}</Text>
+            </Pressable>
+          )}
+
+          {/* 8. Sign Out - Only if logged in */}
+          {loggedIn && (
+            <Pressable style={styles.signout} onPress={handleSignOut}>
+              <MaterialIcons name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
+              <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
+            </Pressable>
+          )}
+        </View>
+
+        <View style={styles.languageSection}>
+          {openLanguageMenu && (
+            <View style={styles.languageMenu}>
+              {env.LANGUAGES.map((lang) => (
+                <Pressable
+                  key={lang.code}
+                  style={lang.code === language ? styles.languageMenuSelectedItem : styles.languageMenuItem}
+                  onPress={async () => {
+                    if (lang.code !== language) {
+                      await updateLanguage(lang.code)
+                      setOpenLanguageMenu(false)
+                    }
+                  }}
+                >
+                  <Text style={lang.code === language ? styles.languageMenuSelectedText : styles.languageMenuText}>
+                    {lang.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
+          <Pressable
+            style={styles.languageButton}
+            onPress={() => setOpenLanguageMenu((prev) => !prev)}
+          >
+            <MaterialIcons name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
+            <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
+    // </View> 
   )
 }
 
 const styles = StyleSheet.create({
+  masterContainer: {
+    flex: 1,
+    backgroundColor: 'transparent', // Make the background transparent to see the "gap"
+  },
+  drawerSurface: {
+    flex: 1, // Takes available space but respects margins
+    width: 280, // Ensure it doesn't span the full width
+    backgroundColor: '#fff',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+    // Add elevation/shadow to make the "gap" visible
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
   drawer: {
     flexGrow: 1,
-    flexDirection: 'column',
+    paddingTop: 50,
+    paddingBottom: 20,
     justifyContent: 'space-between',
+  },
+  menuSection: {
+    paddingHorizontal: 15,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    marginBottom: 5,
+  },
+  activeMenuItem: {
+    backgroundColor: '#feeee4',
+    borderRadius: 8,
   },
   signout: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
-    marginLeft: 15,
-    marginBottom: 25,
-    padding: 5,
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
   text: {
     color: 'rgba(0, 0, 0, 0.54)',
     fontWeight: '600',
-    marginLeft: 25,
+    marginLeft: 20,
+    fontSize: 15,
   },
-  language: {
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-    marginLeft: 15,
-    marginTop: 100,
+  activeText: {
+    color: '#f37022',
+  },
+  languageSection: {
+    paddingHorizontal: 15,
+    marginTop: 50,
   },
   languageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 5,
-  },
-  languageIcon: {
-    marginRight: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
   },
   languageMenu: {
-    position: 'absolute',
-    bottom: 35,
-    right: 10,
-    width: '100%',
+    marginTop: 10,
     borderRadius: 7,
-    backgroundColor: '#fff', // Added background for visibility
-    elevation: 3, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    backgroundColor: '#fff',
+    elevation: 3,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   languageMenuItem: {
-    width: '100%',
-    height: 43,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 12,
+    paddingLeft: 44,
+  },
+  languageMenuSelectedItem: {
+    padding: 12,
+    paddingLeft: 44,
+    backgroundColor: '#feeee4',
   },
   languageMenuText: {
     color: 'rgba(0, 0, 0, 0.54)',
     fontWeight: '600',
-    marginLeft: 25,
-  },
-  languageMenuSelectedItem: {
-    width: '100%',
-    height: 43,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#feeee4',
   },
   languageMenuSelectedText: {
     color: '#f37022',
     fontWeight: '600',
-    marginLeft: 25,
   },
 })
 
