@@ -1,4 +1,3 @@
- 
 declare global {
   namespace setInterval {
     function setInterval(callback: () => void, ms?: number | undefined): NodeJS.Timeout

@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import * as bookcarsTypes from ':bookcars-types'
@@ -13,7 +13,6 @@ import i18n from '@/lang/i18n'
 import * as StripeService from '@/services/StripeService'
 
 interface CarProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   language: string
   car: bookcarsTypes.Car
   from?: Date
@@ -41,9 +40,9 @@ const Car = ({
   dropOffLocation,
   pickupLocationName,
   distance,
-  navigation,
   hidePrice
 }: CarProps) => {
+  const router = useRouter()
   const fr = bookcarsHelper.isFrench(language)
 
   const [days, setDays] = useState<number>()
@@ -457,7 +456,7 @@ const Car = ({
                   from: from.getTime(),
                   to: to.getTime(),
                 }
-                navigation.navigate('Checkout', params)
+                router.push({ pathname: 'checkout', params })
               }}
             />
           </View>

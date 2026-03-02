@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, View, TextInput as ReactTextInput } from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
 import * as bookcarsTypes from ':bookcars-types'
 
 import Layout from '@/components/Layout'
@@ -11,8 +12,10 @@ import * as helper from '@/utils/helper'
 import TextInput from '@/components/TextInput'
 import Button from '@/components/Button'
 
-const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ChangePassword'>) => {
+
+const ChangePasswordScreen = () => {
   const isFocused = useIsFocused()
+  const { d } = useLocalSearchParams<{ d: string }>()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()
@@ -64,14 +67,14 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
       const currentUser = await UserService.getCurrentUser()
 
       if (!currentUser || !currentUser._id) {
-        await UserService.signout(navigation, false, true)
+        await UserService.signout(false, true)
         return
       }
 
       const _user = await UserService.getUser(currentUser._id)
 
       if (!_user) {
-        await UserService.signout(navigation, false, true)
+        await UserService.signout(false, true)
         return
       }
 
@@ -81,7 +84,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
       setUser(_user)
       setVisible(true)
     } catch {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
     }
   }
 
@@ -92,7 +95,8 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
@@ -203,7 +207,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload} strict>
       {visible && (
         <ScrollView
           contentContainerStyle={styles.container}

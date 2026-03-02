@@ -4,6 +4,7 @@
     "jsEngine": "hermes",
     "name": "BookCars",
     "version": "8.6.0",
+    "scheme": "bookcars",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
@@ -71,7 +72,8 @@
       "expo-asset",
       "expo-font",
       "react-native-fbsdk-next",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-router"
     ],
     "owner": "aelassas",
     "extra": {
@@ -90,4 +92,3 @@
     }
   }
 }
-

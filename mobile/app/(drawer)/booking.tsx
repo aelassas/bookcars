@@ -1,39 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from ':bookcars-types'
 
+import * as bookcarsTypes from ':bookcars-types'
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
-import NotificationList from '@/components/NotificationList'
+import BookingList from '@/components/BookingList'
+import * as env from '@/config/env.config'
 
-const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Notifications'>) => {
+
+const BookingScreen = () => {
   const isFocused = useIsFocused()
+  // 1. Get params (id for the booking, d for the reload timestamp)
+  const { id, d } = useLocalSearchParams<{ id: string; d: string }>()
+
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [locale, setLoacle] = useState(fr)
 
   const _init = async () => {
     setVisible(false)
-    const language = await UserService.getLanguage()
-    i18n.locale = language
-    setLoacle(language === 'fr' ? fr : enUS)
+    const _language = await UserService.getLanguage()
+    setLanguage(_language)
+    i18n.locale = _language
 
     const currentUser = await UserService.getCurrentUser()
 
     if (!currentUser || !currentUser._id) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
       return
     }
 
     const _user = await UserService.getUser(currentUser._id)
 
     if (!_user) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
       return
     }
 
@@ -48,16 +52,21 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, d, isFocused])
 
   const onLoad = () => {
     setReload(false)
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
-      {visible && (
-        <NotificationList navigation={navigation} user={user} locale={locale} />
+    // 3. Removed navigation/route props from Layout as they aren't needed in Expo Router
+    <Layout style={styles.master} onLoad={onLoad} reload={reload} strict>
+      {visible && user && (
+        <BookingList
+          user={user._id as string}
+          booking={id as string}
+          language={language}
+        />
       )}
     </Layout>
   )
@@ -69,4 +78,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default NotificationsScreen
+export default BookingScreen

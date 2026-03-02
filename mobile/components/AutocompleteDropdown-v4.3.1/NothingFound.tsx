@@ -7,7 +7,6 @@ interface NothingFoundProps {
   emptyResultText?: string
 }
 
- 
 export const NothingFound: FC<NothingFoundProps> = memo(({ ...props }) => {
   const EL = withFadeAnimation(
     () => (

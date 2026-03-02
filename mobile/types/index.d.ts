@@ -2,9 +2,9 @@ interface CheckoutParams {
   car: string,
   pickupLocation: string,
   dropOffLocation: string,
-  from: number,
-  to: number,
-  d?: number
+  from: string,
+  to: string,
+  d?: string
 }
 
 type StackParams = {

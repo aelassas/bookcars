@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useLocalSearchParams } from 'expo-router'
 
 import i18n from '@/lang/i18n'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import SearchForm from '@/components/SearchForm'
+import { useIsFocused } from '@react-navigation/native'
 
-const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
+const HomeScreen = () => {
   const isFocused = useIsFocused()
+  const { d } = useLocalSearchParams<{ d: string }>()
 
   const [init, setInit] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -31,14 +32,14 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused])  
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload}>
       {init && visible && (
         <ScrollView
           contentContainerStyle={styles.container}
@@ -50,9 +51,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               <Text style={styles.logoMain}>BookCars</Text>
               <Text style={styles.logoRegistered}>®</Text>
             </View>
-            <SearchForm
-              navigation={navigation}
-            />
+            <SearchForm />
           </View>
 
         </ScrollView>

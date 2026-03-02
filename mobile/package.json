@@ -2,7 +2,7 @@
   "name": "bookcars-mobile",
   "description": "Mobile app for BookCars (customer app)",
   "version": "8.6.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
     "eas-build-pre-install": "npm run install:dependencies",
@@ -51,6 +51,7 @@
     "expo-localization": "~17.0.8",
     "expo-location": "~19.0.8",
     "expo-notifications": "~0.32.15",
+    "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-updates": "~29.0.15",

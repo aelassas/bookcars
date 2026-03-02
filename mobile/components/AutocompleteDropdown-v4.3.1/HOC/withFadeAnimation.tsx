@@ -10,7 +10,6 @@ interface WithFadeAnimationProps {
 export const withFadeAnimation = <P extends object>(
   WrappedComponent: ComponentType<P>,
   { containerStyle }: WithFadeAnimationProps = {},
-   
 ): FC<P> => function (props: P) {
   const opacityAnimationValue = useRef(new Animated.Value(0)).current
 

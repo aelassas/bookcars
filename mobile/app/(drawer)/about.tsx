@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, ScrollView } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import * as helper from '@/utils/helper'
+import { useLocalSearchParams } from 'expo-router'
 
-const ContactScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Contact'>) => {
+const AboutScreen = () => {
   const isFocused = useIsFocused()
+  const { d } = useLocalSearchParams<{ d: string }>()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
 
@@ -27,20 +28,20 @@ const ContactScreen = ({ navigation, route }: NativeStackScreenProps<StackParams
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused])
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload}>
       {visible && (
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
         >
-          <Text style={{ fontSize: 16 }}>Contact!</Text>
+          <Text style={{ fontSize: 16 }}>About!</Text>
         </ScrollView>
       )}
     </Layout>
@@ -57,4 +58,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ContactScreen
+export default AboutScreen

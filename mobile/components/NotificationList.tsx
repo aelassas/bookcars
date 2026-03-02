@@ -3,7 +3,8 @@ import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from
 import { MaterialIcons } from '@expo/vector-icons'
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import { Locale, format } from 'date-fns'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useRouter } from 'expo-router'
+
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
@@ -16,12 +17,12 @@ import Checkbox from '@/components/Checkbox'
 import { useGlobalContext, GlobalContextType } from '@/context/GlobalContext'
 
 interface NotificationListProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   user?: bookcarsTypes.User
   locale: Locale
 }
 
-const NotificationList = ({ user, locale, navigation }: NotificationListProps) => {
+const NotificationList = ({ user, locale }: NotificationListProps) => {
+  const router = useRouter()
   const { setNotificationCount } = useGlobalContext() as GlobalContextType
 
   const [loading, setLoading] = useState(true)
@@ -130,7 +131,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                             helper.error()
                           }
                         } catch {
-                          await UserService.signout(navigation)
+                          await UserService.signout()
                         }
                       }}
                     >
@@ -167,7 +168,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                       <MaterialIcons name="markunread" size={24} color={iconColor} />
                     </Pressable>
                   )}
-                  {/* <Pressable
+                  <Pressable
                     style={styles.action}
                     onPress={() => {
                       setSelectedRows(checkedRows)
@@ -175,7 +176,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                     }}
                   >
                     <MaterialIcons name="delete" size={24} color={iconColor} />
-                  </Pressable> */}
+                  </Pressable>
                 </View>
               )}
             </View>
@@ -221,10 +222,9 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                           style={styles.action}
                           onPress={async () => {
                             try {
-                              const navigate = () =>
-                                navigation.navigate('Booking', {
-                                  id: row.booking || '',
-                                })
+                              const navigate = () => {
+                                router.push({ pathname: 'booking', params: { id: row.booking || '' } })
+                              }
 
                               if (!row.isRead) {
                                 const status = await NotificationService.markAsRead(user?._id as string, [row._id])
@@ -241,7 +241,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                                 navigate()
                               }
                             } catch {
-                              await UserService.signout(navigation)
+                              await UserService.signout()
                             }
                           }}
                         >
@@ -284,14 +284,14 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                                 helper.error()
                               }
                             } catch {
-                              await UserService.signout(navigation)
+                              await UserService.signout()
                             }
                           }}
                         >
                           <MaterialIcons name="markunread" size={24} color={iconColor} />
                         </Pressable>
                       )}
-                      {/* <Pressable
+                      <Pressable
                         style={styles.action}
                         onPress={() => {
                           setSelectedRows([row])
@@ -299,7 +299,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                         }}
                       >
                         <MaterialIcons name="delete" size={24} color={iconColor} />
-                      </Pressable> */}
+                      </Pressable>
                     </View>
                   </View>
                 </View>

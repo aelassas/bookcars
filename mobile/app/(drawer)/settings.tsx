@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ScrollView, Pressable } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
+import { useIsFocused } from '@react-navigation/native'
+
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
@@ -21,8 +22,10 @@ import * as helper from '@/utils/helper'
 import * as env from '@/config/env.config'
 import DriverLicense from '@/components/DriverLicense'
 
-const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
+const SettingsScreen = () => {
   const isFocused = useIsFocused()
+  const router = useRouter()
+  const { d } = useLocalSearchParams<{ d: string }>()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
@@ -51,14 +54,14 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const currentUser = await UserService.getCurrentUser()
 
       if (!currentUser || !currentUser._id) {
-        await UserService.signout(navigation, false, true)
+        await UserService.signout(false, true)
         return
       }
 
       const _user = await UserService.getUser(currentUser._id)
 
       if (!_user) {
-        await UserService.signout(navigation, false, true)
+        await UserService.signout(false, true)
         return
       }
 
@@ -96,7 +99,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setVisible(true)
     } catch {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(false, true)
     }
   }
 
@@ -107,7 +110,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     } else {
       setVisible(false)
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [d, isFocused])
 
   const onLoad = () => {
     setReload(false)
@@ -228,7 +231,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   const onPressChangePassword = () => {
-    navigation.navigate('ChangePassword', {})
+    router.push('/change-password')
   }
 
   const handleUpdateAvatar = async () => {
@@ -271,7 +274,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   return (
-    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
+    <Layout style={styles.master} onLoad={onLoad} reload={reload} avatar={avatar} strict>
       {visible && language && (
         <>
           <ScrollView
