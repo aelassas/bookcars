@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
-import { enUS, fr } from 'date-fns/locale'
+import { enUS, fr, es } from 'date-fns/locale'
 import { useIsFocused } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
@@ -24,7 +24,7 @@ const NotificationsScreen = () => {
     setVisible(false)
     const language = await UserService.getLanguage()
     i18n.locale = language
-    setLoacle(language === 'fr' ? fr : enUS)
+    setLoacle(language === 'fr' ? fr : language === 'es' ? es : enUS)
 
     const currentUser = await UserService.getCurrentUser()
 

@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
-import { enUS, fr } from 'date-fns/locale'
+import { enUS, fr, es } from 'date-fns/locale'
 import { PaymentSheetError, initPaymentSheet, useStripe } from '@stripe/stripe-react-native'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -135,7 +135,7 @@ const CheckoutScreen = () => {
       const _language = await UserService.getLanguage()
       i18n.locale = _language
       setLanguage(_language)
-      setLoacle(_language === 'fr' ? fr : enUS)
+      setLoacle(language === 'fr' ? fr : language === 'es' ? es : enUS)
 
       setAuthenticated(false)
       setUser(null)
@@ -676,7 +676,7 @@ const CheckoutScreen = () => {
       try {
         if (!payLater) {
           const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${__car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
-          const _locale = _fr ? fr : enUS
+          const _locale = _fr ? fr : _es ? es : enUS
           const daysLabel = __from && __to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(__from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(__to, _format, { locale: _locale }))})`
           const _description = `${env.WEBSITE_NAME} - ${__car.name} - ${daysLabel} - ${__pickupLocation._id === __dropOffLocation._id ? __pickupLocation.name : `${__pickupLocation.name} - ${__dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
@@ -827,7 +827,11 @@ const CheckoutScreen = () => {
   const iconSize = 18
   const iconColor = '#000'
   const _fr = bookcarsHelper.isFrench(language)
-  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _es = language === 'es'
+  // Spanish and French usually follow the same 'Day Month Year' structure
+  const _format = (_fr || _es)
+    ? 'eee d LLL yyyy kk:mm'
+    : 'eee, d LLL yyyy, p'
   const days = bookcarsHelper.days(__from, __to)
 
   return (
