@@ -88,7 +88,7 @@ const CheckoutScreen = () => {
   const [tosError, setTosError] = useState(false)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(true)
-  const [locale, setLoacle] = useState(fr)
+  const [locale, setLocale] = useState(fr)
   const [additionalDriverFullNameRequired, setAdditionalDriverFullNameRequired] = useState(false)
   const [additionalDriverEmailRequired, setAdditionalDriverEmailRequired] = useState(false)
   const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
@@ -135,7 +135,9 @@ const CheckoutScreen = () => {
       const _language = await UserService.getLanguage()
       i18n.locale = _language
       setLanguage(_language)
-      setLoacle(language === 'fr' ? fr : language === 'es' ? es : enUS)
+      
+      const _locale = _language === 'fr' ? fr : _language === 'es' ? es : enUS
+      setLocale(_locale)
 
       setAuthenticated(false)
       setUser(null)
