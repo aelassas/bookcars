@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Slot, Stack, useRouter } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider as PaperProvider } from 'react-native-paper'
