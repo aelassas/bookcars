@@ -6,7 +6,6 @@ import { CURRENCIES } from '@/config/env.config'
 import * as helper from '@/utils/helper'
 
 interface CurrencyMenuProps {
-  // Removed route prop - we fetch it from the hook now
   textColor?: string
   style?: object
 }

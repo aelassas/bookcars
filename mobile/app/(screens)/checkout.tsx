@@ -1237,7 +1237,7 @@ const CheckoutScreen = () => {
                 style={styles.sucessLink}
                 label={i18n.t('GO_TO_HOME')}
                 onPress={() => {
-                  router.push({ pathname: '/', params: { d: new Date().getTime() } })
+                  router.push({ pathname: '/', params: { d: new Date().getTime().toString() } })
                 }}
               />
             </View>
