@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, ScrollView, View, TextInput as ReactTextInput } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 
@@ -16,6 +16,7 @@ import Header from '@/components/Header'
 import SocialLogin from '@/components/SocialLogin'
 
 const SignInScreen = () => {
+  const isFocused = useIsFocused()
   const router = useRouter()
   const { d } = useLocalSearchParams<{ d: string }>()
 
@@ -63,8 +64,10 @@ const SignInScreen = () => {
   }
 
   useEffect(() => {
-    _init()
-  }, [d]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (isFocused) {
+      _init()
+    }
+  }, [d, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const validateEmail = async () => {
     if (email) {
