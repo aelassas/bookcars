@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useRef } from 'react'
-import { Animated, Dimensions, Pressable, StyleSheet, View } from 'react-native'
+import { Animated, Pressable, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import CustomDrawerContent from '@/components/CustomDrawerContent'
 
