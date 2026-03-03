@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { useLocalSearchParams } from 'expo-router' // Add this
+import { useLocalSearchParams } from 'expo-router'
 import * as bookcarsTypes from ':bookcars-types'
 
 import * as UserService from '@/services/UserService'

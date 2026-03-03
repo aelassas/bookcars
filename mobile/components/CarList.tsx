@@ -70,7 +70,6 @@ const CarList = ({
   includeComingSoonCars,
   onLoad,
 }: CarListProps) => {
-  const router = useRouter()
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
