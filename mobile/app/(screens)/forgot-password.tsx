@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, ScrollView, View, Text, TextInput as ReactTextInput } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 
 import validator from 'validator'
 
@@ -14,6 +14,7 @@ import Header from '@/components/Header'
 import SocialLogin from '@/components/SocialLogin'
 
 const ForgotPasswordScreen = () => {
+  const isFocused = useIsFocused()
   const router = useRouter()
   const { d } = useLocalSearchParams<{ d: string }>()
   const [email, setEmail] = useState('')
@@ -37,8 +38,10 @@ const ForgotPasswordScreen = () => {
   }
 
   useEffect(() => {
-    _init()
-  }, [d])
+    if (isFocused) {
+      _init()
+    }
+  }, [d, isFocused])
 
   const validateEmail = async () => {
     if (email) {

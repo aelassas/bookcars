@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, ScrollView, View, TextInput as ReactTextInput } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
@@ -17,11 +17,9 @@ import Error from '@/components/Error'
 import Backdrop from '@/components/Backdrop'
 import Header from '@/components/Header'
 import SocialLogin from '@/components/SocialLogin'
-import { useAuth } from '@/context/AuthContext'
-
 
 const SignUpScreen = () => {
-  const { refresh } = useAuth()
+  const isFocused = useIsFocused()
   const router = useRouter()
   const { d } = useLocalSearchParams<{ d: string }>()
 
@@ -100,8 +98,10 @@ const SignUpScreen = () => {
   }
 
   useEffect(() => {
-    _init()
-  }, [d])
+    if (isFocused) {
+      _init()
+    }
+  }, [d, isFocused])
 
   const validateFullName = () => {
     const valid = fullName !== ''
