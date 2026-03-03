@@ -205,30 +205,6 @@ export const deletePushToken = async (userId: string): Promise<number> => {
  * Sign out.
  *
  * @async
- * @param {NativeStackNavigationProp<StackParams, keyof StackParams>} navigation
- * @param {boolean} [redirect=true]
- * @param {boolean} [redirectSignin=false]
- * @returns {void}
- */
-// export const signout = async (
-//   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-//   redirect = true,
-//   redirectSignin = false
-// ) => {
-//   await AsyncStorage.removeItem('bc-user')
-
-//   if (redirect) {
-//     navigation.navigate('Home', { d: new Date().getTime() })
-//   }
-//   if (redirectSignin) {
-//     navigation.navigate('SignIn', {})
-//   }
-// }
-
-/**
- * Sign out.
- *
- * @async
  * @param {boolean} [redirectHome=true]
  * @param {boolean} [redirectSignin=false]
  * @returns {void}
