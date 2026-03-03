@@ -1,5 +1,24 @@
 # Releases
 
+## [BookCars 8.6](https://github.com/aelassas/bookcars/releases/tag/v8.6) – 2026-03-03
+
+* chore(mobile): upgrade to Expo SDK 55
+* feat(mobile): migrate navigation from react-navigation to expo-router
+* fix(mobile): prevent loading spinner from persisting in property and booking lists
+* fix(mobile): implement spanish localization for checkout, notifications and bookings
+* fix(mobile): user context not set after email sign up
+* fix(mobile): text not centered in forgot password result screen
+* fix(mobile): apply locale correctly in checkout screen
+* fix(auth): handle apple login email persistence for web and mobile
+
+### Assets
+- [bookcars-8.6.apk](https://github.com/aelassas/bookcars/releases/download/v8.6/bookcars-8.6.apk) (114.44 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.6/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.6)
+
 ## [BookCars 8.5](https://github.com/aelassas/bookcars/releases/tag/v8.5) – 2026-03-01
 
 * feat(mobile): enable React Native New Architecture
