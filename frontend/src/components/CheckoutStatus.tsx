@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DirectionsCar as CarIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr, enUS } from 'date-fns/locale'
+import { fr, enUS, es } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/utils/helper'
@@ -53,7 +53,8 @@ const CheckoutStatus = (
   }
 
   const _fr = language === 'fr'
-  const _locale = _fr ? fr : enUS
+  const _es = language === 'es'
+  const _locale = _fr ? fr : _es ? es : enUS
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const days = (booking && bookcarsHelper.days(new Date(booking.from), new Date(booking.to))) || 0
   const success = status === 'success'

@@ -6,7 +6,6 @@ import {
   GridColDef,
   GridRowId,
   GridRenderCellParams,
-  GridRowSelectionModel
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -20,7 +19,7 @@ import {
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
+import { fr as dfnsFR, enUS as dfnsENUS, es as dfnsES } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -476,7 +475,8 @@ const BookingList = ({
   }
 
   const _fr = language === 'fr'
-  const _locale = _fr ? dfnsFR : dfnsENUS
+  const _es = language === 'es'
+  const _locale = _fr ? dfnsFR : _es ? dfnsES : dfnsENUS
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
@@ -636,7 +636,7 @@ const BookingList = ({
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             onRowSelectionModelChange={(_selectedIds) => {
-              if(_selectedIds.type === 'exclude' && _selectedIds.ids.size === 0){
+              if (_selectedIds.type === 'exclude' && _selectedIds.ids.size === 0) {
                 _selectedIds = { type: 'include', ids: new Set(rows.map((row) => row._id as GridRowId)) }
               }
               setSelectedIds(Array.from(new Set(_selectedIds.ids)).map((id) => id.toString()))

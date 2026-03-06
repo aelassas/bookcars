@@ -21,7 +21,7 @@ import {
   ArrowForwardIos as NextPageIcon,
 } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr, enUS } from 'date-fns/locale'
+import { fr, enUS, es } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -52,8 +52,9 @@ const NotificationList = ({ user }: NotificationListProps) => {
   const [selectedRows, setSelectedRows] = useState<bookcarsTypes.Notification[]>([])
   const notificationsListRef = useRef<HTMLDivElement>(null)
 
-  const _fr = user && user.language === 'fr'
-  const _locale = _fr ? fr : enUS
+  const _fr = user?.language === 'fr'
+  const _es = user?.language === 'es'
+  const _locale = _fr ? fr : _es ? es : enUS
   const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
 
   const fetch = useCallback(async () => {
