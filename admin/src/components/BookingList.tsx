@@ -5,7 +5,7 @@ import {
   GridPaginationModel,
   GridColDef,
   GridRowId,
-  GridRenderCellParams
+  GridRenderCellParams,
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
+import { fr as dfnsFR, enUS as dfnsENUS, es as dfnsES } from 'date-fns/locale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -475,7 +475,8 @@ const BookingList = ({
   }
 
   const _fr = language === 'fr'
-  const _locale = _fr ? dfnsFR : dfnsENUS
+  const _es = language === 'es'
+  const _locale = _fr ? dfnsFR : _es ? dfnsES : dfnsENUS
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
