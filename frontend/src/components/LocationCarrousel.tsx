@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, useMemo, useRef } from 'react'
 import ReactSlick from 'react-slick'
 import { Button } from '@mui/material'
 import {
@@ -27,9 +27,10 @@ const LocationCarrousel = ({
 }: LocationCarrouselProps) => {
   const slider = useRef<ReactSlick>(null)
 
-  const sliderSettings = {
+  const sliderSettings = useMemo(() => ({
     arrows: false,
     dots: true,
+
     appendDots: (dots: ReactNode) => (
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
         <Button variant="text" className="btn-slider btn-slider-prev" onClick={() => slider?.current?.slickPrev()}>
@@ -45,22 +46,15 @@ const LocationCarrousel = ({
         </Button>
       </div>
     ),
+
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    variableWidth: true,
-    responsive: [
-      {
-        breakpoint: 960,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          variableWidth: false,
-        }
-      }
-    ]
-  }
+    swipeToSlide: true,
+    slidesToShow: env.isMobile ? 1 : 3,
+    slidesToScroll: 1,
+    variableWidth: !env.isMobile,
+    centerMode: false,
+  }), [])
 
   return (
     <div className="location-caroussel">
