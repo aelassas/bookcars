@@ -92,7 +92,7 @@ const router = createBrowserRouter([
       { path: 'car', element: <Car /> },
       // { path: 'create-car', element: <CreateCar /> },
       // { path: 'update-car', element: <UpdateCar /> },
-      { path: 'update-booking', element: <UpdateBooking /> },
+      // { path: 'update-booking', element: <UpdateBooking /> },
       { path: 'create-booking', element: <CreateBooking /> },
       // { path: 'users', element: <Users /> },
       // { path: 'user', element: <User /> },
