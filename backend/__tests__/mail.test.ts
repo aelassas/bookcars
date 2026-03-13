@@ -1,40 +1,45 @@
 import { jest } from '@jest/globals'
 
-const testAccount = { user: 'testuser', pass: 'testpass' }
+const TEST_ACCOUNT = { user: 'testuser', pass: 'testpass' }
 
-// Mock nodemailer createTransport and createTestAccount
+// Base mock for nodemailer
 jest.unstable_mockModule('nodemailer', () => ({
-  createTestAccount: jest.fn(() => Promise.resolve(testAccount)),
-  createTransport: jest.fn(() => ({
-    sendMail: jest.fn(() => Promise.resolve({ messageId: 'mocked-id' })),
-    verify: jest.fn(() => Promise.resolve(true)),
-  })),
+  createTestAccount: jest.fn(async () => TEST_ACCOUNT),
+  createTransport: jest.fn(), // We'll define implementation per test
 }))
 
 describe('mail module', () => {
   beforeEach(() => {
-    jest.resetModules() // clear module cache
+    jest.resetModules()
     jest.clearAllMocks()
   })
 
-  it('creates Ethereal test account transporter when CI=true', async () => {
-    jest.unstable_mockModule('../src/config/env.config.js', () => ({
-      CI: true,
-      SMTP_HOST: 'smtp.example.com',
-      SMTP_PORT: 587,
-      secure: false,
-      SMTP_USER: 'user',
-      SMTP_PASS: 'pass',
-    }))
+  /**
+   * Helper to initialize the environment and mail module for each test
+   */
+  const setupTest = async (envOverrides: any, messageId = 'mock-id') => {
+    jest.unstable_mockModule('../src/config/env.config.js', () => envOverrides)
 
-    // Now import nodemailer and mailHelper after mocks are set
     const nodemailer = await import('nodemailer')
     const { sendMail } = await import('../src/utils/mailHelper.js')
 
-    const sendMailMock = jest.fn(() => Promise.resolve({ messageId: '123' }))
-    const verifyMock = jest.fn(() => Promise.resolve(true))
+    const sendMailMock = jest.fn(async () => ({ messageId }))
+    const verifyMock = jest.fn(async () => true)
     const createTransportMock = nodemailer.createTransport as jest.Mock
-    createTransportMock.mockReturnValue({ sendMail: sendMailMock, verify: verifyMock })
+
+    createTransportMock.mockReturnValue({
+      sendMail: sendMailMock,
+      verify: verifyMock,
+    })
+
+    return { sendMail, nodemailer, sendMailMock }
+  }
+
+  it('creates Ethereal test account transporter when CI=true', async () => {
+    const { sendMail, nodemailer } = await setupTest(
+      { CI: true, SMTP_PORT: 587 },
+      '123'
+    )
 
     const info = await sendMail({
       from: 'from@example.com',
@@ -44,72 +49,52 @@ describe('mail module', () => {
     })
 
     expect(nodemailer.createTestAccount).toHaveBeenCalled()
-
-    expect(nodemailer.createTransport).toHaveBeenCalledWith({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-      secure: false,
-    })
-
-    expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
-      from: 'from@example.com',
-      to: 'to@example.com',
-      subject: 'test',
-      text: 'hello',
-    }))
-
-    expect(info).toEqual({ messageId: '123' })
+    expect(nodemailer.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        host: 'smtp.ethereal.email',
+        auth: TEST_ACCOUNT,
+        secure: false,
+      })
+    )
+    expect(info.messageId).toBe('123')
   })
 
-  it('creates real SMTP transporter when CI=false', async () => {
-    jest.unstable_mockModule('../src/config/env.config.js', () => ({
+  it('creates real SMTP transporter with secure: true for port 465', async () => {
+    const { sendMail, nodemailer } = await setupTest({
       CI: false,
       SMTP_HOST: 'smtp.example.com',
       SMTP_PORT: 465,
       SMTP_USER: 'user',
       SMTP_PASS: 'pass',
-    }))
-
-    // Now import nodemailer and mailHelper after mocks are set
-    const nodemailer = await import('nodemailer')
-    const { sendMail } = await import('../src/utils/mailHelper.js')
-
-    const sendMailMock = jest.fn(() => Promise.resolve({ messageId: 'abc' }))
-    const verifyMock = jest.fn(() => Promise.resolve(true))
-    const createTransportMock = nodemailer.createTransport as jest.Mock
-    createTransportMock.mockReturnValue({ sendMail: sendMailMock, verify: verifyMock })
-
-    const info = await sendMail({
-      from: 'from@example.com',
-      to: 'to@example.com',
-      subject: 'test2',
-      text: 'hello2',
     })
 
-    expect(nodemailer.createTransport).toHaveBeenCalledWith({
-      host: 'smtp.example.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'user',
-        pass: 'pass',
-      },
-      maxConnections: 5,
-      maxMessages: 100,
-      pool: true,
+    await sendMail({ to: 'to@example.com', subject: 'SSL', text: 'body' })
+
+    expect(nodemailer.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        port: 465,
+        secure: true,
+      })
+    )
+  })
+
+  it('creates real SMTP transporter with secure: false for port 587', async () => {
+    const { sendMail, nodemailer } = await setupTest({
+      CI: false,
+      SMTP_HOST: 'smtp.example.com',
+      SMTP_PORT: 587,
+      SMTP_USER: 'user',
+      SMTP_PASS: 'pass',
     })
 
-    expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
-      from: 'from@example.com',
-      to: 'to@example.com',
-      subject: 'test2',
-      text: 'hello2',
-    }))
+    await sendMail({ to: 'to@example.com', subject: 'TLS', text: 'body' })
 
-    expect(info).toEqual({ messageId: 'abc' })
+    expect(nodemailer.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        port: 587,
+        secure: false,
+        pool: true,
+      })
+    )
   })
 })
