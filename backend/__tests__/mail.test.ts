@@ -7,6 +7,7 @@ jest.unstable_mockModule('nodemailer', () => ({
   createTestAccount: jest.fn(() => Promise.resolve(testAccount)),
   createTransport: jest.fn(() => ({
     sendMail: jest.fn(() => Promise.resolve({ messageId: 'mocked-id' })),
+    verify: jest.fn(() => Promise.resolve(true)),
   })),
 }))
 
@@ -21,6 +22,7 @@ describe('mail module', () => {
       CI: true,
       SMTP_HOST: 'smtp.example.com',
       SMTP_PORT: 587,
+      secure: false,
       SMTP_USER: 'user',
       SMTP_PASS: 'pass',
     }))
@@ -30,8 +32,9 @@ describe('mail module', () => {
     const { sendMail } = await import('../src/utils/mailHelper.js')
 
     const sendMailMock = jest.fn(() => Promise.resolve({ messageId: '123' }))
+    const verifyMock = jest.fn(() => Promise.resolve(true))
     const createTransportMock = nodemailer.createTransport as jest.Mock
-    createTransportMock.mockReturnValue({ sendMail: sendMailMock })
+    createTransportMock.mockReturnValue({ sendMail: sendMailMock, verify: verifyMock })
 
     const info = await sendMail({
       from: 'from@example.com',
@@ -49,6 +52,7 @@ describe('mail module', () => {
         user: testAccount.user,
         pass: testAccount.pass,
       },
+      secure: false,
     })
 
     expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
@@ -65,7 +69,7 @@ describe('mail module', () => {
     jest.unstable_mockModule('../src/config/env.config.js', () => ({
       CI: false,
       SMTP_HOST: 'smtp.example.com',
-      SMTP_PORT: 587,
+      SMTP_PORT: 465,
       SMTP_USER: 'user',
       SMTP_PASS: 'pass',
     }))
@@ -75,8 +79,9 @@ describe('mail module', () => {
     const { sendMail } = await import('../src/utils/mailHelper.js')
 
     const sendMailMock = jest.fn(() => Promise.resolve({ messageId: 'abc' }))
+    const verifyMock = jest.fn(() => Promise.resolve(true))
     const createTransportMock = nodemailer.createTransport as jest.Mock
-    createTransportMock.mockReturnValue({ sendMail: sendMailMock })
+    createTransportMock.mockReturnValue({ sendMail: sendMailMock, verify: verifyMock })
 
     const info = await sendMail({
       from: 'from@example.com',
@@ -87,11 +92,15 @@ describe('mail module', () => {
 
     expect(nodemailer.createTransport).toHaveBeenCalledWith({
       host: 'smtp.example.com',
-      port: 587,
+      port: 465,
+      secure: true,
       auth: {
         user: 'user',
         pass: 'pass',
       },
+      maxConnections: 5,
+      maxMessages: 100,
+      pool: true,
     })
 
     expect(sendMailMock).toHaveBeenCalledWith(expect.objectContaining({
