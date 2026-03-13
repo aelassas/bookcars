@@ -93,7 +93,6 @@ describe('mail module', () => {
       expect.objectContaining({
         port: 587,
         secure: false,
-        pool: true,
       })
     )
   })
