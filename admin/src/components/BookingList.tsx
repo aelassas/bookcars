@@ -264,12 +264,12 @@ const BookingList = ({
 
           return (
             <div>
-              {/*<Tooltip title={commonStrings.UPDATE}>
+              <Tooltip title={commonStrings.UPDATE}>
                 <IconButton onClick={() => navigate(`/update-booking?b=${row._id}`)}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={commonStrings.DELETE}>
+              {/*<Tooltip title={commonStrings.DELETE}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
@@ -279,7 +279,7 @@ const BookingList = ({
         },
         renderHeader: () => (selectedIds.length > 0 ? (
           <div>
-            <Tooltip title={strings.UPDATE_SELECTION}>
+            {/* <Tooltip title={strings.UPDATE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setOpenUpdateDialog(true)
@@ -288,7 +288,7 @@ const BookingList = ({
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            {/* <Tooltip title={strings.DELETE_SELECTION}>
+             <Tooltip title={strings.DELETE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setopenDeleteDialog(true)
