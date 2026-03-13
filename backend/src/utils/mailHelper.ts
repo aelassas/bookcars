@@ -9,7 +9,8 @@ let transporterPromise: Promise<nodemailer.Transporter> | null = null
 
 /**
  * Initializes and returns a Nodemailer Transporter.
- * * If running in a CI environment, it generates a temporary Ethereal test account.
+ * 
+ * If running in a CI environment, it generates a temporary Ethereal test account.
  * Otherwise, it uses the SMTP configuration provided in the environment variables.
  * @returns {Promise<nodemailer.Transporter>} The initialized transporter instance.
  * @throws {Error} If the SMTP configuration is invalid or connection fails.
