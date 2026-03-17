@@ -1,7 +1,8 @@
 import path from 'node:path'
 import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import { createHtmlPlugin } from 'vite-plugin-html'
+import babelPlugin from '@rolldown/plugin-babel'
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
@@ -9,14 +10,14 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     plugins: [
-      react({
-        // Babel optimizations
-        babel: {
-          plugins: [
-            ['@babel/plugin-transform-runtime'],
-            ['babel-plugin-react-compiler', { optimize: true }],
-          ]
-        }
+      react(),
+      babelPlugin({
+        plugins: [
+          ['@babel/plugin-transform-runtime']
+        ],
+        presets: [
+          reactCompilerPreset()
+        ],
       }),
       createHtmlPlugin({
         inject: {
@@ -44,8 +45,17 @@ export default ({ mode }: { mode: string }) => {
     server: {
       host: '0.0.0.0',
       port: Number.parseInt(process.env.VITE_PORT || '3001', 10),
+      watch: {
+        usePolling: true,
+        interval: 500,
+      },
+      hmr: {
+        protocol: 'ws',
+        host: process.env.VITE_HMR_HOST || 'localhost',
+        port: Number.parseInt(process.env.VITE_HMR_PORT || '3001', 10),
+        clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '3001', 10),
+      },
     },
-
     build: {
       outDir: 'build', // Output directory
       target: 'esnext', // Use esnext to ensure the best performance
@@ -73,8 +83,8 @@ export default ({ mode }: { mode: string }) => {
           comments: false, // Remove comments
         },
         mangle: {
-          properties: false // Don't rename properties (safer)
-        }
+          properties: false, // Don't rename properties (safer)
+        },
       },
 
       // Control chunk size
@@ -84,9 +94,19 @@ export default ({ mode }: { mode: string }) => {
       rollupOptions: {
         treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
         output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom'], // Create a separate vendor chunk
-            router: ['react-router-dom'], // Create a separate router chunk
+          advancedChunks: {
+            groups: [
+              {
+                name: 'vendor',
+                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                priority: 10,
+              },
+              {
+                name: 'router',
+                test: /[\\/]node_modules[\\/]react-router-dom[\\/]/,
+                priority: 20,
+              },
+            ],
           },
           // Generate chunk names
           assetFileNames: 'assets/[name]-[hash][extname]',

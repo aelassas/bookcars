@@ -42,7 +42,10 @@
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
     "@babel/plugin-transform-runtime": "^7.29.0",
+    "@rolldown/plugin-babel": "^0.2.1",
+    "@types/babel__core": "^7.20.5",
     "@types/node": "^25.5.0",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19.2.14",
