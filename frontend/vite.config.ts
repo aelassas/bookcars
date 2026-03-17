@@ -105,8 +105,9 @@ export default ({ mode }: { mode: string }) => {
               },
               {
                 name: 'router',
-                test: /[\\/]node_modules[\\/]react-router-dom[\\/]/,
+                test: /[\\/]node_modules[\\/]react-router(-dom)?[\\/]/,
                 priority: 20,
+                minSize: 0,
               },
             ],
           },
