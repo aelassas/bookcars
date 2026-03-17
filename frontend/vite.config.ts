@@ -93,10 +93,10 @@ export default ({ mode }: { mode: string }) => {
       chunkSizeWarningLimit: 1000, // Warn if a chunk exceeds 1000kb
 
       // Chunk splitting strategy
-      rollupOptions: {
+      rolldownOptions: {
         treeshake: true, // Enable Tree Shaking: Ensure unused code is removed by leveraging ES modules and proper imports
         output: {
-          advancedChunks: {
+          codeSplitting: {
             groups: [
               {
                 name: 'vendor',
