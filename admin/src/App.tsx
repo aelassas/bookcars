@@ -5,6 +5,7 @@ import { UserProvider } from '@/context/UserContext'
 import { RecaptchaProvider } from '@/context/RecaptchaContext'
 import ScrollToTop from '@/components/ScrollToTop'
 import NProgressIndicator from '@/components/NProgressIndicator'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const Header = lazy(() => import('@/components/Header'))
 const SignIn = lazy(() => import('@/pages/SignIn'))
@@ -53,19 +54,21 @@ const AppLayout = () => {
   }, [location.pathname])
 
   return (
-    <UserProvider refreshKey={refreshKey}>
-      <NotificationProvider refreshKey={refreshKey}>
-        <RecaptchaProvider>
-          <ScrollToTop />
-          <div className="app">
-            <Suspense fallback={<NProgressIndicator />}>
-              <Header />
-              <Outlet />
-            </Suspense>
-          </div>
-        </RecaptchaProvider>
-      </NotificationProvider>
-    </UserProvider>
+    <ErrorBoundary>
+      <UserProvider refreshKey={refreshKey}>
+        <NotificationProvider refreshKey={refreshKey}>
+          <RecaptchaProvider>
+            <ScrollToTop />
+            <div className="app">
+              <Suspense fallback={<NProgressIndicator />}>
+                <Header />
+                <Outlet />
+              </Suspense>
+            </div>
+          </RecaptchaProvider>
+        </NotificationProvider>
+      </UserProvider>
+    </ErrorBoundary>
   )
 }
 

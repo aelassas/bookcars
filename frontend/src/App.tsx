@@ -9,6 +9,7 @@ import { SettingProvider } from '@/context/SettingContext'
 import { init as initGA } from '@/utils/ga4'
 import ScrollToTop from '@/components/ScrollToTop'
 import NProgressIndicator from '@/components/NProgressIndicator'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 if (env.GOOGLE_ANALYTICS_ENABLED) {
   initGA()
@@ -48,23 +49,25 @@ const AppLayout = () => {
   }, [location.pathname])
 
   return (
-    <SettingProvider>
-      <UserProvider refreshKey={refreshKey}>
-        <NotificationProvider refreshKey={refreshKey}>
-          <RecaptchaProvider>
-            <PayPalProvider>
-              <ScrollToTop />
-              <div className="app">
-                <Suspense fallback={<NProgressIndicator />}>
-                  <Header />
-                  <Outlet />
-                </Suspense>
-              </div>
-            </PayPalProvider>
-          </RecaptchaProvider>
-        </NotificationProvider>
-      </UserProvider>
-    </SettingProvider>
+    <ErrorBoundary>
+      <SettingProvider>
+        <UserProvider refreshKey={refreshKey}>
+          <NotificationProvider refreshKey={refreshKey}>
+            <RecaptchaProvider>
+              <PayPalProvider>
+                <ScrollToTop />
+                <div className="app">
+                  <Suspense fallback={<NProgressIndicator />}>
+                    <Header />
+                    <Outlet />
+                  </Suspense>
+                </div>
+              </PayPalProvider>
+            </RecaptchaProvider>
+          </NotificationProvider>
+        </UserProvider>
+      </SettingProvider>
+    </ErrorBoundary>
   )
 }
 

@@ -1,5 +1,8 @@
-import ga4 from 'react-ga4'
+import _ga4 from 'react-ga4'
 import env from '@/config/env.config'
+
+// Handle the "Module Object" vs "Default Export" discrepancy
+const ga4: typeof _ga4 = (_ga4 as any).default || _ga4
 
 const TRACKING_ID = env.GOOGLE_ANALYTICS_ID
 const { isProduction } = env
