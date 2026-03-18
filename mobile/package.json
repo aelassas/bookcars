@@ -1,7 +1,7 @@
 {
   "name": "bookcars-mobile",
   "description": "Mobile app for BookCars (customer app)",
-  "version": "8.7.0",
+  "version": "8.8.0",
   "main": "expo-router/entry",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",
