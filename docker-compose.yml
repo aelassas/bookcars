@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:7.0.12
+    image: mongo:7.0.12 # Update mongo version if necessary
     command: mongod --quiet --logpath /dev/null
     restart: always
     environment:
