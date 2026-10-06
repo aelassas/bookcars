@@ -1,7 +1,6 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) 
 [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) 
 [![codecov](https://img.shields.io/codecov/c/github/aelassas/bookcars?label=coverage)](https://codecov.io/gh/aelassas/bookcars)
-[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net/)
 [![docs](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki)
 
 <!--
@@ -48,7 +47,7 @@ Customers can register through the web frontend or mobile app, search for availa
 
 ## Features
 
-### Supplier & Fleet Management
+**Supplier & Fleet Management**
 
 * Supplier management
 * Supplier contracts
@@ -61,7 +60,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Vehicle scheduler
 * Auto-notification system
 
-### Pricing & Payments
+**Pricing & Payments**
 
 * Dynamic price calculation: hourly, daily, weekly, bi-weekly, and monthly rates
 * Date-based price rates
@@ -70,13 +69,13 @@ Customers can register through the web frontend or mobile app, search for availa
 * Multiple payment gateways supported: Stripe, PayPal
 * Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
 
-### Locations & Search
+**Locations & Search**
 
 * Hierarchical locations with country, map, and parking integration
 * Location-based search with nested child location support
 * Map display for locations and parking spots
 
-### User Experience
+**User Experience**
 
 * Customer management
 * Multiple login options: Google, Facebook, Apple, Email
@@ -85,7 +84,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Multiple pagination styles: classic (next/previous), infinite scroll
 * Push notifications
 
-### Security & Performance
+**Security & Performance**
 
 * Secure against XSS, XST, CSRF, MITM, and DDoS attacks
 * Responsive admin panel and frontend
@@ -93,7 +92,7 @@ Customers can register through the web frontend or mobile app, search for availa
 * Docker support for easy deployment and better developer experience
 * Error monitoring and performance tracing
 
-### Supported Platforms
+**Supported Platforms**
 * iOS
 * Android
 * Web
@@ -117,10 +116,9 @@ To contribute code or report issues, please read the [Contribution Guide](https:
 
 If you want to customize BookCars while keeping your fork up to date with the latest changes, check out the [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync) guide in the Wiki.
 -->
-## Live Demo
 <!--
-Some features are locked down on the demo links provided. To have access to all the features contact me by email. You can find it on my [profile page](https://github.com/aelassas) (requires login).
--->
+## Live Demo
+
 ### Frontend
 
 * URL: https://bookcars.dynv6.net/
@@ -156,7 +154,7 @@ You can install the Android App by downloading the APK and installing it on any 
 * [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.7/bookcars-8.7.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
-
+-->
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
