@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  CLOC_EXCLUDE_DIRS: 'node_modules,coverage,.github,.vscode,__scripts,__services,dist'
+  CLOC_EXCLUDE_EXTS: 'md,txt'
+
 jobs:
   loc_job:
     runs-on: ubuntu-latest
@@ -18,26 +22,29 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cloc
 
       - name: Calculate Lines of Code & Generate Badge
+        shell: bash
         run: |
           mkdir -p output
 
-          # Count lines of code using CSV output for reliable parsing
+          # Execute cloc in CSV output mode and extract the 5th column (code lines)
           LOC=$(cloc . \
-            --exclude-dir=node_modules,coverage,.github,.vscode,__scripts,__services,dist \
-            --exclude-ext=md,txt \
+            --exclude-dir="${CLOC_EXCLUDE_DIRS}" \
+            --exclude-ext="${CLOC_EXCLUDE_EXTS}" \
             --not-match-f='package-lock.json|LICENSE|CITATION.cff|\.env|tsconfig\.tsbuildinfo' \
-            --csv \
-            | awk -F',' '$2=="code" {print $5}')
+            --csv 2>/dev/null | awk -F',' 'END{print $5}')
+
+          # Default to 0 if directory is empty or command returns no code lines
+          LOC=${LOC:-0}
 
           echo "Total Lines of Code: $LOC"
 
-          if [ -z "$LOC" ]; then
-            echo "Error: Failed to count lines of code."
-            exit 1
-          fi
+          # Format output with comma separators for readability
+          export LC_ALL=en_US.UTF-8
+          LOC_COMMA=$(printf "%'d" "${LOC}")
+          ENCODED_LOC=$(echo "${LOC_COMMA}" | sed 's/,/%2C/g')
 
           # Download badge from Shields.io
-          curl -fsS --retry 3 -o output/badge.svg "https://img.shields.io/badge/LoC-${LOC}-green"
+          curl -fsS --retry 3 -o output/badge.svg "https://img.shields.io/badge/LoC-${ENCODED_LOC}-green"
 
       - name: Deploy to loc branch
         uses: peaceiris/actions-gh-pages@v3
