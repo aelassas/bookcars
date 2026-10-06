@@ -100,8 +100,6 @@ Customers can register through the web frontend or mobile app, search for availa
 
 ## Stats for Nerds
 
-[![LoC Prod](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/loc-prod.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
-[![LoC Tests](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/loc-tests.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
 [![LoC Total](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/loc-total.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
 
 ## Support & Contributing
