@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import mongoose from 'mongoose'
+import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
 import Car from '../src/models/Car'
@@ -34,7 +35,8 @@ type SeedManifest = {
 
 const testDatabaseUri = (() => {
   const uri = new URL(env.DB_URI)
-  uri.pathname = `/bookcars_seed_test_${Date.now()}_${Math.random().toString(16).slice(2)}`
+  // "bc_" (3) + nanoid(10) (10) = 13 characters total
+  uri.pathname = `/bc_${nanoid(10)}`
   return uri.toString()
 })()
 
