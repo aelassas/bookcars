@@ -30,7 +30,9 @@
     "pre-commit": "node pre-commit.js",
     "releases": "node releases.js",
     "prepare": "husky install",
-    "lint": "eslint . --cache --cache-location .eslintcache"
+    "lint": "eslint . --cache --cache-location .eslintcache",
+    "seed:dev": "npm --prefix backend run seed:dev",
+    "clean:dev": "npm --prefix backend run clean:dev"
   },
   "devDependencies": {
     "chalk": "^5.4.1",
