@@ -1,7 +1,10 @@
 import 'dotenv/config'
+import asyncFs from 'node:fs/promises'
+import path from 'node:path'
 import mongoose from 'mongoose'
 import * as env from '../src/config/env.config'
 import * as databaseHelper from '../src/utils/databaseHelper'
+import * as helper from '../src/utils/helper'
 import * as logger from '../src/utils/logger'
 import Booking from '../src/models/Booking'
 import Car from '../src/models/Car'
@@ -87,11 +90,20 @@ async function main(): Promise<void> {
       logger.info(`Deleted ${adResult.deletedCount} seeded additional driver(s).`)
     }
 
-    // 4. Delete cars
+    // 4. Delete cars and image files
     const carIds = manifest.carIds ?? []
     if (carIds.length > 0) {
+      const cars = await Car.find({ _id: { $in: carIds } })
+      for (const car of cars) {
+        if (car.image) {
+          const imagePath = path.join(env.CDN_CARS, car.image)
+          if (await helper.pathExists(imagePath)) {
+            await asyncFs.unlink(imagePath)
+          }
+        }
+      }
       const carResult = await Car.deleteMany({ _id: { $in: carIds } })
-      logger.info(`Deleted ${carResult.deletedCount} seeded car(s).`)
+      logger.info(`Deleted ${carResult.deletedCount} seeded car(s) and image file(s).`)
     }
 
     // 5. Delete seeded customer

@@ -1,9 +1,14 @@
 import 'dotenv/config'
+import fs from 'node:fs'
+import asyncFs from 'node:fs/promises'
+import path from 'node:path'
+import url from 'node:url'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
 import * as databaseHelper from '../src/utils/databaseHelper'
 import * as authHelper from '../src/utils/authHelper'
+import * as helper from '../src/utils/helper'
 import * as logger from '../src/utils/logger'
 import Car from '../src/models/Car'
 import Country from '../src/models/Country'
@@ -41,6 +46,40 @@ type SeedManifest = {
   createdAt?: Date
 }
 
+const getSourceImagePath = (filename: string): string | null => {
+  const currentDir = path.dirname(url.fileURLToPath(import.meta.url))
+  const possiblePaths = [
+    path.resolve(currentDir, 'img', filename),
+    path.resolve(currentDir, '../scripts/img', filename),
+    path.resolve(currentDir, '../../scripts/img', filename),
+    path.resolve(process.cwd(), 'scripts/img', filename),
+    path.resolve(process.cwd(), 'backend/scripts/img', filename),
+  ]
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return p
+    }
+  }
+  return null
+}
+
+const copyCarImage = async (carId: string | mongoose.Types.ObjectId, sourceFilename: string): Promise<string | null> => {
+  const sourcePath = getSourceImagePath(sourceFilename)
+  if (!sourcePath) {
+    logger.warn(`Source car image ${sourceFilename} not found.`)
+    return null
+  }
+
+  await helper.mkdir(env.CDN_CARS)
+
+  const ext = path.extname(sourceFilename) || '.jpg'
+  const targetFilename = `${carId.toString()}${ext}`
+  const targetPath = path.join(env.CDN_CARS, targetFilename)
+
+  await asyncFs.copyFile(sourcePath, targetPath)
+  return targetFilename
+}
+
 const seedCars = [
   {
     name: 'Volkswagen Golf',
@@ -59,7 +98,7 @@ const seedCars = [
     fullInsurance: 25,
     additionalDriver: 5,
     fuelPolicy: bookcarsTypes.FuelPolicy.FullToFull,
-    image: 'car1.png',
+    sourceImage: 'volkswagen-golf.jpg',
   },
   {
     name: 'Toyota Camry',
@@ -78,7 +117,7 @@ const seedCars = [
     fullInsurance: 30,
     additionalDriver: 7,
     fuelPolicy: bookcarsTypes.FuelPolicy.FullToFull,
-    image: 'car2.png',
+    sourceImage: 'toyota-camry.jpg',
   },
   {
     name: 'Tesla Model 3',
@@ -97,7 +136,7 @@ const seedCars = [
     fullInsurance: 35,
     additionalDriver: 7,
     fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
-    image: 'car3.png',
+    sourceImage: 'tesla-model-3.jpg',
   },
 ]
 
@@ -354,15 +393,19 @@ async function main(): Promise<void> {
     // 4. Seed Cars
     const createdCars: any[] = []
     for (const data of seedCars) {
+      const { sourceImage, ...carData } = data
       let car = await Car.findOne({
         _id: { $in: carIds },
         name: data.name,
       })
 
       if (car) {
-        if (!car.image) {
-          car.image = data.image
-          await car.save()
+        if (!car.image || !(await helper.pathExists(path.join(env.CDN_CARS, car.image)))) {
+          const imageFilename = await copyCarImage(car._id, sourceImage)
+          if (imageFilename) {
+            car.image = imageFilename
+            await car.save()
+          }
         }
         logger.info(`Already seeded car: ${data.name}`)
         createdCars.push(car)
@@ -370,7 +413,7 @@ async function main(): Promise<void> {
       }
 
       car = await Car.create({
-        ...data,
+        ...carData,
         supplier: supplierId,
         locations: [locationId],
         minimumAge: env.MINIMUM_AGE,
@@ -386,6 +429,12 @@ async function main(): Promise<void> {
         co2: 120,
         blockOnPay: false,
       })
+
+      const imageFilename = await copyCarImage(car._id, sourceImage)
+      if (imageFilename) {
+        car.image = imageFilename
+        await car.save()
+      }
 
       await manifestCollection.updateOne(
         { _id: SEED_ID },

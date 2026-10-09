@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import { nanoid } from 'nanoid'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../src/config/env.config'
+import * as helper from '../src/utils/helper'
 import Car from '../src/models/Car'
 import Country from '../src/models/Country'
 import Location from '../src/models/Location'
@@ -146,6 +147,10 @@ describe('development seed command', () => {
     expect(cars.map((car) => car.supplier.toString())).toEqual([supplier._id.toString(), supplier._id.toString(), supplier._id.toString()])
     expect(cars.every((car) => car.locations[0].toString() === location._id.toString())).toBe(true)
     expect(cars.map((car) => car.dailyPrice).sort((a, b) => a - b)).toEqual([35, 55, 65])
+    expect(cars.every((car) => !!car.image)).toBe(true)
+    for (const car of cars) {
+      expect(await helper.pathExists(path.join(env.CDN_CARS, car.image!))).toBe(true)
+    }
     expect(manifest?.supplierId?.toString()).toBe(supplier._id.toString())
     expect(manifest?.locationId?.toString()).toBe(location._id.toString())
     expect(manifest?.carIds).toHaveLength(3)
@@ -164,6 +169,10 @@ describe('development seed command', () => {
     const cars = await Car.find({ _id: { $in: manifest?.carIds } })
     expect(cars).toHaveLength(3)
     expect(cars.every((car) => car.supplier.toString() === activeSupplier._id.toString())).toBe(true)
+    expect(cars.every((car) => !!car.image)).toBe(true)
+    for (const car of cars) {
+      expect(await helper.pathExists(path.join(env.CDN_CARS, car.image!))).toBe(true)
+    }
     const location = await Location.findById(cars[0].locations[0])
     expect(location?.supplier?.toString()).toBe(activeSupplier._id.toString())
     await mongoose.disconnect()
@@ -242,6 +251,17 @@ describe('development cleanup command', () => {
     await mongoose.disconnect()
 
     expect((await runScript('seed-dev')).code).toBe(0)
+
+    await connectTestDatabase()
+    const manifest = await getManifestCollection().findOne({ _id: SEED_ID })
+    const seededCars = await Car.find({ _id: { $in: manifest?.carIds } })
+    const seededCarImages = seededCars.map((car) => car.image).filter(Boolean) as string[]
+    expect(seededCarImages).toHaveLength(3)
+    for (const img of seededCarImages) {
+      expect(await helper.pathExists(path.join(env.CDN_CARS, img))).toBe(true)
+    }
+    await mongoose.disconnect()
+
     expect((await runScript('clean-dev')).code).toBe(0)
     expect((await runScript('clean-dev')).code).toBe(0)
 
@@ -251,6 +271,10 @@ describe('development cleanup command', () => {
     expect(await User.exists({ _id: supplier._id })).toBeTruthy()
     expect(await Location.exists({ _id: location._id })).toBeTruthy()
     expect(await getManifestCollection().findOne({ _id: SEED_ID })).toBeNull()
+
+    for (const img of seededCarImages) {
+      expect(await helper.pathExists(path.join(env.CDN_CARS, img))).toBe(false)
+    }
     await mongoose.disconnect()
   })
 
