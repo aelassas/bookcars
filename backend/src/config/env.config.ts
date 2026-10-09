@@ -96,11 +96,11 @@ export const PRIVATE_KEY = __env__('BC_PRIVATE_KEY', HTTPS)
 export const CERTIFICATE = __env__('BC_CERTIFICATE', HTTPS)
 
 /**
- * MongoDB database URI. Default is: mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars
+ * MongoDB replica set URI. Replica set support is required for transactional booking reservations.
  *
  * @type {string}
  */
-export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars')
+export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars&replicaSet=rs0')
 
 /**
  * Indicate whether MongoDB SSL is enabled or not.
@@ -700,6 +700,7 @@ export interface Car extends Document {
   trips: number
   co2?: number
   blockOnPay?: boolean
+  bookingReservationVersion?: number
 }
 
 /**

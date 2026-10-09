@@ -16,6 +16,7 @@ import Car from '../models/Car'
 import DateBasedPrice from '../models/DateBasedPrice'
 import * as helper from '../utils/helper'
 import * as logger from '../utils/logger'
+import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 import Location from '../models/Location'
 
 /**
@@ -546,12 +547,15 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
                         ]
                       },
                       {
-                        // include Paid, Reserved and Deposit bookings
-                        $in: ['$status', [
-                          bookcarsTypes.BookingStatus.Paid,
-                          bookcarsTypes.BookingStatus.Reserved,
-                          bookcarsTypes.BookingStatus.Deposit,
-                        ]]
+                        $or: [
+                          { $in: ['$status', BOOKING_RESERVATION_STATUSES] },
+                          {
+                            $and: [
+                              { $eq: ['$status', bookcarsTypes.BookingStatus.Void] },
+                              { $gt: ['$expireAt', new Date()] },
+                            ],
+                          },
+                        ],
                       },
                     ]
                   }

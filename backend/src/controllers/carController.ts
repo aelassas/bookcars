@@ -12,6 +12,7 @@ import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import * as helper from '../utils/helper'
 import * as logger from '../utils/logger'
+import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 import DateBasedPrice from '../models/DateBasedPrice'
 import User from '../models/User'
 import Notification from '../models/Notification'
@@ -1187,12 +1188,15 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                         ]
                       },
                       {
-                        // include Paid, Reserved and Deposit bookings
-                        $in: ['$status', [
-                          bookcarsTypes.BookingStatus.Paid,
-                          bookcarsTypes.BookingStatus.Reserved,
-                          bookcarsTypes.BookingStatus.Deposit,
-                        ]]
+                        $or: [
+                          { $in: ['$status', BOOKING_RESERVATION_STATUSES] },
+                          {
+                            $and: [
+                              { $eq: ['$status', bookcarsTypes.BookingStatus.Void] },
+                              { $gt: ['$expireAt', new Date()] },
+                            ],
+                          },
+                        ],
                       },
                     ]
                   }

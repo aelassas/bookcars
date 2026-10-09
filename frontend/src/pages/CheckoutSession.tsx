@@ -17,6 +17,7 @@ const CheckoutSession = () => {
   const [loading, setLoading] = useState(true)
   const [noMatch, setNoMatch] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
 
   if (!sessionId) {
     setNoMatch(true)
@@ -36,6 +37,7 @@ const CheckoutSession = () => {
           setSuccess(status === 200)
         } catch {
           setSuccess(false)
+          setError(true)
         } finally {
           setLoading(false)
         }
@@ -54,6 +56,8 @@ const CheckoutSession = () => {
             : (
               noMatch
                 ? <NoMatch hideHeader />
+                : error
+                  ? <Info message={strings.PAYMENT_FAILED} hideLink />
                 : (
                   success && bookingId && (
                     <CheckoutStatus

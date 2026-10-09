@@ -1,7 +1,10 @@
 services:
   mongo:
     image: mongo:latest
-    command: mongod --quiet --logpath /dev/null
+    command:
+      - bash
+      - -lc
+      - openssl rand -base64 756 > /tmp/mongodb-keyfile && chown mongodb:mongodb /tmp/mongodb-keyfile && chmod 400 /tmp/mongodb-keyfile && exec /usr/local/bin/docker-entrypoint.sh mongod --quiet --replSet rs0 --bind_ip_all --keyFile /tmp/mongodb-keyfile
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -11,6 +14,11 @@ services:
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username admin --password admin --authenticationDatabase admin --eval \"try { rs.status().ok } catch (error) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
 
   mongo-express:
     image: mongo-express:latest
@@ -22,7 +30,8 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
 
   bc-dev-backend:
     build:
@@ -33,7 +42,8 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./backend:/bookcars/backend
