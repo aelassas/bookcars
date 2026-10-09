@@ -8,6 +8,7 @@ import User from '../models/User'
 import Car from '../models/Car'
 import * as bookingController from './bookingController'
 import * as ipinfoHelper from '../utils/ipinfoHelper'
+import { BookingConflictError, saveBookingWithAvailability } from '../utils/bookingReservationHelper'
 
 /**
  * Create PayPal order.
@@ -43,6 +44,7 @@ export const createPayPalOrder = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkPayPalOrder = async (req: Request, res: Response) => {
+  let captureId: string | undefined
   try {
     const paypal = await import('../payment/paypal.js')
     const { bookingId, orderId } = req.params
@@ -77,6 +79,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (order.status === 'COMPLETED') {
+      captureId = order.purchase_units?.[0]?.payments?.captures?.[0]?.id
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
 
@@ -88,7 +91,14 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       }
       booking.status = status
 
-      await booking.save()
+      const saved = await saveBookingWithAvailability(booking, {
+        expectedStatus: bookcarsTypes.BookingStatus.Void,
+        requireExpireAt: true,
+      })
+      if (!saved) {
+        res.sendStatus(200)
+        return
+      }
 
       const car = await Car.findById(booking.car)
       if (!car) {
@@ -139,6 +149,24 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     await booking.deleteOne()
     res.status(400).send(order.status)
   } catch (err) {
+    if (err instanceof BookingConflictError) {
+      if (!captureId) {
+        logger.error('[paypal.checkPayPalOrder] Completed order has no capture id', req.params.orderId)
+        res.status(500).send('Booking unavailable. Payment refund requires support review.')
+        return
+      }
+      try {
+        const paypal = await import('../payment/paypal.js')
+        await paypal.refundCapture(captureId, `bc-refund-${req.params.bookingId}`)
+        await Booking.deleteOne({ _id: req.params.bookingId, status: bookcarsTypes.BookingStatus.Void })
+      } catch (refundError) {
+        logger.error('[paypal.checkPayPalOrder] Failed to refund payment after booking conflict', refundError)
+        res.status(500).send('Booking unavailable. Payment refund requires support review.')
+        return
+      }
+      res.status(409).send(err.message)
+      return
+    }
     logger.error(`[paypal.checkPayPalOrder] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }

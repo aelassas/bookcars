@@ -20,6 +20,7 @@ import * as helper from '../utils/helper'
 import * as mailHelper from '../utils/mailHelper'
 import * as env from '../config/env.config'
 import * as logger from '../utils/logger'
+import { BookingConflictError, saveBookingWithAvailability, saveBookingsWithAvailability } from '../utils/bookingReservationHelper'
 import stripeAPI from '../payment/stripe'
 
 /**
@@ -42,7 +43,7 @@ export const create = async (req: Request, res: Response) => {
 
     const booking = new Booking(body.booking)
 
-    await booking.save()
+    await saveBookingWithAvailability(booking)
     res.json(booking)
   } catch (err) {
     logger.error(`[booking.create] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
@@ -191,6 +192,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
  * @returns {unknown}
  */
 export const checkout = async (req: Request, res: Response) => {
+  let checkoutPaymentIntentId: string | undefined
   try {
     let user: env.User | null
     const { body }: { body: bookcarsTypes.CheckoutPayload } = req
@@ -198,6 +200,16 @@ export const checkout = async (req: Request, res: Response) => {
 
     if (!body.booking) {
       throw new Error('Booking not found')
+    }
+
+    checkoutPaymentIntentId = body.paymentIntentId
+
+    if (checkoutPaymentIntentId) {
+      const existingBooking = await Booking.findOne({ paymentIntentId: checkoutPaymentIntentId })
+      if (existingBooking) {
+        res.status(200).send({ bookingId: existingBooking._id.toString() })
+        return
+      }
     }
 
     const supplier = await User.findById(body.booking.supplier)
@@ -347,7 +359,7 @@ export const checkout = async (req: Request, res: Response) => {
 
     const booking = new Booking(body.booking)
 
-    await booking.save()
+    await saveBookingWithAvailability(booking)
 
     if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
       const car = await Car.findById(booking.car)
@@ -386,6 +398,27 @@ export const checkout = async (req: Request, res: Response) => {
 
     res.status(200).send({ bookingId: booking._id.toString() })
   } catch (err) {
+    if (err instanceof BookingConflictError) {
+      if (checkoutPaymentIntentId) {
+        try {
+          const existingBooking = await Booking.findOne({ paymentIntentId: checkoutPaymentIntentId })
+          if (existingBooking) {
+            res.status(200).send({ bookingId: existingBooking._id.toString() })
+            return
+          }
+          await stripeAPI.refunds.create(
+            { payment_intent: checkoutPaymentIntentId },
+            { idempotencyKey: `booking-conflict-${checkoutPaymentIntentId}` },
+          )
+        } catch (refundError) {
+          logger.error('[booking.checkout] Failed to refund payment after booking conflict', refundError)
+          res.status(500).send('Booking unavailable. Payment refund requires support review.')
+          return
+        }
+      }
+      res.status(409).send(err.message)
+      return
+    }
     logger.error(`[booking.checkout] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
@@ -608,7 +641,7 @@ export const update = async (req: Request, res: Response) => {
         booking._additionalDriver = undefined
       }
 
-      await booking.save()
+      await saveBookingWithAvailability(booking)
 
       if (previousStatus !== status) {
         // notify driver
@@ -622,6 +655,10 @@ export const update = async (req: Request, res: Response) => {
     logger.error('[booking.update] Booking not found:', body.booking._id)
     res.sendStatus(204)
   } catch (err) {
+    if (err instanceof BookingConflictError) {
+      res.status(409).send(err.message)
+      return
+    }
     logger.error(`[booking.update] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
@@ -658,7 +695,6 @@ export const updateStatus = async (req: Request, res: Response) => {
     }
     // end of security check
 
-    const bulk = Booking.collection.initializeOrderedBulkOp()
     const bookings = await Booking.find(filter)
 
     if (bookings.length === 0) {
@@ -666,19 +702,24 @@ export const updateStatus = async (req: Request, res: Response) => {
       return
     }
 
-    const allowedIds = bookings.map((booking) => booking._id)
-
-    bulk.find({ _id: { $in: allowedIds } }).update({$set: { status } })
-    await bulk.execute()
-
+    const previousStatuses = bookings.map((booking) => booking.status)
     for (const booking of bookings) {
-      if (booking.status !== status) {
+      booking.status = status as bookcarsTypes.BookingStatus
+    }
+    await saveBookingsWithAvailability(bookings)
+
+    for (const [index, booking] of bookings.entries()) {
+      if (previousStatuses[index] !== status) {
         await notifyDriver(booking)
       }
     }
 
     res.sendStatus(200)
   } catch (err) {
+    if (err instanceof BookingConflictError) {
+      res.status(409).send(err.message)
+      return
+    }
     logger.error(`[booking.updateStatus] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }

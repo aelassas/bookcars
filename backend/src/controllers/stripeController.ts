@@ -9,6 +9,7 @@ import Booking from '../models/Booking'
 import User from '../models/User'
 import Car from '../models/Car'
 import * as bookingController from './bookingController'
+import { BookingConflictError, saveBookingWithAvailability } from '../utils/bookingReservationHelper'
 
 /**
  * Create Checkout Session.
@@ -96,6 +97,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkCheckoutSession = async (req: Request, res: Response) => {
+  let stripePaymentIntentId: string | undefined
   try {
     const stripeAPI = (await import('../payment/stripe.js')).default
     const { sessionId } = req.params
@@ -130,6 +132,8 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (session.payment_status === 'paid') {
+      const paymentIntent = session.payment_intent
+      stripePaymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent?.id
       booking.expireAt = undefined
 
       let status = bookcarsTypes.BookingStatus.Paid
@@ -140,7 +144,14 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       }
       booking.status = status
 
-      await booking.save()
+      const saved = await saveBookingWithAvailability(booking, {
+        expectedStatus: bookcarsTypes.BookingStatus.Void,
+        requireExpireAt: true,
+      })
+      if (!saved) {
+        res.sendStatus(200)
+        return
+      }
 
       const car = await Car.findById(booking.car)
       if (!car) {
@@ -191,6 +202,27 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     await booking.deleteOne()
     res.status(400).send(session.payment_status)
   } catch (err) {
+    if (err instanceof BookingConflictError) {
+      if (!stripePaymentIntentId) {
+        logger.error('[stripe.checkCheckoutSession] Paid session has no payment intent', req.params.sessionId)
+        res.status(500).send('Booking unavailable. Payment refund requires support review.')
+        return
+      }
+      try {
+        const stripeAPI = (await import('../payment/stripe.js')).default
+        await stripeAPI.refunds.create(
+          { payment_intent: stripePaymentIntentId },
+          { idempotencyKey: `booking-conflict-${req.params.sessionId}` },
+        )
+        await Booking.deleteOne({ sessionId: req.params.sessionId, status: bookcarsTypes.BookingStatus.Void })
+      } catch (refundError) {
+        logger.error('[stripe.checkCheckoutSession] Failed to refund payment after booking conflict', refundError)
+        res.status(500).send('Booking unavailable. Payment refund requires support review.')
+        return
+      }
+      res.status(409).send(err.message)
+      return
+    }
     logger.error(`[stripe.checkCheckoutSession] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }

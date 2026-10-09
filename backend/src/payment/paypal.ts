@@ -106,3 +106,18 @@ export const getOrder = async (orderId: string) => {
 
   return res.data
 }
+
+export const refundCapture = async (captureId: string, requestId: string) => {
+  const token = await getToken()
+  await axios.post(
+    `${PAYPAL_API}/v2/payments/captures/${encodeURIComponent(captureId)}/refund`,
+    {},
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'PayPal-Request-Id': requestId,
+      },
+    },
+  )
+}

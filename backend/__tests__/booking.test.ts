@@ -20,6 +20,7 @@ import Token from '../src/models/Token'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
 import stripeAPI from '../src/payment/stripe'
+import { BookingConflictError, saveBookingsWithAvailability } from '../src/utils/bookingReservationHelper'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -223,6 +224,95 @@ describe('POST /api/create-booking', () => {
     expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)
+  })
+})
+
+describe('booking reservation concurrency', () => {
+  const makeBooking = (
+    car: string,
+    from: Date,
+    to: Date,
+    status: bookcarsTypes.BookingStatus = bookcarsTypes.BookingStatus.Reserved,
+  ) => new Booking({
+    supplier: SUPPLIER_ID,
+    car,
+    driver: DRIVER1_ID,
+    pickupLocation: LOCATION_ID,
+    dropOffLocation: LOCATION_ID,
+    from,
+    to,
+    status,
+    price: 100,
+  })
+
+  it('allows only one concurrent overlapping reservation for a blocking car', async () => {
+    const start = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
+    const first = makeBooking(CAR1_ID, start, new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000))
+    const second = makeBooking(
+      CAR1_ID,
+      new Date(start.getTime() + 2 * 24 * 60 * 60 * 1000),
+      new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000),
+    )
+
+    try {
+      const results = await Promise.allSettled([
+        saveBookingsWithAvailability([first]),
+        saveBookingsWithAvailability([second]),
+      ])
+
+      expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1)
+      const rejected = results.find((result) => result.status === 'rejected')
+      expect(rejected).toBeDefined()
+      expect((rejected as PromiseRejectedResult).reason).toBeInstanceOf(BookingConflictError)
+      expect(await Booking.countDocuments({ _id: { $in: [first._id, second._id] } })).toBe(1)
+    } finally {
+      await Booking.deleteMany({ _id: { $in: [first._id, second._id] } })
+    }
+  })
+
+  it('holds a car for an unexpired payment checkout', async () => {
+    const start = new Date(Date.now() + 120 * 24 * 60 * 60 * 1000)
+    const hold = makeBooking(CAR1_ID, start, new Date(start.getTime() + 3 * 24 * 60 * 60 * 1000), bookcarsTypes.BookingStatus.Void)
+    hold.expireAt = new Date(Date.now() + 30 * 60 * 1000)
+    const competingBooking = makeBooking(CAR1_ID, start, new Date(start.getTime() + 3 * 24 * 60 * 60 * 1000))
+
+    try {
+      await saveBookingsWithAvailability([hold])
+      await expect(saveBookingsWithAvailability([competingBooking])).rejects.toBeInstanceOf(BookingConflictError)
+    } finally {
+      await Booking.deleteMany({ _id: { $in: [hold._id, competingBooking._id] } })
+    }
+  })
+
+  it('allows non-overlapping dates and preserves blockOnPay false behavior', async () => {
+    const car = await Car.findById(CAR2_ID)
+    const previousBlockOnPay = car!.blockOnPay
+
+    const start = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+    const first = makeBooking(CAR2_ID, start, new Date(start.getTime() + 2 * 24 * 60 * 60 * 1000))
+    const second = makeBooking(
+      CAR2_ID,
+      new Date(start.getTime() + 3 * 24 * 60 * 60 * 1000),
+      new Date(start.getTime() + 5 * 24 * 60 * 60 * 1000),
+    )
+    const third = makeBooking(
+      CAR2_ID,
+      new Date(start.getTime() + 1 * 24 * 60 * 60 * 1000),
+      new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000),
+    )
+
+    try {
+      await expect(saveBookingsWithAvailability([first, second])).resolves.toBe(true)
+      await expect(saveBookingsWithAvailability([third])).rejects.toBeInstanceOf(BookingConflictError)
+      car!.blockOnPay = false
+      await car!.save()
+      await expect(saveBookingsWithAvailability([third])).resolves.toBe(true)
+      expect(await Booking.countDocuments({ _id: { $in: [first._id, second._id, third._id] } })).toBe(3)
+    } finally {
+      await Booking.deleteMany({ _id: { $in: [first._id, second._id, third._id] } })
+      car!.blockOnPay = previousBlockOnPay
+      await car!.save()
+    }
   })
 })
 

@@ -210,6 +210,11 @@ const carSchema = new Schema<env.Car>(
       type: Boolean,
       default: true,
     },
+    bookingReservationVersion: {
+      type: Number,
+      default: 0,
+      select: false,
+    },
   },
   {
     timestamps: true,
