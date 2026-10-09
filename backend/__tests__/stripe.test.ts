@@ -224,35 +224,44 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
     })
     await driver.save()
 
-    const car = new Car({
-      name: 'BMW X1',
-      supplier: supplierId,
-      minimumAge: 21,
-      locations: [testHelper.GetRandromObjectId()],
-      dailyPrice: 78,
-      deposit: 950,
-      available: true,
-      type: bookcarsTypes.CarType.Diesel,
-      gearbox: bookcarsTypes.GearboxType.Automatic,
-      aircon: true,
-      image: undefined,
-      seats: 6,
-      doors: 5,
-      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
-      mileage: 1000,
-      cancellation: 0,
-      amendments: 0,
-      theftProtection: 9,
-      collisionDamageWaiver: 12,
-      fullInsurance: 20,
-      additionalDriver: 20,
-      range: bookcarsTypes.CarRange.Midi,
-      rating: 4,
-      multimedia: [
-        bookcarsTypes.CarMultimedia.AndroidAuto,
-      ],
-    })
-    await car.save()
+    const createTestCar = async () => {
+      const car = new Car({
+        name: 'BMW X1',
+        supplier: supplierId,
+        minimumAge: 21,
+        locations: [testHelper.GetRandromObjectId()],
+        dailyPrice: 78,
+        deposit: 950,
+        available: true,
+        type: bookcarsTypes.CarType.Diesel,
+        gearbox: bookcarsTypes.GearboxType.Automatic,
+        aircon: true,
+        image: undefined,
+        seats: 6,
+        doors: 5,
+        fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+        mileage: 1000,
+        cancellation: 0,
+        amendments: 0,
+        theftProtection: 9,
+        collisionDamageWaiver: 12,
+        fullInsurance: 20,
+        additionalDriver: 20,
+        range: bookcarsTypes.CarRange.Midi,
+        rating: 4,
+        multimedia: [
+          bookcarsTypes.CarMultimedia.AndroidAuto,
+        ],
+      })
+      await car.save()
+      return car
+    }
+
+    const car = await createTestCar()
+    const carDeposit = await createTestCar()
+    const carError = await createTestCar()
+    const carCanceled = await createTestCar()
+    const carMissingMembers = await createTestCar()
 
     const locationId = await testHelper.createLocation('location en', 'location fr', testHelper.GetRandromObjectIdAsString())
 
@@ -311,7 +320,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car._id.toString(),
+        car: carDeposit._id.toString(),
         driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -333,13 +342,13 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
-await testHelper.deleteNotifications(booking._id.toString())
+      await testHelper.deleteNotifications(booking._id.toString())
 
       // test failure (stripe order error)
       await booking.deleteOne()
       booking = new Booking({
         supplier: supplierId,
-        car: car._id.toString(),
+        car: carError._id.toString(),
         driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -392,7 +401,7 @@ await testHelper.deleteNotifications(booking._id.toString())
       const sessionId2 = nanoid()
       booking2 = new Booking({
         supplier: supplierId,
-        car: car._id.toString(),
+        car: carCanceled._id.toString(),
         driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -480,7 +489,7 @@ await testHelper.deleteNotifications(booking._id.toString())
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: testHelper.GetRandromObjectId(),
-        car: car._id.toString(),
+        car: carMissingMembers._id.toString(),
         driver: driver._id.toString(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -505,7 +514,7 @@ await testHelper.deleteNotifications(booking._id.toString())
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car._id.toString(),
+        car: carMissingMembers._id.toString(),
         driver: testHelper.GetRandromObjectId(),
         pickupLocation: locationId,
         dropOffLocation: locationId,
@@ -530,7 +539,7 @@ await testHelper.deleteNotifications(booking._id.toString())
       await booking3.deleteOne()
       booking3 = new Booking({
         supplier: supplierId,
-        car: car._id.toString(),
+        car: carMissingMembers._id.toString(),
         driver: driver,
         pickupLocation: testHelper.GetRandromObjectId(),
         dropOffLocation: locationId,
@@ -564,6 +573,10 @@ await testHelper.deleteNotifications(booking._id.toString())
         await booking3.deleteOne()
       }
       await car.deleteOne()
+      await carDeposit.deleteOne()
+      await carError.deleteOne()
+      await carCanceled.deleteOne()
+      await carMissingMembers.deleteOne()
       await driver.deleteOne()
       await Notification.deleteMany({ user: driver._id.toString() })
       await NotificationCounter.deleteMany({ user: driver._id.toString() })

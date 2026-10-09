@@ -30,6 +30,33 @@ const reservesCar = (booking: env.Booking, now: Date) =>
 const overlaps = (first: env.Booking, second: env.Booking) =>
   first.from <= second.to && first.to >= second.from
 
+// Simple queue-based lock for non-transactional environments
+const carLocks = new Map<string, Promise<void>>()
+
+const acquireLocks = async (carIds: string[]): Promise<() => void> => {
+  const sortedCarIds = [...new Set(carIds)].sort()
+  const releaseFns: (() => void)[] = []
+
+  for (const carId of sortedCarIds) {
+    let release: () => void
+    const nextLock = new Promise<void>((resolve) => {
+      release = resolve
+    })
+
+    const currentLock = carLocks.get(carId) || Promise.resolve()
+    carLocks.set(carId, currentLock.then(() => nextLock))
+
+    await currentLock
+    releaseFns.push(release!)
+  }
+
+  return () => {
+    for (const release of releaseFns) {
+      release()
+    }
+  }
+}
+
 export const saveBookingsWithAvailability = async (bookings: env.Booking[], options: BookingSaveOptions = {}) => {
   const now = new Date()
   const reservingBookings = bookings.filter((booking) => reservesCar(booking, now))
@@ -38,16 +65,27 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
     for (const booking of bookings) {
       await booking.save()
     }
-    return
+    return true
   }
 
-  return mongoose.connection.transaction(async (session) => {
+  const client = mongoose.connection.getClient() as any
+  const topologyType = client?.topology?.description?.type
+  const supportsTransactions = topologyType && topologyType !== 'Single' && topologyType !== 'Unknown'
+
+  const executeLogic = async (session?: mongoose.ClientSession) => {
+    const sessionOpt = session ? { session } : {}
+
     if (options.expectedStatus) {
-      const expectedBooking = await Booking.findOne({
+      const query = Booking.findOne({
         _id: bookings[0]._id,
         status: options.expectedStatus,
         ...(options.requireExpireAt ? { expireAt: { $ne: null } } : {}),
-      }).session(session).select('_id').lean()
+      }).select('_id').lean()
+
+      if (session) {
+        query.session(session)
+      }
+      const expectedBooking = await query
 
       if (!expectedBooking) {
         return false
@@ -58,11 +96,13 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
     const blockingCars = new Set<string>()
 
     for (const carId of carIds) {
-      const car = await Car.findOneAndUpdate(
+      const query = Car.findOneAndUpdate(
         { _id: new mongoose.Types.ObjectId(carId) },
         { $inc: { bookingReservationVersion: 1 } },
-        { new: true, session, timestamps: false },
+        { new: true, timestamps: false, ...sessionOpt },
       ).select('blockOnPay').lean()
+
+      const car = await query
 
       if (!car) {
         throw new Error(`Car ${carId} not found`)
@@ -73,7 +113,7 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
       }
     }
 
-    const bookingIds = bookings.map((booking) => booking._id)
+    const bookingIds = bookings.map((booking) => booking._id).filter(Boolean)
 
     for (const booking of reservingBookings) {
       const carId = booking.car.toString()
@@ -81,16 +121,20 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
         continue
       }
 
-      const conflict = await Booking.findOne({
+      const query = Booking.findOne({
         _id: { $nin: bookingIds },
-        car: booking.car,
+        car: new mongoose.Types.ObjectId(carId),
         from: { $lte: booking.to },
-        to: { $gte: booking.from },
-        $or: [
+        to: { $gte: booking.from },$or: [
           { status: { $in: BOOKING_RESERVATION_STATUSES } },
           { status: bookcarsTypes.BookingStatus.Void, expireAt: { $gt: now } },
         ],
-      }).select('_id').session(session).lean()
+      }).select('_id').lean()
+
+      if (session) {
+        query.session(session)
+      }
+      const conflict = await query
 
       if (conflict) {
         throw new BookingConflictError()
@@ -112,11 +156,23 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
     }
 
     for (const booking of bookings) {
-      await booking.save({ session })
+      await booking.save(sessionOpt)
     }
 
     return true
-  })
+  }
+
+  if (supportsTransactions) {
+    return mongoose.connection.transaction(executeLogic)
+  }
+
+  const carIds = reservingBookings.map((b) => b.car.toString())
+  const release = await acquireLocks(carIds)
+  try {
+    return await executeLogic()
+  } finally {
+    release()
+  }
 }
 
 export const saveBookingWithAvailability = async (booking: env.Booking, options?: BookingSaveOptions) =>

@@ -476,15 +476,17 @@ describe('POST /api/checkout', () => {
       expect(bookings.length).toBeGreaterThan(2)
       expect(res.body.bookingId).toBeTruthy()
 
-
       // test failure (car not found)
       const carId = payload.booking!.car
+      const oldPaymentIntentId = payload.paymentIntentId
+      payload.paymentIntentId = undefined // Clear existing paymentIntentId so idempotency check is bypassed
       payload.booking!.car = testHelper.GetRandromObjectIdAsString()
       res = await request(app)
         .post('/api/checkout')
         .send(payload)
       expect(res.statusCode).toBe(400)
       payload.booking!.car = carId
+      payload.paymentIntentId = oldPaymentIntentId
     } catch (err) {
       console.error(err)
     } finally {
@@ -505,6 +507,8 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(400)
 
     // test success (checkout session)
+    // Clean up previous test bookings for CAR1_ID so date availability checks pass
+    await Booking.deleteMany({ car: CAR1_ID, _id: { $ne: BOOKING_ID } })
     payload.paymentIntentId = undefined
     payload.sessionId = 'xxxxxxxxxxxxxx'
     res = await request(app)
@@ -517,8 +521,9 @@ describe('POST /api/checkout', () => {
     expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Void)
     expect(booking?.sessionId).toBe(payload.sessionId)
 
-
     // test success (checkout session driver not verified)
+    // Clean up previous test bookings for CAR1_ID so date availability checks pass
+    await Booking.deleteMany({ car: CAR1_ID, _id: { $ne: BOOKING_ID } })
     driver = await User.findById(DRIVER1_ID)
     driver!.verified = false
     await driver!.save()
@@ -527,9 +532,10 @@ describe('POST /api/checkout', () => {
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.bookingId).toBeTruthy()
+    // Clean up the temporary void booking created in this step to free up the dates
+    await Booking.deleteOne({ _id: res.body.bookingId })
     driver!.verified = true
     await driver!.save()
-
 
     // test success (checkout session with no additional driver)
     payload.booking!.additionalDriver = false
@@ -539,7 +545,8 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.bookingId).toBeTruthy()
     bookings = await Booking.find({ driver: DRIVER1_ID })
-    expect(bookings.length).toBeGreaterThan(3)
+    expect(bookings.length).toBeGreaterThanOrEqual(2)
+    await Booking.deleteOne({ _id: res.body.bookingId })
 
     payload.booking!.additionalDriver = true
 
@@ -579,6 +586,7 @@ describe('POST /api/checkout', () => {
     expect(token?.token.length).toBeGreaterThan(0)
     await token?.deleteOne()
     expect(res.body.bookingId).toBeTruthy()
+    await Booking.deleteOne({ _id: res.body.bookingId })
 
     // test failure (license required)
     supplier = await User.findById(payload.booking!.supplier)
@@ -642,7 +650,7 @@ describe('POST /api/checkout', () => {
     const additionalDrivers = await AdditionalDriver.find({ email: payload.additionalDriver.email })
     expect(additionalDrivers.length).toBe(1)
     expect(res.body.bookingId).toBeTruthy()
-
+    await Booking.deleteOne({ _id: res.body.bookingId })
 
     // test failure (car not found)
     payload.additionalDriver = undefined
