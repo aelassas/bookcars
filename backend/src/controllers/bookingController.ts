@@ -324,7 +324,7 @@ export const checkout = async (req: Request, res: Response) => {
         let expireAt = new Date()
         expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
 
-        body.booking.sessionId = !payPal ? body.sessionId : undefined
+        body.booking.sessionId = body.sessionId
         body.booking.status = bookcarsTypes.BookingStatus.Void
         body.booking.expireAt = expireAt
 
@@ -809,8 +809,12 @@ export const deleteTempBooking = async (req: Request, res: Response) => {
  */
 export const getBooking = async (req: Request, res: Response) => {
   const { id } = req.params
+  const sessionId = req.query.sessionId as string | undefined
 
   try {
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+
     const booking = await Booking.findById(id)
       .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ car: env.CarInfo }>({
@@ -839,6 +843,20 @@ export const getBooking = async (req: Request, res: Response) => {
       .lean()
 
     if (booking) {
+      // 1. SessionId Token Check (for unauthenticated checkout session confirmation)
+      const isValidSession = !!sessionId && booking.sessionId === sessionId
+
+      // 2. Role-Based Authorization Check
+      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+
+      if (!isValidSession && !isOwner && !isSupplier && !isAdmin) {
+        logger.error(`[booking.getBooking] Forbidden access to booking ${id}`)
+        res.status(403).send('Forbidden: Access denied')
+        return
+      }
+
       const { language } = req.params
 
       booking.supplier = {

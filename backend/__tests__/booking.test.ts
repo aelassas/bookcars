@@ -935,28 +935,81 @@ describe('POST /api/update-booking-status', () => {
 
 describe('GET /api/booking/:id/:language', () => {
   it('should get a booking', async () => {
-    const token = await testHelper.signinAsAdmin()
+    const adminToken = await testHelper.signinAsAdmin()
+    const driverToken = await testHelper.generateToken(DRIVER1_ID)
+    const supplierToken = await testHelper.generateToken(SUPPLIER_ID)
 
-    // test success
+    // test success (admin)
     let res = await request(app)
       .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, adminToken)
     expect(res.statusCode).toBe(200)
     expect(res.body.car._id).toBe(CAR2_ID)
+
+    // test success (driver owner)
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, driverToken)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBe(BOOKING_ID)
+
+    // test success (assigned supplier)
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBe(BOOKING_ID)
+
+    // test success (unauthenticated guest with valid sessionId)
+    const sessionId = nanoid()
+    const booking = await Booking.findById(BOOKING_ID)
+    booking!.sessionId = sessionId
+    await booking!.save()
+
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}?sessionId=${sessionId}`)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBe(BOOKING_ID)
+
+    // test failure (unauthenticated guest without sessionId)
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+    expect(res.statusCode).toBe(403)
+
+    // test failure (unauthenticated guest with wrong sessionId)
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}?sessionId=${nanoid()}`)
+    expect(res.statusCode).toBe(403)
+
+    // test failure (unrelated authenticated user)
+    const unrelatedDriver = new User({
+      fullName: 'Unrelated Driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await unrelatedDriver.save()
+    const unrelatedToken = await testHelper.generateToken(unrelatedDriver._id.toString())
+
+    res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, unrelatedToken)
+    expect(res.statusCode).toBe(403)
+    await unrelatedDriver.deleteOne()
 
     // test success (booking not found)
     res = await request(app)
       .get(`/api/booking/${testHelper.GetRandromObjectIdAsString()}/${testHelper.LANGUAGE}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, adminToken)
     expect(res.statusCode).toBe(204)
 
     // test failure (wrong booking id)
     res = await request(app)
       .get(`/api/booking/${nanoid()}/${testHelper.LANGUAGE}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, adminToken)
     expect(res.statusCode).toBe(400)
 
-    await testHelper.signout(token)
+    await testHelper.signout(adminToken)
   })
 })
 

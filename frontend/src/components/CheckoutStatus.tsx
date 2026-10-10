@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { DirectionsCar as CarIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { fr, enUS, es } from 'date-fns/locale'
@@ -11,11 +12,13 @@ import { strings } from '@/lang/checkout-status'
 import { strings as commonStrings } from '@/lang/common'
 import { strings as checkoutStrings } from '@/lang/checkout'
 import Toast from '@/components/Toast'
+import Error from '@/components/Error'
 
 import '@/assets/css/checkout-status.css'
 
 interface CheckoutStatusProps {
   bookingId: string,
+  sessionId?: string,
   payLater?: boolean,
   language: string,
   status: 'success' | 'error'
@@ -25,6 +28,7 @@ interface CheckoutStatusProps {
 const CheckoutStatus = (
   {
     bookingId,
+    sessionId,
     payLater,
     language,
     status,
@@ -34,10 +38,19 @@ const CheckoutStatus = (
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [price, setPrice] = useState(0)
   const [loading, setLoading] = useState(true)
+  const { sessionId: sessionIdFromUrl } = useParams<{ sessionId: string }>()
+  const [sessionIdMismatch, setSessionIdMismatch] = useState(false)
 
   useEffect(() => {
     const init = async () => {
-      const _booking = await BookingService.getBooking(bookingId)
+      // If accessed via a route with :sessionId, verify matching URL param
+      if (sessionIdFromUrl && sessionId !== sessionIdFromUrl) {
+        setSessionIdMismatch(true)
+        return
+      }
+
+      // Pass sessionId to getBooking so backend verifyTokenOptional approves the unauthenticated request
+      const _booking = await BookingService.getBooking(bookingId, sessionId)
       setBooking(_booking)
       setPrice(await PaymentService.convertPrice(_booking.price!))
       setLoading(false)
@@ -46,7 +59,7 @@ const CheckoutStatus = (
     if (bookingId) {
       init()
     }
-  }, [bookingId])
+  }, [bookingId, sessionId, sessionIdFromUrl])
 
   if (loading) {
     return null
@@ -68,6 +81,12 @@ const CheckoutStatus = (
           : strings.ERROR}
         status={status}
       />
+
+      {sessionIdMismatch && (
+        <div className="session-id-mismatch">
+          <Error message={strings.SESSION_ID_MISMATCH} />
+        </div>
+      )}
 
       {success && (
         <div className="details">

@@ -32,6 +32,7 @@ import { PayPalButtons } from '@paypal/react-paypal-js'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import validator from 'validator'
+import { nanoid } from 'nanoid'
 import { createSchema, FormFields } from '@/models/CheckoutForm'
 import CarList from '@/components/CarList'
 import * as bookcarsTypes from ':bookcars-types'
@@ -282,6 +283,8 @@ const Checkout = () => {
           _sessionId = res.sessionId
           _customerId = res.customerId
         } else {
+          // Generate a unique session ID for PayPal checkout
+          _sessionId = nanoid()
           setPayPalLoaded(true)
         }
       }
@@ -1038,6 +1041,7 @@ const Checkout = () => {
             bookingId={bookingId}
             language={language}
             payLater={payLater}
+            sessionId={sessionId}
             status="success"
             className="status"
           />
