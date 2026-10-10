@@ -839,6 +839,19 @@ export const getBooking = async (req: Request, res: Response) => {
       .lean()
 
     if (booking) {
+      const sessionUserId = req.user?._id
+      const sessionUserType = req.user?.type
+      const driverId = booking.driver?._id ? booking.driver._id.toString() : booking.driver?.toString()
+      const supplierId = booking.supplier?._id ? booking.supplier._id.toString() : booking.supplier?.toString()
+      const isAdmin = sessionUserType === bookcarsTypes.UserType.Admin
+      const isDriver = sessionUserId === driverId
+      const isSupplier = sessionUserId === supplierId
+
+      if (!isAdmin && !isDriver && !isSupplier) {
+        logger.error(`[booking.getBooking] Unauthorized attempt to access booking ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot access this booking')
+        return
+      }
       const { language } = req.params
 
       booking.supplier = {
