@@ -305,6 +305,7 @@ export const checkout = async (req: Request, res: Response) => {
           const message = `Payment failed: ${paymentIntent.status}`
           logger.error(message, body)
           res.status(400).send(message)
+          return // Stop further execution if paymentIntent failed
         }
 
         body.booking.paymentIntentId = paymentIntentId

@@ -350,7 +350,6 @@ describe('POST /api/checkout', () => {
     expect(bookings.length).toBeGreaterThan(1)
     expect(res.body.bookingId).toBeTruthy()
 
-
     // test success (driver.enableEmailNotifications disabled)
     let driver = await User.findById(DRIVER1_ID)
     driver!.enableEmailNotifications = false
@@ -363,7 +362,6 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     expect(res.body.bookingId).toBeTruthy()
 
-
     // test success (supplier.enableEmailNotifications disabled)
     let supplier = await User.findById(SUPPLIER_ID)
     supplier!.enableEmailNotifications = false
@@ -374,7 +372,6 @@ describe('POST /api/checkout', () => {
     expect(res.statusCode).toBe(200)
     supplier!.enableEmailNotifications = true
     await supplier!.save()
-
 
     // test success (without contract)
     supplier = await User.findById(SUPPLIER_ID)
@@ -390,7 +387,6 @@ describe('POST /api/checkout', () => {
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
 
-
     // test success (with contract file not found)
     supplier = await User.findById(SUPPLIER_ID)
     contracts = supplier!.contracts
@@ -404,7 +400,6 @@ describe('POST /api/checkout', () => {
     supplier!.contracts = contracts
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
-
 
     // test success (with contract file null)
     supplier = await User.findById(SUPPLIER_ID)
@@ -420,7 +415,6 @@ describe('POST /api/checkout', () => {
     await supplier!.save()
     expect(res.body.bookingId).toBeTruthy()
 
-
     // test success (with contract fr language)
     driver = await User.findById(DRIVER1_ID)
     driver!.language = 'fr'
@@ -432,7 +426,6 @@ describe('POST /api/checkout', () => {
     driver!.language = 'en'
     await driver!.save()
     expect(res.body.bookingId).toBeTruthy()
-
 
     // test failure (stripe payment failed)
     payload.payLater = false
@@ -459,6 +452,9 @@ describe('POST /api/checkout', () => {
       .post('/api/checkout')
       .send(payload)
     expect(res.statusCode).toBe(400)
+    // Regression check: verify that no booking document was saved when payment fails
+    const failedBooking = await Booking.findOne({ paymentIntentId })
+    expect(failedBooking).toBeNull()
 
     // test success (stripe payment succeeded)
     await stripeAPI.paymentIntents.confirm(paymentIntentId, {
