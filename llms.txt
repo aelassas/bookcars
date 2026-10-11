@@ -10,6 +10,8 @@ BookCars provides end-to-end car rental workflows for single-supplier and multi-
 - License: MIT License
 - Tech Stack: Node.js, Express, React, TypeScript, React Native (Expo), MongoDB, Docker
 
+> **Full Text Documentation:** For full-text concatenated markdown documentation, see [llms-full.txt](https://bookcars.github.io/llms-full.txt).
+
 ## Key Capabilities
 
 - **Fleet & Supplier Management**: Single and multi-supplier modes, contract file uploads, fleet search result limits, vehicle schedulers, and automated notifications.
