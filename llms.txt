@@ -1,0 +1,39 @@
+# BookCars
+
+> BookCars is an open-source car rental platform comprising an admin management panel, a web frontend, a native mobile application (iOS & Android), and a Node.js REST API backend.
+
+## Overview
+
+BookCars provides end-to-end car rental workflows for single-supplier and multi-supplier marketplace operations. Suppliers manage fleets, availability, and bookings through a dedicated admin portal. Customers search for vehicles based on location, dates, and times, completing bookings via integrated payment gateways (Stripe and PayPal) or pay-at-counter options.
+
+- Repository: https://github.com/aelassas/bookcars
+- License: MIT License
+- Tech Stack: Node.js, Express, React, TypeScript, React Native (Expo), MongoDB, Docker
+
+## Key Capabilities
+
+- **Fleet & Supplier Management**: Single and multi-supplier modes, contract file uploads, fleet search result limits, vehicle schedulers, and automated notifications.
+- **Dynamic Pricing Engine**: Hourly, daily, weekly, bi-weekly, and monthly rate rules with date-based price adjustments, price change rates, and discount handling.
+- **Locations & Search**: Hierarchical location modeling (Countries, Cities, Parking Spots) with geolocation coordinates and map UI integration.
+- **Payments & Checkout**: Stripe (Cards, Apple Pay, Google Pay, Link) and PayPal integrations. Supports Pay in Full, Pay Deposit, and Pay Later options.
+- **Authentication**: Social Sign-In (Google, Facebook, Apple) and traditional email/password credentials with role-based authorization (Admin, Supplier, Customer).
+- **Localization**: Multi-language (English, French, Spanish) and multi-currency formatting support.
+
+## Core Documentation & Wiki
+
+- [Overview](https://github.com/aelassas/bookcars/wiki/Overview): High-level system architecture and component roles.
+- [Software Architecture](https://github.com/aelassas/bookcars/wiki/Software-Architecture): Backend and frontend structural breakdown.
+- [Self-Hosted Installation](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted)): Manual deployment instructions for Node.js environments.
+- [Docker Deployment](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)): Containerized deployment instructions with Nginx and SSL setup.
+- [Payment Gateways Setup](https://github.com/aelassas/bookcars/wiki/Payment-Gateways): Configuring Stripe and PayPal API keys and webhooks.
+- [Social Login Setup Guide](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): OAuth configuration for Google, Facebook, and Apple authentication.
+- [Price Calculation Engine](https://github.com/aelassas/bookcars/wiki/Price-Calculation): Algorithmic breakdown of tiered and date-based rental rate calculations.
+- [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints): Business rules for rental duration limits and operating hours.
+- [Build & Run Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App): Expo mobile application setup, building APK/IPA binaries, and push notification configuration.
+- [Testing & Integration](https://github.com/aelassas/bookcars/wiki/Integration-Tests-and-Coverage): Running backend Supertest/Jest suites and tracking code coverage.
+
+## Repository Resources
+
+- [Contribution Guide](https://github.com/aelassas/bookcars/blob/main/.github/CONTRIBUTING.md): Guidelines for submitting pull requests, issue reporting, and code style.
+- [Release Notes](https://github.com/aelassas/bookcars/blob/main/.github/RELEASES.md): Version history and changelogs.
+- [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ): Frequently asked questions and troubleshooting guides.
