@@ -1206,6 +1206,21 @@ export const cancelBooking = async (req: Request, res: Response) => {
       .populate<{ driver: env.User }>('driver')
 
     if (booking && booking.cancellation && !booking.cancelRequest) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+
+      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+
+      if (!isOwner && !isSupplier && !isAdmin) {
+        logger.error(`[booking.cancelBooking] Forbidden attempt to cancel booking ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot cancel this booking')
+        return
+      }
+      // end of security check
+
       booking.cancelRequest = true
       await booking.save()
 

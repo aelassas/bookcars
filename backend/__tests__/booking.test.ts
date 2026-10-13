@@ -1142,15 +1142,33 @@ describe('GET /api/has-bookings/:driver', () => {
 
 describe('POST /api/cancel-booking/:id', () => {
   it('should cancel a booking', async () => {
-    const token = await testHelper.signinAsUser()
+    const driverToken = await testHelper.generateToken(DRIVER1_ID)
 
-    // test success
+    // test failure (unauthorized non-owner)
+    const unrelatedDriver = new User({
+      fullName: 'Unrelated Driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await unrelatedDriver.save()
+    const unrelatedToken = await testHelper.generateToken(unrelatedDriver._id.toString())
+
     let booking = await Booking.findById(BOOKING_ID)
     expect(booking?.cancelRequest).toBeFalsy()
 
     let res = await request(app)
       .post(`/api/cancel-booking/${BOOKING_ID}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, unrelatedToken)
+    expect(res.statusCode).toBe(403)
+    booking = await Booking.findById(BOOKING_ID)
+    expect(booking?.cancelRequest).toBeFalsy()
+    await unrelatedDriver.deleteOne()
+
+    // test success (authorized owner)
+    res = await request(app)
+      .post(`/api/cancel-booking/${BOOKING_ID}`)
+      .set(env.X_ACCESS_TOKEN, driverToken)
     expect(res.statusCode).toBe(200)
     booking = await Booking.findById(BOOKING_ID)
     expect(booking?.cancelRequest).toBeTruthy()
@@ -1164,7 +1182,7 @@ describe('POST /api/cancel-booking/:id', () => {
     await booking!.save()
     res = await request(app)
       .post(`/api/cancel-booking/${BOOKING_ID}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, driverToken)
     expect(res.statusCode).toBe(204)
     booking!.supplier = supplierId
     await booking!.save()
@@ -1172,16 +1190,14 @@ describe('POST /api/cancel-booking/:id', () => {
     // test failure (booking not found)
     res = await request(app)
       .post(`/api/cancel-booking/${testHelper.GetRandromObjectIdAsString()}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, driverToken)
     expect(res.statusCode).toBe(204)
 
     // test failure (wrong booking id)
     res = await request(app)
       .post(`/api/cancel-booking/${nanoid()}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, driverToken)
     expect(res.statusCode).toBe(400)
-
-    await testHelper.signout(token)
   })
 })
 
