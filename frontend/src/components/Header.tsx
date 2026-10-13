@@ -493,18 +493,26 @@ const Header = ({
                   onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
                   disableElevation
                   className="btn btn-auth"
-                  aria-label="Sign up"
+                  aria-label={suStrings.SIGN_UP}
                 >
                   <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && (
-                <Button variant="contained" size="medium" startIcon={<LoginIcon />} onClick={() => navigate('/sign-in')} disableElevation className="btn btn-auth" aria-label="Sign up">
+                <Button
+                  variant="contained"
+                  size="medium"
+                  startIcon={<LoginIcon />}
+                  onClick={() => navigate('/sign-in')}
+                  disableElevation
+                  className="btn btn-auth"
+                  aria-label={strings.SIGN_IN}
+                >
                   <span className="btn-auth-txt">{strings.SIGN_IN}</span>
                 </Button>
               )}
               {isSignedIn && (
-                <IconButton aria-label="" onClick={handleNotificationsClick} className="btn">
+                <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn">
                   <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
                     <NotificationsIcon />
                   </Badge>
@@ -527,7 +535,7 @@ const Header = ({
                 </div>
               </Button>
               {isSignedIn && (
-                <IconButton onClick={handleNotificationsClick} className="btn">
+                <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn">
                   <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
                     <NotificationsIcon />
                   </Badge>
