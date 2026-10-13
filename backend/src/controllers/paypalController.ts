@@ -98,8 +98,11 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       return
     }
 
-    if (paidAmount !== booking.price) {
-      logger.error(`[paypal.checkPayPalOrder] Price mismatch. Expected ${booking.price}, got ${paidAmount}`)
+    // Round booking price to 2 decimal places for comparison
+    const expectedPrice = Number.parseFloat(booking.price.toFixed(2))
+
+    if (paidAmount !== expectedPrice) {
+      logger.error(`[paypal.checkPayPalOrder] Price mismatch. Expected ${expectedPrice}, got ${paidAmount}`)
       res.status(400).send('Payment amount mismatch')
       return
     }
