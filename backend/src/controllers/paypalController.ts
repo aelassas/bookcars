@@ -21,12 +21,32 @@ import { BookingConflictError, saveBookingWithAvailability } from '../utils/book
 export const createPayPalOrder = async (req: Request, res: Response) => {
   try {
     const paypal = await import('../payment/paypal.js')
-    const { bookingId, amount, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+    const { bookingId, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+
+    const booking = await Booking.findById(bookingId)
+    if (!booking) {
+      const msg = `Booking with id ${bookingId} not found`
+      logger.info(`[paypal.createPayPalOrder] ${msg}`)
+      res.status(204).send(msg)
+      return
+    }
 
     const clientIp = ipinfoHelper.getClientIp(req)
     const countryCode = await ipinfoHelper.getCountryCode(clientIp)
 
-    const orderId = await paypal.createOrder(bookingId, amount, currency, name, description, countryCode)
+    const orderCurrency = (currency || env.BASE_CURRENCY || 'USD').toUpperCase()
+
+    const orderId = await paypal.createOrder(
+      bookingId,
+      booking.price,
+      orderCurrency,
+      name,
+      description,
+      countryCode,
+    )
+
+    booking.paypalOrderId = orderId
+    await booking.save()
 
     res.json(orderId)
   } catch (err) {
@@ -75,10 +95,23 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     }
 
     //
-    // 2. Update Booking if the payment succeeded
-    // (Set BookingStatus to Paid and remove expireAt TTL index)
+    // 2. Validate PayPal Order against authoritative Booking details
     //
-    if (order.status === 'COMPLETED') {
+    const purchaseUnit = order.purchase_units?.[0]
+    const paidValue = purchaseUnit?.payments?.captures?.[0]?.amount?.value ?? purchaseUnit?.amount?.value
+    const paidAmount = paidValue !== undefined ? Number.parseFloat(paidValue) : undefined
+    const paidCurrency = (purchaseUnit?.payments?.captures?.[0]?.amount?.currency_code ?? purchaseUnit?.amount?.currency_code)?.toUpperCase()
+    const invoiceId = purchaseUnit?.invoice_id ?? purchaseUnit?.custom_id
+    const expectedCurrency = (env.BASE_CURRENCY || 'USD').toUpperCase()
+
+    const isStatusCompleted = order.status === 'COMPLETED'
+    const isAmountValid = paidAmount !== undefined && !Number.isNaN(paidAmount) && Math.abs(paidAmount - booking.price) < 0.01
+    const isCurrencyValid = !paidCurrency || paidCurrency === expectedCurrency
+    const isBookingMatch = (invoiceId ? invoiceId === bookingId : true)
+      && (booking.paypalOrderId ? booking.paypalOrderId === orderId : true)
+      && Boolean(invoiceId || booking.paypalOrderId)
+
+    if (isStatusCompleted && isAmountValid && isCurrencyValid && isBookingMatch) {
       captureId = order.purchase_units?.[0]?.payments?.captures?.[0]?.id
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
@@ -147,7 +180,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     // 3. Delete Booking if the payment didn't succeed
     //
     await booking.deleteOne()
-    res.status(400).send(order.status)
+    res.status(400).send(!isStatusCompleted ? order.status : 'PAYMENT_VERIFICATION_FAILED')
   } catch (err) {
     if (err instanceof BookingConflictError) {
       if (!captureId) {

@@ -52,6 +52,13 @@ export const expireAt = 'expireAt'
 export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'BookCars')
 
 /**
+ * Base currency. Default is USD.
+ *
+ * @type {string}
+ */
+export const BASE_CURRENCY = __env__('BC_BASE_CURRENCY', false, 'USD')
+
+/**
  * Indicate whether we are in CI environment or not.
  *
  * @type {boolean}

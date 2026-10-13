@@ -51,19 +51,46 @@ describe('POST /api/create-paypal-order', () => {
       'US'
     )
 
-    // test success (create paypal order whith non existant user)
+    // test create paypal order with existing booking (uses server-side booking.price)
+    const bookingForOrder = new Booking({
+      supplier: testHelper.GetRandromObjectId(),
+      car: testHelper.GetRandromObjectId(),
+      driver: testHelper.GetRandromObjectId(),
+      pickupLocation: testHelper.GetRandromObjectId(),
+      dropOffLocation: testHelper.GetRandromObjectId(),
+      from: new Date(),
+      to: new Date(),
+      status: bookcarsTypes.BookingStatus.Void,
+      price: 234,
+    })
+    await bookingForOrder.save()
+
     const payload: bookcarsTypes.CreatePayPalOrderPayload = {
-      amount: 234,
+      amount: 999, // client-supplied amount is ignored in favor of booking.price
       currency: 'USD',
       name: 'BMW X1',
       description: 'BMW X1',
-      bookingId: testHelper.GetRandromObjectIdAsString(),
+      bookingId: bookingForOrder._id.toString(),
     }
     let res = await request(app)
       .post('/api/create-paypal-order')
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBeGreaterThan(0)
+    expect(paypal.createOrder).toHaveBeenCalledWith(
+      bookingForOrder._id.toString(),
+      234,
+      'USD',
+      'BMW X1',
+      'BMW X1',
+      expect.any(String),
+    )
+
+    // test non-existent booking
+    const nonExistentRes = await request(app)
+      .post('/api/create-paypal-order')
+      .send({ ...payload, bookingId: testHelper.GetRandromObjectIdAsString() })
+    expect(nonExistentRes.statusCode).toBe(204)
 
     // test failure (create paypal order failure)
     jest.resetModules()
@@ -81,6 +108,8 @@ describe('POST /api/create-paypal-order', () => {
       .post('/api/create-paypal-order')
       .send(payload)
     expect(res.statusCode).toBe(400)
+
+    await bookingForOrder.deleteOne()
   })
 })
 
@@ -173,14 +202,25 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       // test success
       jest.resetModules()
       await jest.unstable_mockModule('../src/payment/paypal.js', () => ({
-        getOrder: jest.fn(() => Promise.resolve({ status: 'COMPLETED' })),
+        getOrder: jest.fn(() => Promise.resolve({
+          status: 'COMPLETED',
+          purchase_units: [
+            {
+              invoice_id: booking._id.toString(),
+              amount: {
+                currency_code: 'USD',
+                value: '312.00',
+              },
+            },
+          ],
+        })),
         getToken: jest.fn(() => Promise.resolve('fake-token')),
         createOrder: jest.fn(),
       }))
 
       let paypal = await import('../src/payment/paypal.js')
 
-      await expect(paypal.getOrder('123')).resolves.toStrictEqual({ status: 'COMPLETED' })
+      await expect(paypal.getOrder('123')).resolves.toMatchObject({ status: 'COMPLETED' })
       expect(paypal.getOrder).toHaveBeenCalledWith('123')
 
       let res = await request(app)
@@ -320,14 +360,25 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       await booking3.save()
       jest.resetModules()
       await jest.unstable_mockModule('../src/payment/paypal.js', () => ({
-        getOrder: jest.fn(() => Promise.resolve({ status: 'COMPLETED' })),
+        getOrder: jest.fn(() => Promise.resolve({
+          status: 'COMPLETED',
+          purchase_units: [
+            {
+              invoice_id: booking3?._id?.toString(),
+              amount: {
+                currency_code: 'USD',
+                value: '312.00',
+              },
+            },
+          ],
+        })),
         getToken: jest.fn(() => Promise.resolve('fake-token')),
         createOrder: jest.fn(),
       }))
 
       paypal = await import('../src/payment/paypal.js')
 
-      await expect(paypal.getOrder('123')).resolves.toStrictEqual({ status: 'COMPLETED' })
+      await expect(paypal.getOrder('123')).resolves.toMatchObject({ status: 'COMPLETED' })
       expect(paypal.getOrder).toHaveBeenCalledWith('123')
 
       // car missing
@@ -446,6 +497,286 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
     } finally {
       const dbRes = await databaseHelper.connect(env.DB_URI, false, false)
       expect(dbRes).toBeTruthy()
+    }
+  })
+})
+
+describe('PayPal payment security & integrity regression tests', () => {
+  let supplierId: string
+  let driver: env.User
+  let car: env.Car
+  let locationId: string
+
+  beforeAll(async () => {
+    const supplierName = nanoid()
+    supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    driver = new User({
+      fullName: 'regression driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await driver.save()
+
+    locationId = await testHelper.createLocation('location reg en', 'location reg fr', testHelper.GetRandromObjectIdAsString())
+
+    car = new Car({
+      name: 'BMW Regression',
+      supplier: supplierId,
+      minimumAge: 21,
+      locations: [testHelper.GetRandromObjectId()],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: 1000,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      rating: 5,
+    })
+    await car.save()
+  })
+
+  afterAll(async () => {
+    await car.deleteOne()
+    await driver.deleteOne()
+    await testHelper.deleteLocation(locationId)
+    await testHelper.deleteSupplier(supplierId)
+    await testHelper.deleteNotifications(driver._id.toString())
+    await NotificationCounter.deleteMany({ user: driver._id.toString() })
+  })
+
+  // Test 1 — Amount mismatch
+  // Given: booking.price = $500, PayPal completed amount = $1
+  // Expected: Payment rejected, Booking remains unpaid
+  it('Test 1 — Amount mismatch: should reject payment when PayPal completed amount does not match booking price', async () => {
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+    const from = new Date()
+    from.setDate(from.getDate() + 1)
+    const to = new Date(from)
+    to.setDate(to.getDate() + 3)
+
+    const bookingMismatch = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      price: 500,
+    })
+    await bookingMismatch.save()
+
+    const orderId = nanoid()
+
+    jest.resetModules()
+    await jest.unstable_mockModule('../src/payment/paypal.js', () => ({
+      getOrder: jest.fn(() => Promise.resolve({
+        status: 'COMPLETED',
+        purchase_units: [
+          {
+            invoice_id: bookingMismatch._id.toString(),
+            amount: {
+              currency_code: 'USD',
+              value: '1.00',
+            },
+            payments: {
+              captures: [
+                {
+                  id: 'cap-mismatch',
+                  amount: {
+                    currency_code: 'USD',
+                    value: '1.00',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })),
+      getToken: jest.fn(() => Promise.resolve('fake-token')),
+      createOrder: jest.fn(),
+    }))
+
+    const res = await request(app)
+      .post(`/api/check-paypal-order/${bookingMismatch._id.toString()}/${orderId}`)
+
+    expect(res.statusCode).toBe(400)
+
+    const updatedBooking = await Booking.findById(bookingMismatch._id.toString())
+    expect(updatedBooking?.status).not.toBe(bookcarsTypes.BookingStatus.Paid)
+
+    if (updatedBooking) {
+      await updatedBooking.deleteOne()
+    }
+  })
+
+  // Test 2 — Correct amount
+  // Given: booking.price = $500, PayPal completed amount = $500
+  // Expected: Payment accepted, Booking becomes paid
+  it('Test 2 — Correct amount: should accept payment when PayPal completed amount matches booking price', async () => {
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+    const from = new Date()
+    from.setDate(from.getDate() + 1)
+    const to = new Date(from)
+    to.setDate(to.getDate() + 3)
+
+    const bookingCorrect = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      price: 500,
+    })
+    await bookingCorrect.save()
+
+    const orderId = nanoid()
+
+    jest.resetModules()
+    await jest.unstable_mockModule('../src/payment/paypal.js', () => ({
+      getOrder: jest.fn(() => Promise.resolve({
+        status: 'COMPLETED',
+        purchase_units: [
+          {
+            invoice_id: bookingCorrect._id.toString(),
+            amount: {
+              currency_code: 'USD',
+              value: '500.00',
+            },
+            payments: {
+              captures: [
+                {
+                  id: 'cap-correct',
+                  amount: {
+                    currency_code: 'USD',
+                    value: '500.00',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })),
+      getToken: jest.fn(() => Promise.resolve('fake-token')),
+      createOrder: jest.fn(),
+    }))
+
+    const res = await request(app)
+      .post(`/api/check-paypal-order/${bookingCorrect._id.toString()}/${orderId}`)
+
+    expect(res.statusCode).toBe(200)
+
+    const updatedBooking = await Booking.findById(bookingCorrect._id.toString())
+    expect(updatedBooking).toBeTruthy()
+    expect(updatedBooking?.status).toBe(bookcarsTypes.BookingStatus.Paid)
+    expect(updatedBooking?.paypalOrderId).toBe(orderId)
+    expect(updatedBooking?.expireAt).toBeUndefined()
+
+    await testHelper.deleteNotifications(bookingCorrect._id.toString())
+    await updatedBooking?.deleteOne()
+  })
+
+  // Test 3 — Booking/order mismatch
+  // A completed PayPal order associated with booking A should not be accepted to mark booking B as paid.
+  it('Test 3 — Booking/order mismatch: should reject marking booking B as paid using order of booking A', async () => {
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+    const from = new Date()
+    from.setDate(from.getDate() + 1)
+    const to = new Date(from)
+    to.setDate(to.getDate() + 3)
+
+    const bookingA = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      price: 500,
+    })
+    await bookingA.save()
+
+    const bookingB = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      price: 500,
+    })
+    await bookingB.save()
+
+    const orderIdA = nanoid()
+
+    jest.resetModules()
+    await jest.unstable_mockModule('../src/payment/paypal.js', () => ({
+      getOrder: jest.fn(() => Promise.resolve({
+        status: 'COMPLETED',
+        purchase_units: [
+          {
+            invoice_id: bookingA._id.toString(),
+            amount: {
+              currency_code: 'USD',
+              value: '500.00',
+            },
+            payments: {
+              captures: [
+                {
+                  id: 'cap-a',
+                  amount: {
+                    currency_code: 'USD',
+                    value: '500.00',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })),
+      getToken: jest.fn(() => Promise.resolve('fake-token')),
+      createOrder: jest.fn(),
+    }))
+
+    // Attempt to use order of booking A to mark booking B as paid
+    const res = await request(app)
+      .post(`/api/check-paypal-order/${bookingB._id.toString()}/${orderIdA}`)
+
+    expect(res.statusCode).toBe(400)
+
+    const updatedBookingB = await Booking.findById(bookingB._id.toString())
+    expect(updatedBookingB?.status).not.toBe(bookcarsTypes.BookingStatus.Paid)
+
+    await bookingA.deleteOne()
+    if (updatedBookingB) {
+      await updatedBookingB.deleteOne()
     }
   })
 })
