@@ -28,11 +28,11 @@ on:
 permissions:
   contents: write
 
-# Serialise runs: a wiki save touching several pages fires several gollum events, and a second
-# run pushing from a stale checkout would be rejected as non-fast-forward. The newest run wins.
+# Serialise runs: a wiki save queueing behind an active run will wait
+# for it to finish rather than cancelling it.
 concurrency:
   group: llms
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   GIT_AUTHOR_NAME: "github-actions[bot]"
