@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-13T10:08:26Z
+> Generated on: 2026-10-13T10:17:21Z
 
 ---
 
@@ -1044,6 +1044,9 @@ BC_GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID
 BC_GOOGLE_MOBILE_CLIENT_ID=GOOGLE_MOBILE_CLIENT_ID
 BC_FACEBOOK_APP_ID=FACEBOOK_APP_ID
 BC_FACEBOOK_APP_SECRET=FACEBOOK_APP_SECRET
+
+# Currency
+BC_BASE_CURRENCY=USD
 
 # Email (SMTP)
 BC_SMTP_HOST=smtp.sendgrid.net
