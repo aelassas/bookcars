@@ -225,53 +225,60 @@ export const checkout = async (req: Request, res: Response) => {
       if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_TEMP_LICENSES, license!)))) {
         throw new Error("Driver's license file not found")
       }
-      driver.verified = false
-      driver.blacklisted = false
-      driver.type = bookcarsTypes.UserType.User
-      driver.license = null
 
-      user = new User(driver)
-      await user.save()
+      const existingUser = await User.findOne({ email: driver.email?.toLowerCase() })
 
-      // create license
-      if (license) {
-        const safeLicense = path.basename(license)
-        const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
-        const filename = `${user._id.toString()}${path.extname(safeLicense)}`
-        const destPath = path.resolve(env.CDN_LICENSES, filename)
+      if (existingUser) {
+        user = existingUser
+      } else {
+        driver.verified = false
+        driver.blacklisted = false
+        driver.type = bookcarsTypes.UserType.User
+        driver.license = null
 
-        // security check: restrict allowed extensions
-        const ext = path.extname(safeLicense)
-        if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
-          throw new Error('Invalid license file type')
-        }
-
-        if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
-          throw new Error('Invalid destination path for license')
-        }
-
-        await asyncFs.rename(tempLicensePath, destPath)
-        user.license = filename
+        user = new User(driver)
         await user.save()
+
+        // create license
+        if (license) {
+          const safeLicense = path.basename(license)
+          const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
+          const filename = `${user._id.toString()}${path.extname(safeLicense)}`
+          const destPath = path.resolve(env.CDN_LICENSES, filename)
+
+          // security check: restrict allowed extensions
+          const ext = path.extname(safeLicense)
+          if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
+            throw new Error('Invalid license file type')
+          }
+
+          if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
+            throw new Error('Invalid destination path for license')
+          }
+
+          await asyncFs.rename(tempLicensePath, destPath)
+          user.license = filename
+          await user.save()
+        }
+
+        const token = new Token({ user: user._id, token: helper.generateToken() })
+        await token.save()
+
+        i18n.locale = user.language
+
+        const mailOptions: nodemailer.SendMailOptions = {
+          from: env.SMTP_FROM,
+          to: user.email,
+          subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+          html: `<p>
+          ${i18n.t('HELLO')}${user.fullName},<br><br>
+          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+          ${i18n.t('REGARDS')}<br>
+          </p>`,
+        }
+        await mailHelper.sendMail(mailOptions)
       }
-
-      const token = new Token({ user: user._id, token: helper.generateToken() })
-      await token.save()
-
-      i18n.locale = user.language
-
-      const mailOptions: nodemailer.SendMailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-        html: `<p>
-        ${i18n.t('HELLO')}${user.fullName},<br><br>
-        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${i18n.t('REGARDS')}<br>
-        </p>`,
-      }
-      await mailHelper.sendMail(mailOptions)
 
       body.booking.driver = user._id.toString()
     } else {

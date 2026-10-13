@@ -584,6 +584,20 @@ describe('POST /api/checkout', () => {
     expect(res.body.bookingId).toBeTruthy()
     await Booking.deleteOne({ _id: res.body.bookingId })
 
+    // test success (payLater with existing registered driver email)
+    payload.payLater = true
+    payload.driver = {
+      fullName: 'driver1',
+      email: driver!.email,
+      language: testHelper.LANGUAGE,
+    }
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.bookingId).toBeTruthy()
+    await Booking.deleteOne({ _id: res.body.bookingId })
+
     // test failure (license required)
     supplier = await User.findById(payload.booking!.supplier)
     supplier!.licenseRequired = true

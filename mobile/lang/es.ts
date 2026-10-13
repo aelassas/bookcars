@@ -91,6 +91,8 @@ export const es = {
   SIGN_IN_TITLE: 'Iniciar sesión',
   SIGN_UP: 'Registrarse',
   SIGN_UP_TITLE: 'Registrarse',
+  SIGN_UP_SUCCESS_HEADING: 'Registro exitoso',
+  SIGN_UP_SUCCESS_MESSAGE: 'Se ha enviado un correo electrónico de activación si esta dirección no está registrada. Si ya tiene una cuenta, inicie sesión.',
   SIGN_IN_ERROR: 'Correo electrónico o contraseña incorrectos.',
   IS_BLACKLISTED: 'Su cuenta está suspendida.',
   FORGOT_PASSWORD: '¿Olvidó su contraseña?',

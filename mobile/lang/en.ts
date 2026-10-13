@@ -92,6 +92,8 @@ export const en = {
   SIGN_IN_TITLE: 'Sign in',
   SIGN_UP: 'Sign up',
   SIGN_UP_TITLE: 'Sign up',
+  SIGN_UP_SUCCESS_HEADING: 'Registration Successful',
+  SIGN_UP_SUCCESS_MESSAGE: 'An activation email has been sent if this address is not already registered. If you already have an account, please sign in.',
   SIGN_IN_ERROR: 'Incorrect email or password.',
   IS_BLACKLISTED: 'Your account is suspended.',
   FORGOT_PASSWORD: 'Forgot password?',

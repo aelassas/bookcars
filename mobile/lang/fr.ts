@@ -91,6 +91,8 @@ export const fr = {
   SIGN_IN_TITLE: 'Connexion',
   SIGN_UP: "S'inscrire",
   SIGN_UP_TITLE: 'Inscription',
+SIGN_UP_SUCCESS_HEADING: 'Inscription réussie',
+  SIGN_UP_SUCCESS_MESSAGE: "Un e-mail d'activation a été envoyé si cette adresse n'est pas déjà enregistrée. Si vous avez déjà un compte, veuillez vous connecter.",
   SIGN_IN_ERROR: 'E-mail ou mot de passe incorrect.',
   IS_BLACKLISTED: 'Votre compte est suspendu.',
   FORGOT_PASSWORD: 'Mot de passe oublié ?',
