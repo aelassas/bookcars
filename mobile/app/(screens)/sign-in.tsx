@@ -26,7 +26,6 @@ const SignInScreen = () => {
 
   const [emailRequired, setEmailRequired] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
-  const [emailError, setEmailError] = useState(false)
   const [passwordRequired, setPasswordRequired] = useState(false)
   const [passwordLengthError, setPasswordLengthError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
@@ -42,7 +41,6 @@ const SignInScreen = () => {
 
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setPasswordRequired(false)
     setPasswordLengthError(false)
     setPasswordError(false)
@@ -69,34 +67,13 @@ const SignInScreen = () => {
     }
   }, [d, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const validateEmail = async () => {
+  const validateEmail = () => {
     if (email) {
       setEmailRequired(false)
-
-      if (validator.isEmail(email)) {
-        try {
-          const status = await UserService.validateEmail({ email })
-          if (status === 204) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
+      const valid = validator.isEmail(email)
+      setEmailValid(valid)
+      return valid
     } else {
-      setEmailError(false)
       setEmailValid(true)
       setEmailRequired(true)
       return false
@@ -107,7 +84,6 @@ const SignInScreen = () => {
     setEmail(text)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setPasswordRequired(false)
     setPasswordLengthError(false)
     setPasswordError(false)
@@ -141,7 +117,7 @@ const SignInScreen = () => {
   }
 
   const onPressSignIn = async () => {
-    const _emailValid = await validateEmail()
+    const _emailValid = validateEmail()
     if (!_emailValid) {
       return
     }
@@ -206,8 +182,8 @@ const SignInScreen = () => {
             style={styles.component}
             label={i18n.t('EMAIL')}
             value={email}
-            error={emailRequired || !emailValid || emailError}
-            helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+            error={emailRequired || !emailValid}
+            helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
             onChangeText={onChangeEmail}
           />
 

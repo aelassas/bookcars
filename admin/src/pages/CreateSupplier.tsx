@@ -121,14 +121,6 @@ const CreateSupplier = () => {
         return
       }
 
-      status = await UserService.validateEmail({ email: data.email })
-
-      if (status !== 200) {
-        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
-        setFocus('email')
-        return
-      }
-
       if (!avatar) {
         setAvatarError(true)
         setSubmitError(false)

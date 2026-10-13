@@ -48,12 +48,6 @@ const SignUp = () => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      const emailStatus = await UserService.validateEmail({ email: data.email })
-      if (emailStatus !== 200) {
-        setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
-        return
-      }
-
       let recaptchaToken = ''
       if (reCaptchaLoaded) {
         recaptchaToken = await generateReCaptchaToken()
@@ -89,6 +83,8 @@ const SignUp = () => {
           setUser(user)
           setUserLoaded(true)
           navigate(`/${window.location.search}`)
+        } else {
+          setError('root', { message: strings.SIGN_UP_ERROR })
         }
       }
     } catch (err) {

@@ -96,7 +96,7 @@ export const fr = {
   FORGOT_PASSWORD: 'Mot de passe oublié ?',
   RESET_PASSWORD: 'Veuillez saisir votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
   RESET: 'Réinitialiser',
-  RESET_EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.',
+  RESET_EMAIL_SENT: 'Si un compte existe pour cette adresse e-mail, les instructions de réinitialisation seront envoyées.',
   REQUIRED: 'Veuillez renseigner ce champ.',
   SIGN_OUT: 'Déconnexion',
   BOOKINGS: 'Réservations',

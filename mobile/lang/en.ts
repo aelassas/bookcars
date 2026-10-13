@@ -97,7 +97,7 @@ export const en = {
   FORGOT_PASSWORD: 'Forgot password?',
   RESET_PASSWORD: 'Please enter your email address so we can send you an email to reset your password.',
   RESET: 'Reset',
-  RESET_EMAIL_SENT: 'Password reset email sent.',
+  RESET_EMAIL_SENT: 'If an account exists for this email address, password reset instructions will be sent.',
   REQUIRED: 'This field is required',
   SIGN_OUT: 'Sign out',
   BOOKINGS: 'Bookings',

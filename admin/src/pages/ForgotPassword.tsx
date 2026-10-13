@@ -24,7 +24,6 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
     clearErrors,
   } = useForm({
     resolver: zodResolver(schema),
@@ -41,13 +40,6 @@ const ForgotPassword = () => {
 
   const onSubmit = async ({ email }: FormFields) => {
     try {
-      const emailStatus = await UserService.validateEmail({ email, appType: env.APP_TYPE })
-      if (emailStatus === 200) {
-        // User not found, show error
-        setError('email', { message: strings.EMAIL_ERROR })
-        return
-      }
-
       const status = await UserService.resend(email, true, env.APP_TYPE)
       if (status === 200) {
         setSent(true)
