@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-13T10:16:39Z
+> Generated on: 2026-10-13T10:17:04Z
 
 ---
 
@@ -994,6 +994,7 @@ From the admin panel, admins can create and manage suppliers, cars, locations, u
 
 When new suppliers are created, they will receive an email prompting them to create an account in order to access the admin panel and manage their car fleet and bookings.
 -->
+
 
 
 ---
