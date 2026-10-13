@@ -88,13 +88,22 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     // 2. Reconcile PayPal purchase unit data against database booking
     //
     const purchaseUnit = order.purchase_units?.[0]
-    const paidAmount = Number.parseFloat(purchaseUnit?.amount?.value || '0')
+    const paidAmount = Number(Number.parseFloat(purchaseUnit?.amount?.value || '0').toFixed(2))
+    const paidCurrency = purchaseUnit?.amount?.currency_code
     const invoiceId = purchaseUnit?.invoice_id
 
     // Check for invoice / booking reference mismatch or amount discrepancy
     if (invoiceId && invoiceId !== bookingId) {
       logger.error(`[paypal.checkPayPalOrder] Booking ID mismatch. Expected ${bookingId}, got ${invoiceId}`)
       res.status(400).send('Booking ID mismatch')
+      return
+    }
+
+    // Currency Reconciliation
+    const expectedCurrency = env.BASE_CURRENCY
+    if (!paidCurrency || paidCurrency.toUpperCase() !== expectedCurrency.toUpperCase()) {
+      logger.error(`[paypal.checkPayPalOrder] Currency mismatch. Expected ${expectedCurrency}, got ${paidCurrency}`)
+      res.status(400).send('Payment currency mismatch')
       return
     }
 

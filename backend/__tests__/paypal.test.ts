@@ -204,7 +204,7 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
             invoice_id: booking._id.toString(),
             amount: {
               value: '312.00',
-              currency_code: 'USD',
+              currency_code: env.BASE_CURRENCY,
             },
             payments: {
               captures: [{ id: 'CAPTURE-123' }],
@@ -250,13 +250,24 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
 
       mockGetOrder.mockImplementation(() => Promise.resolve(mockPayPalOrder({}, {
         invoice_id: booking._id.toString(),
-        amount: { value: '1.00', currency_code: 'USD' },
+        amount: { value: '1.00', currency_code: env.BASE_CURRENCY },
       })))
 
       res = await request(app)
         .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
       expect(res.statusCode).toBe(400)
       expect(res.text).toBe('Payment amount mismatch')
+
+      // test failure (currency mismatch)
+      mockGetOrder.mockImplementation(() => Promise.resolve(mockPayPalOrder({}, {
+        invoice_id: booking._id.toString(),
+        amount: { value: '312.00', currency_code: 'EUR' },
+      })))
+
+      res = await request(app)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toBe('Payment currency mismatch')
 
       // test failure (invoice id / booking id mismatch)
       mockGetOrder.mockImplementation(() => Promise.resolve(mockPayPalOrder({}, {
