@@ -586,7 +586,7 @@ describe('GET /api/confirm-email/:email/:token', () => {
 describe('POST /api/resend/:type/:email/:reset', () => {
   it('returns the same response for existing and missing accounts without sending real email', async () => {
     jest.unstable_mockModule('../src/utils/mailHelper.js', () => ({
-      sendMail: jest.fn().mockResolvedValue({}),
+      sendMail: jest.fn(async () => ({})),
     }))
 
     jest.resetModules()
