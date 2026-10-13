@@ -459,7 +459,7 @@ const Header = ({
                     </ListItem>
                     <ListItem
                       onClick={() => {
-                        navigate('/sign-up')
+                        navigate(`/sign-up?d=${Date.now()}`)
                         handleSideMenuClose()
                       }}
                     >
@@ -486,7 +486,15 @@ const Header = ({
                 </Button>
               )}
               {!hideSignin && !isSignedIn && isLoaded && (
-                <Button variant="contained" size="medium" startIcon={<SignUpIcon />} onClick={() => navigate('/sign-up')} disableElevation className="btn btn-auth" aria-label="Sign in">
+                <Button
+                  variant="contained"
+                  size="medium"
+                  startIcon={<SignUpIcon />}
+                  onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
+                  disableElevation
+                  className="btn btn-auth"
+                  aria-label="Sign up"
+                >
                   <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
                 </Button>
               )}

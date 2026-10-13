@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   OutlinedInput,
   InputLabel,
@@ -9,7 +9,7 @@ import {
   Checkbox,
   Link
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
@@ -33,6 +33,7 @@ import '@/assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const { reCaptchaLoaded, generateReCaptchaToken } = useRecaptchaContext() as RecaptchaContextType
 
@@ -41,10 +42,29 @@ const SignUp = () => {
   const [visible, setVisible] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors, setValue } = useForm<FormFields>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors, setValue, reset } = useForm<FormFields>({
     resolver: zodResolver(schema),
     mode: 'onSubmit'
   })
+
+  // Reset form and view state whenever search params or route changes
+  useEffect(() => {
+    if (UserService.getCurrentUser()) {
+      navigate('/')
+    } else {
+      setLanguage(UserService.getLanguage())
+      setSuccess(false)
+      setRecaptchaError(false)
+      setVisible(true)
+      reset()
+    }
+  }, [location.search, location.pathname, navigate, reset])
+
+  useEffect(() => {
+    if (success) {
+      window.scrollTo(0, 0)
+    }
+  }, [success])
 
   const onSubmit = async (data: FormFields) => {
     try {
@@ -96,7 +116,7 @@ const SignUp = () => {
   return (
     <Layout strict={false} onLoad={onLoad}>
       <div className="signup">
-        {visible && (
+        {visible && !success && (
           <Paper className="signup-form" elevation={10}>
             <h1 className="signup-form-title">{strings.SIGN_UP_HEADING}</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
