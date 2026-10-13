@@ -96,7 +96,7 @@ export const es = {
   FORGOT_PASSWORD: '¿Olvidó su contraseña?',
   RESET_PASSWORD: 'Por favor, ingrese su correo electrónico para enviarle un enlace de restablecimiento de contraseña.',
   RESET: 'Restablecer',
-  RESET_EMAIL_SENT: 'Correo de restablecimiento de contraseña enviado.',
+  RESET_EMAIL_SENT: 'Si existe una cuenta con esta dirección de correo electrónico, se enviarán instrucciones para restablecer la contraseña.',
   REQUIRED: 'Por favor, complete este campo.',
   SIGN_OUT: 'Cerrar sesión',
   BOOKINGS: 'Reservas',

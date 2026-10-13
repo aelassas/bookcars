@@ -13,7 +13,6 @@ import {
   Switch,
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
@@ -126,22 +125,6 @@ const CreateUser = () => {
         setFocus('fullName')
         return false
       }
-    }
-    return true
-  }
-
-  const validateEmail = async (value?: string) => {
-    if (value) {
-      trigger('email')
-
-      if (validator.isEmail(value)) {
-        const status = await UserService.validateEmail({ email: value })
-        if (status != 200) {
-          setError('email', { message: commonStrings.EMAIL_ALREADY_REGISTERED })
-          return false
-        }
-      }
-      return false
     }
     return true
   }
@@ -282,8 +265,8 @@ const CreateUser = () => {
                     }
                     setValue('email', e.target.value)
                   }}
-                  onBlur={async (e) => {
-                    await validateEmail(e.target.value)
+                  onBlur={async () => {
+                    await trigger('email')
                   }}
                   type="text"
                   autoComplete="off"

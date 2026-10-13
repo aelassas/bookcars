@@ -109,6 +109,14 @@ describe('POST /api/sign-up', () => {
     expect(token).not.toBeNull()
     expect(token?.token.length).toBeGreaterThan(0)
 
+    // A duplicate signup has the same public response as a new signup.
+    res = await request(app)
+      .post('/api/sign-up')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.text).toBe('OK')
+    expect(await User.countDocuments({ email: USER1_EMAIL })).toBe(1)
+
     // test success (avatar not found)
     const email = testHelper.GetRandomEmail()
     payload.email = email
@@ -156,7 +164,8 @@ describe('POST /api/sign-up', () => {
       res = await request(newApp)
         .post('/api/sign-up')
         .send(payload)
-      expect(res.statusCode).toBe(400)
+      expect(res.statusCode).toBe(200)
+      expect(res.text).toBe('OK')
       user = await User.findOne({ email: payload.email })
       expect(user).toBeFalsy()
       await dbh.close()
@@ -197,7 +206,7 @@ describe('POST /api/sign-up', () => {
       res = await request(newApp)
         .post('/api/sign-up')
         .send(payload)
-      expect(res.statusCode).toBe(400)
+      expect(res.statusCode).toBe(200)
       expect(deleteOneMock).toHaveBeenCalled()
       deleteOneMock.mockRestore()
       await User.deleteOne({ email })
@@ -575,43 +584,44 @@ describe('GET /api/confirm-email/:email/:token', () => {
 })
 
 describe('POST /api/resend/:type/:email/:reset', () => {
-  it('should resend validation email', async () => {
-    // test success (user active)
-    let user = await User.findById(USER1_ID)
-    expect(user).not.toBeNull()
-    user!.active = true
-    await user!.save()
-    let reset = true
-    let res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${USER1_EMAIL}/${reset}`)
-    expect(res.statusCode).toBe(200)
-    user = await User.findById(USER1_ID)
-    expect(user).not.toBeNull()
-    expect(user?.active).toBeFalsy()
+  it('returns the same response for existing and missing accounts without sending real email', async () => {
+    jest.unstable_mockModule('../src/utils/mailHelper.js', () => ({
+      sendMail: jest.fn(async () => ({})),
+    }))
 
-    // test success (reset)
-    reset = false
-    // res = await request(app)
-    //   .post(`/api/resend/${bookcarsTypes.AppType.Admin}/${ADMIN_EMAIL}/${reset}`)
-    // expect(res.statusCode).toBe(200)
-    // user = await User.findById(ADMIN_ID)
-    // expect(user).not.toBeNull()
-    // expect(user?.active).toBeFalsy()
+    jest.resetModules()
+    await jest.isolateModulesAsync(async () => {
+      const env = await import('../src/config/env.config.js')
+      const newApp = (await import('../src/app.js')).default
+      const User = (await import('../src/models/User.js')).default
+      const dbh = await import('../src/utils/databaseHelper.js')
 
-    // test failure (forbiden)
-    res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Admin}/${USER1_EMAIL}/${reset}`)
-    expect(res.statusCode).toBe(403)
+      await dbh.close()
+      await dbh.connect(env.DB_URI, false, false)
 
-    // test success (user not found)
-    res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${testHelper.GetRandomEmail()}/${reset}`)
-    expect(res.statusCode).toBe(204)
+      const reset = true
+      const existing = await request(newApp)
+        .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${USER1_EMAIL}/${reset}`)
+      const missing = await request(newApp)
+        .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${testHelper.GetRandomEmail()}/${reset}`)
+      const wrongType = await request(newApp)
+        .post(`/api/resend/${bookcarsTypes.AppType.Admin}/${USER1_EMAIL}/${reset}`)
 
-    // test failure (wrong user id)
-    res = await request(app)
-      .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/unknown/${reset}`)
-    expect(res.statusCode).toBe(400)
+      expect(existing.statusCode).toBe(200)
+      expect(missing.statusCode).toBe(existing.statusCode)
+      expect(missing.text).toBe(existing.text)
+      expect(wrongType.statusCode).toBe(existing.statusCode)
+      expect(wrongType.text).toBe(existing.text)
+
+      const user = await User.findById(USER1_ID)
+      expect(user?.active).toBeFalsy()
+
+      const malformed = await request(newApp)
+        .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/unknown/${reset}`)
+      expect(malformed.statusCode).toBe(400)
+
+      await dbh.close()
+    })
   })
 })
 
@@ -1005,29 +1015,26 @@ describe('POST /api/delete-push-token/:userId', () => {
 })
 
 describe('POST /api/validate-email', () => {
-  it('should validate email', async () => {
-    // test success
-    const payload: bookcarsTypes.ValidateEmailPayload = {
+  it('returns the same response for existing and missing valid email addresses', async () => {
+    const existingPayload: bookcarsTypes.ValidateEmailPayload = {
       email: USER1_EMAIL,
     }
-    let res = await request(app)
+    const existing = await request(app)
       .post('/api/validate-email')
-      .send(payload)
-    expect(res.statusCode).toBe(204)
+      .send(existingPayload)
 
-    // test success (email not found)
-    payload.email = testHelper.GetRandomEmail()
-    res = await request(app)
+    const missing = await request(app)
       .post('/api/validate-email')
-      .send(payload)
-    expect(res.statusCode).toBe(200)
+      .send({ email: testHelper.GetRandomEmail() })
+    expect(existing.statusCode).toBe(200)
+    expect(missing.statusCode).toBe(existing.statusCode)
+    expect(missing.text).toBe(existing.text)
 
-    // test failure (wrong email)
-    payload.email = 'unkown'
-    res = await request(app)
+    const malformed = await request(app)
       .post('/api/validate-email')
-      .send(payload)
-    expect(res.statusCode).toBe(400)
+      .send({ email: 'unknown' })
+    expect(malformed.statusCode).toBe(400)
+    expect(malformed.text).not.toContain(USER1_EMAIL)
   })
 })
 

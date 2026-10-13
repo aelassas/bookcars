@@ -35,7 +35,6 @@ const SignUpScreen = () => {
   const [fullNameRequired, setFullNameRequired] = useState(false)
   const [emailRequired, setEmailRequired] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
-  const [emailError, setEmailError] = useState(false)
   const [phoneValid, setPhoneValid] = useState(true)
   const [phoneRequired, setPhoneRequired] = useState(false)
   const [birthDateRequired, setBirthDateRequired] = useState(false)
@@ -68,7 +67,6 @@ const SignUpScreen = () => {
     setFullNameRequired(false)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setPhoneRequired(false)
     setPhoneValid(true)
     setBirthDateRequired(false)
@@ -114,34 +112,13 @@ const SignUpScreen = () => {
     setFullNameRequired(false)
   }
 
-  const validateEmail = async () => {
+  const validateEmail = () => {
     if (email) {
       setEmailRequired(false)
-
-      if (validator.isEmail(email)) {
-        try {
-          const status = await UserService.validateEmail({ email })
-          if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
+      const valid = validator.isEmail(email)
+      setEmailValid(valid)
+      return valid
     } else {
-      setEmailError(false)
       setEmailValid(true)
       setEmailRequired(true)
       return false
@@ -152,7 +129,6 @@ const SignUpScreen = () => {
     setEmail(text)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
   }
 
   const validatePhone = () => {
@@ -268,7 +244,6 @@ const SignUpScreen = () => {
 
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
 
     setPhoneRequired(false)
     setPhoneValid(true)
@@ -315,7 +290,7 @@ const SignUpScreen = () => {
         return
       }
 
-      const _emailValid = await validateEmail()
+      const _emailValid = validateEmail()
       if (!_emailValid) {
         return
       }
@@ -404,8 +379,8 @@ const SignUpScreen = () => {
               style={styles.component}
               label={i18n.t('EMAIL')}
               value={email}
-              error={emailRequired || !emailValid || emailError}
-              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''}
+              error={emailRequired || !emailValid}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
               onChangeText={onChangeEmail}
             />
 
