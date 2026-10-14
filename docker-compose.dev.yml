@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:7.0.12 # Update mongo version if necessary
     command:
       - bash
       - -lc
