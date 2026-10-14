@@ -163,6 +163,15 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     await mailHelper.sendMail(mailOptions)
     res.sendStatus(200)
   } catch (err) {
+    if (env.AUTO_VERIFY_ON_SIGNUP) {
+      logger.warn('[user.signup] Email sending failed with AUTO_VERIFY_ON_SIGNUP enabled. Activating user account for local testing:', err)
+      user.verified = true
+      user.verifiedAt = new Date()
+      await user.save()
+      res.sendStatus(200)
+      return
+    }
+
     try {
       //
       // Delete user in case of smtp failure
