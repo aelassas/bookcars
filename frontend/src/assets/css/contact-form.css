@@ -6,8 +6,9 @@
 
 @media only screen and (width <=960px) {
   .contact-form {
-    width: 350px;
     padding: 30px;
+    margin-right: 5px !important;
+    margin-left: 5px !important;
   }
 
   .contact-form .recaptcha {
