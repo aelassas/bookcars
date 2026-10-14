@@ -7,6 +7,7 @@
 @media only screen and (width <=960px) {
   .contact-form {
     padding: 30px;
+    max-width: 400px;
     margin-right: 5px !important;
     margin-left: 5px !important;
   }
