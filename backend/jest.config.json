@@ -1,6 +1,7 @@
 {
   "moduleNameMapper": {
-    "^(\\.{1,2}/.*)\\.js$": "$1"
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "^(\\.{1,2}/.*)config/redis(\\.js)?$": "<rootDir>/__tests__/redisMock.ts"
   },
   "testEnvironment": "node",
   "extensionsToTreatAsEsm": [

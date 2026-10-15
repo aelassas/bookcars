@@ -12,7 +12,7 @@
     "start:setup": "npm run build && node dist/src/setup/setup.js && node --import ./dist/src/monitoring/instrument.js dist/src",
     "setup": "npm run build && node dist/src/setup/setup.js",
     "reset": "npm run build && node dist/src/setup/reset.js",
-    "test": "rimraf coverage && npm run build && cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --coverage --no-cache",
+    "test": "rimraf coverage && npm run build && cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --coverage --no-cache --forceExit",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "ncu": "ncu -u -x eslint",
     "script:db": "npm run build && node dist/scripts/db.js",
