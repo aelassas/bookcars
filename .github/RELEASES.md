@@ -1,5 +1,29 @@
 # Releases
 
+## [BookCars 8.8](https://github.com/aelassas/bookcars/releases/tag/v8.8) – 2026-10-11
+
+#### What's Changed
+* feat(backend): implement idempotent development seed and cleanup workflow (#112)
+* fix(backend): supplier can update another supplier's booking status (#107)
+* fix(backend): hard-Coded JWT Fallback Enables Supplier Account Impersonation (#109)
+* fix(backend): prevent concurrent double-bookings (#111)
+* fix(backend): potential Stripe payment-integrity issue: checkout continues after an unsuccessful PaymentIntent (#114)
+* fix(backend): prevent unauthenticated access and IDOR on booking details (#115, #116)
+* ci(loc.yml): switch to `cloc` for accurate code-only line counts
+
+#### New Contributors
+* @sameerchoudhary1166 made their first contribution in https://github.com/aelassas/bookcars/pull/111
+* @Nirbhayjakhar3196 made their first contribution in https://github.com/aelassas/bookcars/pull/112
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v8.7...v8.8
+
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.8/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.8)
+
 ## [BookCars 8.7](https://github.com/aelassas/bookcars/releases/tag/v8.7) – 2026-03-18
 
 * fix(backend): optimize mailer with transporter pooling

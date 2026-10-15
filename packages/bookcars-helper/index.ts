@@ -371,7 +371,7 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
   // apply price change rate
   totalPrice += totalPrice * (priceChangeRate / 100)
 
-  return totalPrice
+  return Number(totalPrice.toFixed(2))
 }
 
 /**
@@ -395,7 +395,7 @@ export const convertPrice = async (amount: number, from: string, to: string): Pr
   }
   const cc = new CurrencyConverter({ from, to, amount })
   const res = await cc.convert()
-  return res
+  return Number(res.toFixed(2))
 }
 
 /**

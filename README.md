@@ -45,6 +45,29 @@ Customers can register through the web frontend or mobile app, search for availa
 * [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
 * [Full Documentation](https://github.com/aelassas/bookcars/wiki)
 
+## Development Database Quick Start
+
+For local development and testing, you can populate an isolated MongoDB instance with a complete fixture dataset including admin, suppliers, customers, locations, cars, bookings, and notifications:
+
+```bash
+# Seed development database (idempotent)
+npm run seed:dev
+
+# Clean development database (safely removes only seed-owned records)
+npm run clean:dev
+```
+
+### Sample Development Credentials
+All seeded development accounts use the password: **`B00kC4r5`**
+
+| Role | Email | Password | Access Level & App URL |
+|---|---|---|---|
+| **Admin** | `admin@bookcars.ma` | `B00kC4r5` | Admin Panel (`http://localhost:3001/`) |
+| **Supplier** | `dev-seed-supplier@bookcars.ma` | `B00kC4r5` | Supplier Admin Panel (`http://localhost:3001`) |
+| **Customer** | `dev-seed-customer@bookcars.ma` | `B00kC4r5` | Frontend App (`http://localhost:3002`) |
+
+For full contributor documentation and safety guarantees, see [DEVELOPMENT_SEEDING.md](DEVELOPMENT_SEEDING.md).
+
 ## Features
 
 **Supplier & Fleet Management**

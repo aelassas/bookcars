@@ -30,9 +30,9 @@ The seed workflow conforms to strict safety standards:
 
 | Role | Email | Password | Access Level & App URL |
 |---|---|---|---|
-| **Admin** | `admin@bookcars.ma` | `B00kC4r5` | Admin Panel (`http://localhost:3001` or `http://localhost:3001/`) |
+| **Admin** | `admin@bookcars.ma` | `B00kC4r5` | Admin Panel (`http://localhost:3001/`) |
 | **Supplier** | `dev-seed-supplier@bookcars.ma` | `B00kC4r5` | Supplier Admin Panel (`http://localhost:3001`) |
-| **Customer** | `dev-seed-customer@bookcars.ma` | `B00kC4r5` | Frontend App (`http://localhost:8080` or `http://localhost:3002`) |
+| **Customer** | `dev-seed-customer@bookcars.ma` | `B00kC4r5` | Frontend App (`http://localhost:3002` or `http://localhost:8080`) |
 
 ---
 

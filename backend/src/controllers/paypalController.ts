@@ -21,12 +21,22 @@ import { BookingConflictError, saveBookingWithAvailability } from '../utils/book
 export const createPayPalOrder = async (req: Request, res: Response) => {
   try {
     const paypal = await import('../payment/paypal.js')
-    const { bookingId, amount, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+    const { bookingId, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
+
+    // 1. Retrieve the authoritative booking from database
+    const booking = await Booking.findById(bookingId)
+    if (!booking) {
+      const msg = `Booking with id ${bookingId} not found`
+      logger.info(`[paypal.createPayPalOrder] ${msg}`)
+      res.status(204).send(msg)
+      return
+    }
 
     const clientIp = ipinfoHelper.getClientIp(req)
     const countryCode = await ipinfoHelper.getCountryCode(clientIp)
 
-    const orderId = await paypal.createOrder(bookingId, amount, currency, name, description, countryCode)
+    // 2. Use booking.price derived server-side instead of client-supplied amount
+    const orderId = await paypal.createOrder(bookingId, booking.price, currency, name, description, countryCode)
 
     res.json(orderId)
   } catch (err) {
@@ -50,7 +60,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     const { bookingId, orderId } = req.params
 
     //
-    // 1. Retrieve Checkout Sesssion and Booking
+    // 1. Retrieve Checkout Session and Booking
     //
     const booking = await Booking.findOne({ _id: bookingId, expireAt: { $ne: null } })
     if (!booking) {
@@ -68,18 +78,50 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     }
 
     if (!order) {
-      const msg = `Order ${order} not found`
+      const msg = `Order ${orderId} not found`
       logger.info(`[paypal.checkPayPalOrder] ${msg}`)
       res.status(204).send(msg)
       return
     }
 
     //
-    // 2. Update Booking if the payment succeeded
+    // 2. Reconcile PayPal purchase unit data against database booking
+    //
+    const purchaseUnit = order.purchase_units?.[0]
+    const paidAmount = Number(Number.parseFloat(purchaseUnit?.amount?.value || '0').toFixed(2))
+    const paidCurrency = purchaseUnit?.amount?.currency_code
+    const invoiceId = purchaseUnit?.invoice_id
+
+    // Check for invoice / booking reference mismatch or amount discrepancy
+    if (invoiceId && invoiceId !== bookingId) {
+      logger.error(`[paypal.checkPayPalOrder] Booking ID mismatch. Expected ${bookingId}, got ${invoiceId}`)
+      res.status(400).send('Booking ID mismatch')
+      return
+    }
+
+    // Currency Reconciliation
+    const expectedCurrency = env.BASE_CURRENCY
+    if (!paidCurrency || paidCurrency.toUpperCase() !== expectedCurrency.toUpperCase()) {
+      logger.error(`[paypal.checkPayPalOrder] Currency mismatch. Expected ${expectedCurrency}, got ${paidCurrency}`)
+      res.status(400).send('Payment currency mismatch')
+      return
+    }
+
+    // Round booking price to 2 decimal places for comparison
+    const expectedPrice = Number.parseFloat(booking.price.toFixed(2))
+
+    if (paidAmount !== expectedPrice) {
+      logger.error(`[paypal.checkPayPalOrder] Price mismatch. Expected ${expectedPrice}, got ${paidAmount}`)
+      res.status(400).send('Payment amount mismatch')
+      return
+    }
+
+    //
+    // 3. Update Booking if the payment succeeded
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (order.status === 'COMPLETED') {
-      captureId = order.purchase_units?.[0]?.payments?.captures?.[0]?.id
+      captureId = purchaseUnit?.payments?.captures?.[0]?.id
       booking.paypalOrderId = orderId
       booking.expireAt = undefined
 
@@ -144,7 +186,7 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
     }
 
     //
-    // 3. Delete Booking if the payment didn't succeed
+    // 4. Delete Booking if the payment didn't succeed
     //
     await booking.deleteOne()
     res.status(400).send(order.status)

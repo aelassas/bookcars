@@ -19,7 +19,6 @@ const ForgotPasswordScreen = () => {
   const { d } = useLocalSearchParams<{ d: string }>()
   const [email, setEmail] = useState('')
   const [emailRequired, setEmailRequired] = useState(false)
-  const [emailError, setEmailError] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
   const [sent, setSent] = useState(false)
   const ref = useRef<ReactTextInput>(null)
@@ -30,7 +29,6 @@ const ForgotPasswordScreen = () => {
     setEmail('')
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setSent(false)
     if (ref.current) {
       ref.current.clear()
@@ -43,34 +41,13 @@ const ForgotPasswordScreen = () => {
     }
   }, [d, isFocused])
 
-  const validateEmail = async () => {
+  const validateEmail = () => {
     if (email) {
       setEmailRequired(false)
-
-      if (validator.isEmail(email)) {
-        try {
-          const status = await UserService.validateEmail({ email })
-          if (status === 200) {
-            setEmailError(true)
-            setEmailValid(true)
-            return false
-          }
-          setEmailError(false)
-          setEmailValid(true)
-          return true
-        } catch {
-          helper.toast(i18n.t('GENERIC_ERROR'))
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
+      const valid = validator.isEmail(email)
+      setEmailValid(valid)
+      return valid
     } else {
-      setEmailError(false)
       setEmailValid(true)
       setEmailRequired(true)
       return false
@@ -81,12 +58,11 @@ const ForgotPasswordScreen = () => {
     setEmail(text)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
   }
 
   const onPressReset = async () => {
     try {
-      const _emailValid = await validateEmail()
+      const _emailValid = validateEmail()
       if (!_emailValid) {
         return
       }
@@ -96,7 +72,6 @@ const ForgotPasswordScreen = () => {
       if (status === 200) {
         setEmailRequired(false)
         setEmailValid(true)
-        setEmailError(false)
         setSent(true)
       } else {
         helper.error()
@@ -128,8 +103,8 @@ const ForgotPasswordScreen = () => {
               ref={ref}
               style={styles.component}
               label={i18n.t('EMAIL')}
-              error={emailRequired || !emailValid || emailError}
-              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+              error={emailRequired || !emailValid}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
               onSubmitEditing={onPressReset}
               onChangeText={onChangeEmail}
             />

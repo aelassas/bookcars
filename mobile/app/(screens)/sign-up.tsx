@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, ScrollView, View, TextInput as ReactTextInput } from 'react-native'
+import { StyleSheet, ScrollView, View, Text, TextInput as ReactTextInput } from 'react-native'
 import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
@@ -32,10 +32,10 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [tosChecked, setTosChecked] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [fullNameRequired, setFullNameRequired] = useState(false)
   const [emailRequired, setEmailRequired] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
-  const [emailError, setEmailError] = useState(false)
   const [phoneValid, setPhoneValid] = useState(true)
   const [phoneRequired, setPhoneRequired] = useState(false)
   const [birthDateRequired, setBirthDateRequired] = useState(false)
@@ -64,11 +64,11 @@ const SignUpScreen = () => {
     setPassword('')
     setConfirmPassword('')
     setTosChecked(false)
+    setSuccess(false)
 
     setFullNameRequired(false)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setPhoneRequired(false)
     setPhoneValid(true)
     setBirthDateRequired(false)
@@ -114,34 +114,13 @@ const SignUpScreen = () => {
     setFullNameRequired(false)
   }
 
-  const validateEmail = async () => {
+  const validateEmail = () => {
     if (email) {
       setEmailRequired(false)
-
-      if (validator.isEmail(email)) {
-        try {
-          const status = await UserService.validateEmail({ email })
-          if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
-          }
-          setEmailError(true)
-          setEmailValid(true)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
-      }
+      const valid = validator.isEmail(email)
+      setEmailValid(valid)
+      return valid
     } else {
-      setEmailError(false)
       setEmailValid(true)
       setEmailRequired(true)
       return false
@@ -152,7 +131,6 @@ const SignUpScreen = () => {
     setEmail(text)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
   }
 
   const validatePhone = () => {
@@ -252,56 +230,6 @@ const SignUpScreen = () => {
     setLoading(false)
   }
 
-  const clear = () => {
-    // 1. Reset Form Values
-    setFullName('')
-    setEmail('')
-    setPhone('')
-    setBirthDate(undefined)
-    setPassword('')
-    setConfirmPassword('')
-    setTosChecked(false)
-    setLoading(false)
-
-    // 2. Reset Validation/Error States
-    setFullNameRequired(false)
-
-    setEmailRequired(false)
-    setEmailValid(true)
-    setEmailError(false)
-
-    setPhoneRequired(false)
-    setPhoneValid(true)
-
-    setBirthDateRequired(false)
-    setBirthDateValid(true)
-
-    setPasswordRequired(false)
-    setPasswordLengthError(false)
-
-    setConfirmPasswordRequired(false)
-    setConfirmPasswordError(false)
-
-    setTosError(false)
-
-    // 3. Clear Native Input Refs
-    if (fullNameRef.current) {
-      fullNameRef.current.clear()
-    }
-    if (emailRef.current) {
-      emailRef.current.clear()
-    }
-    if (phoneRef.current) {
-      phoneRef.current.clear()
-    }
-    if (passwordRef.current) {
-      passwordRef.current.clear()
-    }
-    if (confirmPasswordRef.current) {
-      confirmPasswordRef.current.clear()
-    }
-  }
-
   const onPressSignUp = async () => {
     try {
       fullNameRef.current?.blur()
@@ -315,7 +243,7 @@ const SignUpScreen = () => {
         return
       }
 
-      const _emailValid = await validateEmail()
+      const _emailValid = validateEmail()
       if (!_emailValid) {
         return
       }
@@ -354,21 +282,7 @@ const SignUpScreen = () => {
       const status = await UserService.signup(data)
 
       if (status === 200) {
-        const payload: bookcarsTypes.SignInPayload = {
-          email,
-          password,
-          mobile: true,
-        }
-
-        const result = await UserService.signin(payload)
-
-        if (result.status === 200) {
-          clear()
-
-          router.push({ pathname: '/', params: { d: new Date().getTime().toString() } })
-        } else {
-          error()
-        }
+        setSuccess(true)
       } else {
         error()
       }
@@ -383,7 +297,7 @@ const SignUpScreen = () => {
     <View style={styles.master}>
       <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
 
-      {language && (
+      {language && !success && (
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
@@ -404,8 +318,8 @@ const SignUpScreen = () => {
               style={styles.component}
               label={i18n.t('EMAIL')}
               value={email}
-              error={emailRequired || !emailValid || emailError}
-              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''}
+              error={emailRequired || !emailValid}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
               onChangeText={onChangeEmail}
             />
 
@@ -463,6 +377,20 @@ const SignUpScreen = () => {
         </ScrollView>
       )}
 
+      {success && (
+        <View style={styles.container}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.successHeading}>{i18n.t('SIGN_UP_SUCCESS_HEADING')}</Text>
+            <Text style={styles.successMessage}>{i18n.t('SIGN_UP_SUCCESS_MESSAGE')}</Text>
+            <Button
+              style={styles.component}
+              label={i18n.t('SIGN_IN')}
+              onPress={() => router.push({ pathname: '/sign-in', params: { d: Date.now().toString() } })}
+            />
+          </View>
+        </View>
+      )}
+
       {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
     </View>
   )
@@ -482,6 +410,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 480,
     alignItems: 'center',
+    padding: 10,
   },
   component: {
     alignSelf: 'stretch',
@@ -496,6 +425,18 @@ const styles = StyleSheet.create({
   },
   tosText: {
     fontSize: 12,
+  },
+  successHeading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  successMessage: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 })
 

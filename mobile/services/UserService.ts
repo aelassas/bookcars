@@ -96,20 +96,6 @@ export const activate = async (data: bookcarsTypes.ActivatePayload): Promise<num
 }
 
 /**
- * Validate an email.
- *
- * @param {bookcarsTypes.ValidateEmailPayload} data
- * @returns {Promise<number>}
- */
-export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise<number> =>
-  axiosInstance
-    .post(
-      '/api/validate-email',
-      data
-    )
-    .then((res) => res.status)
-
-/**
  * Sign in.
  *
  * @async

@@ -119,6 +119,8 @@ export const getToken = (cookie: string) => {
   return token
 }
 
+export const generateToken = (userId: string) => authHelper.encryptJWT({ id: userId })
+
 const signin = async (appType: bookcarsTypes.AppType, email: string) => {
   const payload: bookcarsTypes.SignInPayload = {
     email,

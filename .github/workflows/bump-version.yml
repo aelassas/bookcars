@@ -101,26 +101,21 @@ jobs:
         shell: pwsh
         run: |
           git checkout main
-
           git fetch origin main
-          git reset --hard origin/main  # reset local main to match remote
+          git reset --hard origin/main
 
-          # Ensure PowerShell scripts have execution permissions
           git update-index --chmod=+x ./__scripts/bump-version.ps1
-
-          # Run your PowerShell script to update version numbers
           ./__scripts/bump-version.ps1 $env:NEXT_VERSION
 
-          # Configure Git for automated commit
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Only commit if there are changes to avoid empty commits
           if (git diff --quiet) {
               Write-Host "No changes detected, skipping commit."
           } else {
               git add --all
               git commit -m "chore: bump version from $env:VERSION to $env:NEXT_VERSION"
+              git pull origin main --rebase
               git push origin main
           }
 
@@ -130,23 +125,19 @@ jobs:
         run: |
           git fetch origin demo:demo
           git checkout demo
-          git reset --hard origin/demo  # reset local demo to match remote
+          git reset --hard origin/demo
 
-          # Ensure PowerShell scripts have execution permissions
           git update-index --chmod=+x ./__scripts/bump-version.ps1
-          
-          # Run version bump script
           ./__scripts/bump-version.ps1 $env:NEXT_VERSION
 
-          # Configure Git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Commit only if there are changes
           if (git diff --quiet) {
               Write-Host "No changes detected on demo branch, skipping commit."
           } else {
               git add --all
               git commit -m "chore: bump version from $env:VERSION to $env:NEXT_VERSION"
+              git pull origin demo --rebase
               git push origin demo
           }

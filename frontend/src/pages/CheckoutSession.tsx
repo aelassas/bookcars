@@ -62,6 +62,7 @@ const CheckoutSession = () => {
                   success && bookingId && (
                     <CheckoutStatus
                       bookingId={bookingId}
+                      sessionId={sessionId}
                       language={UserService.getLanguage()}
                       status={success ? 'success' : 'error'}
                       className="status"

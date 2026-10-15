@@ -225,53 +225,60 @@ export const checkout = async (req: Request, res: Response) => {
       if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_TEMP_LICENSES, license!)))) {
         throw new Error("Driver's license file not found")
       }
-      driver.verified = false
-      driver.blacklisted = false
-      driver.type = bookcarsTypes.UserType.User
-      driver.license = null
 
-      user = new User(driver)
-      await user.save()
+      const existingUser = await User.findOne({ email: driver.email?.toLowerCase() })
 
-      // create license
-      if (license) {
-        const safeLicense = path.basename(license)
-        const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
-        const filename = `${user._id.toString()}${path.extname(safeLicense)}`
-        const destPath = path.resolve(env.CDN_LICENSES, filename)
+      if (existingUser) {
+        user = existingUser
+      } else {
+        driver.verified = false
+        driver.blacklisted = false
+        driver.type = bookcarsTypes.UserType.User
+        driver.license = null
 
-        // security check: restrict allowed extensions
-        const ext = path.extname(safeLicense)
-        if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
-          throw new Error('Invalid license file type')
-        }
-
-        if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
-          throw new Error('Invalid destination path for license')
-        }
-
-        await asyncFs.rename(tempLicensePath, destPath)
-        user.license = filename
+        user = new User(driver)
         await user.save()
+
+        // create license
+        if (license) {
+          const safeLicense = path.basename(license)
+          const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
+          const filename = `${user._id.toString()}${path.extname(safeLicense)}`
+          const destPath = path.resolve(env.CDN_LICENSES, filename)
+
+          // security check: restrict allowed extensions
+          const ext = path.extname(safeLicense)
+          if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
+            throw new Error('Invalid license file type')
+          }
+
+          if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
+            throw new Error('Invalid destination path for license')
+          }
+
+          await asyncFs.rename(tempLicensePath, destPath)
+          user.license = filename
+          await user.save()
+        }
+
+        const token = new Token({ user: user._id, token: helper.generateToken() })
+        await token.save()
+
+        i18n.locale = user.language
+
+        const mailOptions: nodemailer.SendMailOptions = {
+          from: env.SMTP_FROM,
+          to: user.email,
+          subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+          html: `<p>
+          ${i18n.t('HELLO')}${user.fullName},<br><br>
+          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+          ${i18n.t('REGARDS')}<br>
+          </p>`,
+        }
+        await mailHelper.sendMail(mailOptions)
       }
-
-      const token = new Token({ user: user._id, token: helper.generateToken() })
-      await token.save()
-
-      i18n.locale = user.language
-
-      const mailOptions: nodemailer.SendMailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-        html: `<p>
-        ${i18n.t('HELLO')}${user.fullName},<br><br>
-        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${i18n.t('REGARDS')}<br>
-        </p>`,
-      }
-      await mailHelper.sendMail(mailOptions)
 
       body.booking.driver = user._id.toString()
     } else {
@@ -324,7 +331,7 @@ export const checkout = async (req: Request, res: Response) => {
         let expireAt = new Date()
         expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
 
-        body.booking.sessionId = !payPal ? body.sessionId : undefined
+        body.booking.sessionId = body.sessionId
         body.booking.status = bookcarsTypes.BookingStatus.Void
         body.booking.expireAt = expireAt
 
@@ -809,8 +816,12 @@ export const deleteTempBooking = async (req: Request, res: Response) => {
  */
 export const getBooking = async (req: Request, res: Response) => {
   const { id } = req.params
+  const sessionId = req.query.sessionId as string | undefined
 
   try {
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+
     const booking = await Booking.findById(id)
       .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ car: env.CarInfo }>({
@@ -839,19 +850,20 @@ export const getBooking = async (req: Request, res: Response) => {
       .lean()
 
     if (booking) {
-      const sessionUserId = req.user?._id
-      const sessionUserType = req.user?.type
-      const driverId = booking.driver?._id ? booking.driver._id.toString() : booking.driver?.toString()
-      const supplierId = booking.supplier?._id ? booking.supplier._id.toString() : booking.supplier?.toString()
-      const isAdmin = sessionUserType === bookcarsTypes.UserType.Admin
-      const isDriver = sessionUserId === driverId
-      const isSupplier = sessionUserId === supplierId
+      // 1. SessionId Token Check (for unauthenticated checkout session confirmation)
+      const isValidSession = !!sessionId && booking.sessionId === sessionId
 
-      if (!isAdmin && !isDriver && !isSupplier) {
-        logger.error(`[booking.getBooking] Unauthorized attempt to access booking ${id} by user ${sessionUserId}`)
-        res.status(403).send('Forbidden: You cannot access this booking')
+      // 2. Role-Based Authorization Check
+      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+
+      if (!isValidSession && !isOwner && !isSupplier && !isAdmin) {
+        logger.error(`[booking.getBooking] Forbidden access to booking ${id}`)
+        res.status(403).send('Forbidden: Access denied')
         return
       }
+
       const { language } = req.params
 
       booking.supplier = {
@@ -1201,6 +1213,21 @@ export const cancelBooking = async (req: Request, res: Response) => {
       .populate<{ driver: env.User }>('driver')
 
     if (booking && booking.cancellation && !booking.cancelRequest) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+
+      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+
+      if (!isOwner && !isSupplier && !isAdmin) {
+        logger.error(`[booking.cancelBooking] Forbidden attempt to cancel booking ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot cancel this booking')
+        return
+      }
+      // end of security check
+
       booking.cancelRequest = true
       await booking.save()
 

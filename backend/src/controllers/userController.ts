@@ -34,6 +34,9 @@ const getStatusMessage = (lang: string, msg: string) => (
   `<!DOCTYPE html><html lang="'${lang}'"><head></head><body><p>${msg}</p></body></html>`
 )
 
+const isDuplicateEmailError = (err: unknown) =>
+  typeof err === 'object' && err !== null && 'code' in err && err.code === 11000
+
 /**
  * Sign Up.
  *
@@ -120,8 +123,12 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
       }
     }
   } catch (err) {
-    logger.error(`[user.signup] ${i18n.t('ERROR')} ${JSON.stringify(body)}`, err)
-    res.status(400).send(i18n.t('ERROR') + err)
+    if (isDuplicateEmailError(err)) {
+      res.sendStatus(200)
+      return
+    }
+    logger.error(`[user.signup] ${i18n.t('ERROR')}`, err)
+    res.status(400).send(i18n.t('ERROR'))
     return
   }
 
@@ -156,6 +163,15 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     await mailHelper.sendMail(mailOptions)
     res.sendStatus(200)
   } catch (err) {
+    if (env.AUTO_VERIFY_ON_SIGNUP) {
+      logger.warn('[user.signup] Email sending failed with AUTO_VERIFY_ON_SIGNUP enabled. Activating user account for local testing:', err)
+      user.verified = true
+      user.verifiedAt = new Date()
+      await user.save()
+      res.sendStatus(200)
+      return
+    }
+
     try {
       //
       // Delete user in case of smtp failure
@@ -163,10 +179,10 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
       await Token.deleteMany({ user: user._id.toString() })
       await user.deleteOne()
     } catch (deleteErr) {
-      logger.error(`[user.signup] ${i18n.t('ERROR')} ${JSON.stringify(body)}`, deleteErr)
+      logger.error(`[user.signup] ${i18n.t('ERROR')}`, deleteErr)
     }
     logger.error(`[user.signup] ${i18n.t('SMTP_ERROR')}`, err)
-    res.status(400).send(i18n.t('SMTP_ERROR') + err)
+    res.sendStatus(200)
   }
 }
 
@@ -545,64 +561,58 @@ export const deleteTokens = async (req: Request, res: Response) => {
 export const resend = async (req: Request, res: Response) => {
   const { email } = req.params
 
+  if (!helper.isValidEmail(email)) {
+    res.status(400).send(i18n.t('ERROR'))
+    return
+  }
+
   try {
-    if (!helper.isValidEmail(email)) {
-      throw new Error('email is not valid')
-    }
     const user = await User.findOne({ email })
 
     if (user) {
       const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
       if (
-        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)
-        || (type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
-        || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
+        [bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Admin].includes(type)
+        && !(type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
+        && !(type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
       ) {
-        res.sendStatus(403)
-        return
+        user.active = false
+        await user.save()
+
+        const token = new Token({ user: user._id, token: helper.generateToken() })
+        await token.save()
+
+        i18n.locale = user.language
+
+        const reset = req.params.reset === 'true'
+        const activationOrResetLink = `${helper.joinURL(
+          user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.ADMIN_HOST,
+          reset ? 'reset-password' : 'activate',
+        )}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}`
+
+        const mailOptions: nodemailer.SendMailOptions = {
+          from: env.SMTP_FROM,
+          to: user.email,
+          subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+          html:
+            `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+              <p style="font-size: 16px; color: #555;">
+                ${i18n.t('HELLO')} ${user.fullName},<br><br>
+                ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+                <a href="${activationOrResetLink}" target="_blank">${activationOrResetLink}</a><br><br>
+                ${i18n.t('REGARDS')}<br>
+              </p>
+            </div>`,
+        }
+        await mailHelper.sendMail(mailOptions)
       }
-      user.active = false
-      await user.save()
-
-      // generate token and save
-      const token = new Token({ user: user._id, token: helper.generateToken() })
-      await token.save()
-
-      // Send email
-      i18n.locale = user.language
-
-      const reset = req.params.reset === 'true'
-
-      const activationOrResetLink = `${helper.joinURL(
-        user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.ADMIN_HOST,
-        reset ? 'reset-password' : 'activate',
-      )}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}`
-
-      const mailOptions: nodemailer.SendMailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-        html:
-          `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
-            <p style="font-size: 16px; color: #555;">
-              ${i18n.t('HELLO')} ${user.fullName},<br><br>  
-              ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
-              <a href="${activationOrResetLink}" target="_blank">${activationOrResetLink}</a><br><br>
-              ${i18n.t('REGARDS')}<br>
-            </p>
-          </div>`,
-      }
-      await mailHelper.sendMail(mailOptions)
-      res.sendStatus(200)
-      return
     }
-
-    res.sendStatus(204)
   } catch (err) {
-    logger.error(`[user.resend] ${i18n.t('ERROR')} ${email}`, err)
-    res.status(400).send(i18n.t('ERROR') + err)
+    logger.error('[user.resend] Failed to process account email request', err)
   }
+
+  res.sendStatus(200)
 }
 
 /**
@@ -992,36 +1002,18 @@ export const deletePushToken = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const validateEmail = async (req: Request, res: Response) => {
-  const { body }: { body: bookcarsTypes.ValidateEmailPayload } = req
-  const { email, appType } = body
+  const { email }: bookcarsTypes.ValidateEmailPayload = req.body
 
   try {
     if (!helper.isValidEmail(email)) {
-      throw new Error('body.email is not valid')
-    }
-
-    const _appType = appType || bookcarsTypes.AppType.Frontend
-    const types = _appType === bookcarsTypes.AppType.Frontend
-      ? [bookcarsTypes.UserType.User, bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier]
-      : [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier]
-
-    const exists = await User.exists(
-      {
-        email,
-        type: { $in: types }
-      }
-    )
-
-    if (exists) {
-      res.sendStatus(204)
+      res.status(400).send(i18n.t('ERROR'))
       return
     }
 
-    // email does not exist in db (can be added)
     res.sendStatus(200)
   } catch (err) {
-    logger.error(`[user.validateEmail] ${i18n.t('ERROR')} ${email}`, err)
-    res.status(400).send(i18n.t('ERROR') + err)
+    logger.error('[user.validateEmail] Failed to validate email syntax', err)
+    res.status(400).send(i18n.t('ERROR'))
   }
 }
 

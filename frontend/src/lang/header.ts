@@ -17,6 +17,7 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Politique de Confidentialité',
     FAQ: 'FAQ',
     COOKIE_POLICY: 'Politique de cookies',
+    NOTIFICATIONS: 'Notifications',
   },
   en: {
     SIGN_IN: 'Sign in',
@@ -33,6 +34,7 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Privacy Policy',
     FAQ: 'FAQ',
     COOKIE_POLICY: 'Cookie Policy',
+    NOTIFICATIONS: 'Notifications',
   },
   es: {
     SIGN_IN: 'Iniciar sesión',
@@ -49,6 +51,7 @@ const strings = new LocalizedStrings({
     PRIVACY_POLICY: 'Política de Privacidad',
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
+    NOTIFICATIONS: 'Notificaciones',
   },
 })
 

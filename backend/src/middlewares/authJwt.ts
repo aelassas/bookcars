@@ -66,6 +66,43 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 /**
+ * Optional token verification middleware.
+ * Attaches req.user if a valid token is provided, but continues if unauthenticated.
+ */
+const verifyTokenOptional = async (req: Request, res: Response, next: NextFunction) => {
+  let token: string | undefined
+  const isAdmin = authHelper.isAdmin(req)
+  const isFrontend = authHelper.isFrontend(req)
+
+  if (isAdmin) {
+    token = req.signedCookies[env.ADMIN_AUTH_COOKIE_NAME] as string
+  } else if (isFrontend) {
+    token = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string
+  } else {
+    token = req.headers[env.X_ACCESS_TOKEN] as string
+  }
+
+  if (!token) {
+    next()
+    return
+  }
+
+  try {
+    const sessionData = await authHelper.decryptJWT(token)
+    if (sessionData && helper.isValidObjectId(sessionData.id)) {
+      const user = await User.findById(sessionData.id)
+      if (user && !user.blacklisted) {
+        req.user = { _id: user._id.toString(), type: user.type as bookcarsTypes.UserType }
+      }
+    }
+  } catch (err) {
+    logger.info('Optional token verification failed, proceeding anonymously', err)
+  }
+
+  next()
+}
+
+/**
  * Auth for Admin only.
  *
  * @param {Request} req 
@@ -97,4 +134,4 @@ const authSupplier = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default { verifyToken, authAdmin, authSupplier }
+export default { verifyToken, verifyTokenOptional, authAdmin, authSupplier }

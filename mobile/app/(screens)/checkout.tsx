@@ -77,7 +77,6 @@ const CheckoutScreen = () => {
 
   const [fullNameRequired, setFullNameRequired] = useState(false)
   const [emailInfo, setEmailInfo] = useState(true)
-  const [emailError, setEmailError] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
   const [emailRequired, setEmailRequired] = useState(false)
   const [phoneInfo, setPhoneInfo] = useState(true)
@@ -202,7 +201,6 @@ const CheckoutScreen = () => {
       setFullNameRequired(false)
       setEmailRequired(false)
       setEmailValid(true)
-      setEmailError(false)
       setPhoneRequired(false)
       setPhoneValid(true)
       setBirthDateRequired(false)
@@ -330,43 +328,17 @@ const CheckoutScreen = () => {
     setError(false)
   }
 
-  const validateEmail = async () => {
+  const validateEmail = () => {
     if (email) {
       setEmailRequired(false)
-
-      if (validator.isEmail(email)) {
-        try {
-          const status = await UserService.validateEmail({ email })
-          if (status === 200) {
-            setEmailInfo(true)
-            setEmailError(false)
-            setEmailValid(true)
-            setError(false)
-            return true
-          }
-          setEmailInfo(false)
-          setEmailError(true)
-          setEmailValid(true)
-          setError(true)
-          return false
-        } catch (err) {
-          helper.error(err)
-          setEmailInfo(true)
-          setEmailError(false)
-          setEmailValid(true)
-          setError(false)
-          return false
-        }
-      } else {
-        setEmailError(false)
-        setEmailValid(false)
-        setError(true)
-        return false
-      }
+      const valid = validator.isEmail(email)
+      setEmailInfo(valid)
+      setEmailValid(valid)
+      setError(!valid)
+      return valid
     } else {
       setEmailInfo(false)
       setEmailRequired(true)
-      setEmailError(false)
       setEmailValid(true)
       setError(true)
       return false
@@ -397,7 +369,6 @@ const CheckoutScreen = () => {
     setEmailInfo(true)
     setEmailRequired(false)
     setEmailValid(true)
-    setEmailError(false)
     setError(false)
   }
 
@@ -1003,12 +974,11 @@ const CheckoutScreen = () => {
                         style={styles.component}
                         label={i18n.t('EMAIL')}
                         value={email}
-                        error={emailRequired || !emailValid || emailError}
+                        error={emailRequired || !emailValid}
                         helperText={
                           (emailInfo && i18n.t('EMAIL_INFO'))
                           || (emailRequired && i18n.t('REQUIRED'))
                           || (!emailValid && i18n.t('EMAIL_NOT_VALID'))
-                          || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED'))
                           || ''
                         }
                         onChangeText={onChangeEmail}

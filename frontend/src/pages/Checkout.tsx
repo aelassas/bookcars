@@ -32,6 +32,7 @@ import { PayPalButtons } from '@paypal/react-paypal-js'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import validator from 'validator'
+import { nanoid } from 'nanoid'
 import { createSchema, FormFields } from '@/models/CheckoutForm'
 import CarList from '@/components/CarList'
 import * as bookcarsTypes from ':bookcars-types'
@@ -88,7 +89,6 @@ const Checkout = () => {
   const [authenticated, setAuthenticated] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [noMatch, setNoMatch] = useState(false)
-  const [emailRegistered, setEmailRegistered] = useState(false)
   const [emailInfo, setEmailInfo] = useState(true)
   const [phoneInfo, setPhoneInfo] = useState(true)
   const [price, setPrice] = useState(0)
@@ -152,10 +152,6 @@ const Checkout = () => {
   const payDeposit = useWatch({ control, name: 'payDeposit' })
   const payInFull = useWatch({ control, name: 'payInFull' })
 
-  const validateEmail = (email: string) => {
-    return validator.isEmail(email)
-  }
-
   const validatePhone = (phone: string) => {
     return validator.isMobilePhone(phone)
   }
@@ -178,19 +174,6 @@ const Checkout = () => {
       if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
         setRecaptchaError(true)
         return
-      }
-
-      if (!authenticated) {
-        // check email
-        const status = await UserService.validateEmail({ email: data.email! })
-        if (status === 200) {
-          setEmailRegistered(false)
-          setEmailInfo(true)
-        } else {
-          setEmailRegistered(true)
-          setEmailInfo(false)
-          return
-        }
       }
 
       if (car.supplier.licenseRequired && !license) {
@@ -282,6 +265,8 @@ const Checkout = () => {
           _sessionId = res.sessionId
           _customerId = res.customerId
         } else {
+          // Generate a unique session ID for PayPal checkout
+          _sessionId = nanoid()
           setPayPalLoaded(true)
         }
       }
@@ -537,46 +522,23 @@ const Checkout = () => {
                               // {...register('email')}
                               type="text"
                               label={commonStrings.EMAIL}
-                              error={!!errors.email || emailRegistered}
+                              error={!!errors.email}
                               required
                               autoComplete="off"
                               onChange={(e) => {
                                 if (errors.email) {
                                   clearErrors('email')
                                 }
-                                setEmailRegistered(false)
                                 setEmailInfo(false)
                                 setValue('email', e.target.value)
                               }}
-                              onBlur={async (e) => {
+                              onBlur={(e) => {
                                 trigger('email')
-                                const email = e.target.value
-
-                                if (validateEmail(email)) {
-                                  const status = await UserService.validateEmail({ email })
-                                  if (status === 200) {
-                                    setEmailRegistered(false)
-                                    setEmailInfo(true)
-                                  } else {
-                                    setEmailRegistered(true)
-                                    setEmailInfo(false)
-                                  }
-                                } else {
-                                  setEmailRegistered(false)
-                                  setEmailInfo(false)
-                                }
+                                setEmailInfo(validator.isEmail(e.target.value))
                               }}
                             />
-                            <FormHelperText error={!!errors.email || emailRegistered}>
+                            <FormHelperText error={!!errors.email}>
                               {(errors.email && errors.email.message) || ''}
-                              {(emailRegistered && (
-                                <span>
-                                  <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
-                                  <span> </span>
-                                  <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
-                                </span>
-                              ))
-                                || ''}
                               {(emailInfo && !errors.email && strings.EMAIL_INFO) || ''}
                             </FormHelperText>
                           </FormControl>
@@ -1038,6 +1000,7 @@ const Checkout = () => {
             bookingId={bookingId}
             language={language}
             payLater={payLater}
+            sessionId={sessionId}
             status="success"
             className="status"
           />
