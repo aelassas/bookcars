@@ -831,7 +831,10 @@ export const getBooking = async (req: Request, res: Response) => {
           model: 'User',
         },
       })
-      .populate<{ driver: env.User }>('driver')
+      .populate<{ driver: env.UserInfo }>({
+        path: 'driver',
+        select: '_id fullName avatar',
+      })
       .populate<{ pickupLocation: env.LocationInfo }>({
         path: 'pickupLocation',
         populate: {
@@ -854,7 +857,7 @@ export const getBooking = async (req: Request, res: Response) => {
       const isValidSession = !!sessionId && booking.sessionId === sessionId
 
       // 2. Role-Based Authorization Check
-      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isOwner = !!sessionUserId && booking.driver._id?.toString() === sessionUserId
       const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
       const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
 
@@ -938,7 +941,7 @@ export const getBookings = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    let suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
+    const requestedSuppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       statuses,
       // user,
@@ -952,21 +955,28 @@ export const getBookings = async (req: Request, res: Response) => {
     let keyword = (body.filter && body.filter.keyword) || ''
     const options = 'i'
 
-    const $match: mongoose.QueryFilter<any> = {
-      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
-    }
-
     // begin of security check
     const sessionUserId = req.user?._id
+    if (!sessionUserId || !helper.isValidObjectId(sessionUserId)) {
+      logger.error('[booking.getBookings] Request has no valid authenticated user')
+      res.status(403).send('Forbidden: You cannot get booking information')
+      return
+    }
     const sessionUser = await User.findById(sessionUserId)
     if (!sessionUser) {
       logger.error(`[booking.getBookings] Unauthorized attempt to get bookings by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot get booking information')
       return
     }
-    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
-      suppliers = [new mongoose.Types.ObjectId(sessionUserId)]
+    const sessionSupplierId = new mongoose.Types.ObjectId(sessionUser._id)
+    const suppliers = sessionUser.type === bookcarsTypes.UserType.Supplier
+      ? requestedSuppliers.filter((supplier) => supplier.equals(sessionSupplierId))
+      : requestedSuppliers
+
+    const $match: mongoose.QueryFilter<any> = {
+      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
     }
+
     if (sessionUser.type === bookcarsTypes.UserType.User) {
       $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(sessionUser._id) } })
     }
@@ -1058,6 +1068,9 @@ export const getBookings = async (req: Request, res: Response) => {
           pipeline: [
             {
               $match: { $expr: { $eq: ['$_id', '$$driverId'] } },
+            },
+            {
+              $project: { _id: 1, fullName: 1, avatar: 1 },
             },
           ],
           as: 'driver',

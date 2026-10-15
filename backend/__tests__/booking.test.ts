@@ -10,6 +10,7 @@ import app from '../src/app'
 import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
 import * as helper from '../src/utils/helper'
+import * as authHelper from '../src/utils/authHelper'
 import * as env from '../src/config/env.config'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
@@ -1306,5 +1307,190 @@ describe('DELETE /api/delete-temp-booking', () => {
       const connRes = await databaseHelper.connect(env.DB_URI, false, false)
       expect(connRes).toBeTruthy()
     }
+  })
+})
+
+describe('booking list authorization and driver-field security', () => {
+  const sensitiveDriverFields = ['password', 'resetToken', 'verificationToken', 'refreshToken', 'accessToken', 'token']
+  let supplierBId: string
+  let driverAId: string
+  let driverBId: string
+  let carAId: string
+  let carBId: string
+  let bookingAId: string
+  let bookingBId: string
+
+  beforeAll(async () => {
+    supplierBId = await testHelper.createSupplier(testHelper.GetRandomEmail(), 'Audit Supplier B')
+
+    const passwordHash = await authHelper.hashPassword('Synthetic-Audit-Password-2026!')
+    const driverA = new User({
+      fullName: 'Audit Customer A',
+      email: testHelper.GetRandomEmail(),
+      password: passwordHash,
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      avatar: 'audit-customer-a.jpg',
+    })
+    const driverB = new User({
+      fullName: 'Audit Customer B',
+      email: testHelper.GetRandomEmail(),
+      password: passwordHash,
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      avatar: 'audit-customer-b.jpg',
+    })
+    await Promise.all([driverA.save(), driverB.save()])
+    driverAId = driverA._id.toString()
+    driverBId = driverB._id.toString()
+
+    const carPayload = {
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 50,
+      deposit: 100,
+      available: true,
+      type: bookcarsTypes.CarType.Gasoline,
+      gearbox: bookcarsTypes.GearboxType.Manual,
+      aircon: true,
+      seats: 4,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FullToFull,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Mini,
+    }
+    const carA = await new Car({ ...carPayload, name: 'Audit Car A', supplier: SUPPLIER_ID }).save()
+    const carB = await new Car({ ...carPayload, name: 'Audit Car B', supplier: supplierBId }).save()
+    carAId = carA._id.toString()
+    carBId = carB._id.toString()
+
+    const from = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    const to = new Date(from.getTime() + 2 * 24 * 60 * 60 * 1000)
+    const bookingA = await new Booking({
+      supplier: SUPPLIER_ID,
+      car: carAId,
+      driver: driverAId,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Reserved,
+      price: 100,
+    }).save()
+    const bookingB = await new Booking({
+      supplier: supplierBId,
+      car: carBId,
+      driver: driverBId,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Reserved,
+      price: 100,
+    }).save()
+    bookingAId = bookingA._id.toString()
+    bookingBId = bookingB._id.toString()
+
+    await User.collection.updateMany(
+      { _id: { $in: [driverA._id, driverB._id] } },
+      {
+        $set: {
+          resetToken: 'synthetic-reset-token',
+          verificationToken: 'synthetic-verification-token',
+          refreshToken: 'synthetic-refresh-token',
+          accessToken: 'synthetic-access-token',
+          token: 'synthetic-token',
+        },
+      },
+    )
+  })
+
+  afterAll(async () => {
+    await Booking.deleteMany({ _id: { $in: [bookingAId, bookingBId] } })
+    await Car.deleteMany({ _id: { $in: [carAId, carBId] } })
+    await User.deleteMany({ _id: { $in: [driverAId, driverBId, supplierBId] } })
+  })
+
+  const requestBookings = (token: string, suppliers: unknown) => request(app)
+    .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+    .set(env.X_ACCESS_TOKEN, token)
+    .send({ suppliers, statuses: [bookcarsTypes.BookingStatus.Reserved] })
+
+  const expectSafeDriver = (driver: Record<string, unknown>, id: string, fullName: string) => {
+    expect(driver).toEqual({ _id: id, fullName, avatar: expect.any(String) })
+    for (const field of sensitiveDriverFields) {
+      expect(driver).not.toHaveProperty(field)
+    }
+  }
+
+  it('constrains supplier filters to the authenticated supplier and fails safely on invalid filters', async () => {
+    const supplierToken = await testHelper.generateToken(SUPPLIER_ID)
+
+    const ownResponse = await requestBookings(supplierToken, [SUPPLIER_ID])
+    expect(ownResponse.statusCode).toBe(200)
+    expect(ownResponse.body[0].resultData.map((booking: env.BookingInfo) => String(booking._id))).toContain(bookingAId)
+    expect(ownResponse.body[0].resultData.every((booking: env.BookingInfo) => booking.supplier._id?.toString() === SUPPLIER_ID)).toBe(true)
+    const ownBooking = ownResponse.body[0].resultData.find((booking: env.BookingInfo) => String(booking._id) === bookingAId)
+    expect(ownBooking).toBeDefined()
+    expectSafeDriver(ownBooking.driver, driverAId, 'Audit Customer A')
+
+    const otherResponse = await requestBookings(supplierToken, [supplierBId])
+    expect(otherResponse.statusCode).toBe(200)
+    expect(otherResponse.body[0].resultData).toHaveLength(0)
+
+    const multipleResponse = await requestBookings(supplierToken, [SUPPLIER_ID, supplierBId])
+    expect(multipleResponse.statusCode).toBe(200)
+    expect(multipleResponse.body[0].resultData.map((booking: env.BookingInfo) => String(booking._id))).toContain(bookingAId)
+    expect(multipleResponse.body[0].resultData.every((booking: env.BookingInfo) => booking.supplier._id?.toString() !== supplierBId)).toBe(true)
+
+    const emptyResponse = await requestBookings(supplierToken, [])
+    expect(emptyResponse.statusCode).toBe(200)
+    expect(emptyResponse.body[0].resultData).toHaveLength(0)
+
+    const malformedResponse = await requestBookings(supplierToken, ['not-an-object-id'])
+    expect(malformedResponse.statusCode).toBe(400)
+  })
+
+  it('preserves administrator multi-supplier access and requires a valid authenticated session', async () => {
+    const adminToken = await testHelper.signinAsAdmin()
+    const adminResponse = await requestBookings(adminToken, [SUPPLIER_ID, supplierBId])
+    expect(adminResponse.statusCode).toBe(200)
+    expect(new Set(adminResponse.body[0].resultData.map((booking: env.BookingInfo) => booking.supplier._id?.toString())))
+      .toEqual(new Set([SUPPLIER_ID, supplierBId]))
+
+    const unauthenticatedResponse = await request(app)
+      .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+      .send({ suppliers: [SUPPLIER_ID], statuses: [bookcarsTypes.BookingStatus.Reserved] })
+    expect(unauthenticatedResponse.statusCode).toBe(403)
+
+    const invalidSessionResponse = await request(app)
+      .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, 'invalid-session-token')
+      .send({ suppliers: [SUPPLIER_ID], statuses: [bookcarsTypes.BookingStatus.Reserved] })
+    expect(invalidSessionResponse.statusCode).toBe(401)
+
+    await testHelper.signout(adminToken)
+  })
+
+  it('omits sensitive driver fields and preserves individual booking authorization', async () => {
+    const supplierToken = await testHelper.generateToken(SUPPLIER_ID)
+
+    const ownResponse = await request(app)
+      .get(`/api/booking/${bookingAId}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+    expect(ownResponse.statusCode).toBe(200)
+    expect(ownResponse.body.supplier._id).toBe(SUPPLIER_ID)
+    expectSafeDriver(ownResponse.body.driver, driverAId, 'Audit Customer A')
+
+    const otherResponse = await request(app)
+      .get(`/api/booking/${bookingBId}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+    expect(otherResponse.statusCode).toBe(403)
   })
 })
