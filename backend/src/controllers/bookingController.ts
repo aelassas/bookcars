@@ -831,7 +831,7 @@ export const getBooking = async (req: Request, res: Response) => {
           model: 'User',
         },
       })
-      .populate<{ driver: env.User }>('driver')
+      .populate<{ driver: env.User }>('driver', '-password -expireAt')
       .populate<{ pickupLocation: env.LocationInfo }>({
         path: 'pickupLocation',
         populate: {
@@ -952,10 +952,6 @@ export const getBookings = async (req: Request, res: Response) => {
     let keyword = (body.filter && body.filter.keyword) || ''
     const options = 'i'
 
-    const $match: mongoose.QueryFilter<any> = {
-      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
-    }
-
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
@@ -967,10 +963,15 @@ export const getBookings = async (req: Request, res: Response) => {
     if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
       suppliers = [new mongoose.Types.ObjectId(sessionUserId)]
     }
+    // end of security check
+
+    const $match: mongoose.QueryFilter<any> = {
+      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }, { expireAt: null }],
+    }
+
     if (sessionUser.type === bookcarsTypes.UserType.User) {
       $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(sessionUser._id) } })
     }
-    // end of security check
 
     // if (user) {
     //   $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
@@ -1058,6 +1059,12 @@ export const getBookings = async (req: Request, res: Response) => {
           pipeline: [
             {
               $match: { $expr: { $eq: ['$_id', '$$driverId'] } },
+            },
+            {
+              $project: {
+                password: 0,
+                expireAt: 0,
+              },
             },
           ],
           as: 'driver',

@@ -1308,3 +1308,117 @@ describe('DELETE /api/delete-temp-booking', () => {
     }
   })
 })
+
+describe('Security Regression Tests - Issue #124', () => {
+  let supplierBId: string
+  let supplierBToken: string
+  let supplierAId: string
+  let supplierAToken: string
+  let bookingBId: string
+
+  beforeAll(async () => {
+    // Create Supplier A
+    const nameA = testHelper.getSupplierName()
+    supplierAId = await testHelper.createSupplier(`${nameA}@testA.bookcars.ma`, nameA)
+    supplierAToken = await testHelper.generateToken(supplierAId)
+
+    // Create Supplier B
+    const nameB = testHelper.getSupplierName()
+    supplierBId = await testHelper.createSupplier(`${nameB}@testB.bookcars.ma`, nameB)
+    supplierBToken = await testHelper.generateToken(supplierBId)
+
+    // Create a car for Supplier B
+    const carB = new Car({
+      name: 'Supplier B Car',
+      supplier: supplierBId,
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 5,
+    })
+    await carB.save()
+
+    // Create a booking for Supplier B
+    const bookingB = new Booking({
+      supplier: supplierBId,
+      car: carB._id,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: new Date(2025, 0, 1),
+      to: new Date(2025, 0, 5),
+      status: bookcarsTypes.BookingStatus.Reserved,
+      price: 500,
+    })
+    await bookingB.save()
+    bookingBId = bookingB._id.toString()
+  })
+
+  afterAll(async () => {
+    await Booking.deleteOne({ _id: bookingBId })
+    await Car.deleteMany({ supplier: supplierBId })
+    await testHelper.deleteSupplier(supplierAId)
+    await testHelper.deleteSupplier(supplierBId)
+  })
+
+  it("should prevent Supplier A from retrieving Supplier B's bookings via client-supplied suppliers field", async () => {
+    const payload: bookcarsTypes.GetBookingsPayload = {
+      suppliers: [supplierBId], // Supplier A attempts to request Supplier B's ID
+      statuses: [bookcarsTypes.BookingStatus.Reserved],
+    }
+
+    const res = await request(app)
+      .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierAToken)
+      .send(payload)
+
+    expect(res.statusCode).toBe(200)
+    // Supplier A should receive 0 bookings for Supplier B
+    expect(res.body[0].resultData.length).toBe(0)
+  })
+
+  it('should not disclose driver password in POST /api/bookings list endpoint', async () => {
+    const payload: bookcarsTypes.GetBookingsPayload = {
+      suppliers: [supplierBId],
+      statuses: [bookcarsTypes.BookingStatus.Reserved],
+    }
+
+    const res = await request(app)
+      .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierBToken)
+      .send(payload)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body[0].resultData.length).toBeGreaterThan(0)
+    const booking = res.body[0].resultData[0]
+    expect(booking.driver).toBeDefined()
+    expect(booking.driver.password).toBeUndefined()
+  })
+
+  it('should not disclose driver password in GET /api/booking/:id detail endpoint', async () => {
+    const res = await request(app)
+      .get(`/api/booking/${bookingBId}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, supplierBToken)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body.driver).toBeDefined()
+    expect(res.body.driver.password).toBeUndefined()
+  })
+})
