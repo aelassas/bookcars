@@ -2,16 +2,12 @@ import type { Request, Response, NextFunction } from 'express'
 import redis from '../config/redis'
 import * as env from '../config/env.config'
 
-const CAPACITY = 10         
-const REFILL_RATE_MS = 2000 
-
 const TOKEN_BUCKET_LUA = `
   local key = KEYS[1]
   local capacity = tonumber(ARGV[1])
   local refillRateMs = tonumber(ARGV[2])
   local now = tonumber(ARGV[3])
 
- 
   local data = redis.call('HMGET', key, 'tokens', 'lastTime')
   local tokens = tonumber(data[1])
   local lastTime = tonumber(data[2])
@@ -39,6 +35,7 @@ const TOKEN_BUCKET_LUA = `
     return {0, tokens}
   end
 `
+
 const isTest = env.CI
 
 export const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
@@ -55,15 +52,15 @@ export const rateLimiter = async (req: Request, res: Response, next: NextFunctio
       TOKEN_BUCKET_LUA,
       1,
       redisKey,
-      CAPACITY,
-      REFILL_RATE_MS,
+      env.RATE_LIMIT_CAPACITY,
+      env.RATE_LIMIT_REFILL_RATE_MS,
       now
     )) as [number, number]
 
     const allowed = result[0] === 1
     const remainingTokens = result[1]
 
-    res.setHeader('RateLimit-Limit', CAPACITY)
+    res.setHeader('RateLimit-Limit', env.RATE_LIMIT_CAPACITY)
     res.setHeader('RateLimit-Remaining', remainingTokens)
 
     if (allowed) {

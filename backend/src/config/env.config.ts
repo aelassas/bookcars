@@ -145,6 +145,20 @@ export const DB_DEBUG = helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'fa
 export const REDIS_URL = __env__('BC_REDIS_URL', false, 'redis://127.0.0.1:6379')
 
 /**
+ * Rate Limiter Capacity (maximum token bucket size). Default is 10.
+ *
+ * @type {number}
+ */
+export const RATE_LIMIT_CAPACITY = Number.parseInt(__env__('BC_RATE_LIMIT_CAPACITY', false, '10'), 10)
+
+/**
+ * Rate Limiter Refill Rate in milliseconds per token. Default is 2000ms.
+ *
+ * @type {number}
+ */
+export const RATE_LIMIT_REFILL_RATE_MS = Number.parseInt(__env__('BC_RATE_LIMIT_REFILL_RATE_MS', false, '2000'), 10)
+
+/**
  * Cookie secret. It should at least be 32 characters long, but the longer the better.
  *
  * @type {string}
