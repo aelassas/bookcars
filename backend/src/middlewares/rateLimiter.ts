@@ -1,10 +1,9 @@
 import type { Request, Response, NextFunction } from 'express'
 import redis from '../config/redis'
-
+import * as env from '../config/env.config'
 
 const CAPACITY = 10         
 const REFILL_RATE_MS = 2000 
-
 
 const TOKEN_BUCKET_LUA = `
   local key = KEYS[1]
@@ -40,9 +39,10 @@ const TOKEN_BUCKET_LUA = `
     return {0, tokens}
   end
 `
+const isTest = env.CI
 
 export const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
-  if (process.env.NODE_ENV === 'test' && !req.headers['x-test-rate-limit']) {
+  if (isTest && !req.headers['x-test-rate-limit']) {
     return next()
   }
 
