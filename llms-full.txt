@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-15T13:01:23Z
+> Generated on: 2026-10-15T13:06:41Z
 
 ---
 
@@ -1029,6 +1029,9 @@ BC_DB_SSL=false
 BC_DB_SSL_CERT=/etc/ssl/bookcars.crt
 BC_DB_SSL_CA=/etc/ssl/bookcars.ca.pem
 BC_DB_DEBUG=false
+
+# Redis
+BC_REDIS_URL=redis://redis:6379
 
 # Auth
 BC_COOKIE_SECRET=COOKIE_SECRET
