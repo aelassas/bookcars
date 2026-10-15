@@ -831,7 +831,10 @@ export const getBooking = async (req: Request, res: Response) => {
           model: 'User',
         },
       })
-      .populate<{ driver: env.User }>('driver', '-password -expireAt')
+      .populate<{ driver: env.UserInfo }>({
+        path: 'driver',
+        select: '_id fullName avatar',
+      })
       .populate<{ pickupLocation: env.LocationInfo }>({
         path: 'pickupLocation',
         populate: {
@@ -854,7 +857,7 @@ export const getBooking = async (req: Request, res: Response) => {
       const isValidSession = !!sessionId && booking.sessionId === sessionId
 
       // 2. Role-Based Authorization Check
-      const isOwner = !!sessionUserId && booking.driver._id.toString() === sessionUserId
+      const isOwner = !!sessionUserId && booking.driver._id?.toString() === sessionUserId
       const isSupplier = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Supplier && booking.supplier._id?.toString() === sessionUserId
       const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
 
@@ -1061,10 +1064,7 @@ export const getBookings = async (req: Request, res: Response) => {
               $match: { $expr: { $eq: ['$_id', '$$driverId'] } },
             },
             {
-              $project: {
-                password: 0,
-                expireAt: 0,
-              },
+              $project: { _id: 1, fullName: 1, avatar: 1 },
             },
           ],
           as: 'driver',
