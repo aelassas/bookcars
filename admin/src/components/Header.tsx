@@ -13,7 +13,7 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  ListItem
+  ListItemButton
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -302,7 +302,7 @@ const Header = ({
           <>
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu  side-menu">
               <List sx={classes.list}>
-                <ListItem
+                <ListItemButton
                   onClick={() => {
                     navigate('/')
                     handleSideMenuClose()
@@ -310,8 +310,8 @@ const Header = ({
                 >
                   <ListItemIcon><DashboardIcon /></ListItemIcon>
                   <ListItemText primary={strings.DASHBOARD} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/scheduler')
                     handleSideMenuClose()
@@ -319,8 +319,8 @@ const Header = ({
                 >
                   <ListItemIcon><SchedulerIcon /></ListItemIcon>
                   <ListItemText primary={strings.SCHEDULER} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/suppliers')
                     handleSideMenuClose()
@@ -328,8 +328,8 @@ const Header = ({
                 >
                   <ListItemIcon><SuppliersIcon /></ListItemIcon>
                   <ListItemText primary={strings.COMPANIES} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/countries')
                     handleSideMenuClose()
@@ -337,8 +337,8 @@ const Header = ({
                 >
                   <ListItemIcon><CountriesIcon /></ListItemIcon>
                   <ListItemText primary={strings.COUNTRIES} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/locations')
                     handleSideMenuClose()
@@ -346,8 +346,8 @@ const Header = ({
                 >
                   <ListItemIcon><LocationsIcon /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/cars')
                     handleSideMenuClose()
@@ -355,8 +355,8 @@ const Header = ({
                 >
                   <ListItemIcon><CarsIcon /></ListItemIcon>
                   <ListItemText primary={strings.CARS} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/users')
                     handleSideMenuClose()
@@ -364,8 +364,8 @@ const Header = ({
                 >
                   <ListItemIcon><UsersIcon /></ListItemIcon>
                   <ListItemText primary={strings.USERS} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/pricing')
                     handleSideMenuClose()
@@ -373,9 +373,9 @@ const Header = ({
                 >
                   <ListItemIcon><PricingIcon /></ListItemIcon>
                   <ListItemText primary={strings.PRICING} />
-                </ListItem>
+                </ListItemButton>
                 {bankDetails?.showBankDetailsPage && (
-                  <ListItem
+                  <ListItemButton
                     onClick={() => {
                       navigate('/bank-details')
                       handleSideMenuClose()
@@ -383,9 +383,9 @@ const Header = ({
                   >
                     <ListItemIcon><BankDetailsIcon /></ListItemIcon>
                     <ListItemText primary={strings.BANK_DETAILS} />
-                  </ListItem>
+                  </ListItemButton>
                 )}
-                <ListItem
+                <ListItemButton
                   onClick={() => {
                     navigate('/settings')
                     handleSideMenuClose()
@@ -393,9 +393,9 @@ const Header = ({
                 >
                   <ListItemIcon><SettingsIcon /></ListItemIcon>
                   <ListItemText primary={strings.SETTINGS} />
-                </ListItem>
+                </ListItemButton>
               </List>
-              <ListItem
+              <ListItemButton
                 onClick={() => {
                   navigate('/about')
                   handleSideMenuClose()
@@ -403,8 +403,8 @@ const Header = ({
               >
                 <ListItemIcon><AboutIcon /></ListItemIcon>
                 <ListItemText primary={strings.ABOUT} />
-              </ListItem>
-              <ListItem
+              </ListItemButton>
+              <ListItemButton
                 onClick={() => {
                   navigate('/tos')
                   handleSideMenuClose()
@@ -412,8 +412,8 @@ const Header = ({
               >
                 <ListItemIcon><TosIcon /></ListItemIcon>
                 <ListItemText primary={strings.TOS} />
-              </ListItem>
-              <ListItem
+              </ListItemButton>
+              <ListItemButton
                 onClick={() => {
                   navigate('/contact')
                   handleSideMenuClose()
@@ -421,7 +421,7 @@ const Header = ({
               >
                 <ListItemIcon><MailIcon /></ListItemIcon>
                 <ListItemText primary={strings.CONTACT} />
-              </ListItem>
+              </ListItemButton>
             </Drawer>
           </>
           <div style={classes.grow} />

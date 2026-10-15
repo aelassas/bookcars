@@ -13,7 +13,7 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  ListItem
+  ListItemButton
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -352,7 +352,7 @@ const Header = ({
 
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu">
               <List sx={classes.list}>
-                <ListItem
+                <ListItemButton
                   onClick={() => {
                     navigate('/')
                     handleSideMenuClose()
@@ -360,9 +360,9 @@ const Header = ({
                 >
                   <ListItemIcon><HomeIcon /></ListItemIcon>
                   <ListItemText primary={strings.HOME} />
-                </ListItem>
+                </ListItemButton>
                 {isSignedIn && (
-                  <ListItem
+                  <ListItemButton
                     onClick={() => {
                       navigate('/bookings')
                       handleSideMenuClose()
@@ -370,10 +370,10 @@ const Header = ({
                   >
                     <ListItemIcon><BookingsIcon /></ListItemIcon>
                     <ListItemText primary={strings.BOOKINGS} />
-                  </ListItem>
+                  </ListItemButton>
                 )}
                 {!env.HIDE_SUPPLIERS && (
-                  <ListItem
+                  <ListItemButton
                     onClick={() => {
                       navigate('/suppliers')
                       handleSideMenuClose()
@@ -381,9 +381,9 @@ const Header = ({
                   >
                     <ListItemIcon><SupplierIcon /></ListItemIcon>
                     <ListItemText primary={strings.SUPPLIERS} />
-                  </ListItem>
+                  </ListItemButton>
                 )}
-                <ListItem
+                <ListItemButton
                   onClick={() => {
                     navigate('/locations')
                     handleSideMenuClose()
@@ -391,8 +391,8 @@ const Header = ({
                 >
                   <ListItemIcon><LocationIcon /></ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/about')
                     handleSideMenuClose()
@@ -400,8 +400,8 @@ const Header = ({
                 >
                   <ListItemIcon><AboutIcon /></ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/cookie-policy')
                     handleSideMenuClose()
@@ -409,8 +409,8 @@ const Header = ({
                 >
                   <ListItemIcon><CookiePolicyIcon /></ListItemIcon>
                   <ListItemText primary={strings.COOKIE_POLICY} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/privacy')
                     handleSideMenuClose()
@@ -418,8 +418,8 @@ const Header = ({
                 >
                   <ListItemIcon><PrivacyIcon /></ListItemIcon>
                   <ListItemText primary={strings.PRIVACY_POLICY} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/tos')
                     handleSideMenuClose()
@@ -427,8 +427,8 @@ const Header = ({
                 >
                   <ListItemIcon><TosIcon /></ListItemIcon>
                   <ListItemText primary={strings.TOS} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/faq')
                     handleSideMenuClose()
@@ -436,8 +436,8 @@ const Header = ({
                 >
                   <ListItemIcon><FaqIcon /></ListItemIcon>
                   <ListItemText primary={strings.FAQ} />
-                </ListItem>
-                <ListItem
+                </ListItemButton>
+                <ListItemButton
                   onClick={() => {
                     navigate('/contact')
                     handleSideMenuClose()
@@ -445,10 +445,10 @@ const Header = ({
                 >
                   <ListItemIcon><MailIcon /></ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
-                </ListItem>
+                </ListItemButton>
                 {env.isMobile && !hideSignin && !isSignedIn && isLoaded && (
                   <>
-                    <ListItem
+                    <ListItemButton
                       onClick={() => {
                         navigate('/sign-in')
                         handleSideMenuClose()
@@ -456,8 +456,8 @@ const Header = ({
                     >
                       <ListItemIcon><LoginIcon /></ListItemIcon>
                       <ListItemText primary={strings.SIGN_IN} />
-                    </ListItem>
-                    <ListItem
+                    </ListItemButton>
+                    <ListItemButton
                       onClick={() => {
                         navigate(`/sign-up?d=${Date.now()}`)
                         handleSideMenuClose()
@@ -465,7 +465,7 @@ const Header = ({
                     >
                       <ListItemIcon><SignUpIcon /></ListItemIcon>
                       <ListItemText primary={suStrings.SIGN_UP} />
-                    </ListItem>
+                    </ListItemButton>
                   </>
                 )}
               </List>
