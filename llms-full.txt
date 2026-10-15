@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-15T13:07:35Z
+> Generated on: 2026-10-15T13:45:07Z
 
 ---
 
@@ -1337,8 +1337,11 @@ You can find PayPal client id in [PayPal Developer Dashboard](https://developer.
 ```yaml
 services:
   mongo:
-    image: mongo:latest
-    command: mongod --quiet --logpath /dev/null
+    image: mongo:7.0.12 # Update mongo version if necessary
+    command:
+      - bash
+      - -lc
+      - openssl rand -base64 756 > /tmp/mongodb-keyfile && chown mongodb:mongodb /tmp/mongodb-keyfile && chmod 400 /tmp/mongodb-keyfile && exec /usr/local/bin/docker-entrypoint.sh mongod --quiet --replSet rs0 --bind_ip_all --keyFile /tmp/mongodb-keyfile
     restart: always
     environment:
       # Provide your credentials here
@@ -1349,6 +1352,11 @@ services:
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username admin --password admin --authenticationDatabase admin --eval \"try { rs.status().ok } catch (error) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
 
   mongo-express:
     image: mongo-express:latest
@@ -1360,7 +1368,17 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+
 
   bc-backend:
     build: 
@@ -1371,7 +1389,11 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      
     volumes:
       - cdn:/var/www/cdn/bookcars
       - backend_logs:/bookcars/backend/logs
@@ -1402,6 +1424,7 @@ volumes:
   mongodb_data:
   mongodb_config:
   backend_logs:
+  redis_data:
 ```
 
 If you want to use MongoDB Atlas, remove `mongo` container. Otherwise, replace `admin` with the password that you have set in `BC_DB_URI` in `./backend/.env.docker`.
@@ -1591,7 +1614,16 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
 
   bc-backend:
     build: 
@@ -1602,7 +1634,10 @@ services:
     ports:
       - 4002:4002
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./bookcars.key:/etc/ssl/bookcars.key
@@ -1638,6 +1673,7 @@ volumes:
   cdn:
   mongodb_data:
   mongodb_config:
+  redis_data:
 ```
 
 Rebuild and run Docker image:
