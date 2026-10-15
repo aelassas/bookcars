@@ -1,7 +1,7 @@
 import { afterAll } from '@jest/globals'
 import redis from '../src/config/redis.js'
 
-// Ferme proprement la connexion Redis après l'exécution de toutes les suites de tests
+// Closes the Redis connection after all test suites have run
 afterAll(async () => {
   try {
     await redis.quit()
