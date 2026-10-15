@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-13T10:23:40Z
+> Generated on: 2026-10-15T13:01:23Z
 
 ---
 
@@ -31,7 +31,7 @@ That's it! Once added the new currencies will show up in the header menu of the 
 
 ## Base Currency
 
-From the admin panel, the base currency is used to store all prices. By default, it is USD but you can change it from `VITE_BC_CURRENCY` setting in *admin/.env*, `VITE_BC_BASE_CURRENCY` in *frontend/.env* and `BC_BASE_CURRENCY` in *mobile/.env*.
+From the admin panel, the base currency is used to store all prices. By default, it is `USD ` but you can change it from `BC_BASE_CURRENCY` setting in *backend/.env*, `VITE_BC_CURRENCY` setting in *admin/.env*, `VITE_BC_BASE_CURRENCY` in *frontend/.env* and `BC_BASE_CURRENCY` in *mobile/.env*.
 
 
 ---
