@@ -32,7 +32,6 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-
   redis:
     image: redis:7-alpine
     restart: always

@@ -25,7 +25,7 @@ const TOKEN_BUCKET_LUA = `
     local tokensToAdd = math.floor(timePassed / refillRateMs)
     if tokensToAdd > 0 then
       tokens = math.min(capacity, tokens + tokensToAdd)
-      lastTime = now
+      lastTime = lastTime + (tokensToAdd * refillRateMs)
     end
   end
 

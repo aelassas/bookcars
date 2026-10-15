@@ -33,6 +33,15 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+
 
   bc-backend:
     build: 
@@ -45,6 +54,9 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+      redis:
+        condition: service_started
+      
     volumes:
       - cdn:/var/www/cdn/bookcars
       - backend_logs:/bookcars/backend/logs
@@ -75,3 +87,4 @@ volumes:
   mongodb_data:
   mongodb_config:
   backend_logs:
+  redis_data:

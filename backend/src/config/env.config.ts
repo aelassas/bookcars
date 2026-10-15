@@ -996,3 +996,11 @@ export const allowedLicenseExtensions = [
 export const allowedContractExtensions = [
   '.pdf',
 ]
+
+/**
+ * Redis server connection URI.
+ *
+ * @type {string}
+ */
+export const REDIS_URL = __env__('BC_REDIS_URL', false, 'redis://127.0.0.1:6379')
+
