@@ -138,6 +138,13 @@ export const DB_SSL_CA = __env__('BC_DB_SSL_CA', DB_SSL)
 export const DB_DEBUG = helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
 
 /**
+ * Redis server connection URI.
+ *
+ * @type {string}
+ */
+export const REDIS_URL = __env__('BC_REDIS_URL', false, 'redis://127.0.0.1:6379')
+
+/**
  * Cookie secret. It should at least be 32 characters long, but the longer the better.
  *
  * @type {string}
@@ -996,11 +1003,3 @@ export const allowedLicenseExtensions = [
 export const allowedContractExtensions = [
   '.pdf',
 ]
-
-/**
- * Redis server connection URI.
- *
- * @type {string}
- */
-export const REDIS_URL = __env__('BC_REDIS_URL', false, 'redis://127.0.0.1:6379')
-
