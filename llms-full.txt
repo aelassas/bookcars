@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-15T20:13:02Z
+> Generated on: 2026-10-15T20:13:17Z
 
 ---
 
@@ -1032,6 +1032,10 @@ BC_DB_DEBUG=false
 
 # Redis
 BC_REDIS_URL=redis://redis:6379
+
+# Rate Limiter
+BC_RATE_LIMIT_CAPACITY=10
+BC_RATE_LIMIT_REFILL_RATE_MS=2000
 
 # Auth
 BC_COOKIE_SECRET=COOKIE_SECRET
