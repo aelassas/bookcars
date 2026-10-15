@@ -948,6 +948,22 @@ describe('POST /api/update-booking-status', () => {
 })
 
 describe('GET /api/booking/:id/:language', () => {
+  it('should deny unauthenticated access', async () => {
+    const res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+    expect(res.statusCode).toBe(403)
+  })
+
+  it('should deny unauthorized user (IDOR prevention)', async () => {
+    // Sign in as a different user who is neither driver, supplier, nor admin
+    const token = await testHelper.signinAsUser()
+    const res = await request(app)
+      .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
+      .set(env.X_ACCESS_TOKEN, token)
+    expect(res.statusCode).toBe(403)
+    await testHelper.signout(token)
+  })
+
   it('should get a booking', async () => {
     const adminToken = await testHelper.signinAsAdmin()
     const driverToken = await testHelper.generateToken(DRIVER1_ID)

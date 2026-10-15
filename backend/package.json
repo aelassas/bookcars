@@ -36,6 +36,7 @@
     "google-auth-library": "^10.6.2",
     "helmet": "^8.1.0",
     "i18n-js": "^4.5.3",
+    "ioredis": "^6.0.0",
     "jose": "^6.2.1",
     "mongoose": "^9.3.0",
     "multer": "^2.1.1",
