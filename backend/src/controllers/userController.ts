@@ -231,6 +231,37 @@ export const create = async (req: Request, res: Response) => {
       res.status(403).send('Forbidden: You cannot create user')
       return
     }
+    if (
+      sessionUser.type !== bookcarsTypes.UserType.Admin
+      && sessionUser.type !== bookcarsTypes.UserType.Supplier
+    ) {
+      logger.error(`[user.create] Unsupported caller role ${sessionUser.type}`)
+      res.status(403).send('Forbidden: You cannot create user')
+      return
+    }
+
+    const targetType = body.type ?? bookcarsTypes.UserType.User
+    if (!Object.values(bookcarsTypes.UserType).includes(targetType as bookcarsTypes.UserType)) {
+      res.status(400).send('Invalid user type')
+      return
+    }
+    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+      if (targetType !== bookcarsTypes.UserType.User) {
+        logger.error(`[user.create] Supplier ${sessionUserId} attempted to create user type ${targetType}`)
+        res.status(403).send('Forbidden: Suppliers can only create users')
+        return
+      }
+      if (body.supplier && (
+        !helper.isValidObjectId(body.supplier)
+        || !new mongoose.Types.ObjectId(body.supplier).equals(sessionUser._id)
+      )) {
+        logger.error(`[user.create] Supplier ${sessionUserId} attempted to assign a user to another supplier`)
+        res.status(403).send('Forbidden: You cannot assign users to another supplier')
+        return
+      }
+      body.supplier = sessionUser._id.toString()
+    }
+    body.type = targetType
     // end of security check
 
     body.verified = false

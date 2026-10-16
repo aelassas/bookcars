@@ -5,6 +5,7 @@ import url from 'url'
 import path from 'path'
 import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
+import bcrypt from 'bcrypt'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/utils/databaseHelper'
@@ -445,6 +446,144 @@ describe('POST /api/create-user', () => {
     expect(deleteRes.deletedCount).toBe(1)
 
     await testHelper.signout(token)
+  })
+})
+
+describe('POST /api/create-user authorization', () => {
+  const supplierPassword = 'Synthetic-User-Creation-Password!'
+  const supplierEmail = testHelper.GetRandomEmail()
+  const adminAllowedCandidateEmails = [
+    testHelper.GetRandomEmail(),
+    testHelper.GetRandomEmail(),
+    testHelper.GetRandomEmail(),
+  ]
+  const adminCandidateEmail = testHelper.GetRandomEmail()
+  const supplierCandidateEmail = testHelper.GetRandomEmail()
+  const foreignCandidateEmail = testHelper.GetRandomEmail()
+  const driverCandidateEmail = testHelper.GetRandomEmail()
+  const invalidRoleCandidateEmail = testHelper.GetRandomEmail()
+  let supplierId: string
+
+  beforeAll(async () => {
+    supplierId = await testHelper.createSupplier(supplierEmail, 'User Creation Test Supplier')
+  })
+
+  afterAll(async () => {
+    await User.deleteMany({
+      email: {
+        $in: [
+          ...adminAllowedCandidateEmails,
+          adminCandidateEmail,
+          supplierCandidateEmail,
+          foreignCandidateEmail,
+          driverCandidateEmail,
+          invalidRoleCandidateEmail,
+        ],
+      },
+    })
+    if (supplierId) {
+      await testHelper.deleteSupplier(supplierId)
+    }
+  })
+
+  const createPayload = (email: string, type?: string, supplier?: string): bookcarsTypes.CreateUserPayload => ({
+    email,
+    fullName: 'Synthetic User Creation Candidate',
+    language: testHelper.LANGUAGE,
+    phone: '',
+    location: '',
+    bio: '',
+    password: supplierPassword,
+    type,
+    supplier,
+  })
+
+  it('restricts supplier-created roles and binds permitted users to the authenticated supplier', async () => {
+    const supplierToken = await testHelper.generateToken(supplierId)
+
+    let response = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(createPayload(adminCandidateEmail, bookcarsTypes.UserType.Admin))
+    expect(response.statusCode).toBe(403)
+    expect(await User.findOne({ email: adminCandidateEmail })).toBeNull()
+
+    response = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(createPayload(supplierCandidateEmail, bookcarsTypes.UserType.Supplier))
+    expect(response.statusCode).toBe(403)
+    expect(await User.findOne({ email: supplierCandidateEmail })).toBeNull()
+
+    response = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(createPayload(foreignCandidateEmail, bookcarsTypes.UserType.User, testHelper.GetRandromObjectIdAsString()))
+    expect(response.statusCode).toBe(403)
+    expect(await User.findOne({ email: foreignCandidateEmail })).toBeNull()
+
+    response = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(createPayload(driverCandidateEmail, bookcarsTypes.UserType.User))
+    expect(response.statusCode).toBe(200)
+    const driver = await User.findOne({ email: driverCandidateEmail })
+    expect(driver).not.toBeNull()
+    expect(driver?.type).toBe(bookcarsTypes.UserType.User)
+    expect(driver?.supplier?.toString()).toBe(supplierId)
+    expect(driver?.password).not.toBe(supplierPassword)
+    expect(await bcrypt.compare(supplierPassword, driver!.password!)).toBe(true)
+
+    response = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(createPayload(invalidRoleCandidateEmail, 'super-admin'))
+    expect(response.statusCode).toBe(400)
+    expect(await User.findOne({ email: invalidRoleCandidateEmail })).toBeNull()
+  })
+
+  it('rejects ordinary, unauthenticated, and invalid-token callers', async () => {
+    const payload = createPayload(testHelper.GetRandomEmail(), bookcarsTypes.UserType.User)
+    const userToken = await testHelper.generateToken(testHelper.getUserId())
+
+    const ordinaryUserResponse = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, userToken)
+      .send(payload)
+    expect(ordinaryUserResponse.statusCode).toBe(403)
+
+    const unauthenticatedResponse = await request(app)
+      .post('/api/create-user')
+      .send(payload)
+    expect(unauthenticatedResponse.statusCode).toBe(403)
+
+    const invalidTokenResponse = await request(app)
+      .post('/api/create-user')
+      .set(env.X_ACCESS_TOKEN, 'invalid-synthetic-token')
+      .send(payload)
+    expect(invalidTokenResponse.statusCode).toBe(401)
+  })
+
+  it('allows an authenticated Admin to create an allowed account type', async () => {
+    const adminToken = await testHelper.signinAsAdmin()
+    const allowedTypes = [bookcarsTypes.UserType.User, bookcarsTypes.UserType.Supplier, bookcarsTypes.UserType.Admin]
+
+    for (const [index, type] of allowedTypes.entries()) {
+      const email = adminAllowedCandidateEmails[index]
+      const response = await request(app)
+        .post('/api/create-user')
+        .set(env.X_ACCESS_TOKEN, adminToken)
+        .send(createPayload(email, type))
+
+      expect(response.statusCode).toBe(200)
+      const createdUser = await User.findOne({ email })
+      expect(createdUser).not.toBeNull()
+      expect(createdUser?.type).toBe(type)
+      expect(createdUser?.password).not.toBe(supplierPassword)
+      expect(await bcrypt.compare(supplierPassword, createdUser!.password!)).toBe(true)
+    }
+
+    await testHelper.signout(adminToken)
   })
 })
 
