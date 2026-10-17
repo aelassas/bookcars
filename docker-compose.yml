@@ -7,7 +7,6 @@ services:
       - openssl rand -base64 756 > /tmp/mongodb-keyfile && chown mongodb:mongodb /tmp/mongodb-keyfile && chmod 400 /tmp/mongodb-keyfile && exec /usr/local/bin/docker-entrypoint.sh mongod --quiet --replSet rs0 --bind_ip_all --keyFile /tmp/mongodb-keyfile
     restart: always
     environment:
-      # Provide your credentials here
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
@@ -33,6 +32,7 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+
   redis:
     image: redis:7-alpine
     restart: always
@@ -40,8 +40,11 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/data
-
-
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   bc-backend:
     build: 
@@ -55,8 +58,7 @@ services:
       mongo:
         condition: service_healthy
       redis:
-        condition: service_started
-      
+        condition: service_healthy
     volumes:
       - cdn:/var/www/cdn/bookcars
       - backend_logs:/bookcars/backend/logs
@@ -65,6 +67,7 @@ services:
     build: 
       context: .
       dockerfile: ./admin/Dockerfile
+    restart: always
     depends_on:
       - bc-backend
     ports:
@@ -74,6 +77,7 @@ services:
     build: 
       context: .
       dockerfile: ./frontend/Dockerfile
+    restart: always
     depends_on:
       - bc-backend
     ports:
