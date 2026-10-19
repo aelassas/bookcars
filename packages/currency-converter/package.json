@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rimraf ./tsconfig.tsbuildinfo ./index.js ./index.d.ts ./check.js ./check.d.ts && tsc --build --verbose",
+    "build": "npx rimraf ./tsconfig.tsbuildinfo ./index.js ./index.d.ts ./index.d.ts.map ./check.js ./check.d.ts ./check.d.ts.map && tsc --build --verbose",
     "check": "npm run build && node check.js",
     "lint": "eslint ."
   },
@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.3.2",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
+    "@typescript-eslint/eslint-plugin": "^8.57.1",
+    "@typescript-eslint/parser": "^8.57.1",
     "eslint": "^9.39.2",
     "rimraf": "^6.1.3",
     "typescript": "^5.9.3"

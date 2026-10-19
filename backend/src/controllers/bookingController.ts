@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer'
 import path from 'node:path'
 import asyncFs from 'node:fs/promises'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
 import User from '../models/User'
@@ -295,7 +296,35 @@ export const checkout = async (req: Request, res: Response) => {
       throw new Error("Driver's license file not found")
     }
 
-    if (!body.payLater) {
+    // Verify car existence and calculate expected total price
+    const carObj = await Car.findById(body.booking.car).lean()
+    if (!carObj) {
+      res.status(400).send('Car not found')
+      return
+    }
+
+    const fromDate = new Date(body.booking.from)
+    const toDate = new Date(body.booking.to)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      carObj as unknown as bookcarsTypes.Car,
+      fromDate,
+      toDate,
+      supplier.priceChangeRate || 0,
+      {
+        cancellation: body.booking.cancellation,
+        amendments: body.booking.amendments,
+        theftProtection: body.booking.theftProtection,
+        collisionDamageWaiver: body.booking.collisionDamageWaiver,
+        fullInsurance: body.booking.fullInsurance,
+        additionalDriver: body.booking.additionalDriver,
+      }
+    )
+    const expectedBasePriceUsd = await bookcarsHelper.convertPrice(expectedBasePrice, env.BASE_CURRENCY, env.BASE_CURRENCY)
+
+    if (body.payLater) {
+      // Server explicitly decides payment status for payLater
+      body.booking.status = bookcarsTypes.BookingStatus.Pending
+    } else {
       const { payPal, paymentIntentId, sessionId } = body
 
       if (!payPal && !paymentIntentId && !sessionId) {
@@ -313,6 +342,22 @@ export const checkout = async (req: Request, res: Response) => {
           logger.error(message, body)
           res.status(400).send(message)
           return // Stop further execution if paymentIntent failed
+        }
+
+        // Validate currency and amount
+        const expectedAmountCents = Math.floor(expectedBasePriceUsd * 100)
+        if (paymentIntent.currency.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {
+          const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${paymentIntent.currency}`
+          logger.error(message, body)
+          res.status(400).send(message)
+          return
+        }
+
+        if (paymentIntent.amount !== expectedAmountCents) {
+          const message = `Payment amount mismatch: expected ${expectedAmountCents}, got ${paymentIntent.amount}`
+          logger.error(message, body)
+          res.status(400).send(message)
+          return
         }
 
         body.booking.paymentIntentId = paymentIntentId
@@ -365,6 +410,7 @@ export const checkout = async (req: Request, res: Response) => {
       body.booking._additionalDriver = additionalDriver._id.toString()
     }
 
+    body.booking.price = expectedBasePriceUsd
     const booking = new Booking(body.booking)
 
     await saveBookingWithAvailability(booking)

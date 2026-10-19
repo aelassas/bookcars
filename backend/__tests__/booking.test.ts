@@ -6,6 +6,7 @@ import asyncFs from 'node:fs/promises'
 import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import app from '../src/app'
 import * as databaseHelper from '../src/utils/databaseHelper'
 import * as testHelper from './testHelper'
@@ -752,6 +753,179 @@ describe('POST /api/checkout', () => {
     bookings = await Booking.find({ driver: { $in: [DRIVER1_ID, DRIVER2_ID] } })
     for (const booking of bookings) {
       await testHelper.deleteNotifications(booking._id.toString())
+    }
+  })
+})
+
+describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () => {
+  it('should ignore client-supplied Paid status when payLater is enabled', async () => {
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2025, 5, 1),
+        to: new Date(2025, 5, 4),
+        status: bookcarsTypes.BookingStatus.Paid, // Client attempting to tamper with status
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 3000,
+        additionalDriver: false,
+      },
+      payLater: true,
+    }
+
+    const res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+
+    expect(res.statusCode).toBe(200)
+    const booking = await Booking.findById(res.body.bookingId)
+    expect(booking).not.toBeNull()
+    // Server must force status to Pending, ignoring client's requested "Paid"
+    expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Pending)
+    await Booking.deleteOne({ _id: res.body.bookingId })
+  })
+
+  it('should reject payment checkout if amount does not match expected car price', async () => {
+    // Create Payment Intent for $10.00 USD (1000 cents)
+    const receiptEmail = testHelper.GetRandomEmail()
+    const paymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
+      amount: 10,
+      currency: 'usd',
+      receiptEmail,
+      customerName: 'Underpaid Attacker',
+      description: 'Underpaid Test Intent',
+      locale: 'en',
+      name: 'Test Underpay',
+    }
+    const piRes = await request(app)
+      .post('/api/create-payment-intent')
+      .send(paymentIntentPayload)
+    expect(piRes.statusCode).toBe(200)
+    const { paymentIntentId, customerId } = piRes.body
+
+    await stripeAPI.paymentIntents.confirm(paymentIntentId, {
+      payment_method: 'pm_card_visa',
+    })
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2025, 6, 1),
+        to: new Date(2025, 6, 4),
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 3000,
+        additionalDriver: false,
+      },
+      payLater: false,
+      paymentIntentId,
+      customerId,
+    }
+
+    const res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('Payment amount mismatch')
+
+    const customer = await stripeAPI.customers.retrieve(customerId)
+    if (customer) {
+      await stripeAPI.customers.del(customerId)
+    }
+  })
+
+  it('should reject payment checkout if paymentIntentId is replayed', async () => {
+    const car = await Car.findById(CAR1_ID)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      car!.toObject() as unknown as bookcarsTypes.Car,
+      new Date(2025, 7, 1),
+      new Date(2025, 7, 4),
+      0,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    const receiptEmail = testHelper.GetRandomEmail()
+    const paymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
+      amount: expectedBasePrice,
+      currency: 'usd',
+      receiptEmail,
+      customerName: 'Replay Tester',
+      description: 'Valid Intent',
+      locale: 'en',
+      name: 'Test Replay',
+    }
+    const piRes = await request(app)
+      .post('/api/create-payment-intent')
+      .send(paymentIntentPayload)
+    const { paymentIntentId, customerId } = piRes.body
+
+    await stripeAPI.paymentIntents.confirm(paymentIntentId, {
+      payment_method: 'pm_card_visa',
+    })
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2025, 7, 1),
+        to: new Date(2025, 7, 4),
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedBasePrice,
+        additionalDriver: false,
+      },
+      payLater: false,
+      paymentIntentId,
+      customerId,
+    }
+
+    // First checkout succeeds
+    const firstRes = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(firstRes.statusCode).toBe(200)
+
+    // Replay attack attempt with same paymentIntentId fails
+    const secondRes = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(secondRes.statusCode).toBe(200)
+    expect(secondRes.body.bookingId).toBe(firstRes.body.bookingId)
+
+    await Booking.deleteOne({ _id: firstRes.body.bookingId })
+    const customer = await stripeAPI.customers.retrieve(customerId)
+    if (customer) {
+      await stripeAPI.customers.del(customerId)
     }
   })
 })

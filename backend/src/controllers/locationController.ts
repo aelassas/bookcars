@@ -72,7 +72,7 @@ export const validate = async (req: Request, res: Response) => {
 }
 
 const createParkingSpot = async (parkingSpot: bookcarsTypes.ParkingSpot): Promise<string> => {
-  const parkinSpotValues = []
+  const parkinSpotValues: string[] = []
   if (parkingSpot.values) {
     for (const name of parkingSpot.values) {
       const parkinSpotValue = new LocationValue({
@@ -80,7 +80,7 @@ const createParkingSpot = async (parkingSpot: bookcarsTypes.ParkingSpot): Promis
         value: name.value,
       })
       await parkinSpotValue.save()
-      parkinSpotValues.push(parkinSpotValue._id)
+      parkinSpotValues.push(parkinSpotValue._id.toString())
     }
   }
 
