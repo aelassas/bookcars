@@ -319,7 +319,7 @@ export const checkout = async (req: Request, res: Response) => {
         additionalDriver: body.booking.additionalDriver,
       }
     )
-    const expectedBasePriceUsd = await bookcarsHelper.convertPrice(expectedBasePrice, env.BASE_CURRENCY, env.BASE_CURRENCY)
+    const expectedBasePriceInBaseCurrency = await bookcarsHelper.convertPrice(expectedBasePrice, env.BASE_CURRENCY, env.BASE_CURRENCY)
 
     if (body.payLater) {
       // Server explicitly decides payment status for payLater
@@ -345,7 +345,7 @@ export const checkout = async (req: Request, res: Response) => {
         }
 
         // Validate currency and amount
-        const expectedAmountCents = Math.floor(expectedBasePriceUsd * 100)
+        const expectedAmountCents = Math.floor(expectedBasePriceInBaseCurrency * 100)
         if (paymentIntent.currency.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {
           const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${paymentIntent.currency}`
           logger.error(message, body)
@@ -410,7 +410,7 @@ export const checkout = async (req: Request, res: Response) => {
       body.booking._additionalDriver = additionalDriver._id.toString()
     }
 
-    body.booking.price = expectedBasePriceUsd
+    body.booking.price = expectedBasePriceInBaseCurrency
     const booking = new Booking(body.booking)
 
     await saveBookingWithAvailability(booking)
