@@ -1,5 +1,31 @@
 # Releases
 
+## [BookCars 8.9](https://github.com/aelassas/bookcars/releases/tag/v8.9) – 2026-10-21
+
+#### What's Changed
+* fix(security): add distributed Redis Token Bucket rate limiting on authentication routes (#123)
+* fix(backend): prevent users from requesting cancellation of bookings they do not own (#117)
+* fix(backend): high - PayPal checkout trusts client-supplied amount and does not reconcile it with the booking price (#118)
+* fix(backend): add currency reconciliation check during PayPal checkout (#118)
+* fix(backend): Broken Access Control in Supplier Bookings and Customer Password Hash Disclosure (#124)
+* fix(backend): prevent supplier privilege escalation (#127)
+* fix(backend): /api/checkout does not sufficiently bind payment to booking and accepts client-controlled paid state
+* fix: remove public email-existence disclosure from account validation flows (#121)
+* fix: allow checkout with existing emails and update register validation (#121)
+
+#### New Contributors
+* @sahajsrivastava044-spec made their first contribution in https://github.com/aelassas/bookcars/pull/121
+* @Kakkar327-coder made their first contribution in https://github.com/aelassas/bookcars/pull/127
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v8.8...v8.9
+
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v8.9/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v8.9)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v8.9)
+
 ## [BookCars 8.8](https://github.com/aelassas/bookcars/releases/tag/v8.8) – 2026-10-11
 
 #### What's Changed
