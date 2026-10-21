@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BookCars",
-    "version": "8.9.0",
+    "version": "9.0.0",
     "scheme": "bookcars",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
       "image": "./assets/splash.png"
     },
     "android": {
-      "versionCode": 890,
+      "versionCode": 900,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
@@ -24,7 +24,7 @@
       "backgroundColor": "#00000000"
     },
     "ios": {
-      "buildNumber": "8.9.0",
+      "buildNumber": "9.0.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       "bundleIdentifier": "com.bookcars",
