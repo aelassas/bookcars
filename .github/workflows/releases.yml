@@ -41,10 +41,12 @@ jobs:
           git fetch origin
           DEFAULT_BRANCH=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
           git checkout $DEFAULT_BRANCH
-          git pull origin $DEFAULT_BRANCH
 
           git add .github/RELEASES.md
           git commit -m "docs: update RELEASES.md on new release" || echo "No changes"
           
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          
+          # Pull latest remote changes with rebase right before pushing
+          git pull --rebase origin $DEFAULT_BRANCH
           git push origin $DEFAULT_BRANCH
