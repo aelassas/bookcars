@@ -132,6 +132,22 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (session.payment_status === 'paid') {
+      const expectedAmountCents = Math.floor(booking.price * 100)
+
+      if (session.currency?.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {
+        const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${session.currency}`
+        logger.error(`[stripe.checkCheckoutSession] ${message}`)
+        res.status(400).send(message)
+        return
+      }
+
+      if (session.amount_total !== expectedAmountCents) {
+        const message = `Payment amount mismatch: expected ${expectedAmountCents}, got ${session.amount_total}`
+        logger.error(`[stripe.checkCheckoutSession] ${message}`)
+        res.status(400).send(message)
+        return
+      }
+
       const paymentIntent = session.payment_intent
       stripePaymentIntentId = typeof paymentIntent === 'string' ? paymentIntent : paymentIntent?.id
       booking.expireAt = undefined

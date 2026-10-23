@@ -73,7 +73,7 @@ describe('POST /api/create-checkout-session', () => {
     let receiptEmail = testHelper.GetRandomEmail()
     let payload: bookcarsTypes.CreatePaymentPayload = {
       amount: 234,
-      currency: 'usd',
+      currency: env.BASE_CURRENCY.toLowerCase(),
       receiptEmail,
       customerName: 'John Doe',
       locale: 'en',
@@ -196,6 +196,8 @@ describe('POST /api/create-checkout-session', () => {
 
 describe('POST /api/check-checkout-session/:sessionId', () => {
   it('should check checkout session', async () => {
+    const baseCurrency = env.BASE_CURRENCY.toLowerCase()
+
     // test failure (checkout session does not exist)
     let res = await request(app)
       .post('/api/check-checkout-session/xxxxxxxxxx')
@@ -295,21 +297,80 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         default: {
           checkout: {
             sessions: {
-              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid' })),
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency })),
             },
           },
         },
       }))
 
       let stripeAPI = (await import('../src/payment/stripe.js')).default
-
-      await expect(stripeAPI.checkout.sessions.retrieve('123')).resolves.toStrictEqual({ payment_status: 'paid' })
-      expect(stripeAPI.checkout.sessions.retrieve).toHaveBeenCalledWith('123')
+      
+      await expect(stripeAPI.checkout.sessions.retrieve('123')).resolves.toStrictEqual({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency })
 
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
       await testHelper.deleteNotifications(booking._id.toString())
+
+      // test failure (amount mismatch)
+      await booking.deleteOne()
+      booking = new Booking({
+        supplier: supplierId,
+        car: car._id.toString(),
+        driver: driver._id.toString(),
+        pickupLocation: locationId,
+        dropOffLocation: locationId,
+        from: new Date(2024, 2, 1),
+        to: new Date(2024, 2, 4),
+        status: bookcarsTypes.BookingStatus.Void,
+        sessionId,
+        expireAt,
+        cancellation: true,
+        amendments: true,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 312,
+        additionalDriver: true,
+      })
+      await booking.save()
+      jest.resetModules()
+      await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
+        default: {
+          checkout: {
+            sessions: {
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 1000, currency: baseCurrency })),
+            },
+          },
+        },
+      }))
+      stripeAPI = (await import('../src/payment/stripe.js')).default
+      res = await request(app)
+        .post(`/api/check-checkout-session/${sessionId}`)
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toContain('Payment amount mismatch')
+      let unconfirmedBooking = await Booking.findById(booking._id)
+      expect(unconfirmedBooking?.status).not.toBe(bookcarsTypes.BookingStatus.Paid)
+
+      // test failure (currency mismatch)
+      const invalidCurrency = baseCurrency === 'usd' ? 'eur' : 'usd'
+      jest.resetModules()
+      await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
+        default: {
+          checkout: {
+            sessions: {
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 31200, currency: invalidCurrency })),
+            },
+          },
+        },
+      }))
+      stripeAPI = (await import('../src/payment/stripe.js')).default
+      res = await request(app)
+        .post(`/api/check-checkout-session/${sessionId}`)
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toContain('Payment currency mismatch')
+      unconfirmedBooking = await Booking.findById(booking._id)
+      expect(unconfirmedBooking?.status).not.toBe(bookcarsTypes.BookingStatus.Paid)
 
       // test failure (booking not found)
       res = await request(app)
@@ -339,6 +400,17 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         sessionId,
       })
       await booking.save()
+      jest.resetModules()
+      await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
+        default: {
+          checkout: {
+            sessions: {
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency })),
+            },
+          },
+        },
+      }))
+      stripeAPI = (await import('../src/payment/stripe.js')).default
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(200)
@@ -645,7 +717,7 @@ describe('POST /api/create-payment-intent', () => {
     //
     const payload: bookcarsTypes.CreatePaymentPayload = {
       amount: 234,
-      currency: 'usd',
+      currency: env.BASE_CURRENCY.toLowerCase(),
       receiptEmail,
       customerName: 'John Doe',
       locale: 'en',
