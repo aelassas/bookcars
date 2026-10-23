@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-15T20:13:17Z
+> Generated on: 2026-10-23T06:37:58Z
 
 ---
 
@@ -3568,12 +3568,10 @@ If date-based pricing is disabled, pricing is calculated using the car’s prede
   `Price = 1 × DailyPrice`
 
 - **If weekly / bi-weekly / monthly prices are set:**  
-  The system selects the **most cost-efficient combination** of:
-  - `MonthlyPrice`
-  - `WeeklyPrice`
-  - `BiWeeklyPrice` (3-day blocks)
-  - `DailyPrice`
-  - `HourlyPrice` (for leftover hours)
+  The system uses a **Dynamic Programming algorithm** to evaluate all possible combinations of configured rates (`MonthlyPrice`, `WeeklyPrice`, `BiWeeklyPrice`, `DailyPrice`) and selects the **absolute lowest total cost**.
+
+> [!NOTE]
+> Tier prices do not need to be strictly proportional or monotonic. If combining multiple shorter packages (e.g., two 3-day bi-weekly blocks) is cheaper than a single longer package (e.g., a 7-day weekly rate), the algorithm automatically chooses the cheaper combination.
 
 ### Examples
 
@@ -3595,11 +3593,12 @@ If date-based pricing is disabled, pricing is calculated using the car’s prede
 
 #### Example 3: Rental for 10 Days
 
-1. If **Weekly** and **Bi-Weekly** prices are set:  
-   `Price = 1 × WeeklyPrice + 1 × BiWeeklyPrice`
+1. If **Weekly ($500)** and **Bi-Weekly ($200)** prices are set:  
+   `Price = 1 × WeeklyPrice ($500) + 1 × BiWeeklyPrice ($200) = $700`
 
-2. If only **Bi-Weekly** is set:  
-   `Price = 3 × BiWeeklyPrice + 1 × DailyPrice`
+2. If **Bi-Weekly ($100)** is configured significantly lower than **Weekly ($1000)**:  
+   `Price = 3 × BiWeeklyPrice ($300) + 1 × DailyPrice ($100) = $400`  
+   *(The algorithm automatically favors three 3-day blocks + 1 day over the expensive weekly rate).*
 
 3. If no pricing tiers are set:  
    `Price = 10 × DailyPrice`
@@ -3623,9 +3622,9 @@ If date-based pricing is disabled, pricing is calculated using the car’s prede
 
 ### Function Reference
 
-This pricing logic is implemented in the following function: [calculatePrice](https://github.com/aelassas/bookcars/blob/394737148ada811a7807caad99b4b2f56ce34b11/packages/bookcars-helper/index.ts#L271)
+This pricing logic is implemented in the following function: [`calculateTotalPrice`](https://github.com/aelassas/bookcars/blob/main/packages/bookcars-helper/index.ts)
 
-This function is used by **both the frontend and mobile app** to ensure consistent and accurate pricing across all platforms.
+This function is used by **the backend, frontend, and mobile app** to ensure consistent and accurate pricing across all platforms.
 
 It dynamically applies the appropriate price tiers based on:
 - Rental duration (in days and hours)
