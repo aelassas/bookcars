@@ -63,7 +63,25 @@ const runScript = (script: 'seed-dev' | 'clean-dev', nodeEnv = 'development'): P
 })
 
 const connectTestDatabase = async () => {
-  await mongoose.connect(testDatabaseUri)
+  if (mongoose.connection.readyState !== 1) {
+    await mongoose.connect(testDatabaseUri)
+  }
+}
+
+const disconnectTestDatabase = async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect()
+  }
+}
+
+const dropCurrentDatabase = async () => {
+  await disconnectTestDatabase()
+  const conn = await mongoose.createConnection(testDatabaseUri).asPromise()
+  try {
+    await conn.dropDatabase()
+  } finally {
+    await conn.close()
+  }
 }
 
 const getManifestCollection = () => mongoose.connection.collection<SeedManifest>(SEED_COLLECTION)
@@ -117,15 +135,11 @@ const createUnrelatedCar = async (supplierId: mongoose.Types.ObjectId, locationI
 })
 
 beforeEach(async () => {
-  await connectTestDatabase()
-  await mongoose.connection.dropDatabase()
-  await mongoose.disconnect()
+  await dropCurrentDatabase()
 })
 
 afterAll(async () => {
-  await connectTestDatabase()
-  await mongoose.connection.dropDatabase()
-  await mongoose.disconnect()
+  await dropCurrentDatabase()
 })
 
 describe('development seed command', () => {
@@ -133,7 +147,7 @@ describe('development seed command', () => {
     await connectTestDatabase()
     const supplier = await createSupplier()
     const location = await createLocation()
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     expect((await runScript('seed-dev')).code).toBe(0)
     expect((await runScript('seed-dev')).code).toBe(0)
@@ -154,14 +168,14 @@ describe('development seed command', () => {
     expect(manifest?.supplierId?.toString()).toBe(supplier._id.toString())
     expect(manifest?.locationId?.toString()).toBe(location._id.toString())
     expect(manifest?.carIds).toHaveLength(3)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('uses only an active supplier and creates a location when needed', async () => {
     await connectTestDatabase()
     await createSupplier(false)
     const activeSupplier = await createSupplier(true)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     expect((await runScript('seed-dev')).code).toBe(0)
     await connectTestDatabase()
@@ -175,7 +189,7 @@ describe('development seed command', () => {
     }
     const location = await Location.findById(cars[0].locations[0])
     expect(location?.supplier?.toString()).toBe(activeSupplier._id.toString())
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('creates all prerequisites in a fresh development database', async () => {
@@ -197,7 +211,7 @@ describe('development seed command', () => {
     expect(manifest?.ownsCountry).toBe(true)
     expect(manifest?.locationValueIds).toHaveLength(2)
     expect(manifest?.countryValueIds).toHaveLength(2)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('does not create a manifest or cars when a seed supplier is invalid', async () => {
@@ -209,7 +223,7 @@ describe('development seed command', () => {
       type: bookcarsTypes.UserType.User,
       active: false,
     })
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     const result = await runScript('seed-dev')
     expect(result.code).toBe(1)
@@ -218,13 +232,13 @@ describe('development seed command', () => {
     await connectTestDatabase()
     expect(await Car.countDocuments({})).toBe(0)
     expect(await getManifestCollection().countDocuments({})).toBe(0)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('rejects an incomplete manifest without creating cars', async () => {
     await connectTestDatabase()
     await getManifestCollection().insertOne({ _id: SEED_ID, carIds: [] })
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     const result = await runScript('seed-dev')
     expect(result.code).toBe(1)
@@ -232,7 +246,7 @@ describe('development seed command', () => {
 
     await connectTestDatabase()
     expect(await Car.countDocuments({})).toBe(0)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('refuses to run outside development', async () => {
@@ -248,7 +262,7 @@ describe('development cleanup command', () => {
     const supplier = await createSupplier()
     const location = await createLocation()
     const unrelatedCar = await createUnrelatedCar(supplier._id, location._id)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     expect((await runScript('seed-dev')).code).toBe(0)
 
@@ -260,7 +274,7 @@ describe('development cleanup command', () => {
     for (const img of seededCarImages) {
       expect(await helper.pathExists(path.join(env.CDN_CARS, img))).toBe(true)
     }
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
 
     expect((await runScript('clean-dev')).code).toBe(0)
     expect((await runScript('clean-dev')).code).toBe(0)
@@ -275,7 +289,7 @@ describe('development cleanup command', () => {
     for (const img of seededCarImages) {
       expect(await helper.pathExists(path.join(env.CDN_CARS, img))).toBe(false)
     }
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('deletes seed-owned prerequisites when they are no longer referenced', async () => {
@@ -287,7 +301,7 @@ describe('development cleanup command', () => {
     expect(await Location.exists({ supplier: { $exists: true } })).toBeFalsy()
     expect(await Country.exists({ supplier: { $exists: true } })).toBeFalsy()
     expect(await LocationValue.countDocuments({ value: 'San Francisco Airport (SFO)' })).toBe(0)
-    await mongoose.disconnect()
+    await disconnectTestDatabase()
   })
 
   it('refuses to run outside development', async () => {
