@@ -321,21 +321,21 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
       dayRates.push({ days: 30, price: (car.discountedMonthlyPrice || car.monthlyPrice)! })
     }
 
-    // Find the cheapest combination because configured tier prices need not be monotonic.
-    const bestPrices = Array<number>(31).fill(Number.POSITIVE_INFINITY)
-    bestPrices[0] = 0
+    if (totalDays > 0) {
+      // Allocate array up to totalDays + 1 to eliminate circular buffer corruption for long rentals
+      const dp = new Array<number>(totalDays + 1).fill(Number.POSITIVE_INFINITY)
+      dp[0] = 0
 
-    for (let day = 1; day <= totalDays; day += 1) {
-      let bestPrice = Number.POSITIVE_INFINITY
-      for (const rate of dayRates) {
-        if (day >= rate.days) {
-          bestPrice = Math.min(bestPrice, bestPrices[(day - rate.days) % bestPrices.length] + rate.price)
+      for (let day = 1; day <= totalDays; day += 1) {
+        for (const rate of dayRates) {
+          if (day >= rate.days) {
+            dp[day] = Math.min(dp[day], dp[day - rate.days] + rate.price)
+          }
         }
       }
-      bestPrices[day % bestPrices.length] = bestPrice
-    }
 
-    totalPrice += bestPrices[totalDays % bestPrices.length]
+      totalPrice += dp[totalDays]
+    }
 
     // Handle hours if less than a day OR leftover time
     if (totalDays === 0 || remainingHours > 0) {
