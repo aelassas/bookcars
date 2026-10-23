@@ -307,32 +307,35 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
     totalDays = Math.floor(totalHours / 24)
     const remainingHours = totalHours % 24
 
-    let remainingDays = totalDays
+    const dayRates: { days: number; price: number }[] = [
+      { days: 1, price: car.discountedDailyPrice || car.dailyPrice },
+    ]
 
-    if (remainingDays >= 30) {
-      if (car.discountedMonthlyPrice || car.monthlyPrice) {
-        totalPrice += (car.discountedMonthlyPrice || car.monthlyPrice)! * Math.floor(remainingDays / 30)
-        remainingDays %= 30
+    if (car.discountedBiWeeklyPrice || car.biWeeklyPrice) {
+      dayRates.push({ days: 3, price: (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! })
+    }
+    if (car.discountedWeeklyPrice || car.weeklyPrice) {
+      dayRates.push({ days: 7, price: (car.discountedWeeklyPrice || car.weeklyPrice)! })
+    }
+    if (car.discountedMonthlyPrice || car.monthlyPrice) {
+      dayRates.push({ days: 30, price: (car.discountedMonthlyPrice || car.monthlyPrice)! })
+    }
+
+    // Find the cheapest combination because configured tier prices need not be monotonic.
+    const bestPrices = Array<number>(31).fill(Number.POSITIVE_INFINITY)
+    bestPrices[0] = 0
+
+    for (let day = 1; day <= totalDays; day += 1) {
+      let bestPrice = Number.POSITIVE_INFINITY
+      for (const rate of dayRates) {
+        if (day >= rate.days) {
+          bestPrice = Math.min(bestPrice, bestPrices[(day - rate.days) % bestPrices.length] + rate.price)
+        }
       }
+      bestPrices[day % bestPrices.length] = bestPrice
     }
 
-    if (remainingDays >= 7) {
-      if (car.discountedWeeklyPrice || car.weeklyPrice) {
-        totalPrice += (car.discountedWeeklyPrice || car.weeklyPrice)! * Math.floor(remainingDays / 7)
-        remainingDays %= 7
-      }
-    }
-
-    if (remainingDays >= 3) {
-      if (car.discountedBiWeeklyPrice || car.biWeeklyPrice) {
-        totalPrice += (car.discountedBiWeeklyPrice || car.biWeeklyPrice)! * Math.floor(remainingDays / 3)
-        remainingDays %= 3
-      }
-    }
-
-    if (remainingDays > 0) {
-      totalPrice += (car.discountedDailyPrice || car.dailyPrice) * remainingDays
-    }
+    totalPrice += bestPrices[totalDays % bestPrices.length]
 
     // Handle hours if less than a day OR leftover time
     if (totalDays === 0 || remainingHours > 0) {
