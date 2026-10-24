@@ -1210,11 +1210,21 @@ export const update = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
+    const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+    const isAuthorizedSupplierUser = !!sessionUser
+      && sessionUser.type === bookcarsTypes.UserType.Supplier
+      && user.type === bookcarsTypes.UserType.User
+      && user.supplier?.equals(sessionUser._id)
     if (!sessionUser
-      || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
+      || (sessionUser.type === bookcarsTypes.UserType.User && !isSelf)
       || (sessionUser.type === bookcarsTypes.UserType.Supplier
-        && ((user.type === bookcarsTypes.UserType.User && sessionUserId !== user.supplier?.toString())
-          || (user.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user._id.toString())))
+        && !isSelf
+        && !isAuthorizedSupplierUser)
+      || (
+        sessionUser.type !== bookcarsTypes.UserType.Admin
+        && sessionUser.type !== bookcarsTypes.UserType.Supplier
+        && sessionUser.type !== bookcarsTypes.UserType.User
+      )
     ) {
       logger.error(`[user.update] Unauthorized attempt to update user ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot update user information')
@@ -1250,11 +1260,6 @@ export const update = async (req: Request, res: Response) => {
     user.priceChangeRate = priceChangeRate
     user.supplierCarLimit = supplierCarLimit
     user.notifyAdminOnNewCar = notifyAdminOnNewCar
-    user.blacklisted = !!blacklisted
-    // only admins can update user type
-    if (type && sessionUser.type === bookcarsTypes.UserType.Admin) {
-      user.type = type as bookcarsTypes.UserType
-    }
     if (typeof enableEmailNotifications !== 'undefined') {
       user.enableEmailNotifications = enableEmailNotifications
     }
@@ -1264,7 +1269,17 @@ export const update = async (req: Request, res: Response) => {
     if (typeof licenseRequired !== 'undefined') {
       user.licenseRequired = licenseRequired
     }
-
+    if (sessionUser.type === bookcarsTypes.UserType.Admin || isAuthorizedSupplierUser) {
+      if (typeof blacklisted !== 'undefined') {
+        user.blacklisted = blacklisted
+      }
+    }
+    // only admins can update user type
+    if (sessionUser.type === bookcarsTypes.UserType.Admin) {
+      if (type) {
+        user.type = type as bookcarsTypes.UserType
+      }
+    }
     await user.save()
     res.sendStatus(200)
   } catch (err) {
@@ -1626,22 +1641,29 @@ export const changePassword = async (req: Request, res: Response) => {
       return
     }
 
-    // begin of security check
+   // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
-    if (!sessionUser
-      || (sessionUser.type === bookcarsTypes.UserType.User && sessionUserId !== user._id.toString())
-      || (sessionUser.type === bookcarsTypes.UserType.Supplier
-        && ((user.type === bookcarsTypes.UserType.User && sessionUserId !== user.supplier?.toString())
-          || (user.type === bookcarsTypes.UserType.Supplier && sessionUserId !== user._id.toString())))
-    ) {
+
+    const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+    const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+    const isAuthorizedSupplierUser = !!sessionUser
+      && sessionUser.type === bookcarsTypes.UserType.Supplier
+      && user.type === bookcarsTypes.UserType.User
+      && user.supplier?.equals(sessionUser._id)
+
+    const isAuthorized = isAdmin || isSelf || isAuthorizedSupplierUser
+
+    if (!sessionUser || !isAuthorized) {
       logger.error(`[user.changePassword] Unauthorized attempt to change user password ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot change user password')
       return
     }
     // end of security check
 
-    if (strict && !user.password) {
+    // Social accounts do not require current password
+    const requireCurrentPassword = strict
+    if (requireCurrentPassword && !user.password) {
       logger.error('[user.changePassword] User.password not found:', _id)
       res.sendStatus(204)
       return
@@ -1655,17 +1677,18 @@ export const changePassword = async (req: Request, res: Response) => {
       res.sendStatus(200)
     }
 
-    if (strict) {
+    if (requireCurrentPassword) {
       const passwordMatch = await bcrypt.compare(currentPassword, user.password!)
       if (passwordMatch) {
-        return _changePassword()
+        await _changePassword()
+        return
       }
 
       res.sendStatus(204)
       return
     }
 
-    return _changePassword()
+    return await _changePassword()
   } catch (err) {
     logger.error(`[user.changePassword] ${i18n.t('ERROR')} ${_id}`, err)
     res.status(400).send(i18n.t('ERROR') + err)

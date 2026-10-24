@@ -141,11 +141,16 @@ const UpdateUser = () => {
             const _user = await UserService.getUser(id)
 
             if (_user) {
-              if (!(
-                _loggedUser.type === bookcarsTypes.UserType.Admin
-                || (_user.type === bookcarsTypes.UserType.Supplier && _loggedUser._id === _user._id)
-                || (_user.type === bookcarsTypes.UserType.User && _loggedUser._id === _user.supplier)
-              )) {
+              const isAdmin = _loggedUser.type === bookcarsTypes.UserType.Admin
+              const isSelfSupplier =
+                _user.type === bookcarsTypes.UserType.Supplier &&
+                _loggedUser._id?.toString() === _user._id?.toString()
+              const isUsersSupplier =
+                _user.type === bookcarsTypes.UserType.User &&
+                _loggedUser.type === bookcarsTypes.UserType.Supplier &&
+                _loggedUser._id?.toString() === _user.supplier?.toString()
+
+              if (!(isAdmin || isSelfSupplier || isUsersSupplier)) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -194,7 +199,7 @@ const UpdateUser = () => {
   const validateFullName = async (value?: string) => {
     if (!!value && type === bookcarsTypes.UserType.Supplier && user?.fullName !== value) {
       const status = await SupplierService.validate({ fullName: value })
-      
+
       if (status !== 200) {
         setError('fullName', { message: csStrings.INVALID_SUPPLIER_NAME })
         setFocus('fullName')

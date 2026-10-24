@@ -232,12 +232,17 @@ export const checkout = async (req: Request, res: Response) => {
       if (existingUser) {
         user = existingUser
       } else {
-        driver.verified = false
-        driver.blacklisted = false
-        driver.type = bookcarsTypes.UserType.User
-        driver.license = null
-
-        user = new User(driver)
+        user = new User({
+          fullName: driver.fullName,
+          email: driver.email,
+          phone: driver.phone,
+          birthDate: driver.birthDate,
+          language: driver.language,
+          type: bookcarsTypes.UserType.User,
+          license: null,
+          verified: false,
+          blacklisted: false,
+        })
         await user.save()
 
         // create license
