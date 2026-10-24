@@ -329,6 +329,7 @@ export const checkout = async (req: Request, res: Response) => {
     if (body.payLater) {
       // Server explicitly decides payment status for payLater
       body.booking.status = bookcarsTypes.BookingStatus.Pending
+      body.booking.sessionId = body.sessionId
     } else {
       const { payPal, paymentIntentId, sessionId } = body
 

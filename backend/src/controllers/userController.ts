@@ -848,6 +848,7 @@ export const socialSignin = async (req: Request, res: Response) => {
         type: bookcarsTypes.UserType.User,
         blacklisted: false,
         avatar,
+        isSocial: true,
       })
       await user.save()
     }
@@ -1641,7 +1642,7 @@ export const changePassword = async (req: Request, res: Response) => {
       return
     }
 
-   // begin of security check
+    // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
 
@@ -1662,7 +1663,8 @@ export const changePassword = async (req: Request, res: Response) => {
     // end of security check
 
     // Social accounts do not require current password
-    const requireCurrentPassword = strict
+    const isSocial = !!user.isSocial && !user.password
+    const requireCurrentPassword = strict || (isSelf && !isSocial)
     if (requireCurrentPassword && !user.password) {
       logger.error('[user.changePassword] User.password not found:', _id)
       res.sendStatus(204)

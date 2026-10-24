@@ -584,6 +584,7 @@ export interface User extends Document {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  isSocial?: boolean
 }
 
 /**

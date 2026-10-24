@@ -406,6 +406,7 @@ export interface User {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  isSocial?: boolean
 }
 
 export interface Option {

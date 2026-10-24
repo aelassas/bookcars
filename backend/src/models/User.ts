@@ -141,6 +141,14 @@ const userSchema = new Schema<env.User>(
       type: Date,
       index: { name: USER_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.USER_EXPIRE_AT, background: true },
     },
+    isSocial: {
+      //
+      // Indicates whether the user account was created via social login
+      // (e.g., Google, Facebook, Apple OAuth) rather than password credentials.
+      //
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
