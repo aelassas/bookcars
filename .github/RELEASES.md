@@ -1,5 +1,26 @@
 # Releases
 
+## [BookCars 9.0](https://github.com/aelassas/bookcars/releases/tag/v9.0) – 2026-10-25
+
+#### What's Changed
+* fix(backend): verify Stripe checkout session paid amount and currency
+* fix(backend): remediate notification IDOR and broken access control vulnerabilities
+* fix(backend): fix rental pricing to choose the cheapest rate combination (#128)
+* fix(backend): fix checkout privilege escalation and user authorization vulnerabilities
+* fix(frontend): non autenticated pay later checkout success page broken
+
+#### New Contributors
+* @dajiaohuang made their first contribution in https://github.com/aelassas/bookcars/pull/128
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v8.9...v9.0
+
+### Assets
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.0/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.0)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.0)
+
 ## [BookCars 8.9](https://github.com/aelassas/bookcars/releases/tag/v8.9) – 2026-10-21
 
 #### What's Changed
