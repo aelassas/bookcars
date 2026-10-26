@@ -1431,6 +1431,32 @@ export const getUser = async (req: Request, res: Response) => {
       notifyAdminOnNewCar: 1,
     }).lean()
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUserType = req.user?.type
+
+    const isSelf = sessionUserId === id
+    const isSupplierUser = sessionUserType === bookcarsTypes.UserType.Supplier
+      && user?.type === bookcarsTypes.UserType.User
+      && user?.supplier?.toString() === sessionUserId
+
+    if (
+      sessionUserType === bookcarsTypes.UserType.User && !isSelf
+    ) {
+      logger.error(`[user.getUser] Forbidden: user ${sessionUserId} tried to read user ${id}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+
+    if (
+      sessionUserType === bookcarsTypes.UserType.Supplier && !isSelf && !isSupplierUser
+    ) {
+      logger.error(`[user.getUser] Forbidden: supplier ${sessionUserId} tried to read user ${id}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+    // end of security check
+
     if (!user) {
       logger.error('[user.getUser] User not found:', req.params)
       res.sendStatus(204)

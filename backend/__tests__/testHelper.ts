@@ -121,7 +121,7 @@ export const getToken = (cookie: string) => {
 
 export const generateToken = (userId: string) => authHelper.encryptJWT({ id: userId })
 
-const signin = async (appType: bookcarsTypes.AppType, email: string) => {
+export const signin = async (email: string, appType: bookcarsTypes.AppType = bookcarsTypes.AppType.Admin) => {
   const payload: bookcarsTypes.SignInPayload = {
     email,
     password: PASSWORD,
@@ -139,9 +139,33 @@ const signin = async (appType: bookcarsTypes.AppType, email: string) => {
   return token
 }
 
-export const signinAsAdmin = () => signin(bookcarsTypes.AppType.Admin, ADMIN_EMAIL)
+export const signinAsAdmin = () => signin(ADMIN_EMAIL, bookcarsTypes.AppType.Admin)
 
-export const signinAsUser = () => signin(bookcarsTypes.AppType.Frontend, USER_EMAIL)
+export const signinAsUser = () => signin(USER_EMAIL, bookcarsTypes.AppType.Frontend)
+
+export const createUser = async (payload: Partial<env.User>) => {
+  const passwordHash = await authHelper.hashPassword(PASSWORD)
+  const user = new User({
+    email: payload.email || GetRandomEmail(),
+    fullName: payload.fullName || 'Test User',
+    language: LANGUAGE,
+    password: passwordHash,
+    type: payload.type || bookcarsTypes.UserType.User,
+    supplier: payload.supplier,
+    active: true,
+    verified: true,
+  })
+  await user.save()
+  expect(user._id.toString()).toBeDefined()
+  return user._id.toString()
+}
+
+export const deleteUser = async (id: string) => {
+  const res = await User.deleteOne({ _id: id })
+  expect(res.deletedCount).toBe(1)
+  await Notification.deleteMany({ user: id })
+  await NotificationCounter.deleteMany({ user: id })
+}
 
 export const signout = async (token: string) => {
   const res = await request(app)
