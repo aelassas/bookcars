@@ -980,6 +980,99 @@ describe('POST /api/frontend-cars/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
   })
+
+  it('should treat booking end dates as exclusive drop-off boundaries', async () => {
+    const car = new Car({
+      name: 'Dropoff Boundary Test Car',
+      supplier: SUPPLIER2_ID,
+      minimumAge: 21,
+      locations: [LOCATION2_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      blockOnPay: true,
+    })
+    await car.save()
+
+    const bookingFrom = new Date('2027-10-28T12:00:00.000Z')
+    const bookingTo = new Date('2027-10-30T12:00:00.000Z')
+    const adjacentSearchTo = new Date('2027-11-02T12:00:00.000Z')
+    const overlappingSearchFrom = new Date('2027-10-29T12:00:00.000Z')
+
+    const search = async (from: Date, to: Date) => {
+      const res = await request(app)
+        .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+        .send({
+          suppliers: [SUPPLIER2_ID],
+          pickupLocation: LOCATION2_ID,
+          carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline, bookcarsTypes.CarType.Electric, bookcarsTypes.CarType.Hybrid],
+          gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
+          from,
+          to,
+        })
+
+      expect(res.statusCode).toBe(200)
+      return res.body[0].resultData.some(
+        (result: { _id: string }) => result._id === car._id.toString(),
+      )
+    }
+
+    try {
+      const booking = new Booking({
+        supplier: SUPPLIER2_ID,
+        car: car._id,
+        driver: testHelper.getUserId(),
+        pickupLocation: LOCATION2_ID,
+        dropOffLocation: LOCATION2_ID,
+        from: bookingFrom,
+        to: bookingTo,
+        status: bookcarsTypes.BookingStatus.Paid,
+        price: 200,
+      })
+      await booking.save()
+
+      expect(await search(bookingTo, adjacentSearchTo)).toBe(true)
+      expect(await search(overlappingSearchFrom, adjacentSearchTo)).toBe(false)
+
+      for (const status of [
+        bookcarsTypes.BookingStatus.Paid,
+        bookcarsTypes.BookingStatus.Reserved,
+        bookcarsTypes.BookingStatus.Deposit,
+      ]) {
+        booking.status = status
+        await booking.save()
+        expect(await search(overlappingSearchFrom, adjacentSearchTo)).toBe(false)
+      }
+
+      car.blockOnPay = false
+      await car.save()
+      booking.status = bookcarsTypes.BookingStatus.Paid
+      await booking.save()
+      expect(await search(overlappingSearchFrom, adjacentSearchTo)).toBe(true)
+
+      car.blockOnPay = true
+      await car.save()
+      await booking.deleteOne()
+      expect(await search(bookingTo, adjacentSearchTo)).toBe(true)
+    } finally {
+      await Booking.deleteMany({ car: car._id })
+      await car.deleteOne()
+    }
+  })
 })
 
 describe('GET /api/check-car/:id', () => {
