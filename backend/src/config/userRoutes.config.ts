@@ -26,7 +26,7 @@ const routes = {
   deleteTempAvatar: '/api/delete-temp-avatar/:avatar',
   getUsers: '/api/users/:page/:size',
   delete: '/api/delete-users',
-  checkPassword: '/api/check-password/:id/:password',
+  checkPassword: '/api/check-password',
   signout: '/api/sign-out',
   verifyRecaptcha: '/api/verify-recaptcha/:token/:ip',
   sendEmail: '/api/send-email',

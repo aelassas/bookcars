@@ -40,7 +40,11 @@ const ChangePassword = () => {
         return
       }
 
-      const status = hasPassword ? (await UserService.checkPassword(user._id as string, currentPassword!)) : 200
+      const payload: bookcarsTypes.CheckPasswordPayload = {
+        _id: user._id as string,
+        password: currentPassword || ''
+      }
+      const status = hasPassword ? (await UserService.checkPassword(payload)) : 200
 
       if (status === 200) {
         const data: bookcarsTypes.ChangePasswordPayload = {

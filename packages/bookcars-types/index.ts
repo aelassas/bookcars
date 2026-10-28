@@ -308,6 +308,11 @@ export interface UpdateUserPayload extends CreateUserPayload {
   enableEmailNotifications?: boolean
 }
 
+export interface CheckPasswordPayload {
+  _id: string
+  password: string
+}
+
 export interface ChangePasswordPayload {
   _id: string
   password: string

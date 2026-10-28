@@ -113,7 +113,11 @@ const ChangePasswordScreen = () => {
 
         let status = 200
         if (hasPassword) {
-          status = await UserService.checkPassword(user._id, currentPassword)
+          const payload: bookcarsTypes.CheckPasswordPayload = {
+            _id: user._id,
+            password: currentPassword || ''
+          }
+          status = await UserService.checkPassword(payload)
         }
 
         if (status !== 200) {

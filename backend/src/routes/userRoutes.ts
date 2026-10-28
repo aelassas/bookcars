@@ -33,7 +33,7 @@ routes.route(routeNames.updateAvatar).post([authJwt.verifyToken, multer({ storag
 routes.route(routeNames.deleteAvatar).post(authJwt.verifyToken, userController.deleteAvatar)
 routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, userController.deleteTempAvatar)
 routes.route(routeNames.changePassword).post(authJwt.verifyToken, rateLimiter, userController.changePassword)
-routes.route(routeNames.checkPassword).get(authJwt.verifyToken, userController.checkPassword)
+routes.route(routeNames.checkPassword).post(authJwt.verifyToken, rateLimiter, userController.checkPassword)
 routes.route(routeNames.getUsers).post(authJwt.verifyToken, authJwt.authSupplier, userController.getUsers)
 routes.route(routeNames.delete).post(authJwt.verifyToken, authJwt.authSupplier, userController.deleteUsers)
 routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)

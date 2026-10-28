@@ -1733,17 +1733,31 @@ export const changePassword = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkPassword = async (req: Request, res: Response) => {
-  const { id, password } = req.params
+  const { _id: id, password }: bookcarsTypes.CheckPasswordPayload = req.body
 
   try {
     if (!helper.isValidObjectId(id)) {
       throw new Error('User id is not valid')
     }
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUserType = req.user?.type
+
+    const isSelf = sessionUserId === id
+    const isAdmin = sessionUserType === bookcarsTypes.UserType.Admin
+
+    if (!isSelf && !isAdmin) {
+      logger.error(`[user.checkPassword] Forbidden: user ${sessionUserId} tried to check password of user ${id}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+    // end of security check
+
     const user = await User.findById(id)
     if (user) {
       if (!user.password) {
-        logger.error('[user.changePassword] User.password not found')
+        logger.error('[user.checkPassword] User.password not found')
         res.sendStatus(204)
         return
       }
