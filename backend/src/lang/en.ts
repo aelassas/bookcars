@@ -20,6 +20,7 @@ export const en = {
   CAR_IMAGE_NOT_FOUND: 'Image file not found: ',
   PASSWORD_RESET_SUBJECT: 'Password Reset',
   PASSWORD_RESET_LINK: 'Please reset your password by clicking the link:',
+  BOOKING_REFERENCE: 'Booking Reference',
   BOOKING_CONFIRMED_SUBJECT_PART1: 'Your booking',
   BOOKING_CONFIRMED_SUBJECT_PART2: 'is confirmed.',
   BOOKING_CONFIRMED_PART1: 'Your booking',

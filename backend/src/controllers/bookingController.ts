@@ -42,6 +42,10 @@ export const create = async (req: Request, res: Response) => {
       body.booking._additionalDriver = additionalDriver._id.toString()
     }
 
+    if (!body.booking.reference) {
+      body.booking.reference = bookcarsHelper.generateBookingReference()
+    }
+
     const booking = new Booking(body.booking)
 
     await saveBookingWithAvailability(booking)
@@ -62,11 +66,12 @@ export const create = async (req: Request, res: Response) => {
  * @param {boolean} notificationMessage
  * @returns {void}
  */
-export const notify = async (driver: env.User, bookingId: string, user: env.User, notificationMessage: string) => {
+export const notify = async (driver: env.User, bookingId: string, user: env.User, notificationMessage: string, reference?: string) => {
   i18n.locale = user.language
 
   // notification
-  const message = `${driver.fullName} ${notificationMessage} ${bookingId}.`
+  const refDisplay = reference ? ` (${bookcarsHelper.formatBookingReference(reference)})` : ''
+  const message = `${driver.fullName} ${notificationMessage} ${bookingId}${refDisplay}.`
   const notification = new Notification({
     user: user._id,
     message,
@@ -92,6 +97,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
       html: `<p>
     ${i18n.t('HELLO')}${user.fullName},<br><br>
     ${message}<br><br>
+    ${reference ? `<b>${i18n.t('BOOKING_REFERENCE')}:</b> ${bookcarsHelper.formatBookingReference(reference)}<br><br>` : ''}
     ${helper.joinURL(env.ADMIN_HOST, `update-booking?b=${bookingId}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
@@ -151,14 +157,16 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
     }
   }
 
+  const refDisplay = booking.reference ? ` (${bookcarsHelper.formatBookingReference(booking.reference)})` : ''
   const mailOptions: nodemailer.SendMailOptions = {
     from: env.SMTP_FROM,
     to: user.email,
-    subject: `${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART2')}`,
+    subject: `${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART1')} ${booking._id}${refDisplay} ${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART2')}`,
     html:
       `<p>
         ${i18n.t('HELLO')}${user.fullName},<br><br>
-        ${!payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
+        ${booking.reference ? `<b>${i18n.t('BOOKING_REFERENCE')}:</b> ${bookcarsHelper.formatBookingReference(booking.reference)}<br><br>` : ''}
+        ${!payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id}${refDisplay} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
         + '<br><br>' : ''}
         ${i18n.t('BOOKING_CONFIRMED_PART3')}${car.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
       + `${from} ${i18n.t('BOOKING_CONFIRMED_PART6')}`
@@ -416,6 +424,10 @@ export const checkout = async (req: Request, res: Response) => {
       body.booking._additionalDriver = additionalDriver._id.toString()
     }
 
+    if (!body.booking.reference) {
+      body.booking.reference = bookcarsHelper.generateBookingReference()
+    }
+
     body.booking.price = expectedBasePriceInBaseCurrency
     const booking = new Booking(body.booking)
 
@@ -445,14 +457,14 @@ export const checkout = async (req: Request, res: Response) => {
       // Notify supplier
       i18n.locale = supplier.language
       let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-      await notify(user, booking._id.toString(), supplier, message)
+      await notify(user, booking._id.toString(), supplier, message, booking.reference)
 
       // Notify admin
       const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
         message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-        await notify(user, booking._id.toString(), admin, message)
+        await notify(user, booking._id.toString(), admin, message, booking.reference)
       }
     }
 
@@ -500,7 +512,8 @@ const notifyDriver = async (booking: env.Booking) => {
 
   i18n.locale = driver.language
 
-  const message = `${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART1')} ${booking._id} ${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART2')}`
+  const refDisplay = booking.reference ? ` (${bookcarsHelper.formatBookingReference(booking.reference)})` : ''
+  const message = `${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART1')} ${booking._id}${refDisplay} ${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART2')}`
   const notification = new Notification({
     user: driver._id,
     message,
@@ -526,6 +539,7 @@ const notifyDriver = async (booking: env.Booking) => {
       html: `<p>
     ${i18n.t('HELLO')}${driver.fullName},<br><br>
     ${message}<br><br>
+    ${booking.reference ? `<b>${i18n.t('BOOKING_REFERENCE')}:</b> ${bookcarsHelper.formatBookingReference(booking.reference)}<br><br>` : ''}
     ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
@@ -696,6 +710,12 @@ export const update = async (req: Request, res: Response) => {
       booking.price = price as number
       booking.isDeposit = isDeposit || false
       booking.isPayedInFull = isPayedInFull || false
+
+      if (body.booking.reference) {
+        booking.reference = body.booking.reference
+      } else if (!booking.reference) {
+        booking.reference = bookcarsHelper.generateBookingReference()
+      }
 
       if (!additionalDriver && booking._additionalDriver) {
         booking._additionalDriver = undefined
@@ -874,7 +894,16 @@ export const getBooking = async (req: Request, res: Response) => {
     const sessionUserId = req.user?._id
     const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
 
-    const booking = await Booking.findById(id)
+    const isObjectId = helper.isValidObjectId(id)
+    let bookingQuery: any
+    if (isObjectId) {
+      bookingQuery = { _id: id }
+    } else {
+      const parsedRef = bookcarsHelper.parseBookingReference(id)
+      bookingQuery = { reference: parsedRef.valid ? parsedRef.reference : id.toLowerCase().trim() }
+    }
+
+    const booking = await Booking.findOne(bookingQuery)
       .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ car: env.CarInfo }>({
         path: 'car',
@@ -1067,14 +1096,22 @@ export const getBookings = async (req: Request, res: Response) => {
           _id: { $eq: new mongoose.Types.ObjectId(keyword) },
         })
       } else {
-        keyword = escapeStringRegexp(keyword)
-        $match.$and!.push({
-          $or: [
-            { 'supplier.fullName': { $regex: keyword, $options: options } },
-            { 'driver.fullName': { $regex: keyword, $options: options } },
-            { 'car.name': { $regex: keyword, $options: options } },
-          ],
-        })
+        const parsedRef = bookcarsHelper.parseBookingReference(keyword)
+        if (parsedRef.valid) {
+          $match.$and!.push({
+            reference: { $eq: parsedRef.reference },
+          })
+        } else {
+          keyword = escapeStringRegexp(keyword)
+          $match.$and!.push({
+            $or: [
+              { reference: { $regex: keyword, $options: options } },
+              { 'supplier.fullName': { $regex: keyword, $options: options } },
+              { 'driver.fullName': { $regex: keyword, $options: options } },
+              { 'car.name': { $regex: keyword, $options: options } },
+            ],
+          })
+        }
       }
     }
 
@@ -1298,13 +1335,13 @@ export const cancelBooking = async (req: Request, res: Response) => {
         return
       }
       i18n.locale = supplier.language
-      await notify(booking.driver, booking._id.toString(), supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
+      await notify(booking.driver, booking._id.toString(), supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'), booking.reference)
 
       // Notify admin
       const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
       if (admin) {
         i18n.locale = admin.language
-        await notify(booking.driver, booking._id.toString(), admin, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
+        await notify(booking.driver, booking._id.toString(), admin, i18n.t('CANCEL_BOOKING_NOTIFICATION'), booking.reference)
       }
 
       res.sendStatus(200)

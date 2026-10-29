@@ -668,6 +668,7 @@ export interface Booking extends Document {
   isDeposit: boolean
   isPayedInFull?: boolean
   paypalOrderId?: string
+  reference?: string
 }
 
 /**
@@ -798,6 +799,7 @@ export interface BookingInfo {
   _additionalDriver?: Types.ObjectId
   cancelRequest?: boolean
   price: number
+  reference?: string
 }
 
 /**

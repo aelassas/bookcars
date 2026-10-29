@@ -1,5 +1,6 @@
 import * as bookcarsTypes from ':bookcars-types'
 import CurrencyConverter, { currencies } from ':currency-converter'
+import { createReferences } from 'refmint'
 
 /**
  * Format a number.
@@ -634,3 +635,75 @@ export const truncateString = (str: string, maxLength: number) => {
 
   return str.slice(0, maxLength)
 }
+
+const bookingReferences = createReferences({
+  prefix: 'bk',
+  expectedCount: 1_000_000,
+  maxCollisionProbability: 1e-9,
+})
+
+/**
+ * Generate a new canonical public booking reference with 'bk' prefix and Bech32m checksum.
+ *
+ * @export
+ * @returns {string} Canonical lowercase booking reference (e.g., 'bk1zmrgzxrwyw0l5vae5e8u')
+ */
+export const generateBookingReference = (): string => bookingReferences.generate()
+
+/**
+ * Format a booking reference into human-readable groups separated by hyphens.
+ *
+ * @export
+ * @param {string} [reference] Booking reference string
+ * @returns {string} Formatted reference (e.g., 'bk1zmrg-zxrw-yw0l-5vae-5e8u')
+ */
+export const formatBookingReference = (reference?: string): string => {
+  if (!reference) {
+    return ''
+  }
+  try {
+    const parsed = bookingReferences.parse(reference)
+    if (parsed.ok) {
+      return bookingReferences.format(parsed.id)
+    }
+    return reference
+  } catch {
+    return reference
+  }
+}
+
+/**
+ * Parse and validate a booking reference.
+ * Normalizes uppercase characters and grouped hyphens.
+ * Verifies namespace prefix and Bech32m checksum.
+ *
+ * @export
+ * @param {string} [input] Reference string to parse
+ * @returns {{ valid: boolean; reference?: string; error?: string }}
+ */
+export const parseBookingReference = (input?: string): { valid: boolean; reference?: string; error?: string } => {
+  if (!input || typeof input !== 'string') {
+    return { valid: false, error: 'empty' }
+  }
+  try {
+    const res = bookingReferences.parse(input)
+    if (res.ok) {
+      return { valid: true, reference: res.id }
+    }
+    return { valid: false, error: res.error }
+  } catch {
+    return { valid: false, error: 'invalid' }
+  }
+}
+
+/**
+ * Check if a string is a valid booking reference.
+ *
+ * @export
+ * @param {string} [input]
+ * @returns {boolean}
+ */
+export const isValidBookingReference = (input?: string): boolean => {
+  return parseBookingReference(input).valid
+}
+

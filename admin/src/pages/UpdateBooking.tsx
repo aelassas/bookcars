@@ -422,6 +422,16 @@ const UpdateBooking = () => {
         <div className="booking">
           <div className="col-1">
             <form onSubmit={handleSubmit(onSubmit)}>
+              {booking.reference && (
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{blStrings.REFERENCE}</InputLabel>
+                  <Input
+                    type="text"
+                    value={bookcarsHelper.formatBookingReference(booking.reference)}
+                    readOnly
+                  />
+                </FormControl>
+              )}
               {!isSupplier && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList

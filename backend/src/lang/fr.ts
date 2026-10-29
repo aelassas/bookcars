@@ -20,6 +20,7 @@ export const fr = {
   CAR_IMAGE_NOT_FOUND: 'Le fichier image est introuvable : ',
   PASSWORD_RESET_SUBJECT: 'Réinitialisation du mot de passe',
   PASSWORD_RESET_LINK: 'Veuillez réinitialiser votre mot de passe en cliquant sur le lien :',
+  BOOKING_REFERENCE: 'Référence de réservation',
   BOOKING_CONFIRMED_SUBJECT_PART1: 'Votre réservation',
   BOOKING_CONFIRMED_SUBJECT_PART2: 'a été confirmée.',
   BOOKING_CONFIRMED_PART1: 'Votre réservation',

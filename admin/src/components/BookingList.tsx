@@ -218,6 +218,15 @@ const BookingList = ({
   const getColumns = (): GridColDef<bookcarsTypes.Booking>[] => {
     const _columns: GridColDef<bookcarsTypes.Booking>[] = [
       {
+        field: 'reference',
+        headerName: strings.REFERENCE,
+        flex: 1,
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
+          <Link href={`/update-booking?b=${row._id}`}>{value ? bookcarsHelper.formatBookingReference(value) : (row._id || '')}</Link>
+        ),
+        valueGetter: (value: string) => value,
+      },
+      {
         field: 'driver',
         headerName: strings.DRIVER,
         flex: 1,

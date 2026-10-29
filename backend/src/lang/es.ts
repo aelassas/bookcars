@@ -20,6 +20,7 @@ export const es = {
   CAR_IMAGE_NOT_FOUND: 'Archivo de imagen no encontrado: ',
   PASSWORD_RESET_SUBJECT: 'Restablecimiento de contraseña',
   PASSWORD_RESET_LINK: 'Por favor, restablezca su contraseña haciendo clic en el enlace:',
+  BOOKING_REFERENCE: 'Referencia de reserva',
   BOOKING_CONFIRMED_SUBJECT_PART1: 'Su reserva',
   BOOKING_CONFIRMED_SUBJECT_PART2: 'ha sido confirmada.',
   BOOKING_CONFIRMED_PART1: 'Su reserva',

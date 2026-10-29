@@ -17,6 +17,7 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'Pas de réservations.',
     DAYS: 'Jours',
     COST: 'Total',
+    REFERENCE: 'Référence',
   },
   en: {
     CAR: 'Car',
@@ -33,6 +34,7 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'No bookings.',
     DAYS: 'Days',
     COST: 'COST',
+    REFERENCE: 'Reference',
   },
   es: {
     CAR: 'Coche',
@@ -49,6 +51,7 @@ const strings = new LocalizedStrings({
     EMPTY_LIST: 'Sin reservas.',
     DAYS: 'Días',
     COST: 'Coste',
+    REFERENCE: 'Referencia',
   },
 })
 

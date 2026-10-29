@@ -107,6 +107,7 @@ export interface Booking {
   isDeposit?: boolean
   isPayedInFull?: boolean
   paypalOrderId?: string
+  reference?: string
 }
 
 export interface CheckoutPayload {
