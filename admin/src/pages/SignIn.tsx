@@ -157,7 +157,7 @@ const SignIn = () => {
                   setValue('password', e.target.value)
                 }}
                 required
-                autoComplete="password"
+                autoComplete="current-password"
               />
 
               <div className="stay-connected">
