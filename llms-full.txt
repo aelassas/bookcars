@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-10-30T09:03:35Z
+> Generated on: 2026-10-30T09:13:00Z
 
 ---
 
@@ -960,7 +960,8 @@ The admin panel allows admins to manage suppliers, cars, countries, locations, p
 
 Customers can register through the web frontend or mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process in a few clicks.
 
-Use the sidebar to browse installation guides, configuration options, and more.
+> [!TIP]
+> Use the sidebar to browse installation guides, configuration options, and more.
 
 ## Features
 
