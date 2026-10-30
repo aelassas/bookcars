@@ -1,0 +1,31 @@
+{
+  "name": "take-auto-driver-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TAKE Auto — internal Driver Telegram Bot (Contract Module 5). Captures vehicle handover/return and generates the Acceptance Act + Rental Contract PDFs. Never messages customers.",
+  "type": "commonjs",
+  "main": "dist/bot.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/bot.js",
+    "dev": "ts-node bot.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.12.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/pdfkit": "^0.13.4",
+    "@types/pg": "^8.11.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

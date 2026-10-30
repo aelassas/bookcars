@@ -1,0 +1,27 @@
+[Unit]
+Description=RMA CRM (Next.js)
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/rma-crm/platform
+Environment=PORT=3003
+Environment=NODE_ENV=production
+Environment=DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform
+Environment=DATABASE_URL_DIRECT=postgresql://take:take_dev@127.0.0.1:5434/platform
+Environment=AUTH_SECRET=RMA_DEMO_ONLY_CHANGE_BEFORE_PRODUCTION
+Environment=AUTH_URL=http://187.127.219.106:8087
+Environment="NEXT_PUBLIC_PLATFORM_NAME=RMA CRM"
+Environment=FLEET_HOME_SLUG=rma
+Environment=RENTAL_DISTRIBUTOR=off
+Environment=WA_SEND_ENABLED=false
+Environment=DB_POOL_MAX=5
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/rma-crm.log
+StandardError=append:/var/log/rma-crm.log
+
+[Install]
+WantedBy=multi-user.target
