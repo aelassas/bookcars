@@ -1,0 +1,23 @@
+version: "3.9"
+name: rma
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: rma-platform-db
+    environment:
+      POSTGRES_USER: take
+      POSTGRES_PASSWORD: take_dev
+      POSTGRES_DB: platform
+    ports:
+      - "5434:5432"
+    volumes:
+      - rma_postgres_data:/var/lib/postgresql/data
+      - ./docker-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U take -d platform"]
+      interval: 5s
+
+volumes:
+  rma_postgres_data:
