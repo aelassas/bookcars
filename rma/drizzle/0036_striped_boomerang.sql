@@ -1,0 +1,1 @@
+ALTER TABLE "rental" ADD COLUMN "booking_basis" text DEFAULT 'booked' NOT NULL;
