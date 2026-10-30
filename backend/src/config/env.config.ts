@@ -264,6 +264,13 @@ export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
 export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
 
 /**
+ * Recipient for public contact and newsletter submissions.
+ *
+ * @type {string}
+ */
+export const CONTACT_EMAIL = __env__('BC_CONTACT_EMAIL', false)
+
+/**
  * Indicate whether user accounts should be automatically verified upon signup.
  * This is useful for local development and testing purposes.
  *
@@ -454,6 +461,14 @@ export const ADMIN_EMAIL = __env__('BC_ADMIN_EMAIL', false)
  * @type {string}
  */
 export const RECAPTCHA_SECRET = __env__('BC_RECAPTCHA_SECRET', false)
+
+/**
+ * Require server-side reCAPTCHA verification when configured, and always in production.
+ *
+ * @type {boolean}
+ */
+export const RECAPTCHA_REQUIRED = process.env.NODE_ENV === 'production'
+  || Boolean(RECAPTCHA_SECRET && RECAPTCHA_SECRET !== 'RECAPTCHA_SECRET')
 
 /**
  * Timezone for cenverting dates from UTC to local time.

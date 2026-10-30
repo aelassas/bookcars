@@ -33,9 +33,6 @@ const NewsletterForm = () => {
       let recaptchaToken = ''
       if (reCaptchaLoaded) {
         recaptchaToken = await generateReCaptchaToken()
-        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
-          recaptchaToken = ''
-        }
       }
 
       if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
@@ -45,10 +42,10 @@ const NewsletterForm = () => {
 
       const payload: bookcarsTypes.SendEmailPayload = {
         from: email,
-        to: env.CONTACT_EMAIL,
         subject: 'New Newsletter Subscription',
         message: '',
         isContactForm: false,
+        recaptchaToken,
       }
       const status = await UserService.sendEmail(payload)
 

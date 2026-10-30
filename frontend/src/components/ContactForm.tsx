@@ -56,9 +56,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
       let recaptchaToken = ''
       if (reCaptchaLoaded) {
         recaptchaToken = await generateReCaptchaToken()
-        if (!(await helper.verifyReCaptcha(recaptchaToken))) {
-          recaptchaToken = ''
-        }
       }
 
       if (env.RECAPTCHA_ENABLED && !recaptchaToken) {
@@ -68,10 +65,10 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
 
       const payload: bookcarsTypes.SendEmailPayload = {
         from: data.email,
-        to: env.CONTACT_EMAIL,
         subject: data.subject,
         message: data.message,
         isContactForm: true,
+        recaptchaToken,
       }
       const status = await UserService.sendEmail(payload)
 

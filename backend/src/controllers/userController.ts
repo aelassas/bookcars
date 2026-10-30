@@ -6,7 +6,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { CookieOptions, Request, Response } from 'express'
 import nodemailer from 'nodemailer'
-import axios from 'axios'
+import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
@@ -17,6 +17,7 @@ import PushToken from '../models/PushToken'
 import * as helper from '../utils/helper'
 import * as authHelper from '../utils/authHelper'
 import * as mailHelper from '../utils/mailHelper'
+import * as recaptchaHelper from '../utils/recaptchaHelper'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import Car from '../models/Car'
@@ -2041,23 +2042,29 @@ export const deleteUsers = async (req: Request, res: Response) => {
  */
 export const verifyRecaptcha = async (req: Request, res: Response) => {
   try {
-    const { token, ip } = req.params
-    const result = await axios.get(`https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${ip}`)
-    const { success } = result.data
+    const { token } = req.params
+    if (!token || token.length > 4096) {
+      res.sendStatus(400)
+      return
+    }
 
-    if (success) {
+    const verified = await recaptchaHelper.verifyRecaptchaToken(
+      token,
+      req.ip || req.socket.remoteAddress || ''
+    )
+    if (verified) {
       res.sendStatus(200)
       return
     }
     res.sendStatus(204)
-  } catch (err) {
-    logger.error(`[user.delete] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
-    res.status(400).send(i18n.t('ERROR') + err)
+  } catch {
+    logger.error('[user.verifyRecaptcha] Verification service unavailable')
+    res.status(503).send(i18n.t('ERROR'))
   }
 }
 
 /**
- * Send an email. reCAPTCHA is mandatory.
+ * Send a contact or newsletter email after server-side validation.
  *
  * @async
  * @param {Request} req
@@ -2065,36 +2072,117 @@ export const verifyRecaptcha = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const sendEmail = async (req: Request, res: Response) => {
+  const whitelist = [
+    helper.trimEnd(env.ADMIN_HOST, '/'),
+    helper.trimEnd(env.FRONTEND_HOST, '/'),
+  ]
+  const { origin } = req.headers
+  if (!origin || whitelist.indexOf(helper.trimEnd(origin, '/')) === -1) {
+    res.status(400).json({ message: 'Invalid request.' })
+    return
+  }
+
+  const body = req.body as Partial<bookcarsTypes.SendEmailPayload> & { to?: unknown }
+  const {
+    from,
+    subject,
+    message,
+    isContactForm,
+    recaptchaToken,
+  } = body || {}
+
+  const validFrom = typeof from === 'string' ? from.trim() : ''
+  if (
+    typeof body !== 'object'
+    || body === null
+    || Array.isArray(body)
+    || Object.keys(body).some((key) => ![
+      'from',
+      'subject',
+      'message',
+      'isContactForm',
+      'recaptchaToken',
+      'to',
+    ].includes(key))
+    || (body.to !== undefined && (typeof body.to !== 'string' || body.to.length > 254))
+    || !validator.isEmail(validFrom)
+    || typeof subject !== 'string'
+    || subject.trim().length === 0
+    || subject.length > 200
+    || typeof message !== 'string'
+    || message.length > 5000
+    || (isContactForm !== true && isContactForm !== false)
+    || (isContactForm && message.trim().length === 0)
+    || (recaptchaToken !== undefined
+      && (typeof recaptchaToken !== 'string' || recaptchaToken.length > 4096))
+  ) {
+    res.status(400).json({ message: 'Invalid request.' })
+    return
+  }
+
+  if (!env.CONTACT_EMAIL || !validator.isEmail(env.CONTACT_EMAIL)) {
+    logger.error('[user.sendEmail] BC_CONTACT_EMAIL is missing or invalid')
+    res.status(503).json({ message: 'Email service is not configured.' })
+    return
+  }
+
+  if (env.RECAPTCHA_REQUIRED) {
+    if (!recaptchaToken) {
+      res.status(400).json({ message: 'reCAPTCHA verification is required.' })
+      return
+    }
+    if (!env.RECAPTCHA_SECRET || env.RECAPTCHA_SECRET === 'RECAPTCHA_SECRET') {
+      logger.error('[user.sendEmail] reCAPTCHA is required but its secret is not configured')
+      res.status(503).json({ message: 'reCAPTCHA verification is unavailable.' })
+      return
+    }
+
+    try {
+      const verified = await recaptchaHelper.verifyRecaptchaToken(
+        recaptchaToken,
+        req.ip || req.socket.remoteAddress || ''
+      )
+      if (!verified) {
+        res.status(400).json({ message: 'reCAPTCHA verification failed.' })
+        return
+      }
+    } catch {
+      logger.error('[user.sendEmail] reCAPTCHA verification service unavailable')
+      res.status(503).json({ message: 'reCAPTCHA verification is unavailable.' })
+      return
+    }
+  }
+
+  const escapedFrom = validator.escape(validFrom)
+  const escapedSubject = validator.escape(subject.trim())
+  const escapedMessage = validator.escape(message).replace(/(?:\r\n|\r|\n)/g, '<br>')
+  const text = [
+    `${i18n.t('FROM')}: ${validFrom}`,
+    ...(isContactForm ? [`${i18n.t('SUBJECT')}: ${subject.trim()}`] : []),
+    ...(message ? [`${i18n.t('MESSAGE')}:\n${message}`] : []),
+  ].join('\n\n')
+
+  const mailOptions: nodemailer.SendMailOptions = {
+    from: env.SMTP_FROM,
+    to: env.CONTACT_EMAIL,
+    subject: isContactForm ? i18n.t('CONTACT_SUBJECT') : 'New Newsletter Subscription',
+    text,
+    html: `<p>
+      ${i18n.t('FROM')}: ${escapedFrom}<br>
+      ${(isContactForm && `${i18n.t('SUBJECT')}: ${escapedSubject}<br>`) || ''}
+      ${(message && `${i18n.t('MESSAGE')}:<br>${escapedMessage}<br>`) || ''}
+    </p>`,
+  }
+
   try {
-    const whitelist = [
-      helper.trimEnd(env.ADMIN_HOST, '/'),
-      helper.trimEnd(env.FRONTEND_HOST, '/'),
-    ]
-    const { origin } = req.headers
-    if (!origin || whitelist.indexOf(helper.trimEnd(origin, '/')) === -1) {
-      throw new Error('Unauthorized!')
-    }
-
-    const { body }: { body: bookcarsTypes.SendEmailPayload } = req
-    const { from, to, subject, message, isContactForm } = body
-
-    const mailOptions: nodemailer.SendMailOptions = {
-      from: env.SMTP_FROM,
-      to,
-      subject: isContactForm ? i18n.t('CONTACT_SUBJECT') : subject,
-      html:
-        `<p>
-              ${i18n.t('FROM')}: ${from}<br>
-              ${(isContactForm && `${i18n.t('SUBJECT')}: ${subject}<br>`) || ''}
-              ${(message && `${i18n.t('MESSAGE')}:<br>${message.replace(/(?:\r\n|\r|\n)/g, '<br>')}<br>`) || ''}
-         </p>`,
-    }
     await mailHelper.sendMail(mailOptions)
-
     res.sendStatus(200)
   } catch (err) {
-    logger.error(`[user.sendEmail] ${JSON.stringify(req.body)}`, err)
-    res.status(400).send(err)
+    logger.error(
+      '[user.sendEmail] Failed to send email',
+      err instanceof Error ? err.name : 'Unknown error'
+    )
+    res.status(500).json({ message: 'Unable to send email.' })
   }
 }
 
