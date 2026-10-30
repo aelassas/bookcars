@@ -7,3 +7,7 @@
 /**/dist
 /node_modules
 .eslintcache
+
+# Marketing-site hero/gallery images — regenerated or hosted on the KVM2 box,
+# never committed (keeps the repo lean). The HTML/JSON/XML stay in-tree.
+/site/*/img/

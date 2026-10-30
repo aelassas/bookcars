@@ -45,6 +45,9 @@ next-env.d.ts
 
 # QA artifacts
 qa-screenshots/
+.playwright-cli/
+/output/
+/verification/
 
 # TARS session cookie jar (RTA SSO login state — a live credential)
 .tars-session.json
