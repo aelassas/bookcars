@@ -445,7 +445,7 @@ export const checkout = async (req: Request, res: Response) => {
         car: carObj._id,
         from: { $lte: toDate },
         to: { $gte: fromDate },
-        status: { $in: BOOKING_RESERVATION_STATUSES } },
+        status: { $in: BOOKING_RESERVATION_STATUSES },
       })
       if (conflictingBooking) {
         res.status(409).send('Car is no longer available for these dates')
@@ -482,7 +482,7 @@ export const checkout = async (req: Request, res: Response) => {
           car: carObj._id,
           from: { $lte: toDate },
           to: { $gte: fromDate },
-          status: { $in: BOOKING_RESERVATION_STATUSES } },
+          status: { $in: BOOKING_RESERVATION_STATUSES },
         })
         if (conflict) {
           const conflictErr = new Error('CONFLICT') as Error & { code: string }
