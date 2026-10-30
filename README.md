@@ -49,7 +49,7 @@ Customers can register through the web frontend or mobile app, search for availa
 -->
 [![LoC Total](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/loc-total.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml)
 
-## Support & Contributing
+## Support
 
 BookCars is free and open source. If it helped you, saved you time, or powered your production workflows, consider supporting the project via [PayPal](https://www.paypal.me/aelassaspp), [GitHub Sponsors](https://github.com/sponsors/aelassas), [Liberapay](https://liberapay.com/aelassas/), or [Buy Me a Coffee](https://www.buymeacoffee.com/aelassas) to keep it active, independent, and free for everyone.
 
