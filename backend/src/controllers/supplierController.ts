@@ -19,6 +19,14 @@ import * as logger from '../utils/logger'
 import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 import Location from '../models/Location'
 
+const restrictedSupplierFields = [
+  'priceChangeRate',
+  'supplierCarLimit',
+  'notifyAdminOnNewCar',
+  'minimumRentalDays',
+  'blacklisted',
+] as const
+
 /**
  * Validate Supplier by fullname.
  *
@@ -76,6 +84,14 @@ export const update = async (req: Request, res: Response) => {
       res.status(403).send('Forbidden: You cannot update supplier information')
       return
     }
+    if (
+      sessionUser.type !== bookcarsTypes.UserType.Admin
+      && restrictedSupplierFields.some((field) => Object.prototype.hasOwnProperty.call(body, field))
+    ) {
+      logger.error(`[supplier.update] Supplier ${sessionUserId} attempted to update restricted fields for supplier ${_id}`)
+      res.status(403).send('Forbidden: You cannot update restricted supplier information')
+      return
+    }
     // end of security check
 
     const supplier = await User.findById(_id)
@@ -94,17 +110,39 @@ export const update = async (req: Request, res: Response) => {
         notifyAdminOnNewCar,
         blacklisted,
       } = body
-      supplier.fullName = fullName
-      supplier.phone = phone
-      supplier.location = location
-      supplier.bio = bio
-      supplier.payLater = payLater
-      supplier.licenseRequired = licenseRequired
-      supplier.minimumRentalDays = minimumRentalDays
-      supplier.priceChangeRate = priceChangeRate
-      supplier.supplierCarLimit = supplierCarLimit
-      supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
-      supplier.blacklisted = !!blacklisted
+      if (typeof fullName !== 'undefined') {
+        supplier.fullName = fullName
+      }
+      if (typeof phone !== 'undefined') {
+        supplier.phone = phone
+      }
+      if (typeof location !== 'undefined') {
+        supplier.location = location
+      }
+      if (typeof bio !== 'undefined') {
+        supplier.bio = bio
+      }
+      if (typeof payLater !== 'undefined') {
+        supplier.payLater = payLater
+      }
+      if (typeof licenseRequired !== 'undefined') {
+        supplier.licenseRequired = licenseRequired
+      }
+      if (typeof minimumRentalDays !== 'undefined') {
+        supplier.minimumRentalDays = minimumRentalDays
+      }
+      if (typeof priceChangeRate !== 'undefined') {
+        supplier.priceChangeRate = priceChangeRate
+      }
+      if (typeof supplierCarLimit !== 'undefined') {
+        supplier.supplierCarLimit = supplierCarLimit
+      }
+      if (typeof notifyAdminOnNewCar !== 'undefined') {
+        supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
+      }
+      if (typeof blacklisted !== 'undefined') {
+        supplier.blacklisted = blacklisted
+      }
 
       await supplier.save()
       res.json({

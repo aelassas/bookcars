@@ -37,6 +37,14 @@ const getStatusMessage = (lang: string, msg: string) => (
 const isDuplicateEmailError = (err: unknown) =>
   typeof err === 'object' && err !== null && 'code' in err && err.code === 11000
 
+const restrictedSupplierFields = [
+  'priceChangeRate',
+  'supplierCarLimit',
+  'notifyAdminOnNewCar',
+  'minimumRentalDays',
+  'blacklisted',
+] as const
+
 /**
  * Sign Up.
  *
@@ -1231,6 +1239,24 @@ export const update = async (req: Request, res: Response) => {
       res.status(403).send('Forbidden: You cannot update user information')
       return
     }
+    const isAdmin = sessionUser.type === bookcarsTypes.UserType.Admin
+    const hasRestrictedSupplierField = restrictedSupplierFields.some(
+      (field) => Object.prototype.hasOwnProperty.call(body, field),
+    )
+    const canUpdateManagedUserBlacklist = isAuthorizedSupplierUser
+      && Object.prototype.hasOwnProperty.call(body, 'blacklisted')
+    if (
+      !isAdmin
+      && hasRestrictedSupplierField
+      && (!canUpdateManagedUserBlacklist
+        || restrictedSupplierFields.some(
+          (field) => field !== 'blacklisted' && Object.prototype.hasOwnProperty.call(body, field),
+        ))
+    ) {
+      logger.error(`[user.update] User ${sessionUserId} attempted to update restricted fields for user ${_id}`)
+      res.status(403).send('Forbidden: You cannot update restricted user information')
+      return
+    }
     // end of security check
 
     const {
@@ -1253,14 +1279,32 @@ export const update = async (req: Request, res: Response) => {
     if (fullName) {
       user.fullName = fullName
     }
-    user.phone = phone
-    user.location = location
-    user.bio = bio
-    user.birthDate = birthDate ? new Date(birthDate) : undefined
-    user.minimumRentalDays = minimumRentalDays
-    user.priceChangeRate = priceChangeRate
-    user.supplierCarLimit = supplierCarLimit
-    user.notifyAdminOnNewCar = notifyAdminOnNewCar
+    if (typeof phone !== 'undefined') {
+      user.phone = phone
+    }
+    if (typeof location !== 'undefined') {
+      user.location = location
+    }
+    if (typeof bio !== 'undefined') {
+      user.bio = bio
+    }
+    if (typeof birthDate !== 'undefined') {
+      user.birthDate = birthDate ? new Date(birthDate) : undefined
+    }
+    if (isAdmin) {
+      if (typeof minimumRentalDays !== 'undefined') {
+        user.minimumRentalDays = minimumRentalDays
+      }
+      if (typeof priceChangeRate !== 'undefined') {
+        user.priceChangeRate = priceChangeRate
+      }
+      if (typeof supplierCarLimit !== 'undefined') {
+        user.supplierCarLimit = supplierCarLimit
+      }
+      if (typeof notifyAdminOnNewCar !== 'undefined') {
+        user.notifyAdminOnNewCar = notifyAdminOnNewCar
+      }
+    }
     if (typeof enableEmailNotifications !== 'undefined') {
       user.enableEmailNotifications = enableEmailNotifications
     }
@@ -1270,14 +1314,14 @@ export const update = async (req: Request, res: Response) => {
     if (typeof licenseRequired !== 'undefined') {
       user.licenseRequired = licenseRequired
     }
-    if (sessionUser.type === bookcarsTypes.UserType.Admin || isAuthorizedSupplierUser) {
+    if (isAdmin || isAuthorizedSupplierUser) {
       if (typeof blacklisted !== 'undefined') {
         user.blacklisted = blacklisted
       }
     }
     // only admins can update user type
-    if (sessionUser.type === bookcarsTypes.UserType.Admin) {
-      if (type) {
+    if (isAdmin) {
+      if (typeof type !== 'undefined') {
         user.type = type as bookcarsTypes.UserType
       }
     }
