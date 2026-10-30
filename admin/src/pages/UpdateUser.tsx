@@ -368,7 +368,7 @@ const UpdateUser = () => {
                       }}
                       color="primary"
                       disabled={
-                        loggedUser?.type === bookcarsTypes.UserType.Supplier && user?._id !== loggedUser?._id
+                        loggedUser?.type === bookcarsTypes.UserType.Supplier && (user.supplier !== loggedUser?._id || user._id === loggedUser?._id)
                       }
                     />
                   )}
