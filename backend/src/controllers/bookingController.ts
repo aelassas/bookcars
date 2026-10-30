@@ -19,8 +19,9 @@ import PushToken from '../models/PushToken'
 import AdditionalDriver from '../models/AdditionalDriver'
 import * as helper from '../utils/helper'
 import * as mailHelper from '../utils/mailHelper'
-import * as env from '../config/env.config'
 import * as logger from '../utils/logger'
+import { resolveLocationTranslation } from '../utils/locationHelper'
+import * as env from '../config/env.config'
 import { BookingConflictError, saveBookingWithAvailability, saveBookingsWithAvailability } from '../utils/bookingReservationHelper'
 import stripeAPI from '../payment/stripe'
 
@@ -135,13 +136,13 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
     return false
   }
 
-  const pickupLocationName = pickupLocation.values.filter((value) => value.language === language)[0].value
+  const pickupLocationName = resolveLocationTranslation(pickupLocation.values, language)
   const dropOffLocation = await Location.findById(booking.dropOffLocation).populate<{ values: env.LocationValue[] }>('values')
   if (!dropOffLocation) {
     logger.info(`Drop-off location ${booking.pickupLocation} not found`)
     return false
   }
-  const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
+  const dropOffLocationName = resolveLocationTranslation(dropOffLocation.values, language)
 
   let contractFile: string | null = null
   if (supplier.contracts && supplier.contracts.length > 0) {

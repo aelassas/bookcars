@@ -20,6 +20,8 @@ import PushToken from '../src/models/PushToken'
 import Token from '../src/models/Token'
 import Notification from '../src/models/Notification'
 import NotificationCounter from '../src/models/NotificationCounter'
+import Location from '../src/models/Location'
+import LocationValue from '../src/models/LocationValue'
 import stripeAPI from '../src/payment/stripe'
 import { BookingConflictError, saveBookingsWithAvailability } from '../src/utils/bookingReservationHelper'
 
@@ -318,6 +320,53 @@ describe('booking reservation concurrency', () => {
 })
 
 describe('POST /api/checkout', () => {
+  it('confirms checkout when pickup and drop-off translations are missing', async () => {
+    const pickupValue = new LocationValue({ language: 'es', value: 'Recogida' })
+    const dropOffValue = new LocationValue({ language: 'en', value: 'Drop-off' })
+    await pickupValue.save()
+    await dropOffValue.save()
+
+    const pickupLocation = new Location({ country: testHelper.GetRandromObjectId(), values: [pickupValue._id] })
+    const dropOffLocation = new Location({ country: testHelper.GetRandromObjectId(), values: [dropOffValue._id] })
+    await pickupLocation.save()
+    await dropOffLocation.save()
+
+    const driver = await User.findById(DRIVER1_ID)
+    const previousLanguage = driver!.language
+    driver!.language = 'fr'
+    await driver!.save()
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR2_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: pickupLocation._id.toString(),
+        dropOffLocation: dropOffLocation._id.toString(),
+        from: new Date(2035, 3, 1),
+        to: new Date(2035, 3, 4),
+        status: bookcarsTypes.BookingStatus.Pending,
+        price: 312,
+      },
+      payLater: true,
+    }
+
+    try {
+      const res = await request(app)
+        .post('/api/checkout')
+        .send(payload)
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.bookingId).toBeTruthy()
+      await Booking.deleteOne({ _id: res.body.bookingId })
+    } finally {
+      driver!.language = previousLanguage
+      await driver!.save()
+      await Location.deleteMany({ _id: { $in: [pickupLocation._id, dropOffLocation._id] } })
+      await LocationValue.deleteMany({ _id: { $in: [pickupValue._id, dropOffValue._id] } })
+    }
+  })
+
   it('should checkout', async () => {
     let bookings = await Booking.find({ driver: DRIVER1_ID })
     expect(bookings.length).toBe(2)
