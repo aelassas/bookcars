@@ -1544,34 +1544,54 @@ export const updateAvatar = async (req: Request, res: Response) => {
 
     const user = await User.findById(userId)
 
-    if (user) {
-      if (user.avatar && !user.avatar.startsWith('http')) {
-        const avatar = path.join(env.CDN_USERS, user.avatar)
-
-        if (await helper.pathExists(avatar)) {
-          await asyncFs.unlink(avatar)
-        }
-      }
-
-      const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
-      const filepath = path.join(env.CDN_USERS, filename)
-
-      // security check: restrict allowed extensions
-      const ext = path.extname(filename)
-      if (!env.allowedImageExtensions.includes(ext.toLowerCase())) {
-        res.status(400).send('Invalid avatar file type')
-        return
-      }
-
-      await asyncFs.writeFile(filepath, req.file.buffer)
-      user.avatar = filename
-      await user.save()
-      res.json(filename)
+    if (!user) {
+      logger.error('[user.updateAvatar] User not found:', userId)
+      res.sendStatus(204)
       return
     }
 
-    logger.error('[user.updateAvatar] User not found:', userId)
-    res.sendStatus(204)
+    const sessionUserId = req.user?._id
+    const sessionUser = await User.findById(sessionUserId)
+    const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+    const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+    const isAuthorizedSupplierUser = !!sessionUser
+      && sessionUser.type === bookcarsTypes.UserType.Supplier
+      && user.type === bookcarsTypes.UserType.User
+      && user.supplier?.equals(sessionUser._id)
+    const isAuthorized = !!sessionUser && (
+      isAdmin
+      || (sessionUser.type === bookcarsTypes.UserType.User && isSelf)
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier && (isSelf || isAuthorizedSupplierUser))
+    )
+
+    if (!isAuthorized) {
+      logger.error(`[user.updateAvatar] Unauthorized attempt to update avatar for user ${userId} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot update this user avatar')
+      return
+    }
+
+    const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filepath = path.join(env.CDN_USERS, filename)
+
+    // security check: restrict allowed extensions
+    const ext = path.extname(filename)
+    if (!env.allowedImageExtensions.includes(ext.toLowerCase())) {
+      res.status(400).send('Invalid avatar file type')
+      return
+    }
+
+    if (user.avatar && !user.avatar.startsWith('http')) {
+      const avatar = path.join(env.CDN_USERS, user.avatar)
+
+      if (await helper.pathExists(avatar)) {
+        await asyncFs.unlink(avatar)
+      }
+    }
+
+    await asyncFs.writeFile(filepath, req.file.buffer)
+    user.avatar = filename
+    await user.save()
+    res.json(filename)
   } catch (err) {
     logger.error(`[user.updateAvatar] ${i18n.t('ERROR')} ${userId}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
@@ -1594,6 +1614,26 @@ export const deleteAvatar = async (req: Request, res: Response) => {
     const user = await User.findById(userId)
 
     if (user) {
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+      const isAuthorizedSupplierUser = !!sessionUser
+        && sessionUser.type === bookcarsTypes.UserType.Supplier
+        && user.type === bookcarsTypes.UserType.User
+        && user.supplier?.equals(sessionUser._id)
+      const isAuthorized = !!sessionUser && (
+        isAdmin
+        || (sessionUser.type === bookcarsTypes.UserType.User && isSelf)
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && (isSelf || isAuthorizedSupplierUser))
+      )
+
+      if (!isAuthorized) {
+        logger.error(`[user.deleteAvatar] Unauthorized attempt to delete avatar for user ${userId} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this user avatar')
+        return
+      }
+
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
         if (await helper.pathExists(avatar)) {

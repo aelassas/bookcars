@@ -1653,6 +1653,310 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
   })
 })
 
+describe('User update and password authorization security', () => {
+  const supplierEmail = testHelper.GetRandomEmail()
+  const managedUserEmail = testHelper.GetRandomEmail()
+  const otherUserEmail = testHelper.GetRandomEmail()
+  let supplierId: string
+  let managedUserId: string
+  let otherUserId: string
+  let managedUserPasswordHash: string
+
+  beforeAll(async () => {
+    supplierId = await testHelper.createSupplier(supplierEmail, 'User Authorization Test Supplier')
+    managedUserPasswordHash = await authHelper.hashPassword(testHelper.PASSWORD)
+
+    const managedUser = new User({
+      email: managedUserEmail,
+      fullName: 'Managed User',
+      language: testHelper.LANGUAGE,
+      password: managedUserPasswordHash,
+      type: bookcarsTypes.UserType.User,
+      supplier: supplierId,
+      verified: true,
+      active: true,
+      blacklisted: false,
+    })
+    await managedUser.save()
+    managedUserId = managedUser._id.toString()
+
+    const otherUser = new User({
+      email: otherUserEmail,
+      fullName: 'Other User',
+      language: testHelper.LANGUAGE,
+      password: managedUserPasswordHash,
+      type: bookcarsTypes.UserType.User,
+    })
+    await otherUser.save()
+    otherUserId = otherUser._id.toString()
+  })
+
+  afterAll(async () => {
+    await User.deleteMany({ _id: { $in: [managedUserId, otherUserId] } })
+    await testHelper.deleteSupplier(supplierId)
+  })
+
+  const setAvatar = async (userId: string) => {
+    const filename = `${userId}_${nanoid()}.jpg`
+    await asyncFs.copyFile(AVATAR1_PATH, path.join(env.CDN_USERS, filename))
+    const user = await User.findById(userId)
+    expect(user).not.toBeNull()
+    user!.avatar = filename
+    await user!.save()
+    return filename
+  }
+
+  const removeAvatarFile = async (filename: string) => {
+    const filepath = path.join(env.CDN_USERS, filename)
+    if (await helper.pathExists(filepath)) {
+      await asyncFs.unlink(filepath)
+    }
+  }
+
+  it('allows users to update and delete their own avatars', async () => {
+    const userToken = await testHelper.generateToken(otherUserId)
+    const originalFilename = await setAvatar(otherUserId)
+    let updatedFilename: string | undefined
+
+    try {
+      let response = await request(app)
+        .post(`/api/update-avatar/${otherUserId}`)
+        .set(env.X_ACCESS_TOKEN, userToken)
+        .attach('image', AVATAR2_PATH)
+      expect(response.statusCode).toBe(200)
+      updatedFilename = response.body as string
+      let user = await User.findById(otherUserId)
+      expect(user?.avatar).toBe(updatedFilename)
+      expect(await helper.pathExists(path.join(env.CDN_USERS, updatedFilename))).toBe(true)
+      expect(await helper.pathExists(path.join(env.CDN_USERS, originalFilename))).toBe(false)
+
+      response = await request(app)
+        .post(`/api/delete-avatar/${otherUserId}`)
+        .set(env.X_ACCESS_TOKEN, userToken)
+      expect(response.statusCode).toBe(200)
+      user = await User.findById(otherUserId)
+      expect(user?.avatar).toBeUndefined()
+      expect(await helper.pathExists(path.join(env.CDN_USERS, updatedFilename))).toBe(false)
+    } finally {
+      await removeAvatarFile(originalFilename)
+      if (updatedFilename) {
+        await removeAvatarFile(updatedFilename)
+      }
+      const user = await User.findById(otherUserId)
+      if (user) {
+        user.avatar = undefined
+        await user.save()
+      }
+    }
+  })
+
+  it('prevents users from updating or deleting another user avatar without side effects', async () => {
+    const userToken = await testHelper.generateToken(otherUserId)
+    const victimFilename = await setAvatar(managedUserId)
+
+    try {
+      let response = await request(app)
+        .post(`/api/update-avatar/${managedUserId}`)
+        .set(env.X_ACCESS_TOKEN, userToken)
+        .attach('image', AVATAR2_PATH)
+      expect(response.statusCode).toBe(403)
+      let victim = await User.findById(managedUserId)
+      expect(victim?.avatar).toBe(victimFilename)
+      expect(await helper.pathExists(path.join(env.CDN_USERS, victimFilename))).toBe(true)
+
+      response = await request(app)
+        .post(`/api/delete-avatar/${managedUserId}`)
+        .set(env.X_ACCESS_TOKEN, userToken)
+      expect(response.statusCode).toBe(403)
+      victim = await User.findById(managedUserId)
+      expect(victim?.avatar).toBe(victimFilename)
+      expect(await helper.pathExists(path.join(env.CDN_USERS, victimFilename))).toBe(true)
+    } finally {
+      await removeAvatarFile(victimFilename)
+      const victim = await User.findById(managedUserId)
+      if (victim) {
+        victim.avatar = undefined
+        await victim.save()
+      }
+    }
+  })
+
+  it('allows suppliers to manage their own and linked user avatars only', async () => {
+    const supplierToken = await testHelper.generateToken(supplierId)
+    const supplierFilename = await setAvatar(supplierId)
+    const managedFilename = await setAvatar(managedUserId)
+    let supplierUpdatedFilename: string | undefined
+    let managedUpdatedFilename: string | undefined
+
+    try {
+      let response = await request(app)
+        .post(`/api/update-avatar/${supplierId}`)
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+        .attach('image', AVATAR2_PATH)
+      expect(response.statusCode).toBe(200)
+      supplierUpdatedFilename = response.body as string
+
+      response = await request(app)
+        .post(`/api/update-avatar/${managedUserId}`)
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+        .attach('image', AVATAR2_PATH)
+      expect(response.statusCode).toBe(200)
+      managedUpdatedFilename = response.body as string
+
+      response = await request(app)
+        .post(`/api/delete-avatar/${managedUserId}`)
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+      expect(response.statusCode).toBe(200)
+      const managedUser = await User.findById(managedUserId)
+      expect(managedUser?.avatar).toBeUndefined()
+      expect(await helper.pathExists(path.join(env.CDN_USERS, managedUpdatedFilename))).toBe(false)
+
+      response = await request(app)
+        .post(`/api/delete-avatar/${otherUserId}`)
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+      expect(response.statusCode).toBe(403)
+      const otherUser = await User.findById(otherUserId)
+      expect(otherUser?.avatar).toBeUndefined()
+    } finally {
+      for (const filename of [supplierFilename, managedFilename, supplierUpdatedFilename, managedUpdatedFilename]) {
+        if (filename) {
+          await removeAvatarFile(filename)
+        }
+      }
+      const supplier = await User.findById(supplierId)
+      if (supplier) {
+        supplier.avatar = undefined
+        await supplier.save()
+      }
+      const managedUser = await User.findById(managedUserId)
+      if (managedUser) {
+        managedUser.avatar = undefined
+        await managedUser.save()
+      }
+    }
+  })
+
+  it('allows administrators to update and delete another account avatar', async () => {
+    const adminToken = await testHelper.generateToken(testHelper.getAdminUserId())
+    const originalFilename = await setAvatar(otherUserId)
+    let updatedFilename: string | undefined
+
+    try {
+      let response = await request(app)
+        .post(`/api/update-avatar/${otherUserId}`)
+        .set(env.X_ACCESS_TOKEN, adminToken)
+        .attach('image', AVATAR2_PATH)
+      expect(response.statusCode).toBe(200)
+      updatedFilename = response.body as string
+
+      response = await request(app)
+        .post(`/api/delete-avatar/${otherUserId}`)
+        .set(env.X_ACCESS_TOKEN, adminToken)
+      expect(response.statusCode).toBe(200)
+      const user = await User.findById(otherUserId)
+      expect(user?.avatar).toBeUndefined()
+    } finally {
+      await removeAvatarFile(originalFilename)
+      if (updatedFilename) {
+        await removeAvatarFile(updatedFilename)
+      }
+      const user = await User.findById(otherUserId)
+      if (user) {
+        user.avatar = undefined
+        await user.save()
+      }
+    }
+  })
+
+  it('rejects unauthenticated avatar changes and preserves not-found responses', async () => {
+    let response = await request(app)
+      .post(`/api/update-avatar/${managedUserId}`)
+      .attach('image', AVATAR2_PATH)
+    expect(response.statusCode).toBe(403)
+
+    response = await request(app)
+      .post(`/api/delete-avatar/${managedUserId}`)
+    expect(response.statusCode).toBe(403)
+
+    const userToken = await testHelper.generateToken(otherUserId)
+    const missingUserId = testHelper.GetRandromObjectIdAsString()
+    response = await request(app)
+      .post(`/api/update-avatar/${missingUserId}`)
+      .set(env.X_ACCESS_TOKEN, userToken)
+      .attach('image', AVATAR2_PATH)
+    expect(response.statusCode).toBe(204)
+
+    response = await request(app)
+      .post(`/api/delete-avatar/${missingUserId}`)
+      .set(env.X_ACCESS_TOKEN, userToken)
+    expect(response.statusCode).toBe(204)
+  })
+
+  it('denies supplier access to admin accounts while allowing supplier-managed user password resets', async () => {
+    const supplierToken = await testHelper.generateToken(supplierId)
+    const newPassword = 'Supplier-Managed-Reset-Password!'
+
+    let response = await request(app)
+      .post('/api/change-password')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send({
+        _id: testHelper.getAdminUserId(),
+        password: '',
+        newPassword,
+        strict: false,
+      })
+    expect(response.statusCode).toBe(403)
+
+    response = await request(app)
+      .post('/api/change-password')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send({
+        _id: managedUserId,
+        password: '',
+        newPassword,
+        strict: false,
+      })
+    expect(response.statusCode).toBe(200)
+    const managedUser = await User.findById(managedUserId)
+    expect(await bcrypt.compare(newPassword, managedUser!.password!)).toBe(true)
+  })
+
+  it('preserves administrative password reset and account-update capabilities', async () => {
+    const adminToken = await testHelper.signinAsAdmin()
+    const newPassword = 'Administrator-Reset-Password!'
+    const target = await User.findById(otherUserId)
+    expect(target).not.toBeNull()
+
+    let response = await request(app)
+      .post('/api/change-password')
+      .set(env.X_ACCESS_TOKEN, adminToken)
+      .send({
+        _id: otherUserId,
+        password: '',
+        newPassword,
+        strict: false,
+      })
+    expect(response.statusCode).toBe(200)
+    let otherUser = await User.findById(otherUserId)
+    expect(await bcrypt.compare(newPassword, otherUser!.password!)).toBe(true)
+
+    response = await request(app)
+      .post('/api/update-user')
+      .set(env.X_ACCESS_TOKEN, adminToken)
+      .send({
+        _id: otherUserId,
+        type: bookcarsTypes.UserType.Supplier,
+        blacklisted: true,
+      })
+    expect(response.statusCode).toBe(200)
+    otherUser = await User.findById(otherUserId)
+    expect(otherUser?.type).toBe(bookcarsTypes.UserType.Supplier)
+    expect(otherUser?.blacklisted).toBe(true)
+
+    await testHelper.signout(adminToken)
+  })
+})
+
 describe('POST /api/change-password', () => {
   it('should change password', async () => {
     const token = await testHelper.signinAsAdmin()
