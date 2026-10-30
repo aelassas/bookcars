@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { TextFieldVariants } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -34,45 +34,162 @@ const LocationSelectList = ({
   const [keyword, setKeyword] = useState('')
   const [selectedOptions, setSelectedOptions] = useState<bookcarsTypes.Location[]>([])
 
+  const searchIdRef = useRef(0)
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const keywordRef = useRef('')
+  const activeRequestsRef = useRef(0)
+
   useEffect(() => {
-    const _value = multiple ? value as bookcarsTypes.Location[] : value ? [value as bookcarsTypes.Location] : []
+    const _value = multiple
+      ? (value as bookcarsTypes.Location[])
+      : value
+      ? [value as bookcarsTypes.Location]
+      : []
 
     if (!bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
     }
   }, [value, multiple, selectedOptions])
 
-  const fetchData = async (_page: number, _keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>) => {
+  useEffect(() => {
+    return () => {
+      searchIdRef.current += 1
+
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
+
+  const fetchData = async (
+    requestedPage: number,
+    requestedKeyword: string,
+    requestedSearchId: number,
+    onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>
+  ) => {
+    if (requestedPage !== 1 && !fetch) {
+      return
+    }
+
+    activeRequestsRef.current += 1
+    setLoading(true)
+
     try {
-      if (fetch || _page === 1) {
-        setLoading(true)
+      const data = await LocationService.getLocations(
+        requestedKeyword,
+        requestedPage,
+        env.PAGE_SIZE
+      )
 
-        const data = await LocationService.getLocations(_keyword, _page, env.PAGE_SIZE)
-        const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
-        if (!_data) {
-          return
+      // Ignore responses belonging to an older search or stale keyword
+      if (
+        requestedSearchId !== searchIdRef.current ||
+        requestedKeyword !== keywordRef.current
+      ) {
+        return
+      }
+
+      const _data =
+        data && data.length > 0
+          ? data[0]
+          : { pageInfo: { totalRecord: 0 }, resultData: [] }
+
+      if (!_data) {
+        return
+      }
+
+      const totalRecords =
+        Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0
+          ? _data.pageInfo[0].totalRecords
+          : 0
+
+      const resultData: bookcarsTypes.Location[] = _data.resultData ?? []
+
+      setRows(currentRows => {
+        const rawRows =
+          requestedPage === 1 ? resultData : [...currentRows, ...resultData]
+
+        const filteredRows = excludeId
+          ? rawRows.filter(row => row._id !== excludeId)
+          : rawRows
+
+        if (requestedPage === 1) {
+          return filteredRows
         }
-        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-        const _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-        setRows(excludeId ? _rows.filter((row) => row._id !== excludeId) : _rows)
-        setFetch(_data.resultData.length > 0)
+        // Avoid adding duplicate locations when scroll pagination requests overlap
+        const existingIds = new Set(currentRows.map(location => location._id))
+        return [
+          ...currentRows,
+          ...filteredRows.filter(location => !existingIds.has(location._id))
+        ]
+      })
 
-        if (onFetch) {
-          onFetch({ rows: _data.resultData, rowCount: totalRecords })
-        }
+      setFetch(resultData.length > 0)
+
+      if (onFetch) {
+        onFetch({ rows: resultData, rowCount: totalRecords })
       }
     } catch (err) {
-      helper.error(err)
+      if (
+        requestedSearchId === searchIdRef.current &&
+        requestedKeyword === keywordRef.current
+      ) {
+        helper.error(err)
+      }
     } finally {
-      setLoading(false)
+      activeRequestsRef.current -= 1
+
+      if (activeRequestsRef.current === 0) {
+        setLoading(false)
+      }
     }
+  }
+
+  const scheduleSearch = (nextKeyword: string) => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    // Invalidate previous search requests
+    searchIdRef.current += 1
+    const searchId = searchIdRef.current
+
+    keywordRef.current = nextKeyword
+
+    setKeyword(nextKeyword)
+    setRows([])
+    setPage(1)
+    setFetch(true)
+    setLoading(true) // Set loading immediately so Autocomplete shows progress instead of "No options"
+
+    debounceTimerRef.current = setTimeout(() => {
+      fetchData(1, nextKeyword, searchId)
+    }, 300)
   }
 
   const handleChange = (values: bookcarsTypes.Option[]) => {
     if (onChange) {
       onChange(values)
     }
+  }
+
+  const handleClear = () => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    searchIdRef.current += 1
+    const searchId = searchIdRef.current
+
+    keywordRef.current = ''
+
+    setRows([])
+    setPage(1)
+    setKeyword('')
+    setFetch(true)
+
+    fetchData(1, '', searchId)
   }
 
   return (
@@ -87,43 +204,45 @@ const LocationSelectList = ({
       type={bookcarsTypes.RecordType.Location}
       variant={variant || 'standard'}
       ListboxProps={{
-        onScroll: (event) => {
+        onScroll: event => {
           const listboxNode = event.currentTarget
-          if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - env.PAGE_OFFSET) {
-            const p = page + 1
-            setPage(p)
-            fetchData(p, keyword)
+          if (
+            fetch &&
+            !loading &&
+            listboxNode.scrollTop + listboxNode.clientHeight >=
+              listboxNode.scrollHeight - env.PAGE_OFFSET
+          ) {
+            const nextPage = page + 1
+            setPage(nextPage)
+            fetchData(nextPage, keyword, searchIdRef.current)
           }
-        },
+        }
       }}
       onFocus={() => {
         if (!init) {
-          const p = 1
           setRows([])
-          setPage(p)
-          fetchData(p, keyword, () => {
+          setPage(1)
+          fetchData(1, keywordRef.current, searchIdRef.current, () => {
             setInit(true)
           })
         }
       }}
-      onInputChange={(event) => {
-        const _value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
+      onInputChange={(event, val) => {
+        const inputValue =
+          (event &&
+          event.target &&
+          'value' in event.target &&
+          typeof event.target.value === 'string'
+            ? event.target.value
+            : '') ||
+          val ||
+          ''
 
-        // if (event.target.type === 'text' && value !== keyword) {
-        if (_value !== keyword) {
-          setRows([])
-          setPage(1)
-          setKeyword(_value)
-          fetchData(1, _value)
+        if (inputValue !== keywordRef.current) {
+          scheduleSearch(inputValue)
         }
       }}
-      onClear={() => {
-        setRows([])
-        setPage(1)
-        setKeyword('')
-        setFetch(true)
-        fetchData(1, '')
-      }}
+      onClear={handleClear}
     />
   )
 }
