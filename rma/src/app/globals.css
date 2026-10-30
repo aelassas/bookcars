@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   TAKE Auto design tokens (Tailwind v4 — no tailwind.config, theme lives here)
+
+   Design language: calm, dark-on-light SaaS. White surfaces on a cool grey
+   canvas, one violet brand accent used sparingly (primary actions + active
+   nav), semantic emerald/amber/rose reserved for meaning (money, SLA, risk).
+   High legibility for all-day operational use.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Brand — TAKE violet, anchored on the existing #7B61FF identity */
+  --color-brand-50: #f5f4ff;
+  --color-brand-100: #edeafe;
+  --color-brand-200: #ddd8fd;
+  --color-brand-300: #c3b9fb;
+  --color-brand-400: #a390f8;
+  --color-brand-500: #8b73f4;
+  --color-brand-600: #7b61ff;
+  --color-brand-700: #6a4df0;
+  --color-brand-800: #5940d1;
+  --color-brand-900: #4936a8;
+
+  /* Neutral aliases (page anatomy) */
+  --color-canvas: #f6f7f9;      /* app background */
+  --color-surface: #ffffff;     /* cards, panels, sidebar */
+  --color-sunken: #f1f3f6;      /* wells, table heads, code-ish blocks */
+  --color-ink: #101828;         /* primary text */
+  --color-ink-2: #475467;       /* secondary text */
+  --color-ink-3: #98a2b3;       /* placeholder / tertiary */
+  --color-line: #e4e7ec;        /* default border */
+  --color-line-soft: #f0f2f5;   /* hairline dividers */
+
+  /* Semantic */
+  --color-success: #059669;
+  --color-success-soft: #ecfdf5;
+  --color-success-line: #a7f3d0;
+  --color-warn: #d97706;
+  --color-warn-soft: #fffbeb;
+  --color-warn-line: #fde68a;
+  --color-danger: #e11d48;
+  --color-danger-soft: #fff1f2;
+  --color-danger-line: #fecdd3;
+  --color-info: #0284c7;
+  --color-info-soft: #f0f9ff;
+  --color-info-line: #bae6fd;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Shape */
+  --radius-card: 0.75rem;   /* rounded-card — panels */
+  --radius-field: 0.5rem;   /* rounded-field — inputs, buttons */
+
+  /* Elevation — very quiet, borders do most of the work */
+  --shadow-card: 0 1px 2px 0 rgb(16 24 40 / 0.04);
+  --shadow-lifted: 0 1px 2px rgb(16 24 40 / 0.05), 0 4px 12px -2px rgb(16 24 40 / 0.08);
+  --shadow-pop: 0 12px 32px -8px rgb(16 24 40 / 0.18);
+}
+
+/* Legacy variables — kept so older inline styles keep working */
+:root {
+  --background: #f6f7f9;
+  --foreground: #101828;
+  --brand-primary: #7b61ff;
+  --brand-primary-hover: #6a4df0;
+  --brand-accent: #475467;
+  --brand-bg: #f6f7f9;
+  --brand-text: #101828;
+  --brand-muted: #667085;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-brand-200);
+  color: var(--color-brand-900);
+}
+
+/* Quiet scrollbars (WebKit) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d4d9e0;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #b9c0cb;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Consistent focus treatment for anything focusable */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 1px;
+}
+
+/* Auth Wave 1 (P0-8) — explicit, higher-contrast ring on interactive
+   controls that matter most for keyboard users (buttons, links). Layered on
+   top of the generic :focus-visible rule above; #7B61FF stays reserved for
+   this (plus the wordmark and borders) — button FILLS moved to #6A4DF0
+   below so fills and focus rings read as distinct colors. */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #7b61ff;
+  outline-offset: 2px;
+}
+
+/* Numbers line up in tables/KPIs */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   DARK MODE — token overrides applied when <html class="dark"> is set.
+   Strategy: flip canvas/surface/ink to dark-grey slate; keep brand accent and
+   semantic colours (success/warn/danger/info) slightly muted but recognisable.
+   ThemeProvider in src/components/theme/ThemeProvider.tsx sets this class.
+--------------------------------------------------------------------------- */
+/* `.dark-surface` used to apply these same overrides to a SUBTREE, for the
+   Telegram mini app (/tma) which was always dark regardless of the user's saved
+   theme. That route was deleted 2026-08-10 and nothing else ever used the
+   class, so it went with it. Re-add the selector here if a subtree ever needs
+   forced dark again — do not re-invent a second palette for it. */
+:root.dark {
+  /* Neutral anatomy — reversed */
+  --color-canvas: #0f1117;        /* app background */
+  --color-surface: #1a1d27;       /* cards, panels, sidebar */
+  --color-sunken: #13161f;        /* wells, table heads */
+  --color-ink: #f0f2f7;           /* primary text */
+  --color-ink-2: #9aa0b4;         /* secondary text */
+  --color-ink-3: #555c72;         /* placeholder / tertiary */
+  --color-line: #252836;          /* default border */
+  --color-line-soft: #1e212e;     /* hairline dividers */
+
+  /* Brand — keep TAKE violet, shifted lighter for dark surfaces */
+  --color-brand-50: #1a1833;
+  --color-brand-100: #22204a;
+  --color-brand-200: #2d2963;
+  --color-brand-300: #3e357e;
+  --color-brand-400: #5544b8;
+  --color-brand-500: #7b61ff;
+  --color-brand-600: #8b73ff;
+  --color-brand-700: #a090ff;
+  --color-brand-800: #b8aeff;
+  --color-brand-900: #d4cfff;
+
+  /* Semantic — muted slightly, still distinct */
+  --color-success: #34d399;
+  --color-success-soft: #0d2b22;
+  --color-success-line: #1a4a38;
+  --color-warn: #fbbf24;
+  --color-warn-soft: #2b1f08;
+  --color-warn-line: #4a3510;
+  --color-danger: #fb7185;
+  --color-danger-soft: #2b0d14;
+  --color-danger-line: #4a1822;
+  --color-info: #38bdf8;
+  --color-info-soft: #0a1f2e;
+  --color-info-line: #153348;
+
+  /* Elevation — darker and tighter on dark surfaces */
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-lifted: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 16px -2px rgb(0 0 0 / 0.5);
+  --shadow-pop: 0 12px 40px -8px rgb(0 0 0 / 0.7);
+
+  /* Legacy :root vars — keep in sync for any inline styles */
+  --background: #0f1117;
+  --foreground: #f0f2f7;
+  --brand-primary: #8b73ff;
+  --brand-primary-hover: #a090ff;
+  --brand-bg: #0f1117;
+  --brand-text: #f0f2f7;
+  --brand-muted: #9aa0b4;
+}
+
+/* Dark scrollbars */
+:root.dark *::-webkit-scrollbar-thumb {
+  background: #2e3346;
+}
+:root.dark *::-webkit-scrollbar-thumb:hover {
+  background: #3d4460;
+}
