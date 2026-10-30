@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import redis from '../config/redis'
 import * as env from '../config/env.config'
+import * as logger from '../utils/logger'
 
 const TOKEN_BUCKET_LUA = `
   local key = KEYS[1]
@@ -36,43 +37,52 @@ const TOKEN_BUCKET_LUA = `
   end
 `
 
-const isTest = env.CI
+const isTest = env.CI || process.env.NODE_ENV === 'test'
 
-export const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
-  if (isTest && !req.headers['x-test-rate-limit']) {
-    return next()
-  }
-
-  const ip = req.ip || req.socket.remoteAddress || '127.0.0.1'
-  const redisKey = `ratelimit:auth:${ip}`
-  const now = Date.now()
-
-  try {
-    const result = (await redis.eval(
-      TOKEN_BUCKET_LUA,
-      1,
-      redisKey,
-      env.RATE_LIMIT_CAPACITY,
-      env.RATE_LIMIT_REFILL_RATE_MS,
-      now
-    )) as [number, number]
-
-    const allowed = result[0] === 1
-    const remainingTokens = result[1]
-
-    res.setHeader('RateLimit-Limit', env.RATE_LIMIT_CAPACITY)
-    res.setHeader('RateLimit-Remaining', remainingTokens)
-
-    if (allowed) {
+export const createRateLimiter = (namespace: string, failClosedOrFn: boolean | (() => boolean) = false) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    const failClosed = typeof failClosedOrFn === 'function' ? failClosedOrFn() : failClosedOrFn
+    if (isTest && !req.headers['x-test-rate-limit']) {
       return next()
     }
 
-    return res.status(429).json({
-      message: 'Too many requests, please try again later.',
-    })
-  } catch {
-    return next()
-  }
-}
+    const ip = req.ip || req.socket.remoteAddress || '127.0.0.1'
+    const redisKey = `ratelimit:${namespace}:${ip}`
+    const now = Date.now()
 
+    try {
+      const result = (await redis.eval(
+        TOKEN_BUCKET_LUA,
+        1,
+        redisKey,
+        env.RATE_LIMIT_CAPACITY,
+        env.RATE_LIMIT_REFILL_RATE_MS,
+        now
+      )) as [number, number]
+
+      const allowed = result[0] === 1
+      const remainingTokens = result[1]
+
+      res.setHeader('RateLimit-Limit', env.RATE_LIMIT_CAPACITY)
+      res.setHeader('RateLimit-Remaining', remainingTokens)
+
+      if (allowed) {
+        return next()
+      }
+
+      return res.status(429).json({
+        message: 'Too many requests, please try again later.',
+      })
+    } catch {
+      if (failClosed) {
+        logger.error(`[rateLimiter.${namespace}] Redis unavailable`)
+        return res.status(503).json({
+          message: 'Service temporarily unavailable.',
+        })
+      }
+      return next()
+    }
+  }
+
+export const rateLimiter = createRateLimiter('auth')
 export default rateLimiter

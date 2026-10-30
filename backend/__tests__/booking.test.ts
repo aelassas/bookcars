@@ -979,6 +979,304 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
   })
 })
 
+// ---------------------------------------------------------------------------
+// TOCTOU / Double-Booking Regression Tests
+// Validates that checkout revalidates availability before persisting a booking.
+// ---------------------------------------------------------------------------
+describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
+  let toctouCarId: string
+  let toctouDriverId: string
+  let toctouCarObj: bookcarsTypes.Car
+  let supplierPriceChangeRate: number
+
+  beforeAll(async () => {
+    // Reset licenseRequired on SUPPLIER_ID in case previous tests left it true
+    const supplier = await User.findById(SUPPLIER_ID)
+    if (supplier) {
+      supplier.licenseRequired = false
+      await supplier.save()
+      supplierPriceChangeRate = supplier.priceChangeRate || 0
+    } else {
+      supplierPriceChangeRate = 0
+    }
+
+    // Create a dedicated car with blockOnPay enabled for availability checks
+    const car = new Car({
+      name: 'TOCTOU Test Car',
+      supplier: SUPPLIER_ID,
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 5,
+      isDateBasedPrice: false,
+      dateBasedPrices: [],
+      blockOnPay: true,
+    })
+    await car.save()
+    toctouCarId = car._id.toString()
+    toctouCarObj = car.toObject() as unknown as bookcarsTypes.Car
+
+    const driver = new User({
+      fullName: 'TOCTOU Driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await driver.save()
+    toctouDriverId = driver._id.toString()
+  })
+
+  afterAll(async () => {
+    await Car.deleteOne({ _id: toctouCarId })
+    await User.deleteOne({ _id: toctouDriverId })
+    await Booking.deleteMany({ car: toctouCarId })
+    await Notification.deleteMany({ user: toctouDriverId })
+    await NotificationCounter.deleteMany({ user: toctouDriverId })
+  })
+
+  it('should return 409 when the car has a conflicting booking (stale-availability scenario)', async () => {
+    const conflictFrom = new Date(2026, 9, 28)
+    const conflictTo = new Date(2026, 9, 31)
+
+    const expectedPrice = bookcarsHelper.calculateTotalPrice(
+      toctouCarObj,
+      conflictFrom,
+      conflictTo,
+      supplierPriceChangeRate,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    const existingBooking = new Booking({
+      supplier: SUPPLIER_ID,
+      car: toctouCarId,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: conflictFrom,
+      to: conflictTo,
+      status: bookcarsTypes.BookingStatus.Paid,
+      cancellation: false,
+      amendments: false,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      price: expectedPrice,
+      additionalDriver: false,
+    })
+    await existingBooking.save()
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: toctouCarId,
+        driver: toctouDriverId,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: conflictFrom,
+        to: conflictTo,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedPrice,
+        additionalDriver: false,
+      },
+      payLater: true,
+    }
+
+    const res = await request(app).post('/api/checkout').send(payload)
+    expect(res.statusCode).toBe(409)
+
+    // Verify duplicate booking was blocked
+    const count = await Booking.countDocuments({
+      car: toctouCarId,
+      from: conflictFrom,
+      to: conflictTo,
+    })
+    expect(count).toBe(1)
+
+    await Booking.deleteOne({ _id: existingBooking._id })
+  })
+
+  it('should block a checkout when a concurrent booking achieves Reserved status before saving (race condition)', async () => {
+    const raceFrom = new Date(2026, 10, 1)
+    const raceTo = new Date(2026, 10, 5)
+
+    const expectedPrice = bookcarsHelper.calculateTotalPrice(
+      toctouCarObj,
+      raceFrom,
+      raceTo,
+      supplierPriceChangeRate,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    const reservedBooking = new Booking({
+      supplier: SUPPLIER_ID,
+      car: toctouCarId,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: raceFrom,
+      to: raceTo,
+      status: bookcarsTypes.BookingStatus.Reserved,
+      cancellation: false,
+      amendments: false,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      price: expectedPrice,
+      additionalDriver: false,
+    })
+    await reservedBooking.save()
+
+    const payloadB: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: toctouCarId,
+        driver: toctouDriverId,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: raceFrom,
+        to: raceTo,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedPrice,
+        additionalDriver: false,
+      },
+      payLater: true,
+    }
+
+    const res = await request(app).post('/api/checkout').send(payloadB)
+    expect(res.statusCode).toBe(409)
+
+    const count = await Booking.countDocuments({ car: toctouCarId, from: raceFrom, to: raceTo })
+    expect(count).toBe(1)
+
+    await Booking.deleteOne({ _id: reservedBooking._id })
+  })
+
+  it('should NOT block concurrent checkouts when blockOnPay is false', async () => {
+    const nonBlockCar = new Car({
+      name: 'Non-Block Car',
+      supplier: SUPPLIER_ID,
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 5,
+      isDateBasedPrice: false,
+      dateBasedPrices: [],
+      blockOnPay: false,
+    })
+    await nonBlockCar.save()
+    const nbCarId = nonBlockCar._id.toString()
+    const nbCarObj = nonBlockCar.toObject() as unknown as bookcarsTypes.Car
+
+    const nbFrom = new Date(2026, 11, 1)
+    const nbTo = new Date(2026, 11, 4)
+
+    const expectedPrice = bookcarsHelper.calculateTotalPrice(
+      nbCarObj,
+      nbFrom,
+      nbTo,
+      supplierPriceChangeRate,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    const makePayload = (driverId: string): bookcarsTypes.CheckoutPayload => ({
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: nbCarId,
+        driver: driverId,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: nbFrom,
+        to: nbTo,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedPrice,
+        additionalDriver: false,
+      },
+      payLater: true,
+    })
+
+    const [res1, res2] = await Promise.all([
+      request(app).post('/api/checkout').send(makePayload(DRIVER1_ID)),
+      request(app).post('/api/checkout').send(makePayload(toctouDriverId)),
+    ])
+
+    expect(res1.statusCode).toBe(200)
+    expect(res2.statusCode).toBe(200)
+
+    await Booking.deleteMany({ car: nbCarId })
+    await Car.deleteOne({ _id: nbCarId })
+  })
+})
+
 describe('POST /api/update-booking', () => {
   it('should update a booking', async () => {
     const token = await testHelper.signinAsAdmin()

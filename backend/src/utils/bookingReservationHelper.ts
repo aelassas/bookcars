@@ -4,6 +4,11 @@ import * as env from '../config/env.config'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 
+/**
+ * Booking reservation statuses.
+ *
+ * @type {bookcarsTypes.BookingStatus[]}
+ */
 export const BOOKING_RESERVATION_STATUSES = [
   bookcarsTypes.BookingStatus.Deposit,
   bookcarsTypes.BookingStatus.Paid,
