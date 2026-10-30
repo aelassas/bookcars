@@ -233,7 +233,6 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
 export const checkout = async (req: Request, res: Response) => {
   let checkoutPaymentIntentId: string | undefined
   try {
-    const now = new Date()
     let user: env.User | null
     const { body }: { body: bookcarsTypes.CheckoutPayload } = req
     const { driver } = body
@@ -446,10 +445,7 @@ export const checkout = async (req: Request, res: Response) => {
         car: carObj._id,
         from: { $lte: toDate },
         to: { $gte: fromDate },
-             $or: [
-            { status: { $in: BOOKING_RESERVATION_STATUSES } },
-            { status: bookcarsTypes.BookingStatus.Void, expireAt: { $gt: now } },
-          ],
+        status: { $in: BOOKING_RESERVATION_STATUSES } },
       })
       if (conflictingBooking) {
         res.status(409).send('Car is no longer available for these dates')
@@ -486,10 +482,7 @@ export const checkout = async (req: Request, res: Response) => {
           car: carObj._id,
           from: { $lte: toDate },
           to: { $gte: fromDate },
-          $or: [
-            { status: { $in: BOOKING_RESERVATION_STATUSES } },
-            { status: bookcarsTypes.BookingStatus.Void, expireAt: { $gt: now } },
-          ],
+          status: { $in: BOOKING_RESERVATION_STATUSES } },
         })
         if (conflict) {
           const conflictErr = new Error('CONFLICT') as Error & { code: string }
