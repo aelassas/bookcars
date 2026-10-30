@@ -25,7 +25,7 @@ import Location from '../models/Location'
  * @type {readonly ["supplierCarLimit", "notifyAdminOnNewCar", "blacklisted"]}
  */
 export const restrictedSupplierFields = [
-  'supplierCarLimit', // Maximum number of cars can be displayed in search results for a supplier
+  'supplierCarLimit', // Maximum number of cars that can be displayed in search results for a supplier
   'notifyAdminOnNewCar', // Whether to notify admin when a new car is created by a supplier
   'blacklisted', // Whether the supplier is blacklisted
   // minimumRentalDays is not a restricted supplier field because a supplier can set the minimum rental days for their cars
