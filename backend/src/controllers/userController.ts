@@ -22,6 +22,7 @@ import NotificationCounter from '../models/NotificationCounter'
 import Car from '../models/Car'
 import AdditionalDriver from '../models/AdditionalDriver'
 import * as logger from '../utils/logger'
+import * as supplierController from './supplierController'
 
 /**
  * Get status message as HTML.
@@ -1231,6 +1232,24 @@ export const update = async (req: Request, res: Response) => {
       res.status(403).send('Forbidden: You cannot update user information')
       return
     }
+    const isAdmin = sessionUser.type === bookcarsTypes.UserType.Admin
+    const hasRestrictedSupplierField = supplierController.restrictedSupplierFields.some(
+      (field) => Object.prototype.hasOwnProperty.call(body, field),
+    )
+    const canUpdateManagedUserBlacklist = isAuthorizedSupplierUser
+      && Object.prototype.hasOwnProperty.call(body, 'blacklisted')
+    if (
+      !isAdmin
+      && hasRestrictedSupplierField
+      && (!canUpdateManagedUserBlacklist
+        || supplierController.restrictedSupplierFields.some(
+          (field) => field !== 'blacklisted' && Object.prototype.hasOwnProperty.call(body, field),
+        ))
+    ) {
+      logger.error(`[user.update] User ${sessionUserId} attempted to update restricted fields for user ${_id}`)
+      res.status(403).send('Forbidden: You cannot update restricted user information')
+      return
+    }
     // end of security check
 
     const {
@@ -1259,8 +1278,10 @@ export const update = async (req: Request, res: Response) => {
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     user.minimumRentalDays = minimumRentalDays
     user.priceChangeRate = priceChangeRate
-    user.supplierCarLimit = supplierCarLimit
-    user.notifyAdminOnNewCar = notifyAdminOnNewCar
+    if (isAdmin) {
+      user.supplierCarLimit = supplierCarLimit
+      user.notifyAdminOnNewCar = notifyAdminOnNewCar
+    }
     if (typeof enableEmailNotifications !== 'undefined') {
       user.enableEmailNotifications = enableEmailNotifications
     }
@@ -1270,16 +1291,14 @@ export const update = async (req: Request, res: Response) => {
     if (typeof licenseRequired !== 'undefined') {
       user.licenseRequired = licenseRequired
     }
-    if (sessionUser.type === bookcarsTypes.UserType.Admin || isAuthorizedSupplierUser) {
+    if (isAdmin || isAuthorizedSupplierUser) {
       if (typeof blacklisted !== 'undefined') {
         user.blacklisted = blacklisted
       }
     }
     // only admins can update user type
-    if (sessionUser.type === bookcarsTypes.UserType.Admin) {
-      if (type) {
-        user.type = type as bookcarsTypes.UserType
-      }
+    if (isAdmin && typeof type !== 'undefined') {
+      user.type = type as bookcarsTypes.UserType
     }
     await user.save()
     res.sendStatus(200)

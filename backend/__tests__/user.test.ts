@@ -1296,6 +1296,82 @@ describe('POST /api/update-user', () => {
 
     await testHelper.signout(token)
   })
+
+  it('enforces supplier field-level authorization independently in user.update', async () => {
+    const supplier1Email = testHelper.GetRandomEmail()
+    const supplier2Email = testHelper.GetRandomEmail()
+    const supplier1Id = await testHelper.createSupplier(supplier1Email, testHelper.getSupplierName())
+    const supplier2Id = await testHelper.createSupplier(supplier2Email, testHelper.getSupplierName())
+    const regularUserId = await testHelper.createUser({
+      email: testHelper.GetRandomEmail(),
+      fullName: 'Restricted Update User',
+    })
+    const supplierToken = await testHelper.signin(supplier1Email, bookcarsTypes.AppType.Admin)
+    const basePayload: bookcarsTypes.UpdateUserPayload = {
+      _id: supplier1Id,
+      fullName: 'Updated Supplier Name',
+      phone: '01010101',
+      location: 'supplier location',
+      bio: 'supplier bio',
+    }
+
+    let res = await request(app)
+      .post('/api/update-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(basePayload)
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(supplier1Id))?.fullName).toBe(basePayload.fullName)
+
+    for (const field of ['supplierCarLimit', 'notifyAdminOnNewCar', 'blacklisted']) {
+      res = await request(app)
+        .post('/api/update-user')
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+        .send({ ...basePayload, [field]: field === 'notifyAdminOnNewCar' || field === 'blacklisted' ? false : 99 })
+      expect(res.statusCode).toBe(403)
+    }
+
+    res = await request(app)
+      .post('/api/update-user')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send({ ...basePayload, _id: supplier2Id })
+    expect(res.statusCode).toBe(403)
+
+    await testHelper.signout(supplierToken)
+
+    const userToken = await testHelper.signinAsUser()
+    res = await request(app)
+      .post('/api/update-user')
+      .set(env.X_ACCESS_TOKEN, userToken)
+      .send({ ...basePayload, _id: regularUserId, priceChangeRate: 99 })
+    expect(res.statusCode).toBe(403)
+    await testHelper.signout(userToken)
+
+    const adminToken = await testHelper.signinAsAdmin()
+    res = await request(app)
+      .post('/api/update-user')
+      .set(env.X_ACCESS_TOKEN, adminToken)
+      .send({
+        ...basePayload,
+        _id: supplier1Id,
+        priceChangeRate: 7,
+        supplierCarLimit: 12,
+        notifyAdminOnNewCar: true,
+        minimumRentalDays: 4,
+        blacklisted: false,
+      })
+    expect(res.statusCode).toBe(200)
+    const updatedSupplier = await User.findById(supplier1Id)
+    expect(updatedSupplier?.priceChangeRate).toBe(7)
+    expect(updatedSupplier?.supplierCarLimit).toBe(12)
+    expect(updatedSupplier?.notifyAdminOnNewCar).toBeTruthy()
+    expect(updatedSupplier?.minimumRentalDays).toBe(4)
+    expect(updatedSupplier?.blacklisted).toBeFalsy()
+    await testHelper.signout(adminToken)
+
+    await testHelper.deleteSupplier(supplier1Id)
+    await testHelper.deleteSupplier(supplier2Id)
+    await testHelper.deleteUser(regularUserId)
+  })
 })
 
 describe('POST /api/update-email-notifications', () => {

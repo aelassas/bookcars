@@ -222,6 +222,7 @@ const UpdateUser = () => {
         return
       }
 
+      const isAdmin = loggedUser?.type === bookcarsTypes.UserType.Admin
       const language = UserService.getLanguage()
       const payload: bookcarsTypes.UpdateUserPayload = {
         _id: user._id as string,
@@ -235,9 +236,12 @@ const UpdateUser = () => {
         birthDate: data.birthDate,
         minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
         priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
-        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: type === bookcarsTypes.RecordType.Supplier ? notifyAdminOnNewCar : undefined,
-        blacklisted: data.blacklisted,
+      }
+
+      if (isAdmin) {
+        payload.supplierCarLimit = data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined
+        payload.notifyAdminOnNewCar = data.notifyAdminOnNewCar
+        payload.blacklisted = !!data.blacklisted
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {
@@ -363,6 +367,9 @@ const UpdateUser = () => {
                         setValue('blacklisted', e.target.checked)
                       }}
                       color="primary"
+                      disabled={
+                        loggedUser?.type === bookcarsTypes.UserType.Supplier && user?._id !== loggedUser?._id
+                      }
                     />
                   )}
                   label={commonStrings.BLACKLISTED}
@@ -458,6 +465,7 @@ const UpdateUser = () => {
                           clearErrors('supplierCarLimit')
                         }
                       }}
+                      disabled={loggedUser?.type === bookcarsTypes.UserType.Supplier}
                     />
                     <FormHelperText error={!!errors.supplierCarLimit}>
                       {errors.supplierCarLimit?.message || ''}

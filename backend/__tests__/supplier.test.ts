@@ -251,6 +251,50 @@ describe('PUT /api/update-supplier', () => {
     expect(res.body.supplierCarLimit).toBe(3)
     expect(res.body.notifyAdminOnNewCar).toBeTruthy()
 
+    const supplier = await User.findById(SUPPLIER1_ID)
+    expect(supplier).not.toBeNull()
+    const supplierToken = await testHelper.signin(supplier!.email, bookcarsTypes.AppType.Admin)
+    const supplierProfilePayload: bookcarsTypes.UpdateSupplierPayload = {
+      _id: SUPPLIER1_ID,
+      fullName: `${SUPPLIER1_NAME}-self`,
+      bio,
+      location,
+      phone,
+      payLater,
+      licenseRequired: true,
+    }
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send(supplierProfilePayload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.fullName).toBe(supplierProfilePayload.fullName)
+    SUPPLIER1_NAME = supplierProfilePayload.fullName
+
+    for (const field of ['supplierCarLimit', 'notifyAdminOnNewCar', 'blacklisted']) {
+      res = await request(app)
+        .put('/api/update-supplier')
+        .set(env.X_ACCESS_TOKEN, supplierToken)
+        .send({ ...supplierProfilePayload, [field]: field === 'notifyAdminOnNewCar' || field === 'blacklisted' ? false : 99 })
+      expect(res.statusCode).toBe(403)
+    }
+
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .send({ ...supplierProfilePayload, _id: SUPPLIER2_ID })
+    expect(res.statusCode).toBe(403)
+
+    await testHelper.signout(supplierToken)
+
+    const userToken = await testHelper.signinAsUser()
+    res = await request(app)
+      .put('/api/update-supplier')
+      .set(env.X_ACCESS_TOKEN, userToken)
+      .send(supplierProfilePayload)
+    expect(res.statusCode).toBe(403)
+    await testHelper.signout(userToken)
+
     // test success (supplier not found)
     payload._id = testHelper.GetRandromObjectIdAsString()
     res = await request(app)

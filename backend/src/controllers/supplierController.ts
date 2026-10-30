@@ -20,6 +20,19 @@ import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 import Location from '../models/Location'
 
 /**
+ * Restricted supplier fields. Only admins can update these fields.
+ *
+ * @type {readonly ["supplierCarLimit", "notifyAdminOnNewCar", "blacklisted"]}
+ */
+export const restrictedSupplierFields = [
+  'supplierCarLimit', // Maximum number of cars can be displayed in search results for a supplier
+  'notifyAdminOnNewCar', // Whether to notify admin when a new car is created by a supplier
+  'blacklisted', // Whether the supplier is blacklisted
+  // minimumRentalDays is not a restricted supplier field because a supplier can set the minimum rental days for their cars
+  // priceChangeRate is not a restricted supplier field because a supplier can set the price change rate for their cars
+] as const
+
+/**
  * Validate Supplier by fullname.
  *
  * @export
@@ -71,9 +84,18 @@ export const update = async (req: Request, res: Response) => {
     // begin of security check
     const sessionUserId = req.user?._id
     const sessionUser = await User.findById(sessionUserId)
+    const isAdmin = !!sessionUser && sessionUser?.type === bookcarsTypes.UserType.Admin
     if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== _id)) {
       logger.error(`[supplier.update] Unauthorized attempt to update supplier ${_id} by user ${sessionUserId}`)
       res.status(403).send('Forbidden: You cannot update supplier information')
+      return
+    }
+    if (
+      !isAdmin
+      && restrictedSupplierFields.some((field) => Object.prototype.hasOwnProperty.call(body, field))
+    ) {
+      logger.error(`[supplier.update] Supplier ${sessionUserId} attempted to update restricted fields for supplier ${_id}`)
+      res.status(403).send('Forbidden: You cannot update restricted supplier information')
       return
     }
     // end of security check
@@ -102,9 +124,11 @@ export const update = async (req: Request, res: Response) => {
       supplier.licenseRequired = licenseRequired
       supplier.minimumRentalDays = minimumRentalDays
       supplier.priceChangeRate = priceChangeRate
-      supplier.supplierCarLimit = supplierCarLimit
-      supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
-      supplier.blacklisted = !!blacklisted
+      if (isAdmin) {
+        supplier.supplierCarLimit = supplierCarLimit
+        supplier.notifyAdminOnNewCar = notifyAdminOnNewCar
+        supplier.blacklisted = !!blacklisted
+      }
 
       await supplier.save()
       res.json({

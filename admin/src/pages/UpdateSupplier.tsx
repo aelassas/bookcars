@@ -198,6 +198,8 @@ const UpdateSupplier = () => {
         return
       }
 
+      const isAdmin = user?.type === bookcarsTypes.UserType.Admin
+
       const payload: bookcarsTypes.UpdateSupplierPayload = {
         _id: supplier._id as string,
         fullName: data.fullName,
@@ -208,9 +210,12 @@ const UpdateSupplier = () => {
         licenseRequired: !!data.licenseRequired,
         minimumRentalDays: data.minimumRentalDays ? Number(data.minimumRentalDays) : undefined,
         priceChangeRate: data.priceChangeRate ? Number(data.priceChangeRate) : undefined,
-        supplierCarLimit: data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined,
-        notifyAdminOnNewCar: data.notifyAdminOnNewCar,
-        blacklisted: !!data.blacklisted,
+      }
+
+      if (isAdmin) {
+        payload.supplierCarLimit = data.supplierCarLimit ? Number(data.supplierCarLimit) : undefined
+        payload.notifyAdminOnNewCar = data.notifyAdminOnNewCar
+        payload.blacklisted = !!data.blacklisted
       }
 
       const res = await SupplierService.update(payload)
@@ -293,6 +298,7 @@ const UpdateSupplier = () => {
                         setValue('blacklisted', e.target.checked)
                       }}
                       color="primary"
+                      disabled={user?.type === bookcarsTypes.UserType.Supplier}
                     />
                   )}
                   label={commonStrings.BLACKLISTED}
@@ -366,6 +372,7 @@ const UpdateSupplier = () => {
                       clearErrors('supplierCarLimit')
                     }
                   }}
+                  disabled={user?.type === bookcarsTypes.UserType.Supplier}
                 />
                 <FormHelperText error={!!errors.supplierCarLimit}>
                   {errors.supplierCarLimit?.message || ''}
