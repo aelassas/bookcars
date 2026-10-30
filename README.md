@@ -38,88 +38,8 @@ Customers can register through the web frontend or mobile app, search for availa
 * [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
 * [Install Guide (Self-hosted)](https://github.com/aelassas/bookcars/wiki/Installing-(Self%E2%80%90hosted))
 * [Install Guide (Docker)](https://github.com/aelassas/bookcars/wiki/Installing-(Docker))
-* [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)  
-* [Price Calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation)
-* [Rental Date and Time Constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints)
-* [Payment Gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways)
-* [FAQ](https://github.com/aelassas/bookcars/wiki/FAQ)
+* [Development Database](https://github.com/aelassas/bookcars/wiki/Development-Database)
 * [Full Documentation](https://github.com/aelassas/bookcars/wiki)
-
-## Development Database Quick Start
-
-For local development and testing, you can populate an isolated MongoDB instance with a complete fixture dataset including admin, suppliers, customers, locations, cars, bookings, and notifications:
-
-```bash
-# Seed development database (idempotent)
-npm run seed:dev
-
-# Clean development database (safely removes only seed-owned records)
-npm run clean:dev
-```
-
-### Sample Development Credentials
-All seeded development accounts use the password: **`B00kC4r5`**
-
-| Role | Email | Password | Access Level & App URL |
-|---|---|---|---|
-| **Admin** | `admin@bookcars.ma` | `B00kC4r5` | Admin Panel (`http://localhost:3001/`) |
-| **Supplier** | `dev-seed-supplier@bookcars.ma` | `B00kC4r5` | Supplier Admin Panel (`http://localhost:3001`) |
-| **Customer** | `dev-seed-customer@bookcars.ma` | `B00kC4r5` | Frontend App (`http://localhost:3002`) |
-
-For full contributor documentation and safety guarantees, see [DEVELOPMENT_SEEDING.md](DEVELOPMENT_SEEDING.md).
-
-## Features
-
-**Supplier & Fleet Management**
-
-* Supplier management
-* Supplier contracts
-* Supplier search result limit
-* Ready for single or multiple suppliers
-* Car fleet management
-* Flexible time-based car availability
-* Flexible rental date and time constraints
-* Booking management
-* Vehicle scheduler
-* Auto-notification system
-
-**Pricing & Payments**
-
-* Dynamic price calculation: hourly, daily, weekly, bi-weekly, and monthly rates
-* Date-based price rates
-* Price change rate
-* Payment management
-* Multiple payment gateways supported: Stripe, PayPal
-* Multiple payment methods: Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay at the counter, Pay in full, Pay deposit
-
-**Locations & Search**
-
-* Hierarchical locations with country, map, and parking integration
-* Location-based search with nested child location support
-* Map display for locations and parking spots
-
-**User Experience**
-
-* Customer management
-* Multiple login options: Google, Facebook, Apple, Email
-* Multiple language support: English, French, Spanish
-* Multiple currencies support
-* Multiple pagination styles: classic (next/previous), infinite scroll
-* Push notifications
-
-**Security & Performance**
-
-* Secure against XSS, XST, CSRF, MITM, and DDoS attacks
-* Responsive admin panel and frontend
-* Native mobile app for Android and iOS (single codebase)
-* Docker support for easy deployment and better developer experience
-* Error monitoring and performance tracing
-
-**Supported Platforms**
-* iOS
-* Android
-* Web
-* Docker
 
 ## Stats for Nerds
 
