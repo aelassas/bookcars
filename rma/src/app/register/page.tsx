@@ -42,7 +42,7 @@ export default function RegisterPage() {
           )}
 
           <Label className="mt-5" htmlFor="reg-name">Full name</Label>
-          <Input id="reg-name" name="name" required autoFocus className="w-full" placeholder="Azat Yagdyyev" />
+          <Input id="reg-name" name="name" required autoFocus className="w-full" placeholder="Marat Anyanov" />
 
           <Label className="mt-4" htmlFor="reg-email">Email</Label>
           <Input id="reg-email" name="email" type="email" required className="w-full" placeholder="you@company.com" />

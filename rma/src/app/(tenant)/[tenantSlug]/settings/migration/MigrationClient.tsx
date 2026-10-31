@@ -209,7 +209,7 @@ export default function MigrationClient({
               type="password"
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
-              placeholder="https://takeauto-bx24.com/rest/USER_ID/TOKEN/"
+              placeholder="https://yourcompany.bitrix24.com/rest/USER_ID/TOKEN/"
               className="w-full"
             />
             <Button

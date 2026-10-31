@@ -99,7 +99,7 @@ export default async function IntegrationsPage({ params }: { params: Promise<{ t
                 <Input
                   name="bitrixWebhook"
                   type="url"
-                  placeholder="https://takeauto-bx24.com/rest/..."
+                  placeholder="https://yourcompany.bitrix24.com/rest/..."
                   className="flex-1"
                   required
                 />

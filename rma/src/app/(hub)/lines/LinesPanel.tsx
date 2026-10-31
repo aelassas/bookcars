@@ -484,7 +484,7 @@ function AddLineModal({
             id="add-name"
             value={name}
             maxLength={60}
-            placeholder="Askhab (EasyRent)"
+            placeholder="Marat (RMA)"
             onChange={(e) => {
               setName(e.target.value);
               if (!slugTouched) setSlug(slugify(e.target.value));
@@ -498,7 +498,7 @@ function AddLineModal({
           <Input
             id="add-slug"
             value={slug}
-            placeholder="askhab-easyrent"
+            placeholder="marat-rma"
             className="font-mono"
             onChange={(e) => {
               setSlugTouched(true);
@@ -539,7 +539,7 @@ function AddLineModal({
               id="add-owner"
               value={ownerName}
               maxLength={60}
-              placeholder="Askhab (EasyRent)"
+              placeholder="Marat (RMA)"
               onChange={(e) => {
                 setOwnerName(e.target.value);
                 if (!ownerKeyTouched) setOwnerKey(slugify(e.target.value));
@@ -552,7 +552,7 @@ function AddLineModal({
               id="add-ownerkey"
               value={ownerKey}
               className="font-mono"
-              placeholder="askhab"
+              placeholder="marat"
               onChange={(e) => {
                 setOwnerKeyTouched(true);
                 setOwnerKey(e.target.value.toLowerCase());

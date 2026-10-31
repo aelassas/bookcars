@@ -144,7 +144,7 @@ export default function AvailabilityPanel(props: { sessionName: string | null; c
   if (data.agents.length === 0) {
     return (
       <div className="text-sm text-ink-2">
-        No rental rotations configured (RENTAL_ROTATION_ETM / RENTAL_ROTATION_CARDIWAN).
+        No rental rotations configured (RENTAL_ROTATION_* env vars).
       </div>
     );
   }

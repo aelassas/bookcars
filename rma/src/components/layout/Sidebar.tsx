@@ -164,9 +164,9 @@ const SETTINGS_LINKS: {
   { href: "/settings/team", label: "Team", icon: UserCog },
   { href: "/settings/ai", label: "AI Provider", icon: Bot },
   { href: "/settings/integrations", label: "Integrations", icon: Settings },
-  // WhatsApp line pairing lives in the hub (/lines) — linked from Settings so
-  // the client never has to know a separate console exists.
-  { href: "/lines", label: "WhatsApp lines", icon: Phone, absolute: true },
+  // WhatsApp line pairing renders inside the tenant shell
+  // ([tenantSlug]/settings/lines) — the CRM navigation stays put.
+  { href: "/settings/lines", label: "WhatsApp lines", icon: Phone },
   { href: "/settings/migration", label: "Migration", icon: ClipboardList },
   { href: "/settings/support", label: "Support", icon: LifeBuoy },
 ];
