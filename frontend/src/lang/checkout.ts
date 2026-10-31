@@ -1,6 +1,5 @@
 import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/utils/langHelper'
-import { INVALID } from 'zod/v3'
 
 const strings = new LocalizedStrings({
   fr: {
