@@ -7,10 +7,7 @@ import { registerFromLan, type RegisterState } from "./actions";
 
 const PLATFORM = process.env.NEXT_PUBLIC_PLATFORM_NAME || "MyCRM";
 const BRANDS = [
-  { slug: "cardiwan", label: "Cardiwan" },
-  { slug: "easyrent", label: "Easy Rent" },
-  { slug: "etm", label: "ETM" },
-  { slug: "take-auto", label: "TAKE Auto" },
+  { slug: "rma", label: "RMA Car Rental" },
 ];
 
 export default function RegisterPage() {
@@ -58,7 +55,7 @@ export default function RegisterPage() {
             id="reg-brand"
             name="brand"
             required
-            defaultValue="take-auto"
+            defaultValue="rma"
             className="mt-1 w-full rounded-field border border-line bg-surface px-3 py-2 text-sm text-ink"
           >
             {BRANDS.map((b) => (

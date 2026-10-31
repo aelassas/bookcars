@@ -16,6 +16,10 @@ const TAB_CLS = (active: boolean) =>
     active ? "bg-sunken font-medium text-ink" : "text-ink-2 hover:bg-sunken"
   }`;
 
+// Deployment name, inlined at build time (NEXT_PUBLIC_*). "RMA CRM" on the
+// RMA box; the historic default is the TAKE Auto deployment this came from.
+const HUB_NAME = `${process.env.NEXT_PUBLIC_PLATFORM_NAME ?? "TAKE"} hub`;
+
 export default function HubSidebar(props: { showLines: boolean }) {
   const pathname = usePathname() ?? "";
   const tabs = [
@@ -27,7 +31,7 @@ export default function HubSidebar(props: { showLines: boolean }) {
     <>
       {/* Desktop: the left side menu. */}
       <aside className="hidden sm:flex w-44 shrink-0 flex-col border-r border-line bg-surface min-h-screen">
-        <div className="px-4 pt-4 pb-3 text-sm font-semibold">TAKE hub</div>
+        <div className="px-4 pt-4 pb-3 text-sm font-semibold">{HUB_NAME}</div>
         <nav className="flex flex-col gap-1 px-2">
           {tabs.map((t) => (
             <Link key={t.href} href={t.href} className={TAB_CLS(pathname.startsWith(t.href))}>
@@ -39,7 +43,7 @@ export default function HubSidebar(props: { showLines: boolean }) {
       </aside>
       {/* Mobile: the same two tabs as a top bar. */}
       <nav className="flex sm:hidden items-center gap-1 border-b border-line bg-surface px-2 py-2">
-        <span className="px-2 text-sm font-semibold">TAKE hub</span>
+        <span className="px-2 text-sm font-semibold">{HUB_NAME}</span>
         {tabs.map((t) => (
           <Link key={t.href} href={t.href} className={TAB_CLS(pathname.startsWith(t.href))}>
             <t.icon className="h-4 w-4" />

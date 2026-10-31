@@ -19,7 +19,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { db } from "@/platform/db/client";
-import { waLineName } from "@/platform/db/schema";
+import { tenant, waLineName } from "@/platform/db/schema";
 import { LINE_TENANT, tenantSlugForLine } from "@/modules/messaging/lines";
 import {
   LINE_SLUG_RE,
@@ -189,6 +189,15 @@ async function readNameOverrides(): Promise<Record<string, string>> {
     .select({ slug: waLineName.slug, displayName: waLineName.displayName })
     .from(waLineName);
   return Object.fromEntries(rows.map((r) => [r.slug, r.displayName]));
+}
+
+/** Tenant slugs that actually exist in THIS deployment. The static LINE_TENANT
+ *  map is shared heritage across every deployment of the platform (TAKE Auto,
+ *  EasyRent, Cardiwan, RMA…); the roster must only show lines whose tenant is
+ *  real here, or one client's box renders every other client's lines. */
+async function readTenantSlugs(): Promise<Set<string>> {
+  const rows = await db.select({ slug: tenant.slug }).from(tenant);
+  return new Set(rows.map((r) => r.slug));
 }
 
 /** Upsert the display-name override for a line (slug must be allowlisted by
@@ -388,11 +397,14 @@ export async function listLines(opts?: {
   now?: number;
   nameOverrides?: Record<string, string>;
   overlay?: LinesOverlay;
+  /** Tenants existing in this deployment; tests inject it to skip the DB. */
+  tenantSlugs?: Set<string>;
 }): Promise<LineRow[]> {
   const dir = opts?.dir ?? observerDir();
   const now = opts?.now ?? Date.now();
   const names = opts?.nameOverrides ?? (await readNameOverrides());
   const overlay = opts?.overlay ?? readLinesOverlay();
+  const liveTenants = opts?.tenantSlugs ?? (await readTenantSlugs());
   const hidden = new Set([...RETIRED_LINES, ...BANNED_LINES, ...overlayRetiredSlugs(overlay)]);
 
   // Static map first (module-load merged), then overlay tenants fresh — a
@@ -401,7 +413,7 @@ export async function listLines(opts?: {
   const owners = overlayOwners(overlay);
 
   return Object.entries(tenants)
-    .filter(([slug]) => !hidden.has(slug))
+    .filter(([slug, t]) => !hidden.has(slug) && liveTenants.has(t))
     .map(([slug, tenant]) => {
       // Overlay owner wins a complete pair (same rule as resolveOwnerForLine);
       // telegramChatId carries over from the static entry when overriding.

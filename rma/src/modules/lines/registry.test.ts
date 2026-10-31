@@ -18,6 +18,10 @@ import {
 } from "./registry";
 import { LINE_TENANT } from "@/modules/messaging/lines";
 
+/** All tenants the fixture lines map to — stands in for the DB tenant table
+ *  so listLines' deployment filter lets every fixture line through. */
+const ALL_TENANTS = new Set(Object.values(LINE_TENANT));
+
 /**
  * Fixture observer dir — mirrors the files wa-observer/bridge.js writes:
  *   session-<slug>/creds.json   the live session (phone source)
@@ -178,7 +182,7 @@ describe("phone resolution", () => {
 
 describe("listLines", () => {
   it("returns one row per LINE_TENANT key EXCEPT retired/banned slugs", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {} });
+    const rows = await listLines({ dir, now, nameOverrides: {}, tenantSlugs: ALL_TENANTS });
     // Retired/banned slugs keep their LINE_TENANT mapping (historic rows) but
     // are not listed — dead rows read as live-but-broken lines and invite
     // pairing attempts that can only fail or duplicate a session.
@@ -190,7 +194,7 @@ describe("listLines", () => {
   });
 
   it("DB name override wins; no override → owner name", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: { "babek-rent": "Babek MAIN" } });
+    const rows = await listLines({ dir, now, nameOverrides: { "babek-rent": "Babek MAIN" }, tenantSlugs: ALL_TENANTS });
     const babek = rows.find((r) => r.slug === "babek-rent")!;
     expect(babek.displayName).toBe("Babek MAIN");
     const cardiwan = rows.find((r) => r.slug === "cardiwan")!;
@@ -198,16 +202,23 @@ describe("listLines", () => {
   });
 
   it("phone comes from creds when live, from the registry when archived", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {} });
+    const rows = await listLines({ dir, now, nameOverrides: {}, tenantSlugs: ALL_TENANTS });
     expect(rows.find((r) => r.slug === "babek-rent")!.phone).toBe("971529965085");
     expect(rows.find((r) => r.slug === "ayham-rent")!.phone).toBe("971542445836");
   });
 
   it("tenant and owner ride along from the maps", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {} });
+    const rows = await listLines({ dir, now, nameOverrides: {}, tenantSlugs: ALL_TENANTS });
     const ali = rows.find((r) => r.slug === "babek-rent-2")!;
     expect(ali.tenant).toBe("easyrent");
     expect(ali.owner?.key).toBe("ali");
+  });
+
+  it("hides lines whose tenant does not exist in THIS deployment (RMA box shows only rma-main)", async () => {
+    const rows = await listLines({ dir, now, nameOverrides: {}, tenantSlugs: new Set(["rma"]) });
+    expect(rows.map((r) => r.slug)).toEqual(["rma-main"]);
+    expect(rows[0].tenant).toBe("rma");
+    expect(rows[0].owner).toEqual({ key: "ruslan", name: "Ruslan (RMA)" });
   });
 });
 
@@ -282,7 +293,7 @@ describe("page-managed overlay lines in the roster", () => {
   };
 
   it("a page-added unpaired line is listed, mapped, owned, numbered", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY });
+    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY, tenantSlugs: ALL_TENANTS });
     const askhab = rows.find((r) => r.slug === "askhab-easyrent")!;
     expect(askhab.tenant).toBe("easyrent");
     expect(askhab.owner).toEqual({ key: "askhab", name: "Askhab (EasyRent)" });
@@ -293,7 +304,7 @@ describe("page-managed overlay lines in the roster", () => {
   });
 
   it("a page-retired line disappears from the roster (like retired/banned)", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY });
+    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY, tenantSlugs: ALL_TENANTS });
     expect(rows.find((r) => r.slug === "firuz-takeauto")).toBeUndefined();
     expect(isRelinkableLine("firuz-takeauto", OVERLAY)).toBe(false);
     // …but it stays KNOWN — its history keeps its tenant.
@@ -301,7 +312,7 @@ describe("page-managed overlay lines in the roster", () => {
   });
 
   it("an owner override on a static line wins the roster row", async () => {
-    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY });
+    const rows = await listLines({ dir, now, nameOverrides: {}, overlay: OVERLAY, tenantSlugs: ALL_TENANTS });
     expect(rows.find((r) => r.slug === "cardiwan")!.owner).toEqual({ key: "abdullah-2", name: "Abdullah II" });
   });
 

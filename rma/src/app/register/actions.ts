@@ -8,7 +8,7 @@ import { db } from "@/platform/db/client";
 import { user, tenant, tenantMember } from "@/platform/db/schema";
 import { clientIp, isOfficeLan, macFor, recordDevice } from "@/platform/net/device";
 
-const BRANDS = ["cardiwan", "easyrent", "etm", "take-auto"];
+const BRANDS = ["rma"];
 
 export type RegisterState = { error?: string };
 
@@ -25,7 +25,7 @@ export async function registerFromLan(
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").toLowerCase().trim();
   const password = String(formData.get("password") ?? "");
-  const brand = String(formData.get("brand") ?? "take-auto").trim();
+  const brand = String(formData.get("brand") ?? "rma").trim();
 
   if (!name) return { error: "Enter your full name." };
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { error: "Enter a valid email." };
