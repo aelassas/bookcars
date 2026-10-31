@@ -130,95 +130,118 @@ async function main() {
   const { state, saveCreds } = await useMultiFileAuthState(SESSION_DIR);
   const { version } = await fetchLatestBaileysVersion();
 
-  const sock = makeWASocket({
-    version,
-    auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, logger),
-    },
-    logger,
-    printQRInTerminal: false,
-    browser: ["RMA CRM", "Chrome", "1.0.0"],
-    markOnlineOnConnect: false,
-    syncFullHistory: false,
-  });
-
+  // Fresh pairings ride a connect cycle: the first socket dies with
+  // 515 (restartRequired) or times out waiting for the scan (408). Those are
+  // NORMAL — reconnect in-process within seconds so the QR in the Pair modal
+  // is always backed by a LIVE socket. Only genuine failures (bans, logged
+  // out, replaced sessions) fall out to systemd's 5-min RestartSec hold.
+  const TRANSIENT = new Set([DisconnectReason.restartRequired, DisconnectReason.timedOut]);
   let pairCodeRequested = false;
 
-  sock.ev.on("creds.update", saveCreds);
+  async function connect() {
+    pairCodeRequested = false;
+    const sock = makeWASocket({
+      version,
+      auth: {
+        creds: state.creds,
+        keys: makeCacheableSignalKeyStore(state.keys, logger),
+      },
+      logger,
+      printQRInTerminal: false,
+      browser: ["RMA CRM", "Chrome", "1.0.0"],
+      markOnlineOnConnect: false,
+      syncFullHistory: false,
+    });
 
-  sock.ev.on("connection.update", async (update) => {
-    const { connection, lastDisconnect, qr } = update;
+    sock.ev.on("creds.update", saveCreds);
 
-    if (qr) {
-      if (pairRequest.mode === "code" && pairRequest.phone && !pairCodeRequested) {
-        pairCodeRequested = true;
-        try {
-          const code = await sock.requestPairingCode(pairRequest.phone);
-          writeFileSync(PAIR_CODE_FILE, String(code).trim());
-          writeStatus("qr");
-          log(`pair code issued for +${pairRequest.phone}`);
-        } catch (e) {
-          log(`requestPairingCode failed: ${e?.message ?? e} — falling back to QR file`);
+    sock.ev.on("connection.update", async (update) => {
+      const { connection, lastDisconnect, qr } = update;
+
+      if (qr) {
+        if (pairRequest.mode === "code" && pairRequest.phone && !pairCodeRequested) {
+          pairCodeRequested = true;
+          try {
+            const code = await sock.requestPairingCode(pairRequest.phone);
+            writeFileSync(PAIR_CODE_FILE, String(code).trim());
+            writeStatus("qr");
+            log(`pair code issued for +${pairRequest.phone}`);
+          } catch (e) {
+            log(`requestPairingCode failed: ${e?.message ?? e} — falling back to QR file`);
+            writeFileSync(QR_FILE, qr);
+            writeStatus("qr");
+          }
+        } else {
           writeFileSync(QR_FILE, qr);
           writeStatus("qr");
+          log("QR payload written — waiting for scan");
         }
-      } else {
-        writeFileSync(QR_FILE, qr);
-        writeStatus("qr");
-        log("QR payload written — waiting for scan");
+        return;
       }
-      return;
-    }
 
-    if (connection === "open") {
-      rmSync(QR_FILE, { force: true });
-      rmSync(PAIR_CODE_FILE, { force: true });
-      writeFails(0);
-      writeStatus("open");
-      const me = state.creds.me?.id ?? "unknown";
-      log(`connected as ${me}`);
-      return;
-    }
+      if (connection === "open") {
+        rmSync(QR_FILE, { force: true });
+        rmSync(PAIR_CODE_FILE, { force: true });
+        writeFails(0);
+        writeStatus("open");
+        const me = state.creds.me?.id ?? "unknown";
+        log(`connected as ${me}`);
+        return;
+      }
 
-    if (connection === "close") {
-      // A QR from a dead socket scans as "expired" — remove it so the Pair
-      // modal shows its waiting state until the relink/restart cycle mints a
-      // fresh one (the Pair button IS the relink trigger).
-      rmSync(QR_FILE, { force: true });
-      rmSync(PAIR_CODE_FILE, { force: true });
-      const statusCode = lastDisconnect?.error?.output?.statusCode;
-      const loggedOut = statusCode === DisconnectReason.loggedOut;
-      if (loggedOut) {
-        const fails = readFails() + 1;
-        writeFails(fails);
-        if (fails >= 2) {
-          writeStatus("dormant");
-          log(`logged out, strike ${fails}/2 — going dormant until relink from /lines`);
-          process.exit(0); // clean exit: Restart=on-failure keeps the line down
+      if (connection === "close") {
+        // A QR from a dead socket scans as "expired" — remove it so the Pair
+        // modal shows its waiting state until the reconnect mints a fresh one.
+        rmSync(QR_FILE, { force: true });
+        rmSync(PAIR_CODE_FILE, { force: true });
+        const statusCode = lastDisconnect?.error?.output?.statusCode;
+
+        if (TRANSIENT.has(statusCode)) {
+          writeStatus("close");
+          log(`transient close (status ${statusCode}) — reconnecting in 3s`);
+          setTimeout(() => {
+            connect().catch((e) => {
+              log(`reconnect failed: ${e?.message ?? e}`);
+              process.exit(1);
+            });
+          }, 3000);
+          return;
         }
-        writeStatus("close");
-        log(`logged out, strike ${fails}/2 — systemd restarts in 5 min for a fresh QR`);
-      } else {
-        writeStatus("close");
-        log(`connection closed (status ${statusCode ?? "?"}) — systemd restarts in 5 min`);
-      }
-      process.exit(1);
-    }
-  });
 
-  sock.ev.on("messages.upsert", ({ type, messages }) => {
-    // "append" is history sync — importing it would storm the jsonl with old
-    // chats on first pairing. Live traffic only.
-    if (type !== "notify") return;
-    for (const msg of messages) {
-      try {
-        recordMessage(msg);
-      } catch (e) {
-        log(`recordMessage failed: ${e?.message ?? e}`);
+        const loggedOut = statusCode === DisconnectReason.loggedOut;
+        if (loggedOut) {
+          const fails = readFails() + 1;
+          writeFails(fails);
+          if (fails >= 2) {
+            writeStatus("dormant");
+            log(`logged out, strike ${fails}/2 — going dormant until relink from /lines`);
+            process.exit(0); // clean exit: Restart=on-failure keeps the line down
+          }
+          writeStatus("close");
+          log(`logged out, strike ${fails}/2 — systemd restarts in 5 min for a fresh QR`);
+        } else {
+          writeStatus("close");
+          log(`connection closed (status ${statusCode ?? "?"}) — systemd restarts in 5 min`);
+        }
+        process.exit(1);
       }
-    }
-  });
+    });
+
+    sock.ev.on("messages.upsert", ({ type, messages }) => {
+      // "append" is history sync — importing it would storm the jsonl with old
+      // chats on first pairing. Live traffic only.
+      if (type !== "notify") return;
+      for (const msg of messages) {
+        try {
+          recordMessage(msg);
+        } catch (e) {
+          log(`recordMessage failed: ${e?.message ?? e}`);
+        }
+      }
+    });
+  }
+
+  await connect();
 }
 
 main().catch((e) => {
