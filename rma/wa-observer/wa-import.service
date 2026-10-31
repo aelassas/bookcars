@@ -1,0 +1,11 @@
+[Unit]
+Description=Import WhatsApp observer jsonl into the RMA CRM message table
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+Environment=NODE_ENV=production
+Environment=DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform
+Environment=WA_OBSERVER_DIR=/opt/rma-crm/wa-observer
+ExecStart=/usr/bin/npx tsx scripts/importers/import-observer-messages.ts --commit

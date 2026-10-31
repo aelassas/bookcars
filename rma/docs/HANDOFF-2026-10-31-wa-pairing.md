@@ -1,6 +1,30 @@
-# HANDOFF — RMA WhatsApp line pairing (UNFINISHED)
+# HANDOFF — RMA WhatsApp line pairing (~~UNFINISHED~~ deployed, awaiting Ruslan's scan)
 
 **Written:** 2026-10-31  
+
+> **UPDATE 2026-10-31 07:55 UTC — Steps 1–3 are DONE. Only the human step is left.**
+> - Code deployed (rsync), `npm ci` + `next build` green, `rma-crm` restarted.
+> - Env was in the **systemd unit, not `.env.local`** — drop-in
+>   `/etc/systemd/system/rma-crm.service.d/override.conf` adds
+>   `PLATFORM_ADMIN_EMAILS` + `WA_OBSERVER_DIR=/opt/rma-crm/wa-observer`.
+> - Baileys observer built fresh at `rma/wa-observer/` (see that dir):
+>   `observe.mjs` worker, `relink-web.sh`, `wa@.service` template. Runs as
+>   systemd `wa@rma-main` (RestartSec=300 = the 5-min ban rule), NOT pm2 —
+>   the box has no pm2.
+> - Importer bridge runs as `wa-import.timer` (every 60s) → `message` table.
+> - Verified end-to-end WITHOUT the handset: login as ruslan@rma.network →
+>   session 200 → `GET /lines/api/rma-main/qr` → 200 with `state:"qr"` and a
+>   rendered SVG. Observer log: "QR payload written — waiting for scan".
+> - `must_change_password=true` flipped for the 3 seeded users (UPDATE 3).
+> - **Left for Ruslan:** open https://crm.rma.network/lines, log in, click
+>   Pair on `rma-main`, scan the QR with +971 55 359 0533. Badge flips to
+>   `online` within ~30s; first inbound message lands in Postgres within a
+>   minute after that.
+> - v1 observer scope: text + media placeholders only (no media download, no
+>   wa_identity DB writes, no outbound). Importer upgrades placeholders when
+>   transcripts exist. Generalize after the pairing proves out.
+
+
 **Branch:** `fix/backend-test-esm-import` (on `legacy` = `github.com/PrimeTurkmen/R-CRM`)  
 **For:** the next Claude Code / Codex agent picking this up.
 
