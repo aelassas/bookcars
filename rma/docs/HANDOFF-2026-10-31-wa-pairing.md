@@ -23,6 +23,29 @@
 > - v1 observer scope: text + media placeholders only (no media download, no
 >   wa_identity DB writes, no outbound). Importer upgrades placeholders when
 >   transcripts exist. Generalize after the pairing proves out.
+>
+> **UPDATE 2, same day 09:05 UTC — competitor-line leak fixed.** The /lines
+> roster rendered all 14 heritage TAKE Auto/EasyRent/Cardiwan lines because
+> the static LINE_TENANT map is shared across deployments. Fixes (commit
+> `0312b524` + overlay-path fix):
+> - `listLines()` now filters the roster to tenants that EXIST in the local
+>   DB (`readTenantSlugs()`; tests inject `tenantSlugs`). RMA box shows only
+>   `rma-main`; the takeauto box is unchanged (its tenants all exist).
+> - Sidebar title is `NEXT_PUBLIC_PLATFORM_NAME + " hub"` ("RMA CRM hub");
+>   build-time inlined — the box has a one-line `.env.local` with
+>   `NEXT_PUBLIC_PLATFORM_NAME=RMA CRM` because systemd env does NOT reach
+>   `npm run build` over SSH. Rebuilds must keep that file.
+> - Register page brand list is RMA-only (was: 4 heritage brands).
+> - **Root-cause landmine defused:** `linesRegistryPath()` fell back to the
+>   hardcoded takeauto Mac path; when someone mis-clicked **Remove** on
+>   `rma-main` amid the 14 competitor rows, the app created
+>   `/Users/takeauto/.../lines-registry.json` ON THE LINUX BOX and hid
+>   rma-main. Path now derives from `WA_OBSERVER_DIR` when set
+>   (`WA_LINES_REGISTRY` override unchanged); stray `/Users` tree deleted;
+>   drop-in gained `WA_LINES_REGISTRY` too. If rma-main ever vanishes from
+>   /lines again, check the overlay FIRST.
+> - Observer now deletes stale qr/pair-code files on disconnect so the Pair
+>   modal never renders an expired QR.
 
 
 **Branch:** `fix/backend-test-esm-import` (on `legacy` = `github.com/PrimeTurkmen/R-CRM`)  

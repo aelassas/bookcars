@@ -182,6 +182,11 @@ async function main() {
     }
 
     if (connection === "close") {
+      // A QR from a dead socket scans as "expired" — remove it so the Pair
+      // modal shows its waiting state until the relink/restart cycle mints a
+      // fresh one (the Pair button IS the relink trigger).
+      rmSync(QR_FILE, { force: true });
+      rmSync(PAIR_CODE_FILE, { force: true });
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       const loggedOut = statusCode === DisconnectReason.loggedOut;
       if (loggedOut) {

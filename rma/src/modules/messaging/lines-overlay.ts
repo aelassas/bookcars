@@ -35,7 +35,16 @@ import path from "node:path";
 export const DEFAULT_LINES_REGISTRY = "/Users/takeauto/take-auto/wa-observer/lines-registry.json";
 
 export function linesRegistryPath(): string {
-  return process.env.WA_LINES_REGISTRY ?? DEFAULT_LINES_REGISTRY;
+  // Explicit override (tests) wins; otherwise the file lives next to the
+  // observer sessions (WA_OBSERVER_DIR). The bare default is the original
+  // takeauto Mac path — without this chain a fresh deployment WRITES its
+  // overlay into /Users/takeauto/... recreated on a Linux box (RMA, 2026-10-31).
+  return (
+    process.env.WA_LINES_REGISTRY ??
+    (process.env.WA_OBSERVER_DIR
+      ? path.join(process.env.WA_OBSERVER_DIR, "lines-registry.json")
+      : DEFAULT_LINES_REGISTRY)
+  );
 }
 
 export const LINE_SLUG_RE = /^[a-z0-9][a-z0-9-]{1,39}$/;
