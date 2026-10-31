@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { hostAgnosticSignOut } from "@/lib/auth/host-agnostic-sign-out";
-import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren,  } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren, Phone,  } from "lucide-react";
 import { normalizeModules, type ModuleId } from "@/platform/tenant-modules";
 import { ru } from "@/lib/i18n/ru";
 import { t, type Lang } from "@/platform/i18n/dict";
@@ -104,6 +104,7 @@ function NavItem({
   label,
   icon: Icon,
   exact,
+  absolute,
   tenantSlug,
   accent,
   pathname,
@@ -113,12 +114,14 @@ function NavItem({
   label: string;
   icon: React.ElementType;
   exact?: boolean;
+  /** Hub routes (/lines) live outside the tenant prefix. */
+  absolute?: boolean;
   tenantSlug: string;
   accent: string;
   pathname: string;
   onNavigate: () => void;
 }) {
-  const full = `/${tenantSlug}${href}`;
+  const full = absolute ? href : `/${tenantSlug}${href}`;
   const active = !href || exact ? pathname === full : pathname.startsWith(full);
   return (
     <Link
@@ -151,11 +154,19 @@ function NavItem({
   );
 }
 
-const SETTINGS_LINKS = [
+const SETTINGS_LINKS: {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  absolute?: boolean;
+}[] = [
   { href: "/settings/branding", label: "Branding", icon: Palette },
   { href: "/settings/team", label: "Team", icon: UserCog },
   { href: "/settings/ai", label: "AI Provider", icon: Bot },
   { href: "/settings/integrations", label: "Integrations", icon: Settings },
+  // WhatsApp line pairing lives in the hub (/lines) — linked from Settings so
+  // the client never has to know a separate console exists.
+  { href: "/lines", label: "WhatsApp lines", icon: Phone, absolute: true },
   { href: "/settings/migration", label: "Migration", icon: ClipboardList },
   { href: "/settings/support", label: "Support", icon: LifeBuoy },
 ];

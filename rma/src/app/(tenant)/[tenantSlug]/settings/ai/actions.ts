@@ -17,7 +17,7 @@ export async function saveAIConfig(slug: string, formData: FormData): Promise<vo
   const localEndpoint = String(formData.get("localEndpoint") ?? "").trim() || null;
   const localModel = String(formData.get("localModel") ?? "").trim() || null;
 
-  if (!["claude", "local", "auto"].includes(provider)) {
+  if (!["claude", "deepseek", "local", "auto"].includes(provider)) {
     throw new Error("Invalid provider");
   }
   if ((provider === "local" || provider === "auto") && !localEndpoint) {

@@ -46,6 +46,25 @@
 >   /lines again, check the overlay FIRST.
 > - Observer now deletes stale qr/pair-code files on disconnect so the Pair
 >   modal never renders an expired QR.
+>
+> **UPDATE 3, same day 13:30 UTC — login lands in the CRM; DeepSeek wired.**
+> - Root page redirected platform_admin → /admin console FIRST, so Ruslan
+>   (in PLATFORM_ADMIN_EMAILS for /lines access) never saw his CRM. Now:
+>   membership first (`/rma`), /admin only for tenant-less admins.
+> - /lines is linked from CRM Settings as "WhatsApp lines" (hub route, same
+>   session — no separate console needed by the client).
+> - DeepSeek is a full AIProvider now (classifyMessage via JSON mode +
+>   draftReply with AI_COMPANY_NAME persona). Router: tenant config
+>   provider="deepseek" → DeepSeek; env default when DEEPSEEK_API_KEY set and
+>   no ANTHROPIC_API_KEY. rma tenant's ai_provider_config seeded to deepseek.
+>   Settings → AI Provider has a DeepSeek radio.
+> - **STILL NEEDED FROM OWNER:** `DEEPSEEK_API_KEY` — not in any env file I
+>   can read. Drop it into the rma-crm.service drop-in
+>   (`Environment=DEEPSEEK_API_KEY=sk-...`) + `AI_COMPANY_NAME=RMA Car Rental`,
+>   daemon-reload + restart. Until then the classifier logs a warning and
+>   falls back to heuristic.
+> - TARS creds (TARS_BASE_URL/TARS_ORG_DID/TARS_USERNAME/TARS_PASSWORD) sit in
+>   the LOCAL rma/.env.local only — not on the box. TARS work is next.
 
 
 **Branch:** `fix/backend-test-esm-import` (on `legacy` = `github.com/PrimeTurkmen/R-CRM`)  

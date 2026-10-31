@@ -47,6 +47,7 @@ export default function AiSettingsForm({ slug, initial }: Props) {
             <Label>Provider</Label>
             {[
               { v: "claude", label: "Claude (cloud)", desc: "Anthropic API. Simplest, always available." },
+              { v: "deepseek", label: "DeepSeek (cloud)", desc: "DeepSeek API. Low-cost classifier; needs DEEPSEEK_API_KEY on the server." },
               { v: "local", label: "Local (on-prem)", desc: "Your Mac Studio over Tailscale. Data never leaves your office." },
               { v: "auto", label: "Auto (local-first)", desc: "Try local first, fall back to Claude if offline." },
             ].map((opt) => (

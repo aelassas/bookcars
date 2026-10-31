@@ -936,7 +936,7 @@ export const aiProviderConfig = tenantTable(
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => tenant.id, { onDelete: "cascade" }),
-    provider: text("provider").notNull().default("claude"), // claude | local | auto
+    provider: text("provider").notNull().default("claude"), // claude | deepseek | local | auto
     localEndpoint: text("local_endpoint"), // e.g. http://100.x.x.x:1234/v1
     localModel: text("local_model"), // e.g. qwen2.5:14b
     fallbackProvider: text("fallback_provider"), // claude | null

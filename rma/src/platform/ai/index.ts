@@ -11,6 +11,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { aiProviderConfig } from "@/platform/db/schema";
 import type { AIProvider } from "./types";
 import { ClaudeProvider } from "./providers/claude";
+import { DeepseekProvider } from "./providers/deepseek";
 import { LocalProvider } from "./providers/local";
 import { AutoFailoverProvider } from "./providers/auto";
 import { HeuristicProvider } from "./providers/heuristic";
@@ -49,7 +50,9 @@ export async function loadAIConfig(tenantId: string): Promise<AIConfigRow | null
  * Pick the provider for a tenant. Resolution order per SPEC §4.3:
  *   local config       → LocalProvider
  *   auto config        → AutoFailoverProvider(local, claude, LOCAL_FAILOVER_TIMEOUT_MS)
+ *   deepseek config    → DeepseekProvider (needs DEEPSEEK_API_KEY)
  *   else + ANTHROPIC   → ClaudeProvider
+ *   else + DEEPSEEK    → DeepseekProvider (env-level default, RMA setup)
  *   else               → HeuristicProvider
  */
 export async function getAIProviderForTenant(tenantId?: string): Promise<AIProvider> {
@@ -74,7 +77,15 @@ export async function getAIProviderForTenant(tenantId?: string): Promise<AIProvi
     );
   }
 
+  const deepseekKey = (process.env.DEEPSEEK_API_KEY ?? "").trim();
+  if (cfg?.provider === "deepseek") {
+    if (deepseekKey) return new DeepseekProvider({ apiKey: deepseekKey });
+    console.warn("[ai] tenant configured for deepseek but DEEPSEEK_API_KEY is unset — heuristic fallback");
+    return new HeuristicProvider();
+  }
+
   if (process.env.ANTHROPIC_API_KEY) return new ClaudeProvider();
+  if (deepseekKey) return new DeepseekProvider({ apiKey: deepseekKey });
 
   return new HeuristicProvider();
 }

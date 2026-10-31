@@ -4,7 +4,7 @@
 // (ai-engine.ts) only ever see this interface, so swapping Claude for a
 // customer's on-prem model is a config change, never a code change.
 
-export type ProviderName = "claude" | "local" | "auto" | "heuristic";
+export type ProviderName = "claude" | "deepseek" | "local" | "auto" | "heuristic";
 
 export interface ClassifyResult {
   intent: string;
