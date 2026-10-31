@@ -12,7 +12,8 @@ export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<{ status:
   axiosInstance
     .post(
       '/api/checkout',
-      data
+      data,
+      { withCredentials: true }
     )
     .then((res) => ({ status: res.status, bookingId: res.data.bookingId }))
 

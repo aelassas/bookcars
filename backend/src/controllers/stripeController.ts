@@ -132,7 +132,20 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
     // (Set BookingStatus to Paid and remove expireAt TTL index)
     //
     if (session.payment_status === 'paid') {
-      const expectedAmountCents = Math.floor(booking.price * 100)
+      const car = await Car.findById(booking.car)
+      if (!car) {
+        throw new Error(`Car ${booking.car} not found`)
+      }
+
+      let price
+      if (booking.isDeposit) {
+        price = car.deposit
+      } else if (booking.isPayedInFull) {
+        price = booking.price + car.deposit
+      } else {
+        price = booking.price
+      }
+      const expectedAmountCents = Math.floor(price * 100)
 
       if (session.currency?.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {
         const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${session.currency}`
@@ -169,10 +182,7 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
         return
       }
 
-      const car = await Car.findById(booking.car)
-      if (!car) {
-        throw new Error(`Car ${booking.car} not found`)
-      }
+
       car.trips += 1
       await car.save()
 

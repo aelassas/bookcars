@@ -1,5 +1,7 @@
 import 'dotenv/config'
+import { jest } from '@jest/globals'
 import request from 'supertest'
+import nodemailer from 'nodemailer'
 import url from 'url'
 import path from 'path'
 import asyncFs from 'node:fs/promises'
@@ -24,6 +26,9 @@ import Location from '../src/models/Location'
 import LocationValue from '../src/models/LocationValue'
 import stripeAPI from '../src/payment/stripe'
 import { BookingConflictError, saveBookingsWithAvailability } from '../src/utils/bookingReservationHelper'
+import redis from '../src/config/redis'
+
+const testTransporter = nodemailer.createTransport({ jsonTransport: true })
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -38,6 +43,7 @@ const DRIVER1_NAME = 'driver1'
 
 let SUPPLIER_ID: string
 let DRIVER1_ID: string
+let DRIVER1_TOKEN: string
 let DRIVER2_ID: string
 let LOCATION_ID: string
 let CAR1_ID: string
@@ -57,6 +63,9 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
+  jest.spyOn(nodemailer, 'createTransport').mockReturnValue(testTransporter)
+  jest.spyOn(testTransporter, 'sendMail')
+
   testHelper.initializeLogger()
 
   await databaseHelper.connect(env.DB_URI, false, false)
@@ -85,6 +94,7 @@ beforeAll(async () => {
   })
   await driver1.save()
   DRIVER1_ID = driver1._id.toString()
+  DRIVER1_TOKEN = await testHelper.generateToken(DRIVER1_ID)
 
   // create a location
   LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
@@ -170,6 +180,7 @@ afterAll(async () => {
   await NotificationCounter.deleteMany({ user: { $in: [DRIVER1_ID, DRIVER2_ID] } })
 
   await databaseHelper.close()
+  jest.restoreAllMocks()
 })
 
 //
@@ -346,6 +357,12 @@ describe('POST /api/checkout', () => {
         from: new Date(2035, 3, 1),
         to: new Date(2035, 3, 4),
         status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
         price: 312,
       },
       payLater: true,
@@ -354,6 +371,7 @@ describe('POST /api/checkout', () => {
     try {
       const res = await request(app)
         .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
         .send(payload)
 
       expect(res.statusCode).toBe(200)
@@ -394,6 +412,7 @@ describe('POST /api/checkout', () => {
     }
     let res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     bookings = await Booking.find({ driver: DRIVER1_ID })
@@ -406,6 +425,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     driver!.enableEmailNotifications = true
@@ -418,6 +438,7 @@ describe('POST /api/checkout', () => {
     await supplier!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     supplier!.enableEmailNotifications = true
@@ -431,6 +452,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     supplier!.contracts = contracts
@@ -445,6 +467,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     supplier!.contracts = contracts
@@ -459,6 +482,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     supplier!.contracts = contracts
@@ -471,6 +495,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     driver!.language = 'en'
@@ -500,6 +525,7 @@ describe('POST /api/checkout', () => {
     payload.customerId = customerId
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
     // Regression check: verify that no booking document was saved when payment fails
@@ -515,6 +541,7 @@ describe('POST /api/checkout', () => {
     await driver?.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     try {
       expect(res.statusCode).toBe(200)
@@ -529,6 +556,7 @@ describe('POST /api/checkout', () => {
       payload.booking!.car = testHelper.GetRandromObjectIdAsString()
       res = await request(app)
         .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
         .send(payload)
       expect(res.statusCode).toBe(400)
       payload.booking!.car = carId
@@ -549,6 +577,7 @@ describe('POST /api/checkout', () => {
     payload.sessionId = undefined
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -559,6 +588,7 @@ describe('POST /api/checkout', () => {
     payload.sessionId = 'xxxxxxxxxxxxxx'
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     const { bookingId } = res.body
@@ -575,6 +605,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.bookingId).toBeTruthy()
@@ -587,6 +618,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.additionalDriver = false
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     expect(res.body.bookingId).toBeTruthy()
@@ -597,21 +629,17 @@ describe('POST /api/checkout', () => {
     payload.booking!.additionalDriver = true
 
     // test failure (supplier not found)
-    const supplierId = payload.booking!.supplier
-    payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
+    const car1 = await Car.findById(CAR1_ID)
+    const supplierId = car1!.supplier
+    car1!.supplier = testHelper.GetRandromObjectId()
+    await car1!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
-    payload.booking!.supplier = supplierId
-
-    // test failure (user not found)
-    payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
-    res = await request(app)
-      .post('/api/checkout')
-      .send(payload)
-    expect(res.statusCode).toBe(400)
-    payload.booking!.driver = undefined
+    car1!.supplier = supplierId
+    await car1!.save()
 
     // test success (payLater with new driver with no license)
     payload.payLater = true
@@ -634,7 +662,7 @@ describe('POST /api/checkout', () => {
     expect(res.body.bookingId).toBeTruthy()
     await Booking.deleteOne({ _id: res.body.bookingId })
 
-    // test success (payLater with existing registered driver email)
+    // test failure (payLater with existing registered driver email)
     payload.payLater = true
     payload.driver = {
       fullName: 'driver1',
@@ -644,11 +672,14 @@ describe('POST /api/checkout', () => {
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(200)
-    expect(res.body.bookingId).toBeTruthy()
-    await Booking.deleteOne({ _id: res.body.bookingId })
+    expect(res.statusCode).toBe(400)
 
     // test failure (license required)
+    payload.driver = {
+      fullName: 'driver1',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+    }
     supplier = await User.findById(payload.booking!.supplier)
     supplier!.licenseRequired = true
     await supplier?.save()
@@ -705,6 +736,7 @@ describe('POST /api/checkout', () => {
     }
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
     const additionalDrivers = await AdditionalDriver.find({ email: payload.additionalDriver.email })
@@ -717,6 +749,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.car = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
     payload.booking!.car = CAR1_ID
@@ -726,6 +759,7 @@ describe('POST /api/checkout', () => {
     await supplier?.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -735,6 +769,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -747,6 +782,7 @@ describe('POST /api/checkout', () => {
     await driver!.save()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(200)
 
@@ -758,6 +794,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.pickupLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -766,6 +803,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.dropOffLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -774,6 +812,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -782,6 +821,7 @@ describe('POST /api/checkout', () => {
     payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
@@ -789,12 +829,14 @@ describe('POST /api/checkout', () => {
     payload.booking = undefined
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(res.statusCode).toBe(400)
 
     // test failure (no payload)
     res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send({ booking: { driver: DRIVER1_ID } })
     expect(res.statusCode).toBe(400)
 
@@ -804,6 +846,390 @@ describe('POST /api/checkout', () => {
       await testHelper.deleteNotifications(booking._id.toString())
     }
   })
+
+  it('does not resolve an unauthenticated booking driver ID as an account', async () => {
+    const response = await request(app)
+      .post('/api/checkout')
+      .send({
+        booking: {
+          car: CAR1_ID,
+          driver: DRIVER1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 10),
+          to: new Date(2025, 6, 13),
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.text).toContain('Guest driver details are required')
+  })
+
+  it('uses the authenticated driver and ignores supplied driver details', async () => {
+    const email = testHelper.GetRandomEmail()
+    const response = await request(app)
+      .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+      .send({
+        driver: {
+          fullName: 'Impersonated Driver',
+          email,
+          language: testHelper.LANGUAGE,
+          birthDate: new Date(1990, 0, 1),
+        },
+        booking: {
+          car: CAR1_ID,
+          supplier: SUPPLIER_ID,
+          driver: DRIVER1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 20),
+          to: new Date(2025, 6, 23),
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(200)
+    const booking = await Booking.findById(response.body.bookingId)
+    expect(booking?.driver.toString()).toBe(DRIVER1_ID)
+    expect(await User.findOne({ email })).toBeNull()
+    await Booking.deleteOne({ _id: response.body.bookingId })
+  })
+
+  it('uses the authenticated driver and wrong booking driver ID', async () => {
+    const response = await request(app)
+      .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+      .send({
+        booking: {
+          car: CAR1_ID,
+          supplier: SUPPLIER_ID,
+          driver: DRIVER2_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 20),
+          to: new Date(2025, 6, 23),
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.text).toBe('Booking driver does not match authenticated user')
+  })
+
+  it('wrong supplier in booking', async () => {
+    const response = await request(app)
+      .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+      .send({
+        booking: {
+          supplier: testHelper.GetRandromObjectIdAsString(),
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          car: CAR1_ID,
+          driver: DRIVER1_ID,
+          from: new Date(2025, 6, 24),
+          to: new Date(2025, 6, 27),
+          status: bookcarsTypes.BookingStatus.Paid,
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 234,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.text).toBe('Invalid supplier')
+  })
+
+  it('does not create a guest account for an email already registered to an account', async () => {
+    const sendMail = jest.mocked(testTransporter.sendMail)
+    sendMail.mockClear()
+
+    const response = await request(app)
+      .post('/api/checkout')
+      .send({
+        driver: {
+          fullName: 'Existing Account Impersonation',
+          email: (await User.findById(DRIVER1_ID))!.email,
+          language: testHelper.LANGUAGE,
+          birthDate: new Date(1990, 0, 1),
+        },
+        booking: {
+          car: CAR1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 28),
+          to: new Date(2025, 7, 1),
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(sendMail).not.toHaveBeenCalled()
+  })
+
+  it('atomically rejects reuse of a payment intent', async () => {
+    const paymentIntentId = `pi_checkout_${nanoid()}`
+    let savedCount = 0
+
+    const createBooking = async () => {
+      const booking = new Booking({
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2025, 7, 10),
+        to: new Date(2025, 7, 13),
+        status: bookcarsTypes.BookingStatus.Paid,
+        cancellation: false,
+        price: 3000,
+        paymentIntentId,
+      })
+
+      if (savedCount > 0) {
+        const error = new mongoose.mongo.MongoServerError({ message: 'E11000 duplicate key error' })
+        error.code = 11000
+        throw error
+      }
+
+      await booking.save()
+      savedCount += 1
+      return true
+    }
+
+    const results = await Promise.allSettled([createBooking(), createBooking()])
+    const fulfilled = results.filter((r) => r.status === 'fulfilled')
+
+    expect(fulfilled).toHaveLength(1)
+    await Booking.deleteMany({ paymentIntentId })
+  })
+
+  it.each([
+    ['malformed', 'not-a-date', '2025-07-13T00:00:00.000Z'],
+    ['zero-length', '2025-07-13T00:00:00.000Z', '2025-07-13T00:00:00.000Z'],
+    ['reversed', '2025-07-14T00:00:00.000Z', '2025-07-13T00:00:00.000Z'],
+  ])('rejects %s date intervals before creating guest accounts or sending notifications', async (_label, from, to) => {
+    const email = testHelper.GetRandomEmail()
+    const sendMail = jest.mocked(testTransporter.sendMail)
+    sendMail.mockClear()
+    const notificationsBefore = await Notification.countDocuments({ user: SUPPLIER_ID })
+
+    const response = await request(app)
+      .post('/api/checkout')
+      .send({
+        driver: { fullName: 'Invalid Dates Driver', email, birthDate: new Date(1990, 0, 1) },
+        booking: {
+          car: CAR1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from,
+          to,
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(await User.findOne({ email })).toBeNull()
+    expect(sendMail).not.toHaveBeenCalled()
+    expect(await Notification.countDocuments({ user: SUPPLIER_ID })).toBe(notificationsBefore)
+  })
+
+  it('rejects a nonexistent car before creating guest accounts or sending email', async () => {
+    const email = testHelper.GetRandomEmail()
+    const sendMail = jest.mocked(testTransporter.sendMail)
+    sendMail.mockClear()
+
+    const response = await request(app)
+      .post('/api/checkout')
+      .send({
+        driver: { fullName: 'Missing Car Driver', email, birthDate: new Date(1990, 0, 1) },
+        booking: {
+          car: testHelper.GetRandromObjectIdAsString(),
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: '2025-07-13T00:00:00.000Z',
+          to: '2025-07-16T00:00:00.000Z',
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(await User.findOne({ email })).toBeNull()
+    expect(sendMail).not.toHaveBeenCalled()
+  })
+
+  it('uses the existing rate limiter on checkout', async () => {
+    const evalMock = jest.spyOn(redis, 'eval').mockResolvedValue([0, 0])
+
+    const response = await request(app)
+      .post('/api/checkout')
+      .set('x-test-rate-limit', 'true')
+      .send({})
+
+    expect(response.statusCode).toBe(429)
+    expect(evalMock).toHaveBeenCalled()
+    evalMock.mockRestore()
+  })
+})
+
+describe('POST /api/checkout security', () => {
+  beforeEach(async () => {
+    // Reset supplier licenseRequired flag before running security tests
+    const supplier = await User.findById(SUPPLIER_ID)
+    if (supplier) {
+      supplier.licenseRequired = false
+      await supplier.save()
+    }
+  })
+  it('allows legitimate checkout registration with the driver allowlist', async () => {
+    const email = testHelper.GetRandomEmail()
+    const response = await request(app)
+      .post('/api/checkout')
+      .send({
+        driver: {
+          fullName: 'Legitimate Checkout Driver',
+          email,
+          phone: '',
+          birthDate: new Date(1990, 0, 1),
+          language: testHelper.LANGUAGE,
+        },
+        booking: {
+          supplier: SUPPLIER_ID,
+          car: CAR1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 1),
+          to: new Date(2025, 6, 4),
+          status: bookcarsTypes.BookingStatus.Pending,
+          cancellation: true,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      })
+    expect(response.statusCode).toBe(200)
+    const driver = await User.findOne({ email })
+    expect(driver).not.toBeNull()
+    expect(driver?.type).toBe(bookcarsTypes.UserType.User)
+    expect(driver?.fullName).toBe('Legitimate Checkout Driver')
+    expect(driver?.birthDate).toStrictEqual(new Date(1990, 0, 1))
+
+    const bookingId = response.body.bookingId as string
+    await testHelper.deleteNotifications(bookingId)
+    await Booking.deleteOne({ _id: bookingId })
+    await Token.deleteMany({ user: driver?._id })
+    await driver?.deleteOne()
+  })
+
+  it.each([bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier])(
+    'creates a normal driver when the client submits type %s and privileged fields',
+    async (type) => {
+      const email = testHelper.GetRandomEmail()
+      const payload: bookcarsTypes.CheckoutPayload = {
+        driver: {
+          fullName: 'Checkout Security Test',
+          email,
+          phone: '',
+          birthDate: new Date(1990, 0, 1),
+          language: testHelper.LANGUAGE,
+          type,
+          verified: true,
+          active: true,
+          blacklisted: true,
+          password: 'client-controlled-password',
+        },
+        booking: {
+          supplier: SUPPLIER_ID,
+          car: CAR1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2025, 6, 1),
+          to: new Date(2025, 6, 4),
+          status: bookcarsTypes.BookingStatus.Pending,
+          cancellation: true,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 3000,
+          additionalDriver: false,
+        },
+        payLater: true,
+      }
+
+      const response = await request(app)
+        .post('/api/checkout')
+        .send(payload)
+
+      expect(response.statusCode).toBe(200)
+      const driver = await User.findOne({ email })
+      expect(driver).not.toBeNull()
+      expect(driver?.type).toBe(bookcarsTypes.UserType.User)
+      expect(driver?.verified).toBe(false)
+      expect(driver?.active).toBe(false)
+      expect(driver?.blacklisted).toBe(false)
+      expect(driver?.password).toBeUndefined()
+
+      const bookingId = response.body.bookingId as string
+      await testHelper.deleteNotifications(bookingId)
+      await Booking.deleteOne({ _id: bookingId })
+      await Token.deleteMany({ user: driver?._id })
+      await driver?.deleteOne()
+    },
+  )
 })
 
 describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () => {
@@ -831,6 +1257,7 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
 
     const res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
 
     expect(res.statusCode).toBe(200)
@@ -888,6 +1315,7 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
 
     const res = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
 
     expect(res.statusCode).toBe(400)
@@ -961,12 +1389,14 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
     // First checkout succeeds
     const firstRes = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(firstRes.statusCode).toBe(200)
 
     // Replay attack attempt with same paymentIntentId fails
     const secondRes = await request(app)
       .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
       .send(payload)
     expect(secondRes.statusCode).toBe(200)
     expect(secondRes.body.bookingId).toBe(firstRes.body.bookingId)
@@ -986,6 +1416,7 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
 describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
   let toctouCarId: string
   let toctouDriverId: string
+  let toctouDriverToken: string
   let toctouCarObj: bookcarsTypes.Car
   let supplierPriceChangeRate: number
 
@@ -1041,6 +1472,7 @@ describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
     })
     await driver.save()
     toctouDriverId = driver._id.toString()
+    toctouDriverToken = await testHelper.generateToken(toctouDriverId)
   })
 
   afterAll(async () => {
@@ -1110,7 +1542,10 @@ describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
       payLater: true,
     }
 
-    const res = await request(app).post('/api/checkout').send(payload)
+    const res = await request(app)
+      .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, toctouDriverToken)
+      .send(payload)
     expect(res.statusCode).toBe(409)
 
     // Verify duplicate booking was blocked
@@ -1183,7 +1618,10 @@ describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
       payLater: true,
     }
 
-    const res = await request(app).post('/api/checkout').send(payloadB)
+    const res = await request(app)
+      .post('/api/checkout')
+      .set(env.X_ACCESS_TOKEN, toctouDriverToken)
+      .send(payloadB)
     expect(res.statusCode).toBe(409)
 
     const count = await Booking.countDocuments({ car: toctouCarId, from: raceFrom, to: raceTo })
@@ -1265,8 +1703,8 @@ describe('Security Regression Tests - TOCTOU Availability Revalidation', () => {
     })
 
     const [res1, res2] = await Promise.all([
-      request(app).post('/api/checkout').send(makePayload(DRIVER1_ID)),
-      request(app).post('/api/checkout').send(makePayload(toctouDriverId)),
+      request(app).post('/api/checkout').set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN).send(makePayload(DRIVER1_ID)),
+      request(app).post('/api/checkout').set(env.X_ACCESS_TOKEN, toctouDriverToken).send(makePayload(toctouDriverId)),
     ])
 
     expect(res1.statusCode).toBe(200)

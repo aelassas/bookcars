@@ -1,5 +1,6 @@
 import LocalizedStrings from 'localized-strings'
 import * as langHelper from '@/utils/langHelper'
+import { INVALID } from 'zod/v3'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -43,6 +44,7 @@ const strings = new LocalizedStrings({
     PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT: "Les sociétés de location de voitures vous permettent uniquement de récupérer les clés à l'heure de prise en charge qui vous a été assignée. Votre voiture vous est généralement garantie pendant une durée limitée après l'heure de prise en charge prévue. Ensuite, elle sera probablement proposée à un autre client.",
     PICK_UP_CHECKLIST_DOCUMENTS_TITLE: 'Ce dont vous avez besoin',
     PICK_UP_CHECKLIST_DOCUMENTS_CONTENT: "Lors de la prise en charge du véhicule, vous aurez besoin d'un passeport ou une carte d'identité et un permis de conduire.",
+    INVALID_REQUEST: 'Email déjà enregistré ou autre erreur de validation.',
   },
   en: {
     BOOKING_HEADING: 'Book now',
@@ -85,6 +87,7 @@ const strings = new LocalizedStrings({
     PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT: "Rental companies only allow you to get your keys at your allocated pick-up time, they'll usually hold your car for a limited time after you're due to pick it up - then it's likely to be passed to another customer.",
     PICK_UP_CHECKLIST_DOCUMENTS_TITLE: 'What you bring with you',
     PICK_UP_CHECKLIST_DOCUMENTS_CONTENT: "When you pick the car up, you'll need a passport or national ID card and a driver's license.",
+    INVALID_REQUEST: 'Email already registered or other validation error.',
   },
   es: {
     BOOKING_HEADING: 'Reservar ahora',
@@ -127,6 +130,7 @@ const strings = new LocalizedStrings({
     PICK_UP_CHECKLIST_ARRIVE_ON_TIME_CONTENT: 'Las empresas de alquiler solo te dan las llaves a la hora de recogida asignada. Normalmente, te reservarán el coche durante un tiempo limitado una vez transcurrida la hora prevista para recogerlo. Después, es probable que se lo alquilen a otro cliente.',
     PICK_UP_CHECKLIST_DOCUMENTS_TITLE: 'Qué llevar contigo',
     PICK_UP_CHECKLIST_DOCUMENTS_CONTENT: 'A la hora de recoger el vehículo deberás facilitar el pasaporte o el documento nacional de identidad y Todos los conductores deberán presentar su permiso de conducir.',
+    INVALID_REQUEST: 'Correo electrónico ya registrado u otro error de validación.',
   },
 })
 

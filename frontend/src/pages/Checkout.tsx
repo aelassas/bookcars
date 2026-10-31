@@ -267,7 +267,6 @@ const Checkout = () => {
         } else {
           // Generate a unique session ID for PayPal checkout
           _sessionId = nanoid()
-          setPayPalLoaded(true)
         }
       } else {
         // Generate a unique session ID for pay later checkout
@@ -290,17 +289,24 @@ const Checkout = () => {
       const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
 
       if (status === 200) {
+        setBookingId(_bookingId)
+        setSessionId(_sessionId)
         if (payLater) {
           setVisible(false)
           setSuccess(true)
+        } else if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal) {
+          // Set payPalLoaded ONLY AFTER bookingId is set
+          setPayPalLoaded(true)
         }
-        setBookingId(_bookingId)
-        setSessionId(_sessionId)
       } else {
         helper.error()
       }
     } catch (err) {
-      helper.error(err)
+      if ((err as any)?.status === 400) {
+        helper.error(err, strings.INVALID_REQUEST)
+      } else {
+        helper.error(err)
+      }
     }
   }
 
@@ -889,17 +895,26 @@ const Checkout = () => {
                           <div className="payment-options-container">
                             <PayPalButtons
                               createOrder={async () => {
-                                const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
-                                const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
-                                const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
-                                let amount = price
-                                if (payDeposit) {
-                                  amount = depositPrice
-                                } else if (payInFull) {
-                                  amount = price + depositPrice
+                                try {
+                                  if (!bookingId) {
+                                    console.error('Missing bookingId before PayPal order creation')
+                                    return ''
+                                  }
+                                  const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
+                                  const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
+                                  const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
+                                  let amount = price
+                                  if (payDeposit) {
+                                    amount = depositPrice
+                                  } else if (payInFull) {
+                                    amount = price + depositPrice
+                                  }
+                                  const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
+                                  return orderId || ''
+                                } catch (err) {
+                                  console.error('Error creating PayPal order', err)
+                                  return ''
                                 }
-                                const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
-                                return orderId
                               }}
                               onApprove={async (data, actions) => {
                                 try {

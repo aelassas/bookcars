@@ -37,7 +37,7 @@ import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
  */
 const propertyLocks = new Map<string, Promise<void>>()
 
-async function withPropertyLock<T>(propertyId: string, fn: () => Promise<T>): Promise<T> {
+async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise<T> {
   // Wait for any outstanding operation on this property to finish
   const previous = propertyLocks.get(propertyId) ?? Promise.resolve()
 
@@ -233,15 +233,13 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
 export const checkout = async (req: Request, res: Response) => {
   let checkoutPaymentIntentId: string | undefined
   try {
-    let user: env.User | null
     const { body }: { body: bookcarsTypes.CheckoutPayload } = req
-    const { driver } = body
-
-    if (!body.booking) {
-      throw new Error('Booking not found')
-    }
 
     checkoutPaymentIntentId = body.paymentIntentId
+    const bookingInput = body.booking
+    if (!bookingInput) {
+      throw new Error('Booking missing')
+    }
 
     if (checkoutPaymentIntentId) {
       const existingBooking = await Booking.findOne({ paymentIntentId: checkoutPaymentIntentId })
@@ -251,132 +249,182 @@ export const checkout = async (req: Request, res: Response) => {
       }
     }
 
-    const supplier = await User.findById(body.booking.supplier)
-    if (!supplier) {
-      throw new Error(`Supplier ${body.booking.supplier} not found`)
+    // Verify car existence
+    if (typeof bookingInput.car !== 'string' || !helper.isValidObjectId(bookingInput.car)) {
+      res.status(400).send('Invalid car')
+      return
     }
-
-    if (driver) {
-      const { license } = driver
-      if (supplier.licenseRequired && !license) {
-        throw new Error("Driver's license required")
-      }
-      if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_TEMP_LICENSES, license!)))) {
-        throw new Error("Driver's license file not found")
-      }
-
-      const existingUser = await User.findOne({ email: driver.email?.toLowerCase() })
-
-      if (existingUser) {
-        user = existingUser
-      } else {
-        user = new User({
-          fullName: driver.fullName,
-          email: driver.email,
-          phone: driver.phone,
-          birthDate: driver.birthDate,
-          language: driver.language,
-          type: bookcarsTypes.UserType.User,
-          license: null,
-          verified: false,
-          blacklisted: false,
-        })
-        await user.save()
-
-        // create license
-        if (license) {
-          const safeLicense = path.basename(license)
-          const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
-          const filename = `${user._id.toString()}${path.extname(safeLicense)}`
-          const destPath = path.resolve(env.CDN_LICENSES, filename)
-
-          // security check: restrict allowed extensions
-          const ext = path.extname(safeLicense)
-          if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
-            throw new Error('Invalid license file type')
-          }
-
-          if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
-            throw new Error('Invalid destination path for license')
-          }
-
-          await asyncFs.rename(tempLicensePath, destPath)
-          user.license = filename
-          await user.save()
-        }
-
-        const token = new Token({ user: user._id, token: helper.generateToken() })
-        await token.save()
-
-        i18n.locale = user.language
-
-        const mailOptions: nodemailer.SendMailOptions = {
-          from: env.SMTP_FROM,
-          to: user.email,
-          subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-          html: `<p>
-          ${i18n.t('HELLO')}${user.fullName},<br><br>
-          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${i18n.t('REGARDS')}<br>
-          </p>`,
-        }
-        await mailHelper.sendMail(mailOptions)
-      }
-
-      body.booking.driver = user._id.toString()
-    } else {
-      user = await User.findById(body.booking.driver)
-    }
-
-    if (!user) {
-      throw new Error(`User ${body.booking.driver} not found`)
-    }
-    if (supplier.licenseRequired && !user!.license) {
-      throw new Error("Driver's license required")
-    }
-    if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_LICENSES, user!.license!)))) {
-      throw new Error("Driver's license file not found")
-    }
-
-    // Verify car existence and calculate expected total price
-    const carObj = await Car.findById(body.booking.car).lean()
+    const carObj = await Car.findById(bookingInput.car).lean()
     if (!carObj) {
       res.status(400).send('Car not found')
       return
     }
 
-    const fromDate = new Date(body.booking.from)
-    const toDate = new Date(body.booking.to)
+    const fromValue: unknown = bookingInput.from
+    const toValue: unknown = bookingInput.to
+    const fromDate = typeof fromValue === 'string' || fromValue instanceof Date ? new Date(fromValue) : new Date(NaN)
+    const toDate = typeof toValue === 'string' || toValue instanceof Date ? new Date(toValue) : new Date(NaN)
+
+    if (
+      Number.isNaN(fromDate.getTime())
+      || Number.isNaN(toDate.getTime())
+      || toDate <= fromDate
+    ) {
+      res.status(400).send('Invalid booking dates')
+      return
+    }
+
+    if (body.payLater !== undefined && typeof body.payLater !== 'boolean') {
+      res.status(400).send('Invalid payment option')
+      return
+    }
+
+    const [supplier, locations] = await Promise.all([
+      User.findById(carObj.supplier),
+      Location.find({ _id: { $in: carObj.locations } }),
+    ])
+    if (!supplier || supplier.type !== bookcarsTypes.UserType.Supplier || supplier.blacklisted || !locations || locations.length === 0) {
+      res.status(400).send('Invalid property relationships')
+      return
+    }
+
+    if (body.payLater && !supplier.payLater) {
+      res.status(400).send('Pay-later checkout is unavailable')
+      return
+    }
+
+    // Calculate expected total price
     const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
       carObj as unknown as bookcarsTypes.Car,
       fromDate,
       toDate,
       supplier.priceChangeRate || 0,
       {
-        cancellation: body.booking.cancellation,
-        amendments: body.booking.amendments,
-        theftProtection: body.booking.theftProtection,
-        collisionDamageWaiver: body.booking.collisionDamageWaiver,
-        fullInsurance: body.booking.fullInsurance,
-        additionalDriver: body.booking.additionalDriver,
+        cancellation: bookingInput.cancellation,
+        amendments: bookingInput.amendments,
+        theftProtection: bookingInput.theftProtection,
+        collisionDamageWaiver: bookingInput.collisionDamageWaiver,
+        fullInsurance: bookingInput.fullInsurance,
+        additionalDriver: bookingInput.additionalDriver,
       }
     )
     const expectedBasePriceInBaseCurrency = await bookcarsHelper.convertPrice(expectedBasePrice, env.BASE_CURRENCY, env.BASE_CURRENCY)
+    if (!Number.isFinite(expectedBasePriceInBaseCurrency) || expectedBasePriceInBaseCurrency < 0) {
+      res.status(400).send('Invalid booking price')
+      return
+    }
+
+    // Create and validate user (either logged-in or guest)
+    let user: env.User | null = null
+    let guestUser: InstanceType<typeof User> | undefined
+    const driver = body.driver
+    if (req.user) {
+      if (req.user.type !== bookcarsTypes.UserType.User) {
+        res.status(403).send({ message: 'Only drivers can checkout!' })
+        return
+      }
+      user = await User.findById(req.user._id)
+      if (!user || user.blacklisted) {
+        res.status(401).send({ message: 'Unauthorized!' })
+        return
+      }
+    } else {
+      if (!driver || !driver.fullName?.trim() || !driver.email?.trim()) {
+        res.status(400).send('Guest driver details are required')
+        return
+      }
+
+      const email = driver.email.trim().toLowerCase()
+      if (await User.findOne({ email })) {
+        res.status(400).send('An account already exists for this email')
+        return
+      }
+
+      const language = driver.language || env.DEFAULT_LANGUAGE
+      if (!env.LANGUAGES.includes(language.toLowerCase())) {
+        res.status(400).send('Invalid driver language')
+        return
+      }
+
+      let parsedBirthDate: Date | undefined
+      if (driver.birthDate) {
+        parsedBirthDate = new Date(driver.birthDate)
+        if (Number.isNaN(parsedBirthDate.getTime())) {
+          res.status(400).send('Invalid driver birth date')
+          return
+        }
+        const minimumBirthDate = new Date()
+        minimumBirthDate.setFullYear(minimumBirthDate.getFullYear() - carObj.minimumAge)
+        if (parsedBirthDate > minimumBirthDate) {
+          res.status(400).send('Driver does not meet the minimum age requirement')
+          return
+        }
+      }
+
+      guestUser = new User({
+        fullName: driver.fullName.trim(),
+        email,
+        phone: driver.phone,
+        birthDate: parsedBirthDate,
+        language: language.toLowerCase(),
+        type: bookcarsTypes.UserType.User,
+        verified: false,
+        blacklisted: false,
+        license: null
+      })
+      await guestUser.validate()
+    }
+
+    if (typeof bookingInput !== 'object') {
+      res.status(400).send('Invalid booking data')
+      return
+    }
+
+    if (bookingInput.supplier?.toString() !== carObj.supplier.toString()) {
+      res.status(400).send('Invalid supplier')
+      return
+    }
+
+    if (req.user) {
+      if (helper.isValidObjectId(bookingInput.driver as string)) {
+        const bookingDriver = await User.findById(bookingInput.driver)
+        if (req.user._id.toString() !== bookingDriver?._id?.toString()) {
+          res.status(400).send('Booking driver does not match authenticated user')
+          return
+        }
+      } else {
+        res.status(400).send('Booking driver does not match authenticated user')
+        return
+      }
+    }
+
+    const bookingData: bookcarsTypes.Booking = {
+      ...bookingInput,
+      supplier: carObj.supplier.toString(),
+      driver: (req.user ? user!._id.toString() : undefined) as any,
+    }
+
+    let paymentIntentCustomerId: string | undefined
 
     if (body.payLater) {
       // Server explicitly decides payment status for payLater
-      body.booking.status = bookcarsTypes.BookingStatus.Pending
-      body.booking.sessionId = body.sessionId
+      bookingData.status = bookcarsTypes.BookingStatus.Pending
+      bookingData.sessionId = body.sessionId
     } else {
       const { payPal, paymentIntentId, sessionId } = body
 
+      if (typeof payPal !== 'undefined' && typeof payPal !== 'boolean') {
+        res.status(400).send('Invalid payment provider')
+        return
+      }
+
       if (!payPal && !paymentIntentId && !sessionId) {
-        throw new Error('paymentIntentId and sessionId not found')
+        res.status(400).send('paymentIntentId and sessionId not found')
+        return
       }
 
       if (!payPal) {
-        body.booking.customerId = body.customerId
+        bookingData.customerId = body.customerId
       }
 
       if (paymentIntentId) {
@@ -404,38 +452,85 @@ export const checkout = async (req: Request, res: Response) => {
           return
         }
 
-        body.booking.paymentIntentId = paymentIntentId
+        paymentIntentCustomerId = typeof paymentIntent.customer === 'string'
+          ? paymentIntent.customer
+          : paymentIntent.customer?.id
+        if (body.customerId && body.customerId !== paymentIntentCustomerId) {
+          res.status(400).send('Payment customer mismatch')
+          return
+        }
+
+        bookingData.paymentIntentId = paymentIntentId
         let status = bookcarsTypes.BookingStatus.Paid
-        if (body.booking.isDeposit) {
+        if (bookingData.isDeposit) {
           status = bookcarsTypes.BookingStatus.Deposit
-        } else if (body.booking.isPayedInFull) {
+        } else if (bookingData.isPayedInFull) {
           status = bookcarsTypes.BookingStatus.PaidInFull
         }
-        body.booking.status = status
+        bookingData.status = status
       } else {
         //
         // Bookings created from checkout with Stripe are temporary
         // and are automatically deleted if the payment checkout session expires.
         //
-        let expireAt = new Date()
+        const expireAt = new Date()
         expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
 
-        body.booking.sessionId = body.sessionId
-        body.booking.status = bookcarsTypes.BookingStatus.Void
-        body.booking.expireAt = expireAt
-
-        //
-        // Non verified and active users created from checkout with Stripe are temporary
-        // and are automatically deleted if the payment checkout session expires.
-        //
-        if (!user.verified) {
-          expireAt = new Date()
-          expireAt.setSeconds(expireAt.getSeconds() + env.USER_EXPIRE_AT)
-
-          user.expireAt = expireAt
-          await user.save()
-        }
+        bookingData.sessionId = body.sessionId
+        bookingData.status = bookcarsTypes.BookingStatus.Void
+        bookingData.expireAt = expireAt
       }
+    }
+
+    //
+    // Non verified and active users created from checkout with Stripe are temporary
+    // and are automatically deleted if the payment checkout session expires.
+    //
+    if (guestUser) {
+      const expireAt = new Date()
+      expireAt.setSeconds(expireAt.getSeconds() + env.USER_EXPIRE_AT)
+      guestUser.expireAt = expireAt
+
+      const license = driver?.license
+
+      // create license
+      if (license) {
+        const safeLicense = path.basename(license)
+        const tempLicensePath = path.resolve(env.CDN_TEMP_LICENSES, safeLicense)
+        const filename = `${guestUser._id.toString()}${path.extname(safeLicense)}`
+        const destPath = path.resolve(env.CDN_LICENSES, filename)
+
+        // security check: restrict allowed extensions
+        const ext = path.extname(safeLicense)
+        if (!env.allowedLicenseExtensions.includes(ext.toLowerCase())) {
+          throw new Error('Invalid license file type')
+        }
+
+        if (!destPath.startsWith(path.resolve(env.CDN_LICENSES) + path.sep)) {
+          throw new Error('Invalid destination path for license')
+        }
+
+        await asyncFs.rename(tempLicensePath, destPath)
+        guestUser.license = filename
+      }
+
+      await guestUser.save()
+      user = guestUser
+    }
+
+    if (!user) {
+      throw new Error('Driver not found')
+    }
+
+    bookingData.driver = user._id.toString()
+
+    if (supplier.licenseRequired && !user!.license) {
+      res.status(400).send("Driver's license required")
+      return
+    }
+    if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_LICENSES, user!.license!)))) {
+      res.status(400).send("Driver's license file not found")
+      return
     }
 
     // Revalidate date availability (TOCTOU guard)
@@ -448,35 +543,32 @@ export const checkout = async (req: Request, res: Response) => {
         status: { $in: BOOKING_RESERVATION_STATUSES },
       })
       if (conflictingBooking) {
+        if (guestUser) {
+          await guestUser.deleteOne()
+        }
         res.status(409).send('Car is no longer available for these dates')
         return
       }
-    }
-
-    const { customerId } = body
-    if (customerId) {
-      user.customerId = customerId
-      await user?.save()
     }
 
     const { language } = user
     i18n.locale = language
 
     // additionalDriver
-    if (body.booking.additionalDriver && body.additionalDriver) {
+    if (bookingData.additionalDriver && body.additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
-      body.booking._additionalDriver = additionalDriver._id.toString()
+      bookingData._additionalDriver = additionalDriver._id.toString()
     }
 
-    body.booking.price = expectedBasePriceInBaseCurrency
-    const booking = new Booking(body.booking)
+    bookingData.price = expectedBasePriceInBaseCurrency
+    const booking = new Booking(bookingData)
 
     // Save the booking inside the per-property lock when exclusive
     // availability is required, so the conflict check + save are
     // effectively atomic in a single-process Node deployment.
     if (carObj.blockOnPay) {
-      await withPropertyLock(carObj._id.toString(), async () => {
+      await withCarLock(carObj._id.toString(), async () => {
         // Re-check inside the lock to close the race window
         const conflict = await Booking.exists({
           car: carObj._id,
@@ -492,11 +584,11 @@ export const checkout = async (req: Request, res: Response) => {
         await saveBookingWithAvailability(booking)
       }).catch(async (err: Error & { code?: string }) => {
         if (err.code === 'CONFLICT') {
-          if (driver && user) {
-            await Token.deleteMany({ user: user._id })
-            await user.deleteOne()
+          if (guestUser) {
+            await Token.deleteMany({ user: guestUser._id })
+            await guestUser.deleteOne()
           }
-          res.status(409).send('Property is no longer available for these dates')
+          res.status(409).send('Car is no longer available for these dates')
           return
         }
         throw err
@@ -507,6 +599,37 @@ export const checkout = async (req: Request, res: Response) => {
       }
     } else {
       await saveBookingWithAvailability(booking)
+    }
+
+    const status = body.payLater
+      ? bookcarsTypes.BookingStatus.Pending
+      : body.paymentIntentId
+        ? bookcarsTypes.BookingStatus.Paid
+        : bookcarsTypes.BookingStatus.Void
+    if (guestUser) {
+      if (status === bookcarsTypes.BookingStatus.Paid || body.payLater) {
+        guestUser.expireAt = undefined
+        await guestUser.save()
+      }
+
+      const token = new Token({ user: user._id, token: helper.generateToken() })
+      await token.save()
+
+      const mailOptions: nodemailer.SendMailOptions = {
+        from: env.SMTP_FROM,
+        to: user.email,
+        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+        html: `<p>
+          ${i18n.t('HELLO')}${user.fullName},<br><br>
+          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+          ${i18n.t('REGARDS')}<br>
+          </p>`,
+      }
+      await mailHelper.sendMail(mailOptions)
+    } else if (paymentIntentCustomerId) {
+      user.customerId = paymentIntentCustomerId
+      await user.save()
     }
 
     if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
@@ -546,6 +669,11 @@ export const checkout = async (req: Request, res: Response) => {
 
     res.status(200).send({ bookingId: booking._id.toString() })
   } catch (err) {
+    if (checkoutPaymentIntentId && err instanceof mongoose.mongo.MongoServerError && err.code === 11000) {
+      res.status(400).send(`PaymentIntent ${checkoutPaymentIntentId} has already been used`)
+      return
+    }
+
     if (err instanceof BookingConflictError) {
       if (checkoutPaymentIntentId) {
         try {

@@ -304,7 +304,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       }))
 
       let stripeAPI = (await import('../src/payment/stripe.js')).default
-      
+
       await expect(stripeAPI.checkout.sessions.retrieve('123')).resolves.toStrictEqual({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency })
 
       res = await request(app)
@@ -405,7 +405,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         default: {
           checkout: {
             sessions: {
-              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency })),
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: carDeposit.deposit * 100, currency: baseCurrency })),
             },
           },
         },
