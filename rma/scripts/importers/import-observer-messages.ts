@@ -90,6 +90,28 @@ async function main() {
   // every inbound); an unresolved lid keeps the brand slug and is counted.
   const identityByLid = new Map<string, string>();
   {
+    // The observer appends wa-identity-<slug>.jsonl whenever WhatsApp shows it
+    // both halves of a privacy-JID identity (lid + phone). Fold those into
+    // wa_identity FIRST so this same run's outbound rows resolve their "to".
+    for (const f of readdirSync(DIR).filter((f) => f.startsWith("wa-identity-") && f.endsWith(".jsonl"))) {
+      const brand = f.replace(/^wa-identity-/, "").replace(/\.jsonl$/, "");
+      for (const line of readFileSync(join(DIR, f), "utf8").split(/\r?\n/)) {
+        if (!line.trim()) continue;
+        try {
+          const j = JSON.parse(line);
+          if (!j.lid || !j.phone) continue;
+          await pool.query(
+            `INSERT INTO wa_identity (lid, phone, push_name, brand_line, last_seen)
+             VALUES ($1,$2,$3,$4,now())
+             ON CONFLICT (lid) DO UPDATE SET
+               phone = EXCLUDED.phone,
+               push_name = COALESCE(EXCLUDED.push_name, wa_identity.push_name),
+               last_seen = now()`,
+            [j.lid, j.phone, j.pushName ?? null, brand]
+          );
+        } catch { /* skip malformed line */ }
+      }
+    }
     const res = await pool.query("SELECT lid, phone FROM wa_identity WHERE phone IS NOT NULL");
     for (const r of res.rows as { lid: string; phone: string }[]) identityByLid.set(r.lid, r.phone);
   }

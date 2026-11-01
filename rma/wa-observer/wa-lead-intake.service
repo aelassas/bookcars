@@ -1,0 +1,10 @@
+[Unit]
+Description=Create leads from inbound WhatsApp messages (RMA CRM)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+Environment=NODE_ENV=production
+Environment=DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform
+ExecStart=/usr/bin/npx tsx scripts/run-wa-lead-intake.ts --commit

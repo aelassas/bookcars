@@ -1,0 +1,10 @@
+[Unit]
+Description=Run board classification every 5 minutes
+
+[Timer]
+OnBootSec=120
+OnUnitActiveSec=300
+AccuracySec=30
+
+[Install]
+WantedBy=timers.target

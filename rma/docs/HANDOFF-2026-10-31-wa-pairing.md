@@ -65,6 +65,34 @@
 >   falls back to heuristic.
 > - TARS creds (TARS_BASE_URL/TARS_ORG_DID/TARS_USERNAME/TARS_PASSWORD) sit in
 >   the LOCAL rma/.env.local only — not on the box. TARS work is next.
+>
+> **UPDATE 4, 2026-11-01 — the pipeline is LIVE.**
+> - rma-main PAIRED 2026-10-31 11:34 UTC as 971553590533 (the 515/408
+>   in-process reconnect fix in observe.mjs is what made scanning work —
+>   before it, every QR was backed by a dead socket).
+> - muha-test paired fine, then the handset UNLINKED it → 2 strikes → dormant
+>   by design. Revive = Pair click (relink-web.sh handles the rest).
+> - **systemd timers on the box (units in rma/wa-observer/):**
+>   `wa-import.timer` 60s (jsonl→message), `wa-lead-intake.timer` 120s
+>   (message→lead, module lead-from-whatsapp.ts), `wa-board-classify.timer`
+>   300s (message threads→board_item via DeepSeek — classify-inbox speaks
+>   OpenAI dialect, pointed at api.deepseek.com via QWEN_BASE_URL/QWEN_MODEL;
+>   key in EnvironmentFile /opt/rma-crm/wa-observer/secrets.env, mode 600).
+> - DEEPSEEK_API_KEY + AI_COMPANY_NAME="RMA Car Rental" live in the rma-crm
+>   drop-in; tenant ai_provider_config.provider='deepseek' — Messages UI
+>   classify/draft runs on DeepSeek.
+> - First classify pass produced 8 real board cards with Russian/English
+>   summaries + reply drafts (Vadim: extend 2 weeks = booking/med, etc.).
+> - **@lid gap closed:** observer now reads remoteJidAlt/senderPn → writes
+>   from_pn AND wa-identity-<slug>.jsonl; the importer folds that into
+>   wa_identity before message import (65 outbound rows were unresolvable
+>   without it). History heals as customers write again.
+> - Login flow: membership-first (Ruslan lands in /rma, not /admin);
+>   Settings → WhatsApp lines renders the panel inside the CRM shell;
+>   Ruslan changed his seed password (mustChangePassword flow verified
+>   working with marat@ — session → forced /account/password?next=%2Frma).
+> - Traffic stats day 1: 129 WA messages observed; ~45% of inbound is @lid
+>   (phone-hidden) — board cards cover those threads, leads need phones.
 
 
 **Branch:** `fix/backend-test-esm-import` (on `legacy` = `github.com/PrimeTurkmen/R-CRM`)  

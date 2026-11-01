@@ -50,6 +50,7 @@ const STATUS_FILE = path.join(DIR, `status-${SLUG}.json`);
 const OBSERVED_FILE = path.join(DIR, `observed-${SLUG}.jsonl`);
 const FAILS_FILE = path.join(DIR, `connect-fails-${SLUG}.json`);
 const PAIR_REQUEST_FILE = path.join(DIR, `pair-request-${SLUG}.json`);
+const IDENTITY_FILE = path.join(DIR, `wa-identity-${SLUG}.jsonl`);
 
 const logger = pino({ level: process.env.LOG_LEVEL ?? "warn" });
 const log = (msg) => console.log(`[wa-${SLUG}] ${new Date().toISOString()} ${msg}`);
@@ -106,12 +107,22 @@ function recordMessage(msg) {
   const text = extractText(msg);
   if (!text) return;
   const fromMe = Boolean(key.fromMe);
-  // Plain phone JID exposes digits directly; @lid DMs and group participants
-  // expose them via senderPn / participantPn when WhatsApp chooses to.
+  // Modern DM traffic arrives as a privacy JID (<n>@lid); Baileys exposes the
+  // real phone alongside it as key.remoteJidAlt ("9715…@s.whatsapp.net") or
+  // key.senderPn. Capture BOTH: senderPhone for the message row, and a
+  // wa-identity line so the importer can teach Postgres the lid→phone map
+  // (without it half the inbound traffic can never become a lead).
+  const pnJid = key.senderPn ?? key.remoteJidAlt ?? key.participantPn ?? null;
+  const pnDigits =
+    pnJid && pnJid.endsWith("@s.whatsapp.net") ? pnJid.split("@")[0].replace(/\D/g, "") : null;
   const senderPhone =
-    key.senderPn?.split("@")[0] ??
-    key.participantPn?.split("@")[0] ??
-    (jid.endsWith("@s.whatsapp.net") ? jid.split("@")[0] : null);
+    pnDigits ?? (jid.endsWith("@s.whatsapp.net") ? jid.split("@")[0] : null);
+  if (jid.endsWith("@lid") && pnDigits) {
+    appendFileSync(
+      IDENTITY_FILE,
+      JSON.stringify({ lid: jid.split("@")[0], phone: pnDigits, pushName: msg.pushName ?? null }) + "\n"
+    );
+  }
   const row = {
     ts: new Date(Number(msg.messageTimestamp ?? 0) * 1000 || Date.now()).toISOString(),
     brand: SLUG,
