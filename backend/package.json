@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon",
     "dev:setup": "npm run setup && nodemon",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=512\" tsc --build --verbose && babel dist -d dist",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node --import ./dist/src/monitoring/instrument.js dist/src",
     "start:setup": "npm run build && node dist/src/setup/setup.js && node --import ./dist/src/monitoring/instrument.js dist/src",
     "setup": "npm run build && node dist/src/setup/setup.js",
