@@ -1,6 +1,7 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) 
 [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) 
 [![codecov](https://img.shields.io/codecov/c/github/aelassas/bookcars?label=coverage)](https://codecov.io/gh/aelassas/bookcars)
+[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net/)
 [![docs](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki)
 
 <!--
@@ -67,7 +68,7 @@ To contribute code or report issues, please read the [Contribution Guide](https:
 
 If you want to customize BookCars while keeping your fork up to date with the latest changes, check out the [Fork, Customize, and Sync](https://github.com/aelassas/bookcars/wiki/Fork,-Customize,-and-Sync) guide in the Wiki.
 -->
-<!--
+
 ## Live Demo
 
 ### Frontend
@@ -105,7 +106,7 @@ You can install the Android App by downloading the APK and installing it on any 
 * [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.7/bookcars-8.7.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
--->
+
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
