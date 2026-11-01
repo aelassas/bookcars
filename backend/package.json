@@ -8,7 +8,7 @@
     "build:packages": "cd ../packages/bookcars-types && npm i && npm run build && cd ../currency-converter && npm i && npm run build && cd ../bookcars-helper && npm i && npm run build && cd ../../backend",
     "dev": "npm run build:packages && nodemon",
     "dev:setup": "npm run setup && nodemon",
-    "build": "npm run build:packages && rimraf dist && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
+    "build": "npm run build:packages && cross-env NODE_OPTIONS=\"--max-old-space-size=512\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node --import ./dist/src/monitoring/instrument.js dist/src",
     "start:setup": "npm run build && node dist/src/setup/setup.js && node --import ./dist/src/monitoring/instrument.js dist/src",
     "setup": "npm run build && node dist/src/setup/setup.js",
