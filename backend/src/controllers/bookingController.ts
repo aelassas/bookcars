@@ -222,6 +222,32 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
 }
 
 /**
+ * Safely cancel a Stripe PaymentIntent if it is in a cancellable status.
+ *
+ * @param {string} paymentIntentId - The ID of the PaymentIntent to cancel.
+ */
+const cancelPaymentIntentSafely = async (paymentIntentId: string) => {
+  try {
+    const paymentIntent = await stripeAPI.paymentIntents.retrieve(paymentIntentId)
+    const cancellableStatuses = [
+      'requires_payment_method',
+      'requires_capture',
+      'requires_reauthorization',
+      'requires_confirmation',
+      'requires_action',
+      'expired',
+      'processing',
+    ]
+
+    if (cancellableStatuses.includes(paymentIntent.status)) {
+      await stripeAPI.paymentIntents.cancel(paymentIntentId)
+    }
+  } catch (err) {
+    logger.error(`[cancelPaymentIntentSafely] Failed to cancel PaymentIntent ${paymentIntentId}`, err)
+  }
+}
+
+/**
  * Complete checkout process and create Booking.
  *
  * @export
@@ -336,6 +362,13 @@ export const checkout = async (req: Request, res: Response) => {
 
       const email = driver.email.trim().toLowerCase()
       if (await User.findOne({ email })) {
+        if (checkoutPaymentIntentId) {
+          try {
+            await cancelPaymentIntentSafely(checkoutPaymentIntentId)
+          } catch (cancelErr) {
+            logger.error('Failed to cancel payment intent on duplicate email', cancelErr)
+          }
+        }
         res.status(400).send('An account already exists for this email')
         return
       }
@@ -429,11 +462,13 @@ export const checkout = async (req: Request, res: Response) => {
 
       if (paymentIntentId) {
         const paymentIntent = await stripeAPI.paymentIntents.retrieve(paymentIntentId)
-        if (paymentIntent.status !== 'succeeded') {
+
+        // With manual capture, the status after PaymentSheet present is 'requires_capture'
+        if (paymentIntent.status !== 'requires_capture' && paymentIntent.status !== 'succeeded') {
           const message = `Payment failed: ${paymentIntent.status}`
           logger.error(message, body)
           res.status(400).send(message)
-          return // Stop further execution if paymentIntent failed
+          return
         }
 
         // Validate currency and amount
@@ -664,6 +699,21 @@ export const checkout = async (req: Request, res: Response) => {
         i18n.locale = admin.language
         message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
         await notify(user, booking._id.toString(), admin, message)
+      }
+    }
+
+    // CAPTURE FUNDS once the booking is successfully persisted
+    const { paymentIntentId } = body
+    if (paymentIntentId) {
+      try {
+        const paymentIntent = await stripeAPI.paymentIntents.retrieve(paymentIntentId)
+        if (paymentIntent.status === 'requires_capture') {
+          await stripeAPI.paymentIntents.capture(paymentIntentId)
+        }
+      } catch (captureError) {
+        logger.error(`[booking.checkout] Failed to capture PaymentIntent ${paymentIntentId}`, captureError)
+        res.status(500).send('Booking saved, but payment capture failed. Please contact support.')
+        return
       }
     }
 

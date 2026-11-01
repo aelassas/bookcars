@@ -260,4 +260,6 @@ export const en = {
   INVALID_PICK_UP_TIME: 'Invalid pick-up time',
   INVALID_DROP_OFF_TIME: 'Invalid drop-off time',
   SETTINGS_NOT_LOADED: 'Failed to load settings. Please try again later.',
+  PAYMENT_CANCELED_TITLE: 'Payment Canceled',
+  CHECKOUT_INVALID_REQUEST: 'An account with this email already exists or invalid details were provided. Your payment authorization was canceled and you were not charged. Please sign in to continue.',
 }

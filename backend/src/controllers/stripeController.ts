@@ -302,6 +302,7 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       receipt_email: receiptEmail,
       description,
       customer: customer.id,
+      capture_method: 'manual',
       automatic_payment_methods: {
         enabled: true,
         allow_redirects: 'never',

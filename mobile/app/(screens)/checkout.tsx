@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, View, TextInput as ReactTextInput } from 'react-native'
+import { Text as RNPText, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import validator from 'validator'
@@ -112,6 +113,9 @@ const CheckoutScreen = () => {
   const [payInFull, setPayInFull] = useState(false)
   const adRequired = true
 
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false)
+  const [errorDialogMessage, setErrorDialogMessage] = useState('')
+
   const { presentPaymentSheet } = useStripe()
 
   const fullNameRef = useRef<ReactTextInput>(null)
@@ -134,7 +138,7 @@ const CheckoutScreen = () => {
       const _language = await UserService.getLanguage()
       i18n.locale = _language
       setLanguage(_language)
-      
+
       const _locale = _language === 'fr' ? fr : _language === 'es' ? es : enUS
       setLocale(_locale)
 
@@ -706,6 +710,7 @@ const CheckoutScreen = () => {
                   paid = false
                 }
               } else {
+                // With capture_method: 'manual', success in presentPaymentSheet indicates successful hold/authorization
                 paid = true
               }
             }
@@ -792,8 +797,17 @@ const CheckoutScreen = () => {
       } else {
         _error()
       }
-    } catch (err) {
-      _error(err)
+    } catch (err: any) {
+      setLoading(false)
+      if (err?.response?.status === 400 || err?.status === 400) {
+        // Payment was canceled/released on Stripe due to validation failure
+        setErrorDialogMessage(i18n.t('CHECKOUT_INVALID_REQUEST'))
+        setErrorDialogOpen(true)
+      } else {
+        _error(err)
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -1221,6 +1235,32 @@ const CheckoutScreen = () => {
           {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
         </>
       )}
+
+      <Portal>
+        <Dialog
+          style={styles.dialog}
+          visible={errorDialogOpen}
+          onDismiss={() => setErrorDialogOpen(false)}
+          dismissable={false}
+        >
+          <Dialog.Title style={styles.dialogTitleContent}>
+            {i18n.t('PAYMENT_CANCELED_TITLE')}
+          </Dialog.Title>
+          <Dialog.Content style={styles.dialogContent}>
+            <RNPText variant="bodyMedium" style={{ textAlign: 'center' }}>
+              {errorDialogMessage}
+            </RNPText>
+          </Dialog.Content>
+          <Dialog.Actions style={styles.dialogActions}>
+            <NativeButton
+              textColor="#f37022"
+              onPress={() => setErrorDialogOpen(false)}
+            >
+              {i18n.t('CLOSE')}
+            </NativeButton>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </Layout>
   )
 }
@@ -1414,6 +1454,23 @@ const styles = StyleSheet.create({
   },
   error: {
     marginBottom: 10,
+  },
+  dialog: {
+    width: '90%',
+    maxWidth: 480,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+  },
+  dialogTitleContent: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  dialogContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dialogActions: {
+    justifyContent: 'center',
   },
 })
 

@@ -260,4 +260,6 @@ export const es = {
   INVALID_PICK_UP_TIME: 'Hora de recogida no válida',
   INVALID_DROP_OFF_TIME: 'Hora de devolución no válida',
   SETTINGS_NOT_LOADED: 'Error al cargar la configuración. Por favor, inténtelo de nuevo más tarde.',
+  PAYMENT_CANCELED_TITLE: 'Pago cancelado',
+  CHECKOUT_INVALID_REQUEST: 'Ya existe una cuenta con este correo electrónico o se proporcionaron datos no válidos. Su autorización de pago fue cancelada y no se le cobró. Por favor, inicie sesión para continuar.',
 }

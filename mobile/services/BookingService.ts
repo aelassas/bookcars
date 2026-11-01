@@ -8,13 +8,16 @@ import * as bookcarsTypes from ':bookcars-types'
  * @param {bookcarsTypes.CheckoutPayload} data
  * @returns {Promise<number>}
  */
-export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<number> =>
-  axiosInstance
+export const checkout = async (data: bookcarsTypes.CheckoutPayload): Promise<number> => {
+  const headers = await UserService.authHeader()
+  return axiosInstance
     .post(
       '/api/checkout',
-      data
+      data,
+      { headers }
     )
     .then((res) => res.status)
+}
 
 /**
  * Get bookings.
