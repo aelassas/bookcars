@@ -29,7 +29,7 @@ const strings = new LocalizedStrings({
     PAY_DEPOSIT: "Payer l'acompte en ligne et confirmer la réservation",
     PAY_DEPOSIT_INFO: "Payez l'acompte en ligne pour confirmer votre réservation. Le solde restant est dû lors de la prise en charge.",
     DEPOSIT: 'Acompte',
-    PAY_ONLINE: 'Payer la totalité en ligne et réserver la voiture',
+    PAY_ONLINE: 'Payer en ligne sans acompte et réserver la voiture',
     PAY_ONLINE_INFO: 'Confirmez votre réservation en ligne sans acompte. Payez le montant total au moment du retrait.',
     PAY_IN_FULL: 'Payer la totalité en ligne et réserver la voiture',
     PAY_IN_FULL_INFO: 'Acompte inclus. Modification et annulation sous conditions.',
