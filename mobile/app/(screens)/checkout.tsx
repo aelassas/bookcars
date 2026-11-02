@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, Text, View, TextInput as ReactTextInput } from 'react-native'
+import { Image, StyleSheet, Text, View, TextInputInstance } from 'react-native'
 import { Text as RNPText, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { enUS, fr, es } from 'date-fns/locale'
 import { PaymentSheetError, initPaymentSheet, useStripe } from '@stripe/stripe-react-native'
-import { useIsFocused } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -118,17 +117,17 @@ const CheckoutScreen = () => {
 
   const { presentPaymentSheet } = useStripe()
 
-  const fullNameRef = useRef<ReactTextInput>(null)
-  const emailRef = useRef<ReactTextInput>(null)
-  const phoneRef = useRef<ReactTextInput>(null)
-  const cardNameRef = useRef<ReactTextInput>(null)
-  const cardNumberRef = useRef<ReactTextInput>(null)
-  const cardMonthRef = useRef<ReactTextInput>(null)
-  const cardYearRef = useRef<ReactTextInput>(null)
-  const cvvRef = useRef<ReactTextInput>(null)
-  const _fullNameRef = useRef<ReactTextInput>(null)
-  const _emailRef = useRef<ReactTextInput>(null)
-  const _phoneRef = useRef<ReactTextInput>(null)
+  const fullNameRef = useRef<TextInputInstance>(null)
+  const emailRef = useRef<TextInputInstance>(null)
+  const phoneRef = useRef<TextInputInstance>(null)
+  const cardNameRef = useRef<TextInputInstance>(null)
+  const cardNumberRef = useRef<TextInputInstance>(null)
+  const cardMonthRef = useRef<TextInputInstance>(null)
+  const cardYearRef = useRef<TextInputInstance>(null)
+  const cvvRef = useRef<TextInputInstance>(null)
+  const _fullNameRef = useRef<TextInputInstance>(null)
+  const _emailRef = useRef<TextInputInstance>(null)
+  const _phoneRef = useRef<TextInputInstance>(null)
 
   const _init = async () => {
     try {

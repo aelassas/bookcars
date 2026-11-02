@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import type { SetStateAction, Dispatch, FC, ReactElement, MutableRefObject } from 'react'
-import type { LayoutChangeEvent, ViewProps } from 'react-native'
+import type { LayoutChangeEvent, ViewInstance, ViewProps } from 'react-native'
 import { StyleSheet, View } from 'react-native'
 import type { IAutocompleteDropdownRef } from './types'
 
@@ -9,7 +9,7 @@ export interface IAutocompleteDropdownContext {
   setContent: Dispatch<SetStateAction<ReactElement | undefined>>
   direction?: 'up' | 'down'
   setDirection: Dispatch<SetStateAction<IAutocompleteDropdownContext['direction']>>
-  activeInputContainerRef?: MutableRefObject<View | null>
+  activeInputContainerRef?: MutableRefObject<ViewInstance | null>
   activeControllerRef?: MutableRefObject<IAutocompleteDropdownRef | null>
   controllerRefs?: MutableRefObject<IAutocompleteDropdownRef[]>
 }
@@ -44,8 +44,8 @@ export const AutocompleteDropdownContextProvider: FC<IAutocompleteDropdownContex
   const [contentStyles, setContentStyles] = useState<
     { top?: number; left: number; width?: number; bottom?: number } | undefined
   >(undefined)
-  const activeInputContainerRef = useRef<View>(null)
-  const wrapperRef = useRef<View>(null)
+  const activeInputContainerRef = useRef<ViewInstance>(null)
+  const wrapperRef = useRef<ViewInstance>(null)
   const activeControllerRef = useRef<IAutocompleteDropdownRef | null>(null)
   const controllerRefs = useRef<IAutocompleteDropdownRef[]>([])
   const positionTrackingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)

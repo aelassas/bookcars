@@ -45,7 +45,7 @@ export const Dropdown = memo((props: DropdownProps) => {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled={true}
-        data={dataSet}
+        data={dataSet ?? undefined}
         style={{ maxHeight: suggestionsListMaxHeight }}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}

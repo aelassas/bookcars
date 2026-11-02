@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, ScrollView } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
 
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import * as helper from '@/utils/helper'
-import { useLocalSearchParams } from 'expo-router'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 
 const AboutScreen = () => {
   const isFocused = useIsFocused()

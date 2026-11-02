@@ -8,10 +8,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "splash": {
-      "backgroundColor": "#f37022",
-      "image": "./assets/splash.png"
-    },
     "android": {
       "versionCode": 910,
       "adaptiveIcon": {

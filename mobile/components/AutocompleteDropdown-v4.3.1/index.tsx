@@ -15,9 +15,9 @@ import type {
   FocusEvent,
   GestureResponderEvent,
   ListRenderItem,
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-  TextInputSubmitEditingEventData,
+  TextInputInstance,
+  TextInputSubmitEditingEvent,
+  ViewInstance,
 } from 'react-native'
 import {
   Dimensions,
@@ -89,8 +89,8 @@ export const AutocompleteDropdown = memo<
       suggestionsListTextStyle,
     } = props
     const InputComponent = (props.InputComponent as typeof TextInput) || TextInput
-    const inputRef = useRef<TextInput>(null)
-    const containerRef = useRef<View>(null)
+    const inputRef = useRef<TextInputInstance>(null)
+    const containerRef = useRef<ViewInstance>(null)
     const [searchText, setSearchText] = useState('')
     const [inputValue, setInputValue] = useState('')
     const [loading, setLoading] = useState(loadingProp)
@@ -430,7 +430,7 @@ export const AutocompleteDropdown = memo<
     )
 
     const onSubmit = useCallback(
-      (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+      (e: TextInputSubmitEditingEvent) => {
         inputRef.current?.blur()
         if (closeOnSubmit) {
           close()

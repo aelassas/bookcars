@@ -108,7 +108,7 @@ const RootLayout = () => {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ExpoStatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
+      <ExpoStatusBar style="dark" />
 
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SettingProvider>

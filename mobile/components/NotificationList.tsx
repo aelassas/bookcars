@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator, ScrollViewInstance } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import { Locale, format } from 'date-fns'
@@ -33,7 +33,7 @@ const NotificationList = ({ user, locale }: NotificationListProps) => {
   const [selectedRows, setSelectedRows] = useState<bookcarsTypes.Notification[]>([])
   const [rowCount, setRowCount] = useState(-1)
 
-  const notificationsListRef = useRef<ScrollView>(null)
+  const notificationsListRef = useRef<ScrollViewInstance>(null)
 
   const fetch = useCallback(async () => {
     if (user?._id) {

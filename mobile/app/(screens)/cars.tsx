@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 // import * as Location from 'expo-location'
-import { useIsFocused } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, ScrollView } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 
 import i18n from '@/lang/i18n'
 import * as UserService from '@/services/UserService'

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ScrollView, Pressable } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import { useIsFocused } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'

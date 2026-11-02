@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import { useIsFocused } from '@react-navigation/native'
 
 import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'

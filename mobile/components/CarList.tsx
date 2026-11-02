@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { useRouter } from 'expo-router'
-import { CommonActions, NavigationRoute, RouteProp } from '@react-navigation/native'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
@@ -249,7 +248,7 @@ const CarList = ({
                 <Text>{i18n.t('EMPTY_CAR_LIST')}</Text>
               </View>
             )
-              : null
+              : undefined
           }
           refreshing={loading}
           refreshControl={

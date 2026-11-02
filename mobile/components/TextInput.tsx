@@ -4,8 +4,8 @@ import {
   View,
   Text,
   TextInput as ReactTextInput,
-  NativeSyntheticEvent,
-  TextInputKeyPressEventData
+  TextInputInstance,
+  TextInputKeyPressEvent
 } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -25,7 +25,7 @@ interface TextInputProps {
   autoCorrect?: boolean
   hideClearButton?: boolean
   helperText?: string
-  onKeyPress?: (event: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
+  onKeyPress?: (event: TextInputKeyPressEvent) => void
   onFocus?: () => void
   onBlur?: () => void
   onSubmitEditing?: () => void
@@ -34,10 +34,10 @@ interface TextInputProps {
 
 const TextInputComponent = (
   props: TextInputProps,
-  ref: React.ForwardedRef<ReactTextInput>
+  ref: React.ForwardedRef<TextInputInstance>
 ) => {
   const [value, setValue] = useState('')
-  const _ref = useRef<ReactTextInput | null>(null)
+  const _ref = useRef<TextInputInstance | null>(null)
   const small = props.size === 'small'
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const TextInputComponent = (
   )
 }
 
-const TextInput = forwardRef<ReactTextInput, TextInputProps>(TextInputComponent)
+const TextInput: React.ForwardRefExoticComponent<TextInputProps & React.RefAttributes<TextInputInstance>> = forwardRef<TextInputInstance, TextInputProps>(TextInputComponent)
 
 TextInput.displayName = 'TextInput'
 

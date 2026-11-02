@@ -74,7 +74,7 @@ export const SimpleDrawerProvider = ({ children }: { children: React.ReactNode }
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 99,
   },

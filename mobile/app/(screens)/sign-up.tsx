@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, ScrollView, View, Text, TextInput as ReactTextInput } from 'react-native'
+import { StyleSheet, ScrollView, View, Text, TextInputInstance } from 'react-native'
 import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
@@ -46,11 +46,11 @@ const SignUpScreen = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false)
   const [tosError, setTosError] = useState(false)
 
-  const fullNameRef = useRef<ReactTextInput>(null)
-  const emailRef = useRef<ReactTextInput>(null)
-  const phoneRef = useRef<ReactTextInput>(null)
-  const passwordRef = useRef<ReactTextInput>(null)
-  const confirmPasswordRef = useRef<ReactTextInput>(null)
+  const fullNameRef = useRef<TextInputInstance>(null)
+  const emailRef = useRef<TextInputInstance>(null)
+  const phoneRef = useRef<TextInputInstance>(null)
+  const passwordRef = useRef<TextInputInstance>(null)
+  const confirmPasswordRef = useRef<TextInputInstance>(null)
 
   const _init = async () => {
     const _language = await UserService.getLanguage()

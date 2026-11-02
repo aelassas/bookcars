@@ -191,7 +191,7 @@ const BookingList = ({
               <Text style={styles.text}>{deleted ? i18n.t('BOOKING_DELETED') : i18n.t('EMPTY_BOOKING_LIST')}</Text>
             </View>
           )
-            : null
+            : undefined
         }
         refreshing={loading}
         refreshControl={

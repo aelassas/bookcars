@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 import { enUS, fr, es } from 'date-fns/locale'
-import { useIsFocused } from '@react-navigation/native'
 
 import * as bookcarsTypes from ':bookcars-types'
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, ScrollView, View, Text, TextInput as ReactTextInput } from 'react-native'
+import { StyleSheet, ScrollView, View, Text, TextInputInstance } from 'react-native'
 import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 
 import validator from 'validator'
@@ -21,7 +21,7 @@ const ForgotPasswordScreen = () => {
   const [emailRequired, setEmailRequired] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
   const [sent, setSent] = useState(false)
-  const ref = useRef<ReactTextInput>(null)
+  const ref = useRef<TextInputInstance>(null)
 
   const _init = async () => {
     const language = await UserService.getLanguage()

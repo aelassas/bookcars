@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, View, TextInput as ReactTextInput } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
-import { useIsFocused } from '@react-navigation/native'
+import { ScrollView, StyleSheet, View, TextInputInstance } from 'react-native'
+import { useIsFocused, useLocalSearchParams } from 'expo-router'
 
 import * as bookcarsTypes from ':bookcars-types'
 
@@ -30,9 +29,9 @@ const ChangePasswordScreen = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false)
   const [hasPassword, setHasPassword] = useState(false)
 
-  const currentPasswordRef = useRef<ReactTextInput>(null)
-  const passwordRef = useRef<ReactTextInput>(null)
-  const confirmPasswordRef = useRef<ReactTextInput>(null)
+  const currentPasswordRef = useRef<TextInputInstance>(null)
+  const passwordRef = useRef<TextInputInstance>(null)
+  const confirmPasswordRef = useRef<TextInputInstance>(null)
 
   const clear = () => {
     setCurrentPassword('')

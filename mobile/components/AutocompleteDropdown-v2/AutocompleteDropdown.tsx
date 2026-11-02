@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Dimensions, Keyboard, Platform, Pressable, View, TextInput, ScrollView } from 'react-native'
+import { Dimensions, Keyboard, Platform, Pressable, View, TextInput, ScrollView, ViewInstance } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import debounce from 'lodash.debounce'
 import PropTypes from 'prop-types'
@@ -32,7 +32,7 @@ export const AutocompleteDropdown: any = memo(
     const InputComponent = props.InputComponent ?? TextInput
 
     const inputRef = useRef<typeof InputComponent>(null)
-    const containerRef = useRef<View>(null)
+    const containerRef = useRef<ViewInstance>(null)
 
     useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {

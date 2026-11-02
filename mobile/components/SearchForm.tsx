@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import { useRouter } from 'expo-router'
+import { useIsFocused, useRouter } from 'expo-router'
 import { addHours } from 'date-fns'
 
 import * as env from '@/config/env.config'

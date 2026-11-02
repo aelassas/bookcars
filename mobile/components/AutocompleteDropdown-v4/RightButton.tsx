@@ -71,7 +71,7 @@ export const RightButton: React.FC<RightButtonProps> = memo(
         {showChevron && (
           <Animated.View style={{ transform: [{ rotate: chevronSpin }] }}>
             <TouchableOpacity onPress={onChevronPress} style={styles.chevronButton}>
-              {ChevronIconComponent ?? <ChevronDown width={20} stroke="#727992" />}
+              {ChevronIconComponent ?? <ChevronDown width={20} color="#727992" />}
             </TouchableOpacity>
           </Animated.View>
         )}
