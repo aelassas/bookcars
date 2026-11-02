@@ -255,6 +255,32 @@ const LoginSocialGoogle = ({
     checkIsExistsSDKScript,
   ]);
 
+  const [isButtonRendered, setIsButtonRendered] = useState(false);
+  const buttonContainerRef = useRef<HTMLDivElement>(null);
+
+  // One Tap (prompt()) relies on FedCM and is blocked after the user dismisses it
+  // or disables third-party sign-in. The Google-rendered button is not subject to
+  // those restrictions, so it is overlaid invisibly on top of the custom children.
+  useEffect(() => {
+    if (
+      typeResponse !== 'idToken' ||
+      !isSdkLoaded ||
+      !_window.google?.accounts?.id?.renderButton ||
+      !buttonContainerRef.current
+    ) {
+      return;
+    }
+    const container = buttonContainerRef.current;
+    container.innerHTML = '';
+    _window.google.accounts.id.renderButton(container, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      width: 200,
+    });
+    setIsButtonRendered(true);
+  }, [typeResponse, isSdkLoaded]);
+
   const loginGoogle = useCallback(() => {
     if (!isSdkLoaded) return;
     if (!_window.google) {
@@ -269,6 +295,35 @@ const LoginSocialGoogle = ({
       else _window.google.accounts.id.prompt();
     }
   }, [access_type, instance, isSdkLoaded, load, onLoginStart, onReject]);
+
+  if (typeResponse === 'idToken') {
+    return (
+      <div
+        className={className}
+        style={{ position: 'relative', overflow: 'hidden' }}
+        onClick={isButtonRendered ? undefined : loginGoogle}
+      >
+        {children}
+        <div
+          ref={buttonContainerRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            opacity: 0.001,
+            cursor: 'pointer',
+            zIndex: 1,
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={className} onClick={loginGoogle}>

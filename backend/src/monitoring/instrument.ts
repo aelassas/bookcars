@@ -8,11 +8,8 @@ if (env.ENABLE_SENTRY) {
     logger.info('[Sentry] Traces sample rate is set to 0, no transactions will be sent.')
   }
   Sentry.init({
-    dsn: env.SENTRY_DSN_BACKEND,
+    dsn: env.SENTRY_DSN_BACKEND,    
     environment: process.env.NODE_ENV || 'development',
-    // Adds request headers and IP for users, for more info visit:
-    // https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#sendDefaultPii
-    sendDefaultPii: true,
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for tracing.
     // We recommend adjusting this value in production

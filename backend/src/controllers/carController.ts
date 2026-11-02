@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
-import nodemailer from 'nodemailer'
+import { SendMailOptions } from 'nodemailer'
 import * as bookcarsTypes from ':bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
@@ -135,7 +135,7 @@ export const create = async (req: Request, res: Response) => {
 
             // mail
             if (admin.enableEmailNotifications) {
-              const mailOptions: nodemailer.SendMailOptions = {
+              const mailOptions: SendMailOptions = {
                 from: env.SMTP_FROM,
                 to: admin.email,
                 subject: message,
@@ -339,7 +339,7 @@ export const update = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const checkCar = async (req: Request, res: Response) => {
-  const { id } = req.params
+  const { id } = req.params as { id: string }
 
   try {
     const _id = new mongoose.Types.ObjectId(id)
@@ -605,7 +605,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
     }
 
     const baseDir = path.resolve(env.CDN_TEMP_CARS)
-    const targetPath = path.resolve(baseDir, image)
+    const targetPath = path.resolve(baseDir, image as string)
 
     // critical security check: prevent directory traversal
     if (!targetPath.startsWith(baseDir + path.sep)) {
@@ -697,8 +697,8 @@ export const getCar = async (req: Request, res: Response) => {
 export const getCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
+    const page = Number.parseInt(req.params.page as string, 10)
+    const size = Number.parseInt(req.params.size as string, 10)
     const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id))
     const {
       carType,
@@ -920,8 +920,8 @@ export const getBookingCars = async (req: Request, res: Response) => {
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
+    const page = Number.parseInt(req.params.page as string, 10)
+    const size = Number.parseInt(req.params.size as string, 10)
 
     const cars = await Car.aggregate(
       [
@@ -980,10 +980,10 @@ export const getBookingCars = async (req: Request, res: Response) => {
 export const getFrontendCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
-    const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id))
-    const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
+    const page = Number.parseInt(req.params.page as string, 10)
+    const size = Number.parseInt(req.params.size as string, 10)
+    const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id as string))
+    const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation as string)
     const {
       carType,
       gearbox,

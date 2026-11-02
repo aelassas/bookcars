@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
+import mongoose,{ HydratedDocument } from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
-import nodemailer from 'nodemailer'
+import { SendMailOptions } from 'nodemailer'
 import path from 'node:path'
 import asyncFs from 'node:fs/promises'
 import * as bookcarsTypes from ':bookcars-types'
@@ -123,7 +123,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
 
   // mail
   if (user.enableEmailNotifications) {
-    const mailOptions: nodemailer.SendMailOptions = {
+    const mailOptions: SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: message,
@@ -189,7 +189,7 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
     }
   }
 
-  const mailOptions: nodemailer.SendMailOptions = {
+  const mailOptions: SendMailOptions = {
     from: env.SMTP_FROM,
     to: user.email,
     subject: `${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART2')}`,
@@ -341,7 +341,7 @@ export const checkout = async (req: Request, res: Response) => {
     }
 
     // Create and validate user (either logged-in or guest)
-    let user: env.User | null = null
+    let user: HydratedDocument<env.User> | null = null
     let guestUser: InstanceType<typeof User> | undefined
     const driver = body.driver
     if (req.user) {
@@ -650,7 +650,7 @@ export const checkout = async (req: Request, res: Response) => {
       const token = new Token({ user: user._id, token: helper.generateToken() })
       await token.save()
 
-      const mailOptions: nodemailer.SendMailOptions = {
+      const mailOptions: SendMailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
         subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
@@ -719,7 +719,7 @@ export const checkout = async (req: Request, res: Response) => {
 
     res.status(200).send({ bookingId: booking._id.toString() })
   } catch (err) {
-    if (checkoutPaymentIntentId && err instanceof mongoose.mongo.MongoServerError && err.code === 11000) {
+    if (checkoutPaymentIntentId && err instanceof mongoose.mongo.MongoServerError && (err as mongoose.mongo.MongoServerError).code === 11000) {
       res.status(400).send(`PaymentIntent ${checkoutPaymentIntentId} has already been used`)
       return
     }
@@ -785,7 +785,7 @@ const notifyDriver = async (booking: env.Booking) => {
 
   // mail
   if (driver.enableEmailNotifications) {
-    const mailOptions: nodemailer.SendMailOptions = {
+    const mailOptions: SendMailOptions = {
       from: env.SMTP_FROM,
       to: driver.email,
       subject: message,
@@ -1257,8 +1257,8 @@ export const getBookingId = async (req: Request, res: Response) => {
 export const getBookings = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
+    const page = Number.parseInt(req.params.page as string, 10)
+    const size = Number.parseInt(req.params.size as string, 10)
     let suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       statuses,
@@ -1500,7 +1500,7 @@ export const hasBookings = async (req: Request, res: Response) => {
   try {
     const count = await Booking
       .find({
-        driver: new mongoose.Types.ObjectId(driver),
+        driver: new mongoose.Types.ObjectId(driver as string),
       })
       .limit(1)
       .countDocuments()
@@ -1532,7 +1532,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
   try {
     const booking = await Booking
       .findOne({
-        _id: new mongoose.Types.ObjectId(id),
+        _id: new mongoose.Types.ObjectId(id as string),
       })
       .populate<{ supplier: env.User }>('supplier')
       .populate<{ driver: env.User }>('driver')

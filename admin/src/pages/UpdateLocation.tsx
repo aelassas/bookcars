@@ -316,7 +316,7 @@ const UpdateLocation = () => {
               </FormControl>
 
               <ParkingSpotEditList
-                title={strings.PARKING_SPOTS}
+                title={clStrings.PARKING_SPOTS}
                 values={parkingSpotFields as bookcarsTypes.ParkingSpot[]}
                 onAdd={(value) => {
                   const parkingSpot: ParkingSpot = {

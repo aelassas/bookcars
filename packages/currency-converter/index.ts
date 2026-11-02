@@ -436,43 +436,52 @@ class CurrencyConverter {
     this.ratesCache = {}
 
     if (params != undefined) {
-      if (params['from'] !== undefined)
+      if (params['from'] !== undefined) {
         this.from(params['from'])
+      }
 
-      if (params['to'] !== undefined)
+      if (params['to'] !== undefined) {
         this.to(params['to'])
+      }
 
-      if (params['amount'] !== undefined)
+      if (params['amount'] !== undefined) {
         this.amount(params['amount'])
+      }
     }
   }
 
   from(currencyFrom: string) {
-    if (typeof currencyFrom !== 'string')
+    if (typeof currencyFrom !== 'string') {
       throw new TypeError('currency code should be a string')
+    }
 
-    if (!this.currencyCode.includes(currencyFrom.toUpperCase() as CurrencyCode))
+    if (!this.currencyCode.includes(currencyFrom.toUpperCase() as CurrencyCode)) {
       throw new Error(`${currencyFrom} is not a valid currency code`)
+    }
 
     this.currencyFrom = currencyFrom.toUpperCase()
     return this
   }
   to(currencyTo: string) {
-    if (typeof currencyTo !== 'string')
+    if (typeof currencyTo !== 'string') {
       throw new TypeError('currency code should be a string')
+    }
 
-    if (!this.currencyCode.includes(currencyTo.toUpperCase() as CurrencyCode))
+    if (!this.currencyCode.includes(currencyTo.toUpperCase() as CurrencyCode)) {
       throw new Error(`${currencyTo} is not a valid currency code`)
+    }
 
     this.currencyTo = currencyTo
     return this
   }
   amount(currencyAmount: number) {
-    if (typeof currencyAmount !== 'number')
+    if (typeof currencyAmount !== 'number') {
       throw new TypeError('amount should be a number')
+    }
 
-    if (currencyAmount <= 0)
+    if (currencyAmount <= 0) {
       throw new Error('amount should be a positive number')
+    }
 
     this.currencyAmount = currencyAmount
     return this
@@ -491,27 +500,33 @@ class CurrencyConverter {
   }
 
   setupRatesCache(ratesCacheOptions: { isRatesCaching: boolean, ratesCacheDuration: number }) {
-    if (typeof ratesCacheOptions != 'object')
+    if (typeof ratesCacheOptions != 'object') {
       throw new TypeError('ratesCacheOptions should be an object')
+    }
 
-    if (ratesCacheOptions.isRatesCaching === undefined)
-      throw new Error(`ratesCacheOptions should have a property called isRatesCaching`)
+    if (ratesCacheOptions.isRatesCaching === undefined) {
+      throw new Error('ratesCacheOptions should have a property called isRatesCaching')
+    }
 
-    if (typeof ratesCacheOptions.isRatesCaching != 'boolean')
+    if (typeof ratesCacheOptions.isRatesCaching != 'boolean') {
       throw new TypeError('ratesCacheOptions.isRatesCaching should be a boolean')
+    }
 
-    if (typeof ratesCacheOptions.ratesCacheDuration != 'number')
+    if (typeof ratesCacheOptions.ratesCacheDuration != 'number') {
       throw new TypeError('ratesCacheOptions.ratesCacheDuration should be a number')
+    }
 
-    if (ratesCacheOptions.ratesCacheDuration <= 0)
+    if (ratesCacheOptions.ratesCacheDuration <= 0) {
       throw new Error('ratesCacheOptions.ratesCacheDuration should be a positive number of seconds')
+    }
 
     this.isRatesCaching = ratesCacheOptions.isRatesCaching
 
-    if (ratesCacheOptions.ratesCacheDuration === undefined)
+    if (ratesCacheOptions.ratesCacheDuration === undefined) {
       this.ratesCacheDuration = 3600 // Defaults to 3600 seconds (1 hour)
-    else
+    } else {
       this.ratesCacheDuration = ratesCacheOptions.ratesCacheDuration
+    }
 
     return this
   }
@@ -550,14 +565,17 @@ class CurrencyConverter {
       this.amount(currencyAmount)
     }
 
-    if (this.currencyFrom == '')
+    if (this.currencyFrom == '') {
       throw new Error('currency code cannot be an empty string')
+    }
 
-    if (this.currencyTo == '')
+    if (this.currencyTo == '') {
       throw new Error('currency code cannot be an empty string')
+    }
 
-    if (this.currencyAmount == 0)
+    if (this.currencyAmount == 0) {
       throw new Error('currency amount should be a positive value')
+    }
 
     return this.rates().then((rates) => {
       this.convertedValue = rates * this.currencyAmount
@@ -566,21 +584,25 @@ class CurrencyConverter {
   }
 
   currencyName(currencyCode_: string) {
-    if (typeof currencyCode_ != 'string')
+    if (typeof currencyCode_ != 'string') {
       throw new TypeError('currency code should be a string')
+    }
 
-    if (!this.currencyCode.includes(currencyCode_.toUpperCase() as CurrencyCode))
+    if (!this.currencyCode.includes(currencyCode_.toUpperCase() as CurrencyCode)) {
       throw new Error(`${currencyCode_} is not a valid currency code`)
+    }
 
     return this.currencies[currencyCode_ as CurrencyCode]
   }
 
   addRateToRatesCache(currencyPair: string, rate_: number) {
-    if (typeof currencyPair != 'string')
+    if (typeof currencyPair != 'string') {
       throw new TypeError('currency pair should be a string')
+    }
 
-    if (typeof rate_ != 'number')
+    if (typeof rate_ != 'number') {
       throw new TypeError('rate should be a number')
+    }
 
     let now = new Date()
     if (currencyPair in this.ratesCache) {

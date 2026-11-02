@@ -23,7 +23,7 @@ export const getLanguage = () => {
  * @param {LocalizedStrings} strings
  * @param {?string} [language]
  */
-export const setLanguage = (strings: LocalizedStrings, language?: string) => {
+export const setLanguage = (strings: InstanceType<typeof LocalizedStrings>, language?: string) => {
   const lang = language || getLanguage()
   strings.setLanguage(lang)
 }

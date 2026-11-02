@@ -573,6 +573,7 @@ export const FACEBOOK_APP_SECRET = __env__('BC_FACEBOOK_APP_SECRET', false, 'FAC
  * @extends {Document}
  */
 export interface User extends Document {
+  _id: Types.ObjectId
   supplier?: Types.ObjectId
   fullName: string
   email: string
@@ -694,6 +695,7 @@ export interface Booking extends Document {
  * @extends {Document}
  */
 export interface DateBasedPrice extends Document {
+  _id: Types.ObjectId
   startDate: Date
   endDate: Date
   dailyPrice: number
@@ -708,6 +710,7 @@ export interface DateBasedPrice extends Document {
  * @extends {Document}
  */
 export interface Car extends Document {
+  _id: Types.ObjectId
   name: string
   licensePlate?: string
   supplier: Types.ObjectId
@@ -824,6 +827,7 @@ export interface BookingInfo {
  * @extends {Document}
  */
 export interface LocationValue extends Document {
+  _id: Types.ObjectId
   language: string
   value: string
 }
@@ -837,6 +841,7 @@ export interface LocationValue extends Document {
  * @extends {Document}
  */
 export interface Country extends Document {
+  _id: Types.ObjectId
   values: Types.ObjectId[]
   name?: string
   supplier?: Types.ObjectId
@@ -864,6 +869,7 @@ export interface CountryInfo {
  * @extends {Document}
  */
 export interface Location extends Document {
+  _id: Types.ObjectId
   country: Types.ObjectId
   longitude?: number
   latitude?: number
@@ -901,6 +907,7 @@ export interface LocationInfo {
  * @extends {Document}
  */
 export interface ParkingSpot extends Document {
+  _id: Types.ObjectId
   longitude: number
   latitude: number
   values: (Types.ObjectId | LocationValue)[]
@@ -916,6 +923,7 @@ export interface ParkingSpot extends Document {
  * @extends {Document}
  */
 export interface Notification extends Document {
+  _id: Types.ObjectId
   user: Types.ObjectId
   message: string
   booking: Types.ObjectId
@@ -932,6 +940,7 @@ export interface Notification extends Document {
  * @extends {Document}
  */
 export interface NotificationCounter extends Document {
+  _id: Types.ObjectId
   user: Types.ObjectId
   count?: number
 }
@@ -945,6 +954,7 @@ export interface NotificationCounter extends Document {
  * @extends {Document}
  */
 export interface PushToken extends Document {
+  _id: Types.ObjectId
   user: Types.ObjectId
   token: string
 }
@@ -958,6 +968,7 @@ export interface PushToken extends Document {
  * @extends {Document}
  */
 export interface Token extends Document {
+  _id: Types.ObjectId
   user: Types.ObjectId
   token: string
   expireAt?: Date
@@ -972,6 +983,7 @@ export interface Token extends Document {
  * @extends {Document}
  */
 export interface BankDetails extends Document {
+  _id: Types.ObjectId
   accountHolder: string
   bankName: string
   iban: string
@@ -983,11 +995,12 @@ export interface BankDetails extends Document {
  * Setting Document.
  *
  * @export
- * @interface BankDetails
- * @typedef {BankDetails}
+ * @interface Setting
+ * @typedef {Setting}
  * @extends {Document}
  */
 export interface Setting extends Document {
+  _id: Types.ObjectId
   minPickupHours: number
   minRentalHours: number
   minPickupDropoffHour: number

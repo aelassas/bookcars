@@ -311,8 +311,9 @@ export const getSupplier = async (req: Request, res: Response) => {
  */
 export const getSuppliers = async (req: Request, res: Response) => {
   try {
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
+    const { page: _page, size: _size } = req.params as { page: string, size: string }
+    const page = Number.parseInt(_page, 10)
+    const size = Number.parseInt(_size, 10)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
@@ -858,7 +859,7 @@ export const createContract = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const updateContract = async (req: Request, res: Response) => {
-  const { id, language } = req.params
+  const { id, language } = req.params as { id: string, language: string }
   const { file } = req
 
   try {
@@ -924,7 +925,7 @@ export const updateContract = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const deleteContract = async (req: Request, res: Response) => {
-  const { id, language } = req.params
+  const { id, language } = req.params as { id: string, language: string }
 
   try {
     if (!helper.isValidObjectId(id)) {
@@ -966,7 +967,7 @@ export const deleteContract = async (req: Request, res: Response) => {
  * @returns {*}
  */
 export const deleteTempContract = async (req: Request, res: Response) => {
-  const { file } = req.params
+  const { file } = req.params as { file: string }
 
   try {
     // prevent null bytes

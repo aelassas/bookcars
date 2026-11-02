@@ -10,6 +10,7 @@ const config = [
       'node_modules/',
       'dist',
       'index.d.ts',
+      'check.d.ts',
     ]
   },
   // Main configuration

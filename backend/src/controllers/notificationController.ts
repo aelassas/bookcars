@@ -54,7 +54,7 @@ const getAuthorizedNotificationUserId = (
  * @returns {unknown}
  */
 export const notificationCounter = async (req: Request, res: Response) => {
-  const { userId } = req.params
+  const { userId } = req.params as { userId: string }
   try {
     const targetUserId = getAuthorizedNotificationUserId(req, res, userId)
     if (!targetUserId) {
@@ -87,7 +87,7 @@ export const notificationCounter = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const getNotifications = async (req: Request, res: Response) => {
-  const { userId: _userId, page: _page, size: _size } = req.params
+  const { userId: _userId, page: _page, size: _size } = req.params as { userId: string, page: string, size: string }
 
   try {
     const targetUserId = getAuthorizedNotificationUserId(req, res, _userId)
@@ -135,7 +135,7 @@ export const getNotifications = async (req: Request, res: Response) => {
  */
 export const markAsRead = async (req: Request, res: Response) => {
   try {
-    const { userId: _userId } = req.params
+    const { userId: _userId } = req.params as { userId: string }
     const targetUserId = getAuthorizedNotificationUserId(req, res, _userId)
     if (!targetUserId) {
       return
@@ -193,7 +193,7 @@ export const markAsRead = async (req: Request, res: Response) => {
  */
 export const markAsUnRead = async (req: Request, res: Response) => {
   try {
-    const { userId: _userId } = req.params
+    const { userId: _userId } = req.params as { userId: string }
     const targetUserId = getAuthorizedNotificationUserId(req, res, _userId)
     if (!targetUserId) {
       return
@@ -251,7 +251,7 @@ export const markAsUnRead = async (req: Request, res: Response) => {
  */
 export const deleteNotifications = async (req: Request, res: Response) => {
   try {
-    const { userId: _userId } = req.params
+    const { userId: _userId } = req.params as { userId: string }
     const targetUserId = getAuthorizedNotificationUserId(req, res, _userId)
     if (!targetUserId) {
       return

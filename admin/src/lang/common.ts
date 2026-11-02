@@ -94,6 +94,7 @@ const strings = new LocalizedStrings({
     BLACKLISTED: 'Liste noire',
     BLACKLISTED_TOOLTIP: "Les utilisateurs mis sur liste noire n'ont plus accès à la plateforme.",
     FIELD_NOT_VALID: 'Veuillez respecter le format requis',
+    REQUIRED: 'Ce champ est requis.'
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -186,6 +187,7 @@ const strings = new LocalizedStrings({
     BLACKLISTED: 'Blacklisted',
     BLACKLISTED_TOOLTIP: 'Users who are blacklisted no longer have access to the platform.',
     FIELD_NOT_VALID: 'Please respect the required format',
+    REQUIRED: 'This field is required.',
   },
   es: {
     GENERIC_ERROR: 'Se ha producido un error no controlado.',
@@ -278,6 +280,7 @@ const strings = new LocalizedStrings({
     BLACKLISTED: 'Lista negra',
     BLACKLISTED_TOOLTIP: 'Los usuarios en la lista negra ya no tienen acceso a la plataforma.',
     FIELD_NOT_VALID: 'Por favor respete el formato requerido',
+    REQUIRED: 'Este campo es obligatorio',
   },
 })
 

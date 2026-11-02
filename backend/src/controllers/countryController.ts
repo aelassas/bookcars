@@ -242,8 +242,8 @@ export const getCountry = async (req: Request, res: Response) => {
  */
 export const getCountries = async (req: Request, res: Response) => {
   try {
-    const page = Number.parseInt(req.params.page, 10)
-    const size = Number.parseInt(req.params.size, 10)
+    const page = Number.parseInt(req.params.page as string, 10)
+    const size = Number.parseInt(req.params.size as string, 10)
     const { language } = req.params
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -326,7 +326,7 @@ export const getCountries = async (req: Request, res: Response) => {
  */
 export const getCountriesWithLocations = async (req: Request, res: Response) => {
   try {
-    const { language, imageRequired: _imageRequired, minLocations: _minLocations } = req.params
+    const { language, imageRequired: _imageRequired, minLocations: _minLocations } = req.params as { language: string, imageRequired: string, minLocations: string }
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
@@ -432,7 +432,7 @@ export const getCountriesWithLocations = async (req: Request, res: Response) => 
  * @returns {unknown}
  */
 export const checkCountry = async (req: Request, res: Response) => {
-  const { id } = req.params
+  const { id } = req.params as { id: string }
 
   try {
     const _id = new mongoose.Types.ObjectId(id)
@@ -463,7 +463,7 @@ export const checkCountry = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const getCountryId = async (req: Request, res: Response) => {
-  const { name, language } = req.params
+  const { name, language } = req.params as { name: string, language: string }
 
   try {
     if (language.length !== 2) {

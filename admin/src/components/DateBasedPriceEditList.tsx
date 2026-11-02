@@ -46,7 +46,7 @@ const DateBasedPriceEditList = (
               <div className="date-range">
                 <FormControl margin="dense" className="date">
                   <DatePicker
-                    label={commonStrings.START_DATE}
+                    label={strings.START_DATE}
                     required
                     onChange={(date) => {
                       if (date && dateBasedPrice.endDate && new Date(dateBasedPrice.endDate).getTime() < date.getTime()) {
@@ -74,7 +74,7 @@ const DateBasedPriceEditList = (
 
                 <FormControl margin="dense" className="date">
                   <DatePicker
-                    label={commonStrings.END_DATE}
+                    label={strings.END_DATE}
                     required
                     onChange={(date) => {
                       if (date && dateBasedPrice.startDate && new Date(dateBasedPrice.startDate).getTime() > date.getTime()) {

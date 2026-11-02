@@ -13,7 +13,7 @@ export default ({ mode }: { mode: string }) => {
       react(),
       babelPlugin({
         plugins: [
-          ['@babel/plugin-transform-runtime']
+          '@babel/plugin-transform-runtime'
         ],
         presets: [
           reactCompilerPreset()
