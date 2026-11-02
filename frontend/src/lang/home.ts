@@ -7,7 +7,7 @@ const strings = new LocalizedStrings({
     PICK_UP_DATE: 'Date de prise en charge',
     DROP_OFF_DATE: 'Date de retour',
     DROP_OFF: 'Restituer au même endroit',
-    COVER: "Réservez votre voiture aujourd'hui!",
+    COVER: "Réservez votre voiture aujourd'hui !",
     SUPPLIERS_TITLE: 'Vous Connecter aux plus Grandes Enseignes',
     MAP_TITLE: 'Carte des Agences de Location de Voitures',
     MAP_PICK_UP_SELECTED: 'Lieu de prise en charge sélectionné',
