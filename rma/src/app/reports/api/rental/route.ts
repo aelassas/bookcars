@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/platform/auth";
+import { getActiveTenant } from "@/platform/auth/tenant";
 import { getRentalReport, REPORT_PERIODS, type ReportPeriod } from "@/modules/reports/rental";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
-  const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  // Tenant-bound, not just signed-in: the report aggregates across brands, so
+  // a bare session check would serve it to any member of any tenant.
+  const t = await getActiveTenant();
+  if (!t?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const period = new URL(req.url).searchParams.get("period") ?? "today";
   if (!REPORT_PERIODS.includes(period as ReportPeriod)) {

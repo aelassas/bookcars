@@ -7,6 +7,14 @@ const PUBLIC_PREFIXES = [
   "/api/integrations", // inbound webhooks from third-party providers
 ];
 
+// ⚠️  SCOPE OF THIS GATE — pages only. Verified live on the RMA box
+// 2026-11-03: route handlers under /api/* are NOT covered by the redirect
+// below — an unauthenticated request reaches the handler, and the handler
+// must answer it. So the real boundary for every route.ts is its own first
+// statement (session check / token / HMAC), enforced by
+// src/platform/auth/route-guards.test.ts. Never rely on this middleware to
+// protect an API route.
+
 // Coarse per-IP flood guard on unauthenticated traffic. This is the outer
 // blanket over the per-endpoint limiters (magic-link, webhooks) — it catches
 // blunt volumetric abuse before it reaches any handler. Generous ceiling so

@@ -444,3 +444,35 @@ A dedicated RMA WhatsApp business number will replace Ruslan's personal
   `187.127.219.106`.
 
 Good luck.
+
+---
+
+## UPDATE 5 (2026-11-03) — ponytail audit: findings fixed + RLS enforced
+
+Ran the `ponytail-audit` skill over `rma/` (report in the session). All findings
+that could be fixed safely were fixed and DEPLOYED:
+
+1. `/api/public/lead` now rate-limited in-route (10/min/IP) — the middleware
+   global limiter does NOT run for `/api/*` route handlers (verified live:
+   pages 307 to /login, API handlers answer unauthenticated). Every route
+   self-guards; new build test `src/platform/auth/route-guards.test.ts` fails
+   on any route.ts without an auth marker.
+2. **RLS is now ENFORCED at runtime**: `app_runtime` role created
+   (`npm run db:app-role`), `DB_APP_ROLE=app_runtime` added to the rma-crm
+   systemd drop-in. Verified: with `app.tenant_id` GUC the role sees 426
+   messages, without it 0. The wa-* timers still run as owner `take` (they
+   never set DB_APP_ROLE) — deliberate: they are ops jobs, not tenant code.
+3. `recordPayment()` no longer trusts a caller-supplied actorId — it calls
+   `requireAuth()` itself (audit trail can't be forged). Callers updated.
+4. `/fleet/api/positions`, `/fleet/api/track`, `/reports/api/rental` now
+   require `getActiveTenant()` (membership), not just any session.
+5. DB password out of git: the three wa-*.service units read DATABASE_URL
+   from root-only `/opt/rma-crm/wa-observer/secrets.env` (EnvironmentFile).
+6. 33 TAKE-era one-off scripts moved to `rma/scripts/attic/` (nothing on the
+   box references them; only timers are the three wa-* units).
+
+Still open from the audit (deferred, by design): password rotation for the
+`take` DB role (localhost-only today); true per-tenant data filtering in the
+fleet/report routes (they're TAKE-era cross-brand rollups); media
+transcription on the RMA box (voice/image placeholders can't become leads);
+TARS (waiting on the owner's OTP mailbox).

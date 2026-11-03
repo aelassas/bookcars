@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/platform/auth";
+import { getActiveTenant } from "@/platform/auth/tenant";
 import { V3_MAX_HOURS, pilotAccounts, v3Get, v3Token } from "@/platform/integrations/pilot/v3";
 
 export const dynamic = "force-dynamic";
@@ -27,8 +27,10 @@ type TripSegment = {
 };
 
 export async function GET(req: Request) {
-  const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  // Tenant-bound, not just signed-in: any veh_id/imei is queryable, so a bare
+  // session check would expose every brand's GPS history to any member.
+  const t = await getActiveTenant();
+  if (!t?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const url = new URL(req.url);
   const vehId = url.searchParams.get("veh_id")?.trim();

@@ -6,5 +6,6 @@ After=network.target
 Type=oneshot
 WorkingDirectory=/opt/rma-crm/platform
 Environment=NODE_ENV=production
-Environment=DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform
+# DATABASE_URL lives in secrets.env (root-only, never in git) alongside QWEN_API_KEY.
+EnvironmentFile=/opt/rma-crm/wa-observer/secrets.env
 ExecStart=/usr/bin/npx tsx scripts/run-wa-lead-intake.ts --commit

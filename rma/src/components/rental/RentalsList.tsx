@@ -270,7 +270,6 @@ export default function RentalsList({
         <RecordPaymentModal
           tenantId={tenantId}
           tenantSlug={tenantSlug}
-          actorId={actorId}
           rentalId={paymentRental.rental.id}
           customerName={paymentRental.customerName}
           maxAmount={paymentRental.rental.balanceDue}

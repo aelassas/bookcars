@@ -16,12 +16,15 @@ import { requireRoleForTenant, requireAuth } from "@/platform/auth/authorization
 // accounting role).
 export async function recordPayment(
   tenantId: string,
-  actorId: string | undefined,
   data: { rentalId: string; amount: number; method?: string; notes?: string },
   tenantSlug?: string
 ) {
   await assertNotPreviewMode(tenantId);
   await canManageRentalsForTenant(tenantId);
+  // The actor is ALWAYS the session user — a caller-supplied id would let any
+  // sales account write audit rows in someone else's name (the cash trail must
+  // be undeniable; confirmPayment already follows this rule).
+  const actorId = await requireAuth();
   if (!data.rentalId || data.amount <= 0) throw new Error("Invalid payment amount");
 
   // Shared fleet: the rental (and therefore its payment/task/audit rows) lives

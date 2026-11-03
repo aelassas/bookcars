@@ -10,7 +10,6 @@ const METHODS = ["cash", "card", "bank_transfer", "other"];
 export function RecordPaymentModal({
   tenantId,
   tenantSlug,
-  actorId,
   rentalId,
   customerName,
   maxAmount,
@@ -19,7 +18,6 @@ export function RecordPaymentModal({
 }: {
   tenantId: string;
   tenantSlug: string;
-  actorId?: string;
   rentalId: string;
   customerName: string | null;
   maxAmount: number;
@@ -42,7 +40,6 @@ export function RecordPaymentModal({
       }
       await recordPayment(
         tenantId,
-        actorId,
         {
           rentalId,
           amount,

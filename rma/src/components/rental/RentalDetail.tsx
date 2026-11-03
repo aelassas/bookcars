@@ -224,7 +224,6 @@ export function RentalDetail({
         <RecordPaymentModal
           tenantId={tenantId}
           tenantSlug={tenantSlug}
-          actorId={actorId}
           rentalId={r.id}
           customerName={customerName}
           maxAmount={r.balanceDue}

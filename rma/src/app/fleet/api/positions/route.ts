@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/platform/auth";
+import { getActiveTenant } from "@/platform/auth/tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +26,10 @@ async function pilot(cmd: string): Promise<Record<string, unknown>> {
 }
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  // Tenant-bound, not just signed-in: the Pilot account spans every brand, so
+  // a bare session check would serve the whole fleet to any member.
+  const t = await getActiveTenant();
+  if (!t?.id) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   try {
     const list = (await pilot("cmd=list")) as { list?: PilotVehicle[] };
     const vehicles = list.list ?? [];

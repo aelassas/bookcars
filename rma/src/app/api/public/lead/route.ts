@@ -6,8 +6,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq, and } from "drizzle-orm";
 import { db } from "@/platform/db/client";
 import { tenant, customer, message } from "@/platform/db/schema";
+import { clientIp, rateLimit } from "@/platform/security/rate-limit";
 
 const ORIGIN = "*";
+
+// Unauthenticated write endpoint: throttle hard per IP. The middleware global
+// limiter does not run for /api/* route handlers (verified live 2026-11-03),
+// so this is the ONLY flood guard on the form.
+const LEAD_LIMIT = 10; // requests
+const LEAD_WINDOW_MS = 60 * 1000; // per minute
 
 function cors(res: NextResponse) {
   res.headers.set("Access-Control-Allow-Origin", ORIGIN);
@@ -21,6 +28,11 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: NextRequest) {
+  const limit = rateLimit({ key: `public-lead:${clientIp(req)}`, limit: LEAD_LIMIT, windowMs: LEAD_WINDOW_MS });
+  if (!limit.ok) {
+    return cors(NextResponse.json({ error: "too many requests" }, { status: 429, headers: { "retry-after": String(limit.retryAfter) } }));
+  }
+
   let body: any;
   try { body = await req.json(); } catch { return cors(NextResponse.json({ error: "bad json" }, { status: 400 })); }
 
