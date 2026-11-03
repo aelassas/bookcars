@@ -1,5 +1,34 @@
 # Releases
 
+## [BookCars 9.1](https://github.com/aelassas/bookcars/releases/tag/v9.1) – 2026-11-03
+
+* feat(mobile): upgrade to Expo SDK 58 and React Native to 0.83.2
+* feat(admin,frontend): upgrade to React 19.3.1
+* fix(backend): add object-level authorization to GET /api/user/:id
+* fix(backend): add object-level authorization to POST /api/check-password
+* fix(backend): allow adjacent booking dates and prevent overlap
+* fix(backend): fix supplier field-level authorization in profile updates (#131)
+* fix(backend): fix booking confirmation for missing location translations (#133)
+* fix(backend): fix authorize avatar update and deletion 
+* fix(backend): secure booking checkout flow
+* fix(backend): enable tsc incremental build to prevent build OOM
+* fix(admin,frontend): autocomplete current password
+* fix(admin,frontend): prevent stale location autocomplete results
+* fix(admin,frontend,mobile): localization issues
+* fix(mobile): cancel payment hold on guest email conflict and show dialog
+* test(helper): add unit tests for bookcars-helper utilities
+* chore(deps): update dependencies
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v9.0...v9.1
+
+### Assets
+- [bookcars-9.1.apk](https://github.com/aelassas/bookcars/releases/download/v9.1/bookcars-9.1.apk) (114.45 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.1/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.1)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.1)
+
 ## [BookCars 9.0](https://github.com/aelassas/bookcars/releases/tag/v9.0) – 2026-10-25
 
 #### What's Changed
@@ -15,6 +44,7 @@
 **Full Changelog**: https://github.com/aelassas/bookcars/compare/v8.9...v9.0
 
 ### Assets
+- [bookcars-9.0.apk](https://github.com/aelassas/bookcars/releases/download/v9.0/bookcars-9.0.apk) (114.45 MB)
 - [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.0/bookcars-db.zip) (8.64 MB)
 
 ### Source Code
