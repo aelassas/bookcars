@@ -11,6 +11,9 @@ const strings = new LocalizedStrings({
   es: {
     NO_MATCH: '¡No hay nada que ver aquí!',
   },
+  de: {
+    NO_MATCH: 'Hier gibt es nichts zu sehen!',
+  },
 })
 
 langHelper.setLanguage(strings)

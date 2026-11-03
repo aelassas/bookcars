@@ -65,6 +65,27 @@ const strings = new LocalizedStrings({
     CANCEL_BOOKING: '¿Está seguro de que desea cancelar esta reserva?',
     CANCEL_BOOKING_REQUEST_SENT: 'Su solicitud de cancelación ha sido recibida. Nos pondremos en contacto con usted para finalizar el procedimiento de cancelación.',
   },
+  de: {
+    CAR: 'Auto',
+    SUPPLIER: 'Anbieter',
+    DRIVER: 'Fahrer',
+    PRICE: 'Preis',
+    STATUS: 'Status',
+    UPDATE_SELECTION: 'Auswahl bearbeiten',
+    DELETE_SELECTION: 'Auswahl löschen',
+    UPDATE_STATUS: 'Statusänderung',
+    NEW_STATUS: 'Neuer Status',
+    DELETE_BOOKING: 'Sind Sie sicher, dass Sie diese Buchung löschen möchten?',
+    DELETE_BOOKINGS: 'Sind Sie sicher, dass Sie die ausgewählten Buchungen löschen möchten?',
+    EMPTY_LIST: 'Keine Buchungen.',
+    VIEW: 'Diese Buchung ansehen',
+    UPDATE: 'Diese Buchung bearbeiten',
+    DAYS: 'Tage',
+    COST: 'Gesamt',
+    CANCEL: 'Diese Buchung stornieren',
+    CANCEL_BOOKING: 'Sind Sie sicher, dass Sie diese Buchung stornieren möchten?',
+    CANCEL_BOOKING_REQUEST_SENT: 'Ihre Stornierungsanfrage wurde übermittelt. Wir werden uns mit Ihnen in Verbindung setzen, um das Stornierungsverfahren abzuschließen.',
+  },
 })
 
 langHelper.setLanguage(strings)

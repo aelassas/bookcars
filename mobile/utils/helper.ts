@@ -367,20 +367,36 @@ export const getAdditionalDriver = async (additionalDriver: number, language: st
 }
 
 /**
- * Get days label?
+ * Get plural suffix of the days unit.
  *
+ * @param {string} language
  * @param {number} days
  * @returns {string}
  */
-export const getDays = (days: number) => `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
+export const getDaysPluralSuffix = (language: string, days: number) => {
+  if (days <= 1) {
+    return ''
+  }
+  return language === 'de' ? 'e' : 's'
+}
+
+/**
+ * Get days label?
+ *
+ * @param {string} language
+ * @param {number} days
+ * @returns {string}
+ */
+export const getDays = (language: string, days: number) => `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${getDaysPluralSuffix(language, days)}`
 
 /**
  * Get short days label.
  *
+ * @param {string} language
  * @param {number} days
  * @returns {string}
  */
-export const getDaysShort = (days: number) => `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
+export const getDaysShort = (language: string, days: number) => `${days} ${i18n.t('PRICE_DAYS_PART_2')}${getDaysPluralSuffix(language, days)}`
 
 /**
  * Get cancellation option label.
@@ -678,6 +694,8 @@ export const getDepositFilterValue = async (language: string, value: DepositFilt
       return `Moins de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
     case 'es':
       return `Menos de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'de':
+      return `Weniger als ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
     case 'en':
     default:
       return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`

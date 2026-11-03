@@ -30,6 +30,15 @@ const strings = new LocalizedStrings({
     CONTENT2: 'Disfruta de una comodidad, fiabilidad y valor inigualables con nuestro servicio de alquiler de coches de primera calidad. Desde reservas sencillas hasta vehículos de alta calidad, somos tu socio de viajes de confianza.',
     FIND_DEAL: 'Buscar oferta',
   },
+  de: {
+    TITLE1: `${env.WEBSITE_NAME} - Ihr erstklassiger Autovermietungsservice`,
+    SUBTITLE1: 'Ihr zuverlässiger Partner für Autovermietungen',
+    CONTENT1: `Bei ${env.WEBSITE_NAME} wissen wir, dass jede Reise einzigartig ist. Wir haben es uns zur Aufgabe gemacht, unseren Kunden eine vielfältige Auswahl an Fahrzeugen anzubieten, die jedem Reisebedürfnis gerecht wird. Ob Sie eine Stadt erkunden, geschäftlich unterwegs sind oder das Abenteuer suchen – unsere zuverlässigen Autovermietungsdienste sorgen dafür, dass Ihr Abenteuer reibungslos beginnt. Unser Ziel ist es, einen außergewöhnlichen Kundenservice zu bieten, der Ihr Erlebnis angenehm und stressfrei macht. Mit wettbewerbsfähigen Preisen, einer Vielzahl gut gewarteter Fahrzeuge und einem engagierten Team, das Ihnen jederzeit zur Seite steht, möchten wir Ihr vertrauenswürdiger Partner auf der Straße sein. Wählen Sie ${env.WEBSITE_NAME} für alle Ihre Autovermietungsbedürfnisse und erleben Sie die Freiheit, in Ihrem eigenen Tempo zu entdecken.`,
+    TITLE2: `Warum ${env.WEBSITE_NAME} wählen`,
+    SUBTITLE2: 'Erleben Sie Exzellenz auf jeder Reise',
+    CONTENT2: 'Genießen Sie unübertroffenen Komfort, Zuverlässigkeit und Wert mit unserem erstklassigen Autovermietungsservice. Von mühelosen Buchungen bis hin zu hochwertigen Fahrzeugen – wir sind Ihr vertrauenswürdiger Reisepartner.',
+    FIND_DEAL: 'Angebot finden',
+  },
 })
 
 langHelper.setLanguage(strings)

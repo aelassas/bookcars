@@ -17,6 +17,11 @@ const strings = new LocalizedStrings({
     VIEW_SUPPLIER: 'Ver perfil del proveedor',
     DELETE_SUPPLIER: '¿Estás seguro de que quieres eliminar este proveedor y todos sus datos?',
   },
+  de: {
+    EMPTY_LIST: 'Keine Anbieter.',
+    VIEW_SUPPLIER: 'Anbieterprofil anzeigen',
+    DELETE_SUPPLIER: 'Sind Sie sicher, dass Sie diesen Anbieter und alle seine Daten löschen möchten?',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     FIVE: '5 asientos',
     FIVE_PLUS: '5+ asientos',
   },
+  de: {
+    SEATS: 'Sitze',
+    TWO: '2 Sitze',
+    FOUR: '4 Sitze',
+    FIVE: '5 Sitze',
+    FIVE_PLUS: '5+ Sitze',
+  },
 })
 
 langHelper.setLanguage(strings)

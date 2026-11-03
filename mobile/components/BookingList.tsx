@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { ActivityIndicator, StyleSheet, View, Text, RefreshControl } from 'react-native'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { Text as RNPText, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
-import { enUS, fr, es } from 'date-fns/locale'
+import { fr } from 'date-fns/locale'
 import { useRouter } from 'expo-router'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '@/config/env.config'
 import i18n from '@/lang/i18n'
 import * as helper from '@/utils/helper'
+import { getDateLocale } from '@/utils/dateLocale'
 import * as BookingService from '@/services/BookingService'
 import Booking from './Booking'
 
@@ -82,7 +83,7 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    setLoacle(language === 'fr' ? fr : language === 'es' ? es : enUS)
+    setLoacle(getDateLocale(language))
   }, [language])
 
   useEffect(() => {

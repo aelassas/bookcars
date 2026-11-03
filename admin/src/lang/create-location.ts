@@ -29,6 +29,15 @@ const strings = new LocalizedStrings({
     PARKING_SPOTS: 'Plazas de aparcamiento',
     PARENT_LOCATION: 'Ubicación de los Padres',
   },
+  de: {
+    NEW_LOCATION_HEADING: 'Neuer Standort',
+    LOCATION_NAME: 'Standort',
+    INVALID_LOCATION: 'Dieser Standort existiert bereits.',
+    LOCATION_CREATED: 'Standort erfolgreich erstellt.',
+    COUNTRY: 'Land',
+    PARKING_SPOTS: 'Parkplätze',
+    PARENT_LOCATION: 'Übergeordneter Standort',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { fr, enUS, es } from 'date-fns/locale'
+import { getDateLocale } from '@/utils/dateLocale'
 import { Scheduler } from '@/components/scheduler/index'
 import {
   ProcessedEvent,
@@ -171,6 +171,42 @@ const VehicleScheduler = (
       }
     }
 
+    if (_language === 'de') {
+      return {
+        navigation: {
+          month: 'Monat',
+          week: 'Woche',
+          day: 'Tag',
+          today: 'Heute',
+          agenda: 'Agenda',
+        },
+        form: {
+          addTitle: 'Ereignis hinzufügen',
+          editTitle: 'Ereignis bearbeiten',
+          confirm: 'Bestätigen',
+          delete: 'Löschen',
+          cancel: 'Abbrechen',
+        },
+        event: {
+          title: 'Titel',
+          subtitle: 'Untertitel',
+          start: 'Beginn',
+          end: 'Ende',
+          allDay: 'Ganztägig',
+        },
+        validation: {
+          required: 'Erforderlich',
+          invalidEmail: 'Ungültige E-Mail-Adresse',
+          onlyNumbers: 'Nur Zahlen erlaubt',
+          min: 'Mindestens {{min}} Buchstaben',
+          max: 'Höchstens {{max}} Buchstaben',
+        },
+        moreEvents: 'Mehr...',
+        noDataToDisplay: 'Keine Daten zum Anzeigen',
+        loading: 'Wird geladen...',
+      }
+    }
+
     // default to english
     return {
       navigation: {
@@ -211,7 +247,7 @@ const VehicleScheduler = (
     <Scheduler
       ref={schedulerRef}
       view="month"
-      locale={language === 'fr' ? fr : language === 'es' ? es : enUS}
+      locale={getDateLocale(language)}
       disableViewer
       editable={false}
       draggable={false}

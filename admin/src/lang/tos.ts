@@ -151,6 +151,52 @@ Si tiene alguna pregunta sobre estos Términos de servicio, comuníquese con nos
 Al utilizar nuestros servicios, usted reconoce que ha leído y comprendido estos Términos de servicio y acepta regirse por ellos.    
     `,
   },
+  de: {
+    TITLE: 'Nutzungsbedingungen',
+    TOS: `
+Willkommen bei ${env.WEBSITE_NAME}! Indem Sie auf unsere Website zugreifen und unsere Dienste nutzen, erklären Sie sich damit einverstanden, die folgenden Nutzungsbedingungen einzuhalten und an sie gebunden zu sein. Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie unsere Dienste bitte nicht.
+
+1. Annahme der Bedingungen
+
+Durch den Zugriff auf unsere Dienste oder deren Nutzung bestätigen Sie, dass Sie diese Nutzungsbedingungen und unsere Datenschutzerklärung gelesen und verstanden haben und ihnen zustimmen.
+
+2. Nutzung unserer Dienste
+
+Sie verpflichten sich, unsere Dienste nur für rechtmäßige Zwecke und in einer Weise zu nutzen, die weder die Rechte anderer verletzt noch deren Nutzung unserer Dienste einschränkt oder behindert. Dies schließt die Einhaltung aller geltenden Gesetze und Vorschriften ein.
+
+3. Reservierungen und Zahlungen
+
+Wenn Sie bei ${env.WEBSITE_NAME} eine Reservierung vornehmen, verpflichten Sie sich, genaue und vollständige Angaben zu machen. Alle Zahlungen müssen über unser sicheres Zahlungssystem erfolgen. Sobald die Zahlung abgeschlossen ist, erhalten Sie eine Bestätigung Ihrer Reservierung.
+
+4. Stornierungsbedingungen
+
+Stornierungen, die 24 Stunden vor dem Mietdatum erfolgen, berechtigen unter Umständen zu einer vollständigen Rückerstattung. Bei Stornierungen, die weniger als 24 Stunden vor dem Mietdatum erfolgen, kann eine Stornogebühr anfallen. Detaillierte Informationen finden Sie in unseren Stornierungsbedingungen.
+
+5. Mietbedingungen
+
+Alle Mietverträge unterliegen unseren Mietbedingungen, die unter anderem Altersbeschränkungen, Führerscheinanforderungen und Versicherungspflichten umfassen. Sie sind dafür verantwortlich sicherzustellen, dass Sie alle Voraussetzungen erfüllen, bevor Sie eine Reservierung vornehmen.
+
+6. Haftungsbeschränkung
+
+${env.WEBSITE_NAME} haftet nicht für mittelbare, zufällige oder Folgeschäden, die sich aus Ihrer Nutzung unserer Dienste ergeben. In keinem Fall übersteigt unsere Gesamthaftung den Betrag, den Sie für die Dienste bezahlt haben.
+
+7. Änderungen der Bedingungen
+
+Wir behalten uns das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern. Änderungen treten unmittelbar nach ihrer Veröffentlichung auf unserer Website in Kraft. Ihre fortgesetzte Nutzung unserer Dienste nach etwaigen Änderungen gilt als Ihre Zustimmung zu den neuen Bedingungen.
+
+8. Anwendbares Recht
+
+Diese Nutzungsbedingungen unterliegen den Gesetzen und werden in Übereinstimmung mit diesen ausgelegt. Alle Streitigkeiten, die sich aus diesen Bedingungen ergeben, werden vor den zuständigen Gerichten beigelegt.
+
+9. Kontaktinformationen
+
+Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte unter ${env.CONTACT_EMAIL}. Wir helfen Ihnen gerne bei allen Anfragen zu unseren Diensten.
+
+10. Anerkennung
+
+Durch die Nutzung unserer Dienste bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen und verstanden haben und sich an sie gebunden erklären.
+    `,
+  },
 })
 
 langHelper.setLanguage(strings)

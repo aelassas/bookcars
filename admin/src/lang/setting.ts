@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     MIN_PICKUP_DROPOFF_HOUR: 'Hora mínima permitida para el retiro y la devolución (por ej. 9 para las 09:00)',
     MAX_PICKUP_DROPOFF_HOUR: 'Hora máxima permitida para el retiro y la devolución (por ej. 19 para las 19:00)',
   },
+  de: {
+    SETTINGS: 'Mieteinstellungen',
+    MIN_PICKUP_HOURS: 'Mindestvorlaufzeit in Stunden vor der Abholung',
+    MIN_RENTAL_HOURS: 'Mindestmietdauer in Stunden zwischen Abholung und Rückgabe',
+    MIN_PICKUP_DROPOFF_HOUR: 'Früheste zulässige Stunde für Abholung und Rückgabe (z. B. 9 für 09:00)',
+    MAX_PICKUP_DROPOFF_HOUR: 'Späteste zulässige Stunde für Abholung und Rückgabe (z. B. 19 für 19:00)',
+  },
 })
 
 langHelper.setLanguage(strings)

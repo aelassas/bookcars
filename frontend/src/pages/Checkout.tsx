@@ -22,7 +22,7 @@ import {
   AssignmentTurnedIn as ChecklistIcon,
 } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr, enUS, es } from 'date-fns/locale'
+import { getDateLocale } from '@/utils/dateLocale'
 import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
@@ -115,13 +115,17 @@ const Checkout = () => {
   const additionalDriverEmailRef = useRef<HTMLInputElement | null>(null)
   const additionalDriverPhoneRef = useRef<HTMLInputElement | null>(null)
 
-  const _fr = language === 'fr'
-  const _es = language === 'es'
-  const _locale = _fr ? fr : _es ? es : enUS
-  const _format = _fr ? 'eee d LLL yyyy kk:mm' : _es ? 'eee, d LLLL yyyy HH:mm' : 'eee, d LLL yyyy, p'
+  const _locale = getDateLocale(language)
+  console.log(_locale, language)
+  const dateFormats: Record<string, string> = {
+    fr: 'eee d LLL yyyy kk:mm',
+    es: 'eee, d LLLL yyyy HH:mm',
+    de: 'eee, d LLL yyyy HH:mm',
+  }
+  const _format = dateFormats[language] || 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
-  const daysLabel = from && to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
+  const daysLabel = from && to && `${helper.getDaysShort(language, days)} (${bookcarsHelper.capitalize(format(from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
 
   const schema = createSchema(car)
 

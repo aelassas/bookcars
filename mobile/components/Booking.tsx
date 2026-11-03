@@ -43,7 +43,7 @@ const Booking = ({
   today.setMilliseconds(0)
 
   const _fr = bookcarsHelper.isFrench(language)
-  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _format = (_fr || language === 'de') ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
 
   const [loading, setLoading] = useState(true)
   const [currencySymbol, setCurrencySymbol] = useState('')
@@ -86,7 +86,7 @@ const Booking = ({
 
         <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
         <Text style={styles.detailText}>
-          {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+          {`${helper.getDaysShort(language, bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
             format(to, _format, { locale }),
           )})`}
         </Text>

@@ -4,9 +4,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ToastContainer } from 'react-toastify'
 
-import { frFR as corefrFR, enUS as coreenUS, esES as coresES } from '@mui/material/locale'
-import { frFR, enUS, esES } from '@mui/x-date-pickers/locales'
-import { frFR as dataGridfrFR, enUS as dataGridenUS, esES as dataGridesEs } from '@mui/x-data-grid/locales'
+import { frFR as corefrFR, enUS as coreenUS, esES as coresES, deDE as coredeDE } from '@mui/material/locale'
+import { frFR, enUS, esES, deDE } from '@mui/x-date-pickers/locales'
+import { frFR as dataGridfrFR, enUS as dataGridenUS, esES as dataGridesEs, deDE as dataGriddeDE } from '@mui/x-data-grid/locales'
 import { disableDevTools } from ':disable-react-devtools'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
@@ -65,8 +65,14 @@ if (lang) {
 }
 
 language = UserService.getLanguage()
-const isFr = language === 'fr'
-const isEs = language === 'es'
+
+const muiLocales = {
+  en: { pickers: enUS, dataGrid: dataGridenUS, core: coreenUS },
+  fr: { pickers: frFR, dataGrid: dataGridfrFR, core: corefrFR },
+  es: { pickers: esES, dataGrid: dataGridesEs, core: coresES },
+  de: { pickers: deDE, dataGrid: dataGriddeDE, core: coredeDE },
+}
+const muiLocale = muiLocales[language as keyof typeof muiLocales] ?? muiLocales.en
 
 const theme = createTheme(
   {
@@ -101,9 +107,9 @@ const theme = createTheme(
       },
     },
   },
-  isFr ? frFR : isEs ? esES : enUS,
-  isFr ? dataGridfrFR : isEs ? dataGridesEs : dataGridenUS,
-  isFr ? corefrFR : isEs ? coresES : coreenUS,
+  muiLocale.pickers,
+  muiLocale.dataGrid,
+  muiLocale.core,
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

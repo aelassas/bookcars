@@ -23,6 +23,13 @@ const strings = new LocalizedStrings({
     MAXI: 'Maxi',
     SCOOTER: 'Scooter',
   },
+  de: {
+    RANGE: 'Fahrzeugklasse',
+    MINI: 'Mini',
+    MIDI: 'Midi',
+    MAXI: 'Maxi',
+    SCOOTER: 'Roller',
+  },
 })
 
 langHelper.setLanguage(strings)

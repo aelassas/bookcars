@@ -29,6 +29,15 @@ const strings = new LocalizedStrings({
     INVALID_PICK_UP_TIME: 'Hora de recogida no válida',
     INVALID_DROP_OFF_TIME: 'Hora de devolución no válida',
   },
+  de: {
+    PICK_UP_DATE: 'Abholdatum',
+    DROP_OFF_DATE: 'Rückgabedatum',
+    DROP_OFF: 'Rückgabe am selben Ort',
+    MIN_PICK_UP_HOURS_ERROR: 'Die Abholzeit muss mindestens einige Stunden in der Zukunft liegen',
+    MIN_RENTAL_HOURS_ERROR: 'Die Mietdauer ist zu kurz',
+    INVALID_PICK_UP_TIME: 'Ungültige Abholzeit',
+    INVALID_DROP_OFF_TIME: 'Ungültige Rückgabezeit',
+  },
 })
 
 langHelper.setLanguage(strings)

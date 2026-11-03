@@ -17,6 +17,11 @@ const strings = new LocalizedStrings({
     SUPPLIER: 'proveedor',
     SUPPLIERS: 'proveedores',
   },
+  de: {
+    NEW_SUPPLIER: 'Neuer Anbieter',
+    SUPPLIER: 'Anbieter',
+    SUPPLIERS: 'Anbieter',
+  },
 })
 
 langHelper.setLanguage(strings)

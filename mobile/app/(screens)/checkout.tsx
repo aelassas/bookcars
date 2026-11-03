@@ -5,7 +5,7 @@ import { useIsFocused, useLocalSearchParams, useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
-import { enUS, fr, es } from 'date-fns/locale'
+import { fr } from 'date-fns/locale'
 import { PaymentSheetError, initPaymentSheet, useStripe } from '@stripe/stripe-react-native'
 
 import * as bookcarsTypes from ':bookcars-types'
@@ -20,6 +20,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import Switch from '@/components/Switch'
 import Link from '@/components/Link'
 import * as helper from '@/utils/helper'
+import { getDateLocale } from '@/utils/dateLocale'
 import Error from '@/components/Error'
 import Button from '@/components/Button'
 import RadioButton from '@/components/RadioButton'
@@ -138,8 +139,7 @@ const CheckoutScreen = () => {
       i18n.locale = _language
       setLanguage(_language)
 
-      const _locale = _language === 'fr' ? fr : _language === 'es' ? es : enUS
-      setLocale(_locale)
+      setLocale(getDateLocale(_language))
 
       setAuthenticated(false)
       setUser(null)
@@ -652,8 +652,8 @@ const CheckoutScreen = () => {
       try {
         if (!payLater) {
           const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${__car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
-          const _locale = _fr ? fr : _es ? es : enUS
-          const daysLabel = __from && __to && `${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(format(__from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(__to, _format, { locale: _locale }))})`
+          const _locale = getDateLocale(language)
+          const daysLabel = __from && __to && `${helper.getDaysShort(language, days)} (${bookcarsHelper.capitalize(format(__from, _format, { locale: _locale }))} - ${bookcarsHelper.capitalize(format(__to, _format, { locale: _locale }))})`
           const _description = `${env.WEBSITE_NAME} - ${__car.name} - ${daysLabel} - ${__pickupLocation._id === __dropOffLocation._id ? __pickupLocation.name : `${__pickupLocation.name} - ${__dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
@@ -814,8 +814,9 @@ const CheckoutScreen = () => {
   const iconColor = '#000'
   const _fr = bookcarsHelper.isFrench(language)
   const _es = language === 'es'
-  // Spanish and French usually follow the same 'Day Month Year' structure
-  const _format = (_fr || _es)
+  const _de = language === 'de'
+  // Spanish, French and German use a 24h 'Day Month Year' structure
+  const _format = (_fr || _es || _de)
     ? 'eee d LLL yyyy kk:mm'
     : 'eee, d LLL yyyy, p'
   const days = bookcarsHelper.days(__from, __to)
@@ -918,7 +919,7 @@ const CheckoutScreen = () => {
 
                     <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
                     <Text style={styles.detailText}>
-                      {`${helper.getDaysShort(bookcarsHelper.days(__from, __to))} (${bookcarsHelper.capitalize(format(__from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+                      {`${helper.getDaysShort(language, bookcarsHelper.days(__from, __to))} (${bookcarsHelper.capitalize(format(__from, _format, { locale }))} - ${bookcarsHelper.capitalize(
                         format(__to, _format, { locale }),
                       )})`}
                     </Text>

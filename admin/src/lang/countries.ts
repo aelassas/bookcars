@@ -26,6 +26,14 @@ const strings = new LocalizedStrings({
     COUNTRY: 'país',
     COUNTRIES: 'países',
   },
+  de: {
+    NEW_COUNTRY: 'Neues Land',
+    DELETE_COUNTRY: 'Sind Sie sicher, dass Sie dieses Land löschen möchten?',
+    CANNOT_DELETE_COUNTRY: 'Dieses Land kann nicht gelöscht werden, da es mit Standorten verknüpft ist.',
+    EMPTY_LIST: 'Keine Länder.',
+    COUNTRY: 'Land',
+    COUNTRIES: 'Länder',
+  },
 })
 
 langHelper.setLanguage(strings)

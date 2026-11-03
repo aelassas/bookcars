@@ -38,6 +38,18 @@ const strings = new LocalizedStrings({
     FAQ_CANCEL_TITLE: '¿Qué sucede si necesito cancelar mi reserva?',
     FAQ_CANCEL_TEXT: 'Entendemos que los planes pueden cambiar, por eso ofrecemos políticas de cancelación flexibles. Según el momento de tu cancelación, pueden aplicarse cargos. Consulta nuestros términos y condiciones o comunícate con nuestro equipo de atención al cliente para obtener ayuda con las cancelaciones.',
   },
+  de: {
+    FAQ_TITLE: 'FAQ',
+    MORE_QUESTIONS: 'Weitere Fragen?',
+    FAQ_DOCUMENTS_TITLE: 'Welche Dokumente benötige ich, um ein Fahrzeug zu mieten?',
+    FAQ_DOCUMENTS_TEXT: 'Um ein Fahrzeug zu mieten, benötigen Sie in der Regel einen gültigen Führerschein, eine Kreditkarte für die Zahlung und die Kaution sowie einen Versicherungsnachweis. Zusätzliche Anforderungen können je nach Standort und Fahrzeugtyp variieren.',
+    FAQ_SERVICES_TITLE: 'Bieten Sie Liefer- und Abholservices an?',
+    FAQ_SERVICES_TEXT: 'Ja, das tun wir! Wir bieten praktische Liefer- und Abholservices an verschiedenen Orten an, darunter Flughäfen, Hotels und mehr. Teilen Sie uns einfach Ihren gewünschten Ort mit, und wir kümmern uns um den Rest.',
+    FAQ_AGE_TITLE: 'Gibt es ein Mindestalter für die Anmietung eines Fahrzeugs?',
+    FAQ_AGE_TEXT: 'Ja, das Mindestalter für die Anmietung eines Fahrzeugs beträgt in der Regel 18 Jahre. An einigen Standorten können jedoch höhere Altersanforderungen oder zusätzliche Einschränkungen für bestimmte Fahrzeugtypen gelten.',
+    FAQ_CANCEL_TITLE: 'Was passiert, wenn ich meine Reservierung stornieren muss?',
+    FAQ_CANCEL_TEXT: 'Wir wissen, dass sich Pläne ändern können, und bieten daher flexible Stornierungsbedingungen an. Je nach Zeitpunkt Ihrer Stornierung können Gebühren anfallen. Bitte lesen Sie unsere Allgemeinen Geschäftsbedingungen oder wenden Sie sich an unser Kundenserviceteam, um Unterstützung bei Stornierungen zu erhalten.',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -53,6 +53,22 @@ const strings = new LocalizedStrings({
     FAQ: 'Preguntas frecuentes',
     COOKIE_POLICY: 'Política de Cookies',
   },
+  de: {
+    COPYRIGHT_PART1,
+    COPYRIGHT_PART2: '. Alle Rechte vorbehalten.',
+    CORPORATE: 'Unternehmen',
+    ABOUT: 'Über uns',
+    TOS: 'Nutzungsbedingungen',
+    RENT: 'Auto mieten',
+    SUPPLIERS: 'Anbieter',
+    LOCATIONS: 'Standorte',
+    SUPPORT: 'Support',
+    CONTACT: 'Kontakt',
+    SECURE_PAYMENT: `100 % sichere Zahlung mit ${env.WEBSITE_NAME}`,
+    PRIVACY_POLICY: 'Datenschutzerklärung',
+    FAQ: 'FAQ',
+    COOKIE_POLICY: 'Cookie-Richtlinie',
+  },
 })
 
 langHelper.setLanguage(strings)

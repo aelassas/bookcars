@@ -34,6 +34,16 @@ const strings = new LocalizedStrings({
     FIND_DEAL: 'Buscar oferta',
     PRICING: 'Precios',
   },
+  de: {
+    TITLE1: `${env.WEBSITE_NAME} – Ihr erstklassiger Autovermietungsservice`,
+    SUBTITLE1: 'Ihr zuverlässiger Partner für Autovermietung',
+    CONTENT1: `Bei ${env.WEBSITE_NAME} wissen wir, dass jede Reise einzigartig ist. Wir haben es uns zur Aufgabe gemacht, unseren Kunden eine vielfältige Auswahl an Fahrzeugen anzubieten, die jedem Reisebedürfnis gerecht wird. Ob Sie eine Stadt erkunden, geschäftlich unterwegs sind oder das Abenteuer suchen – unsere zuverlässigen Mietwagenservices sorgen dafür, dass Ihre Reise reibungslos beginnt. Unser Ziel ist es, einen außergewöhnlichen Kundenservice zu bieten und Ihnen ein angenehmes, stressfreies Erlebnis zu ermöglichen. Mit wettbewerbsfähigen Preisen, einer Vielzahl gepflegter Fahrzeuge und einem engagierten Team, das Ihnen jederzeit zur Seite steht, möchten wir Ihr vertrauensvoller Partner auf der Straße sein. Entscheiden Sie sich für ${env.WEBSITE_NAME} und genießen Sie die Freiheit, in Ihrem eigenen Tempo zu entdecken.`,
+    TITLE2: `Warum ${env.WEBSITE_NAME}`,
+    SUBTITLE2: 'Erleben Sie Exzellenz auf jeder Reise',
+    CONTENT2: 'Genießen Sie unübertroffenen Komfort, Zuverlässigkeit und Wert mit unserem erstklassigen Autovermietungsservice. Von der mühelosen Buchung bis zu hochwertigen Fahrzeugen – wir sind Ihr vertrauensvoller Reisepartner.',
+    FIND_DEAL: 'Angebot finden',
+    PRICING: 'Preise',
+  },
 })
 
 langHelper.setLanguage(strings)

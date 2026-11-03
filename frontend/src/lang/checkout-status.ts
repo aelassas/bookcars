@@ -30,6 +30,15 @@ const strings = new LocalizedStrings({
     STATUS_MESSAGE: 'Revise su buzón de correo y siga los pasos descritos en el correo electrónico de confirmación de reserva para reservar su vehículo.',
     SESSION_ID_MISMATCH: 'ID de sesión no coincide. Por favor, inténtelo de nuevo.',
   },
+  de: {
+    CONGRATULATIONS: 'Herzlichen Glückwunsch!',
+    SUCCESS: 'Ihre Zahlung wurde erfolgreich durchgeführt. Wir haben Ihnen eine Bestätigungs-E-Mail gesendet.',
+    SUCCESS_PAY_LATER: 'Ihre Buchung wurde erfolgreich durchgeführt. Wir haben Ihnen eine Bestätigungs-E-Mail gesendet.',
+    ERROR: 'Etwas ist schiefgelaufen! Bitte versuchen Sie es später erneut',
+    STATUS_TITLE: `${env.WEBSITE_NAME} Buchungsbestätigung`,
+    STATUS_MESSAGE: 'Prüfen Sie Ihr E-Mail-Postfach und folgen Sie den Schritten in der Buchungsbestätigungs-E-Mail, um Ihr Auto zu buchen.',
+    SESSION_ID_MISMATCH: 'Die Sitzungs-ID stimmt nicht überein. Bitte versuchen Sie es erneut.',
+  },
 })
 
 langHelper.setLanguage(strings)

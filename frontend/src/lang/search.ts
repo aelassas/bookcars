@@ -14,6 +14,10 @@ const strings = new LocalizedStrings({
     SHOW_FILTERS: 'Mostrar filtros',
     HILE_FILTERS: 'Ocultar filtros',
   },
+  de: {
+    SHOW_FILTERS: 'Filter anzeigen',
+    HILE_FILTERS: 'Filter ausblenden',
+  },
 })
 
 langHelper.setLanguage(strings)

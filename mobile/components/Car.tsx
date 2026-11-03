@@ -428,7 +428,7 @@ const Car = ({
 
           {!hidePrice && from && to && (
             <View style={styles.price}>
-              <Text style={styles.priceSecondary}>{helper.getDays(days)}</Text>
+              <Text style={styles.priceSecondary}>{helper.getDays(language, days)}</Text>
               <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(totalPrice, currencySymbol, language)}`}</Text>
               <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(totalPrice / days, currencySymbol, language)}`}</Text>
 

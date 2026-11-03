@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { DirectionsCar as CarIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { fr, enUS, es } from 'date-fns/locale'
+import { getDateLocale } from '@/utils/dateLocale'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/utils/helper'
@@ -65,10 +65,8 @@ const CheckoutStatus = (
     return null
   }
 
-  const _fr = language === 'fr'
-  const _es = language === 'es'
-  const _locale = _fr ? fr : _es ? es : enUS
-  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _locale = getDateLocale(language)
+  const _format = language === 'fr' || language === 'de' ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const days = (booking && bookcarsHelper.days(new Date(booking.from), new Date(booking.to))) || 0
   const success = status === 'success'
 
@@ -105,7 +103,7 @@ const CheckoutStatus = (
               <div className="status-detail">
                 <span className="status-detail-title">{checkoutStrings.DAYS}</span>
                 <div className="status-detail-value">
-                  {`${helper.getDaysShort(days)} (${bookcarsHelper.capitalize(
+                  {`${helper.getDaysShort(language, days)} (${bookcarsHelper.capitalize(
                     format(new Date(booking.from), _format, { locale: _locale }),
                   )} - ${bookcarsHelper.capitalize(format(new Date(booking.to), _format, { locale: _locale }))})`}
                 </div>

@@ -460,21 +460,37 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
 ]
 
 /**
- * Get days label
+ * Get plural suffix of the days label.
  *
+ * @param {string} language
  * @param {number} days
  * @returns {string}
  */
-export const getDays = (days: number) =>
-  `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+export const getDaysPluralSuffix = (language: string, days: number) => {
+  if (days <= 1) {
+    return ''
+  }
+  return language === 'de' ? 'e' : 's'
+}
+
+/**
+ * Get days label
+ *
+ * @param {string} language
+ * @param {number} days
+ * @returns {string}
+ */
+export const getDays = (language: string, days: number) =>
+  `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${getDaysPluralSuffix(language, days)}`
 
 /**
  * Get short days label.
  *
+ * @param {string} language
  * @param {number} days
  * @returns {string}
  */
-export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+export const getDaysShort = (language: string, days: number) => `${days} ${strings.PRICE_DAYS_PART_2}${getDaysPluralSuffix(language, days)}`
 
 /**
  * Get cancellation option label.

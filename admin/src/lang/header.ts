@@ -56,6 +56,24 @@ const strings = new LocalizedStrings({
     BANK_DETAILS: 'Detalles bancarios',
     PRICING: 'Precios',
   },
+  de: {
+    DASHBOARD: 'Dashboard',
+    SCHEDULER: 'Fahrzeugplaner',
+    HOME: 'Startseite',
+    COMPANIES: 'Anbieter',
+    LOCATIONS: 'Standorte',
+    CARS: 'Fahrzeuge',
+    USERS: 'Benutzer',
+    ABOUT: 'Über uns',
+    TOS: 'Nutzungsbedingungen',
+    CONTACT: 'Kontakt',
+    LANGUAGE: 'Sprache',
+    SETTINGS: 'Einstellungen',
+    SIGN_OUT: 'Abmelden',
+    COUNTRIES: 'Länder',
+    BANK_DETAILS: 'Bankverbindung',
+    PRICING: 'Preise',
+  },
 })
 
 langHelper.setLanguage(strings)

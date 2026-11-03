@@ -14,6 +14,10 @@ const strings = new LocalizedStrings({
     SELECT_PICK_UP_LOCATION: 'Seleccionar ubicación',
     SELECT_DROP_OFF_LOCATION: 'Establecer como ubicación de entrega',
   },
+  de: {
+    SELECT_PICK_UP_LOCATION: 'Standort auswählen',
+    SELECT_DROP_OFF_LOCATION: 'Als Rückgabeort festlegen',
+  },
 })
 
 langHelper.setLanguage(strings)

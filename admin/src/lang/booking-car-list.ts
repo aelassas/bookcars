@@ -14,6 +14,10 @@ const strings = new LocalizedStrings({
     REQUIRED_FIELD: 'Por favor, complete el campo: ',
     REQUIRED_FIELDS: 'Por favor, complete los campos: ',
   },
+  de: {
+    REQUIRED_FIELD: 'Bitte füllen Sie das Feld aus: ',
+    REQUIRED_FIELDS: 'Bitte füllen Sie die Felder aus: ',
+  },
 })
 
 langHelper.setLanguage(strings)
