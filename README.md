@@ -21,7 +21,7 @@
 https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 -->
 
-[![](https://bookcars.github.io/content/cover-1.png)](https://bookcars.wexdev.com:3002/)
+[![](https://bookcars.github.io/content/cover-1.png)](https://bookcars.wexdev.com/)
 
 ## BookCars
 
