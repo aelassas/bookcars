@@ -80,17 +80,20 @@ export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =
  * @param {bookcarsTypes.SignInPayload} data
  * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
  */
-export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
-  axiosInstance
+export const signin = async (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> => {
+  const selectedLanguage = localStorage.getItem('bc-fe-language')
+
+  const res = await axiosInstance
     .post(
       '/api/sign-in/frontend',
       data,
       { withCredentials: true }
     )
-    .then((res) => {
-      localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
-      return { status: res.status, data: res.data }
-    })
+
+  localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
+  const user = res.data.blacklisted ? res.data : await syncLanguage(res.data, selectedLanguage)
+  return { status: res.status, data: user }
+}
 
 /**
  * Social sign in.
@@ -98,17 +101,20 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
  * @param {bookcarsTypes.SignInPayload} data
  * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
  */
-export const socialSignin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
-  axiosInstance
+export const socialSignin = async (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> => {
+  const selectedLanguage = localStorage.getItem('bc-fe-language')
+
+  const res = await axiosInstance
     .post(
       '/api/social-sign-in',
       data,
       { withCredentials: true }
     )
-    .then((res) => {
-      localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
-      return { status: res.status, data: res.data }
-    })
+
+  localStorage.setItem('bc-fe-user', JSON.stringify(res.data))
+  const user = res.data.blacklisted ? res.data : await syncLanguage(res.data, selectedLanguage)
+  return { status: res.status, data: user }
+}
 
 /**
  * Sign out.
@@ -250,6 +256,33 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
  */
 export const setLanguage = (lang: string) => {
   localStorage.setItem('bc-fe-language', lang)
+}
+
+/**
+ * Keep the user's language in sync with the language selected in the UI before signing in.
+ * If no language was selected, the user's language is kept.
+ *
+ * @async
+ * @param {bookcarsTypes.User} user
+ * @param {(string | null)} selectedLanguage
+ * @returns {Promise<bookcarsTypes.User>}
+ */
+const syncLanguage = async (user: bookcarsTypes.User, selectedLanguage: string | null): Promise<bookcarsTypes.User> => {
+  if (selectedLanguage && selectedLanguage !== user.language && env.LANGUAGES.includes(selectedLanguage)) {
+    try {
+      const status = await updateLanguage({ id: user._id as string, language: selectedLanguage })
+      if (status === 200) {
+        return { ...user, language: selectedLanguage }
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (user.language) {
+    setLanguage(user.language)
+  }
+  return user
 }
 
 /**

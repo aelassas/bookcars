@@ -75,7 +75,7 @@ if (lang) {
       language = user.language
       if (lang && lang.length === 2 && user.language !== lang) {
         const data = {
-          id: user.id,
+          id: user._id,
           language: lang,
         }
 
