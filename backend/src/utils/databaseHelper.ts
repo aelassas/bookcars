@@ -228,6 +228,28 @@ export const models = defineModels([
 ] as const)
 
 /**
+ * Cars created before the blockOnPay field existed have no value stored.
+ * A missing value means the car is not blocking, as assumed by the admin panel and the search.
+ * Without this migration, the schema default (true) would make checkout treat them as blocking.
+ *
+ * @async
+ * @returns {Promise<boolean>}
+ */
+export const initializeBlockOnPay = async (): Promise<boolean> => {
+  try {
+    await Car.updateMany(
+      { blockOnPay: { $exists: false } },
+      { $set: { blockOnPay: false } },
+      { timestamps: false },
+    )
+    return true
+  } catch (err) {
+    logger.error('[database.initializeBlockOnPay] Error while initializing blockOnPay', err)
+    return false
+  }
+}
+
+/**
  * Initializes database.
  *
  * @async
@@ -270,6 +292,7 @@ export const initialize = async (createIndexes: boolean = true): Promise<boolean
       databaseLangHelper.initializeLocations(),
       databaseLangHelper.initializeCountries(),
       databaseLangHelper.initializeParkingSpots(),
+      initializeBlockOnPay(),
       settingController.init(),
     ])
 

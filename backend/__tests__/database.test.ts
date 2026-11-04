@@ -9,6 +9,7 @@ import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
 import Country from '../src/models/Country'
 import ParkingSpot from '../src/models/ParkingSpot'
+import Car from '../src/models/Car'
 import mongoose from 'mongoose'
 
 beforeAll(() => {
@@ -111,6 +112,51 @@ describe('Test database initialization failures', () => {
     expect(await databaseLangHelper.initializeLocations()).toBeFalsy()
     expect(await databaseLangHelper.initializeCountries()).toBeFalsy()
     expect(await databaseLangHelper.initializeParkingSpots()).toBeFalsy()
+  })
+})
+
+describe('initializeBlockOnPay', () => {
+  it('sets blockOnPay to false on cars that lack the field only', async () => {
+    expect(await databaseHelper.connect(env.DB_URI, false, false)).toBeTruthy()
+
+    const updatedAt = new Date('2020-01-01T00:00:00.000Z')
+    const missingId = new mongoose.Types.ObjectId()
+    const blockingId = new mongoose.Types.ObjectId()
+    const notBlockingId = new mongoose.Types.ObjectId()
+
+    // raw inserts bypass the schema defaults
+    await Car.collection.insertMany([
+      { _id: missingId, name: 'blockOnPay missing', createdAt: updatedAt, updatedAt },
+      { _id: blockingId, name: 'blockOnPay true', blockOnPay: true, createdAt: updatedAt, updatedAt },
+      { _id: notBlockingId, name: 'blockOnPay false', blockOnPay: false, createdAt: updatedAt, updatedAt },
+    ])
+
+    try {
+      expect(await databaseHelper.initializeBlockOnPay()).toBeTruthy()
+
+      const missing = await Car.collection.findOne({ _id: missingId })
+      expect(missing?.blockOnPay).toBe(false)
+      expect(missing?.updatedAt).toEqual(updatedAt)
+
+      // the schema default no longer turns the migrated car into a blocking one
+      const car = await Car.findById(missingId)
+      expect(car?.blockOnPay).toBe(false)
+
+      const blocking = await Car.collection.findOne({ _id: blockingId })
+      expect(blocking?.blockOnPay).toBe(true)
+      const notBlocking = await Car.collection.findOne({ _id: notBlockingId })
+      expect(notBlocking?.blockOnPay).toBe(false)
+
+      // idempotent
+      expect(await databaseHelper.initializeBlockOnPay()).toBeTruthy()
+      expect((await Car.collection.findOne({ _id: blockingId }))?.blockOnPay).toBe(true)
+    } finally {
+      await Car.collection.deleteMany({ _id: { $in: [missingId, blockingId, notBlockingId] } })
+      await databaseHelper.close()
+    }
+
+    // test failure (lost db connection)
+    expect(await databaseHelper.initializeBlockOnPay()).toBeFalsy()
   })
 })
 
