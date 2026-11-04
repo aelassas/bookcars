@@ -206,16 +206,18 @@ export const flattenSuppliers = (suppliers: bookcarsTypes.User[]): string[] =>
 
 /**
  * Get number of days between two dates.
+ * Rounded so that a daylight saving time change (a 23 or 25 hour day) does not add or drop a day.
  *
  * @param {?Date} [from]
  * @param {?Date} [to]
  * @returns {number}
  */
 export const days = (from?: Date, to?: Date) =>
-  (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
+  (from && to && Math.round((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
 
 /**
  * Get number of hours between two dates.
+ * Rounded on full-day boundaries so that a daylight saving time change (a 23 or 25 hour day) does not add or drop an hour.
  *
  * @param {?Date} [from] 
  * @param {?Date} [to] 
@@ -227,6 +229,12 @@ export const hours = (from?: Date, to?: Date): number => {
   }
   const ms = to.getTime() - from.getTime()
   const hrs = ms / (1000 * 60 * 60)
+  // Round to avoid DST +/- 1 hour drift on full-day boundaries
+  const roundedDays = Math.round(hrs / 24)
+  const actualHours = Math.round(hrs)
+  if (Math.abs(actualHours - roundedDays * 24) <= 1) {
+    return roundedDays * 24
+  }
   return Math.ceil(hrs)
 }
 

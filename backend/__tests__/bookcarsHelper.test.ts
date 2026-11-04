@@ -142,16 +142,56 @@ describe('bookcarsHelper', () => {
 
   describe('days and hours', () => {
     const from = new Date('2026-01-01T10:00:00.000Z')
-    const to = new Date('2026-01-03T14:00:00.000Z')
+    const to = new Date('2026-01-03T14:00:00.000Z') // 52 hours (2.167 days)
 
     it('days should return rounded difference in days', () => {
-      expect(helper.days(from, to)).toBe(3)
+      expect(helper.days(from, to)).toBe(2)
       expect(helper.days()).toBe(0)
     })
 
     it('hours should return rounded difference in hours', () => {
       expect(helper.hours(from, to)).toBe(52)
       expect(helper.hours()).toBe(0)
+    })
+
+    it('should not add or drop a day or hour across daylight saving time changes (DST shifts)', () => {
+      // Europe/Paris, 10:00 to 10:00: contains 25-hour day on 2026-10-25 (fall back)
+      const fromFall = new Date('2026-10-01T10:00:00+02:00')
+      const toFall = new Date('2026-11-01T10:00:00+01:00')
+      expect(helper.days(fromFall, toFall)).toBe(31)
+
+      // Europe/Paris, 10:00 to 10:00: contains 23-hour day on 2026-03-29 (spring forward)
+      const fromSpring = new Date('2026-03-01T10:00:00+01:00')
+      const toSpring = new Date('2026-04-01T10:00:00+02:00')
+      expect(helper.days(fromSpring, toSpring)).toBe(31)
+    })
+  })
+
+  describe('hours helper - DST shift tests', () => {
+    it('should calculate correct hours across spring-forward DST transition (23-hour day)', () => {
+      // Europe/Paris: March 28 10:00 (+01:00) to March 29 10:00 (+02:00)
+      // Real time delta is 23 hours, but represents a full 1-day calendar rental
+      const fromSpring = new Date('2026-03-28T10:00:00+01:00')
+      const toSpring = new Date('2026-03-29T10:00:00+02:00')
+
+      expect(helper.hours(fromSpring, toSpring)).toBe(24)
+    })
+
+    it('should calculate correct hours across fall-back DST transition (25-hour day)', () => {
+      // Europe/Paris: October 24 10:00 (+02:00) to October 25 10:00 (+01:00)
+      // Real time delta is 25 hours, but represents a full 1-day calendar rental
+      const fromFall = new Date('2026-10-24T10:00:00+02:00')
+      const toFall = new Date('2026-10-25T10:00:00+01:00')
+
+      expect(helper.hours(fromFall, toFall)).toBe(24)
+    })
+
+    it('should preserve exact partial-day hours when not on a 24-hour boundary offset', () => {
+      // 5 partial hours on standard day
+      const from = new Date('2026-01-01T10:00:00Z')
+      const to = new Date('2026-01-01T15:00:00Z')
+
+      expect(helper.hours(from, to)).toBe(5)
     })
   })
 

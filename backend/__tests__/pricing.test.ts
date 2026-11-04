@@ -178,6 +178,20 @@ describe('calculateTotalPrice', () => {
       expect(totalSpring).toBe(100)
     })
 
+    it('should not charge an extra day when the stay spans the end of daylight saving time (fall back)', () => {
+      const car = {
+        ...baseCar,
+        dailyPrice: 100,
+        hourlyPrice: 10,
+      } as unknown as bookcarsTypes.Car
+
+      // Europe/Paris, 10:00 to 10:00: stay spans 25-hour day of 2026-10-25 (31 calendar days)
+      const from = new Date('2026-10-01T10:00:00+02:00')
+      const to = new Date('2026-11-01T10:00:00+01:00')
+
+      expect(bookcarsHelper.calculateTotalPrice(car, from, to, 0)).toBe(3100) // 31 * 100
+    })
+
     it('calculates complex multi-day rentals with leftover partial-day hours', () => {
       const car = {
         ...baseCar,
@@ -296,6 +310,21 @@ describe('calculateTotalPrice', () => {
       )
 
       expect(total).toBe(160) // 2 * 80
+    })
+
+    it('should not charge an extra day when date-based pricing spans the end of daylight saving time (fall back)', () => {
+      const car = {
+        ...baseCar,
+        isDateBasedPrice: true,
+        dailyPrice: 100,
+        dateBasedPrices: [],
+      } as unknown as bookcarsTypes.Car
+
+      // Europe/Paris, 10:00 to 10:00 across 2026-10-25 (31 calendar days)
+      const from = new Date('2026-10-01T10:00:00+02:00')
+      const to = new Date('2026-11-01T10:00:00+01:00')
+
+      expect(bookcarsHelper.calculateTotalPrice(car, from, to, 0)).toBe(3100) // 31 * 100
     })
   })
 
