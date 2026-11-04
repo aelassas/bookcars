@@ -19,7 +19,7 @@ BookCars provides end-to-end car rental workflows for single-supplier and multi-
 - **Locations & Search**: Hierarchical location modeling (Countries, Cities, Parking Spots) with geolocation coordinates and map UI integration.
 - **Payments & Checkout**: Stripe (Cards, Apple Pay, Google Pay, Link) and PayPal integrations. Supports Pay in Full, Pay Deposit, and Pay Later options.
 - **Authentication**: Social Sign-In (Google, Facebook, Apple) and traditional email/password credentials with role-based authorization (Admin, Supplier, Customer).
-- **Localization**: Multi-language (English, French, Spanish) and multi-currency formatting support.
+- **Localization**: Multi-language (English, French, Spanish, German, Portuguese, Italian, Chinese, Japanese) and multi-currency formatting support.
 
 ## Core Documentation & Wiki
 

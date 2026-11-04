@@ -1,12 +1,12 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) 
 [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) 
 [![codecov](https://img.shields.io/codecov/c/github/aelassas/bookcars?label=coverage)](https://codecov.io/gh/aelassas/bookcars)
-[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net/)
+[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.wexdev.com/)
 [![docs](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki)
 
 <!--
 [![docs](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki)
-[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.dynv6.net/)
+[![live demo](https://img.shields.io/badge/live-demo-brightgreen)](https://bookcars.wexdev.com/)
 [![loc](https://raw.githubusercontent.com/aelassas/bookcars/refs/heads/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml) 
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-brightgreen?logo=jest)](https://github.com/jestjs/jest)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/aelassas/bookcars/pulls)
@@ -21,19 +21,23 @@
 https://github.com/user-attachments/assets/01afc5ec-3c0a-47b9-a4e1-3b8888b2a695
 -->
 
-[![](https://bookcars.github.io/content/cover-1.png)](https://bookcars.dynv6.net:3002/)
+[![](https://bookcars.github.io/content/cover-1.png)](https://bookcars.wexdev.com:3002/)
 
 ## BookCars
 
-BookCars is a car rental platform with an admin panel for managing fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is an open-source, cross-platform car rental platform. It includes an admin panel for managing fleets and bookings, a responsive web frontend, and a native mobile app for Android and iOS, so customers can rent cars from any device.
 
-It comes with built-in support for Stripe and PayPal payment gateways, allowing you to choose the one best suited for your country or business model. If Stripe isn't available in your region, PayPal serves as a secure and reliable alternative.
+BookCars supports both single-supplier and multi-supplier modes. Suppliers manage their own fleets and bookings through a dedicated admin panel, with a vehicle scheduler, [supplier contracts](https://github.com/aelassas/bookcars/wiki/Supplier-Contracts), search result limits, and an [automatic notification system](https://github.com/aelassas/bookcars/wiki/Auto%E2%80%90Notification-System). Each new supplier receives an email prompting them to create their account and gain access to the system. Admins can manage suppliers, cars, countries, locations, parking spots, customers, bookings, and payments.
 
-BookCars supports both single-supplier and multi-supplier modes. Suppliers can manage their fleets and bookings through a dedicated admin panel. Each new supplier receives an email prompting them to create their account and gain access to the system.
+Pricing is flexible. Each car can have hourly, daily, bi-weekly, weekly, and monthly rates, discounted prices, [date-based price rates](https://github.com/aelassas/bookcars/wiki/Price-Calculation#date-based-price-rates), and a supplier [price change rate](https://github.com/aelassas/bookcars/wiki/Price-Calculation#price-change-rate), all combined by a [dynamic price calculation](https://github.com/aelassas/bookcars/wiki/Price-Calculation). Admins can also configure [rental date and time constraints](https://github.com/aelassas/bookcars/wiki/Rental-Date-and-Time-Constraints), such as the minimum notice before pick-up, the minimum rental duration, the allowed pick-up and drop-off hours, and a minimum number of rental days per supplier. [Car availability is flexible too](https://github.com/aelassas/bookcars/wiki/FAQ#how-to-automatically-prevent-a-car-from-being-booked-multiple-times-when-its-already-booked): a car can be blocked automatically after a successful payment, or stay available for overlapping bookings.
 
-The admin panel allows admins to manage suppliers, cars, countries, locations, parking spots, customers, bookings, and payments.
+Locations are [hierarchical](https://github.com/aelassas/bookcars/wiki/Locations), with countries, nested child locations, parking spots, and a map display.
 
-Customers can register through the web frontend or mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process in a few clicks.
+BookCars comes with built-in support for the [Stripe and PayPal payment gateways](https://github.com/aelassas/bookcars/wiki/Payment-Gateways), allowing you to choose the one best suited for your country or business model. If Stripe isn't available in your region, PayPal serves as a secure and reliable alternative. Customers can pay by credit card, PayPal, Google Pay, Apple Pay, or Link, pay in full, pay a deposit, or pay at the counter.
+
+Customers can register through the web frontend or mobile app, or sign in with email, Google, Facebook, or Apple. They can search for available cars by pickup and drop-off locations and times, choose a car, and complete the checkout process in a few clicks.
+
+BookCars supports 8 languages (English, French, Spanish, German, Portuguese, Italian, Chinese, and Japanese) and [134 currencies](https://github.com/aelassas/bookcars/wiki/Add-New-Currency), and you can [add a new language](https://github.com/aelassas/bookcars/wiki/Add-New-Language) by following the guide. It is protected against common web attacks (XSS, CSRF, MITM, and DDoS), includes error monitoring with [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry), and is easy to deploy with [Docker](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)).
 
 ## Quick Links
 * [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
@@ -73,13 +77,13 @@ If you want to customize BookCars while keeping your fork up to date with the la
 
 ### Frontend
 
-* URL: https://bookcars.dynv6.net/
+* URL: https://bookcars.wexdev.com/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
 ### Admin Panel
 
-* URL: https://bookcars.dynv6.net:3001/
+* URL: https://bookcars.wexdev.com:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
