@@ -12,7 +12,7 @@ div.booking-status .bs-icon {
 
 div.booking-status span.bs {
   padding: 3px;
-  width: 108px;
+  min-width: 108px;
   text-align: center;
   color: #fff;
   display: inline-flex;
