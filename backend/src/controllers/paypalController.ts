@@ -23,6 +23,13 @@ export const createPayPalOrder = async (req: Request, res: Response) => {
     const paypal = await import('../payment/paypal.js')
     const { bookingId, currency, name, description }: bookcarsTypes.CreatePayPalOrderPayload = req.body
 
+    // Payments are only accepted in the base currency
+    if (typeof currency !== 'string' || currency.toUpperCase() !== env.BASE_CURRENCY.toUpperCase()) {
+      const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${currency}`
+      logger.error(`[paypal.createPayPalOrder] ${message}`)
+      res.status(400).send(message)
+      return
+    }
     // 1. Retrieve the authoritative booking from database
     const booking = await Booking.findById(bookingId)
     if (!booking) {
@@ -36,7 +43,7 @@ export const createPayPalOrder = async (req: Request, res: Response) => {
     const countryCode = await ipinfoHelper.getCountryCode(clientIp)
 
     // 2. Use booking.price derived server-side instead of client-supplied amount
-    const orderId = await paypal.createOrder(bookingId, booking.price, currency, name, description, countryCode)
+    const orderId = await paypal.createOrder(bookingId, booking.price, env.BASE_CURRENCY, name, description, countryCode)
 
     res.json(orderId)
   } catch (err) {

@@ -93,6 +93,7 @@ const Checkout = () => {
   const [phoneInfo, setPhoneInfo] = useState(true)
   const [price, setPrice] = useState(0)
   const [depositPrice, setDepositPrice] = useState(0)
+  const [basePaymentAmount, setBasePaymentAmount] = useState(0)
   const [success, setSuccess] = useState(false)
   const [loadingPage, setLoadingPage] = useState(true)
   const [recaptchaError, setRecaptchaError] = useState(false)
@@ -116,7 +117,7 @@ const Checkout = () => {
   const additionalDriverPhoneRef = useRef<HTMLInputElement | null>(null)
 
   const _locale = getDateLocale(language)
-  console.log(_locale, language)
+
   const dateFormats: Record<string, string> = {
     fr: 'eee d LLL yyyy kk:mm',
     es: 'eee, d LLLL yyyy HH:mm',
@@ -202,15 +203,30 @@ const Checkout = () => {
         }
       }
 
-      let amount = price
+      //
+      // Payments are always made in the base currency.
+      // The prices displayed in the selected currency are only estimates.
+      //
+      const priceChangeRate = car.supplier.priceChangeRate || 0
+      const baseTotalPrice = bookcarsHelper.calculateTotalPrice(car, from, to, priceChangeRate, {
+        cancellation: data.cancellation,
+        amendments: data.amendments,
+        theftProtection: data.theftProtection,
+        collisionDamageWaiver: data.collisionDamageWaiver,
+        fullInsurance: data.fullInsurance,
+        additionalDriver,
+      })
+      let baseDepositPrice = car.deposit > 0 ? car.deposit : 0
+      baseDepositPrice += baseDepositPrice * (priceChangeRate / 100)
+
+      let basePrice = baseTotalPrice
       if (payDeposit) {
-        amount = depositPrice
+        basePrice = baseDepositPrice
       } else if (payInFull) {
-        amount = price + depositPrice
+        basePrice = baseTotalPrice + baseDepositPrice
       }
-
-      const basePrice = await bookcarsHelper.convertPrice(amount, PaymentService.getCurrency(), env.BASE_CURRENCY)
-
+      basePrice = Number(basePrice.toFixed(2))
+      setBasePaymentAmount(basePrice)
       const booking: bookcarsTypes.Booking = {
         supplier: car.supplier._id as string,
         car: car._id,
@@ -249,16 +265,9 @@ const Checkout = () => {
           const _description = `${env.WEBSITE_NAME} - ${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
-          let finalPrice = price
-          if (payDeposit) {
-            finalPrice = depositPrice
-          } else if (payInFull) {
-            finalPrice = price + depositPrice
-          }
-
           const payload: bookcarsTypes.CreatePaymentPayload = {
-            amount: finalPrice,
-            currency: PaymentService.getCurrency(),
+            amount: basePrice,
+            currency: env.BASE_CURRENCY,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
             name,
@@ -908,13 +917,7 @@ const Checkout = () => {
                                   const name = bookcarsHelper.truncateString(car.name, PayPalService.ORDER_NAME_MAX_LENGTH)
                                   const _description = `${car.name} - ${daysLabel} - ${pickupLocation._id === dropOffLocation._id ? pickupLocation.name : `${pickupLocation.name} - ${dropOffLocation.name}`}`
                                   const description = bookcarsHelper.truncateString(_description, PayPalService.ORDER_DESCRIPTION_MAX_LENGTH)
-                                  let amount = price
-                                  if (payDeposit) {
-                                    amount = depositPrice
-                                  } else if (payInFull) {
-                                    amount = price + depositPrice
-                                  }
-                                  const orderId = await PayPalService.createOrder(bookingId!, amount, PaymentService.getCurrency(), name, description)
+                                  const orderId = await PayPalService.createOrder(bookingId!, basePaymentAmount, env.BASE_CURRENCY, name, description)
                                   return orderId || ''
                                 } catch (err) {
                                   console.error('Error creating PayPal order', err)

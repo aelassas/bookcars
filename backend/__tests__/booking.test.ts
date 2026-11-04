@@ -298,6 +298,33 @@ describe('booking reservation concurrency', () => {
     }
   })
 
+  it('allows back-to-back reservations that only touch at the boundary', async () => {
+    const start = new Date(Date.now() + 150 * 24 * 60 * 60 * 1000)
+    const boundary = new Date(start.getTime() + 3 * 24 * 60 * 60 * 1000)
+    const first = makeBooking(CAR1_ID, start, boundary)
+    const second = makeBooking(CAR1_ID, boundary, new Date(boundary.getTime() + 3 * 24 * 60 * 60 * 1000))
+    const third = makeBooking(CAR1_ID, new Date(boundary.getTime() - 60 * 1000), new Date(boundary.getTime() + 60 * 1000))
+
+    try {
+      // sequential saves
+      await expect(saveBookingsWithAvailability([first])).resolves.toBe(true)
+      await expect(saveBookingsWithAvailability([second])).resolves.toBe(true)
+      // a real overlap with both is still rejected
+      await expect(saveBookingsWithAvailability([third])).rejects.toBeInstanceOf(BookingConflictError)
+    } finally {
+      await Booking.deleteMany({ _id: { $in: [first._id, second._id, third._id] } })
+    }
+
+    // same batch
+    const fourth = makeBooking(CAR1_ID, start, boundary)
+    const fifth = makeBooking(CAR1_ID, boundary, new Date(boundary.getTime() + 3 * 24 * 60 * 60 * 1000))
+    try {
+      await expect(saveBookingsWithAvailability([fourth, fifth])).resolves.toBe(true)
+    } finally {
+      await Booking.deleteMany({ _id: { $in: [fourth._id, fifth._id] } })
+    }
+  })
+
   it('allows non-overlapping dates and preserves blockOnPay false behavior', async () => {
     const car = await Car.findById(CAR2_ID)
     const previousBlockOnPay = car!.blockOnPay

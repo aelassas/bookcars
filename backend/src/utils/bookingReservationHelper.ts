@@ -32,8 +32,9 @@ const reservesCar = (booking: env.Booking, now: Date) =>
   BOOKING_RESERVATION_STATUSES.includes(booking.status)
   || (booking.status === bookcarsTypes.BookingStatus.Void && !!booking.expireAt && booking.expireAt > now)
 
+// Ranges that only touch (one ends exactly when the other starts) do not overlap
 const overlaps = (first: env.Booking, second: env.Booking) =>
-  first.from <= second.to && first.to >= second.from
+  first.from < second.to && first.to > second.from
 
 // Simple queue-based lock for non-transactional environments
 const carLocks = new Map<string, Promise<void>>()
@@ -129,8 +130,9 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
       const query = Booking.findOne({
         _id: { $nin: bookingIds },
         car: new mongoose.Types.ObjectId(carId),
-        from: { $lte: booking.to },
-        to: { $gte: booking.from },$or: [
+        from: { $lt: booking.to },
+        to: { $gt: booking.from },
+        $or: [
           { status: { $in: BOOKING_RESERVATION_STATUSES } },
           { status: bookcarsTypes.BookingStatus.Void, expireAt: { $gt: now } },
         ],

@@ -644,7 +644,31 @@ const CheckoutScreen = () => {
         }
       }
 
-      const currency = await StripeService.getCurrency()
+      //
+      // Payments are always made in the base currency.
+      // The prices displayed in the selected currency are only estimates.
+      //
+      const currency = env.BASE_CURRENCY
+      const priceChangeRate = __car.supplier.priceChangeRate || 0
+      const baseTotalPrice = bookcarsHelper.calculateTotalPrice(__car, __from, __to, priceChangeRate, {
+        cancellation,
+        amendments,
+        theftProtection,
+        collisionDamageWaiver,
+        fullInsurance,
+        additionalDriver,
+      })
+      let baseDepositPrice = __car.deposit > 0 ? __car.deposit : 0
+      baseDepositPrice += baseDepositPrice * (priceChangeRate / 100)
+
+      let basePrice = baseTotalPrice
+      if (payDeposit) {
+        basePrice = baseDepositPrice
+      } else if (payInFull) {
+        basePrice = baseTotalPrice + baseDepositPrice
+      }
+      basePrice = Number(basePrice.toFixed(2))
+
       let paid = payLater
       let canceled = false
       let paymentIntentId: string | undefined
@@ -657,15 +681,8 @@ const CheckoutScreen = () => {
           const _description = `${env.WEBSITE_NAME} - ${__car.name} - ${daysLabel} - ${__pickupLocation._id === __dropOffLocation._id ? __pickupLocation.name : `${__pickupLocation.name} - ${__dropOffLocation.name}`}`
           const description = bookcarsHelper.truncateString(_description, StripeService.ORDER_DESCRIPTION_MAX_LENGTH)
 
-          let amount = price
-          if (payDeposit) {
-            amount = depositPrice
-          } else if (payInFull) {
-            amount = price + depositPrice
-          }
-
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
-            amount,
+            amount: basePrice,
             currency,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
@@ -730,15 +747,6 @@ const CheckoutScreen = () => {
         alert(i18n.t('PAYMENT_FAILED'))
         return
       }
-
-      let amount = price
-      if (payDeposit) {
-        amount = depositPrice
-      } else if (payInFull) {
-        amount = price + depositPrice
-      }
-
-      const basePrice = await bookcarsHelper.convertPrice(amount, currency, env.BASE_CURRENCY)
 
       let bookingStatus = bookcarsTypes.BookingStatus.Paid
       if (payLater) {

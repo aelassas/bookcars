@@ -87,6 +87,13 @@ describe('POST /api/create-checkout-session', () => {
     expect(res.body.sessionId).not.toBeNull()
     expect(res.body.customerId).not.toBeNull()
 
+    // test failure (create checkout session in a non-base currency)
+    res = await request(app)
+      .post('/api/create-checkout-session')
+      .send({ ...payload, currency: env.BASE_CURRENCY.toLowerCase() === 'usd' ? 'eur' : 'usd' })
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('Payment currency mismatch')
+
     // test success (create checkout session with existant user)
     try {
       res = await request(app)
@@ -730,6 +737,15 @@ describe('POST /api/create-payment-intent', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.paymentIntentId).not.toBeNull()
     expect(res.body.customerId).not.toBeNull()
+
+    //
+    // Test create payment intent in a non-base currency
+    //
+    res = await request(app)
+      .post('/api/create-payment-intent')
+      .send({ ...payload, currency: env.BASE_CURRENCY.toLowerCase() === 'usd' ? 'eur' : 'usd' })
+    expect(res.statusCode).toBe(400)
+    expect(res.text).toContain('Payment currency mismatch')
 
     //
     // Test create payment intent with existant user

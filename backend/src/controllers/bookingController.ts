@@ -574,8 +574,8 @@ export const checkout = async (req: Request, res: Response) => {
     if (carObj.blockOnPay) {
       const conflictingBooking = await Booking.exists({
         car: carObj._id,
-        from: { $lte: toDate },
-        to: { $gte: fromDate },
+        from: { $lt: toDate },
+        to: { $gt: fromDate },
         status: { $in: BOOKING_RESERVATION_STATUSES },
       })
       if (conflictingBooking) {
@@ -608,8 +608,8 @@ export const checkout = async (req: Request, res: Response) => {
         // Re-check inside the lock to close the race window
         const conflict = await Booking.exists({
           car: carObj._id,
-          from: { $lte: toDate },
-          to: { $gte: fromDate },
+          from: { $lt: toDate },
+          to: { $gt: fromDate },
           status: { $in: BOOKING_RESERVATION_STATUSES },
         })
         if (conflict) {
