@@ -66,7 +66,7 @@ const CheckoutStatus = (
   }
 
   const _locale = getDateLocale(language)
-  const _format = language === 'fr' || language === 'de' ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _format = language === 'fr' || language === 'de' || language === 'pt' ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const days = (booking && bookcarsHelper.days(new Date(booking.from), new Date(booking.to))) || 0
   const success = status === 'success'
 

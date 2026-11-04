@@ -44,6 +44,16 @@ const strings = new LocalizedStrings({
     FIND_DEAL: 'Angebot finden',
     PRICING: 'Preise',
   },
+  pt: {
+    TITLE1: `${env.WEBSITE_NAME} - O seu serviço de aluguer de automóveis de eleição`,
+    SUBTITLE1: 'O seu parceiro de confiança para aluguer de automóveis',
+    CONTENT1: `Na ${env.WEBSITE_NAME}, sabemos que cada viagem é única. Estamos empenhados em oferecer aos nossos clientes uma seleção diversificada de veículos que respondem a todas as necessidades de viagem. Quer esteja a explorar uma cidade, a deslocar-se em negócios ou à procura de aventura, os nossos fiáveis serviços de aluguer de automóveis garantem que a sua aventura começa sem problemas. A nossa missão é prestar um serviço de apoio ao cliente excecional, tornando a sua experiência agradável e sem stress. Com preços competitivos, uma variedade de veículos bem conservados e uma equipa dedicada pronta a ajudá-lo, esforçamo-nos por ser o seu parceiro de confiança na estrada. Escolha a ${env.WEBSITE_NAME} para todas as suas necessidades de aluguer de automóveis e descubra a liberdade de explorar ao seu ritmo.`,
+    TITLE2: `Porquê escolher a ${env.WEBSITE_NAME}`,
+    SUBTITLE2: 'Experimente a excelência em cada viagem',
+    CONTENT2: 'Desfrute de uma comodidade, fiabilidade e valor inigualáveis com o nosso serviço de aluguer de automóveis de eleição. Desde reservas sem esforço a veículos de alta qualidade, somos o seu parceiro de viagem de confiança.',
+    FIND_DEAL: 'Encontrar oferta',
+    PRICING: 'Preços',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -50,6 +50,18 @@ const strings = new LocalizedStrings({
     FAQ_CANCEL_TITLE: 'Was passiert, wenn ich meine Reservierung stornieren muss?',
     FAQ_CANCEL_TEXT: 'Wir wissen, dass sich Pläne ändern können, und bieten daher flexible Stornierungsbedingungen an. Je nach Zeitpunkt Ihrer Stornierung können Gebühren anfallen. Bitte lesen Sie unsere Allgemeinen Geschäftsbedingungen oder wenden Sie sich an unser Kundenserviceteam, um Unterstützung bei Stornierungen zu erhalten.',
   },
+  pt: {
+    FAQ_TITLE: 'Perguntas frequentes',
+    MORE_QUESTIONS: 'Mais perguntas?',
+    FAQ_DOCUMENTS_TITLE: 'De que documentos preciso para alugar um veículo?',
+    FAQ_DOCUMENTS_TEXT: 'Para alugar um veículo, normalmente precisará de uma carta de condução válida, de um cartão de crédito para o pagamento e a caução, e de um comprovativo de seguro. Os requisitos adicionais podem variar consoante a sua localização e o tipo de veículo que está a alugar.',
+    FAQ_SERVICES_TITLE: 'Oferecem serviços de entrega e recolha?',
+    FAQ_SERVICES_TEXT: 'Sim, oferecemos! Disponibilizamos serviços de entrega e recolha convenientes em vários locais, incluindo aeroportos, hotéis e muito mais. Basta indicar-nos o local pretendido e nós tratamos do resto.',
+    FAQ_AGE_TITLE: 'Existe uma idade mínima para alugar um veículo?',
+    FAQ_AGE_TEXT: 'Sim, a idade mínima exigida para alugar um veículo é normalmente de 18 anos. No entanto, alguns locais podem ter requisitos de idade mais elevados ou restrições adicionais para determinados tipos de veículos.',
+    FAQ_CANCEL_TITLE: 'O que acontece se eu precisar de cancelar a minha reserva?',
+    FAQ_CANCEL_TEXT: 'Compreendemos que os planos podem mudar, por isso oferecemos políticas de cancelamento flexíveis. Dependendo do momento do cancelamento, podem aplicar-se taxas. Consulte os nossos termos e condições ou contacte a nossa equipa de apoio ao cliente para obter ajuda com os cancelamentos.',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -39,6 +39,15 @@ const strings = new LocalizedStrings({
     STATUS_MESSAGE: 'Prüfen Sie Ihr E-Mail-Postfach und folgen Sie den Schritten in der Buchungsbestätigungs-E-Mail, um Ihr Auto zu buchen.',
     SESSION_ID_MISMATCH: 'Die Sitzungs-ID stimmt nicht überein. Bitte versuchen Sie es erneut.',
   },
+  pt: {
+    CONGRATULATIONS: 'Parabéns!',
+    SUCCESS: 'O seu pagamento foi efetuado com sucesso. Enviámos-lhe um e-mail de confirmação.',
+    SUCCESS_PAY_LATER: 'A sua reserva foi efetuada com sucesso. Enviámos-lhe um e-mail de confirmação.',
+    ERROR: 'Algo correu mal! Tente novamente mais tarde',
+    STATUS_TITLE: `${env.WEBSITE_NAME} Confirmação de reserva`,
+    STATUS_MESSAGE: 'Verifique a sua caixa de correio e siga os passos descritos no e-mail de confirmação de reserva para reservar o seu carro.',
+    SESSION_ID_MISMATCH: 'O ID da sessão não corresponde. Por favor, tente novamente.',
+  },
 })
 
 langHelper.setLanguage(strings)

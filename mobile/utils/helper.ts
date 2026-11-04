@@ -696,6 +696,8 @@ export const getDepositFilterValue = async (language: string, value: DepositFilt
       return `Menos de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
     case 'de':
       return `Weniger als ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'pt':
+      return `Menos de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
     case 'en':
     default:
       return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`

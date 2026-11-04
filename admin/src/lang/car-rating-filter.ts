@@ -30,6 +30,13 @@ const strings = new LocalizedStrings({
     RATING_3: '(ab 3)',
     RATING_4: '(ab 4)',
   },
+  pt: {
+    RATING: 'Classificação',
+    RATING_1: '(1 ou mais)',
+    RATING_2: '(2 ou mais)',
+    RATING_3: '(3 ou mais)',
+    RATING_4: '(4 ou mais)',
+  },
 })
 
 langHelper.setLanguage(strings)

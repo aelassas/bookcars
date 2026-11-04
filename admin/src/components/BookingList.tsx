@@ -475,7 +475,7 @@ const BookingList = ({
   }
 
   const _locale = getDateLocale(language)
-  const _format = (language === 'fr' || language === 'de') ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _format = (language === 'fr' || language === 'de' || language === 'pt') ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
   return (

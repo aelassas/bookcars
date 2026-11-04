@@ -297,7 +297,7 @@ export const getDefaultLanguage = () => {
   const locales = Localization.getLocales()
   const languageCode = locales?.[0]?.languageCode?.toLowerCase() || ''
 
-  const supportedLanguages = ['en', 'fr', 'es', 'de']
+  const supportedLanguages = ['en', 'fr', 'es', 'de', 'pt']
 
   return supportedLanguages.includes(languageCode)
     ? languageCode

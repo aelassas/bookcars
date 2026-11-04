@@ -207,6 +207,42 @@ const VehicleScheduler = (
       }
     }
 
+    if (_language === 'pt') {
+      return {
+        navigation: {
+          month: 'Mês',
+          week: 'Semana',
+          day: 'Dia',
+          today: 'Hoje',
+          agenda: 'Agenda',
+        },
+        form: {
+          addTitle: 'Adicionar evento',
+          editTitle: 'Editar evento',
+          confirm: 'Confirmar',
+          delete: 'Eliminar',
+          cancel: 'Cancelar',
+        },
+        event: {
+          title: 'Título',
+          subtitle: 'Subtítulo',
+          start: 'Início',
+          end: 'Fim',
+          allDay: 'Dia inteiro',
+        },
+        validation: {
+          required: 'Obrigatório',
+          invalidEmail: 'E-mail inválido',
+          onlyNumbers: 'Apenas números são permitidos',
+          min: 'Mínimo de {{min}} letras',
+          max: 'Máximo de {{max}} letras',
+        },
+        moreEvents: 'Mais...',
+        noDataToDisplay: 'Sem dados para apresentar',
+        loading: 'A carregar...',
+      }
+    }
+
     // default to english
     return {
       navigation: {

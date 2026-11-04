@@ -251,7 +251,7 @@ describe('PUT /api/update-location/:id', () => {
     const parkingSpot2 = (location!.parkingSpots[1]) as unknown as FlattenMaps<bookcarsTypes.ParkingSpot>
     expect(parkingSpot2.values!.length).toBe(3)
     parkingSpot2.values![0].value = 'Parking spot 2 updated'
-    parkingSpot2.values![3] = { language: 'pt', value: 'Parking spot 2 pt' }
+    parkingSpot2.values![3] = { language: 'it', value: 'Parking spot 2 it' }
 
     const payload: bookcarsTypes.UpsertLocationPayload = {
       country: countryId,
@@ -612,7 +612,7 @@ describe('GET /api/locations-with-position/:language', () => {
 
     // test success (expect no result)
     res = await request(app)
-      .get('/api/locations-with-position/pt')
+      .get('/api/locations-with-position/it')
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(0)
 

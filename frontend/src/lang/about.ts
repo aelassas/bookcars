@@ -39,6 +39,15 @@ const strings = new LocalizedStrings({
     CONTENT2: 'Genießen Sie unübertroffenen Komfort, Zuverlässigkeit und Wert mit unserem erstklassigen Autovermietungsservice. Von mühelosen Buchungen bis hin zu hochwertigen Fahrzeugen – wir sind Ihr vertrauenswürdiger Reisepartner.',
     FIND_DEAL: 'Angebot finden',
   },
+  pt: {
+    TITLE1: `${env.WEBSITE_NAME} - O seu serviço de aluguer de automóveis de excelência`,
+    SUBTITLE1: 'O seu parceiro de confiança para o aluguer de automóveis',
+    CONTENT1: `Na ${env.WEBSITE_NAME}, sabemos que cada viagem é única. Comprometemo-nos a oferecer aos nossos clientes uma seleção diversificada de veículos que respondem a todas as necessidades de viagem. Quer esteja a explorar uma cidade, em deslocação profissional ou à procura de aventura, os nossos fiáveis serviços de aluguer de automóveis garantem que a sua aventura começa sem contratempos. A nossa missão é prestar um serviço de atendimento ao cliente excecional, tornando a sua experiência agradável e sem stress. Com preços competitivos, uma variedade de veículos bem conservados e uma equipa dedicada pronta a ajudá-lo, esforçamo-nos por ser o seu parceiro de confiança na estrada. Escolha a ${env.WEBSITE_NAME} para todas as suas necessidades de aluguer de automóveis e descubra a liberdade de explorar ao seu próprio ritmo.`,
+    TITLE2: `Porquê escolher a ${env.WEBSITE_NAME}`,
+    SUBTITLE2: 'Viva a excelência em cada viagem',
+    CONTENT2: 'Desfrute de uma comodidade, fiabilidade e qualidade inigualáveis com o nosso serviço de aluguer de automóveis de excelência. Desde reservas sem esforço a veículos de alta qualidade, somos o seu parceiro de viagem de confiança.',
+    FIND_DEAL: 'Encontrar oferta',
+  },
 })
 
 langHelper.setLanguage(strings)

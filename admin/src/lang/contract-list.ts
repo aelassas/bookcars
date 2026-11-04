@@ -14,6 +14,9 @@ const strings = new LocalizedStrings({
   de: {
     TITLE: 'Verträge',
   },
+  pt: {
+    TITLE: 'Contratos',
+  },
 })
 
 langHelper.setLanguage(strings)

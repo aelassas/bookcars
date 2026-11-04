@@ -197,7 +197,52 @@ Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte 
 Durch die Nutzung unserer Dienste bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen und verstanden haben und sich an sie gebunden erklären.
     `,
   },
-})
+  pt: {
+    TITLE: 'Termos de Utilização',
+    TOS: `
+Bem-vindo à ${env.WEBSITE_NAME}! Ao aceder ao nosso website e utilizar os nossos serviços, concorda em cumprir e ficar vinculado aos seguintes Termos de Utilização. Se não concordar com estes termos, não utilize os nossos serviços.
+
+1. Aceitação dos Termos
+
+Ao aceder ou utilizar os nossos serviços, confirma que leu, compreendeu e aceita estes Termos de Utilização e a nossa Política de Privacidade.
+
+2. Utilização dos Nossos Serviços
+
+Concorda em utilizar os nossos serviços apenas para fins lícitos e de uma forma que não viole os direitos de terceiros, nem restrinja ou iniba a utilização dos nossos serviços por parte de terceiros. Isto inclui o cumprimento de todas as leis e regulamentos aplicáveis.
+
+3. Reservas e Pagamentos
+
+Quando efetua uma reserva na ${env.WEBSITE_NAME}, concorda em fornecer informações exatas e completas. Todos os pagamentos devem ser efetuados através do nosso sistema de pagamento seguro. Assim que o pagamento for concluído, receberá uma confirmação da sua reserva.
+
+4. Política de Cancelamento
+
+Os cancelamentos efetuados com 24 horas de antecedência em relação à data de aluguer podem dar direito a um reembolso total. Os cancelamentos efetuados com menos de 24 horas de antecedência em relação à data de aluguer podem implicar uma taxa de cancelamento. Consulte a nossa política de cancelamento para obter informações detalhadas.
+
+5. Condições de Aluguer
+
+Todos os alugueres estão sujeitos às nossas condições de aluguer, que incluem, entre outras, restrições de idade, requisitos de carta de condução e obrigações de seguro. É responsável por garantir que cumpre todos os requisitos antes de efetuar uma reserva.
+
+6. Limitação de Responsabilidade
+
+A ${env.WEBSITE_NAME} não será responsável por quaisquer danos indiretos, acidentais ou consequenciais decorrentes da sua utilização dos nossos serviços. Em nenhum caso a nossa responsabilidade total excederá o montante pago por si pelos serviços.
+
+7. Alterações aos Termos
+
+Reservamo-nos o direito de alterar estes Termos de Utilização a qualquer momento. Quaisquer alterações entram em vigor imediatamente após a sua publicação no nosso website. A sua utilização continuada dos nossos serviços após quaisquer alterações constitui a sua aceitação dos novos termos.
+
+8. Lei Aplicável
+
+Estes Termos de Utilização são regidos e interpretados de acordo com as leis. Quaisquer litígios decorrentes destes termos serão resolvidos nos tribunais.
+
+9. Informações de Contacto
+
+Se tiver alguma questão relativamente a estes Termos de Utilização, contacte-nos através do endereço ${env.CONTACT_EMAIL}. Estamos aqui para o ajudar com quaisquer questões relacionadas com os nossos serviços.
+
+10. Reconhecimento
+
+Ao utilizar os nossos serviços, reconhece que leu e compreendeu estes Termos de Utilização e concorda em ficar vinculado por eles.
+    `,
+  },})
 
 langHelper.setLanguage(strings)
 export { strings }

@@ -203,6 +203,56 @@ Wir können diese Cookie-Richtlinie von Zeit zu Zeit aktualisieren, um Änderung
 Wenn Sie Fragen zu dieser Cookie-Richtlinie haben, kontaktieren Sie uns bitte unter: ${env.CONTACT_EMAIL}
     `,
   },
+  pt: {
+    TITLE: 'Política de Cookies',
+    POLICY: `
+A presente Política de Cookies explica como a ${env.WEBSITE_NAME} («nós», «nos» ou «nosso») utiliza cookies e tecnologias semelhantes no nosso website. Ao utilizar o nosso website, o utilizador consente a utilização de cookies conforme descrito na presente política.
+
+1. O Que São Cookies?
+
+Os cookies são pequenos ficheiros de texto que são armazenados no seu dispositivo (computador, tablet, smartphone) quando visita um website. Ajudam a melhorar a sua experiência de navegação, memorizando as suas preferências e disponibilizando informações ou serviços relevantes.
+
+2. Tipos de Cookies Que Utilizamos
+
+Utilizamos os seguintes tipos de cookies:
+
+- Cookies Estritamente Necessários: Estes cookies são essenciais para o funcionamento do website e não podem ser desativados nos nossos sistemas.
+- Cookies de Desempenho: Estes cookies ajudam-nos a compreender como os visitantes interagem com o nosso website, recolhendo e comunicando informações de forma anónima.
+- Cookies Funcionais: Estes cookies permitem que o website ofereça funcionalidades melhoradas e personalização.
+- Cookies de Segmentação/Publicidade: Estes cookies são utilizados para apresentar anúncios relevantes e monitorizar o desempenho dos anúncios.
+
+3. Como Utilizamos os Cookies
+
+Utilizamos cookies para:
+
+- Melhorar a funcionalidade e o desempenho do website.
+- Analisar a utilização do website para melhorar os nossos serviços.
+- Personalizar a sua experiência e memorizar as suas preferências.
+- Apresentar anúncios segmentados com base nos seus interesses.
+
+4. Gestão das Suas Preferências de Cookies
+
+Pode gerir as suas preferências de cookies em qualquer momento, ajustando as definições do seu navegador. A maioria dos navegadores permite:
+
+- Bloquear todos os cookies.
+- Eliminar os cookies existentes.
+- Receber notificações quando é definido um cookie.
+
+Tenha em atenção que a desativação dos cookies pode afetar a sua experiência no nosso website.
+
+5. Cookies de Terceiros
+
+Podemos permitir que prestadores de serviços terceiros coloquem cookies no nosso website para analisar o tráfego do website, prestar serviços de publicidade ou possibilitar funcionalidades adicionais. Estes cookies são regidos pelas políticas de privacidade dos respetivos terceiros.
+
+6. Alterações à Presente Política de Cookies
+
+Podemos atualizar a presente Política de Cookies periodicamente, para refletir alterações na tecnologia, na legislação ou nas nossas práticas. A política atualizada será publicada nesta página com uma data de «Última atualização» revista.
+
+7. Contacte-nos
+
+Caso tenha alguma questão sobre a presente Política de Cookies, contacte-nos através de: ${env.CONTACT_EMAIL}
+    `,
+  },
 })
 
 langHelper.setLanguage(strings)

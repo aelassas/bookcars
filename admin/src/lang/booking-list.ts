@@ -66,6 +66,22 @@ const strings = new LocalizedStrings({
     DAYS: 'Tage',
     COST: 'KOSTEN',
   },
+  pt: {
+    CAR: 'Carro',
+    SUPPLIER: 'Fornecedor',
+    DRIVER: 'Condutor',
+    PRICE: 'Preço',
+    STATUS: 'Estado',
+    UPDATE_SELECTION: 'Editar seleção',
+    DELETE_SELECTION: 'Eliminar seleção',
+    UPDATE_STATUS: 'Modificação do estado',
+    NEW_STATUS: 'Novo estado',
+    DELETE_BOOKING: 'Tem a certeza de que pretende eliminar esta reserva?',
+    DELETE_BOOKINGS: 'Tem a certeza de que pretende eliminar as reservas selecionadas?',
+    EMPTY_LIST: 'Sem reservas.',
+    DAYS: 'Dias',
+    COST: 'CUSTO',
+  },
 })
 
 langHelper.setLanguage(strings)

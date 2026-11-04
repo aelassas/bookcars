@@ -30,6 +30,13 @@ const strings = new LocalizedStrings({
     MAXI: 'Maxi',
     SCOOTER: 'Scooter',
   },
+  pt: {
+    RANGE: 'Gama',
+    MINI: 'Mini',
+    MIDI: 'Midi',
+    MAXI: 'Maxi',
+    SCOOTER: 'Scooter',
+  },
 })
 
 langHelper.setLanguage(strings)

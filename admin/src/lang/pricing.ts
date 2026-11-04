@@ -58,6 +58,20 @@ const strings = new LocalizedStrings({
     CONTACT_US: 'Kontaktieren Sie uns',
     FEATURE_5: 'Unbegrenzt Fahrzeuge in den Suchergebnissen',
   },
+  pt: {
+    TITLE: 'Planos de preços',
+    FREE_PLAN: 'Plano gratuito',
+    FREE_PLAN_PRICE: 'Grátis',
+    FEATURE_1: 'Criar carros ilimitados',
+    FEATURE_2: '1 carro nos resultados de pesquisa',
+    BASIC_PLAN: 'Plano básico',
+    BASIC_PLAN_PRICE: '$10/mês',
+    FEATURE_3: '5 carros nos resultados de pesquisa',
+    FEATURE_4: 'Suporte prioritário',
+    PREMIUM_PLAN: 'Plano premium',
+    CONTACT_US: 'Contacte-nos',
+    FEATURE_5: 'Carros ilimitados nos resultados de pesquisa',
+  },
 })
 
 langHelper.setLanguage(strings)

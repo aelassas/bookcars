@@ -30,6 +30,13 @@ const strings = new LocalizedStrings({
     ANDROID_AUTO: 'Android Auto',
     APPLE_CAR_PLAY: 'Apple CarPlay',
   },
+  pt: {
+    MULTIMEDIA: 'Multimédia',
+    TOUCHSCREEN: 'Ecrã tátil',
+    BLUETOOTH: 'Bluetooth',
+    ANDROID_AUTO: 'Android Auto',
+    APPLE_CAR_PLAY: 'Apple CarPlay',
+  },
 })
 
 langHelper.setLanguage(strings)

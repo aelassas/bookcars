@@ -30,6 +30,13 @@ const strings = new LocalizedStrings({
     SIGN_UP_SUCCESS_HEADING: 'Registrierung erfolgreich',
     SIGN_UP_SUCCESS_MESSAGE: 'Eine Aktivierungs-E-Mail wurde gesendet, sofern diese Adresse noch nicht registriert ist. Wenn Sie bereits ein Konto haben, melden Sie sich bitte an.',
   },
+  pt: {
+    SIGN_UP_HEADING: 'Registar',
+    SIGN_UP: 'Registar',
+    SIGN_UP_ERROR: 'Ocorreu um erro durante o registo.',
+    SIGN_UP_SUCCESS_HEADING: 'Registo efetuado com sucesso',
+    SIGN_UP_SUCCESS_MESSAGE: 'Foi enviado um e-mail de ativação, caso este endereço ainda não esteja registado. Se já tem uma conta, inicie sessão.',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -246,6 +246,69 @@ Wenn Sie Fragen zu dieser Datenschutzerklärung oder zu unseren Datenpraktiken h
 Durch die Nutzung unserer Dienste bestätigen Sie, dass Sie diese Datenschutzerklärung gelesen und verstanden haben und ihren Bedingungen zustimmen.
     `,
   },
+  pt: {
+    TITLE: 'Política de Privacidade',
+    PRIVACY_POLICY: `
+A sua privacidade é importante para nós na ${env.WEBSITE_NAME}. A presente Política de Privacidade descreve a forma como recolhemos, utilizamos e protegemos as suas informações quando utiliza o nosso website e os nossos serviços. Ao aceder aos nossos serviços, o utilizador consente nas práticas descritas na presente política.
+
+
+1. Informações que Recolhemos
+
+Recolhemos informações suas quando se regista no nosso website, efetua uma encomenda ou interage com os nossos serviços. As informações que podemos recolher incluem:
+
+Nome
+Endereço de correio eletrónico
+Número de telefone
+Informações de pagamento
+Preferências de aluguer
+Pode visitar o nosso website de forma anónima, mas determinadas funcionalidades poderão ficar limitadas.
+
+
+2. Como Utilizamos as Suas Informações
+
+As suas informações podem ser utilizadas das seguintes formas:
+
+Para processar as suas reservas e pagamentos
+Para melhorar o atendimento ao cliente
+Para enviar mensagens de correio eletrónico periódicas relativas à sua encomenda ou a outros produtos e serviços
+Para responder a pedidos de informação e de assistência
+
+
+3. Como Protegemos as Suas Informações
+
+Implementamos diversas medidas de segurança para manter a segurança dos seus dados pessoais. Todas as informações sensíveis são transmitidas através de servidores seguros e apenas são acessíveis a pessoal autorizado. Não armazenamos as informações do seu cartão de crédito nos nossos servidores.
+
+
+4. Partilha das Suas Informações
+
+Não vendemos, trocamos nem transferimos de outra forma os seus dados pessoais identificáveis a terceiros, exceto a parceiros de confiança que nos auxiliam na operação do nosso website, na condução da nossa atividade ou na prestação de serviços ao utilizador, desde que essas partes se comprometam a manter essas informações confidenciais. Podemos também divulgar as suas informações quando considerarmos que a divulgação é adequada para cumprir a lei, fazer cumprir as políticas do nosso website ou proteger os nossos direitos ou os direitos, a propriedade ou a segurança de terceiros.
+
+
+5. Privacidade das Crianças
+
+Cumprimos a Lei de Proteção da Privacidade das Crianças na Internet (COPPA). Os nossos serviços não se destinam a crianças com menos de 13 anos e não recolhemos intencionalmente dados pessoais de crianças com menos de 13 anos. Se tomarmos conhecimento de que recolhemos dados pessoais de uma criança com menos de 13 anos, tomaremos medidas para eliminar essas informações.
+
+
+6. Alterações à Nossa Política de Privacidade
+
+Podemos atualizar a presente Política de Privacidade periodicamente. Notificá-lo-emos de quaisquer alterações através da publicação da nova Política de Privacidade nesta página. Recomendamos que reveja periodicamente a presente Política de Privacidade para tomar conhecimento de eventuais alterações.
+
+
+7. Os Seus Direitos
+
+O utilizador tem o direito de solicitar o acesso aos dados pessoais que detemos sobre si, de solicitar a retificação de quaisquer inexatidões e de solicitar o apagamento dos seus dados pessoais, sem prejuízo de determinadas exceções. Para exercer estes direitos, contacte-nos através das informações indicadas abaixo.
+
+
+8. Contacte-nos
+
+Caso tenha alguma questão sobre a presente Política de Privacidade ou sobre as nossas práticas em matéria de dados, contacte-nos através do endereço ${env.CONTACT_EMAIL}. Comprometemo-nos a dar resposta às suas preocupações e a proteger a sua privacidade.
+
+
+9. Reconhecimento
+
+Ao utilizar os nossos serviços, o utilizador reconhece que leu e compreendeu a presente Política de Privacidade e concorda com os seus termos.
+    `,
+  },
 })
 
 langHelper.setLanguage(strings)

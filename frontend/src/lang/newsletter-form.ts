@@ -26,6 +26,12 @@ const strings = new LocalizedStrings({
     SUBSCRIBE: 'Abonnieren',
     SUCCESS: 'Anmeldung erfolgreich!',
   },
+  pt: {
+    TITLE: 'Subscrever',
+    SUB_TITLE: 'Subscreva a nossa lista de correio para receber as últimas novidades!',
+    SUBSCRIBE: 'Subscrever',
+    SUCCESS: 'Subscrição efetuada com sucesso!',
+  },
 })
 
 langHelper.setLanguage(strings)

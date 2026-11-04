@@ -38,6 +38,15 @@ const strings = new LocalizedStrings({
     PARKING_SPOTS: 'Parkplätze',
     PARENT_LOCATION: 'Übergeordneter Standort',
   },
+  pt: {
+    NEW_LOCATION_HEADING: 'Novo local',
+    LOCATION_NAME: 'Local',
+    INVALID_LOCATION: 'Este local já existe.',
+    LOCATION_CREATED: 'Local criado com sucesso.',
+    COUNTRY: 'País',
+    PARKING_SPOTS: 'Lugares de estacionamento',
+    PARENT_LOCATION: 'Local principal',
+  },
 })
 
 langHelper.setLanguage(strings)

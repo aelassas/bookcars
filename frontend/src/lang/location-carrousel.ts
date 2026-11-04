@@ -22,6 +22,11 @@ const strings = new LocalizedStrings({
     AVALIABLE_LOCATION: 'verfügbarer Standort',
     AVALIABLE_LOCATIONS: 'verfügbare Standorte',
   },
+  pt: {
+    SELECT_LOCATION: 'Selecionar local',
+    AVALIABLE_LOCATION: 'local disponível',
+    AVALIABLE_LOCATIONS: 'locais disponíveis',
+  },
 })
 
 langHelper.setLanguage(strings)

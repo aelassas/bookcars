@@ -27,6 +27,12 @@ const strings = new LocalizedStrings({
     SUPPLIER_IMAGE_SIZE_ERROR: `Das Bild muss das Format ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT} haben`,
     RECOMMENDED_IMAGE_SIZE: `Empfohlene Bildgröße: ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
   },
+  pt: {
+    CREATE_SUPPLIER_HEADING: 'Novo fornecedor',
+    INVALID_SUPPLIER_NAME: 'Este fornecedor já existe.',
+    SUPPLIER_IMAGE_SIZE_ERROR: `A imagem deve ter o formato ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+    RECOMMENDED_IMAGE_SIZE: `Tamanho de imagem recomendado: ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -34,6 +34,14 @@ const strings = new LocalizedStrings({
     SWIFT_BIC: 'SWIFT/BIC',
     SHOW_BANK_DETAILS_PAGE: 'Seite mit Bankverbindung anzeigen',
   },
+  pt: {
+    BANK_DETAILS: 'Dados bancários',
+    ACCOUNT_HOLDER: 'Titular da conta',
+    BANK_NAME: 'Nome do banco',
+    IBAN: 'IBAN',
+    SWIFT_BIC: 'SWIFT/BIC',
+    SHOW_BANK_DETAILS_PAGE: 'Mostrar a página de dados bancários',
+  },
 })
 
 langHelper.setLanguage(strings)

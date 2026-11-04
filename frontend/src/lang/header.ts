@@ -70,6 +70,23 @@ const strings = new LocalizedStrings({
     COOKIE_POLICY: 'Cookie-Richtlinie',
     NOTIFICATIONS: 'Benachrichtigungen',
   },
+  pt: {
+    SIGN_IN: 'Iniciar sessão',
+    HOME: 'Início',
+    BOOKINGS: 'Reservas',
+    ABOUT: 'Sobre',
+    TOS: 'Termos de Serviço',
+    CONTACT: 'Contacto',
+    LANGUAGE: 'Idioma',
+    SETTINGS: 'Definições',
+    SIGN_OUT: 'Terminar sessão',
+    SUPPLIERS: 'Fornecedores',
+    LOCATIONS: 'Localizações',
+    PRIVACY_POLICY: 'Política de Privacidade',
+    FAQ: 'Perguntas frequentes',
+    COOKIE_POLICY: 'Política de Cookies',
+    NOTIFICATIONS: 'Notificações',
+  },
 })
 
 langHelper.setLanguage(strings)

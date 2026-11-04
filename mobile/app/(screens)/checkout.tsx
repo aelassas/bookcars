@@ -815,8 +815,9 @@ const CheckoutScreen = () => {
   const _fr = bookcarsHelper.isFrench(language)
   const _es = language === 'es'
   const _de = language === 'de'
-  // Spanish, French and German use a 24h 'Day Month Year' structure
-  const _format = (_fr || _es || _de)
+  const _pt = language === 'pt'
+  // Spanish, French, German and Portuguese use a 24h 'Day Month Year' structure
+  const _format = (_fr || _es || _de || _pt)
     ? 'eee d LLL yyyy kk:mm'
     : 'eee, d LLL yyyy, p'
   const days = bookcarsHelper.days(__from, __to)

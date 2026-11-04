@@ -18,6 +18,10 @@ const strings = new LocalizedStrings({
     PICK_UP_LOCATION: 'Abholort',
     DROP_OFF_LOCATION: 'Rückgabeort',
   },
+  pt: {
+    PICK_UP_LOCATION: 'Local de levantamento',
+    DROP_OFF_LOCATION: 'Local de devolução',
+  },
 })
 
 langHelper.setLanguage(strings)

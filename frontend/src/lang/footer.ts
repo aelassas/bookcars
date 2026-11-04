@@ -69,6 +69,22 @@ const strings = new LocalizedStrings({
     FAQ: 'FAQ',
     COOKIE_POLICY: 'Cookie-Richtlinie',
   },
+  pt: {
+    COPYRIGHT_PART1,
+    COPYRIGHT_PART2: '. Todos os direitos reservados.',
+    CORPORATE: 'Institucional',
+    ABOUT: 'Sobre Nós',
+    TOS: 'Termos de Serviço',
+    RENT: 'Alugar um Carro',
+    SUPPLIERS: 'Fornecedores',
+    LOCATIONS: 'Localizações',
+    SUPPORT: 'Suporte',
+    CONTACT: 'Contacto',
+    SECURE_PAYMENT: `Pagamento 100% seguro com ${env.WEBSITE_NAME}`,
+    PRIVACY_POLICY: 'Política de Privacidade',
+    FAQ: 'Perguntas frequentes',
+    COOKIE_POLICY: 'Política de Cookies',
+  },
 })
 
 langHelper.setLanguage(strings)

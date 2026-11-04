@@ -197,6 +197,52 @@ Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte 
 Durch die Nutzung unserer Dienste bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen und verstanden haben und sich damit einverstanden erklären, an sie gebunden zu sein.
     `,
   },
+  pt: {
+    TITLE: 'Termos de Serviço',
+    TOS: `
+Bem-vindo à ${env.WEBSITE_NAME}! Ao aceder ao nosso website e ao utilizar os nossos serviços, o utilizador concorda em cumprir os seguintes Termos de Serviço e em ficar vinculado aos mesmos. Caso não concorde com estes termos, não utilize os nossos serviços.
+
+1. Aceitação dos Termos
+
+Ao aceder ou utilizar os nossos serviços, o utilizador confirma que leu, compreendeu e aceita estes Termos de Serviço e a nossa Política de Privacidade.
+
+2. Utilização dos Nossos Serviços
+
+O utilizador compromete-se a utilizar os nossos serviços apenas para fins lícitos e de uma forma que não viole os direitos de terceiros nem restrinja ou iniba a utilização dos nossos serviços por parte de terceiros. Tal inclui o cumprimento de todas as leis e regulamentos aplicáveis.
+
+3. Reservas e Pagamentos
+
+Ao efetuar uma reserva com a ${env.WEBSITE_NAME}, o utilizador compromete-se a fornecer informações exatas e completas. Todos os pagamentos devem ser efetuados através do nosso sistema de pagamento seguro. Uma vez concluído o pagamento, receberá uma confirmação da sua reserva.
+
+4. Política de Cancelamento
+
+Os cancelamentos efetuados com 24 horas de antecedência relativamente à data de aluguer podem dar direito a reembolso integral. Os cancelamentos efetuados com menos de 24 horas de antecedência relativamente à data de aluguer podem estar sujeitos a uma taxa de cancelamento. Consulte a nossa política de cancelamento para obter informações detalhadas.
+
+5. Condições de Aluguer
+
+Todos os alugueres estão sujeitos às nossas condições de aluguer, que incluem, entre outras, restrições de idade, requisitos relativos à carta de condução e obrigações em matéria de seguro. O utilizador é responsável por garantir que cumpre todos os requisitos antes de efetuar uma reserva.
+
+6. Limitação de Responsabilidade
+
+A ${env.WEBSITE_NAME} não será responsável por quaisquer danos indiretos, acidentais ou consequenciais decorrentes da sua utilização dos nossos serviços. Em caso algum a nossa responsabilidade total excederá o montante pago pelo utilizador pelos serviços.
+
+7. Alterações aos Termos
+
+Reservamo-nos o direito de alterar estes Termos de Serviço a qualquer momento. Quaisquer alterações produzem efeitos imediatamente após a sua publicação no nosso website. A continuação da utilização dos nossos serviços após quaisquer alterações constitui a aceitação dos novos termos.
+
+8. Lei Aplicável
+
+Os presentes Termos de Serviço são regidos e interpretados em conformidade com a lei aplicável. Quaisquer litígios decorrentes destes termos serão resolvidos nos tribunais.
+
+9. Informações de Contacto
+
+Caso tenha alguma questão relativa a estes Termos de Serviço, contacte-nos através do endereço ${env.CONTACT_EMAIL}. Estamos ao seu dispor para o ajudar em qualquer pedido de informação relacionado com os nossos serviços.
+
+10. Reconhecimento
+
+Ao utilizar os nossos serviços, o utilizador reconhece que leu e compreendeu estes Termos de Serviço e concorda em ficar vinculado aos mesmos.
+    `,
+  },
 })
 
 langHelper.setLanguage(strings)
