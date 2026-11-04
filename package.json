@@ -35,9 +35,9 @@
     "clean:dev": "npm --prefix backend run clean:dev"
   },
   "devDependencies": {
-    "chalk": "^5.4.1",
+    "chalk": "^6.0.1",
     "eslint": "^9.27.0",
     "husky": "^9.1.7",
-    "p-limit": "^6.2.0"
+    "p-limit": "^7.3.3"
   }
 }
