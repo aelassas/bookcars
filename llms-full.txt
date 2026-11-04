@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-11-04T08:18:01Z
+> Generated on: 2026-11-04T09:31:55Z
 
 ---
 
@@ -55,6 +55,7 @@ BookCars comes with built-in support for the following languages:
 | French   | `fr` | Français |
 | Spanish  | `es` | Español  |
 | German   | `de` | Deutsch  |
+| Portuguese (european) | `pt` | Português |
 
 English is the default language (`DEFAULT_LANGUAGE`, configurable with `VITE_BC_DEFAULT_LANGUAGE` in the Admin Panel and Frontend, and `BC_DEFAULT_LANGUAGE` in the Backend and Mobile App). The Mobile App uses the device language when it is supported, otherwise the default language.
 
