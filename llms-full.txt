@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-11-03T21:20:35Z
+> Generated on: 2026-11-04T08:18:01Z
 
 ---
 
@@ -1062,7 +1062,7 @@ Customers can register through the web frontend or mobile app, search for availa
 ### User Experience
 * Customer management
 * [Multiple login options](https://github.com/aelassas/bookcars/wiki/Social-Login-Setup): Google, Facebook, Apple, Email
-* Multiple language support: English, French, Spanish
+* Multiple language support: English, French, German, Spanish
 * [Multiple currencies support](https://github.com/aelassas/bookcars/wiki/Add-New-Currency)
 * Multiple pagination styles: classic (next/previous), infinite scroll
 * Push notifications
