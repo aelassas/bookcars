@@ -22,6 +22,18 @@ const strings = new LocalizedStrings({
     SHOW_FILTERS: 'Mostrar filtros',
     HILE_FILTERS: 'Ocultar filtros',
   },
+  it: {
+    SHOW_FILTERS: 'Mostra filtri',
+    HILE_FILTERS: 'Nascondi filtri',
+  },
+  zh: {
+    SHOW_FILTERS: '显示筛选',
+    HILE_FILTERS: '隐藏筛选',
+  },
+  ja: {
+    SHOW_FILTERS: 'フィルターを表示',
+    HILE_FILTERS: 'フィルターを非表示',
+  },
 })
 
 langHelper.setLanguage(strings)

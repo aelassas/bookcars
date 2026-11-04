@@ -47,6 +47,33 @@ const strings = new LocalizedStrings({
     INVALID_PICK_UP_TIME: 'Hora de levantamento inválida',
     INVALID_DROP_OFF_TIME: 'Hora de devolução inválida',
   },
+  it: {
+    PICK_UP_DATE: 'Data di ritiro',
+    DROP_OFF_DATE: 'Data di riconsegna',
+    DROP_OFF: 'Riconsegna nella stessa sede',
+    MIN_PICK_UP_HOURS_ERROR: "L'orario di ritiro deve essere almeno qualche ora nel futuro",
+    MIN_RENTAL_HOURS_ERROR: 'La durata del noleggio è troppo breve',
+    INVALID_PICK_UP_TIME: 'Orario di ritiro non valido',
+    INVALID_DROP_OFF_TIME: 'Orario di riconsegna non valido',
+  },
+  zh: {
+    PICK_UP_DATE: '取车日期',
+    DROP_OFF_DATE: '还车日期',
+    DROP_OFF: '在同一地点还车',
+    MIN_PICK_UP_HOURS_ERROR: '取车时间必须至少在几小时之后',
+    MIN_RENTAL_HOURS_ERROR: '租期过短',
+    INVALID_PICK_UP_TIME: '取车时间无效',
+    INVALID_DROP_OFF_TIME: '还车时间无效',
+  },
+  ja: {
+    PICK_UP_DATE: '受取日',
+    DROP_OFF_DATE: '返却日',
+    DROP_OFF: '同じ場所に返却',
+    MIN_PICK_UP_HOURS_ERROR: '受取時刻は、現在から数時間以上先に設定してください',
+    MIN_RENTAL_HOURS_ERROR: 'レンタル期間が短すぎます',
+    INVALID_PICK_UP_TIME: '受取時刻が無効です',
+    INVALID_DROP_OFF_TIME: '返却時刻が無効です',
+  },
 })
 
 langHelper.setLanguage(strings)

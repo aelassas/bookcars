@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     RECAPTCHA_ERROR: 'Preencha o captcha para continuar.',
     SIGN_UP_ERROR: 'Ocorreu um erro durante o registo.',
   },
+  it: {
+    SIGN_UP_HEADING: 'Registrati',
+    TOS_SIGN_UP: 'Ho letto e accetto i Termini di utilizzo.',
+    SIGN_UP: 'Registrati',
+    RECAPTCHA_ERROR: 'Completa il captcha per continuare.',
+    SIGN_UP_ERROR: 'Si è verificato un errore durante la registrazione.',
+  },
+  zh: {
+    SIGN_UP_HEADING: '注册',
+    TOS_SIGN_UP: '我已阅读并同意使用条款。',
+    SIGN_UP: '注册',
+    RECAPTCHA_ERROR: '请完成验证码以继续。',
+    SIGN_UP_ERROR: '注册时出错。',
+  },
+  ja: {
+    SIGN_UP_HEADING: '新規登録',
+    TOS_SIGN_UP: '利用規約を読み、同意します。',
+    SIGN_UP: '新規登録',
+    RECAPTCHA_ERROR: '続行するにはCAPTCHAを完了してください。',
+    SIGN_UP_ERROR: '登録中にエラーが発生しました。',
+  },
 })
 
 langHelper.setLanguage(strings)

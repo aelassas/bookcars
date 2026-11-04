@@ -467,6 +467,12 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
  * @returns {string}
  */
 export const getDaysPluralSuffix = (language: string, days: number) => {
+  if (language === 'zh' || language === 'ja') {
+    return ''
+  }
+  if (language === 'it') {
+    return days <= 1 ? 'o' : 'i'
+  }
   if (days <= 1) {
     return ''
   }

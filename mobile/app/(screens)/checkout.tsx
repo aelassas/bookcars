@@ -820,14 +820,7 @@ const CheckoutScreen = () => {
 
   const iconSize = 18
   const iconColor = '#000'
-  const _fr = bookcarsHelper.isFrench(language)
-  const _es = language === 'es'
-  const _de = language === 'de'
-  const _pt = language === 'pt'
-  // Spanish, French, German and Portuguese use a 24h 'Day Month Year' structure
-  const _format = (_fr || _es || _de || _pt)
-    ? 'eee d LLL yyyy kk:mm'
-    : 'eee, d LLL yyyy, p'
+  const _format = helper.getDateTimeFormat(language)
   const days = bookcarsHelper.days(__from, __to)
 
   return (

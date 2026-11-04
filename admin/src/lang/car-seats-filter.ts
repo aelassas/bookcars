@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     FIVE: '5 lugares',
     FIVE_PLUS: '5+ lugares',
   },
+  it: {
+    SEATS: 'Posti',
+    TWO: '2 posti',
+    FOUR: '4 posti',
+    FIVE: '5 posti',
+    FIVE_PLUS: '5+ posti',
+  },
+  zh: {
+    SEATS: '座位数',
+    TWO: '2 座',
+    FOUR: '4 座',
+    FIVE: '5 座',
+    FIVE_PLUS: '5 座以上',
+  },
+  ja: {
+    SEATS: '座席数',
+    TWO: '2人乗り',
+    FOUR: '4人乗り',
+    FIVE: '5人乗り',
+    FIVE_PLUS: '5人乗り以上',
+  },
 })
 
 langHelper.setLanguage(strings)

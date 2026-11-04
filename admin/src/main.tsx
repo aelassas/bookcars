@@ -4,9 +4,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ToastContainer } from 'react-toastify'
 
-import { frFR as corefrFR, enUS as coreenUS, esES as coresES, deDE as coredeDE, ptPT as coreptPT } from '@mui/material/locale'
-import { frFR, enUS, esES, deDE, ptPT } from '@mui/x-date-pickers/locales'
-import { frFR as dataGridfrFR, enUS as dataGridenUS, esES as dataGridesEs, deDE as dataGriddeDE, ptPT as dataGridptPT } from '@mui/x-data-grid/locales'
+import { frFR as corefrFR, enUS as coreenUS, esES as coresES, deDE as coredeDE, ptPT as coreptPT, itIT as coreitIT, zhCN as corezhCN, jaJP as corejaJP } from '@mui/material/locale'
+import { frFR, enUS, esES, deDE, ptPT, itIT, zhCN, jaJP } from '@mui/x-date-pickers/locales'
+import { frFR as dataGridfrFR, enUS as dataGridenUS, esES as dataGridesEs, deDE as dataGriddeDE, ptPT as dataGridptPT, itIT as dataGriditIT, zhCN as dataGridzhCN, jaJP as dataGridjaJP } from '@mui/x-data-grid/locales'
 import { disableDevTools } from ':disable-react-devtools'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
@@ -72,7 +72,10 @@ const muiLocales = {
   es: { pickers: esES, dataGrid: dataGridesEs, core: coresES },
   de: { pickers: deDE, dataGrid: dataGriddeDE, core: coredeDE },
   pt: { pickers: ptPT, dataGrid: dataGridptPT, core: coreptPT },
-}
+    it: { pickers: itIT, dataGrid: dataGriditIT, core: coreitIT },
+    zh: { pickers: zhCN, dataGrid: dataGridzhCN, core: corezhCN },
+    ja: { pickers: jaJP, dataGrid: dataGridjaJP, core: corejaJP },
+  }
 const muiLocale = muiLocales[language as keyof typeof muiLocales] ?? muiLocales.en
 
 const theme = createTheme(

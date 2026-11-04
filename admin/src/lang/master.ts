@@ -32,6 +32,24 @@ const strings = new LocalizedStrings({
     VALIDATION_EMAIL_SENT: 'E-mail de validação enviado.',
     VALIDATION_EMAIL_ERROR: 'Ocorreu um erro ao enviar o e-mail de validação.',
   },
+  it: {
+    VALIDATE_EMAIL: "Abbiamo inviato un'e-mail di convalida al tuo indirizzo e-mail. Controlla la tua casella di posta e convalida il tuo account facendo clic sul link contenuto nell'e-mail. Il link scadrà dopo un giorno. Se non hai ricevuto l'e-mail di convalida, fai clic su Invia di nuovo.",
+    RESEND: 'Invia di nuovo',
+    VALIDATION_EMAIL_SENT: 'E-mail di convalida inviata.',
+    VALIDATION_EMAIL_ERROR: "Si è verificato un errore durante l'invio dell'e-mail di convalida.",
+  },
+  zh: {
+    VALIDATE_EMAIL: '验证邮件已发送至您的邮箱。请查收邮件并点击邮件中的链接验证您的账户。该链接将在一天后失效。如果您没有收到验证邮件，请点击“重新发送”。',
+    RESEND: '重新发送',
+    VALIDATION_EMAIL_SENT: '验证邮件已发送。',
+    VALIDATION_EMAIL_ERROR: '发送验证邮件时出错。',
+  },
+  ja: {
+    VALIDATE_EMAIL: '確認メールをご登録のメールアドレスに送信しました。メールボックスをご確認のうえ、メール内のリンクをクリックしてアカウントを認証してください。リンクの有効期限は1日です。確認メールが届かない場合は、「再送信」をクリックしてください。',
+    RESEND: '再送信',
+    VALIDATION_EMAIL_SENT: '確認メールを送信しました。',
+    VALIDATION_EMAIL_ERROR: '確認メールの送信中にエラーが発生しました。',
+  },
 })
 
 langHelper.setLanguage(strings)

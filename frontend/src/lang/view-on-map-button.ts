@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     VIEW_ON_MAP: 'Ver no mapa',
   },
+  it: {
+    VIEW_ON_MAP: 'Visualizza sulla mappa',
+  },
+  zh: {
+    VIEW_ON_MAP: '在地图上查看',
+  },
+  ja: {
+    VIEW_ON_MAP: '地図で見る',
+  },
 })
 
 langHelper.setLanguage(strings)

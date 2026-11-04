@@ -42,6 +42,30 @@ const strings = new LocalizedStrings({
     RESET_PASSWORD: 'Esqueceu-se da palavra-passe?',
     STAY_CONNECTED: 'Manter sessão iniciada',
   },
+  it: {
+    SIGN_IN_HEADING: 'Accedi',
+    SIGN_IN: 'Accedi',
+    ERROR_IN_SIGN_IN: 'E-mail o password non corretta.',
+    IS_BLACKLISTED: 'Il tuo account è sospeso.',
+    RESET_PASSWORD: 'Password dimenticata?',
+    STAY_CONNECTED: 'Resta connesso',
+  },
+  zh: {
+    SIGN_IN_HEADING: '登录',
+    SIGN_IN: '登录',
+    ERROR_IN_SIGN_IN: '邮箱或密码不正确。',
+    IS_BLACKLISTED: '您的账户已被停用。',
+    RESET_PASSWORD: '忘记密码？',
+    STAY_CONNECTED: '保持登录状态',
+  },
+  ja: {
+    SIGN_IN_HEADING: 'ログイン',
+    SIGN_IN: 'ログイン',
+    ERROR_IN_SIGN_IN: 'メールアドレスまたはパスワードが正しくありません。',
+    IS_BLACKLISTED: 'アカウントが停止されています。',
+    RESET_PASSWORD: 'パスワードをお忘れですか？',
+    STAY_CONNECTED: 'ログイン状態を保持する',
+  },
 })
 
 langHelper.setLanguage(strings)

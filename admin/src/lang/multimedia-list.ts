@@ -32,6 +32,24 @@ const strings = new LocalizedStrings({
     BLUETOOTH: 'Bluetooth',
     TOUCHSCREEN: 'Ecrã tátil',
   },
+  it: {
+    ANDROID_AUTO: 'Android Auto',
+    APPLE_CAR_PLAY: 'Apple Car Play',
+    BLUETOOTH: 'Bluetooth',
+    TOUCHSCREEN: 'Touchscreen',
+  },
+  zh: {
+    ANDROID_AUTO: 'Android Auto',
+    APPLE_CAR_PLAY: 'Apple Car Play',
+    BLUETOOTH: '蓝牙',
+    TOUCHSCREEN: '触摸屏',
+  },
+  ja: {
+    ANDROID_AUTO: 'Android Auto',
+    APPLE_CAR_PLAY: 'Apple Car Play',
+    BLUETOOTH: 'Bluetooth',
+    TOUCHSCREEN: 'タッチスクリーン',
+  },
 })
 
 langHelper.setLanguage(strings)

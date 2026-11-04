@@ -43,7 +43,7 @@ describe('Test database initialization', () => {
 
     const lv1 = new LocationValue({ language: 'en', value: 'location' })
     await lv1.save()
-    const lv2 = new LocationValue({ language: 'it', value: 'posizione' })
+    const lv2 = new LocationValue({ language: 'ru', value: 'местоположение' })
     await lv2.save()
     const l1 = new Location({ country: testHelper.GetRandromObjectIdAsString(), values: [lv1._id, lv2._id] })
     await l1.save()
@@ -52,13 +52,13 @@ describe('Test database initialization', () => {
 
     // test batch deletion pf unsupported languages
     for (let i = 0; i < 1050; i++) {
-      const lv2 = new LocationValue({ language: 'it', value: 'posizione' })
+      const lv2 = new LocationValue({ language: 'ru', value: 'местоположение' })
       await lv2.save()
     }
 
     const cv1 = new LocationValue({ language: 'en', value: 'country' })
     await cv1.save()
-    const cv2 = new LocationValue({ language: 'it', value: 'paese' })
+    const cv2 = new LocationValue({ language: 'ru', value: 'страна' })
     await cv2.save()
     const c1 = new Country({ values: [cv1._id, cv2._id] })
     await c1.save()
@@ -67,7 +67,7 @@ describe('Test database initialization', () => {
 
     const pv1 = new LocationValue({ language: 'en', value: 'parking' })
     await pv1.save()
-    const pv2 = new LocationValue({ language: 'it', value: 'parcheggio' })
+    const pv2 = new LocationValue({ language: 'ru', value: 'парковка' })
     await pv2.save()
     const ps1 = new ParkingSpot({ latitude: 1, longitude: 1, values: [pv1._id, pv2._id] })
     await ps1.save()

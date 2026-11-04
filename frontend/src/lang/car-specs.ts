@@ -32,6 +32,24 @@ const strings = new LocalizedStrings({
     MORE_THAN_FOOR_DOORS: '4+ portas',
     MORE_THAN_FIVE_SEATS: '5+ lugares',
   },
+  it: {
+    CAR_SPECS: 'Caratteristiche del veicolo',
+    AIRCON: 'Aria condizionata',
+    MORE_THAN_FOOR_DOORS: '4+ porte',
+    MORE_THAN_FIVE_SEATS: '5+ posti',
+  },
+  zh: {
+    CAR_SPECS: '车辆规格',
+    AIRCON: '空调',
+    MORE_THAN_FOOR_DOORS: '4 门以上',
+    MORE_THAN_FIVE_SEATS: '5 座以上',
+  },
+  ja: {
+    CAR_SPECS: '車両スペック',
+    AIRCON: 'エアコン',
+    MORE_THAN_FOOR_DOORS: '4ドア以上',
+    MORE_THAN_FIVE_SEATS: '5席以上',
+  },
 })
 
 langHelper.setLanguage(strings)

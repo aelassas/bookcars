@@ -33,6 +33,24 @@ const strings = new LocalizedStrings({
     SUPPLIER_IMAGE_SIZE_ERROR: `A imagem deve ter o formato ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Tamanho de imagem recomendado: ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
   },
+  it: {
+    CREATE_SUPPLIER_HEADING: 'Nuovo fornitore',
+    INVALID_SUPPLIER_NAME: 'Questo fornitore esiste già.',
+    SUPPLIER_IMAGE_SIZE_ERROR: `L'immagine deve avere il formato ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+    RECOMMENDED_IMAGE_SIZE: `Dimensione immagine consigliata: ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+  },
+  zh: {
+    CREATE_SUPPLIER_HEADING: '新增供应商',
+    INVALID_SUPPLIER_NAME: '该供应商已存在。',
+    SUPPLIER_IMAGE_SIZE_ERROR: `图片尺寸必须为 ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+    RECOMMENDED_IMAGE_SIZE: `建议图片尺寸：${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+  },
+  ja: {
+    CREATE_SUPPLIER_HEADING: '新しいサプライヤー',
+    INVALID_SUPPLIER_NAME: 'このサプライヤーは既に存在します。',
+    SUPPLIER_IMAGE_SIZE_ERROR: `画像のサイズは ${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT} にしてください`,
+    RECOMMENDED_IMAGE_SIZE: `推奨画像サイズ：${env.SUPPLIER_IMAGE_WIDTH}x${env.SUPPLIER_IMAGE_HEIGHT}`,
+  },
 })
 
 langHelper.setLanguage(strings)

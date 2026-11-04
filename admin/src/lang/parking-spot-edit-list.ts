@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     NEW_PARKING_SPOT: 'Novo lugar de estacionamento',
   },
+  it: {
+    NEW_PARKING_SPOT: 'Nuovo posto auto',
+  },
+  zh: {
+    NEW_PARKING_SPOT: '新建停车位',
+  },
+  ja: {
+    NEW_PARKING_SPOT: '新規駐車スペース',
+  },
 })
 
 langHelper.setLanguage(strings)

@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     UPDATE_USER_HEADING: 'Atualização do utilizador',
   },
+  it: {
+    UPDATE_USER_HEADING: "Modifica dell'utente",
+  },
+  zh: {
+    UPDATE_USER_HEADING: '更新用户',
+  },
+  ja: {
+    UPDATE_USER_HEADING: 'ユーザーの更新',
+  },
 })
 
 langHelper.setLanguage(strings)

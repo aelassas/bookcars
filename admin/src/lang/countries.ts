@@ -42,6 +42,30 @@ const strings = new LocalizedStrings({
     COUNTRY: 'país',
     COUNTRIES: 'países',
   },
+  it: {
+    NEW_COUNTRY: 'Nuovo paese',
+    DELETE_COUNTRY: 'Sei sicuro di voler eliminare questo paese?',
+    CANNOT_DELETE_COUNTRY: 'Questo paese non può essere eliminato perché è collegato a delle sedi.',
+    EMPTY_LIST: 'Nessun paese.',
+    COUNTRY: 'paese',
+    COUNTRIES: 'paesi',
+  },
+  zh: {
+    NEW_COUNTRY: '新增国家',
+    DELETE_COUNTRY: '您确定要删除这个国家吗？',
+    CANNOT_DELETE_COUNTRY: '该国家已关联地点，无法删除。',
+    EMPTY_LIST: '暂无国家。',
+    COUNTRY: '国家',
+    COUNTRIES: '国家',
+  },
+  ja: {
+    NEW_COUNTRY: '新しい国',
+    DELETE_COUNTRY: 'この国を削除してもよろしいですか？',
+    CANNOT_DELETE_COUNTRY: 'この国は拠点に関連付けられているため削除できません。',
+    EMPTY_LIST: '国がありません。',
+    COUNTRY: '国',
+    COUNTRIES: '国',
+  },
 })
 
 langHelper.setLanguage(strings)

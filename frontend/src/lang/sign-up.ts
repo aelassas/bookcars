@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     SIGN_UP_SUCCESS_HEADING: 'Registo efetuado com sucesso',
     SIGN_UP_SUCCESS_MESSAGE: 'Foi enviado um e-mail de ativação, caso este endereço ainda não esteja registado. Se já tem uma conta, inicie sessão.',
   },
+  it: {
+    SIGN_UP_HEADING: 'Registrati',
+    SIGN_UP: 'Registrati',
+    SIGN_UP_ERROR: 'Si è verificato un errore durante la registrazione.',
+    SIGN_UP_SUCCESS_HEADING: 'Registrazione completata',
+    SIGN_UP_SUCCESS_MESSAGE: "Se questo indirizzo non è già registrato, è stata inviata un'e-mail di attivazione. Se hai già un account, effettua l'accesso.",
+  },
+  zh: {
+    SIGN_UP_HEADING: '注册',
+    SIGN_UP: '注册',
+    SIGN_UP_ERROR: '注册时出错。',
+    SIGN_UP_SUCCESS_HEADING: '注册成功',
+    SIGN_UP_SUCCESS_MESSAGE: '如果该邮箱地址尚未注册，我们已向其发送激活邮件。如果您已有账户，请直接登录。',
+  },
+  ja: {
+    SIGN_UP_HEADING: '新規登録',
+    SIGN_UP: '新規登録',
+    SIGN_UP_ERROR: '登録中にエラーが発生しました。',
+    SIGN_UP_SUCCESS_HEADING: '登録が完了しました',
+    SIGN_UP_SUCCESS_MESSAGE: 'このメールアドレスが未登録の場合、アクティベーションメールを送信しました。すでにアカウントをお持ちの場合は、ログインしてください。',
+  },
 })
 
 langHelper.setLanguage(strings)

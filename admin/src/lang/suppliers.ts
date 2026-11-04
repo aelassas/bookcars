@@ -27,6 +27,21 @@ const strings = new LocalizedStrings({
     SUPPLIER: 'fornecedor',
     SUPPLIERS: 'fornecedores',
   },
+  it: {
+    NEW_SUPPLIER: 'Nuovo fornitore',
+    SUPPLIER: 'fornitore',
+    SUPPLIERS: 'fornitori',
+  },
+  zh: {
+    NEW_SUPPLIER: '新建供应商',
+    SUPPLIER: '供应商',
+    SUPPLIERS: '供应商',
+  },
+  ja: {
+    NEW_SUPPLIER: '新規サプライヤー',
+    SUPPLIER: 'サプライヤー',
+    SUPPLIERS: 'サプライヤー',
+  },
 })
 
 langHelper.setLanguage(strings)

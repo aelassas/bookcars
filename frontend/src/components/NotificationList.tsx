@@ -53,7 +53,14 @@ const NotificationList = ({ user }: NotificationListProps) => {
   const notificationsListRef = useRef<HTMLDivElement>(null)
 
   const _locale = getDateLocale(user?.language)
-  const _format = user?.language === 'fr' || user?.language === 'de' || user?.language === 'pt' ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
+  const _format = ({
+    fr: 'eee d LLLL, kk:mm',
+    de: 'eee d LLLL, kk:mm',
+    pt: 'eee d LLLL, kk:mm',
+    it: 'eee d LLLL, kk:mm',
+    zh: 'M月d日 eee HH:mm',
+    ja: 'M月d日 eee HH:mm',
+  } as Record<string, string>)[user?.language ?? ''] || 'eee, d LLLL, kk:mm'
 
   const fetch = useCallback(async () => {
     if (user && user._id) {

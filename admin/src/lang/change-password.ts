@@ -52,6 +52,36 @@ const strings = new LocalizedStrings({
     PASSWORD_UPDATE_ERROR: 'Ocorreu um erro ao atualizar a palavra-passe.',
     PASSWORD_UPDATE: 'Palavra-passe alterada com sucesso.',
   },
+  it: {
+    CHANGE_PASSWORD_HEADING: 'Modifica della password',
+    CURRENT_PASSWORD: 'Password attuale',
+    YOUR_PASSWORD: 'La tua password',
+    CURRENT_PASSWORD_ERROR: 'Password errata',
+    NEW_PASSWORD: 'Nuova password',
+    NEW_PASSWORD_ERROR: 'Scegli una nuova password',
+    PASSWORD_UPDATE_ERROR: 'Si è verificato un errore durante l\'aggiornamento della password.',
+    PASSWORD_UPDATE: 'Password modificata con successo.',
+  },
+  zh: {
+    CHANGE_PASSWORD_HEADING: '修改密码',
+    CURRENT_PASSWORD: '当前密码',
+    YOUR_PASSWORD: '您的密码',
+    CURRENT_PASSWORD_ERROR: '密码错误',
+    NEW_PASSWORD: '新密码',
+    NEW_PASSWORD_ERROR: '请设置新密码',
+    PASSWORD_UPDATE_ERROR: '更新密码时出错。',
+    PASSWORD_UPDATE: '密码修改成功。',
+  },
+  ja: {
+    CHANGE_PASSWORD_HEADING: 'パスワードの変更',
+    CURRENT_PASSWORD: '現在のパスワード',
+    YOUR_PASSWORD: 'あなたのパスワード',
+    CURRENT_PASSWORD_ERROR: 'パスワードが正しくありません',
+    NEW_PASSWORD: '新しいパスワード',
+    NEW_PASSWORD_ERROR: '新しいパスワードを設定してください',
+    PASSWORD_UPDATE_ERROR: 'パスワードの更新中にエラーが発生しました。',
+    PASSWORD_UPDATE: 'パスワードを変更しました。',
+  },
 })
 
 langHelper.setLanguage(strings)

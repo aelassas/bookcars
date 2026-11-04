@@ -1,5 +1,5 @@
 import type { Locale } from 'date-fns'
-import { de, enUS, es, fr, pt } from 'date-fns/locale'
+import { de, enUS, es, fr, it, ja, pt, zhCN } from 'date-fns/locale'
 
 /**
  * Get date-fns locale from language code.
@@ -17,6 +17,12 @@ export const getDateLocale = (language?: string): Locale => {
       return de
     case 'pt':
       return pt
+    case 'it':
+      return it
+    case 'zh':
+      return zhCN
+    case 'ja':
+      return ja
     case 'en':
     default:
       return enUS

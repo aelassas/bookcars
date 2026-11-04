@@ -1,7 +1,7 @@
 import type { Locale } from 'date-fns'
-import { fr, enUS, es, de, pt } from 'date-fns/locale'
+import { fr, enUS, es, de, pt, it, zhCN, ja } from 'date-fns/locale'
 
-const locales: Record<string, Locale> = { fr, es, de, pt }
+const locales: Record<string, Locale> = { fr, es, de, pt, it, zh: zhCN, ja }
 
 /**
  * Get date-fns locale from language code.

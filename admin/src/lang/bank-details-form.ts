@@ -42,6 +42,30 @@ const strings = new LocalizedStrings({
     SWIFT_BIC: 'SWIFT/BIC',
     SHOW_BANK_DETAILS_PAGE: 'Mostrar a página de dados bancários',
   },
+  it: {
+    BANK_DETAILS: 'Dati bancari',
+    ACCOUNT_HOLDER: 'Intestatario del conto',
+    BANK_NAME: 'Nome della banca',
+    IBAN: 'IBAN',
+    SWIFT_BIC: 'SWIFT/BIC',
+    SHOW_BANK_DETAILS_PAGE: 'Mostra la pagina dei dati bancari',
+  },
+  zh: {
+    BANK_DETAILS: '银行信息',
+    ACCOUNT_HOLDER: '账户持有人',
+    BANK_NAME: '银行名称',
+    IBAN: 'IBAN',
+    SWIFT_BIC: 'SWIFT/BIC',
+    SHOW_BANK_DETAILS_PAGE: '显示银行信息页面',
+  },
+  ja: {
+    BANK_DETAILS: '銀行口座情報',
+    ACCOUNT_HOLDER: '口座名義人',
+    BANK_NAME: '銀行名',
+    IBAN: 'IBAN',
+    SWIFT_BIC: 'SWIFT/BIC',
+    SHOW_BANK_DETAILS_PAGE: '銀行口座情報ページを表示',
+  },
 })
 
 langHelper.setLanguage(strings)

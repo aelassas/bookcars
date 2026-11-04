@@ -123,6 +123,9 @@ const Checkout = () => {
     es: 'eee, d LLLL yyyy HH:mm',
     de: 'eee, d LLL yyyy HH:mm',
     pt: 'eee, d LLL yyyy HH:mm',
+    it: 'eee, d LLL yyyy HH:mm',
+    zh: 'yyyy年M月d日 eee HH:mm',
+    ja: 'yyyy年M月d日 eee HH:mm',
   }
   const _format = dateFormats[language] || 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10

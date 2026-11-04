@@ -27,6 +27,21 @@ const strings = new LocalizedStrings({
     VIEW_SUPPLIER: 'Ver perfil do fornecedor',
     DELETE_SUPPLIER: 'Tem a certeza de que pretende eliminar este fornecedor e todos os seus dados?',
   },
+  it: {
+    EMPTY_LIST: 'Nessun fornitore.',
+    VIEW_SUPPLIER: 'Visualizza il profilo del fornitore',
+    DELETE_SUPPLIER: 'Sei sicuro di voler eliminare questo fornitore e tutti i suoi dati?',
+  },
+  zh: {
+    EMPTY_LIST: '暂无供应商。',
+    VIEW_SUPPLIER: '查看供应商资料',
+    DELETE_SUPPLIER: '您确定要删除此供应商及其所有数据吗？',
+  },
+  ja: {
+    EMPTY_LIST: 'サプライヤーはありません。',
+    VIEW_SUPPLIER: 'サプライヤーのプロフィールを表示',
+    DELETE_SUPPLIER: 'このサプライヤーとそのすべてのデータを削除してもよろしいですか？',
+  },
 })
 
 langHelper.setLanguage(strings)

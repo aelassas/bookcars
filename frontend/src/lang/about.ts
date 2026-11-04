@@ -48,6 +48,33 @@ const strings = new LocalizedStrings({
     CONTENT2: 'Desfrute de uma comodidade, fiabilidade e qualidade inigualáveis com o nosso serviço de aluguer de automóveis de excelência. Desde reservas sem esforço a veículos de alta qualidade, somos o seu parceiro de viagem de confiança.',
     FIND_DEAL: 'Encontrar oferta',
   },
+  it: {
+    TITLE1: `${env.WEBSITE_NAME} - Il tuo servizio di noleggio auto d'eccellenza`,
+    SUBTITLE1: 'Il tuo partner di fiducia per il noleggio auto',
+    CONTENT1: `In ${env.WEBSITE_NAME} sappiamo che ogni viaggio è unico. Ci impegniamo a offrire ai nostri clienti una selezione diversificata di veicoli che soddisfano ogni esigenza di viaggio. Che tu stia esplorando una città, viaggiando per lavoro o cercando l'avventura, i nostri affidabili servizi di noleggio auto garantiscono che la tua avventura inizi senza intoppi. La nostra missione è offrire un servizio clienti eccezionale, rendendo la tua esperienza piacevole e senza stress. Con tariffe competitive, una vasta scelta di veicoli ben mantenuti e un team dedicato pronto ad assisterti, ci impegniamo a essere il tuo partner di fiducia su strada. Scegli ${env.WEBSITE_NAME} per tutte le tue esigenze di noleggio auto e scopri la libertà di esplorare al tuo ritmo.`,
+    TITLE2: `Perché scegliere ${env.WEBSITE_NAME}`,
+    SUBTITLE2: 'Vivi l\'eccellenza in ogni viaggio',
+    CONTENT2: 'Goditi comodità, affidabilità e convenienza senza pari con il nostro servizio di noleggio auto di alto livello. Dalle prenotazioni semplici ai veicoli di alta qualità, siamo il tuo partner di viaggio di fiducia.',
+    FIND_DEAL: 'Trova un\'offerta',
+  },
+  zh: {
+    TITLE1: `${env.WEBSITE_NAME} - 您的优质租车服务`,
+    SUBTITLE1: '您值得信赖的租车伙伴',
+    CONTENT1: `在 ${env.WEBSITE_NAME}，我们深知每一次旅程都是独一无二的。我们致力于为客户提供多样化的车型选择，满足各种出行需求。无论您是在城市中探索、出差通勤，还是追寻冒险，我们可靠的租车服务都能确保您的旅程顺利开启。我们的使命是提供卓越的客户服务，让您的体验愉快而轻松。凭借具有竞争力的价格、种类丰富且保养良好的车辆，以及随时为您提供协助的专业团队，我们努力成为您旅途中值得信赖的伙伴。选择 ${env.WEBSITE_NAME} 满足您所有的租车需求，尽享按自己的节奏自由探索的乐趣。`,
+    TITLE2: `为什么选择 ${env.WEBSITE_NAME}`,
+    SUBTITLE2: '让每一次旅程都精彩卓越',
+    CONTENT2: '我们的优质租车服务为您带来无与伦比的便利、可靠与价值。从轻松预订到高品质车辆，我们是您值得信赖的旅行伙伴。',
+    FIND_DEAL: '查找优惠',
+  },
+  ja: {
+    TITLE1: `${env.WEBSITE_NAME} - 上質なレンタカーサービス`,
+    SUBTITLE1: 'レンタカーなら信頼のパートナーにお任せください',
+    CONTENT1: `${env.WEBSITE_NAME}では、すべての旅がかけがえのないものだと考えています。あらゆる旅行のニーズにお応えできるよう、多彩な車両をご用意しています。街の散策、出張での移動、冒険の旅など、信頼できるレンタカーサービスで、旅のスタートをスムーズにお手伝いします。私たちの使命は、卓越したカスタマーサービスで、快適でストレスのないご体験をお届けすることです。競争力のある料金、よく整備された豊富な車両、そしてサポートに努める専任チームにより、道中の信頼できるパートナーを目指しています。レンタカーのご利用は ${env.WEBSITE_NAME} で、ご自分のペースで自由に旅をお楽しみください。`,
+    TITLE2: `${env.WEBSITE_NAME} が選ばれる理由`,
+    SUBTITLE2: 'すべての旅で卓越した体験を',
+    CONTENT2: '上質なレンタカーサービスで、比類のない利便性、信頼性、価値をお楽しみください。かんたんな予約から高品質な車両まで、信頼できる旅のパートナーです。',
+    FIND_DEAL: 'お得なプランを探す',
+  },
 })
 
 langHelper.setLanguage(strings)

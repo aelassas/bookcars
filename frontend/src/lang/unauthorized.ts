@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     UNAUTHORIZED: 'Acesso não autorizado',
   },
+  it: {
+    UNAUTHORIZED: 'Accesso non autorizzato',
+  },
+  zh: {
+    UNAUTHORIZED: '未经授权的访问',
+  },
+  ja: {
+    UNAUTHORIZED: '許可されていないアクセス',
+  },
 })
 
 langHelper.setLanguage(strings)

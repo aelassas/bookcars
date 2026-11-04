@@ -22,6 +22,18 @@ const strings = new LocalizedStrings({
     UPDATE_LOCATION: 'Atualização do local',
     LOCATION_UPDATED: 'Local atualizado com sucesso.',
   },
+  it: {
+    UPDATE_LOCATION: 'Modifica della località',
+    LOCATION_UPDATED: 'Località aggiornata con successo.',
+  },
+  zh: {
+    UPDATE_LOCATION: '更新地点',
+    LOCATION_UPDATED: '地点更新成功。',
+  },
+  ja: {
+    UPDATE_LOCATION: '場所の更新',
+    LOCATION_UPDATED: '場所を更新しました。',
+  },
 })
 
 langHelper.setLanguage(strings)

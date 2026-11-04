@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     RATING_3: '(3 ou mais)',
     RATING_4: '(4 ou mais)',
   },
+  it: {
+    RATING: 'Valutazione',
+    RATING_1: '(1 e oltre)',
+    RATING_2: '(2 e oltre)',
+    RATING_3: '(3 e oltre)',
+    RATING_4: '(4 e oltre)',
+  },
+  zh: {
+    RATING: '评分',
+    RATING_1: '（1 分及以上）',
+    RATING_2: '（2 分及以上）',
+    RATING_3: '（3 分及以上）',
+    RATING_4: '（4 分及以上）',
+  },
+  ja: {
+    RATING: '評価',
+    RATING_1: '（1以上）',
+    RATING_2: '（2以上）',
+    RATING_3: '（3以上）',
+    RATING_4: '（4以上）',
+  },
 })
 
 langHelper.setLanguage(strings)

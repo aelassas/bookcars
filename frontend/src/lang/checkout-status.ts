@@ -48,6 +48,33 @@ const strings = new LocalizedStrings({
     STATUS_MESSAGE: 'Verifique a sua caixa de correio e siga os passos descritos no e-mail de confirmação de reserva para reservar o seu carro.',
     SESSION_ID_MISMATCH: 'O ID da sessão não corresponde. Por favor, tente novamente.',
   },
+  it: {
+    CONGRATULATIONS: 'Congratulazioni!',
+    SUCCESS: 'Il pagamento è stato effettuato con successo. Ti abbiamo inviato un\'e-mail di conferma.',
+    SUCCESS_PAY_LATER: 'La prenotazione è stata effettuata con successo. Ti abbiamo inviato un\'e-mail di conferma.',
+    ERROR: 'Qualcosa è andato storto! Riprova più tardi',
+    STATUS_TITLE: `${env.WEBSITE_NAME} Conferma della prenotazione`,
+    STATUS_MESSAGE: 'Controlla la tua casella di posta e segui i passaggi descritti nell\'e-mail di conferma della prenotazione per prenotare la tua auto.',
+    SESSION_ID_MISMATCH: 'L\'ID della sessione non corrisponde. Riprova.',
+  },
+  zh: {
+    CONGRATULATIONS: '恭喜！',
+    SUCCESS: '您的付款已成功完成。我们已向您发送了确认邮件。',
+    SUCCESS_PAY_LATER: '您的预订已成功完成。我们已向您发送了确认邮件。',
+    ERROR: '出错了！请稍后重试',
+    STATUS_TITLE: `${env.WEBSITE_NAME} 预订确认`,
+    STATUS_MESSAGE: '请查看您的邮箱，并按照预订确认邮件中的步骤预订您的车辆。',
+    SESSION_ID_MISMATCH: '会话 ID 不匹配。请重试。',
+  },
+  ja: {
+    CONGRATULATIONS: 'おめでとうございます！',
+    SUCCESS: 'お支払いが完了しました。確認メールをお送りしました。',
+    SUCCESS_PAY_LATER: 'ご予約が完了しました。確認メールをお送りしました。',
+    ERROR: '問題が発生しました。しばらくしてからもう一度お試しください',
+    STATUS_TITLE: `${env.WEBSITE_NAME} 予約確認`,
+    STATUS_MESSAGE: 'メールボックスをご確認いただき、予約確認メールに記載された手順に従ってお車をご予約ください。',
+    SESSION_ID_MISMATCH: 'セッション ID が一致しません。もう一度お試しください。',
+  },
 })
 
 langHelper.setLanguage(strings)

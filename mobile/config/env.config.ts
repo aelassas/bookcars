@@ -51,6 +51,18 @@ export const LANGUAGES = [
     code: 'pt',
     label: 'Português',
   },
+  {
+    code: 'it',
+    label: 'Italiano',
+  },
+  {
+    code: 'zh',
+    label: '中文',
+  },
+  {
+    code: 'ja',
+    label: '日本語',
+  },
 ]
 
 type Currency = { code: string, symbol: string }

@@ -42,8 +42,7 @@ const Booking = ({
   today.setSeconds(0)
   today.setMilliseconds(0)
 
-  const _fr = bookcarsHelper.isFrench(language)
-  const _format = (_fr || language === 'de' || language === 'pt') ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const _format = helper.getDateTimeFormat(language)
 
   const [loading, setLoading] = useState(true)
   const [currencySymbol, setCurrencySymbol] = useState('')

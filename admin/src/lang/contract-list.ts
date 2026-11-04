@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     TITLE: 'Contratos',
   },
+  it: {
+    TITLE: 'Contratti',
+  },
+  zh: {
+    TITLE: '合同',
+  },
+  ja: {
+    TITLE: '契約書',
+  },
 })
 
 langHelper.setLanguage(strings)

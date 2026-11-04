@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     SEND: 'Enviar',
     MESSAGE_SENT: 'Mensagem enviada',
   },
+  it: {
+    CONTACT_HEADING: 'Contatti',
+    SUBJECT: 'Oggetto',
+    MESSAGE: 'Messaggio',
+    SEND: 'Invia',
+    MESSAGE_SENT: 'Messaggio inviato',
+  },
+  zh: {
+    CONTACT_HEADING: '联系我们',
+    SUBJECT: '主题',
+    MESSAGE: '消息',
+    SEND: '发送',
+    MESSAGE_SENT: '消息已发送',
+  },
+  ja: {
+    CONTACT_HEADING: 'お問い合わせ',
+    SUBJECT: '件名',
+    MESSAGE: 'メッセージ',
+    SEND: '送信',
+    MESSAGE_SENT: 'メッセージを送信しました',
+  },
 })
 
 langHelper.setLanguage(strings)

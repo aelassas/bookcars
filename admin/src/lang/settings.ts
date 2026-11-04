@@ -27,6 +27,21 @@ const strings = new LocalizedStrings({
     NETWORK_SETTINGS: 'Definições de rede',
     SETTINGS_EMAIL_NOTIFICATIONS: 'Ativar notificações por e-mail',
   },
+  it: {
+    SETTINGS_UPDATED: 'Impostazioni aggiornate con successo.',
+    NETWORK_SETTINGS: 'Impostazioni di rete',
+    SETTINGS_EMAIL_NOTIFICATIONS: 'Attiva le notifiche via e-mail',
+  },
+  zh: {
+    SETTINGS_UPDATED: '设置已成功更新。',
+    NETWORK_SETTINGS: '网络设置',
+    SETTINGS_EMAIL_NOTIFICATIONS: '启用邮件通知',
+  },
+  ja: {
+    SETTINGS_UPDATED: '設定を更新しました。',
+    NETWORK_SETTINGS: 'ネットワーク設定',
+    SETTINGS_EMAIL_NOTIFICATIONS: 'メール通知を有効にする',
+  },
 })
 
 langHelper.setLanguage(strings)

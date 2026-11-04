@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     NO_MATCH: 'Nada para ver aqui!',
   },
+  it: {
+    NO_MATCH: 'Non c\'è niente da vedere qui!',
+  },
+  zh: {
+    NO_MATCH: '这里什么也没有！',
+  },
+  ja: {
+    NO_MATCH: 'ここには何もありません！',
+  },
 })
 
 langHelper.setLanguage(strings)

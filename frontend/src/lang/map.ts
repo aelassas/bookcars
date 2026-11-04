@@ -22,6 +22,18 @@ const strings = new LocalizedStrings({
     SELECT_PICK_UP_LOCATION: 'Selecionar local',
     SELECT_DROP_OFF_LOCATION: 'Definir como local de devolução',
   },
+  it: {
+    SELECT_PICK_UP_LOCATION: 'Seleziona sede',
+    SELECT_DROP_OFF_LOCATION: 'Imposta come sede di riconsegna',
+  },
+  zh: {
+    SELECT_PICK_UP_LOCATION: '选择地点',
+    SELECT_DROP_OFF_LOCATION: '设为还车地点',
+  },
+  ja: {
+    SELECT_PICK_UP_LOCATION: '場所を選択',
+    SELECT_DROP_OFF_LOCATION: '返却場所として設定',
+  },
 })
 
 langHelper.setLanguage(strings)

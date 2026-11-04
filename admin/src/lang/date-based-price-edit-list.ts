@@ -32,6 +32,24 @@ const strings = new LocalizedStrings({
     DAILY_PRICE: 'Preço diário',
     NEW_DATE_BASED_PRICE: 'Novo preço por data',
   },
+  it: {
+    START_DATE: 'Data di inizio',
+    END_DATE: 'Data di fine',
+    DAILY_PRICE: 'Prezzo giornaliero',
+    NEW_DATE_BASED_PRICE: 'Nuovo prezzo per data',
+  },
+  zh: {
+    START_DATE: '开始日期',
+    END_DATE: '结束日期',
+    DAILY_PRICE: '日价格',
+    NEW_DATE_BASED_PRICE: '新增按日期定价',
+  },
+  ja: {
+    START_DATE: '開始日',
+    END_DATE: '終了日',
+    DAILY_PRICE: '1日あたりの料金',
+    NEW_DATE_BASED_PRICE: '新しい日付別料金',
+  },
 })
 
 langHelper.setLanguage(strings)

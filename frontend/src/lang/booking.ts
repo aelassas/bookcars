@@ -17,6 +17,15 @@ const strings = new LocalizedStrings({
   pt: {
     TOTAL: 'Total:',
   },
+  it: {
+    TOTAL: 'Totale:',
+  },
+  zh: {
+    TOTAL: '总计：',
+  },
+  ja: {
+    TOTAL: '合計：',
+  },
 })
 
 langHelper.setLanguage(strings)

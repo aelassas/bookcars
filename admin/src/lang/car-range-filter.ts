@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     MAXI: 'Maxi',
     SCOOTER: 'Scooter',
   },
+  it: {
+    RANGE: 'Categoria',
+    MINI: 'Mini',
+    MIDI: 'Midi',
+    MAXI: 'Maxi',
+    SCOOTER: 'Scooter',
+  },
+  zh: {
+    RANGE: '车型等级',
+    MINI: '迷你型',
+    MIDI: '中型',
+    MAXI: '大型',
+    SCOOTER: '踏板车',
+  },
+  ja: {
+    RANGE: 'クラス',
+    MINI: 'ミニ',
+    MIDI: 'ミディ',
+    MAXI: 'マキシ',
+    SCOOTER: 'スクーター',
+  },
 })
 
 langHelper.setLanguage(strings)

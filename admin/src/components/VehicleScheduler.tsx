@@ -243,6 +243,114 @@ const VehicleScheduler = (
       }
     }
 
+    if (_language === 'it') {
+      return {
+        navigation: {
+          month: 'Mese',
+          week: 'Settimana',
+          day: 'Giorno',
+          today: 'Oggi',
+          agenda: 'Agenda',
+        },
+        form: {
+          addTitle: 'Aggiungi evento',
+          editTitle: 'Modifica evento',
+          confirm: 'Conferma',
+          delete: 'Elimina',
+          cancel: 'Annulla',
+        },
+        event: {
+          title: 'Titolo',
+          subtitle: 'Sottotitolo',
+          start: 'Inizio',
+          end: 'Fine',
+          allDay: 'Tutto il giorno',
+        },
+        validation: {
+          required: 'Obbligatorio',
+          invalidEmail: 'E-mail non valida',
+          onlyNumbers: 'Sono ammessi solo numeri',
+          min: 'Minimo {{min}} lettere',
+          max: 'Massimo {{max}} lettere',
+        },
+        moreEvents: 'Altro...',
+        noDataToDisplay: 'Nessun dato da visualizzare',
+        loading: 'Caricamento...',
+      }
+    }
+
+    if (_language === 'zh') {
+      return {
+        navigation: {
+          month: '月',
+          week: '周',
+          day: '日',
+          today: '今天',
+          agenda: '日程',
+        },
+        form: {
+          addTitle: '添加事件',
+          editTitle: '编辑事件',
+          confirm: '确认',
+          delete: '删除',
+          cancel: '取消',
+        },
+        event: {
+          title: '标题',
+          subtitle: '副标题',
+          start: '开始',
+          end: '结束',
+          allDay: '全天',
+        },
+        validation: {
+          required: '必填',
+          invalidEmail: '电子邮件无效',
+          onlyNumbers: '仅允许输入数字',
+          min: '至少 {{min}} 个字符',
+          max: '最多 {{max}} 个字符',
+        },
+        moreEvents: '更多...',
+        noDataToDisplay: '没有可显示的数据',
+        loading: '加载中...',
+      }
+    }
+
+    if (_language === 'ja') {
+      return {
+        navigation: {
+          month: '月',
+          week: '週',
+          day: '日',
+          today: '今日',
+          agenda: 'アジェンダ',
+        },
+        form: {
+          addTitle: 'イベントを追加',
+          editTitle: 'イベントを編集',
+          confirm: '確認',
+          delete: '削除',
+          cancel: 'キャンセル',
+        },
+        event: {
+          title: 'タイトル',
+          subtitle: 'サブタイトル',
+          start: '開始',
+          end: '終了',
+          allDay: '終日',
+        },
+        validation: {
+          required: '必須',
+          invalidEmail: 'メールアドレスが無効です',
+          onlyNumbers: '数字のみ使用できます',
+          min: '{{min}}文字以上',
+          max: '{{max}}文字以下',
+        },
+        moreEvents: 'その他...',
+        noDataToDisplay: '表示するデータがありません',
+        loading: '読み込み中...',
+      }
+    }
+
     // default to english
     return {
       navigation: {

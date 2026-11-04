@@ -37,6 +37,27 @@ const strings = new LocalizedStrings({
     MIN_PICKUP_DROPOFF_HOUR: 'Hora mínima permitida para a recolha e a devolução (p. ex., 9 para as 09:00)',
     MAX_PICKUP_DROPOFF_HOUR: 'Hora máxima permitida para a recolha e a devolução (p. ex., 19 para as 19:00)',
   },
+  it: {
+    SETTINGS: 'Impostazioni di noleggio',
+    MIN_PICKUP_HOURS: 'Anticipo minimo richiesto in ore prima del ritiro',
+    MIN_RENTAL_HOURS: 'Durata minima del noleggio in ore tra il ritiro e la riconsegna',
+    MIN_PICKUP_DROPOFF_HOUR: 'Ora minima consentita per il ritiro e la riconsegna (es. 9 per le 09:00)',
+    MAX_PICKUP_DROPOFF_HOUR: 'Ora massima consentita per il ritiro e la riconsegna (es. 19 per le 19:00)',
+  },
+  zh: {
+    SETTINGS: '租车设置',
+    MIN_PICKUP_HOURS: '取车前所需的最短提前时间（小时）',
+    MIN_RENTAL_HOURS: '取车与还车之间的最短租期（小时）',
+    MIN_PICKUP_DROPOFF_HOUR: '取车和还车的最早允许时间（例如：9 表示 09:00）',
+    MAX_PICKUP_DROPOFF_HOUR: '取车和还车的最晚允许时间（例如：19 表示 19:00）',
+  },
+  ja: {
+    SETTINGS: 'レンタル設定',
+    MIN_PICKUP_HOURS: '受け取りまでに必要な最短時間（時間）',
+    MIN_RENTAL_HOURS: '受け取りから返却までの最短レンタル期間（時間）',
+    MIN_PICKUP_DROPOFF_HOUR: '受け取りおよび返却が可能な最も早い時刻（例：9 は 09:00）',
+    MAX_PICKUP_DROPOFF_HOUR: '受け取りおよび返却が可能な最も遅い時刻（例：19 は 19:00）',
+  },
 })
 
 langHelper.setLanguage(strings)

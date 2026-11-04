@@ -42,6 +42,30 @@ const strings = new LocalizedStrings({
     LOCATION: 'local',
     LOCATIONS: 'locais',
   },
+  it: {
+    NEW_LOCATION: 'Nuova sede',
+    DELETE_LOCATION: 'Sei sicuro di voler eliminare questa sede?',
+    CANNOT_DELETE_LOCATION: 'Questa sede non può essere eliminata perché è collegata a sedi secondarie o ad auto.',
+    EMPTY_LIST: 'Nessuna sede.',
+    LOCATION: 'sede',
+    LOCATIONS: 'sedi',
+  },
+  zh: {
+    NEW_LOCATION: '新建地点',
+    DELETE_LOCATION: '您确定要删除此地点吗？',
+    CANNOT_DELETE_LOCATION: '此地点无法删除，因为它与下级地点或车辆相关联。',
+    EMPTY_LIST: '暂无地点。',
+    LOCATION: '地点',
+    LOCATIONS: '地点',
+  },
+  ja: {
+    NEW_LOCATION: '新規拠点',
+    DELETE_LOCATION: 'この拠点を削除してもよろしいですか？',
+    CANNOT_DELETE_LOCATION: 'この拠点は下位の拠点または車両に関連付けられているため、削除できません。',
+    EMPTY_LIST: '拠点はありません。',
+    LOCATION: '拠点',
+    LOCATIONS: '拠点',
+  },
 })
 
 langHelper.setLanguage(strings)

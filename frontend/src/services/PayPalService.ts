@@ -20,7 +20,7 @@ export const ORDER_DESCRIPTION_MAX_LENGTH = 1000
 /**
  * Returns PayPal locale.
  *
-* @returns {("fr_FR" | "es_ES" | "de_DE" | "pt_PT" | "en_US")}
+* @returns {("fr_FR" | "es_ES" | "de_DE" | "pt_PT" | "it_IT" | "zh_CN" | "ja_JP" | "en_US")}
  */
 export const getLocale = () => {
   const lang = UserService.getLanguage()
@@ -39,6 +39,18 @@ export const getLocale = () => {
 
   if (lang === 'pt') {
     return 'pt_PT'
+  }
+
+  if (lang === 'it') {
+    return 'it_IT'
+  }
+
+  if (lang === 'zh') {
+    return 'zh_CN'
+  }
+
+  if (lang === 'ja') {
+    return 'ja_JP'
   }
 
   // default is en_US

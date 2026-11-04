@@ -367,6 +367,30 @@ export const getAdditionalDriver = async (additionalDriver: number, language: st
 }
 
 /**
+ * Get date-fns format for displaying a date with time.
+ *
+ * @param {string} language
+ * @returns {string}
+ */
+export const getDateTimeFormat = (language: string) => {
+  switch (language) {
+    case 'zh':
+    case 'ja':
+      // Year Month Day structure, 24h
+      return 'yyyy年M月d日 eee HH:mm'
+    case 'fr':
+    case 'es':
+    case 'de':
+    case 'pt':
+    case 'it':
+      // 24h 'Day Month Year' structure
+      return 'eee d LLL yyyy kk:mm'
+    default:
+      return 'eee, d LLL yyyy, p'
+  }
+}
+
+/**
  * Get plural suffix of the days unit.
  *
  * @param {string} language
@@ -374,10 +398,19 @@ export const getAdditionalDriver = async (additionalDriver: number, language: st
  * @returns {string}
  */
 export const getDaysPluralSuffix = (language: string, days: number) => {
-  if (days <= 1) {
-    return ''
+  switch (language) {
+    case 'it':
+      // giorno / giorni
+      return days <= 1 ? 'o' : 'i'
+    case 'zh':
+    case 'ja':
+      return ''
+    default:
+      if (days <= 1) {
+        return ''
+      }
+      return language === 'de' ? 'e' : 's'
   }
-  return language === 'de' ? 'e' : 's'
 }
 
 /**
@@ -698,6 +731,12 @@ export const getDepositFilterValue = async (language: string, value: DepositFilt
       return `Weniger als ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
     case 'pt':
       return `Menos de ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'it':
+      return `Meno di ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'zh':
+      return `少于 ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`
+    case 'ja':
+      return `${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''} 未満`
     case 'en':
     default:
       return `Less than ${isCurrencyRTL ? currency : ''}${depositFilterValue}${!isCurrencyRTL ? (` ${currency}`) : ''}`

@@ -32,6 +32,24 @@ const strings = new LocalizedStrings({
     DELETE_SELECTION: 'Eliminar os utilizadores selecionados',
     BLACKLIST: 'Adicionar à lista negra',
   },
+  it: {
+    DELETE_USER: 'Sei sicuro di voler eliminare questo utente e tutti i suoi dati?',
+    DELETE_USERS: 'Sei sicuro di voler eliminare gli utenti selezionati e tutti i loro dati?',
+    DELETE_SELECTION: 'Elimina gli utenti selezionati',
+    BLACKLIST: 'Aggiungi alla lista nera',
+  },
+  zh: {
+    DELETE_USER: '您确定要删除该用户及其所有数据吗？',
+    DELETE_USERS: '您确定要删除所选用户及其所有数据吗？',
+    DELETE_SELECTION: '删除所选用户',
+    BLACKLIST: '加入黑名单',
+  },
+  ja: {
+    DELETE_USER: 'このユーザーとそのすべてのデータを削除してもよろしいですか？',
+    DELETE_USERS: '選択したユーザーとそのすべてのデータを削除してもよろしいですか？',
+    DELETE_SELECTION: '選択したユーザーを削除',
+    BLACKLIST: 'ブラックリストに追加',
+  },
 })
 
 langHelper.setLanguage(strings)

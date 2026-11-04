@@ -22,6 +22,18 @@ const strings = new LocalizedStrings({
     TOTAL: 'Total:',
     DELETE_BOOKING: 'Tem a certeza de que pretende eliminar esta reserva?',
   },
+  it: {
+    TOTAL: 'Totale:',
+    DELETE_BOOKING: 'Eliminare questa prenotazione?',
+  },
+  zh: {
+    TOTAL: '总计：',
+    DELETE_BOOKING: '您确定要删除此预订吗？',
+  },
+  ja: {
+    TOTAL: '合計：',
+    DELETE_BOOKING: 'この予約を削除してもよろしいですか？',
+  },
 })
 
 langHelper.setLanguage(strings)

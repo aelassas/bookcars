@@ -35,6 +35,9 @@ export const LANGUAGES = [
   'es',
   'de',
   'pt',
+  'it',
+  'zh',
+  'ja',
 ]
 
 /**
