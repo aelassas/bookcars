@@ -81,7 +81,7 @@ export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =
  * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
  */
 export const signin = async (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> => {
-  const selectedLanguage = localStorage.getItem('bc-fe-language')
+  const selectedLanguage = getLanguage()
 
   const res = await axiosInstance
     .post(
@@ -102,7 +102,7 @@ export const signin = async (data: bookcarsTypes.SignInPayload): Promise<{ statu
  * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
  */
 export const socialSignin = async (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> => {
-  const selectedLanguage = localStorage.getItem('bc-fe-language')
+  const selectedLanguage = getLanguage()
 
   const res = await axiosInstance
     .post(
@@ -259,16 +259,15 @@ export const setLanguage = (lang: string) => {
 }
 
 /**
- * Keep the user's language in sync with the language selected in the UI before signing in.
- * If no language was selected, the user's language is kept.
+ * Keep the user's language in sync with the language displayed in the UI before signing in.
  *
  * @async
  * @param {bookcarsTypes.User} user
- * @param {(string | null)} selectedLanguage
+ * @param {string} selectedLanguage
  * @returns {Promise<bookcarsTypes.User>}
  */
-const syncLanguage = async (user: bookcarsTypes.User, selectedLanguage: string | null): Promise<bookcarsTypes.User> => {
-  if (selectedLanguage && selectedLanguage !== user.language && env.LANGUAGES.includes(selectedLanguage)) {
+const syncLanguage = async (user: bookcarsTypes.User, selectedLanguage: string): Promise<bookcarsTypes.User> => {
+  if (selectedLanguage !== user.language && env.LANGUAGES.includes(selectedLanguage)) {
     try {
       const status = await updateLanguage({ id: user._id as string, language: selectedLanguage })
       if (status === 200) {
