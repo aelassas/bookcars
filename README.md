@@ -37,7 +37,7 @@ BookCars comes with built-in support for the [Stripe and PayPal payment gateways
 
 Customers can register through the web frontend or mobile app, or sign in with email, Google, Facebook, or Apple. They can search for available cars by pickup and drop-off locations and times, choose a car, and complete the checkout process in a few clicks.
 
-BookCars supports 8 languages (English, French, Spanish, German, Portuguese, Italian, Chinese, and Japanese) and [134 currencies](https://github.com/aelassas/bookcars/wiki/Add-New-Currency), and you can [add a new language](https://github.com/aelassas/bookcars/wiki/Add-New-Language) by following the guide. It is protected against common web attacks (XSS, CSRF, MITM, and DDoS), includes error monitoring with [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry), and is easy to deploy with [Docker](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)).
+BookCars supports 8 languages (English, French, Spanish, German, Portuguese, Italian, Chinese, and Japanese) and [134 currencies](https://github.com/aelassas/bookcars/wiki/Add-New-Currency), and you can [add a new language](https://github.com/aelassas/bookcars/wiki/Add-New-Language) by following the guide. The platform is protected by JWT authentication, HttpOnly cookies, TLS encryption, Redis-backed rate limiting, Google reCAPTCHA on public forms, and request validation against common web attacks (XSS, CSRF, MITM, and DDoS). It includes error monitoring with [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry), and is easy to deploy with [Docker](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)).
 
 ## Quick Links
 * [Overview](https://github.com/aelassas/bookcars/wiki/Overview)  
