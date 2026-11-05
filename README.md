@@ -75,41 +75,24 @@ If you want to customize BookCars while keeping your fork up to date with the la
 
 ## Live Demo
 
-### Frontend
-
-* URL: https://bookcars.wexdev.com/
-* Login: jdoe@bookcars.ma
-* Password: B00kC4r5
-
-### Admin Panel
-
-* URL: https://bookcars.wexdev.com:3001/
-* Login: admin@bookcars.ma
-* Password: B00kC4r5
+| App | URL | Login | Password |
+|-----|-----|-------|----------|
+| Frontend | https://bookcars.wexdev.com/ | `jdoe@bookcars.ma` | `B00kC4r5` |
+| Admin Panel | https://bookcars.wexdev.com:3001/ | `admin@bookcars.ma` | `B00kC4r5` |
 
 ### Mobile App
 
-You can install the Android app on any Android device.
+Install the Android app on any Android device by scanning the QR code with the Camera app, or by [downloading the APK](https://github.com/aelassas/bookcars/releases/download/v9.2/bookcars-9.2.apk). Sign in with the frontend login above.
 
-#### Scan this code with a device
+<img alt="QR code to download the BookCars Android APK" width="120" src="https://github.com/user-attachments/assets/5085a2cb-bd37-4282-9f20-9b92c179d043">
 
-Open the Camera app and point it at this code. Then tap the notification that appears.
+<details>
+<summary>How to install the Mobile App on Android</summary>
 
-<img alt="" width="120" src="https://bookcars.github.io/content/qr-code-8.7.png">
+* Android 8.0 (API level 26) and higher: open the Install unknown apps system settings screen and allow app installations from the source you are downloading the app from (e.g. your web browser).
+* Android 7.1.1 (API level 25) and lower: enable the Unknown sources system setting, found in Settings > Security.
 
-#### How to install the Mobile App on Android
-
-* On devices running Android 8.0 (API level 26) and higher, you must navigate to the Install unknown apps system settings screen to enable app installations from a particular location (i.e. the web browser you are downloading the app from).
-
-* On devices running Android 7.1.1 (API level 25) and lower, you should enable the Unknown sources system setting, found in Settings > Security on your device.
-
-#### Alternative Way
-
-You can install the Android App by downloading the APK and installing it on any Android device.
-
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v8.7/bookcars-8.7.apk)
-* Login: jdoe@bookcars.ma
-* Password: B00kC4r5
+</details>
 
 ## License
 
