@@ -3,12 +3,35 @@ import i18n from '../lang/i18n'
 import * as logger from '../utils/logger'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
+import * as helper from '../utils/helper'
 import Booking from '../models/Booking'
 import User from '../models/User'
 import Car from '../models/Car'
 import * as bookingController from './bookingController'
 import * as ipinfoHelper from '../utils/ipinfoHelper'
 import { BookingConflictError, saveBookingWithAvailability } from '../utils/bookingReservationHelper'
+
+/**
+ * Get the amount to charge for a booking: the booking price, the deposit,
+ * or the booking price plus the deposit, depending on the payment option chosen at checkout.
+ *
+ * @async
+ * @param {env.Booking} booking
+ * @returns {Promise<number>}
+ */
+const getBookingPaymentAmount = async (booking: env.Booking) => {
+  if (!booking.isDeposit && !booking.isPayedInFull) {
+    return booking.price
+  }
+
+  const car = await Car.findById(booking.car, { deposit: 1 }).lean()
+  if (!car) {
+    throw new Error(`Car ${booking.car} not found`)
+  }
+  const supplier = await User.findById(booking.supplier, { priceChangeRate: 1 }).lean()
+
+  return helper.getPaymentAmount(booking.price, car.deposit, supplier?.priceChangeRate || 0, booking.isDeposit, booking.isPayedInFull)
+}
 
 /**
  * Create PayPal order.
@@ -42,8 +65,9 @@ export const createPayPalOrder = async (req: Request, res: Response) => {
     const clientIp = ipinfoHelper.getClientIp(req)
     const countryCode = await ipinfoHelper.getCountryCode(clientIp)
 
-    // 2. Use booking.price derived server-side instead of client-supplied amount
-    const orderId = await paypal.createOrder(bookingId, booking.price, env.BASE_CURRENCY, name, description, countryCode)
+    // 2. Use the amount derived server-side from the booking instead of client-supplied amount
+    const amount = await getBookingPaymentAmount(booking)
+    const orderId = await paypal.createOrder(bookingId, amount, env.BASE_CURRENCY, name, description, countryCode)
 
     res.json(orderId)
   } catch (err) {
@@ -114,8 +138,8 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       return
     }
 
-    // Round booking price to 2 decimal places for comparison
-    const expectedPrice = Number.parseFloat(booking.price.toFixed(2))
+    // Round the amount to charge to 2 decimal places for comparison
+    const expectedPrice = Number.parseFloat((await getBookingPaymentAmount(booking)).toFixed(2))
 
     if (paidAmount !== expectedPrice) {
       logger.error(`[paypal.checkPayPalOrder] Price mismatch. Expected ${expectedPrice}, got ${paidAmount}`)

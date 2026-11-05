@@ -423,6 +423,53 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       expect(res.statusCode).toBe(200)
       await testHelper.deleteNotifications(booking._id.toString())
 
+      // test success (pay in full, supplier with a price change rate)
+      await booking.deleteOne()
+      await User.updateOne({ _id: supplierId }, { priceChangeRate: 10 })
+      booking = new Booking({
+        supplier: supplierId,
+        car: carDeposit._id.toString(),
+        driver: driver._id.toString(),
+        pickupLocation: locationId,
+        dropOffLocation: locationId,
+        from,
+        to,
+        status: bookcarsTypes.BookingStatus.Void,
+        isPayedInFull: true,
+        expireAt,
+        cancellation: true,
+        amendments: true,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 312,
+        additionalDriver: true,
+        sessionId,
+      })
+      await booking.save()
+      jest.resetModules()
+      await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
+        default: {
+          checkout: {
+            sessions: {
+              // booking price + deposit with the price change rate applied, as on the checkout page: 312 + 950 * 1.1 = 1357
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 135700, currency: baseCurrency })),
+            },
+          },
+        },
+      }))
+      stripeAPI = (await import('../src/payment/stripe.js')).default
+      try {
+        res = await request(app)
+          .post(`/api/check-checkout-session/${sessionId}`)
+        expect(res.statusCode).toBe(200)
+        const paidInFull = await Booking.findById(booking._id)
+        expect(paidInFull?.status).toBe(bookcarsTypes.BookingStatus.PaidInFull)
+      } finally {
+        await User.updateOne({ _id: supplierId }, { priceChangeRate: 0 })
+      }
+      await testHelper.deleteNotifications(booking._id.toString())
+
       // test failure (stripe order error)
       await booking.deleteOne()
       booking = new Booking({

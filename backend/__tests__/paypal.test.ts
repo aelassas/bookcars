@@ -309,8 +309,35 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
       })
       await booking.save()
 
+      // test success (the PayPal order is created for the deposit, not the booking price)
+      mockCreateOrder.mockClear()
+      mockCreateOrder.mockImplementation(() => Promise.resolve('ORDER-MOCK-123'))
+      res = await request(app)
+        .post('/api/create-paypal-order')
+        .send({
+          amount: 1,
+          currency: env.BASE_CURRENCY,
+          name: 'BMW X1',
+          description: 'BMW X1',
+          bookingId: booking._id.toString(),
+        })
+      expect(res.statusCode).toBe(200)
+      expect(mockCreateOrder).toHaveBeenCalledTimes(1)
+      expect(mockCreateOrder.mock.calls[0][1]).toBe(950)
+
+      // test failure (deposit booking paid with the booking price)
       mockGetOrder.mockImplementation(() => Promise.resolve(mockPayPalOrder({}, {
         invoice_id: booking._id.toString(),
+      })))
+
+      res = await request(app)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${orderId}`)
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toBe('Payment amount mismatch')
+
+      mockGetOrder.mockImplementation(() => Promise.resolve(mockPayPalOrder({}, {
+        invoice_id: booking._id.toString(),
+        amount: { value: '950.00', currency_code: env.BASE_CURRENCY },
       })))
 
       res = await request(app)

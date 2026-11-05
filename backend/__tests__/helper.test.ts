@@ -96,6 +96,24 @@ describe('toCents', () => {
   })
 })
 
+describe('getPaymentAmount', () => {
+  it('should return the amount to charge for the payment option', () => {
+    // pay online: the booking price
+    expect(helper.getPaymentAmount(312, 950, 0)).toBe(312)
+    expect(helper.getPaymentAmount(312, 950, 10, false, false)).toBe(312)
+    // pay the deposit
+    expect(helper.getPaymentAmount(312, 950, 0, true)).toBe(950)
+    expect(helper.getPaymentAmount(312, 950, 10, true)).toBe(1045)
+    // pay in full: the booking price plus the deposit
+    expect(helper.getPaymentAmount(312, 950, 0, false, true)).toBe(1262)
+    expect(helper.getPaymentAmount(312, 950, 10, false, true)).toBe(1357)
+    expect(helper.getPaymentAmount(285.71, 333.33, 7, false, true)).toBe(642.37)
+    // no deposit: the booking price
+    expect(helper.getPaymentAmount(312, 0, 10, false, true)).toBe(312)
+    expect(helper.getPaymentAmount(312, 0, 10, true)).toBe(312)
+  })
+})
+
 describe('delay', () => {
   it('should delay in ms', async () => {
     let res = true
