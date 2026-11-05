@@ -152,14 +152,8 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
         throw new Error(`Car ${booking.car} not found`)
       }
 
-      let price
-      if (booking.isDeposit) {
-        price = car.deposit
-      } else if (booking.isPayedInFull) {
-        price = booking.price + car.deposit
-      } else {
-        price = booking.price
-      }
+      const supplierPriceChangeRate = (await User.findById(booking.supplier, { priceChangeRate: 1 }).lean())?.priceChangeRate || 0
+      const price = helper.getPaymentAmount(booking.price, car.deposit, supplierPriceChangeRate, booking.isDeposit, booking.isPayedInFull)
       const expectedAmountCents = helper.toCents(price)
 
       if (session.currency?.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {

@@ -245,6 +245,31 @@ export const toCents = (amount: number) => Math.round(amount * 100)
 export const formatPayPalPrice = (price: number) => (toCents(price) / 100).toFixed(2)
 
 /**
+ * Get the amount to charge for a booking, depending on the payment option chosen at checkout:
+ * the booking price, the deposit only, or the booking price plus the deposit.
+ * The supplier's price change rate is applied to the deposit, as on the checkout pages of the frontend and the mobile app.
+ * Without a deposit, the amount is the booking price.
+ *
+ * @param {number} price Booking price
+ * @param {number} deposit Car deposit
+ * @param {number} priceChangeRate Supplier price change rate
+ * @param {?boolean} [isDeposit]
+ * @param {?boolean} [isPayedInFull]
+ * @returns {number}
+ */
+export const getPaymentAmount = (price: number, deposit: number, priceChangeRate: number, isDeposit?: boolean, isPayedInFull?: boolean) => {
+  if ((!isDeposit && !isPayedInFull) || !(deposit > 0)) {
+    return price
+  }
+
+  let depositPrice = deposit
+  depositPrice += depositPrice * (priceChangeRate / 100)
+
+  const amount = isDeposit ? depositPrice : price + depositPrice
+  return Number(amount.toFixed(2))
+}
+
+/**
  * Delay in milliseconds.
  *
  * @param {number} ms 
