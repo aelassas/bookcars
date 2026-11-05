@@ -214,19 +214,35 @@ export const getStripeLocale = (locale: string): Stripe.Checkout.SessionCreatePa
 }
 
 /**
+ * Convert an amount to the currency's smallest unit (cents).
+ *
+ * Rounds instead of flooring: amounts are already rounded to 2 decimals,
+ * but many of them aren't exact in floating point (285.71 * 100 = 28570.999...),
+ * so Math.floor would drop a cent.
+ *
+ * Example:
+ * 1          100
+ * 1.13       113
+ * 285.71     28571
+ *
+ * @param {number} amount
+ * @returns {number}
+ */
+export const toCents = (amount: number) => Math.round(amount * 100)
+
+/**
  * Format PayPal price.
  *
  * Example:
  * 1          1.00
  * 1.2        1.20
- * 1.341      1.34
- * 1.345      1.34
- * 1.378      1.37
+ * 1.13       1.13
+ * 285.71     285.71
  *
  * @param {number} price
  * @returns {string}
  */
-export const formatPayPalPrice = (price: number) => (Math.floor(price * 100) / 100).toFixed(2)
+export const formatPayPalPrice = (price: number) => (toCents(price) / 100).toFixed(2)
 
 /**
  * Delay in milliseconds.

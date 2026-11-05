@@ -473,7 +473,7 @@ export const checkout = async (req: Request, res: Response) => {
         }
 
         // Validate currency and amount
-        const expectedAmountCents = Math.floor(expectedBasePriceInBaseCurrency * 100)
+        const expectedAmountCents = helper.toCents(expectedBasePriceInBaseCurrency)
         if (paymentIntent.currency.toLowerCase() !== env.BASE_CURRENCY.toLowerCase()) {
           const message = `Payment currency mismatch: expected ${env.BASE_CURRENCY}, got ${paymentIntent.currency}`
           logger.error(message, body)

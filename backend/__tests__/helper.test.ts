@@ -73,6 +73,26 @@ describe('formatPayPalPrice', () => {
     expect(helper.formatPayPalPrice(11)).toBe('11.00')
     expect(helper.formatPayPalPrice(11.1)).toBe('11.10')
     expect(helper.formatPayPalPrice(11.12)).toBe('11.12')
+    // amounts that aren't exact in floating point (x * 100 is just below the integer)
+    expect(helper.formatPayPalPrice(1.13)).toBe('1.13')
+    expect(helper.formatPayPalPrice(285.71)).toBe('285.71')
+    // the amount sent to PayPal matches the booking price checkPayPalOrder expects
+    for (let cents = 1; cents <= 100000; cents += 1) {
+      const price = cents / 100
+      expect(Number(helper.formatPayPalPrice(price))).toBe(Number.parseFloat(price.toFixed(2)))
+    }
+  })
+})
+
+describe('toCents', () => {
+  it('should convert an amount to cents', () => {
+    expect(helper.toCents(0)).toBe(0)
+    expect(helper.toCents(11)).toBe(1100)
+    expect(helper.toCents(11.1)).toBe(1110)
+    expect(helper.toCents(1.13)).toBe(113)
+    expect(helper.toCents(285.71)).toBe(28571)
+    // a weekly price of 1000 for 2 days, as calculateTotalPrice computes it
+    expect(helper.toCents(Number((1000 * 2 / 7).toFixed(2)))).toBe(28571)
   })
 })
 
