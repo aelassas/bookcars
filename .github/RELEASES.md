@@ -1,5 +1,27 @@
 # Releases
 
+## [BookCars 9.2](https://github.com/aelassas/bookcars/releases/tag/v9.2) – 2026-11-05
+
+* feat(admin, frontend, mobile): add German, Portuguese, Italian, Chinese (simplified) and Japanese language support
+* fix(admin, frontend, mobile): keep language selected before sign-in and sync it to user.language after sign-in
+* fix(backend): migrate cars missing blockOnPay to false at startup to avoid 409 on checkout
+* fix(backend): round amounts to cents instead of flooring them
+* fix(helper): prevent extra day or hour charges across DST transitions
+* fix(booking): align availability conflict checks to allow same-day turnarounds
+* fix(admin): show language button in header on desktop when not signed in
+* fix(mobile): prevent DateTimePicker from re-opening on Android after being dismissed
+* test(backend): add rateLimiter.test.ts
+* test(backend): add Redis integration tests and configure CI service container
+* chore(deps): update dependencies
+
+### Assets
+- [bookcars-9.2.apk](https://github.com/aelassas/bookcars/releases/download/v9.2/bookcars-9.2.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.2/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.2)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.2)
+
 ## [BookCars 9.1](https://github.com/aelassas/bookcars/releases/tag/v9.1) – 2026-11-03
 
 * feat(mobile): upgrade to Expo SDK 58 and React Native to 0.83.2
