@@ -425,7 +425,7 @@ const CheckoutScreen = () => {
         start: birthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
+      const _birthDateValid = sub >= (__car?.minimumAge ?? env.MINIMUM_AGE)
 
       setBirthDateValid(_birthDateValid)
       setError(!_birthDateValid)
@@ -446,7 +446,7 @@ const CheckoutScreen = () => {
         start: addtionalDriverBirthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= env.MINIMUM_AGE
+      const _birthDateValid = sub >= (__car?.minimumAge ?? env.MINIMUM_AGE)
 
       setAdditionalDriverBirthDateValid(_birthDateValid)
       setError(!_birthDateValid)
