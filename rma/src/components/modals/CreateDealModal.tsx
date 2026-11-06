@@ -5,17 +5,19 @@ import { createDeal } from "@/modules/crm/actions";
 import { Button, Input, Select, Label, Textarea } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
 import { LeadSearch } from "@/components/ui/LeadSearch";
+import { dealStageOptions, type DealStage } from "@/modules/crm/stages";
 
 const TYPES = ["rent", "lease", "purchase"];
-const STAGES = ["inquiry", "quote", "contract", "handover", "closed"];
 
 export function CreateDealModal({
   tenantId,
+  tenantSlug,
   defaultStage,
   onClose,
   onCreated,
 }: {
   tenantId: string;
+  tenantSlug?: string;
   defaultStage?: string;
   onClose: () => void;
   onCreated?: () => void;
@@ -23,6 +25,7 @@ export function CreateDealModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leadId, setLeadId] = useState("");
+  const stages = dealStageOptions(tenantSlug);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +38,7 @@ export function CreateDealModal({
         ref: String(fd.get("ref")),
         type: String(fd.get("type")) as "rent" | "lease" | "purchase",
         leadId: leadId || undefined,
-        stage: String(fd.get("stage")) as "inquiry" | "quote" | "contract" | "handover" | "closed",
+        stage: String(fd.get("stage")) as DealStage,
         value: Number(fd.get("value")) || undefined,
         notes: String(fd.get("notes") || ""),
       });
@@ -72,9 +75,9 @@ export function CreateDealModal({
           <div>
             <Label>Stage</Label>
             <Select name="stage" defaultValue={defaultStage ?? "inquiry"} className="w-full">
-              {STAGES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
+              {stages.map(({ key, label }) => (
+                <option key={key} value={key}>
+                  {label}
                 </option>
               ))}
             </Select>

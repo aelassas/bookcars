@@ -12,6 +12,7 @@ import { requireAuth } from "@/platform/auth/authorization";
 import { getTenantBySlug } from "@/platform/auth/tenant";
 import { canManageCRMForTenant } from "./policies";
 import { resolveReplyContext } from "./chat-shared";
+import { markWhatsappContacted } from "./whatsapp-contacted";
 
 /**
  * Queue an outbound WhatsApp reply for a lead.
@@ -125,9 +126,12 @@ export async function queueLeadReply(slug: string, leadId: string, body: string)
       entityId: leadId,
       intent: `Queued WhatsApp reply to ${ctx.toJid}`,
     });
+    await markWhatsappContacted(tx, { tenantId: t.id, leadId, actorId });
   });
 
   revalidatePath(`/${slug}/crm/leads/${leadId}`);
+  revalidatePath(`/${slug}/crm`);
+  revalidatePath(`/${slug}/rent`);
 }
 
 /**

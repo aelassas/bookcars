@@ -21,6 +21,7 @@ import { formatCurrency } from "@/lib/format";
 import { Handshake } from "lucide-react";
 import DealsFilters from "./DealsFilters";
 import { recordHref } from "@/lib/return-navigation";
+import { dealStageLabel, dealStageOptions } from "@/modules/crm/stages";
 
 const PAGE_SIZE = 50;
 
@@ -35,8 +36,6 @@ const STATUS_TONE: Record<string, BadgeTone> = {
   won: "success",
   lost: "danger",
 };
-
-const STAGES = ["inquiry", "quote", "contract", "handover", "closed"] as const;
 
 export default async function DealsPage({
   params,
@@ -86,20 +85,20 @@ export default async function DealsPage({
         title="Deals"
         subtitle={`${total.toLocaleString()} deal${total === 1 ? "" : "s"}${filterDesc ? ` — ${filterDesc}` : ""}`}
         icon={<Handshake className="h-4.5 w-4.5" />}
-        action={<DealsFilters status={status} stage={stage} myDeals={myDeals} />}
+        action={<DealsFilters tenantSlug={tenantSlug} status={status} stage={stage} myDeals={myDeals} />}
       />
 
       {/* Pipeline summary strip (open deals per stage) */}
       <div className="mb-6 flex flex-wrap gap-2">
-        {STAGES.map((s) => {
-          const row = summaryByStage.get(s);
+        {dealStageOptions(tenantSlug).map(({ key, label }) => {
+          const row = summaryByStage.get(key);
           return (
             <div
-              key={s}
+              key={key}
               className="flex items-center gap-2 rounded-field border border-line bg-surface px-3 py-1.5 text-xs shadow-card"
             >
-              <span className={cx("h-2 w-2 rounded-full", STAGE_CLS[s])} />
-              <span className="font-medium capitalize text-ink">{s}</span>
+              <span className={cx("h-2 w-2 rounded-full", STAGE_CLS[key])} />
+              <span className="font-medium capitalize text-ink">{label}</span>
               <span className="text-ink-3 tnum">({row?.count ?? 0})</span>
               <span className="font-medium text-ink-2 tnum">
                 {formatCurrency(row?.totalValue ?? 0)}
@@ -156,7 +155,7 @@ export default async function DealsPage({
                   <TD>
                     <span className="inline-flex items-center gap-1.5 capitalize">
                       <span className={cx("h-2 w-2 rounded-full", STAGE_CLS[d.stage] ?? "bg-line")} />
-                      {d.stage}
+                      {dealStageLabel(tenantSlug, d.stage)}
                     </span>
                   </TD>
                   <TD className="whitespace-nowrap text-right font-medium tnum">

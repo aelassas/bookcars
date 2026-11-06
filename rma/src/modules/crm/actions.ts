@@ -13,6 +13,7 @@ import { createBitrix24Client } from "@/platform/integrations/bitrix24/client";
 import { createStageCatalog, FUNNEL_C6_COLUMNS, type FunnelColumn } from "@/platform/integrations/bitrix24/mappings";
 import { assertSafeBitrixWebhookUrl } from "@/platform/integrations/bitrix24/url-guard";
 import { INTENT_LABELS, isIntent, type Intent } from "./intent";
+import { isDealStage, statusForDealStage, type DealStage, type DealStatus } from "./stages";
 
 // ─── «Мой день» card dismissal ───────────────────────────────────────────────
 
@@ -168,14 +169,16 @@ export async function createDeal(
     ref: string;
     type: "rent" | "lease" | "purchase";
     leadId?: string;
-    status?: "open" | "won" | "lost";
-    stage?: "inquiry" | "quote" | "contract" | "handover" | "closed";
+    status?: DealStatus;
+    stage?: DealStage;
     value?: number;
     notes?: string;
   }
 ) {
   await assertNotPreviewMode(tenantId);
   await canManageCRMForTenant(tenantId);
+  if (data.stage !== undefined && !isDealStage(data.stage)) throw new Error(`Unknown deal stage: ${data.stage}`);
+  const stage = data.stage ?? (data.status && data.status !== "open" ? "closed" : "inquiry");
   const row = await withDrizzleTenant(tenantId, async (tx) => {
     const rows = await tx
       .insert(deal)
@@ -184,8 +187,8 @@ export async function createDeal(
         ref: data.ref,
         type: data.type,
         leadId: data.leadId || null,
-        status: data.status ?? "open",
-        stage: data.stage ?? "inquiry",
+        status: statusForDealStage(stage, data.status),
+        stage,
         value: data.value ?? null,
         notes: data.notes ?? null,
         // Touched now → shows on the live kanban (which filters by activity).
@@ -213,8 +216,8 @@ export async function updateDeal(
   data: {
     ref?: string;
     type?: "rent" | "lease" | "purchase";
-    status?: "open" | "won" | "lost";
-    stage?: "inquiry" | "quote" | "contract" | "handover" | "closed";
+    status?: DealStatus;
+    stage?: DealStage;
     value?: number | null;
     balanceDue?: number;
     notes?: string | null;
@@ -224,14 +227,25 @@ export async function updateDeal(
 ) {
   await assertNotPreviewMode(tenantId);
   await canManageCRMForTenant(tenantId);
+  if (data.stage !== undefined && !isDealStage(data.stage)) throw new Error(`Unknown deal stage: ${data.stage}`);
   const row = await withDrizzleTenant(tenantId, async (tx) => {
+    const [current] = await tx
+      .select({ stage: deal.stage, status: deal.status })
+      .from(deal)
+      .where(eq(deal.id, dealId))
+      .limit(1);
+    if (!current) return null;
+    const nextStage = data.stage ?? (data.status === "won" || data.status === "lost" ? "closed" : current.stage);
+    const nextStatus = data.stage !== undefined
+      ? statusForDealStage(data.stage, data.status ?? current.status as DealStatus)
+      : data.status ?? current.status;
     const rows = await tx
       .update(deal)
       .set({
         ...(data.ref !== undefined ? { ref: data.ref } : {}),
         ...(data.type !== undefined ? { type: data.type } : {}),
-        ...(data.status !== undefined ? { status: data.status } : {}),
-        ...(data.stage !== undefined ? { stage: data.stage } : {}),
+        status: nextStatus,
+        stage: nextStage,
         ...(data.value !== undefined ? { value: data.value } : {}),
         ...(data.balanceDue !== undefined ? { balanceDue: data.balanceDue } : {}),
         ...(data.notes !== undefined ? { notes: data.notes } : {}),
@@ -278,15 +292,23 @@ export async function deleteDeal(tenantId: string, dealId: string) {
 export async function updateDealStage(
   tenantId: string,
   dealId: string,
-  stage: "inquiry" | "quote" | "contract" | "handover" | "closed"
+  stage: DealStage
 ) {
   await assertNotPreviewMode(tenantId);
   await canManageCRMForTenant(tenantId);
+  if (!isDealStage(stage)) throw new Error(`Unknown deal stage: ${stage}`);
   const row = await withDrizzleTenant(tenantId, async (tx) => {
+    const [current] = await tx.select({ status: deal.status }).from(deal).where(eq(deal.id, dealId)).limit(1);
+    if (!current) return null;
     const rows = await tx
       .update(deal)
       // Moving a card is activity — restamp so it stays/returns to the live board.
-      .set({ stage, updatedAt: new Date(), lastActivityAt: new Date() })
+      .set({
+        stage,
+        status: statusForDealStage(stage, current.status as DealStatus),
+        updatedAt: new Date(),
+        lastActivityAt: new Date(),
+      })
       .where(eq(deal.id, dealId))
       .returning();
     const r = Array.isArray(rows) ? rows[0] : rows;
@@ -307,7 +329,7 @@ export async function updateDealStage(
 export async function moveDealStage(
   tenantId: string,
   dealId: string,
-  stage: "inquiry" | "quote" | "contract" | "handover" | "closed"
+  stage: DealStage
 ) {
   return updateDealStage(tenantId, dealId, stage);
 }

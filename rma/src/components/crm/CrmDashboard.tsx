@@ -114,7 +114,7 @@ export function CrmDashboard({
       )}
 
       {tab === "pipeline" && (
-        <PipelineBoard tenantId={tenantId} currentUserId={currentUserId} defaultMine={defaultMine} />
+        <PipelineBoard tenantId={tenantId} tenantSlug={tenantSlug} currentUserId={currentUserId} defaultMine={defaultMine} />
       )}
       {tab === "assign" && canAssign && <CoordinatorInbox tenantId={tenantId} />}
       {tab === "leads" && <LeadsList tenantId={tenantId} tenantSlug={tenantSlug} />}

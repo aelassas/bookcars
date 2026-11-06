@@ -38,6 +38,7 @@ export default async function RentPipelinePage({
     return (
       <TenantRentPipeline
         tenantId={t.id}
+        tenantSlug={tenantSlug}
         tenantName={t.name}
         currentUserId={session.user.id}
       />

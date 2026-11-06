@@ -17,6 +17,7 @@ import { RecordPaymentModal } from "@/components/modals/RecordPaymentModal";
 import { ProcessReturnModal } from "@/components/modals/ProcessReturnModal";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
 import { ContractSection } from "@/components/rental/ContractSection";
+import { TarsSection } from "@/components/rental/TarsSection";
 import { startRental, completeRental, cancelRental, resolveDeposit } from "@/modules/rental/actions";
 import { confirmPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
@@ -64,6 +65,7 @@ type Rental = {
   depositResolvedAt?: Date | null;
   salesAgentId?: string | null;
   contractUrl?: string | null;
+  tarsDocumentNumber?: string | null;
 };
 
 type Payment = {
@@ -99,7 +101,11 @@ export function RentalDetail({
   rental: initialRental,
   customerName,
   customerPhone,
+  customerEmiratesId,
   vehicleLabel,
+  vehiclePlate,
+  vehicleVin,
+  vehicleOdometer,
   payments: initialPayments,
   actorId,
   canConfirm = false,
@@ -109,7 +115,11 @@ export function RentalDetail({
   rental: Rental;
   customerName: string | null;
   customerPhone: string | null;
+  customerEmiratesId: string | null;
   vehicleLabel: string;
+  vehiclePlate: string;
+  vehicleVin: string | null;
+  vehicleOdometer: number | null;
   payments: Payment[];
   actorId?: string;
   canConfirm?: boolean;
@@ -393,6 +403,25 @@ export function RentalDetail({
             contractUrl={r.contractUrl}
             canGenerate={canConfirm}
           />
+          {tenantSlug === "rma" && r.startDate && r.returnDate && (
+            <div className="mt-3">
+              <TarsSection
+                tenantId={tenantId}
+                tenantSlug={tenantSlug}
+                rentalId={r.id}
+                contractUrl={r.contractUrl ?? null}
+                tarsDocumentNumber={r.tarsDocumentNumber ?? null}
+                customerName={customerName ?? "Unknown"}
+                customerEmiratesId={customerEmiratesId}
+                vehiclePlate={vehiclePlate}
+                vehicleVin={vehicleVin}
+                vehicleOdometer={vehicleOdometer}
+                startAt={r.startDate.toISOString()}
+                returnAt={r.returnDate.toISOString()}
+                canManage={canConfirm}
+              />
+            </div>
+          )}
         </div>
       </Card>
 

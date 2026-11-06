@@ -17,6 +17,7 @@ import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { insertPurposeChangeEvent } from "@/modules/fleet/purpose-events";
 import { computeDepositResolution, depositNotification, type DepositOutcome } from "./deposit";
 import { isBookingBasis } from "./booking";
+import { parseTarsDocumentNumber } from "@/platform/integrations/tars/handoff";
 
 function daysBetween(a: Date, b: Date) {
   const ms = b.getTime() - a.getTime();
@@ -60,6 +61,61 @@ export async function startRental(tenantId: string, actorId: string | undefined,
     });
 
     if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
+    return row;
+  });
+}
+
+export async function confirmTarsUpload(
+  tenantId: string,
+  rentalId: string,
+  documentNumber: string,
+  tenantSlug: string,
+  signatureConfirmed: boolean,
+) {
+  await assertNotPreviewMode(tenantId);
+  await canManageRentalsForTenant(tenantId);
+  const trustedActorId = await requireAuth();
+  if (!signatureConfirmed) throw new Error("Confirm the required signatures before recording the TARS upload");
+  const normalizedDocument = parseTarsDocumentNumber(documentNumber);
+
+  const home = await requireFleetHomeTenantId();
+  return withDrizzleTenant(home, async (tx) => {
+    const [current] = await tx
+      .select({ contractUrl: rental.contractUrl, tarsDocumentNumber: rental.tarsDocumentNumber, dealId: rental.dealId })
+      .from(rental)
+      .where(eq(rental.id, rentalId))
+      .limit(1);
+    if (!current) throw new Error("Rental not found");
+    if (!current.contractUrl) throw new Error("Generate the rental contract before recording the TARS upload");
+    if (current.tarsDocumentNumber && current.tarsDocumentNumber !== normalizedDocument) {
+      throw new Error(`This rental is already linked to TARS document ${current.tarsDocumentNumber}`);
+    }
+
+    const rows = await tx
+      .update(rental)
+      .set({ tarsDocumentNumber: normalizedDocument, updatedAt: new Date() })
+      .where(eq(rental.id, rentalId))
+      .returning();
+    const row = Array.isArray(rows) ? rows[0] : rows;
+
+    if (current.dealId) {
+      await tx
+        .update(deal)
+        .set({ stage: "tars", updatedAt: new Date(), lastActivityAt: new Date() })
+        .where(and(eq(deal.id, current.dealId), inArray(deal.stage, ["inquiry", "quote", "contract"])));
+    }
+
+    await tx.insert(auditEvent).values({
+      tenantId: home,
+      actorId: trustedActorId,
+      action: "rental.tars.confirmed",
+      entityType: "rental",
+      entityId: rentalId,
+      intent: `Staff confirmed signed contract upload to TARS as ${normalizedDocument}`,
+    });
+
+    revalidatePath(`/${tenantSlug}/rentals/${rentalId}`);
+    revalidatePath(`/${tenantSlug}/deals`);
     return row;
   });
 }

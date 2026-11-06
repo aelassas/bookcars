@@ -14,6 +14,7 @@
  */
 import { normalizePhone, MIN_PHONE_MATCH_DIGITS } from "@/platform/messaging/phone";
 import { isBroadcast } from "@/modules/messaging/competitor";
+import { extractSignals, type ExtractedSignals } from "@/modules/messaging/extract";
 
 /** Marks both `lead.source` and `lead.external_source` for WhatsApp-born leads. */
 export const WA_LEAD_SOURCE = "whatsapp";
@@ -73,6 +74,8 @@ export type NewLead = {
   createdAt: Date;
   /** The message that produced it, for stitching the conversation afterwards. */
   messageId: string;
+  /** Deal-driving facts extracted from the same message. */
+  signals: ExtractedSignals;
 };
 
 /** A body that carries no information for a salesperson. */
@@ -191,6 +194,14 @@ export function leadFromMessage(m: InboundMessage, rules: LeadRules = {}): NewLe
   // The daily "available cars" list every shop blasts into the same chats.
   if (isBroadcast(body)) return null;
 
+  const signals = extractSignals(body, { referenceDate: m.createdAt });
+  if (!qualifiesAsLead(digits, {
+    car: signals.carText,
+    intent: signals.intent,
+    termMonths: signals.termMonths,
+    priceAed: signals.priceAed,
+  })) return null;
+
   const name = m.customerName?.trim();
   const isBusiness = BUSINESS_NAME.test(name ?? "") || BUSINESS_NAME.test(body);
   return {
@@ -205,5 +216,6 @@ export function leadFromMessage(m: InboundMessage, rules: LeadRules = {}): NewLe
     notes: (m.body ?? "").trim().slice(0, 500),
     createdAt: m.createdAt,
     messageId: m.id,
+    signals,
   };
 }

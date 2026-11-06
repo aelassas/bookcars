@@ -7,6 +7,7 @@ import { recordHref } from "@/lib/return-navigation";
 import { getDealsPaginated, getDealPipelineSummary } from "@/modules/crm/queries";
 import { Card, Badge, Button, EmptyState, STAGE_CLS, cx, type BadgeTone } from "@/components/ui";
 import { CreateDealModal } from "@/components/modals/CreateDealModal";
+import { dealStageLabel, dealStageOptions } from "@/modules/crm/stages";
 import { formatCurrency } from "@/lib/format";
 import { Plus, Handshake, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -33,6 +34,7 @@ export function DealsList({ tenantId, tenantSlug }: { tenantId: string; tenantSl
   const [loaded, setLoaded] = useState(false);
   const [loading, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
+  const stages = dealStageOptions(tenantSlug);
 
   const load = useCallback(
     (p: number) => {
@@ -76,7 +78,7 @@ export function DealsList({ tenantId, tenantSlug }: { tenantId: string; tenantSl
               key={s.stage}
               className="rounded-field border border-line bg-surface px-3 py-1.5 text-xs shadow-card"
             >
-              <span className="font-medium capitalize text-ink">{s.stage}</span>
+              <span className="font-medium capitalize text-ink">{dealStageLabel(tenantSlug, s.stage)}</span>
               <span className="ml-1 text-ink-3 tnum">({s.count})</span>
             </div>
           ))}
@@ -89,6 +91,7 @@ export function DealsList({ tenantId, tenantSlug }: { tenantId: string; tenantSl
       {showModal && (
         <CreateDealModal
           tenantId={tenantId}
+          tenantSlug={tenantSlug}
           onClose={() => setShowModal(false)}
           onCreated={() => load(page)}
         />
@@ -119,7 +122,7 @@ export function DealsList({ tenantId, tenantSlug }: { tenantId: string; tenantSl
                 <div className="mt-2 text-sm font-medium text-ink">
                   {d.status === "open" ? "Open deal" : d.status}
                 </div>
-                <div className="text-xs capitalize text-ink-3">Stage: {d.stage}</div>
+                <div className="text-xs capitalize text-ink-3">Stage: {dealStageLabel(tenantSlug, d.stage)}</div>
                 {d.value && (
                   <div className="mt-1 text-xs font-medium text-success tnum">{formatCurrency(d.value)}</div>
                 )}
@@ -130,16 +133,14 @@ export function DealsList({ tenantId, tenantSlug }: { tenantId: string; tenantSl
                 )}
                 <div className="mt-3">
                   <div className="flex gap-1">
-                    {["inquiry", "quote", "contract", "handover", "closed"].map((s) => (
+                    {stages.map(({ key, label }) => (
                       <div
-                        key={s}
+                        key={key}
                         className={cx(
                           "h-2 flex-1 rounded-full",
-                          s === d.stage || (d.stage === "closed" && s === "closed")
-                            ? STAGE_CLS[s]
-                            : "bg-line"
+                          key === d.stage ? STAGE_CLS[key] : "bg-line"
                         )}
-                        title={s}
+                        title={label}
                       />
                     ))}
                   </div>

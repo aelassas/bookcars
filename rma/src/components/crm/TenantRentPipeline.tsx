@@ -14,10 +14,12 @@ import { SalesFunnel } from "./SalesFunnel";
 // the detail vs coarse column layout from the tenant's own data.
 export async function TenantRentPipeline({
   tenantId,
+  tenantSlug,
   tenantName,
   currentUserId,
 }: {
   tenantId: string;
+  tenantSlug: string;
   tenantName: string;
   currentUserId?: string;
 }) {
@@ -50,7 +52,7 @@ export async function TenantRentPipeline({
       ) : (
         <>
           <SalesFunnel tenantId={tenantId} />
-          <PipelineBoard tenantId={tenantId} currentUserId={currentUserId} />
+          <PipelineBoard tenantId={tenantId} tenantSlug={tenantSlug} currentUserId={currentUserId} />
         </>
       )}
     </main>

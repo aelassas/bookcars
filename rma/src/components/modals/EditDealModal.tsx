@@ -1,13 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 import { updateDeal, deleteDeal, closeDeal } from "@/modules/crm/actions";
+import type { KanbanDeal } from "@/modules/crm/queries";
 import { Button, Input, Select, Label, Textarea } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
 import { LeadSearch } from "@/components/ui/LeadSearch";
+import { rentalWindow } from "@/components/crm/pipeline-utils";
+import { dealStageOptions, type DealStage } from "@/modules/crm/stages";
 
 const TYPES = ["rent", "lease", "purchase"];
-const STAGES = ["inquiry", "quote", "contract", "handover", "closed"];
 
 const DANGER_OUTLINE_BTN =
   "inline-flex h-9 select-none items-center justify-center whitespace-nowrap rounded-field border border-danger-line bg-surface px-3.5 text-sm font-medium text-danger transition-colors hover:bg-danger-soft disabled:cursor-not-allowed disabled:opacity-50";
@@ -16,27 +20,22 @@ const SUCCESS_BTN =
 
 export function EditDealModal({
   tenantId,
+  tenantSlug,
   deal,
   onClose,
   onUpdated,
 }: {
   tenantId: string;
-  deal: {
-    id: string;
-    ref: string;
-    type: "rent" | "lease" | "purchase";
-    stage: string;
-    status: string;
-    value: number | null;
-    notes: string | null;
-    leadId: string | null;
-  };
+  tenantSlug: string;
+  deal: KanbanDeal;
   onClose: () => void;
   onUpdated?: () => void;
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leadId, setLeadId] = useState(deal.leadId ?? "");
+  const window = rentalWindow(deal.dateFrom, deal.dateTo);
+  const hasRentalContext = deal.customerName || deal.phone || deal.requestedCar || window || deal.aiNote;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,7 +47,7 @@ export function EditDealModal({
       await updateDeal(tenantId, deal.id, {
         ref: String(fd.get("ref")),
         type: String(fd.get("type")) as "rent" | "lease" | "purchase",
-        stage: String(fd.get("stage")) as "inquiry" | "quote" | "contract" | "handover" | "closed",
+        stage: String(fd.get("stage")) as DealStage,
         value: fd.get("value") === "" ? null : Number(fd.get("value")),
         leadId: leadId || null,
         notes: String(fd.get("notes") || ""),
@@ -88,8 +87,41 @@ export function EditDealModal({
   }
 
   return (
-    <Modal title="Edit Deal" onClose={onClose} busy={submitting} protectChanges hasChanges={leadId !== (deal.leadId ?? "")}>
+    <Modal
+      title={deal.customerName?.trim() || "Edit deal"}
+      subtitle={`${deal.ref} · Quick edit`}
+      onClose={onClose}
+      busy={submitting}
+      protectChanges
+      hasChanges={leadId !== (deal.leadId ?? "")}
+    >
       {error && <ModalError>{error}</ModalError>}
+
+      {hasRentalContext && (
+        <section className="mb-4 rounded-field border border-line bg-sunken/60 p-3" aria-label="Rental request">
+          <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-ink-3">Rental request</div>
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+            {deal.phone && <div><dt className="text-ink-3">Customer</dt><dd className="mt-0.5 text-ink tnum">{deal.phone}</dd></div>}
+            {(deal.requestedCar || deal.vehicleLabel) && <div><dt className="text-ink-3">Car</dt><dd className="mt-0.5 font-medium text-ink">{deal.requestedCar || deal.vehicleLabel}</dd></div>}
+            {window && <div><dt className="text-ink-3">Dates</dt><dd className="mt-0.5 text-ink">{window}</dd></div>}
+            {deal.ownerName && <div><dt className="text-ink-3">Owner</dt><dd className="mt-0.5 text-ink">{deal.ownerName}</dd></div>}
+          </dl>
+          {deal.aiNote && (
+            <div className="mt-3 flex items-start gap-1.5 border-t border-line-soft pt-2 text-xs text-ink-2">
+              <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-brand-500" />
+              <span>{deal.aiNote}</span>
+            </div>
+          )}
+        </section>
+      )}
+
+      <Link
+        href={`/${tenantSlug}/deals/${deal.id}`}
+        className="mb-4 inline-flex items-center gap-1.5 text-xs font-medium text-brand-700 hover:text-brand-800"
+      >
+        Open full deal and WhatsApp conversation
+        <ArrowUpRight className="h-3.5 w-3.5" />
+      </Link>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -102,19 +134,15 @@ export function EditDealModal({
             <Label>Type *</Label>
             <Select name="type" required defaultValue={deal.type} className="w-full">
               {TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
+                <option key={t} value={t}>{t}</option>
               ))}
             </Select>
           </div>
           <div>
             <Label>Stage *</Label>
             <Select name="stage" required defaultValue={deal.stage} className="w-full">
-              {STAGES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
+              {dealStageOptions(tenantSlug).map(({ key, label }) => (
+                <option key={key} value={key}>{label}</option>
               ))}
             </Select>
           </div>
@@ -127,12 +155,7 @@ export function EditDealModal({
           </div>
           <div>
             <Label>Linked Lead</Label>
-            <LeadSearch
-              tenantId={tenantId}
-              value={leadId}
-              onChange={(id) => setLeadId(id)}
-              placeholder="Search leads…"
-            />
+            <LeadSearch tenantId={tenantId} value={leadId} onChange={(id) => setLeadId(id)} placeholder="Search leads…" />
           </div>
         </div>
 
@@ -142,39 +165,16 @@ export function EditDealModal({
         </div>
 
         <ModalFooter className="justify-between">
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={submitting}
-            className={DANGER_OUTLINE_BTN}
-          >
-            Delete
-          </button>
+          <button type="button" onClick={handleDelete} disabled={submitting} className={DANGER_OUTLINE_BTN}>Delete</button>
           <div className="flex flex-wrap items-center gap-2">
             {deal.status === "open" && (
               <>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => handleClose("lost")}
-                  disabled={submitting}
-                >
-                  Mark lost
-                </Button>
-                <button
-                  type="button"
-                  onClick={() => handleClose("won")}
-                  disabled={submitting}
-                  className={SUCCESS_BTN}
-                >
-                  Mark won
-                </button>
+                <Button type="button" variant="secondary" onClick={() => handleClose("lost")} disabled={submitting}>Mark lost</Button>
+                <button type="button" onClick={() => handleClose("won")} disabled={submitting} className={SUCCESS_BTN}>Mark won</button>
               </>
             )}
             <ModalCancel>Cancel</ModalCancel>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? "Saving..." : "Save"}
-            </Button>
+            <Button type="submit" disabled={submitting}>{submitting ? "Saving..." : "Save"}</Button>
           </div>
         </ModalFooter>
       </form>

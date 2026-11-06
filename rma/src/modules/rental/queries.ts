@@ -57,9 +57,12 @@ export type RentalWithDetails = {
   rental: typeof rental.$inferSelect;
   customerName: string | null;
   customerPhone: string | null;
+  customerEmiratesId: string | null;
   vehiclePlate: string | null;
   vehicleMake: string | null;
   vehicleModel: string | null;
+  vehicleVin: string | null;
+  vehicleOdometer: number | null;
   payments: (typeof payment.$inferSelect)[];
 };
 
@@ -74,9 +77,12 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
         rental: rental,
         customerName: customer.name,
         customerPhone: customer.phone,
+        customerEmiratesId: customer.emiratesId,
         vehiclePlate: vehicle.plate,
         vehicleMake: vehicle.make,
         vehicleModel: vehicle.model,
+        vehicleVin: vehicle.vin,
+        vehicleOdometer: vehicle.odometer,
       })
       .from(rental)
       .innerJoin(customer, eq(rental.customerId, customer.id))

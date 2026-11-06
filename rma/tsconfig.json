@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "driver-bot"]
+  "exclude": ["node_modules", "driver-bot", "scripts/attic"]
 }

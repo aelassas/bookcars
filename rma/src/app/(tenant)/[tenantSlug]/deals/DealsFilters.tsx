@@ -3,15 +3,17 @@
 import { useRouter, usePathname } from "next/navigation";
 import { Button, Select } from "@/components/ui";
 import { useTransition } from "react";
+import { dealStageOptions } from "@/modules/crm/stages";
 
 const STATUSES = ["open", "won", "lost"] as const;
-const STAGES = ["inquiry", "quote", "contract", "handover", "closed"] as const;
 
 export default function DealsFilters({
+  tenantSlug,
   status,
   stage,
   myDeals,
 }: {
+  tenantSlug: string;
   status?: string;
   stage?: string;
   myDeals?: string;
@@ -66,9 +68,9 @@ export default function DealsFilters({
         onChange={(e) => apply({ stage: e.target.value })}
       >
         <option value="">All stages</option>
-        {STAGES.map((s) => (
-          <option key={s} value={s}>
-            {s.charAt(0).toUpperCase() + s.slice(1)}
+        {dealStageOptions(tenantSlug).map(({ key, label }) => (
+          <option key={key} value={key}>
+            {label}
           </option>
         ))}
       </Select>

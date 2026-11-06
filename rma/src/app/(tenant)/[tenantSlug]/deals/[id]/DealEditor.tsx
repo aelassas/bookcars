@@ -21,11 +21,11 @@ import {
 } from "@/components/ui";
 import { CalendarPlus, Car, X } from "lucide-react";
 import { LeadSearch } from "@/components/ui/LeadSearch";
+import { dealStageOptions, type DealStage } from "@/modules/crm/stages";
 
 type VehicleOption = { id: string; make: string; model: string; plate: string; dailyRate?: number };
 
-const STAGES = ["inquiry", "quote", "contract", "handover", "closed"] as const;
-type Stage = (typeof STAGES)[number];
+type Stage = DealStage;
 type DealType = "rent" | "lease" | "purchase";
 type DealStatus = "open" | "won" | "lost";
 
@@ -298,7 +298,7 @@ export default function DealEditor({
       <Card className="overflow-hidden">
         <CardHeader title="Pipeline stage" />
         <div className="flex flex-wrap gap-2 p-4">
-          {STAGES.map((s) => {
+          {dealStageOptions(tenantSlug).map(({ key: s, label }) => {
             const active = s === stage;
             return (
               <button
@@ -314,7 +314,7 @@ export default function DealEditor({
                 )}
               >
                 <span className={cx("h-2 w-2 rounded-full", STAGE_CLS[s])} />
-                {stagePending === s ? "Moving…" : s}
+                {stagePending === s ? "Moving…" : label}
               </button>
             );
           })}
@@ -358,9 +358,9 @@ export default function DealEditor({
               value={stage}
               onChange={(e) => setStage(e.target.value)}
             >
-              {STAGES.map((s) => (
+              {dealStageOptions(tenantSlug).map(({ key: s, label }) => (
                 <option key={s} value={s}>
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                  {label}
                 </option>
               ))}
             </Select>

@@ -381,6 +381,7 @@ export const STAGE_CLS: Record<string, string> = {
   inquiry: "bg-slate-300",
   quote: "bg-sky-400",
   contract: "bg-sky-600",
+  tars: "bg-violet-500",
   handover: "bg-emerald-500",
   closed: "bg-slate-800",
 };

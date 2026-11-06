@@ -75,6 +75,21 @@ describe("leadFromMessage", () => {
     expect(leadFromMessage(msg({ body: "[image]" }))).toBeNull();
   });
 
+  it("refuses a greeting until the person names something they want", () => {
+    expect(leadFromMessage(msg({ body: "Hi guys" }))).toBeNull();
+  });
+
+  it("keeps the requested car and rental date with the lead", () => {
+    const lead = leadFromMessage(msg({
+      body: "Hi guys do u have tesla for one week starting dec 1? send photos please",
+      createdAt: new Date("2026-11-05T13:46:17Z"),
+    }));
+    expect(lead).not.toBeNull();
+    expect(lead!.signals.carText).toBe("tesla");
+    expect(lead!.signals.dateFrom).toBe("2026-12-01");
+    expect(lead!.signals.intent).toBe("rent");
+  });
+
   it("falls back to the phone when WhatsApp gives no name", () => {
     const lead = leadFromMessage(msg({ customerName: null }));
     expect(lead!.customerName).toContain("971501234567");

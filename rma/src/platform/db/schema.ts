@@ -557,7 +557,7 @@ export const deal = pgTable(
     ref: text("ref").notNull(),
     type: text("type").notNull(), // rent | lease | purchase
     status: text("status").notNull().default("open"), // open | won | lost
-    stage: text("stage").notNull().default("inquiry"), // inquiry | quote | contract | handover | closed
+    stage: text("stage").notNull().default("inquiry"), // inquiry | quote | contract | tars | handover | closed
     // Exact Bitrix funnel stage NAME (e.g. "Выявление потребности", "КП
     // отправлено"), resolved per-category from crm.dealcategory.stage.list at
     // sync time. Nullable: platform-native deals have no Bitrix stage. The

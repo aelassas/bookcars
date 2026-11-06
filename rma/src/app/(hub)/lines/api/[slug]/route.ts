@@ -101,8 +101,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
 // confirmSlug (the UI makes the operator type it). Retirement:
 //   · overlay marks the slug retired — hidden from the roster, refused by
 //     every relink path, tenant/owner/phone mapping KEPT for historic rows
-//   · wa-observer/retire-line.sh stops the pm2 observer and ARCHIVES the
-//     session dir (retired-session-<slug>.<ts>, same convention as relink)
+//   · wa-observer/retire-line.sh stops + disables the systemd observer and
+//     ARCHIVES the session dir (archives/retired-session-<slug>-<ts>)
 //   · message history (DB rows + observed-<slug>.jsonl) is never touched
 export async function DELETE(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   const access = await canManageLines();

@@ -1,6 +1,7 @@
 "use server";
 
-import { lead, deal, user, rental, lease, vehicle, tenantMember } from "@/platform/db/schema";
+import { lead, deal, user, rental, lease, vehicle, tenant, tenantMember, message } from "@/platform/db/schema";
+import { RMA_RENTAL_STAGES } from "./stages";
 import { boardItem } from "@/platform/db/board-schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import {
@@ -122,7 +123,7 @@ const LIVE_CUTOFF = "2026-07-11";
 function liveDealCond(): SQL {
   return or(
     sql`${deal.createdAt} >= ${LIVE_CUTOFF}`,
-    and(eq(deal.status, "open"), inArray(deal.stage, ["quote", "contract", "handover"])),
+    and(eq(deal.status, "open"), inArray(deal.stage, ["quote", "contract", "tars", "handover"])),
     and(eq(deal.status, "open"), eq(deal.stage, "inquiry"), ne(deal.type, "rent"))
   ) as SQL;
 }
@@ -172,6 +173,11 @@ export type KanbanDeal = {
   // ── Card-minimalism fields (Azat-simple presentation) ───────────────────
   /** Customer name from the linked lead — the card's headline. */
   customerName: string | null;
+  phone: string | null;
+  /** Car and rental window the customer named in chat, not an invented fleet match. */
+  requestedCar: string | null;
+  dateFrom: string | null;
+  dateTo: string | null;
   /** Assigned salesperson's name (for owner initials); null when unassigned. */
   ownerName: string | null;
   /** "Make Model" of any vehicle linked via a rental/lease; null otherwise. */
@@ -462,16 +468,14 @@ export async function getCrmFunnel(
 //                 whenever the scope holds any Bitrix deal with a stage_detail.
 //                 Cards group by stage_detail; a null/foreign-funnel deal is
 //                 bucketed by its coarse stage so nothing vanishes.
-//   • "coarse"  — the legacy 5-stage board (inquiry…closed), used for a purely
-//                 platform-native tenant where stage_detail is null everywhere.
+//   • "coarse"  — RMA's six-stage rental flow, or the legacy five-stage board
+//                 for other platform-native tenants.
 export type KanbanMode = "detail" | "coarse";
 // `coarse` is the legacy stage a column maps into — used as the CreateDealModal
 // default and to keep won/lost math intact. In coarse mode it equals the key.
 export type KanbanColumn = { key: string; label: string; coarse: string };
 export type KanbanBoardConfig = { mode: KanbanMode; columns: KanbanColumn[] };
 
-// Legacy coarse column labels (Russian, as the team reads them). Kept here so
-// the board client is layout-agnostic — it just renders {key,label}.
 const COARSE_COLUMN_LABELS: Record<string, string> = {
   inquiry: "New inquiry",
   quote: "Needs assessment",
@@ -507,6 +511,10 @@ function columnCond(mode: KanbanMode, key: string): SQL {
   return mode === "detail" ? (sql`(${detailColumnExpr()}) = ${key}` as SQL) : eq(deal.stage, key);
 }
 
+function kanbanVisibleCond(): SQL {
+  return or(eq(deal.status, "open"), eq(deal.stage, "closed")) as SQL;
+}
+
 // Decide the board layout + ordered columns for this tenant/owner scope.
 export async function getKanbanBoardConfig(
   tenantId: string,
@@ -514,12 +522,20 @@ export async function getKanbanBoardConfig(
 ): Promise<KanbanBoardConfig> {
   await canManageCRMForTenant(tenantId);
   const owners = await resolveOwners(opts);
-  const conds: SQL[] = [eq(deal.status, "open"), isNotNull(deal.stageDetail)];
-  if (owners) conds.push(inArray(deal.ownerId, owners));
-  const hasDetail = await withDrizzleTenant(tenantId, async (tx) => {
+  const { tenantSlug, hasDetail } = await withDrizzleTenant(tenantId, async (tx) => {
+    const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
+    if (t?.slug === "rma") return { tenantSlug: t.slug, hasDetail: false };
+    const conds: SQL[] = [eq(deal.status, "open"), isNotNull(deal.stageDetail)];
+    if (owners) conds.push(inArray(deal.ownerId, owners));
     const [{ n }] = await tx.select({ n: count() }).from(deal).where(and(...conds));
-    return (n ?? 0) > 0;
+    return { tenantSlug: t?.slug, hasDetail: (n ?? 0) > 0 };
   });
+  if (tenantSlug === "rma") {
+    return {
+      mode: "coarse",
+      columns: RMA_RENTAL_STAGES.map(({ key, label }) => ({ key, label, coarse: key })),
+    };
+  }
   if (hasDetail) {
     return {
       mode: "detail",
@@ -532,9 +548,40 @@ export async function getKanbanBoardConfig(
   };
 }
 
+type KanbanAttention = "new" | "stale";
+
+type KanbanFilters = {
+  ownerId?: string;
+  ownerIds?: string[];
+  mode?: KanbanMode;
+  query?: string;
+  attention?: KanbanAttention;
+};
+
+function kanbanFilterCond(query?: string, attention?: KanbanAttention): SQL | undefined {
+  const conds: SQL[] = [];
+  const q = query?.trim();
+  if (q) {
+    const pattern = `%${q}%`;
+    conds.push(or(
+      ilike(deal.ref, pattern),
+      ilike(lead.customerName, pattern),
+      ilike(lead.phone, pattern),
+      ilike(deal.vouchedCar, pattern),
+      ilike(deal.notes, pattern),
+    )!);
+  }
+  if (attention === "new") conds.push(eq(deal.stage, "inquiry"));
+  if (attention === "stale") {
+    conds.push(ne(deal.stage, "inquiry"));
+    conds.push(sql`(${deal.lastActivityAt} IS NULL OR ${deal.lastActivityAt} < now() - interval '3 days')`);
+  }
+  return conds.length > 0 ? and(...conds) : undefined;
+}
+
 export async function getKanbanSummary(
   tenantId: string,
-  opts?: { ownerId?: string; ownerIds?: string[]; mode?: KanbanMode }
+  opts?: KanbanFilters
 ): Promise<KanbanStageSummary[]> {
   await canManageCRMForTenant(tenantId);
   const liveCond = kanbanLiveCond(kanbanCutoffISO());
@@ -543,8 +590,10 @@ export async function getKanbanSummary(
   // "My line" — a salesperson sees only their own deals. "me" resolves to the
   // signed-in user; concrete ids filter to those owners; undefined = everyone.
   const owners = await resolveOwners(opts);
-  const conds: SQL[] = [eq(deal.status, "open")];
+  const conds: SQL[] = [kanbanVisibleCond()];
   if (owners) conds.push(inArray(deal.ownerId, owners));
+  const filter = kanbanFilterCond(opts?.query, opts?.attention);
+  if (filter) conds.push(filter);
   return withDrizzleTenant(tenantId, (tx) =>
     tx
       .select({
@@ -554,6 +603,7 @@ export async function getKanbanSummary(
         liveTotalValue: sql<number>`COALESCE(SUM(${deal.value}) FILTER (WHERE ${liveCond}), 0)::bigint`,
       })
       .from(deal)
+      .leftJoin(lead, eq(lead.id, deal.leadId))
       .where(and(...conds))
       // Parameterized CASE gets different placeholder numbers in SELECT vs
       // GROUP BY, so Postgres can't prove they match and rejects with
@@ -575,14 +625,20 @@ type DealRowForEnrich = {
   customerName: string | null;
   externalSource: string | null;
 };
-type DealEnrichment = { estValue: number | null; vehicleLabel: string | null; aiNote: string | null };
+type DealEnrichment = {
+  estValue: number | null;
+  vehicleLabel: string | null;
+  aiNote: string | null;
+  dateFrom: string | null;
+  dateTo: string | null;
+};
 
 async function enrichDeals(
   tx: Parameters<Parameters<typeof withDrizzleTenant>[1]>[0],
   rows: DealRowForEnrich[]
 ): Promise<Map<string, DealEnrichment>> {
   const out = new Map<string, DealEnrichment>();
-  for (const r of rows) out.set(r.id, { estValue: null, vehicleLabel: null, aiNote: null });
+  for (const r of rows) out.set(r.id, { estValue: null, vehicleLabel: null, aiNote: null, dateFrom: null, dateTo: null });
   if (rows.length === 0) return out;
 
   // ── Vehicle + daily rate via any rental/lease bound to the deal (or its
@@ -612,6 +668,26 @@ async function enrichDeals(
       const rate = l.rate ?? 0;
       if (l.dealId && !vehByDeal.has(l.dealId)) vehByDeal.set(l.dealId, { label, rate });
       if (l.leadId && !vehByLead.has(l.leadId)) vehByLead.set(l.leadId, { label, rate });
+    }
+  }
+
+  const datesByLead = new Map<string, { from: string | null; to: string | null }>();
+  if (leadIds.length > 0) {
+    const dateRows = await tx
+      .select({
+        leadId: message.relatedEntityId,
+        from: message.extractedDateFrom,
+        to: message.extractedDateTo,
+      })
+      .from(message)
+      .where(and(
+        eq(message.relatedEntityType, "lead"),
+        inArray(message.relatedEntityId, leadIds),
+        or(isNotNull(message.extractedDateFrom), isNotNull(message.extractedDateTo))
+      ))
+      .orderBy(desc(message.createdAt));
+    for (const d of dateRows) {
+      if (d.leadId && !datesByLead.has(d.leadId)) datesByLead.set(d.leadId, { from: d.from, to: d.to });
     }
   }
 
@@ -654,6 +730,11 @@ async function enrichDeals(
     }
     const nk = r.customerName?.trim().toLowerCase();
     if (nk && aiByName.has(nk)) e.aiNote = aiByName.get(nk)!;
+    if (r.leadId) {
+      const dates = datesByLead.get(r.leadId);
+      e.dateFrom = dates?.from ?? null;
+      e.dateTo = dates?.to ?? null;
+    }
   }
   return out;
 }
@@ -675,6 +756,8 @@ const dealCardCols = {
   lastActivityAt: deal.lastActivityAt,
   stageDetail: deal.stageDetail,
   customerName: lead.customerName,
+  phone: lead.phone,
+  requestedCar: deal.vouchedCar,
   ownerName: user.name,
 } as const;
 
@@ -693,6 +776,8 @@ function toKanbanDeal(
     lastActivityAt: Date | string | null;
     stageDetail: string | null;
     customerName: string | null;
+    phone: string | null;
+    requestedCar: string | null;
     ownerName: string | null;
   },
   enr: DealEnrichment | undefined
@@ -710,6 +795,10 @@ function toKanbanDeal(
     lastActivityAt: r.lastActivityAt,
     stageDetail: r.stageDetail,
     customerName: r.customerName,
+    phone: r.phone,
+    requestedCar: r.requestedCar,
+    dateFrom: enr?.dateFrom ?? null,
+    dateTo: enr?.dateTo ?? null,
     ownerName: r.ownerName,
     estValue: r.value == null || r.value === 0 ? enr?.estValue ?? null : null,
     vehicleLabel: enr?.vehicleLabel ?? null,
@@ -721,7 +810,7 @@ function toKanbanDeal(
 // inquiry stage never loads its ~25k archive at once.
 export async function getKanbanStageDeals(
   tenantId: string,
-  opts: { stage: string; scope: KanbanScope; page: number; pageSize: number; ownerId?: string; ownerIds?: string[]; mode?: KanbanMode }
+  opts: { stage: string; scope: KanbanScope; page: number; pageSize: number } & KanbanFilters
 ): Promise<{ rows: KanbanDeal[]; total: number }> {
   await canManageCRMForTenant(tenantId);
   const { stage, scope, page, pageSize } = opts;
@@ -732,12 +821,17 @@ export async function getKanbanStageDeals(
   const offset = (page - 1) * pageSize;
   return withDrizzleTenant(tenantId, async (tx) => {
     const where = and(
-      eq(deal.status, "open"),
+      kanbanVisibleCond(),
       columnCond(mode, stage),
       scopeCond,
-      owners ? inArray(deal.ownerId, owners) : undefined
+      owners ? inArray(deal.ownerId, owners) : undefined,
+      kanbanFilterCond(opts.query, opts.attention),
     );
-    const [{ total }] = await tx.select({ total: count() }).from(deal).where(where);
+    const [{ total }] = await tx
+      .select({ total: count() })
+      .from(deal)
+      .leftJoin(lead, eq(lead.id, deal.leadId))
+      .where(where);
     const rows = await tx
       .select(dealCardCols)
       .from(deal)
