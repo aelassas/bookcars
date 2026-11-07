@@ -365,6 +365,69 @@ describe('calculateTotalPrice', () => {
       expect(total).toBe(435)
     })
 
+    it('charges per-day options for the rental days when the rental has leftover hours', () => {
+      const car = {
+        ...optionsCar,
+        hourlyPrice: 10,
+      } as unknown as bookcarsTypes.Car
+      const options: bookcarsTypes.CarOptions = {
+        fullInsurance: true,
+        additionalDriver: true,
+      }
+      const from = new Date('2026-01-01T10:00:00Z')
+      const to = new Date('2026-01-02T23:00:00Z') // 1 day + 13 hours, shown as 2 days
+
+      const total = bookcarsHelper.calculateTotalPrice(car, from, to, 0, options)
+
+      expect(bookcarsHelper.days(from, to)).toBe(2)
+      // Base: 1 * 100 + 13 * 10 = 230
+      // Per-day options (2 days): (fullInsurance 15 + additionalDriver 7) * 2 = 44
+      // Total: 230 + 44 = 274
+      expect(total).toBe(274)
+    })
+
+    it('keeps per-day options at the rounded day count when the leftover is under 12 hours', () => {
+      const car = {
+        ...optionsCar,
+        hourlyPrice: 10,
+      } as unknown as bookcarsTypes.Car
+      const options: bookcarsTypes.CarOptions = {
+        fullInsurance: true,
+        additionalDriver: true,
+      }
+      const from = new Date('2026-01-01T10:00:00Z')
+      const to = new Date('2026-01-02T21:00:00Z') // 1 day + 11 hours, shown as 1 day
+
+      const total = bookcarsHelper.calculateTotalPrice(car, from, to, 0, options)
+
+      expect(bookcarsHelper.days(from, to)).toBe(1)
+      // Base: 1 * 100 + 11 * 10 = 210
+      // Per-day options (1 day): fullInsurance 15 + additionalDriver 7 = 22
+      // Total: 210 + 22 = 232
+      expect(total).toBe(232)
+    })
+
+    it('charges per-day options when the rental is shorter than a day', () => {
+      const car = {
+        ...optionsCar,
+        hourlyPrice: 10,
+      } as unknown as bookcarsTypes.Car
+      const options: bookcarsTypes.CarOptions = {
+        theftProtection: true,
+        collisionDamageWaiver: true,
+      }
+      const from = new Date('2026-01-01T08:00:00Z')
+      const to = new Date('2026-01-01T22:00:00Z') // 14 hours, shown as 1 day
+
+      const total = bookcarsHelper.calculateTotalPrice(car, from, to, 0, options)
+
+      expect(bookcarsHelper.days(from, to)).toBe(1)
+      // Base: 14 * 10 = 140
+      // Per-day options (1 day): theftProtection 5 + collisionDamageWaiver 8 = 13
+      // Total: 140 + 13 = 153
+      expect(total).toBe(153)
+    })
+
     it('calculates total correctly for partial/selected options', () => {
       const options: bookcarsTypes.CarOptions = {
         cancellation: true,

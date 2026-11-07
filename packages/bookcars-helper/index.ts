@@ -279,6 +279,8 @@ export const formatPrice = (price: number, currency: string, language: string) =
 export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date, priceChangeRate: number, options?: bookcarsTypes.CarOptions) => {
   let totalPrice = 0
   let totalDays = days(from, to)
+  // Per-day options use the rounded day count from days(), as the option labels and the date-based branch do.
+  const optionDays = days(from, to)
 
   if (car.isDateBasedPrice) {
     let currentDate = new Date(from)
@@ -366,16 +368,16 @@ export const calculateTotalPrice = (car: bookcarsTypes.Car, from: Date, to: Date
       totalPrice += car.amendments
     }
     if (options.theftProtection && car.theftProtection > 0) {
-      totalPrice += car.theftProtection * totalDays
+      totalPrice += car.theftProtection * optionDays
     }
     if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-      totalPrice += car.collisionDamageWaiver * totalDays
+      totalPrice += car.collisionDamageWaiver * optionDays
     }
     if (options.fullInsurance && car.fullInsurance > 0) {
-      totalPrice += car.fullInsurance * totalDays
+      totalPrice += car.fullInsurance * optionDays
     }
     if (options.additionalDriver && car.additionalDriver > 0) {
-      totalPrice += car.additionalDriver * totalDays
+      totalPrice += car.additionalDriver * optionDays
     }
   }
 
