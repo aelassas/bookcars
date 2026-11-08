@@ -320,6 +320,18 @@ export const checkout = async (req: Request, res: Response) => {
       return
     }
 
+    // Pick-up and drop-off locations must exist before the booking is saved
+    const { pickupLocation, dropOffLocation } = bookingInput
+    if (
+      typeof pickupLocation !== 'string' || !helper.isValidObjectId(pickupLocation)
+      || typeof dropOffLocation !== 'string' || !helper.isValidObjectId(dropOffLocation)
+      || !(await Location.exists({ _id: pickupLocation }))
+      || !(await Location.exists({ _id: dropOffLocation }))
+    ) {
+      res.status(400).send('Invalid pick-up or drop-off location')
+      return
+    }
+
     // Calculate expected total price
     const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
       carObj as unknown as bookcarsTypes.Car,
@@ -649,68 +661,18 @@ export const checkout = async (req: Request, res: Response) => {
       : body.paymentIntentId
         ? bookcarsTypes.BookingStatus.Paid
         : bookcarsTypes.BookingStatus.Void
-    if (guestUser) {
-      if (status === bookcarsTypes.BookingStatus.Paid || body.payLater) {
+    if (guestUser && (status === bookcarsTypes.BookingStatus.Paid || body.payLater)) {
+      try {
         guestUser.expireAt = undefined
         await guestUser.save()
-      }
-
-      const token = new Token({ user: user._id, token: helper.generateToken() })
-      await token.save()
-
-      const mailOptions: SendMailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-        html: `<p>
-          ${i18n.t('HELLO')}${user.fullName},<br><br>
-          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${i18n.t('REGARDS')}<br>
-          </p>`,
-      }
-      await mailHelper.sendMail(mailOptions)
-    } else if (paymentIntentCustomerId) {
-      user.customerId = paymentIntentCustomerId
-      await user.save()
-    }
-
-    if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
-      const car = await Car.findById(booking.car)
-      if (!car) {
-        throw new Error(`Car ${booking.car} not found`)
-      }
-      car.trips += 1
-      await car.save()
-    }
-
-    if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
-      // Mark car as fully booked
-      // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
-      //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
-      // }
-
-      // Send confirmation email to customer
-      if (!(await confirm(user, supplier, booking, body.payLater))) {
-        res.sendStatus(400)
-        return
-      }
-
-      // Notify supplier
-      i18n.locale = supplier.language
-      let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-      await notify(user, booking._id.toString(), supplier, message)
-
-      // Notify admin
-      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
-      if (admin) {
-        i18n.locale = admin.language
-        message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-        await notify(user, booking._id.toString(), admin, message)
+      } catch (guestErr) {
+        logger.error(`[booking.checkout] Booking ${booking._id.toString()} saved, but clearing the guest account expiry failed`, guestErr)
       }
     }
 
-    // CAPTURE FUNDS once the booking is successfully persisted
+    // CAPTURE FUNDS once the booking is successfully persisted,
+    // before the emails and notifications below, so that a booking saved
+    // as paid is not left with an uncaptured payment if one of them fails
     const { paymentIntentId } = body
     if (paymentIntentId) {
       try {
@@ -723,6 +685,67 @@ export const checkout = async (req: Request, res: Response) => {
         res.status(500).send('Booking saved, but payment capture failed. Please contact support.')
         return
       }
+    }
+
+    // The booking is saved (and its payment captured): a failing email or
+    // notification is logged and does not turn the checkout into an error
+    try {
+      if (guestUser) {
+        const token = new Token({ user: user._id, token: helper.generateToken() })
+        await token.save()
+
+        const mailOptions: SendMailOptions = {
+          from: env.SMTP_FROM,
+          to: user.email,
+          subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+          html: `<p>
+            ${i18n.t('HELLO')}${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+            ${i18n.t('REGARDS')}<br>
+            </p>`,
+        }
+        await mailHelper.sendMail(mailOptions)
+      } else if (paymentIntentCustomerId) {
+        user.customerId = paymentIntentCustomerId
+        await user.save()
+      }
+
+      if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
+        const car = await Car.findById(booking.car)
+        if (!car) {
+          throw new Error(`Car ${booking.car} not found`)
+        }
+        car.trips += 1
+        await car.save()
+      }
+
+      if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
+        // Mark car as fully booked
+        // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
+        //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
+        // }
+
+        // Send confirmation email to customer
+        if (!(await confirm(user, supplier, booking, body.payLater))) {
+          logger.error(`[booking.checkout] Confirmation email not sent for booking ${booking._id.toString()}`)
+        }
+
+        // Notify supplier
+        i18n.locale = supplier.language
+        let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+        await notify(user, booking._id.toString(), supplier, message)
+
+        // Notify admin
+        const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+        if (admin) {
+          i18n.locale = admin.language
+          message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+          await notify(user, booking._id.toString(), admin, message)
+        }
+      }
+    } catch (notifyErr) {
+      logger.error(`[booking.checkout] Booking ${booking._id.toString()} saved, but sending emails or notifications failed`, notifyErr)
     }
 
     res.status(200).send({ bookingId: booking._id.toString() })

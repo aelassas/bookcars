@@ -1434,6 +1434,135 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
       await stripeAPI.customers.del(customerId)
     }
   })
+
+  it('should capture the payment of a paid checkout even if a notification fails', async () => {
+    const from = new Date(2025, 8, 1)
+    const to = new Date(2025, 8, 4)
+    const car = await Car.findById(CAR1_ID)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      car!.toObject() as unknown as bookcarsTypes.Car,
+      from,
+      to,
+      0,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    // Authorized (manual capture) payment, as after the mobile payment sheet
+    const paymentIntentId = `pi_test_${nanoid()}`
+    const customerId = `cus_test_${nanoid()}`
+    const retrieveSpy = jest.spyOn(stripeAPI.paymentIntents, 'retrieve').mockResolvedValue({
+      id: paymentIntentId,
+      status: 'requires_capture',
+      amount: helper.toCents(expectedBasePrice),
+      currency: env.BASE_CURRENCY.toLowerCase(),
+      customer: customerId,
+    } as never)
+    const captureSpy = jest.spyOn(stripeAPI.paymentIntents, 'capture').mockResolvedValue({
+      id: paymentIntentId,
+      status: 'succeeded',
+    } as never)
+    // The supplier notification, sent before the capture on main, fails
+    const notificationSaveSpy = jest.spyOn(Notification.prototype, 'save').mockRejectedValueOnce(new Error('Notification store unavailable'))
+    const driverCustomerId = (await User.findById(DRIVER1_ID))?.customerId
+    const carTrips = car!.trips
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from,
+        to,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedBasePrice,
+        additionalDriver: false,
+      },
+      payLater: false,
+      paymentIntentId,
+      customerId,
+    }
+
+    try {
+      const res = await request(app)
+        .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+        .send(payload)
+
+      // The booking is saved as paid, so the payment is captured and the checkout succeeds
+      expect(res.statusCode).toBe(200)
+      expect(notificationSaveSpy).toHaveBeenCalled()
+      expect(captureSpy).toHaveBeenCalledWith(paymentIntentId)
+      const booking = await Booking.findOne({ paymentIntentId })
+      expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Paid)
+    } finally {
+      retrieveSpy.mockRestore()
+      captureSpy.mockRestore()
+      notificationSaveSpy.mockRestore()
+      const booking = await Booking.findOne({ paymentIntentId })
+      if (booking) {
+        await testHelper.deleteNotifications(booking._id.toString())
+      }
+      await Booking.deleteMany({ paymentIntentId })
+      await Car.updateOne({ _id: CAR1_ID }, { trips: carTrips })
+      await User.updateOne({ _id: DRIVER1_ID }, driverCustomerId ? { customerId: driverCustomerId } : { $unset: { customerId: '' } })
+    }
+  })
+
+  it('should reject a checkout with an unknown pick-up location before saving the booking', async () => {
+    const from = new Date(2025, 9, 1)
+    const to = new Date(2025, 9, 4)
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: testHelper.GetRandromObjectIdAsString(),
+        dropOffLocation: LOCATION_ID,
+        from,
+        to,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 0,
+        additionalDriver: false,
+      },
+      payLater: true,
+    }
+
+    try {
+      const res = await request(app)
+        .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+        .send(payload)
+
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toBe('Invalid pick-up or drop-off location')
+      expect(await Booking.exists({ car: CAR1_ID, driver: DRIVER1_ID, from, to })).toBeNull()
+    } finally {
+      const bookings = await Booking.find({ car: CAR1_ID, driver: DRIVER1_ID, from, to })
+      for (const booking of bookings) {
+        await testHelper.deleteNotifications(booking._id.toString())
+      }
+      await Booking.deleteMany({ car: CAR1_ID, driver: DRIVER1_ID, from, to })
+    }
+  })
 })
 
 // ---------------------------------------------------------------------------
