@@ -1,5 +1,26 @@
 # Releases
 
+## [BookCars 9.3](https://github.com/aelassas/bookcars/releases/tag/v9.3) – 2026-11-08
+
+#### What's Changed
+* fix(backend): check payments against the chosen payment option (#136)
+* fix(helper): charge per-day options for the rental days shown at checkout (#141)
+* fix(frontend): Web checkout shows the Stripe payment form even when the booking request fails (#139)
+* fix(mobile): check the driver against the car minimum age before payment (#138)
+
+#### New Contributors
+* @5eBeKs made their first contribution in https://github.com/aelassas/bookcars/pull/136
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v9.2...v9.3
+
+### Assets
+- [bookcars-9.3.apk](https://github.com/aelassas/bookcars/releases/download/v9.3/bookcars-9.3.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.3/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.3)
+
 ## [BookCars 9.2](https://github.com/aelassas/bookcars/releases/tag/v9.2) – 2026-11-05
 
 * feat(admin, frontend, mobile): add German, Portuguese, Italian, Chinese (simplified) and Japanese language support
