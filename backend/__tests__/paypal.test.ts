@@ -584,3 +584,132 @@ describe('POST /api/check-paypal-order/:bookingId/:orderId', () => {
     }
   })
 })
+
+describe('POST /api/check-paypal-order/:bookingId/:orderId (failing notification)', () => {
+  it('should confirm a paid order when a notification fails and refuse a second order for the paid booking', async () => {
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+    const from = new Date()
+    from.setDate(from.getDate() + 1)
+    const to = new Date(from)
+    to.setDate(to.getDate() + 3)
+
+    const supplierName = nanoid()
+    const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    const driver = new User({
+      fullName: 'driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await driver.save()
+
+    const car = new Car({
+      name: 'BMW X1',
+      supplier: supplierId,
+      minimumAge: 21,
+      locations: [testHelper.GetRandromObjectId()],
+      dailyPrice: 78,
+      deposit: 950,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      image: undefined,
+      seats: 6,
+      doors: 5,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: 1000,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
+      range: bookcarsTypes.CarRange.Midi,
+      rating: 4,
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+    })
+    await car.save()
+
+    const locationId = await testHelper.createLocation('location en', 'location fr', testHelper.GetRandromObjectIdAsString())
+
+    const booking = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      cancellation: true,
+      amendments: true,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      price: 312,
+      additionalDriver: true,
+    })
+
+    const notificationSaveSpy = jest.spyOn(Notification.prototype, 'save')
+    try {
+      await booking.save()
+
+      mockGetOrder.mockImplementation(() => Promise.resolve({
+        status: 'COMPLETED',
+        purchase_units: [
+          {
+            invoice_id: booking._id.toString(),
+            amount: {
+              value: '312.00',
+              currency_code: env.BASE_CURRENCY,
+            },
+            payments: {
+              captures: [{ id: 'CAPTURE-123' }],
+            },
+          },
+        ],
+      }))
+
+      // the order is paid and the booking is saved as paid, then the supplier notification fails
+      notificationSaveSpy.mockRejectedValueOnce(new Error('Notification store unavailable'))
+
+      let res = await request(app)
+        .post(`/api/check-paypal-order/${booking._id.toString()}/${nanoid()}`)
+      expect(notificationSaveSpy).toHaveBeenCalled()
+      expect(res.statusCode).toBe(200)
+
+      const paidBooking = await Booking.findById(booking._id)
+      expect(paidBooking?.status).toBe(bookcarsTypes.BookingStatus.Paid)
+      expect(paidBooking?.expireAt).toBeFalsy()
+
+      // the paid booking must not get a second PayPal order
+      mockCreateOrder.mockClear()
+      mockCreateOrder.mockImplementation(() => Promise.resolve('ORDER-MOCK-456'))
+      const payload: bookcarsTypes.CreatePayPalOrderPayload = {
+        amount: 312,
+        currency: env.BASE_CURRENCY,
+        name: 'BMW X1',
+        description: 'BMW X1',
+        bookingId: booking._id.toString(),
+      }
+      res = await request(app)
+        .post('/api/create-paypal-order')
+        .send(payload)
+      expect(res.statusCode).toBe(400)
+      expect(mockCreateOrder).not.toHaveBeenCalled()
+    } finally {
+      notificationSaveSpy.mockRestore()
+      await testHelper.deleteNotifications(booking._id.toString())
+      await booking.deleteOne()
+      await car.deleteOne()
+      await driver.deleteOne()
+      await testHelper.deleteLocation(locationId)
+      await testHelper.deleteSupplier(supplierId)
+    }
+  })
+})

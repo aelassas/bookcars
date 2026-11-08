@@ -62,6 +62,15 @@ export const createPayPalOrder = async (req: Request, res: Response) => {
       return
     }
 
+    // A booking that is no longer awaiting its payment (already paid, for example)
+    // must not get a new order, otherwise the customer can be charged twice
+    if (booking.status !== bookcarsTypes.BookingStatus.Void) {
+      const msg = `Booking ${bookingId} is not awaiting payment`
+      logger.info(`[paypal.createPayPalOrder] ${msg}`)
+      res.status(400).send(msg)
+      return
+    }
+
     const clientIp = ipinfoHelper.getClientIp(req)
     const countryCode = await ipinfoHelper.getCountryCode(clientIp)
 
@@ -194,22 +203,28 @@ export const checkPayPalOrder = async (req: Request, res: Response) => {
       user.expireAt = undefined
       await user.save()
 
-      if (!(await bookingController.confirm(user, supplier, booking, false))) {
-        res.sendStatus(400)
-        return
-      }
+      // The order is paid and the booking is saved as paid: a failing email or
+      // notification is logged and does not turn the paid order into an error
+      try {
+        if (!(await bookingController.confirm(user, supplier, booking, false))) {
+          res.sendStatus(400)
+          return
+        }
 
-      // Notify supplier
-      i18n.locale = supplier.language
-      let message = i18n.t('BOOKING_PAID_NOTIFICATION')
-      await bookingController.notify(user, booking._id.toString(), supplier, message)
+        // Notify supplier
+        i18n.locale = supplier.language
+        let message = i18n.t('BOOKING_PAID_NOTIFICATION')
+        await bookingController.notify(user, booking._id.toString(), supplier, message)
 
-      // Notify admin
-      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
-      if (admin) {
-        i18n.locale = admin.language
-        message = i18n.t('BOOKING_PAID_NOTIFICATION')
-        await bookingController.notify(user, booking._id.toString(), admin, message)
+        // Notify admin
+        const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+        if (admin) {
+          i18n.locale = admin.language
+          message = i18n.t('BOOKING_PAID_NOTIFICATION')
+          await bookingController.notify(user, booking._id.toString(), admin, message)
+        }
+      } catch (notifyErr) {
+        logger.error(`[paypal.checkPayPalOrder] Booking ${booking._id.toString()} paid, but sending emails or notifications failed`, notifyErr)
       }
 
       res.sendStatus(200)
