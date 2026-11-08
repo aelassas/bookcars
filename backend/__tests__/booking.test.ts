@@ -1522,6 +1522,121 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
     }
   })
 
+  it('should confirm a mobile checkout paid as a deposit or in full like a regular payment', async () => {
+    const from = new Date(2025, 8, 10)
+    const to = new Date(2025, 8, 13)
+    const car = await Car.findById(CAR1_ID)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      car!.toObject() as unknown as bookcarsTypes.Car,
+      from,
+      to,
+      0,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+    const carTrips = car!.trips
+    const driver = await User.findById(DRIVER1_ID)
+    const driverCustomerId = driver?.customerId
+    const supplierCounter = (await NotificationCounter.findOne({ user: SUPPLIER_ID }))?.count
+
+    const options = [
+      { isDeposit: true, isPayedInFull: false, status: bookcarsTypes.BookingStatus.Deposit },
+      { isDeposit: false, isPayedInFull: true, status: bookcarsTypes.BookingStatus.PaidInFull },
+    ]
+
+    // mailHelper builds its own transporter, so the spy goes on the shared nodemailer Mail prototype
+    const sendMail = jest.spyOn(Object.getPrototypeOf(testTransporter), 'sendMail').mockResolvedValue({ messageId: 'test' } as never)
+
+    try {
+      for (const [index, option] of options.entries()) {
+        sendMail.mockClear()
+        const amount = helper.getPaymentAmount(expectedBasePrice, car!.deposit, 0, option.isDeposit, option.isPayedInFull)
+        const paymentIntentId = `pi_test_${nanoid()}`
+        const customerId = `cus_test_${nanoid()}`
+        const retrieveSpy = jest.spyOn(stripeAPI.paymentIntents, 'retrieve').mockResolvedValue({
+          id: paymentIntentId,
+          status: 'requires_capture',
+          amount: helper.toCents(amount),
+          currency: env.BASE_CURRENCY.toLowerCase(),
+          customer: customerId,
+        } as never)
+        const captureSpy = jest.spyOn(stripeAPI.paymentIntents, 'capture').mockResolvedValue({
+          id: paymentIntentId,
+          status: 'succeeded',
+        } as never)
+
+        const payload: bookcarsTypes.CheckoutPayload = {
+          booking: {
+            supplier: SUPPLIER_ID,
+            car: CAR1_ID,
+            driver: DRIVER1_ID,
+            pickupLocation: LOCATION_ID,
+            dropOffLocation: LOCATION_ID,
+            from,
+            to,
+            status: bookcarsTypes.BookingStatus.Pending,
+            cancellation: false,
+            amendments: false,
+            theftProtection: false,
+            collisionDamageWaiver: false,
+            fullInsurance: false,
+            price: amount,
+            additionalDriver: false,
+            isDeposit: option.isDeposit,
+            isPayedInFull: option.isPayedInFull,
+          },
+          payLater: false,
+          paymentIntentId,
+          customerId,
+        }
+
+        try {
+          const res = await request(app)
+            .post('/api/checkout')
+            .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+            .send(payload)
+
+          expect(res.statusCode).toBe(200)
+          expect(captureSpy).toHaveBeenCalledWith(paymentIntentId)
+          const booking = await Booking.findOne({ paymentIntentId })
+          expect(booking?.status).toBe(option.status)
+          // The driver gets the booking confirmation email
+          expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
+            to: driver!.email,
+            subject: expect.stringContaining(booking!._id.toString()),
+          }))
+          // The supplier is notified of the paid booking and the car trip is counted, as for a regular payment
+          expect(await Notification.exists({ user: SUPPLIER_ID, booking: booking!._id })).toBeTruthy()
+          expect((await Car.findById(CAR1_ID))?.trips).toBe(carTrips + index + 1)
+        } finally {
+          retrieveSpy.mockRestore()
+          captureSpy.mockRestore()
+          const booking = await Booking.findOne({ paymentIntentId })
+          if (booking) {
+            await testHelper.deleteNotifications(booking._id.toString())
+            await Notification.deleteMany({ user: SUPPLIER_ID, booking: booking._id })
+          }
+          await Booking.deleteMany({ paymentIntentId })
+        }
+      }
+    } finally {
+      sendMail.mockRestore()
+      await Car.updateOne({ _id: CAR1_ID }, { trips: carTrips })
+      await User.updateOne({ _id: DRIVER1_ID }, driverCustomerId ? { customerId: driverCustomerId } : { $unset: { customerId: '' } })
+      if (supplierCounter === undefined) {
+        await NotificationCounter.deleteMany({ user: SUPPLIER_ID })
+      } else {
+        await NotificationCounter.updateOne({ user: SUPPLIER_ID }, { count: supplierCounter })
+      }
+    }
+  })
+
   it('should reject a checkout with an unknown pick-up location before saving the booking', async () => {
     const from = new Date(2025, 9, 1)
     const to = new Date(2025, 9, 4)
