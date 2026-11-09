@@ -24,9 +24,10 @@ export const verifyRecaptchaToken = async (token: string, ip: string): Promise<b
 
   const { success, action, score } = result.data
 
-  // Verify action match if provided by Google, otherwise allow standard execution
-  const isProduction = process.env.NODE_ENV === 'production'
-  const minimumScore = isProduction ? 0.5 : 0.1 // Accept lower scores or bypass score checking in local dev mode
-
-  return success === true && action === 'submit' && typeof score === 'number' && score >= minimumScore
+  return (
+    success === true &&
+    action === 'submit' &&
+    typeof score === 'number' &&
+    score >= env.RECAPTCHA_MIN_SCORE
+  )
 }

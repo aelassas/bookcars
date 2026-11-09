@@ -476,6 +476,14 @@ export const RECAPTCHA_REQUIRED = process.env.NODE_ENV === 'production'
   || Boolean(RECAPTCHA_SECRET && RECAPTCHA_SECRET !== 'RECAPTCHA_SECRET')
 
 /**
+* Minimum acceptable score for Google reCAPTCHA v3 verification (0.0 to 1.0).
+* Default is 0.5.
+*
+* @type {number}
+*/
+export const RECAPTCHA_MIN_SCORE = Number.parseFloat(__env__('BC_RECAPTCHA_MIN_SCORE', false, '0.5'))
+
+/**
  * Timezone for cenverting dates from UTC to local time.
  * Must be a valid TZ idenfidier: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
  * Default is UTC.
