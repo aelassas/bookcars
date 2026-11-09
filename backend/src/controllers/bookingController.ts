@@ -711,7 +711,15 @@ export const checkout = async (req: Request, res: Response) => {
         await user.save()
       }
 
-      if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
+      // A payment intent booking is saved as Paid, Deposit or PaidInFull
+      // depending on the payment option: all three are paid bookings
+      const paidWithPaymentIntent = !!body.paymentIntentId && !!body.customerId && [
+        bookcarsTypes.BookingStatus.Paid,
+        bookcarsTypes.BookingStatus.Deposit,
+        bookcarsTypes.BookingStatus.PaidInFull,
+      ].includes(booking.status)
+
+      if (paidWithPaymentIntent) {
         const car = await Car.findById(booking.car)
         if (!car) {
           throw new Error(`Car ${booking.car} not found`)
@@ -720,7 +728,7 @@ export const checkout = async (req: Request, res: Response) => {
         await car.save()
       }
 
-      if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
+      if (body.payLater || paidWithPaymentIntent) {
         // Mark car as fully booked
         // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
         //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
