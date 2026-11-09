@@ -105,7 +105,7 @@ export const saveBookingsWithAvailability = async (bookings: env.Booking[], opti
       const query = Car.findOneAndUpdate(
         { _id: new mongoose.Types.ObjectId(carId) },
         { $inc: { bookingReservationVersion: 1 } },
-        { new: true, timestamps: false, ...sessionOpt },
+        { returnDocument: 'after', timestamps: false, ...sessionOpt },
       ).select('blockOnPay').lean()
 
       const car = await query
