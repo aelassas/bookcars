@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build:packages": "cd ../packages/bookcars-types && npm i && npm run build && cd ../currency-converter && npm i && npm run build && cd ../bookcars-helper && npm i && npm run build && cd ../../backend",
+    "build:packages": "cd ../packages/bookcars-types && npm i --include=dev && npm run build && cd ../currency-converter && npm i --include=dev && npm run build && cd ../bookcars-helper && npm i --include=dev && npm run build && cd ../../backend",
     "dev": "npm run build:packages && nodemon",
     "dev:setup": "npm run setup && nodemon",
     "build": "npm run build:packages && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
