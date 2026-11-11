@@ -453,6 +453,17 @@ const Header = ({
               </ListItem>
             </Drawer>
           </>
+          <Button onClick={() => navigate('/')} sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none', ml: 1 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: 6, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', fontWeight: 800, fontSize: 16 }}>
+              S
+            </span>
+            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.5px', color: '#fff' }}>
+              Safar<span style={{ color: '#10b981' }}>Rent</span>
+            </span>
+            <span style={{ fontSize: 9, fontWeight: 700, background: '#064e3b', color: '#6ee7b7', padding: '2px 5px', borderRadius: 4, border: '1px solid #047857', textTransform: 'uppercase' }}>
+              ADMIN PK
+            </span>
+          </Button>
           <div style={classes.grow} />
           <div className="header-desktop">
             {isSignedIn && (

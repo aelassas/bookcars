@@ -14,6 +14,12 @@ const strings = new LocalizedStrings({
     VALIDATION_EMAIL_SENT: 'Validation email sent.',
     VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
   },
+  ur: {
+    VALIDATE_EMAIL: 'آپ کے ای میل پتے پر توثیقی ای میل بھیج دی گئی ہے۔ براہ کرم اپنا ان باکس چیک کریں اور ای میل میں موجود لنک پر کلک کر کے اپنا اکاؤنٹ تصدیق کریں۔ یہ لنک 24 گھنٹے بعد غیر فعال ہو جائے گا۔',
+    RESEND: 'دوبارہ بھیجیں',
+    VALIDATION_EMAIL_SENT: 'توثیقی ای میل بھیج دی گئی ہے۔',
+    VALIDATION_EMAIL_ERROR: 'توثیقی ای میل بھیجتے وقت خرابی پیش آئی۔',
+  },
   es: {
     VALIDATE_EMAIL: 'Se ha enviado un correo electrónico de validación a su dirección de correo electrónico. Revise su casilla de correo y valide su cuenta haciendo clic en el enlace del correo electrónico. Expirará después de un día. Si no recibió el correo electrónico de validación, haga clic en reenviar.',
     RESEND: 'Reenviar',

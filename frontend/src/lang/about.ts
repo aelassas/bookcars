@@ -21,6 +21,15 @@ const strings = new LocalizedStrings({
     CONTENT2: "Enjoy unmatched convenience, reliability, and value with our premier car rental service. From effortless bookings to high-quality vehicles, we're your trusted travel partner.",
     FIND_DEAL: 'Find Deal',
   },
+  ur: {
+    TITLE1: `${env.WEBSITE_NAME} - پاکستان کا بہترین رینٹ اے کار پلیٹ فارم`,
+    SUBTITLE1: 'آپ کا بااعتماد سفری ساتھی',
+    CONTENT1: `${env.WEBSITE_NAME} میں ہم سمجھتے ہیں کہ ہر سفر منفرد ہوتا ہے۔ ہم اپنے صارفین کو اعلیٰ معیار کی گاڑیاں فراہم کرنے کے لیے پرعزم ہیں، خواہ آپ کراچی، لاہور، اسلام آباد کی سڑکوں پر سفر کر رہے ہوں یا شمالی علاقہ جات کے دلکش راستوں پر۔ ہماری مہم محفوظ، آرام دہ اور جدید ٹیکنالوجی سے لیس سفری سہولیات فراہم کرنا ہے۔ سلف ڈرائیو اور ڈرائیور کے ساتھ دونوں آپشنز اور مقامی ادائیگی کے آسان ذرائع (JazzCash، EasyPaisa، Raast) کے ساتھ آپ کا سفر باآسانی مکمل ہوتا ہے۔`,
+    TITLE2: `کیوں منتخب کریں ${env.WEBSITE_NAME}`,
+    SUBTITLE2: 'ہر سفر میں بہترین معیار اور حفاظت',
+    CONTENT2: 'سفر رینٹ کے ساتھ شفاف قیمتیں، بغیر کسی چھپے ہوئے چارجز کے، اور 24/7 کسٹمر سپورٹ کے ساتھ پاکستان بھر میں بغیر پریشانی کے گاڑی بک کریں۔',
+    FIND_DEAL: 'بہترین گاڑی تلاش کریں',
+  },
   es: {
     TITLE1: `${env.WEBSITE_NAME} - Su servicio de alquiler de coches`,
     SUBTITLE1: 'Su socio de confianza para alquileres de coches',

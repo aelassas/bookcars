@@ -58,6 +58,66 @@ app.use(allowedMethods)
 // Serve static files from the CDN directory
 app.use('/cdn', express.static(env.CDN_ROOT))
 
+app.get('/', (_req, res) => {
+  res.status(200).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafarRent API Engine | Pakistan Vehicle Rental Operations</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: radial-gradient(circle at top, #064e3b 0%, #031e17 40%, #02120e 100%); color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: rgba(6, 78, 59, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; max-width: 680px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #6ee7b7; padding: 6px 14px; border-radius: 9999px; font-weight: 600; font-size: 13px; margin-bottom: 20px; }
+    .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+    h1 { font-size: 30px; font-weight: 700; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .subtitle { color: #a7f3d0; font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 30px; }
+    .tile { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px 16px; }
+    .tile-lbl { font-size: 11px; text-transform: uppercase; color: #6ee7b7; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .tile-val { font-size: 14px; color: #f1f5f9; font-weight: 500; word-break: break-all; }
+    .tile-val a { color: #34d399; text-decoration: none; font-weight: 600; }
+    .tile-val a:hover { text-decoration: underline; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; background: #059669; color: white; padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); }
+    .btn:hover { background: #10b981; transform: translateY(-1px); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: none; color: #e2e8f0; }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.14); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge"><span class="dot"></span> SafarRent API Engine Online</div>
+    <h1>SafarRent Operations API</h1>
+    <p class="subtitle">Pakistan Vehicle Rental Platform • Operations, Fleet KPIs &amp; RentOps AI Engine</p>
+    <div class="grid">
+      <div class="tile">
+        <div class="tile-lbl">Customer Web Portal</div>
+        <div class="tile-val"><a href="http://localhost:8080" target="_blank">http://localhost:8080 &rarr;</a></div>
+      </div>
+      <div class="tile">
+        <div class="tile-lbl">Admin &amp; Operations Portal</div>
+        <div class="tile-val"><a href="http://localhost:3001/operations" target="_blank">http://localhost:3001/operations &rarr;</a></div>
+      </div>
+      <div class="tile">
+        <div class="tile-lbl">Pakistan Operations API</div>
+        <div class="tile-val"><code>/api/operations-dashboard</code></div>
+      </div>
+      <div class="tile">
+        <div class="tile-lbl">RentOps AI Intake API</div>
+        <div class="tile-val"><code>/api/ai/booking-intake</code></div>
+      </div>
+    </div>
+    <div class="actions">
+      <a href="http://localhost:8080" class="btn">Launch Customer Portal</a>
+      <a href="http://localhost:3001/operations" class="btn btn-secondary">Open Admin Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>`)
+})
+
 app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)
 app.use('/', locationRoutes)

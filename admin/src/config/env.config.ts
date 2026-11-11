@@ -11,6 +11,10 @@ const LANGUAGES = [
     label: 'English',
   },
   {
+    code: 'ur',
+    label: 'اردو (Pakistan)',
+  },
+  {
     code: 'fr',
     label: 'Français',
   },

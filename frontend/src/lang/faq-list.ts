@@ -26,6 +26,18 @@ const strings = new LocalizedStrings({
     FAQ_CANCEL_TITLE: 'What happens if I need to cancel my reservation?',
     FAQ_CANCEL_TEXT: 'We understand that plans can change, which is why we offer flexible cancellation policies. Depending on the timing of your cancellation, there may be applicable fees. Please refer to our terms and conditions or contact our customer support team for assistance with cancellations.',
   },
+  ur: {
+    FAQ_TITLE: 'عمومی سوالات (FAQ)',
+    MORE_QUESTIONS: 'مزید سوالات ہیں؟',
+    FAQ_DOCUMENTS_TITLE: 'گاڑی کرایہ پر لینے کے لیے کن دستاویزات کی ضرورت ہے؟',
+    FAQ_DOCUMENTS_TEXT: 'گاڑی کرایہ پر لینے کے لیے آپ کو اصل قومی شناختی کارڈ (CNIC) یا پاسپورٹ اور کارآمد ڈرائیونگ لائسنس درکار ہوگا۔ پاکستانی شہریوں اور بیرون ملک مقیم پاکستانیوں دونوں کے لیے آسان تصدیق دستیاب ہے۔',
+    FAQ_SERVICES_TITLE: 'کیا آپ ایئرپورٹ اور ہوٹل پر ڈیلیوری فراہم کرتے ہیں؟',
+    FAQ_SERVICES_TEXT: 'جی ہاں! ہم کراچی، لاہور، اسلام آباد اور تمام بڑے ہوائی اڈوں (Airports)، ریلوے اسٹیشنز اور ہوٹلوں پر گاڑی کی ڈلیوری اور پک اپ سروس فراہم کرتے ہیں۔',
+    FAQ_AGE_TITLE: 'گاڑی کرائے پر لینے کی کم سے کم عمر کیا ہے؟',
+    FAQ_AGE_TEXT: 'گاڑی کرائے پر لینے کے لیے کم از کم عمر 21 سال ہونا ضروری ہے۔ پرتعیش اور 4x4 گاڑیوں کے لیے عمر اور ڈرائیونگ تجربے کی کچھ اضافی شرائط ہو سکتی ہیں۔',
+    FAQ_CANCEL_TITLE: 'اگر مجھے بکنگ منسوخ کرنی ہو تو کیا طریقہ کار ہے؟',
+    FAQ_CANCEL_TEXT: 'ہم آسان اور لچکدار منسوخی پالیسی فراہم کرتے ہیں۔ مقررہ وقت سے پہلے منسوخی پر آسان ریفنڈ JazzCash، EasyPaisa یا آپ کے بینک اکاؤنٹ میں کر دیا جاتا ہے۔',
+  },
   es: {
     FAQ_TITLE: 'Preguntas frecuentes',
     MORE_QUESTIONS: '¿Más preguntas?',

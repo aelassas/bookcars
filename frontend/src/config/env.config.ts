@@ -16,6 +16,11 @@ const LANGUAGES: Language[] = [
     label: 'English',
   },
   {
+    code: 'ur',
+    countryCode: 'pk',
+    label: 'اردو (Pakistan)',
+  },
+  {
     code: 'fr',
     countryCode: 'fr',
     label: 'Français',
@@ -62,6 +67,10 @@ type Currency = { code: string, symbol: string }
  */
 const CURRENCIES: Currency[] = [
   {
+    code: 'PKR',
+    symbol: 'Rs',
+  },
+  {
     code: 'USD',
     symbol: '$',
   },
@@ -97,14 +106,14 @@ const env = {
   isProduction: import.meta.env.VITE_NODE_ENV === 'production',
   isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
 
-  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'BookCars'),
+  WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'SafarRent'),
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
-  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'USD'),
+  BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'PKR'),
   CURRENCIES,
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,

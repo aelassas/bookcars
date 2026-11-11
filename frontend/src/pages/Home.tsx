@@ -153,9 +153,25 @@ const Home = () => {
             )}
           </div>
 
-          <div className="home-title">{strings.TITLE}</div>
+          <div className="home-title">🇵🇰 {strings.TITLE}</div>
           <div className="home-cover">{strings.COVER}</div>
-          {/* <div className="home-subtitle">{strings.SUBTITLE}</div> */}
+          <div className="home-subtitle">{strings.SUBTITLE}</div>
+
+          {/* Pakistan Trust & Fleet Highlights */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginTop: '18px', zIndex: 2 }}>
+            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
+              🚗 Self-Drive &amp; Chauffeur
+            </span>
+            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
+              🛡️ GPS Tracker &amp; Insured
+            </span>
+            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
+              ⚡ JazzCash • EasyPaisa • Raast
+            </span>
+            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
+              🏔️ Northern Areas 4x4
+            </span>
+          </div>
 
         </div>
 

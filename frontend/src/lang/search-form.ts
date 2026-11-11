@@ -20,6 +20,15 @@ const strings = new LocalizedStrings({
     INVALID_PICK_UP_TIME: 'Invalid pick-up time',
     INVALID_DROP_OFF_TIME: 'Invalid drop-off time',
   },
+  ur: {
+    PICK_UP_DATE: 'پک اپ تاریخ',
+    DROP_OFF_DATE: 'واپسی کی تاریخ',
+    DROP_OFF: 'اسی مقام پر واپس کریں',
+    MIN_PICK_UP_HOURS_ERROR: 'گاڑی حاصل کرنے کا وقت چند گھنٹے بعد کا ہونا ضروری ہے',
+    MIN_RENTAL_HOURS_ERROR: 'کرائے کی مدت بہت کم ہے',
+    INVALID_PICK_UP_TIME: 'پک اپ کا وقت غلط ہے',
+    INVALID_DROP_OFF_TIME: 'واپسی کا وقت غلط ہے',
+  },
   es: {
     PICK_UP_DATE: 'Fecha de recogida',
     DROP_OFF_DATE: 'Fecha de entrega',

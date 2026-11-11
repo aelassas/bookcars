@@ -16,6 +16,13 @@ const strings = new LocalizedStrings({
     SIGN_UP_SUCCESS_HEADING: 'Registration Successful',
     SIGN_UP_SUCCESS_MESSAGE: 'An activation email has been sent if this address is not already registered. If you already have an account, please sign in.',
   },
+  ur: {
+    SIGN_UP_HEADING: 'نیا اکاؤنٹ بنائیں',
+    SIGN_UP: 'رجسٹر کریں',
+    SIGN_UP_ERROR: 'رجسٹریشن کے دوران خرابی پیش آئی۔',
+    SIGN_UP_SUCCESS_HEADING: 'رجسٹریشن کامیاب رہی',
+    SIGN_UP_SUCCESS_MESSAGE: 'آپ کے ای میل پر تصدیقی پیغام بھیج دیا گیا ہے۔ اگر آپ کا اکاؤنٹ پہلے سے موجود ہے تو براہ کرم سائن ان کریں۔',
+  },
   es: {
     SIGN_UP_HEADING: 'Regístrate',
     SIGN_UP: 'Regístrate',

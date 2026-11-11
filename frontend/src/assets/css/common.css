@@ -4,6 +4,14 @@
   --toastify-icon-color-info: #fff !important;
 }
 
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+:lang(ur), [lang="ur"] {
+  font-family: 'Noto Nastaliq Urdu', 'Plus Jakarta Sans', serif !important;
+}
+
 .grecaptcha-badge {
   visibility: hidden !important;
 }
@@ -13,7 +21,7 @@
 }
 
 #nprogress .bar {
-  background: #1a1a1a !important;
+  background: #059669 !important;
 }
 
 .buttons button {
@@ -22,8 +30,12 @@
 }
 
 .btn-primary {
-  background-color: #232323 !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
   color: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
 }
 
 .hidden {
@@ -35,7 +47,12 @@
   color: #fff !important;
 } */
 
-.btn-primary:hover,
+.btn-primary:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45) !important;
+  transform: translateY(-1px) !important;
+  opacity: 1 !important;
+}
 .btn-secondary:hover,
 .btn-orange:hover {
   opacity: 0.95;

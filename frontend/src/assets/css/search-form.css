@@ -9,13 +9,23 @@ form.home-search-form .btn-cancel {
 form.home-search-form .btn-search {
   color: #fff;
   border: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   margin: 0;
   white-space: nowrap;
-  background: #212121;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+  transition: all 0.2s ease;
 }
 
-form.home-search-form .btn-search:hover,
+form.home-search-form .btn-search:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
 form.home-search-form .btn-cancel:hover {
   opacity: 0.95;
 }

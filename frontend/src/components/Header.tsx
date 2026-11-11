@@ -344,7 +344,17 @@ const Header = ({
                   <MenuIcon />
                 </IconButton>
 
-                <Button onClick={() => navigate('/')} className="logo">{env.WEBSITE_NAME}</Button>
+                <Button onClick={() => navigate('/')} className="logo" sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', fontWeight: 800, fontSize: 18, boxShadow: '0 2px 8px rgba(5,150,105,0.35)' }}>
+                    S
+                  </span>
+                  <span style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px', color: '#0f172a' }}>
+                    Safar<span style={{ color: '#059669' }}>Rent</span>
+                  </span>
+                  <span style={{ fontSize: 10, fontWeight: 700, background: '#ecfdf5', color: '#059669', padding: '2px 6px', borderRadius: 4, border: '1px solid #a7f3d0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    PK
+                  </span>
+                </Button>
 
                 {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
               </>
