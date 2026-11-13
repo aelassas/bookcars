@@ -650,6 +650,7 @@ export const vehicle = tenantTable(
     // highlights the car once either threshold is reached. NULL = not planned.
     nextServiceDate: date("next_service_date"),
     nextServiceOdometer: integer("next_service_odometer"),
+    oilChangeIntervalKm: integer("oil_change_interval_km").notNull().default(8000),
     gpsBlocked: boolean("gps_blocked").notNull().default(false),
     imei: text("imei"),
     pilotDeviceId: text("pilot_device_id"),
@@ -677,6 +678,8 @@ export const vehicle = tenantTable(
     // sync (integrations/tars) matches on plate first, then on this VIN.
     vin: text("vin"),
     registrationExpiry: date("registration_expiry"),
+    websitePublished: boolean("website_published").notNull().default(false),
+    websiteCategory: text("website_category"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -984,6 +987,8 @@ export const rental = tenantTable(
     balanceDue: integer("balance_due").notNull().default(0),
     status: text("status").notNull().default("reserved"), // reserved | active | returned | completed | cancelled
     notes: text("notes"),
+    dailyMileageLimitKm: integer("daily_mileage_limit_km"),
+    startOdometer: integer("start_odometer"),
     // Return inspection fields
     finalOdometer: integer("final_odometer"),
     fuelLevel: integer("fuel_level"), // 0-100

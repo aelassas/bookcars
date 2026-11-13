@@ -1,8 +1,8 @@
 /**
  * run-notify.ts — one tick of the push-first rules (see modules/notify/rules).
  *
- * Runs rule 1 (waiting clients, via board escalation), rule 2 (hot deals),
- * and — when the Dubai clock says so — the morning + CEO digests. Safe to run
+ * Runs client, payment, return and vehicle-service rules, plus the morning
+ * and CEO digests at the configured Dubai hour. Safe to run
  * as often as every minute: the ledger dedupe + escalation cooldown make
  * repeat runs no-ops. Called by scripts/notify-heartbeat.js.
  *
@@ -21,6 +21,7 @@ import { pool } from "@/platform/db/client";
 import { escalateBreachedBoardCards } from "@/modules/board/escalation";
 import { notifyHotDeals, notifyHotInbound, notifyHunters, notifyPaymentFollowups, notifyReturnsDue, sendMorningDigests, sendCeoDigest } from "@/modules/notify/rules";
 import { notifyRentDemand } from "@/modules/rent-watcher/watcher";
+import { notifyServiceDue } from "@/modules/notify/service-due";
 
 const TENANT = process.env.NOTIFY_TENANT_SLUG || "take-auto";
 const LIVE = process.env.NOTIFY_LIVE === "true";
@@ -41,7 +42,7 @@ async function main() {
   // CallGear firehose in easyrent. A take-auto-only digest hid Ali's REAL
   // workload (147 easyrent deals, 143 active/7d) from him — the Artur lesson,
   // digest edition.
-  const BUSINESS_SLUGS = ["take-auto", "cardiwan", "easyrent"];
+  const BUSINESS_SLUGS = [...new Set([TENANT, "take-auto", "cardiwan", "easyrent"])];
   const hotIn: unknown[] = [];
   const digests: unknown[] = [];
   for (const s of BUSINESS_SLUGS) {
@@ -55,6 +56,7 @@ async function main() {
     if (s === "take-auto") hotIn.push(...(await notifyHunters(trow.id, { dryRun })));
     hotIn.push(await notifyPaymentFollowups(trow.id, { dryRun }));
     hotIn.push(await notifyReturnsDue(trow.id, { dryRun }));
+    hotIn.push(await notifyServiceDue(trow.id, { dryRun }));
     // AI rent-demand watcher — behind a flag while it pilots (Babek's brands).
     // Fleet/pricing/rentals live under take-auto (the sheet importer's tenant),
     // scoped to the brand by company_id; inbound is read from the brand tenant.

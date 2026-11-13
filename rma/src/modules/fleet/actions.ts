@@ -1,11 +1,13 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { auditEvent, tenant, vehicle } from "@/platform/db/schema";
+import { auditEvent, document, lease, rental, tenant, vehicle, vehicleTimelineEvent } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
+import { requireAuth } from "@/platform/auth/authorization";
 import { canManageFleetForTenant } from "./policies";
+import { EDITABLE_VEHICLE_STATUSES } from "./vehicle-options";
 
 /**
  * Editable vehicle fields. Everything optional — the Edit vehicle form sends
@@ -22,13 +24,11 @@ export interface UpdateVehicleInput {
   location?: string | null;
   nextServiceDate?: string | null;
   nextServiceOdometer?: number | null;
+  oilChangeIntervalKm?: number;
   /** Lifecycle status — only the manager-set values. on_rent/reserved are
    *  derived from active rentals and are never accepted here. */
   status?: (typeof EDITABLE_VEHICLE_STATUSES)[number];
 }
-
-/** Statuses a manager may set by hand; anything else is rental-derived. */
-export const EDITABLE_VEHICLE_STATUSES = ["available", "in_service", "sold"] as const;
 
 function assertNonNegativeInt(value: number, field: string) {
   if (!Number.isInteger(value) || value < 0) {
@@ -51,6 +51,9 @@ export async function updateVehicle(
   if (data.odometer !== undefined) assertNonNegativeInt(data.odometer, "Odometer");
   if (data.nextServiceOdometer !== undefined && data.nextServiceOdometer !== null) {
     assertNonNegativeInt(data.nextServiceOdometer, "Next service odometer");
+  }
+  if (data.oilChangeIntervalKm !== undefined && (!Number.isInteger(data.oilChangeIntervalKm) || data.oilChangeIntervalKm <= 0)) {
+    throw new Error("Oil change interval must be a positive integer");
   }
   if (data.year !== undefined && data.year !== null) {
     if (!Number.isInteger(data.year) || data.year < 1900 || data.year > 2100) {
@@ -76,6 +79,7 @@ export async function updateVehicle(
   if (data.location !== undefined) set.location = data.location;
   if (data.nextServiceDate !== undefined) set.nextServiceDate = data.nextServiceDate;
   if (data.nextServiceOdometer !== undefined) set.nextServiceOdometer = data.nextServiceOdometer;
+  if (data.oilChangeIntervalKm !== undefined) set.oilChangeIntervalKm = data.oilChangeIntervalKm;
   if (data.status !== undefined) set.status = data.status;
 
   const { slug } = await withDrizzleTenant(tenantId, async (tx) => {
@@ -101,6 +105,43 @@ export async function updateVehicle(
       .from(tenant)
       .where(eq(tenant.id, tenantId));
     return { slug: t[0]?.slug ?? null };
+  });
+
+  if (slug) {
+    revalidatePath(`/${slug}/fleet/${vehicleId}`);
+    revalidatePath(`/${slug}/fleet`);
+  }
+}
+
+export async function deleteVehicle(tenantId: string, vehicleId: string, confirmation: string): Promise<void> {
+  await canManageFleetForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+  if (confirmation !== "DELETE") throw new Error("Type DELETE to confirm");
+
+  const slug = await withDrizzleTenant(tenantId, async (tx) => {
+    const [target] = await tx.select({ plate: vehicle.plate }).from(vehicle).where(eq(vehicle.id, vehicleId)).limit(1);
+    if (!target) throw new Error("Vehicle not found");
+
+    const [linkedRental] = await tx.select({ id: rental.id }).from(rental).where(eq(rental.vehicleId, vehicleId)).limit(1);
+    const [linkedLease] = await tx.select({ id: lease.id }).from(lease).where(eq(lease.vehicleId, vehicleId)).limit(1);
+    const [linkedEvent] = await tx.select({ id: vehicleTimelineEvent.id }).from(vehicleTimelineEvent).where(eq(vehicleTimelineEvent.vehicleId, vehicleId)).limit(1);
+    const [linkedDocument] = await tx.select({ id: document.id }).from(document).where(and(eq(document.entityType, "vehicle"), eq(document.entityId, vehicleId))).limit(1);
+    if (linkedRental || linkedLease || linkedEvent || linkedDocument) {
+      throw new Error("This vehicle has linked history. Mark it Sold instead of deleting it");
+    }
+
+    await tx.delete(vehicle).where(eq(vehicle.id, vehicleId));
+    await tx.insert(auditEvent).values({
+      tenantId,
+      actorId,
+      action: "vehicle.delete",
+      entityType: "vehicle",
+      entityId: vehicleId,
+      intent: `Deleted unused vehicle ${target.plate}`,
+    });
+    const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
+    return t?.slug;
   });
 
   if (slug) {

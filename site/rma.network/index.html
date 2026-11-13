@@ -344,19 +344,20 @@ var T = {
   }
 };
 function waLink(text){ return "https://wa.me/" + WA + "?text=" + encodeURIComponent(text); }
+function esc(value){ return String(value == null ? "" : value).replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]; }); }
 function renderFleet(lang){
   var d = T[lang];
   document.getElementById("fleetHero").innerHTML = HERO_CARS.map(function(c){
-    return '<div class="car-img"><img src="'+c.img+'" alt="'+c.name+' — RMA Car Rental Dubai" loading="lazy">'+
-      '<div class="body"><div class="cls">'+c.cls+'</div><h3>'+c.name+'</h3>'+
-      '<div class="plate">'+c.plate+'</div>'+
-      '<div class="price">AED '+c.price.toLocaleString("en-AE")+' <small>'+d.perDay+'</small><em>'+c.month+'</em></div>'+
+    return '<div class="car-img"><img src="'+esc(c.img)+'" alt="'+esc(c.name)+' — RMA Car Rental Dubai" loading="lazy">'+
+      '<div class="body"><div class="cls">'+esc(c.cls)+'</div><h3>'+esc(c.name)+'</h3>'+
+      '<div class="plate">'+esc(c.plate)+'</div>'+
+      '<div class="price">AED '+Number(c.price).toLocaleString("en-AE")+' <small>'+d.perDay+'</small>'+(c.month?'<em>'+esc(c.month)+'</em>':'')+'</div>'+
       '<a class="btn sm block" target="_blank" rel="noopener" href="'+waLink(d.waCar(c.name))+'">'+d.book+'</a></div></div>';
   }).join('');
   document.getElementById("fleetList").innerHTML = LIST_CARS.map(function(c){
-    return '<div class="fleet-row"><div class="name">'+c.name+'<small>'+c.plate+'</small></div>'+
-      '<div class="cls2">'+c.cls+'</div>'+
-      '<div class="pr">AED '+c.price.toLocaleString("en-AE")+' <small>'+d.perDay+'</small></div>'+
+    return '<div class="fleet-row"><div class="name">'+esc(c.name)+'<small>'+esc(c.plate)+'</small></div>'+
+      '<div class="cls2">'+esc(c.cls)+'</div>'+
+      '<div class="pr">AED '+Number(c.price).toLocaleString("en-AE")+' <small>'+d.perDay+'</small></div>'+
       '<a class="btn sm ghost" target="_blank" rel="noopener" href="'+waLink(d.waCar(c.name))+'">'+d.book+'</a></div>';
   }).join('');
 }
@@ -383,6 +384,18 @@ document.getElementById("langRu").onclick = function(){ setLang("ru"); };
 var initial = "en";
 try { initial = localStorage.getItem("rma-lang") || ((navigator.language||"").indexOf("ru")===0 ? "ru" : "en"); } catch(e){}
 setLang(initial);
+
+fetch("https://crm.rma.network/api/public/site-cars")
+  .then(function(res){ if (!res.ok) throw new Error("fleet unavailable"); return res.json(); })
+  .then(function(data){
+    if (!Array.isArray(data.cars) || data.cars.length === 0) return;
+    HERO_CARS = data.cars.map(function(c){
+      return { name:String(c.name), cls:String(c.category), plate:String(c.plate), price:Number(c.price), month:"", img:c.photo || "/img/hero-g63.jpg" };
+    });
+    LIST_CARS = [];
+    renderFleet(initial);
+  })
+  .catch(function(){ /* Keep the static fleet when the CRM is unavailable. */ });
 
 window.addEventListener("scroll", function(){
   document.getElementById("nav").classList.toggle("scrolled", window.scrollY > 40);

@@ -8,6 +8,7 @@ vi.mock("./policies", () => ({ canManageCRMForTenant: mocks.authorize }));
 vi.mock("@/platform/tenancy/guard", () => ({ assertNotPreviewMode: mocks.preview }));
 vi.mock("@/platform/tenancy/rls", () => ({ withDrizzleTenant: mocks.transaction }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate }));
+vi.mock("@/platform/auth/authorization", () => ({ requireAuth: vi.fn() }));
 
 import { createCustomer, updateCustomer } from "./customer-actions";
 

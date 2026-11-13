@@ -47,8 +47,7 @@ export interface PilotClient {
   readonly mode: "live" | "mock";
   getFleet(): Promise<PilotFleetVehicle[]>;
   getStatus(imei: string): Promise<PilotStatus>;
-  // NOTE: engine-block / immobilise is intentionally NOT part of this client.
-  // Constraint: Pilot is read-only (location/status). Never command the vehicle.
+  blockEngine(imei: string): Promise<PilotCommandResult>;
 }
 
 const BASE = process.env.PILOT_BASE_URL ?? "https://pilot-gps.com";
@@ -111,7 +110,7 @@ function sensorBatteryVolts(sensors: any): number | undefined {
   return Number.isFinite(v) && v > 0 ? v : undefined;
 }
 
-class LivePilotClient implements PilotClient {
+export class LivePilotClient implements PilotClient {
   readonly mode = "live" as const;
   private token: string | null = null;
   private nodeId = "";
@@ -224,6 +223,21 @@ class LivePilotClient implements PilotClient {
     };
   }
 
+  async blockEngine(imei: string): Promise<PilotCommandResult> {
+    const data = await this.req(`/vehicles/commands?imei=${encodeURIComponent(imei)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        template_name: process.env.PILOT_ENGINE_BLOCK_TEMPLATE ?? "engine_block",
+      }),
+    });
+    const commandId = Number(data?.command_id ?? data?.data?.command_id);
+    if ((data?.code !== undefined && data.code !== 0) || !Number.isInteger(commandId) || commandId <= 0) {
+      throw new Error(`Pilot rejected engine block: ${data?.msg ?? "missing command id"}`);
+    }
+    return { commandId, accepted: true };
+  }
+
 }
 
 // Mock fleet — used when no Pilot credentials are configured so the platform
@@ -273,6 +287,11 @@ class MockPilotClient implements PilotClient {
     };
   }
 
+  async blockEngine(imei: string): Promise<PilotCommandResult> {
+    if (!MOCK_FLEET.some((vehicle) => vehicle.imei === imei)) throw new Error("Mock vehicle not found");
+    return { commandId: 1001, accepted: true };
+  }
+
 }
 
 // Multi-account: the holding runs several Pilot logins (TAKE Auto fleet +
@@ -310,6 +329,14 @@ class MultiPilotClient implements PilotClient {
     }
     // None owned it / all empty — return the first account's (best-effort) answer.
     return this.clients[0].getStatus(imei);
+  }
+
+  async blockEngine(imei: string): Promise<PilotCommandResult> {
+    for (const client of this.clients) {
+      const fleet = await client.getFleet();
+      if (fleet.some((vehicle) => vehicle.imei === imei)) return client.blockEngine(imei);
+    }
+    throw new Error("No configured Pilot account owns this vehicle");
   }
 }
 

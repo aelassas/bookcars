@@ -22,6 +22,8 @@ export function ProcessReturnModal({
     returnDate: Date | null;
     dailyRate: number;
     balanceDue: number;
+    dailyMileageLimitKm?: number | null;
+    startOdometer?: number | null;
   };
   onClose: () => void;
   onReturned?: () => void;
@@ -104,6 +106,13 @@ export function ProcessReturnModal({
         {lateFee > 0 && (
           <div className="rounded-field border border-warn-line bg-warn-soft px-3 py-2 text-sm text-warn tnum">
             Late return · {formatCurrency(lateFee)} extra fee
+          </div>
+        )}
+
+        {rental.dailyMileageLimitKm != null && (
+          <div className="rounded-field border border-line bg-sunken px-3 py-2 text-sm text-ink-2">
+            Daily limit: {rental.dailyMileageLimitKm} km
+            {rental.startOdometer != null ? ` · start odometer: ${rental.startOdometer} km` : " · start odometer was not recorded"}
           </div>
         )}
 

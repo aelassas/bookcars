@@ -22,6 +22,7 @@ import { startRental, completeRental, cancelRental, resolveDeposit } from "@/mod
 import { confirmPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { calculateMileageUsage } from "@/modules/rental/mileage";
 import {
   Play,
   RotateCcw,
@@ -57,6 +58,8 @@ type Rental = {
   depositRefunded: number | null;
   returnNotes: string | null;
   notes: string | null;
+  dailyMileageLimitKm: number | null;
+  startOdometer: number | null;
   // Deposit-contract lifecycle (optional — present on the DB row at runtime).
   contractType?: string | null;
   bookingBasis?: string | null;
@@ -225,6 +228,13 @@ export function RentalDetail({
   const showComplete = r.status === "returned";
   const showCancel = r.status === "reserved";
   const showPaymentButton = (r.status === "active" || r.status === "returned") && r.balanceDue > 0;
+  const mileage = calculateMileageUsage({
+    startOdometer: r.startOdometer,
+    finalOdometer: r.finalOdometer,
+    dailyMileageLimitKm: r.dailyMileageLimitKm,
+    startDate: r.startDate,
+    actualReturnDate: r.actualReturnDate,
+  });
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -252,6 +262,8 @@ export function RentalDetail({
             returnDate: r.returnDate,
             dailyRate: r.dailyRate,
             balanceDue: r.balanceDue,
+            dailyMileageLimitKm: r.dailyMileageLimitKm,
+            startOdometer: r.startOdometer,
           }}
           onClose={() => setShowReturnModal(false)}
           onReturned={() => window.location.reload()}
@@ -334,6 +346,13 @@ export function RentalDetail({
             )}
             <Row label="Duration" value={`${r.totalDays} days`} />
             <Row label="Daily rate" value={formatCurrency(r.dailyRate)} />
+            <Row label="Daily mileage limit" value={r.dailyMileageLimitKm != null ? `${r.dailyMileageLimitKm} km` : "Unlimited"} />
+            {mileage && (
+              <>
+                <Row label="Mileage used" value={`${mileage.drivenKm} / ${mileage.allowedKm} km`} />
+                <Row label="Mileage excess" value={`${mileage.excessKm} km`} valueClass={mileage.excessKm > 0 ? "text-danger" : "text-success"} />
+              </>
+            )}
           </dl>
         </Card>
 

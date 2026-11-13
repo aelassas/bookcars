@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { hostAgnosticSignOut } from "@/lib/auth/host-agnostic-sign-out";
-import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren, Phone,  } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren, Phone, Globe,  } from "lucide-react";
 import { normalizeModules, type ModuleId } from "@/platform/tenant-modules";
 import { ru } from "@/lib/i18n/ru";
 import { t, type Lang } from "@/platform/i18n/dict";
@@ -161,6 +161,7 @@ const SETTINGS_LINKS: {
   absolute?: boolean;
 }[] = [
   { href: "/settings/branding", label: "Branding", icon: Palette },
+  { href: "/settings/website", label: "Website", icon: Globe },
   { href: "/settings/team", label: "Team", icon: UserCog },
   { href: "/settings/ai", label: "AI Provider", icon: Bot },
   { href: "/settings/integrations", label: "Integrations", icon: Settings },

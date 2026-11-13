@@ -26,6 +26,9 @@ export interface FleetVehicle {
   location?: string | null;
   odometer: number;
   dailyRate: number;
+  nextServiceDate?: string | null;
+  nextServiceOdometer?: number | null;
+  oilChangeIntervalKm: number;
   gpsBlocked: boolean;
   imei?: string | null;
   // The company currently HOLDING the car (its hand), if assigned. Shared-fleet
@@ -252,6 +255,9 @@ export async function getFleetForTenant(tenantId: string): Promise<{
       location: dbv.location,
       odometer: dbv.odometer,
       dailyRate: dbv.dailyRate,
+      nextServiceDate: dbv.nextServiceDate,
+      nextServiceOdometer: dbv.nextServiceOdometer,
+      oilChangeIntervalKm: dbv.oilChangeIntervalKm,
       gpsBlocked: live?.blocked ?? dbv.gpsBlocked,
       imei: dbv.imei,
       companyId: dbv.companyId,
@@ -280,6 +286,9 @@ export async function getFleetForTenant(tenantId: string): Promise<{
         status: deriveVehicleStatus(live.blocked, live.ignition, live.speed, live.lastFixAt),
         odometer: Math.round(live.odometerKm),
         dailyRate: 0,
+        nextServiceDate: null,
+        nextServiceOdometer: null,
+        oilChangeIntervalKm: 8000,
         gpsBlocked: live.blocked,
         imei: live.imei,
         lat: live.lat,

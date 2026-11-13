@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Wrench } from "lucide-react";
 import { addTimelineEvent } from "@/modules/fleet/timeline-actions";
 import { updateVehicle } from "@/modules/fleet/actions";
-import { Badge, Button, Input, Label, Textarea, cx } from "@/components/ui";
+import { nextOilChangeOdometer } from "@/modules/fleet/maintenance";
+import { Badge, Button, Input, Label, Select, Textarea, cx } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
 import { t, type Lang } from "@/platform/i18n/dict";
 
@@ -41,12 +42,6 @@ function todayISO() {
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
-/**
- * Service panel for the vehicle profile: planned next service (with a
- * due/overdue highlight), the service history from the timeline, and the
- * "Log service" form, which writes a service timeline event and — when
- * filled — the car's next planned service.
- */
 export function VehicleServicePanel({
   tenantSlug,
   tenantId,
@@ -54,6 +49,7 @@ export function VehicleServicePanel({
   currentOdometer,
   nextServiceDate,
   nextServiceOdometer,
+  oilChangeIntervalKm,
   history,
   lang,
 }: {
@@ -63,6 +59,7 @@ export function VehicleServicePanel({
   currentOdometer: number;
   nextServiceDate: string | null;
   nextServiceOdometer: number | null;
+  oilChangeIntervalKm: number;
   history: ServiceHistoryItem[];
   lang: Lang;
 }) {
@@ -73,7 +70,6 @@ export function VehicleServicePanel({
   const odometerReached = nextServiceOdometer != null && nextServiceOdometer <= currentOdometer;
   const datePassed = plannedDate != null && plannedDate < today;
   const overdue = odometerReached || datePassed;
-  // Due soon: date today or within 7 days (or odometer already reached).
   const dueSoon = overdue || (plannedDate != null && plannedDate <= addDays(today, 7));
   const planned = plannedDate != null || nextServiceOdometer != null;
 
@@ -99,7 +95,6 @@ export function VehicleServicePanel({
       </div>
 
       <div className="grid gap-4 px-4 py-3 sm:grid-cols-3">
-        {/* Planned next service */}
         <div
           className={cx(
             "rounded-field border px-3 py-2.5",
@@ -126,9 +121,11 @@ export function VehicleServicePanel({
           ) : (
             <div className="mt-1 text-sm text-ink-3">{t(lang, "service.notPlanned")}</div>
           )}
+          <div className="mt-1 text-xs text-ink-3">
+            {t(lang, "service.oilInterval")}: {oilChangeIntervalKm.toLocaleString("en-GB")} {t(lang, "service.km")}
+          </div>
         </div>
 
-        {/* History */}
         <div className="sm:col-span-2">
           <div className="text-xs font-medium text-ink-3">{t(lang, "service.history")}</div>
           {history.length === 0 ? (
@@ -138,9 +135,11 @@ export function VehicleServicePanel({
               {history.map((ev) => {
                 const odo = typeof ev.meta?.odometer === "number" ? ev.meta.odometer : null;
                 const cost = typeof ev.meta?.costAed === "number" ? ev.meta.costAed : null;
+                const category = typeof ev.meta?.category === "string" ? ev.meta.category : null;
                 return (
                   <li key={ev.id} className="flex flex-wrap items-baseline gap-x-3 py-1.5 text-sm">
                     <span className="tnum shrink-0 text-ink-2">{fmtDate(ev.startsAt)}</span>
+                    {category && <span className="shrink-0 text-xs text-ink-3">{t(lang, `service.category.${category}`)}</span>}
                     <span className="min-w-0 flex-1 truncate text-ink">{ev.title ?? "—"}</span>
                     {odo != null && (
                       <span className="tnum shrink-0 text-xs text-ink-3">
@@ -164,6 +163,7 @@ export function VehicleServicePanel({
           tenantId={tenantId}
           vehicleId={vehicleId}
           currentOdometer={currentOdometer}
+          oilChangeIntervalKm={oilChangeIntervalKm}
           lang={lang}
           onClose={() => setLogOpen(false)}
         />
@@ -177,6 +177,7 @@ function LogServiceModal({
   tenantId,
   vehicleId,
   currentOdometer,
+  oilChangeIntervalKm,
   lang,
   onClose,
 }: {
@@ -184,6 +185,7 @@ function LogServiceModal({
   tenantId: string;
   vehicleId: string;
   currentOdometer: number;
+  oilChangeIntervalKm: number;
   lang: Lang;
   onClose: () => void;
 }) {
@@ -198,11 +200,19 @@ function LogServiceModal({
 
     const fd = new FormData(e.currentTarget);
     const date = String(fd.get("date"));
-    const odometer = Number(fd.get("odometer")) || null;
+    const odometerValue = String(fd.get("odometer")).trim();
+    const odometer = odometerValue ? Number(odometerValue) : null;
+    const category = String(fd.get("category") || "service");
     const description = String(fd.get("description")).trim();
-    const cost = Number(fd.get("cost")) || null;
+    const costValue = String(fd.get("cost")).trim();
+    const cost = costValue ? Number(costValue) : null;
     const nextServiceDate = String(fd.get("nextServiceDate") ?? "") || null;
-    const nextServiceOdometer = Number(fd.get("nextServiceOdometer")) || null;
+    const nextOdometerValue = String(fd.get("nextServiceOdometer") ?? "").trim();
+    const nextServiceOdometer = nextOdometerValue
+      ? Number(nextOdometerValue)
+      : category === "oil_change" && odometer != null
+        ? nextOilChangeOdometer(odometer, oilChangeIntervalKm)
+        : null;
 
     try {
       await addTimelineEvent(tenantSlug, {
@@ -212,13 +222,15 @@ function LogServiceModal({
         status: "done",
         title: description,
         meta: {
+          category,
           ...(odometer != null ? { odometer } : {}),
           ...(cost != null ? { costAed: cost } : {}),
         },
       });
-      if (nextServiceDate || nextServiceOdometer != null) {
-        await updateVehicle(tenantId, vehicleId, { nextServiceDate, nextServiceOdometer });
-      }
+      await updateVehicle(tenantId, vehicleId, {
+        ...(odometer != null ? { odometer } : {}),
+        ...(nextServiceDate || nextServiceOdometer != null ? { nextServiceDate, nextServiceOdometer } : {}),
+      });
       router.refresh();
       onClose();
     } catch (err) {
@@ -233,6 +245,15 @@ function LogServiceModal({
       {error && <ModalError>{error}</ModalError>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <Label>{t(lang, "service.category")} *</Label>
+          <Select name="category" required defaultValue="oil_change" className="w-full">
+            {["oil_change", "service", "parking", "polishing", "other"].map((category) => (
+              <option key={category} value={category}>{t(lang, `service.category.${category}`)}</option>
+            ))}
+          </Select>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label>{t(lang, "service.date")} *</Label>
@@ -258,7 +279,7 @@ function LogServiceModal({
 
         <div>
           <Label>{t(lang, "service.cost")}</Label>
-          <Input name="cost" type="number" min={0} step={1} className="w-full" />
+          <Input name="cost" type="number" min={0} step={0.01} className="w-full" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -268,7 +289,14 @@ function LogServiceModal({
           </div>
           <div>
             <Label>{t(lang, "vehicle.nextServiceOdometer")}</Label>
-            <Input name="nextServiceOdometer" type="number" min={0} step={1} className="w-full" />
+            <Input
+              name="nextServiceOdometer"
+              type="number"
+              min={0}
+              step={1}
+              placeholder={`${t(lang, "service.autoOil")}: ${oilChangeIntervalKm} ${t(lang, "service.km")}`}
+              className="w-full"
+            />
           </div>
         </div>
 

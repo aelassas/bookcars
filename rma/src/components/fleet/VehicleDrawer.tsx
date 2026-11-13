@@ -3,6 +3,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { FleetVehicle } from "@/modules/fleet/queries";
 import { BrandLogo } from "./BrandLogo";
+import { EditVehicleButton } from "./EditVehicleModal";
+import { EngineBlockButton } from "./EngineBlockButton";
 import { t, LANG_COOKIE, type Lang } from "@/platform/i18n/dict";
 
 function Cell({ label, children }: { label: string; children: ReactNode }) {
@@ -27,9 +29,13 @@ const ONGOING_WINDOW_MS = 15 * 60 * 1000;
 
 export function VehicleDrawer({
   vehicle,
+  tenantId,
+  canBlockEngine,
   onClose,
 }: {
   vehicle: FleetVehicle;
+  tenantId: string;
+  canBlockEngine: boolean;
   onClose: () => void;
 }) {
   const [lang, setLang] = useState<Lang>("en");
@@ -154,6 +160,11 @@ export function VehicleDrawer({
                 <span className="capitalize">{vehicle.status.replace("_", " ")}</span>
               </Cell>
             </dl>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {vehicle.id !== vehicle.imei && <EditVehicleButton tenantId={tenantId} vehicle={vehicle} lang={lang} />}
+              <EngineBlockButton tenantId={tenantId} vehicle={vehicle} allowed={canBlockEngine} />
+            </div>
 
             {currentTrip && (
               <p className="mt-3 text-sm text-slate-600">

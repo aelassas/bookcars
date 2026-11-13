@@ -150,6 +150,7 @@ export default async function VehicleCardPage({
               location: vehicle.location,
               nextServiceDate: vehicle.nextServiceDate,
               nextServiceOdometer: vehicle.nextServiceOdometer,
+              oilChangeIntervalKm: vehicle.oilChangeIntervalKm,
             }}
           />
         </dl>
@@ -177,6 +178,7 @@ export default async function VehicleCardPage({
         currentOdometer={vehicle.odometer ?? 0}
         nextServiceDate={vehicle.nextServiceDate ?? null}
         nextServiceOdometer={vehicle.nextServiceOdometer ?? null}
+        oilChangeIntervalKm={vehicle.oilChangeIntervalKm}
         history={serviceHistory}
         lang={lang}
       />

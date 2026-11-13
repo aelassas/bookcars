@@ -4,6 +4,7 @@ import { getTenantBySlug } from "@/platform/auth/tenant";
 import { FleetView } from "@/components/fleet/FleetView";
 import { getFleetForTenant } from "@/modules/fleet/queries";
 import { getServerLang } from "@/platform/i18n/lang";
+import { getTenantRoles } from "@/platform/auth/authorization";
 
 export default async function FleetPage({
   params,
@@ -20,6 +21,8 @@ export default async function FleetPage({
 
   const lang = await getServerLang();
   const { mode, vehicles } = await getFleetForTenant(t.id);
+  const roles = await getTenantRoles(session.user.id, t.id);
+  const canBlockEngine = roles.some((role) => ["security", "tenant_admin", "platform_admin"].includes(role));
 
-  return <FleetView vehicles={vehicles} mode={mode} tenantSlug={tenantSlug} tenantId={t.id} lang={lang} />;
+  return <FleetView vehicles={vehicles} mode={mode} tenantSlug={tenantSlug} tenantId={t.id} lang={lang} canBlockEngine={canBlockEngine} />;
 }

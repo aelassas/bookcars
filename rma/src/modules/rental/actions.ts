@@ -18,6 +18,7 @@ import { insertPurposeChangeEvent } from "@/modules/fleet/purpose-events";
 import { computeDepositResolution, depositNotification, type DepositOutcome } from "./deposit";
 import { isBookingBasis } from "./booking";
 import { parseTarsDocumentNumber } from "@/platform/integrations/tars/handoff";
+import { calculateMileageUsage } from "./mileage";
 
 function daysBetween(a: Date, b: Date) {
   const ms = b.getTime() - a.getTime();
@@ -39,10 +40,12 @@ export async function startRental(tenantId: string, actorId: string | undefined,
     const [current] = await tx.select({ status: rental.status, vehicleId: rental.vehicleId }).from(rental).where(eq(rental.id, id)).limit(1);
     if (!current) throw new Error("Rental not found");
     if (current.status !== "reserved") throw new Error(`Cannot start rental with status ${current.status}`);
+    const [currentVehicle] = await tx.select({ odometer: vehicle.odometer }).from(vehicle).where(eq(vehicle.id, current.vehicleId)).limit(1);
+    if (!currentVehicle) throw new Error("Vehicle not found");
 
     const [row] = await tx
       .update(rental)
-      .set({ status: "active", updatedAt: new Date() })
+      .set({ status: "active", startOdometer: currentVehicle.odometer, updatedAt: new Date() })
       .where(eq(rental.id, id))
       .returning();
 
@@ -153,6 +156,19 @@ export async function processReturn(
     if (current.status !== "active") throw new Error(`Cannot process return for rental with status ${current.status}`);
 
     const actualReturnDate = data.actualReturnDate ?? new Date();
+    if (data.finalOdometer !== undefined && (!Number.isInteger(data.finalOdometer) || data.finalOdometer < 0)) {
+      throw new Error("Final odometer must be a non-negative integer");
+    }
+    if (current.startOdometer != null && data.finalOdometer != null && data.finalOdometer < current.startOdometer) {
+      throw new Error("Final odometer cannot be lower than the starting odometer");
+    }
+    const mileage = calculateMileageUsage({
+      startOdometer: current.startOdometer,
+      finalOdometer: data.finalOdometer ?? null,
+      dailyMileageLimitKm: current.dailyMileageLimitKm,
+      startDate: current.startDate,
+      actualReturnDate,
+    });
     const lateFee = extraDays(current.returnDate, actualReturnDate) * current.dailyRate;
     const manualExtra = data.extraChargeAmount ?? 0;
     const totalExtra = lateFee + manualExtra;
@@ -177,7 +193,11 @@ export async function processReturn(
 
     await tx
       .update(vehicle)
-      .set({ status: "available", updatedAt: new Date() })
+      .set({
+        status: "available",
+        ...(data.finalOdometer !== undefined ? { odometer: data.finalOdometer } : {}),
+        updatedAt: new Date(),
+      })
       .where(eq(vehicle.id, row.vehicleId));
 
     await tx.insert(auditEvent).values({
@@ -186,7 +206,7 @@ export async function processReturn(
       action: "rental.return",
       entityType: "rental",
       entityId: id,
-      intent: `Vehicle returned. Late fee ${lateFee} AED, extra charges ${manualExtra} AED.`,
+      intent: `Vehicle returned. Late fee ${lateFee} AED, extra charges ${manualExtra} AED.${mileage ? ` Mileage ${mileage.drivenKm}/${mileage.allowedKm} km; excess ${mileage.excessKm} km.` : ""}`,
     });
 
     if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
@@ -634,6 +654,7 @@ export interface CreateRentalFromQuoteInput {
   leadId?: string;
   notes?: string;
   salesAgentId?: string;
+  dailyMileageLimitKm?: number;
   /** Fallback ONLY for vehicles without price tiers; ignored when a tier matches. */
   manualDailyRate?: number;
   /** Overrides the tier deposit when provided. */
@@ -682,6 +703,9 @@ async function createRentalFromQuoteImpl(
   if (!data.customerId) throw new Error("Customer is required");
   if (!data.vehicleId) throw new Error("Vehicle is required");
   const channel: Channel = data.channel === "b2b" ? "b2b" : "b2c";
+  if (data.dailyMileageLimitKm !== undefined && (!Number.isInteger(data.dailyMileageLimitKm) || data.dailyMileageLimitKm <= 0)) {
+    throw new Error("Daily mileage limit must be a positive integer");
+  }
 
   // Fleet + rentals + price_tier live in fleet-home; authz above is the caller's
   // own brand. Everything below runs in fleet-home so a rent-brand booking lands
@@ -811,6 +835,7 @@ async function createRentalFromQuoteImpl(
         balanceDue: total,
         status: "reserved",
         notes: data.notes ?? null,
+        dailyMileageLimitKm: data.dailyMileageLimitKm ?? null,
         // TODO(deposit): when the payment step lands, collect/hold `deposit`
         // here (payment row + gateway); depositStatus already defaults to "held".
         // TODO(contract): generate the rental-agreement PDF and set contractUrl —

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
-import { updateVehicle, EDITABLE_VEHICLE_STATUSES } from "@/modules/fleet/actions";
+import { deleteVehicle, updateVehicle } from "@/modules/fleet/actions";
+import { EDITABLE_VEHICLE_STATUSES } from "@/modules/fleet/vehicle-options";
 import { Button, Input, Label, Select } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
 import { t, type Lang } from "@/platform/i18n/dict";
@@ -22,6 +23,7 @@ export interface EditableVehicle {
   location?: string | null;
   nextServiceDate?: string | null;
   nextServiceOdometer?: number | null;
+  oilChangeIntervalKm?: number;
 }
 
 /** Trigger for the identity strip — owns the modal's open state. */
@@ -72,6 +74,20 @@ export function EditVehicleModal({
   // active rental owns it, so the select locks instead of offering fake choices.
   const statusLocked = !(EDITABLE_VEHICLE_STATUSES as readonly string[]).includes(vehicle.status);
 
+  async function handleDelete() {
+    const confirmation = prompt(t(lang, "vehicle.deletePrompt"));
+    if (confirmation !== "DELETE") return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      await deleteVehicle(tenantId, vehicle.id, confirmation);
+      window.location.href = `/${window.location.pathname.split("/")[1]}/fleet`;
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));
+      setSubmitting(false);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
@@ -89,6 +105,7 @@ export function EditVehicleModal({
         location: String(fd.get("location") ?? "").trim() || null,
         nextServiceDate: String(fd.get("nextServiceDate") ?? "") || null,
         nextServiceOdometer: Number(fd.get("nextServiceOdometer")) || null,
+        oilChangeIntervalKm: Number(fd.get("oilChangeIntervalKm")) || 8000,
         // Disabled selects submit nothing — only send a status the manager set.
         ...(statusLocked ? {} : { status: String(fd.get("status")) as (typeof EDITABLE_VEHICLE_STATUSES)[number] }),
       });
@@ -183,6 +200,19 @@ export function EditVehicleModal({
           )}
         </div>
 
+        <div>
+          <Label>{t(lang, "vehicle.oilChangeInterval")}</Label>
+          <Input
+            name="oilChangeIntervalKm"
+            type="number"
+            min={1}
+            step={1}
+            required
+            defaultValue={vehicle.oilChangeIntervalKm ?? 8000}
+            className="w-full"
+          />
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label>{t(lang, "vehicle.nextServiceDate")}</Label>
@@ -207,6 +237,9 @@ export function EditVehicleModal({
         </div>
 
         <ModalFooter>
+          <Button type="button" variant="danger" onClick={handleDelete} disabled={submitting}>
+            {t(lang, "vehicle.delete")}
+          </Button>
           <ModalCancel>{t(lang, "vehicle.cancel")}</ModalCancel>
           <Button type="submit" disabled={submitting}>
             {submitting ? t(lang, "vehicle.saving") : t(lang, "vehicle.save")}

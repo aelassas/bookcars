@@ -50,19 +50,21 @@ export function FleetView({
   tenantSlug,
   tenantId,
   lang,
+  canBlockEngine,
 }: {
   vehicles: FleetVehicle[];
   mode: "live" | "mock";
   tenantSlug: string;
   tenantId: string;
   lang: Lang;
+  canBlockEngine: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [docVehicle, setDocVehicle] = useState<FleetVehicle | null>(null);
-  const [vehicleList] = useState<FleetVehicle[]>(vehicles);
+  const vehicleList = vehicles;
 
   const FILTERS: { id: Filter; label: string }[] = [
     { id: "all", label: "All" },
@@ -327,7 +329,14 @@ export function FleetView({
         </div>
       )}
 
-      {selected && <VehicleDrawer vehicle={selected} onClose={() => setSelectedId(null)} />}
+      {selected && (
+        <VehicleDrawer
+          vehicle={selected}
+          tenantId={tenantId}
+          canBlockEngine={canBlockEngine}
+          onClose={() => setSelectedId(null)}
+        />
+      )}
     </div>
   );
 }

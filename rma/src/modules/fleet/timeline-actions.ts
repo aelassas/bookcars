@@ -61,6 +61,14 @@ export async function addTimelineEvent(
   if (Number.isNaN(startsAt.getTime())) throw new Error("Invalid start date");
   if (endsAt && Number.isNaN(endsAt.getTime())) throw new Error("Invalid end date");
   if (endsAt && endsAt <= startsAt) throw new Error("End must be after start");
+  const odometer = input.meta?.odometer;
+  const costAed = input.meta?.costAed;
+  if (odometer !== undefined && (typeof odometer !== "number" || !Number.isInteger(odometer) || odometer < 0)) {
+    throw new Error("Odometer must be a non-negative integer");
+  }
+  if (costAed !== undefined && (typeof costAed !== "number" || !Number.isFinite(costAed) || costAed < 0)) {
+    throw new Error("Cost must be a non-negative number");
+  }
 
   try {
     return await withDrizzleTenant(t.id, async (tx) => {

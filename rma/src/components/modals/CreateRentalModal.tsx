@@ -119,6 +119,7 @@ export function CreateRentalModal({
           dealId,
           leadId,
           notes: String(fd.get("notes") || ""),
+          dailyMileageLimitKm: Number(fd.get("dailyMileageLimitKm")) || undefined,
           // Manual pricing is only sent in the no-tier fallback.
           ...(quote.status === "none"
             ? {
@@ -266,6 +267,11 @@ export function CreateRentalModal({
               </option>
             ))}
           </Select>
+        </div>
+
+        <div>
+          <Label>Daily mileage limit (km)</Label>
+          <Input name="dailyMileageLimitKm" type="number" min={1} step={1} className="w-full" placeholder="Unlimited" />
         </div>
 
         <div>
