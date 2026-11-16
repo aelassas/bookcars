@@ -1,7 +1,7 @@
 # BookCars - Full Documentation Context
 
 > Auto-generated full documentation context compiled from the BookCars Wiki.
-> Generated on: 2026-11-04T21:08:30Z
+> Generated on: 2026-11-16T13:24:04Z
 
 ---
 
@@ -5147,26 +5147,28 @@ Read the full technical article on CodeProject: [BookCars: Car Rental Platform w
 
 ### Supplier Contract Management
 
-Each supplier has the ability to upload a contract (PDF document) for each language supported by the platform. The available languages are:
+Each supplier can upload a contract (PDF document) for each language supported by the platform:
 
 - **English** (default)
 - **French**
 - **Spanish**
+- **German**
+- **Portuguese**
+- **Italian**
+- **Chinese (Simplified)**
+- **Japanese**
 
-When a customer successfully completes a checkout, the system will automatically send the contract in the language that corresponds to the customer's defined language preference. If a contract is available in the customer's language, it will be sent immediately after the checkout process is complete.
+When a customer completes a checkout, the system automatically emails the supplier's contract in the customer's preferred language.
 
-#### Language Fallback Logic:
-- If the contract in the customer's selected language is not available, the system will fall back to sending the contract in **English**.
-- If no contract is uploaded for any language, no contract will be sent after the checkout process.
+#### Language Fallback Logic
+- If no contract is uploaded for the customer's language, the system falls back to the **English** contract.
+- If no English contract is available (or no contracts have been uploaded at all), no contract is sent.
 
-#### Supplier Contract Management:
-- Suppliers can manage their contracts at any time through the **Supplier's Page** on the **Admin Dashboard**. 
-  - **Add Contract**: Upload a new contract for each supported language.
-  - **Update Contract**: Edit and re-upload an existing contract if necessary.
-  - **Delete Contract**: Remove a previously uploaded contract for any language.
-
-This system ensures that suppliers can easily manage their contracts and that customers receive the appropriate documents in their preferred language, providing a seamless and efficient experience.
-
+#### Managing Contracts
+Suppliers and admins can manage contracts at any time from the **Supplier's Page** in the **Admin Dashboard**:
+- **Add Contract**: Upload a PDF contract for a supported language.
+- **Update Contract**: Replace an existing contract with a revised PDF.
+- **Delete Contract**: Remove a previously uploaded contract for a specific language.
 
 ---
 
