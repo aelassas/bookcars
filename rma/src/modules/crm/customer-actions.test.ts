@@ -10,7 +10,7 @@ vi.mock("@/platform/tenancy/rls", () => ({ withDrizzleTenant: mocks.transaction 
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate }));
 vi.mock("@/platform/auth/authorization", () => ({ requireAuth: vi.fn() }));
 
-import { createCustomer, updateCustomer } from "./customer-actions";
+import { createCustomer, deleteCustomer, updateCustomer } from "./customer-actions";
 
 describe("customer edits", () => {
   beforeEach(() => {
@@ -50,5 +50,14 @@ describe("customer edits", () => {
     expect(mocks.transaction).toHaveBeenCalledWith("tenant-1", expect.any(Function));
     expect(mocks.revalidate).toHaveBeenCalledWith("/[tenantSlug]/customers", "page");
     expect(mocks.revalidate).toHaveBeenCalledWith("/[tenantSlug]/customers/[id]", "page");
+  });
+  it("returns a readable deletion error for linked history", async () => {
+    mocks.transaction.mockImplementation(async (_tenantId, fn) => fn({
+      select: () => ({ from: () => ({ where: () => ({ limit: async () => [{ id: "linked" }] }) }) }),
+    }));
+    await expect(deleteCustomer("tenant-1", "customer-1", "DELETE")).resolves.toEqual({
+      error: "This customer has linked CRM history and cannot be deleted",
+    });
+    expect(mocks.revalidate).not.toHaveBeenCalled();
   });
 });

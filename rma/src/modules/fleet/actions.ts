@@ -113,22 +113,22 @@ export async function updateVehicle(
   }
 }
 
-export async function deleteVehicle(tenantId: string, vehicleId: string, confirmation: string): Promise<void> {
+export async function deleteVehicle(tenantId: string, vehicleId: string, confirmation: string): Promise<{ error: string | null }> {
   await canManageFleetForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const actorId = await requireAuth();
-  if (confirmation !== "DELETE") throw new Error("Type DELETE to confirm");
+  if (confirmation !== "DELETE") return { error: "Type DELETE to confirm" };
 
-  const slug = await withDrizzleTenant(tenantId, async (tx) => {
+  const result: { error: string | null; slug?: string } = await withDrizzleTenant(tenantId, async (tx) => {
     const [target] = await tx.select({ plate: vehicle.plate }).from(vehicle).where(eq(vehicle.id, vehicleId)).limit(1);
-    if (!target) throw new Error("Vehicle not found");
+    if (!target) return { error: "Vehicle not found" };
 
     const [linkedRental] = await tx.select({ id: rental.id }).from(rental).where(eq(rental.vehicleId, vehicleId)).limit(1);
     const [linkedLease] = await tx.select({ id: lease.id }).from(lease).where(eq(lease.vehicleId, vehicleId)).limit(1);
     const [linkedEvent] = await tx.select({ id: vehicleTimelineEvent.id }).from(vehicleTimelineEvent).where(eq(vehicleTimelineEvent.vehicleId, vehicleId)).limit(1);
     const [linkedDocument] = await tx.select({ id: document.id }).from(document).where(and(eq(document.entityType, "vehicle"), eq(document.entityId, vehicleId))).limit(1);
     if (linkedRental || linkedLease || linkedEvent || linkedDocument) {
-      throw new Error("This vehicle has linked history. Mark it Sold instead of deleting it");
+      return { error: "This vehicle has linked history. Mark it Sold instead of deleting it" };
     }
 
     await tx.delete(vehicle).where(eq(vehicle.id, vehicleId));
@@ -141,11 +141,12 @@ export async function deleteVehicle(tenantId: string, vehicleId: string, confirm
       intent: `Deleted unused vehicle ${target.plate}`,
     });
     const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
-    return t?.slug;
+    return { error: null, slug: t?.slug };
   });
 
-  if (slug) {
-    revalidatePath(`/${slug}/fleet/${vehicleId}`);
-    revalidatePath(`/${slug}/fleet`);
+  if (result.slug) {
+    revalidatePath(`/${result.slug}/fleet/${vehicleId}`);
+    revalidatePath(`/${result.slug}/fleet`);
   }
+  return { error: result.error };
 }

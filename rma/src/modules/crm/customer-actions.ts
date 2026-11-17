@@ -89,15 +89,15 @@ export async function updateCustomer(
   return saved;
 }
 
-export async function deleteCustomer(tenantId: string, id: string, confirmation: string): Promise<void> {
+export async function deleteCustomer(tenantId: string, id: string, confirmation: string): Promise<{ error: string | null }> {
   await canManageCRMForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const actorId = await requireAuth();
-  if (confirmation !== "DELETE") throw new Error("Type DELETE to confirm");
+  if (confirmation !== "DELETE") return { error: "Type DELETE to confirm" };
 
-  await withDrizzleTenant(tenantId, async (tx) => {
+  const error = await withDrizzleTenant(tenantId, async (tx) => {
     const [target] = await tx.select({ name: customer.name }).from(customer).where(eq(customer.id, id)).limit(1);
-    if (!target) throw new Error("Customer not found");
+    if (!target) return "Customer not found";
     const [linkedDeal] = await tx.select({ id: deal.id }).from(deal).where(eq(deal.customerId, id)).limit(1);
     const [linkedMessage] = await tx.select({ id: message.id }).from(message).where(eq(message.customerId, id)).limit(1);
     const [linkedCall] = await tx.select({ id: call.id }).from(call).where(eq(call.customerId, id)).limit(1);
@@ -105,7 +105,7 @@ export async function deleteCustomer(tenantId: string, id: string, confirmation:
     const [linkedLease] = await tx.select({ id: lease.id }).from(lease).where(eq(lease.customerId, id)).limit(1);
     const [linkedDocument] = await tx.select({ id: document.id }).from(document).where(and(eq(document.entityType, "customer"), eq(document.entityId, id))).limit(1);
     if (linkedDeal || linkedMessage || linkedCall || linkedRental || linkedLease || linkedDocument) {
-      throw new Error("This customer has linked CRM history and cannot be deleted");
+      return "This customer has linked CRM history and cannot be deleted";
     }
 
     await tx.delete(customer).where(eq(customer.id, id));
@@ -117,7 +117,11 @@ export async function deleteCustomer(tenantId: string, id: string, confirmation:
       entityId: id,
       intent: `Deleted unused customer ${target.name}`,
     });
+    return null;
   });
-  revalidatePath("/[tenantSlug]/customers", "page");
-  revalidatePath("/[tenantSlug]/customers/[id]", "page");
+  if (!error) {
+    revalidatePath("/[tenantSlug]/customers", "page");
+    revalidatePath("/[tenantSlug]/customers/[id]", "page");
+  }
+  return { error };
 }

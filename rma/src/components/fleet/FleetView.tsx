@@ -6,9 +6,11 @@ import type { FleetVehicle } from "@/modules/fleet/queries";
 import { PageHeader, Badge, Button, ButtonLink, Input, EmptyState } from "@/components/ui";
 import { VehicleDrawer } from "./VehicleDrawer";
 import { BrandLogo } from "./BrandLogo";
+import { EditVehicleButton } from "./EditVehicleModal";
+import { deleteVehicle } from "@/modules/fleet/actions";
 import { CreateVehicleModal } from "@/components/modals/CreateVehicleModal";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
-import { Paperclip, Car, Plus, MapPin, Gauge, Clock, SearchX, CalendarDays } from "lucide-react";
+import { Paperclip, Car, Plus, MapPin, Gauge, Clock, SearchX, CalendarDays, Trash2 } from "lucide-react";
 import { t, type Lang } from "@/platform/i18n/dict";
 
 const ACCENT: Record<string, string> = {
@@ -64,7 +66,30 @@ export function FleetView({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [docVehicle, setDocVehicle] = useState<FleetVehicle | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState("");
   const vehicleList = vehicles;
+
+  async function handleDelete(vehicle: FleetVehicle) {
+    const confirmation = prompt(t(lang, "vehicle.deletePrompt"));
+    if (confirmation !== "DELETE") return;
+    setDeletingId(vehicle.id);
+    setDeleteError("");
+    try {
+      const result = await deleteVehicle(tenantId, vehicle.id, confirmation);
+      if (result.error) {
+        setDeleteError(result.error);
+        alert(result.error);
+        return;
+      }
+      window.location.reload();
+    } catch {
+      setDeleteError(t(lang, "vehicle.saveError"));
+      alert(t(lang, "vehicle.saveError"));
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   const FILTERS: { id: Filter; label: string }[] = [
     { id: "all", label: "All" },
@@ -185,6 +210,8 @@ export function FleetView({
           ))}
         </div>
       </div>
+
+      {deleteError && <p role="alert" className="mb-4 text-sm text-danger">{deleteError}</p>}
 
       {list.length === 0 ? (
         <EmptyState
@@ -323,6 +350,15 @@ export function FleetView({
                     Documents
                   </button>
                 </div>
+                {cardHref && (
+                  <div className="flex items-center justify-end gap-2 border-t border-line-soft px-3 py-2">
+                    <EditVehicleButton tenantId={tenantId} vehicle={v} lang={lang} />
+                    <Button variant="danger" size="sm" disabled={deletingId === v.id} onClick={() => handleDelete(v)}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                      {deletingId === v.id ? "Deleting…" : t(lang, "vehicle.delete")}
+                    </Button>
+                  </div>
+                )}
               </div>
             );
           })}

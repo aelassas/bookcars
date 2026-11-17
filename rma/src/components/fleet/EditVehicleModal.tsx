@@ -80,7 +80,12 @@ export function EditVehicleModal({
     setSubmitting(true);
     setError(null);
     try {
-      await deleteVehicle(tenantId, vehicle.id, confirmation);
+      const result = await deleteVehicle(tenantId, vehicle.id, confirmation);
+      if (result.error) {
+        setError(result.error);
+        setSubmitting(false);
+        return;
+      }
       window.location.href = `/${window.location.pathname.split("/")[1]}/fleet`;
     } catch (err) {
       setError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));

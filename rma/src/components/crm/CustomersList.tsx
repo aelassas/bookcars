@@ -18,9 +18,10 @@ import {
   type BadgeTone,
 } from "@/components/ui";
 import { CreateCustomerModal } from "@/components/modals/CreateCustomerModal";
+import { deleteCustomer } from "@/modules/crm/customer-actions";
 import { recordHref } from "@/lib/return-navigation";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
-import { ChevronLeft, ChevronRight, Paperclip, Pencil, Plus, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Paperclip, Pencil, Plus, Trash2, Users } from "lucide-react";
 import type { customer as CustomerTable } from "@/platform/db/schema";
 
 type Customer = typeof CustomerTable.$inferSelect;
@@ -57,6 +58,8 @@ export default function CustomersList({
   const [showModal, setShowModal] = useState(false);
   const [editCustomer, setEditCustomer] = useState<Customer | null>(null);
   const [notice, setNotice] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState("");
   const [docCustomer, setDocCustomer] = useState<Customer | null>(null);
   const [searchInput, setSearchInput] = useState(searchParams.get("search") ?? "");
   const [isPending, startTransition] = useTransition();
@@ -87,6 +90,27 @@ export default function CustomersList({
     navigate(1, searchInput.trim());
   }
 
+  async function handleDelete(customer: Customer) {
+    const confirmation = prompt("Type DELETE to permanently delete this unused customer");
+    if (confirmation !== "DELETE") return;
+    setDeletingId(customer.id);
+    setDeleteError("");
+    setNotice("");
+    try {
+      const result = await deleteCustomer(tenantId, customer.id, confirmation);
+      if (result.error) {
+        setDeleteError(result.error);
+        return;
+      }
+      setNotice("Customer deleted");
+      router.refresh();
+    } catch {
+      setDeleteError("Customer deletion failed");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
     <div aria-busy={isPending}>
       <PageHeader
@@ -110,6 +134,7 @@ export default function CustomersList({
       )}
 
       {notice && <p role="status" className="mb-4 text-sm text-success">{notice}</p>}
+      {deleteError && <p role="alert" className="mb-4 text-sm text-danger">{deleteError}</p>}
 
       {docCustomer && (
         <div className="mb-6">
@@ -211,6 +236,9 @@ export default function CustomersList({
                     <div className="flex items-center gap-1">
                     <button type="button" onClick={() => setEditCustomer(c)} className={cx(ICON_BTN, "text-ink-3 hover:bg-sunken hover:text-ink")} aria-label={`Edit ${c.name}`} title="Edit customer">
                       <Pencil className="h-4 w-4" />
+                    </button>
+                    <button type="button" onClick={() => handleDelete(c)} disabled={deletingId === c.id} className={cx(ICON_BTN, "text-danger hover:bg-rose-50")} aria-label={`Delete ${c.name}`} title="Delete customer">
+                      <Trash2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => setDocCustomer(c)}

@@ -20,7 +20,12 @@ export function CustomerActions({ tenantId, customer }: { tenantId: string; cust
     setDeleting(true);
     setError(null);
     try {
-      await deleteCustomer(tenantId, customer.id, confirmation);
+      const result = await deleteCustomer(tenantId, customer.id, confirmation);
+      if (result.error) {
+        setError(result.error);
+        setDeleting(false);
+        return;
+      }
       window.location.href = `/${window.location.pathname.split("/")[1]}/customers`;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Customer deletion failed");
