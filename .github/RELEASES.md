@@ -1,11 +1,24 @@
 # Releases
 
+## [BookCars 9.5](https://github.com/aelassas/bookcars/releases/tag/v9.5) – 2026-11-17
+
+* fix(security): prevent NoSQL operator injection in /api/activate by @destinyfkrr ([GHSA-59w5-463c-8j6g](https://github.com/aelassas/bookcars/security/advisories/GHSA-59w5-463c-8j6g))
+* ci(loc.yml): replace apt-get with npm for cloc installation
+
+### Assets
+- [bookcars-9.5.apk](https://github.com/aelassas/bookcars/releases/download/v9.5/bookcars-9.5.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.5/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.5)
+
 ## [BookCars 9.4](https://github.com/aelassas/bookcars/releases/tag/v9.4) – 2026-11-11
 
 * feat(backend): export `BC_RECAPTCHA_MIN_SCORE` in env config
-* fix(backend): capture the checkout payment before sending emails (#143)
-* fix(backend): don't fail a paid PayPal or Stripe order when an email fails (#145)
-* fix(backend): confirm mobile bookings paid as a deposit or in full (#147)
+* fix(backend): capture the checkout payment before sending emails by @5eBeKs (#143)
+* fix(backend): don't fail a paid PayPal or Stripe order when an email fails by @5eBeKs (#145)
+* fix(backend): confirm mobile bookings paid as a deposit or in full by @5eBeKs (#147)
 * fix(backend): replace deprecated new option with returnDocument in findOneAndUpdate
 * fix(backend): adjust reCAPTCHA score threshold for non-production environments
 
