@@ -81,9 +81,8 @@ const STATIC_BRAND_OWNERS: Record<string, BrandOwner> = {
   "ig-takeauto":           { key: "leasing-manager",  name: "Leasing Dept Manager", telegramChatId: null }, // Instagram DM
   "fb-takeauto":           { key: "leasing-manager",  name: "Leasing Dept Manager", telegramChatId: null }, // Facebook Messenger
   "takeauto-meta-main":    { key: "leasing-manager",  name: "Leasing Dept Manager", telegramChatId: null }, // WhatsApp Cloud API 971505375594
-  // RMA Car Rental, Dubai. Pilot number is Ruslan's personal handset
-  // (971553590533) — a dedicated RMA business line will replace it later and
-  // this slug stays.
+  // RMA Car Rental, Dubai. The dedicated business line 971581965238 keeps
+  // the original rma-main slug so its history and routing stay attached.
   "rma-main":              { key: "ruslan",           name: "Ruslan (RMA)",         telegramChatId: null },
 };
 
@@ -204,7 +203,7 @@ export const LINE_PHONES: Record<string, string> = {
   "97143742003": "mohammed-takeauto",
   "971567235539": "takeauto-leasing-dept",
   "971505375594": "takeauto-meta-main", // WhatsApp Cloud API line on WABA 495592020296971
-  "971553590533": "rma-main",           // Ruslan's handset for the RMA pilot; swapped to a dedicated RMA number later
+  "971581965238": "rma-main",           // Dedicated RMA business WhatsApp line
 };
 
 /** Effective phone → slug map: overlay entries merged UNDER the static map —

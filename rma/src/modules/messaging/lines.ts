@@ -76,10 +76,9 @@ const STATIC_LINE_TENANT: Record<string, string> = {
   // this Meta account cannot access (2026-09-23).
   "takeauto-meta-main": "take-auto",
   // ── RMA Car Rental (Dubai) — self-hosted on Hostinger, deployment "RMA CRM".
-  // 971553590533 is Ruslan Anyanov's handset for the pilot; per his 27.10
-  // message a dedicated RMA business number will replace it later and the
-  // slug stays. Pre-registered so Ruslan can open /lines and pair without an
-  // operator editing the overlay first.
+  // 971581965238 is the dedicated RMA business number connected to the
+  // platform. The original rma-main slug stays so message history and routing
+  // remain attached to the same line.
   "rma-main": "rma",
 };
 

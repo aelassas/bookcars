@@ -218,6 +218,7 @@ describe("listLines", () => {
     const rows = await listLines({ dir, now, nameOverrides: {}, tenantSlugs: new Set(["rma"]) });
     expect(rows.map((r) => r.slug)).toEqual(["rma-main"]);
     expect(rows[0].tenant).toBe("rma");
+    expect(rows[0].phone).toBe("971581965238");
     expect(rows[0].owner).toEqual({ key: "ruslan", name: "Ruslan (RMA)" });
   });
 });

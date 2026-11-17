@@ -241,7 +241,7 @@ pm2 save
 
 Ruslan then opens https://crm.rma.network/login, signs in as
 `ruslan@rma.network`, navigates to `/lines`, clicks Pair → QR, scans with
-WhatsApp on his handset (`+971 55 359 0533`), and the status flips to
+WhatsApp on the RMA business handset (`+971 58 196 5238`), and the status flips to
 `online` once the session is written.
 
 ## 7. Smoke tests
@@ -260,7 +260,5 @@ WhatsApp on his handset (`+971 55 359 0533`), and the status flips to
 - **TARS portal needs its own user** per owner note 2026-10-30. The
   current `.env.local` TARS creds are the demo set; swap when Ruslan
   provisions a dedicated TARS user for the automation.
-- **WhatsApp observer** — see §6; blocks actual pairing.
-- **A dedicated RMA business WhatsApp number** will replace
-  `971553590533` once procured. The `rma-main` slug stays; only the
-  `LINE_PHONES` entry in `src/modules/board/owners.ts` is updated.
+- **WhatsApp observer** — see §6; blocks actual pairing. The dedicated RMA
+  business number is `971581965238`; the `rma-main` slug stays unchanged.

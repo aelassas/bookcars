@@ -42,11 +42,9 @@ describe("LINE_TENANT — the paired device decides the brand, not the slug", ()
     expect(tenantSlugForLine("takeauto-leasing-dept")).toBe("take-auto");
   });
 
-  it("files the RMA pilot line under rma, pre-registered before Ruslan pairs", () => {
-    // Pre-registered in STATIC_LINE_TENANT so Ruslan can open /lines and pair
-    // without an operator editing the overlay first. 971553590533 is his
-    // personal handset for the pilot — the slug stays when a dedicated RMA
-    // business number replaces it later (owner 2026-10-27).
+  it("files the RMA business line under rma", () => {
+    // The dedicated 971581965238 line keeps the original rma-main slug so
+    // existing message history and routing stay attached to it.
     expect(tenantSlugForLine("rma-main")).toBe("rma");
   });
 
