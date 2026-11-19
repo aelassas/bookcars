@@ -58,10 +58,18 @@ describe("TARS vehicle identity", () => {
       { id: "vehicle-1", plate: "GG 31235", vin: vehicle.vin!, externalId: null, externalSource: null },
     ]);
     existing.rentals.push({
+      id: "rental-cancelled",
+      vehicleId: "vehicle-1",
+      startDate: new Date("2026-11-16T00:00:00Z"),
+      returnDate: new Date("2026-11-24T00:00:00Z"),
+      status: "cancelled",
+      tarsDocumentNumber: null,
+    }, {
       id: "rental-1",
       vehicleId: "vehicle-1",
       startDate: new Date("2026-11-16T00:00:00Z"),
       returnDate: new Date("2026-11-24T00:00:00Z"),
+      status: "active",
       tarsDocumentNumber: null,
     });
 

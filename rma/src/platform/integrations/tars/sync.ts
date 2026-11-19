@@ -199,6 +199,7 @@ export interface ExistingRentalRow {
   vehicleId: string;
   startDate: Date;
   returnDate: Date;
+  status: string;
   tarsDocumentNumber: string | null;
 }
 
@@ -340,7 +341,7 @@ export function buildPlan(
     const day = (value: Date) => value.toISOString().slice(0, 10);
     const existingRental = existingRentals.find((r) => r.tarsDocumentNumber === mapped.documentNumber)
       ?? existingRentals.find((r) =>
-        !r.tarsDocumentNumber && !usedRentalIds.has(r.id) && r.vehicleId === vehicleId &&
+        !r.tarsDocumentNumber && !usedRentalIds.has(r.id) && r.vehicleId === vehicleId && r.status === mapped.status &&
         day(r.startDate) === day(mapped.startDate) && day(r.returnDate) === day(mapped.returnDate)
       );
     if (existingRental) usedRentalIds.add(existingRental.id);
@@ -394,6 +395,7 @@ export async function loadExisting(tenantId: string): Promise<ExistingState> {
         vehicleId: rental.vehicleId,
         startDate: rental.startDate,
         returnDate: rental.returnDate,
+        status: rental.status,
         tarsDocumentNumber: rental.tarsDocumentNumber,
       })
       .from(rental),
@@ -514,21 +516,26 @@ export async function applyPlan(tenantId: string, plan: SyncPlan): Promise<SyncC
         updatedAt: new Date(),
         ...(m.status ? { status: m.status } : {}),
       };
-      if (item.existingId) {
-        await tx.update(rental).set({ ...data, tarsDocumentNumber: m.documentNumber }).where(eq(rental.id, item.existingId));
-        counts.rentalsUpdated++;
-      } else {
-        await tx.insert(rental).values({
-          tenantId,
-          ...data,
-          // TARS exposes no money on the contract payload — the NOT NULL price
-          // columns stay 0 until someone records the real numbers in the CRM.
-          dailyRate: 0,
-          total: 0,
-          status: m.status ?? "reserved",
-          tarsDocumentNumber: m.documentNumber,
-        });
-        counts.rentalsInserted++;
+      try {
+        if (item.existingId) {
+          await tx.update(rental).set({ ...data, tarsDocumentNumber: m.documentNumber }).where(eq(rental.id, item.existingId));
+          counts.rentalsUpdated++;
+        } else {
+          await tx.insert(rental).values({
+            tenantId,
+            ...data,
+            // TARS exposes no money on the contract payload — the NOT NULL price
+            // columns stay 0 until someone records the real numbers in the CRM.
+            dailyRate: 0,
+            total: 0,
+            status: m.status ?? "reserved",
+            tarsDocumentNumber: m.documentNumber,
+          });
+          counts.rentalsInserted++;
+        }
+      } catch (error) {
+        const root = error instanceof Error && error.cause instanceof Error ? error.cause : error;
+        throw new Error(`TARS rental ${m.documentNumber}: ${root instanceof Error ? root.message : root}`);
       }
     }
   });
