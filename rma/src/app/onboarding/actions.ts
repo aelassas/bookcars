@@ -57,5 +57,5 @@ export async function createTenantForCurrentUser(formData: FormData) {
   });
 
   // Hand off to the guided setup wizard (brand → modules → migrate → team).
-  redirect(`/${created.slug}/onboarding`);
+  redirect(`/${created.slug}/onboarding/setup`);
 }

@@ -175,11 +175,14 @@ export async function markVehicleAsSold(tenantId: string, vehicleId: string): Pr
   const { slug } = await withDrizzleTenant(tenantId, async (tx) => {
     const [current] = await tx.select({ status: vehicle.status, plate: vehicle.plate }).from(vehicle).where(eq(vehicle.id, vehicleId)).limit(1);
     if (!current) throw new Error("Vehicle not found");
-    // Reserved / on_rent are rental-derived — flipping those to sold would
-    // orphan an active rental. The Edit modal already locks status in that
-    // case; mirror the same guard here so the one-click button cannot bypass.
-    if (!EDITABLE_VEHICLE_STATUSES.includes(current.status as (typeof EDITABLE_VEHICLE_STATUSES)[number])) {
-      throw new Error(`Cannot mark a ${current.status} vehicle as sold`);
+    // Reserved / on_rent are live rental handoffs — flipping those to sold
+    // would orphan an active rental, so the one-click button must not bypass
+    // them. "overdue" (engine blocked / rental past its return date) is a
+    // problem state the owner retires, not a live handoff, so it IS sellable.
+    if (current.status === "reserved" || current.status === "on_rent") {
+      throw new Error(
+        `Cannot mark a ${current.status} vehicle as sold — settle the active rental first`,
+      );
     }
     await tx.update(vehicle).set({ status: "sold", updatedAt: new Date() }).where(eq(vehicle.id, vehicleId));
     await tx.insert(auditEvent).values({

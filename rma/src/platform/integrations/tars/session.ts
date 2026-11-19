@@ -185,12 +185,15 @@ export async function loginWithPlaywright(opts: TarsLoginOptions): Promise<TarsC
     }
 
     const channel = opts.otpChannel ?? process.env.TARS_OTP_CHANNEL ?? "email";
+    // The OTP screen is a radio group `name="sfaChoice"`: value="mobile" (SMS,
+    // pre-selected) and value="mail" (email). Clicking the label text does NOT
+    // toggle the radio (probed 2026-11-19), so check the input directly.
+    const radioValue = channel === "email" ? "mail" : "mobile";
     await page
-      .locator(`text=/Send OTP to ${channel === "email" ? "email" : "mobile"}/i`)
-      .first()
-      .click()
+      .locator(`input[name="sfaChoice"][value="${radioValue}"]`)
+      .check()
       .catch(() => {});
-    await page.locator('button:has-text("Send OTP"), input[value*="Send OTP"]').first().click();
+    await page.locator('button:has-text("Send OTP")').first().click();
 
     const otp = await opts.getOtp();
     const otpInput = page

@@ -32,7 +32,7 @@ const SECTION_TITLES: Record<string, string> = {
   tasks: "Tasks",
   search: "Search",
   settings: "Settings",
-  onboarding: "Onboarding",
+  onboarding: "Rental onboarding",
 };
 
 export default function Topbar({ tenantSlug, lang = "ru" }: { tenantSlug: string; lang?: Lang }) {
@@ -42,6 +42,7 @@ export default function Topbar({ tenantSlug, lang = "ru" }: { tenantSlug: string
   const rest = pathname.replace(`/${tenantSlug}`, "").split("/").filter(Boolean);
   let title = SECTION_TITLES[rest[0] ?? ""] ?? "Overview";
   if (rest[0] === "fleet" && rest[1] === "availability") title = "Availability calendar";
+  if (rest[0] === "onboarding" && rest[1] === "setup") title = "Workspace setup";
 
   const user = session?.user;
   const display = user?.name || user?.email || "";

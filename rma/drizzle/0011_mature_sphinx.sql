@@ -1,6 +1,8 @@
 -- Custom migration: idempotent so it can run on DBs that already have the task table
 -- (from the manually-written 0011_task_table.sql that predated this generated migration).
 
+CREATE EXTENSION IF NOT EXISTS postgis;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "task" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tenant_id" uuid NOT NULL,

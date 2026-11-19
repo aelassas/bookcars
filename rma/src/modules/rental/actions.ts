@@ -98,7 +98,7 @@ export async function confirmTarsUpload(
 
     const rows = await tx
       .update(rental)
-      .set({ tarsDocumentNumber: normalizedDocument, updatedAt: new Date() })
+      .set({ tarsDocumentNumber: normalizedDocument, onboardingStage: "tars", updatedAt: new Date() })
       .where(eq(rental.id, rentalId))
       .returning();
     const row = Array.isArray(rows) ? rows[0] : rows;
@@ -120,6 +120,7 @@ export async function confirmTarsUpload(
     });
 
     revalidatePath(`/${tenantSlug}/rentals/${rentalId}`);
+    revalidatePath(`/${tenantSlug}/onboarding`);
     revalidatePath(`/${tenantSlug}/deals`);
     return row;
   });

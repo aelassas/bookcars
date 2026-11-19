@@ -1055,6 +1055,9 @@ export const rental = tenantTable(
     // TARS contract identity (0080, e.g. "55606-3350") — the TARS sync
     // (integrations/tars) upserts on it; unique per tenant.
     tarsDocumentNumber: text("tars_document_number"),
+    onboardingStage: text("onboarding_stage").notNull().default("new_lead"),
+    taqeeqSubmissionId: text("taqeeq_submission_id"),
+    taqeeqSignedAt: timestamp("taqeeq_signed_at", { withTimezone: true }),
     extensionStatus: text("extension_status").notNull().default("not_sent"),
     returnReminderSentAt: timestamp("return_reminder_sent_at", { withTimezone: true }),
     customerResponseAt: timestamp("customer_response_at", { withTimezone: true }),
@@ -1072,6 +1075,7 @@ export const rental = tenantTable(
     index("rental_vehicle_idx").on(t.vehicleId),
     index("rental_company_idx").on(t.companyId),
     uniqueIndex("rental_tenant_tars_doc_uniq").on(t.tenantId, t.tarsDocumentNumber),
+    index("rental_tenant_onboarding_stage_idx").on(t.tenantId, t.onboardingStage),
   ],
   { companyScoped: true },
 );

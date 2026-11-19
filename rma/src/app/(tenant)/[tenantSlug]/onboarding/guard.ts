@@ -21,5 +21,5 @@ export async function redirectIfNeedsOnboarding(
     .from(tenant)
     .where(eq(tenant.id, tenantId))
     .limit(1);
-  if (row && !row.onboardedAt) redirect(`/${slug}/onboarding`);
+  if (row && !row.onboardedAt) redirect(`/${slug}/onboarding/setup`);
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { hostAgnosticSignOut } from "@/lib/auth/host-agnostic-sign-out";
-import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren, Phone, Globe, Receipt,  } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, Car, CalendarDays, CalendarRange, RotateCcw, ShieldAlert, Settings, Menu, X, Briefcase, ClipboardList, ClipboardCheck, ListChecks, UserCog, Bot, LifeBuoy, Palette, FileText, Search, Inbox, KeyRound, LogOut, Activity, Sun, GitFork, Siren, Phone, Globe, Receipt,  } from "lucide-react";
 import { normalizeModules, type ModuleId } from "@/platform/tenant-modules";
 import { ru } from "@/lib/i18n/ru";
 import { t, type Lang } from "@/platform/i18n/dict";
@@ -73,6 +73,7 @@ const GROUPS: { label: string | null; links: NavLink[] }[] = [
       // free" — no `rentOps`, they belong to both lines.
       { href: "/fleet/availability", label: "nav.calendar", module: "rentals", icon: CalendarRange },
       { href: "/rentals", label: "nav.rentals", module: "rentals", icon: CalendarDays },
+      { href: "/onboarding", label: "nav.rentalOnboarding", module: "rentals", icon: ClipboardCheck },
       { href: "/leases", label: "nav.leasing", module: "leases", icon: FileText, hideForRent: true },
       { href: "/returns", label: "nav.returns", module: "returns", icon: RotateCcw },
       { href: "/operations", label: "nav.operationsBoard", module: "rentals", icon: Activity },
