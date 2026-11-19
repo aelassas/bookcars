@@ -16,6 +16,8 @@ export interface EditableVehicle {
   year?: number | null;
   plate: string;
   dailyRate: number;
+  weeklyRate: number;
+  monthlyRate: number;
   odometer: number;
   /** Current lifecycle status. Rental-derived values (on_rent, reserved,
    *  overdue) lock the Status select — those flip back by themselves. */
@@ -106,6 +108,8 @@ export function EditVehicleModal({
         year: Number(fd.get("year")) || null,
         plate: String(fd.get("plate")).trim(),
         dailyRate: Number(fd.get("dailyRate")) || 0,
+        weeklyRate: Number(fd.get("weeklyRate")) || 0,
+        monthlyRate: Number(fd.get("monthlyRate")) || 0,
         odometer: Number(fd.get("odometer")) || 0,
         location: String(fd.get("location") ?? "").trim() || null,
         nextServiceDate: String(fd.get("nextServiceDate") ?? "") || null,
@@ -157,7 +161,7 @@ export function EditVehicleModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div>
             <Label>{t(lang, "vehicle.dailyRate")}</Label>
             <Input
@@ -170,16 +174,39 @@ export function EditVehicleModal({
             />
           </div>
           <div>
-            <Label>{t(lang, "vehicle.odometer")}</Label>
+            <Label>{t(lang, "vehicle.weeklyRate")}</Label>
             <Input
-              name="odometer"
+              name="weeklyRate"
               type="number"
               min={0}
               step={1}
-              defaultValue={vehicle.odometer}
+              defaultValue={vehicle.weeklyRate}
               className="w-full"
             />
           </div>
+          <div>
+            <Label>{t(lang, "vehicle.monthlyRate")}</Label>
+            <Input
+              name="monthlyRate"
+              type="number"
+              min={0}
+              step={1}
+              defaultValue={vehicle.monthlyRate}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label>{t(lang, "vehicle.odometer")}</Label>
+          <Input
+            name="odometer"
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={vehicle.odometer}
+            className="w-full"
+          />
         </div>
 
         <div>

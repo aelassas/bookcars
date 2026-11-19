@@ -20,6 +20,8 @@ export interface UpdateVehicleInput {
   year?: number | null;
   plate?: string;
   dailyRate?: number;
+  weeklyRate?: number;
+  monthlyRate?: number;
   odometer?: number;
   location?: string | null;
   nextServiceDate?: string | null;
@@ -48,6 +50,8 @@ export async function updateVehicle(
     throw new Error("Plate must not be empty");
   }
   if (data.dailyRate !== undefined) assertNonNegativeInt(data.dailyRate, "Daily rate");
+  if (data.weeklyRate !== undefined) assertNonNegativeInt(data.weeklyRate, "Weekly rate");
+  if (data.monthlyRate !== undefined) assertNonNegativeInt(data.monthlyRate, "Monthly rate");
   if (data.odometer !== undefined) assertNonNegativeInt(data.odometer, "Odometer");
   if (data.nextServiceOdometer !== undefined && data.nextServiceOdometer !== null) {
     assertNonNegativeInt(data.nextServiceOdometer, "Next service odometer");
@@ -75,6 +79,8 @@ export async function updateVehicle(
   if (data.year !== undefined) set.year = data.year;
   if (data.plate !== undefined) set.plate = data.plate.trim();
   if (data.dailyRate !== undefined) set.dailyRate = data.dailyRate;
+  if (data.weeklyRate !== undefined) set.weeklyRate = data.weeklyRate;
+  if (data.monthlyRate !== undefined) set.monthlyRate = data.monthlyRate;
   if (data.odometer !== undefined) set.odometer = data.odometer;
   if (data.location !== undefined) set.location = data.location;
   if (data.nextServiceDate !== undefined) set.nextServiceDate = data.nextServiceDate;

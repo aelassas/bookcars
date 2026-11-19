@@ -1,0 +1,9 @@
+[Unit]
+Description=RMA CRM rental operations with RTA and Salik sync
+After=network.target docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+EnvironmentFile=/etc/rma-crm-notify.env
+ExecStart=/usr/bin/npx tsx scripts/run-rental-operations.ts --commit --sync-fines --sync-salik

@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { rental, payment, task, auditEvent } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { requireRoleForTenant, requireAuth } from "@/platform/auth/authorization";
+import { assertValidPayment, availablePaymentBalance } from "./payment-rules";
 
 // STEP 1 — sales records a payment ("payment received + amount"). Status =
 // pending; balance is NOT reduced yet. Two follow-up tasks are opened: sales
@@ -25,20 +26,26 @@ export async function recordPayment(
   // sales account write audit rows in someone else's name (the cash trail must
   // be undeniable; confirmPayment already follows this rule).
   const actorId = await requireAuth();
-  if (!data.rentalId || data.amount <= 0) throw new Error("Invalid payment amount");
+  if (!data.rentalId) throw new Error("Rental is required");
 
   // Shared fleet: the rental (and therefore its payment/task/audit rows) lives
   // in fleet-home. Authorize on the viewer's brand, write everything under
   // fleet-home so the rows stay consistent with the rental and read back.
   const home = await requireFleetHomeTenantId();
   return withDrizzleTenant(home, async (tx) => {
-    const [r] = await tx.select().from(rental).where(eq(rental.id, data.rentalId)).limit(1);
+    const [r] = await tx.select().from(rental).where(eq(rental.id, data.rentalId)).for("update").limit(1);
     if (!r) throw new Error("Rental not found");
     if (r.status === "cancelled") throw new Error("Cannot record payment for cancelled rental");
+    const [pending] = await tx
+      .select({ total: sql<number>`coalesce(sum(${payment.amount}), 0)::int` })
+      .from(payment)
+      .where(and(eq(payment.rentalId, data.rentalId), eq(payment.status, "pending")));
+    const method = data.method ?? "cash";
+    assertValidPayment(data.amount, availablePaymentBalance(r.balanceDue, Number(pending?.total ?? 0)), method);
 
     const ins = await tx
       .insert(payment)
-      .values({ tenantId: home, rentalId: data.rentalId, amount: data.amount, method: data.method ?? "cash", notes: data.notes ?? null, status: "pending", recordedBy: actorId ?? null })
+      .values({ tenantId: home, rentalId: data.rentalId, amount: data.amount, method, notes: data.notes ?? null, status: "pending", recordedBy: actorId ?? null })
       .returning();
     const p = Array.isArray(ins) ? ins[0] : ins;
 
@@ -48,7 +55,7 @@ export async function recordPayment(
       { tenantId: home, companyId: r.companyId, externalId: ref, board: "security", column: "open", status: "open", title: `Accepted-not-posted: ${data.amount} AED (rental)`, description: "Payment recorded but not yet confirmed — verify cash reached the till." },
     ]);
 
-    await tx.insert(auditEvent).values({ tenantId: home, actorId: actorId ?? null, action: "payment.received", entityType: "payment", entityId: p.id, intent: `Sales recorded ${data.amount} AED ${data.method ?? "cash"} (pending sales confirmation)` });
+    await tx.insert(auditEvent).values({ tenantId: home, actorId: actorId ?? null, action: "payment.received", entityType: "payment", entityId: p.id, intent: `Sales recorded ${data.amount} AED ${method} (pending sales confirmation)` });
 
     if (tenantSlug) { revalidatePath(`/${tenantSlug}/rentals/${data.rentalId}`); revalidatePath(`/${tenantSlug}/security`); }
     return p;
@@ -66,20 +73,59 @@ export async function confirmPayment(tenantId: string, paymentId: string, tenant
     const [p] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
     if (!p) throw new Error("Payment not found");
     if (p.status === "confirmed") return p;
+    if (p.status !== "pending") throw new Error(`Cannot confirm a ${p.status} payment`);
 
-    await tx.update(payment).set({ status: "confirmed", confirmedBy: actorId, confirmedAt: new Date() }).where(eq(payment.id, paymentId));
+    // Serialize confirmations against other payments for the same rental.
+    const [r] = await tx.select().from(rental).where(eq(rental.id, p.rentalId)).for("update").limit(1);
+    if (!r) throw new Error("Rental not found");
+    if (p.amount > r.balanceDue) throw new Error(`Payment exceeds the remaining balance of ${r.balanceDue} AED`);
 
-    const [r] = await tx.select().from(rental).where(eq(rental.id, p.rentalId)).limit(1);
-    if (r) {
-      const newBalance = Math.max(0, r.balanceDue - p.amount);
-      await tx.update(rental).set({ balanceDue: newBalance, updatedAt: new Date() }).where(eq(rental.id, r.id));
+    const postedRows = await tx
+      .update(payment)
+      .set({ status: "confirmed", confirmedBy: actorId, confirmedAt: new Date() })
+      .where(and(eq(payment.id, paymentId), eq(payment.status, "pending")))
+      .returning();
+    const posted = Array.isArray(postedRows) ? postedRows[0] : postedRows;
+    if (!posted) {
+      const [current] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
+      return current;
     }
+
+    await tx.update(rental).set({ balanceDue: r.balanceDue - p.amount, updatedAt: new Date() }).where(eq(rental.id, r.id));
     await tx.update(task).set({ status: "done", updatedAt: new Date() }).where(and(eq(task.externalId, `payment:${paymentId}`), eq(task.status, "open")));
 
     await tx.insert(auditEvent).values({ tenantId: home, actorId, action: "payment.confirmed", entityType: "payment", entityId: paymentId, intent: `Sales confirmed payment received: ${p.amount} AED` });
 
     if (tenantSlug) { revalidatePath(`/${tenantSlug}/rentals/${p.rentalId}`); revalidatePath(`/${tenantSlug}/security`); revalidatePath(`/${tenantSlug}/collections`); }
-    return p;
+    return posted;
+  });
+}
+
+export async function rejectPayment(tenantId: string, paymentId: string, tenantSlug?: string) {
+  await requireRoleForTenant(tenantId, ["sales", "sales_manager", "general_manager"]);
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  return withDrizzleTenant(home, async (tx) => {
+    const [p] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
+    if (!p) throw new Error("Payment not found");
+    if (p.status === "rejected") return p;
+    if (p.status !== "pending") throw new Error("A confirmed payment cannot be rejected");
+
+    const rejectedRows = await tx
+      .update(payment)
+      .set({ status: "rejected" })
+      .where(and(eq(payment.id, paymentId), eq(payment.status, "pending")))
+      .returning();
+    const rejected = Array.isArray(rejectedRows) ? rejectedRows[0] : rejectedRows;
+    if (!rejected) {
+      const [current] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
+      return current;
+    }
+    await tx.update(task).set({ status: "done", updatedAt: new Date() }).where(and(eq(task.externalId, `payment:${paymentId}`), eq(task.status, "open")));
+    await tx.insert(auditEvent).values({ tenantId: home, actorId, action: "payment.rejected", entityType: "payment", entityId: paymentId, intent: `Sales rejected unposted payment: ${p.amount} AED; balance unchanged` });
+
+    if (tenantSlug) { revalidatePath(`/${tenantSlug}/rentals/${p.rentalId}`); revalidatePath(`/${tenantSlug}/security`); }
+    return rejected;
   });
 }
 

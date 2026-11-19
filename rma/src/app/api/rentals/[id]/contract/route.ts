@@ -117,7 +117,7 @@ export async function POST(
         totalDays: row.r.totalDays,
         dailyRate: row.r.dailyRate,
         deposit: row.r.deposit,
-        total: row.r.total,
+        rentalSubtotal: row.r.dailyRate * row.r.totalDays,
         returnRemarks: row.r.damageNotes ?? null,
       };
 

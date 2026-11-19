@@ -48,8 +48,8 @@ export function FinesBoard({ tenantId, vehicles }: { tenantId: string; vehicles:
           <Siren className="h-4 w-4 text-brand-600" /> Salik tolls
         </span>
         <span className="text-ink-2">
-          One Salik account for all cars (per intake form). Live toll sync turns on the moment the account login is
-          shared — until then RTA fines below already work on the real plates.
+          Use Charges for assigned Salik, Parkin and Parkonic records, payments and statements. Automated feeds still
+          require authenticated operator access; the RTA lookup below checks real plates.
         </span>
         <button
           type="button"

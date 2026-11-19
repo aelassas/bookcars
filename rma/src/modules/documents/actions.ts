@@ -6,6 +6,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { uploadDocument } from "@/platform/storage/upload";
 import { auth } from "@/platform/auth";
 import { canManageDocumentsForTenant } from "@/platform/auth/authorization";
+import { runDocumentRecognition } from "./recognition-service";
 
 export async function uploadDocumentForEntity(
   tenantId: string,
@@ -50,6 +51,9 @@ export async function uploadDocumentForEntity(
     return r;
   });
 
+  if (data.entityType === "customer" && ["id", "license", "passport", "international_license"].includes(data.category)) {
+    await runDocumentRecognition(tenantId, row.id);
+  }
   revalidatePath("/");
   return row;
 }

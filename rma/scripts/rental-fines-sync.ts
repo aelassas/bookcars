@@ -18,7 +18,7 @@
  *   vehicle, not just rented ones); rental.rtaFinesAed = fines ticketed
  *   inside the rental window (startDate .. returnDate||today), plus a
  *   human-readable multi-line finesBreakdown.
- *   Salik customer portal (scripts/salik-trips.cjs, one session per account):
+ *   Salik customer portal (src/platform/integrations/salik, one session per account):
  *   toll + parking spend from startDate → today → rental.salikAed, and the
  *   same number onto the vehicle while its rental is active. Vehicles with
  *   no active rental keep their previous salikAed.
@@ -41,7 +41,7 @@ config({ path: ".env.local" });
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
+import * as salik from "@/platform/integrations/salik/client";
 import { lookupFines, type RtaFinesResult } from "@/platform/integrations/rta/client";
 import { decodePlate } from "@/platform/integrations/rta/plate";
 import { createTwentyClient, type TwentyClient } from "@/platform/integrations/twenty/client";
@@ -61,21 +61,6 @@ const RTA_DELAY_MS = 300;
 const SALIK_DELAY_MS = 200;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const require = createRequire(import.meta.url);
-// Zero-dep Salik customer-portal connector (docs/salik-connector.md).
-const salik = require("../../scripts/salik-trips.cjs") as {
-  login(user: string, pass: string): Promise<unknown>;
-  getVehicles(jar: unknown): Promise<Map<string, { color: string; colorId: string }>>;
-  getTollTrips(
-    jar: unknown,
-    q: { plateNumber: string; colorId: string; from: Date; to: Date },
-  ): Promise<{ date: Date; amount: number; gate: string }[]>;
-  getParkingTrips(
-    jar: unknown,
-    q: { from: Date; to: Date },
-  ): Promise<{ plateNumber: string; plateColor: string; date: Date | null; amount: number }[]>;
-};
 
 // ── Google Sheets ───────────────────────────────────────────────────────────
 
@@ -341,7 +326,7 @@ async function main() {
   console.log(`pass B RTA: ${rtaOk} ok, ${rtaFailed} failed`);
 
   // Salik: one session per account, plate → owning account map.
-  type SalikOwner = { jar: unknown; colorId: string };
+  type SalikOwner = { jar: Parameters<typeof salik.getTollTrips>[0]; colorId: string };
   const ownership = new Map<string, SalikOwner>();
   const allParking: { plateNumber: string; plateColor: string; date: Date | null; amount: number }[] = [];
   try {

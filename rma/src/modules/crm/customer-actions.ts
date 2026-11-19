@@ -7,19 +7,9 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/platform/auth/authorization";
 import { canManageCRMForTenant } from "./policies";
-import { normalizeCustomerInput } from "./customer-input";
+import { normalizeCustomerInput, type CustomerInput } from "./customer-input";
 
-export async function createCustomer(
-  tenantId: string,
-  data: {
-    name: string;
-    phone?: string;
-    email?: string;
-    division?: string;
-    source?: string;
-    notes?: string;
-  }
-) {
+export async function createCustomer(tenantId: string, data: CustomerInput) {
   await canManageCRMForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const input = normalizeCustomerInput(data);
@@ -35,6 +25,13 @@ export async function createCustomer(
         division: input.division ?? "rent",
         source: input.source || null,
         notes: input.notes || null,
+        dateOfBirth: input.dateOfBirth || null,
+        nationality: input.nationality || null,
+        emiratesId: input.emiratesId || null,
+        emiratesIdExpiry: input.emiratesIdExpiry || null,
+        passportNumber: input.passportNumber || null,
+        driverLicenseNumber: input.driverLicenseNumber || null,
+        driverLicenseExpiry: input.driverLicenseExpiry || null,
       })
       .returning();
     const row = Array.isArray(rows) ? rows[0] : rows;
@@ -52,25 +49,20 @@ export async function createCustomer(
   return saved;
 }
 
-export async function updateCustomer(
-  tenantId: string,
-  id: string,
-  data: Partial<{
-    name: string;
-    phone: string;
-    email: string;
-    division: string;
-    source: string;
-    notes: string;
-  }>
-) {
+export async function updateCustomer(tenantId: string, id: string, data: Partial<CustomerInput>) {
   await canManageCRMForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const input = normalizeCustomerInput(data);
   const saved = await withDrizzleTenant(tenantId, async (tx) => {
     const [row] = await tx
       .update(customer)
-      .set({ ...input, updatedAt: new Date() })
+      .set({
+        ...input,
+        ...(input.dateOfBirth !== undefined ? { dateOfBirth: input.dateOfBirth || null } : {}),
+        ...(input.emiratesIdExpiry !== undefined ? { emiratesIdExpiry: input.emiratesIdExpiry || null } : {}),
+        ...(input.driverLicenseExpiry !== undefined ? { driverLicenseExpiry: input.driverLicenseExpiry || null } : {}),
+        updatedAt: new Date(),
+      })
       .where(eq(customer.id, id))
       .returning();
     if (!row) throw new Error("This customer no longer exists. Return to the customer directory and try again.");

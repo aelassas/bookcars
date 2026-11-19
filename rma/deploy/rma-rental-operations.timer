@@ -1,0 +1,10 @@
+[Unit]
+Description=Run RMA CRM rental operations and RTA/Salik sync hourly
+
+[Timer]
+OnBootSec=5min
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

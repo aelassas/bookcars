@@ -130,9 +130,21 @@ export default async function VehicleCardPage({
             </dd>
           </div>
           <div>
-            <dt className="text-ink-3">Rate</dt>
+            <dt className="text-ink-3">Day</dt>
             <dd className="font-medium text-ink tnum">
-              {vehicle.dailyRate ? `${vehicle.dailyRate} AED / day` : "—"}
+              {vehicle.dailyRate ? `${vehicle.dailyRate} AED` : "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-3">Week</dt>
+            <dd className="font-medium text-ink tnum">
+              {vehicle.weeklyRate ? `${vehicle.weeklyRate} AED` : "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-3">Month</dt>
+            <dd className="font-medium text-ink tnum">
+              {vehicle.monthlyRate ? `${vehicle.monthlyRate} AED` : "—"}
             </dd>
           </div>
           <EditVehicleButton
@@ -145,6 +157,8 @@ export default async function VehicleCardPage({
               year: vehicle.year,
               plate: vehicle.plate,
               dailyRate: vehicle.dailyRate,
+              weeklyRate: vehicle.weeklyRate,
+              monthlyRate: vehicle.monthlyRate,
               odometer: vehicle.odometer,
               status: vehicle.status,
               location: vehicle.location,
@@ -179,6 +193,10 @@ export default async function VehicleCardPage({
         nextServiceDate={vehicle.nextServiceDate ?? null}
         nextServiceOdometer={vehicle.nextServiceOdometer ?? null}
         oilChangeIntervalKm={vehicle.oilChangeIntervalKm}
+        serviceLimitIntervalKm={vehicle.serviceLimitIntervalKm}
+        lastServiceDate={vehicle.lastServiceDate ?? null}
+        lastServiceOdometer={vehicle.lastServiceOdometer ?? null}
+        lastServiceWork={vehicle.lastServiceWork ?? null}
         history={serviceHistory}
         lang={lang}
       />

@@ -27,6 +27,18 @@ const geographyPoint = customType<{ data: string; driverData: string }>({
   },
 });
 
+const money = customType<{ data: number; driverData: string }>({
+  dataType() {
+    return "numeric(12,2)";
+  },
+  toDriver(value) {
+    return value.toFixed(2);
+  },
+  fromDriver(value) {
+    return Number(value);
+  },
+});
+
 // ─── 1. Auth.js tables (global, no tenant_id) ──────────────────────────────
 
 export const user = pgTable("user", {
@@ -646,11 +658,17 @@ export const vehicle = tenantTable(
     point: geographyPoint("point"),
     odometer: integer("odometer").notNull().default(0),
     dailyRate: integer("daily_rate").notNull().default(0),
+    weeklyRate: integer("weekly_rate").notNull().default(0),
+    monthlyRate: integer("monthly_rate").notNull().default(0),
     // Planned next service (0079) — the Service panel on the vehicle profile
     // highlights the car once either threshold is reached. NULL = not planned.
     nextServiceDate: date("next_service_date"),
     nextServiceOdometer: integer("next_service_odometer"),
     oilChangeIntervalKm: integer("oil_change_interval_km").notNull().default(8000),
+    serviceLimitIntervalKm: integer("service_limit_interval_km").notNull().default(10000),
+    lastServiceDate: date("last_service_date"),
+    lastServiceOdometer: integer("last_service_odometer"),
+    lastServiceWork: text("last_service_work"),
     gpsBlocked: boolean("gps_blocked").notNull().default(false),
     imei: text("imei"),
     pilotDeviceId: text("pilot_device_id"),
@@ -722,6 +740,14 @@ export const customer = tenantTable(
     // Emirates ID from TARS contract drivers (0080, 784-YYYY-XXXXXXX-X) — the
     // strongest dedupe key for TARS-synced customers, ahead of phone.
     emiratesId: text("emirates_id"),
+    dateOfBirth: date("date_of_birth"),
+    nationality: text("nationality"),
+    passportNumber: text("passport_number"),
+    driverLicenseNumber: text("driver_license_number"),
+    driverLicenseExpiry: date("driver_license_expiry"),
+    emiratesIdExpiry: date("emirates_id_expiry"),
+    documentsReviewedAt: timestamp("documents_reviewed_at", { withTimezone: true }),
+    documentsReviewedBy: uuid("documents_reviewed_by").references(() => user.id),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -921,6 +947,10 @@ export const document = tenantTable(
     storageKey: text("storage_key").notNull(),
     publicUrl: text("public_url").notNull(),
     uploadedBy: uuid("uploaded_by").references(() => user.id),
+    recognitionStatus: text("recognition_status").notNull().default("not_requested"),
+    recognizedData: jsonb("recognized_data"),
+    recognitionError: text("recognition_error"),
+    recognizedAt: timestamp("recognized_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -976,6 +1006,7 @@ export const rental = tenantTable(
     // from (matches price_tier.channel), and the signed rental-agreement PDF
     // (left NULL at create; filled by the contract/driver-bot step).
     channel: text("channel").notNull().default("b2c"), // b2c | b2b
+    customerType: text("customer_type"), // tourist | resident (0084); NULL on historic rentals
     contractUrl: text("contract_url"),
     startDate: timestamp("start_date", { withTimezone: true }).notNull(),
     returnDate: timestamp("return_date", { withTimezone: true }).notNull(),
@@ -993,10 +1024,10 @@ export const rental = tenantTable(
     finalOdometer: integer("final_odometer"),
     fuelLevel: integer("fuel_level"), // 0-100
     damageNotes: text("damage_notes"),
-    // Return checklist (owner 2026-07-26) — filled on the car's return BEFORE the
-    // rental is closed: fines / Salik / parking / defects, each {checked, amount,
-    // note}. Manual today (Salik/fines live in iTransport, no access yet); the
-    // shape has the hooks to auto-fill later. Plus who completed/sent it & when.
+    customerRating: integer("customer_rating"), // 1-5, recorded at return (0083)
+    // Return checklist: fines / Salik / parking / defects, each {checked, amount,
+    // note}. Itemized operator charges and payments live in rental_charge (0086);
+    // this checklist remains the staff sign-off on the return inspection.
     returnChecklist: jsonb("return_checklist").$type<{
       fines?: { checked: boolean; amount?: number | null; note?: string | null };
       salik?: { checked: boolean; amount?: number | null; note?: string | null };
@@ -1020,6 +1051,13 @@ export const rental = tenantTable(
     // TARS contract identity (0080, e.g. "55606-3350") — the TARS sync
     // (integrations/tars) upserts on it; unique per tenant.
     tarsDocumentNumber: text("tars_document_number"),
+    extensionStatus: text("extension_status").notNull().default("not_sent"),
+    returnReminderSentAt: timestamp("return_reminder_sent_at", { withTimezone: true }),
+    customerResponseAt: timestamp("customer_response_at", { withTimezone: true }),
+    customerResponse: text("customer_response"),
+    statementCount: integer("statement_count").notNull().default(0),
+    lastStatementSentAt: timestamp("last_statement_sent_at", { withTimezone: true }),
+    finalStatementSentAt: timestamp("final_statement_sent_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -1034,6 +1072,39 @@ export const rental = tenantTable(
   { companyScoped: true },
 );
 
+export const rentalCharge = tenantTable(
+  "rental_charge",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenant.id, { onDelete: "cascade" }),
+    rentalId: uuid("rental_id").notNull().references(() => rental.id),
+    vehicleId: uuid("vehicle_id").notNull().references(() => vehicle.id),
+    customerId: uuid("customer_id").notNull().references(() => customer.id),
+    kind: text("kind").notNull(),
+    externalId: text("external_id").notNull(),
+    source: text("source").notNull().default("manual"),
+    occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
+    description: text("description"),
+    location: text("location"),
+    amount: money("amount").notNull(),
+    status: text("status").notNull().default("unpaid"),
+    notificationStatus: text("notification_status").notNull().default("not_sent"),
+    notifiedAt: timestamp("notified_at", { withTimezone: true }),
+    paymentDueAt: timestamp("payment_due_at", { withTimezone: true }),
+    notificationError: text("notification_error"),
+    paidAt: timestamp("paid_at", { withTimezone: true }),
+    createdBy: uuid("created_by").references(() => user.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t: TenantExtraColumns) => [
+    index("rental_charge_rental_idx").on(t.tenantId, t.rentalId),
+    index("rental_charge_vehicle_time_idx").on(t.tenantId, t.vehicleId, t.occurredAt),
+    index("rental_charge_outstanding_idx").on(t.tenantId, t.status, t.paymentDueAt),
+    uniqueIndex("rental_charge_external_uniq").on(t.tenantId, t.kind, t.externalId),
+  ],
+);
+
 // ─── 11.5 Payment (rental payments, deposits, refunds) ─────────────────────
 
 export const payment = tenantTable(
@@ -1042,7 +1113,8 @@ export const payment = tenantTable(
     id: uuid("id").primaryKey().defaultRandom(),
     tenantId: uuid("tenant_id").notNull().references(() => tenant.id, { onDelete: "cascade" }),
     rentalId: uuid("rental_id").notNull().references(() => rental.id, { onDelete: "cascade" }),
-    amount: integer("amount").notNull(),
+    rentalChargeId: uuid("rental_charge_id").references(() => rentalCharge.id),
+    amount: money("amount").notNull(),
     method: text("method").notNull().default("cash"), // cash | card | bank_transfer | other
     notes: text("notes"),
     // Two-step confirmation: sales records (pending) → sales confirms (posted).
@@ -1443,5 +1515,28 @@ export const vehicleTimelineEvent = tenantTable(
   (t: TenantExtraColumns) => [
     index("vehicle_timeline_tenant_vehicle_starts_idx").on(t.tenantId, t.vehicleId, t.startsAt),
     index("vehicle_timeline_rental_idx").on(t.rentalId),
+  ],
+);
+
+export const engineBlock = tenantTable(
+  "engine_block",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id").notNull().references(() => tenant.id, { onDelete: "cascade" }),
+    rentalChargeId: uuid("rental_charge_id").notNull().references(() => rentalCharge.id),
+    vehicleId: uuid("vehicle_id").notNull().references(() => vehicle.id),
+    requestedBy: uuid("requested_by").references(() => user.id),
+    commandId: integer("command_id"),
+    unblockCommandId: integer("unblock_command_id"),
+    status: text("status").notNull().default("requested"),
+    liveStateCheckedAt: timestamp("live_state_checked_at", { withTimezone: true }).notNull(),
+    error: text("error"),
+    releasedAt: timestamp("released_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t: TenantExtraColumns) => [
+    index("engine_block_vehicle_idx").on(t.tenantId, t.vehicleId, t.status),
+    uniqueIndex("engine_block_charge_uniq").on(t.tenantId, t.rentalChargeId),
   ],
 );

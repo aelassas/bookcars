@@ -4,8 +4,7 @@ import { useState } from "react";
 import { recordPayment } from "@/modules/rental/payment-actions";
 import { Button, Input, Select, Label, Textarea } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
-
-const METHODS = ["cash", "card", "bank_transfer", "other"];
+import { PAYMENT_METHODS } from "@/modules/rental/payment-rules";
 
 export function RecordPaymentModal({
   tenantId,
@@ -89,7 +88,7 @@ export function RecordPaymentModal({
           <div>
             <Label>Method *</Label>
             <Select name="method" required className="w-full">
-              {METHODS.map((m) => (
+              {PAYMENT_METHODS.map((m) => (
                 <option key={m} value={m}>
                   {m.replace("_", " ")}
                 </option>

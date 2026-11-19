@@ -17,6 +17,7 @@ import {
 import { CustomerActions } from "@/components/crm/CustomerActions";
 import { BackLink } from "@/components/ui/BackLink";
 import { recordHref, safeReturnHref } from "@/lib/return-navigation";
+import { DocumentPanel } from "@/components/documents/DocumentPanel";
 
 const money = (n: number | null | undefined) => `${(n ?? 0).toLocaleString()} AED`;
 
@@ -63,7 +64,11 @@ export default async function CustomerDetailPage({
       <Card className="mt-3 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-xl font-semibold tracking-tight text-ink">{c.name}</h1>
-          <CustomerActions tenantId={t.id} customer={{ id: c.id, name: c.name, phone: c.phone, email: c.email, division: c.division, source: c.source, notes: c.notes }} />
+          <CustomerActions tenantId={t.id} customer={{
+            id: c.id, name: c.name, phone: c.phone, email: c.email, division: c.division, source: c.source, notes: c.notes,
+            dateOfBirth: c.dateOfBirth, nationality: c.nationality, emiratesId: c.emiratesId, emiratesIdExpiry: c.emiratesIdExpiry,
+            passportNumber: c.passportNumber, driverLicenseNumber: c.driverLicenseNumber, driverLicenseExpiry: c.driverLicenseExpiry,
+          }} />
         </div>
         <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:grid-cols-3">
           <Field label="Phone" value={c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="hover:underline">{c.phone}</a> : "—"} />
@@ -71,8 +76,18 @@ export default async function CustomerDetailPage({
           <Field label="Division" value={c.division} />
           <Field label="Source" value={c.source ?? "—"} />
           <Field label="Notes" value={c.notes ?? "—"} />
+          <Field label="Emirates ID" value={c.emiratesId ?? "—"} />
+          <Field label="Passport" value={c.passportNumber ?? "—"} />
+          <Field label="Driving licence" value={c.driverLicenseNumber ?? "—"} />
+          <Field label="Licence expiry" value={c.driverLicenseExpiry ?? "—"} />
+          <Field label="Nationality" value={c.nationality ?? "—"} />
+          <Field label="Documents reviewed" value={c.documentsReviewedAt ? new Date(c.documentsReviewedAt).toLocaleString() : "Pending review"} />
         </div>
       </Card>
+
+      <div className="mt-6">
+        <DocumentPanel tenantId={t.id} entityType="customer" entityId={id} entityLabel={c.name} />
+      </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
         <div>

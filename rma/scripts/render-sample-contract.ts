@@ -38,7 +38,7 @@ const sample: RentalContractPdfData = {
   totalDays: 7,
   dailyRate: 130,
   deposit: 1500,
-  total: 910,
+  rentalSubtotal: 910,
   address: "Al Quoz Industrial 3, Warehouse 12, Dubai",
 
   exitRemarks: "Minor scratch on rear left bumper, noted at handover.",

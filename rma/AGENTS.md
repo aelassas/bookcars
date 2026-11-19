@@ -246,3 +246,12 @@ npm run dev          # starts on localhost:3000
 | Auth.js v5 + Better Auth spike | **In progress** — spike due Week 2 | ADR-001 v2 §24 |
 | SSE over WebSockets | **Locked** for v1 | ADR-001 v2 §5 |
 - **Fines & Salik hub page (2026-09-19):** `/fines` (hub route group) renders the RTA-fines + Salik table WITHOUT Google creds on the box: `scripts/update-fines-tab.mjs` (hourly launchd on the office Mac, where the Google login lives) rewrites the Google "Fines" tab, then PUSHES the same `{header, rows}` to `POST /api/webhooks/fines?token=` (FINES_PUSH_TOKEN, unset = 500) → `fines_snapshot` single-row mirror (0078). The page's `/fines/api` reads the DB only. Push failure never fails the sheet run (config `scripts/.fines-push.json`, gitignored). "Notes" edits still happen in the Google sheet — it stays the source of truth.
+
+## RMA rental operations (2026-11-18)
+
+- `0086_rental_operations.sql` adds reviewed customer-document OCR data, whole-paid-term mileage operations, return/extension state, a deduplicated `rental_charge` ledger (fine/Salik/Parkin/Parkonic), charge-linked payments and audited charge-linked engine blocks. Do not apply it before `0083`, `0084`, and fleet migration `0085`.
+- `/operations` is the per-car manager screen. `/charges` is the operational fines/tolls/parking screen; the older `/fines` RTA lookup remains available.
+- Mileage allowance is `rental.total_days × daily_mileage_limit_km` (RMA default 150), not elapsed return days and not a separate daily cap.
+- The fine debt clock starts from `wa_outbox.sent_at`, never queue time. `scripts/run-rental-operations.ts` is dry-run unless `--commit`; RTA sync needs `--sync-fines`, Salik needs `--sync-salik`; blocking additionally needs `--block-overdue-fines` and fresh stopped/ignition-off Pilot telemetry belonging to the current rental.
+- The restored Salik connector is `src/platform/integrations/salik/client.ts`; its account JSON is gitignored. `src/modules/rental-charges/salik.ts` imports exact decimal tolls by Dubai event time. Hourly RTA/Salik timer units are in `deploy/rma-rental-operations.*`, and `/charges` has selected-car RTA/Salik buttons. The timer is not enabled until approved release. Parkin/Parkonic remain separate manual/import workflows until their operator feeds are connected. TARS read sync and reviewed handoff exist; automatic passport-only tourist submission is unverified.
+- Full implementation/release notes: `RENTAL-OPERATIONS-2026-11-18.md`.

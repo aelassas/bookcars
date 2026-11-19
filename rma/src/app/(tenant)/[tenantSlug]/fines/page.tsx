@@ -45,7 +45,7 @@ export default async function TenantFinesPage({
     <main className="p-6">
       <PageHeader
         title="Fines & Salik"
-        subtitle="Live RTA payable-fines check per car (Dubai public gateway) · Salik connects when the account login arrives"
+        subtitle="RTA payable-fines lookup per car · use Charges for assignment, payments, Salik and paid parking"
         icon={<Siren className="h-4.5 w-4.5" />}
       />
       <FinesBoard tenantId={t.id} vehicles={rows} />

@@ -40,6 +40,7 @@ export default async function RentalDetailPage({ params }: Props) {
         vehicleVin={data.vehicleVin}
         vehicleOdometer={data.vehicleOdometer}
         payments={data.payments}
+        charges={data.charges.map((charge) => ({ charge, customerName: data.customerName ?? "Customer", plate: data.vehiclePlate ?? "—" }))}
         actorId={session.user.id}
         canConfirm={canConfirm}
       />

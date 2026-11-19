@@ -27,12 +27,14 @@ function refreshWebsiteSettings() {
 export async function setWebsiteListing(
   tenantId: string,
   vehicleId: string,
-  input: { published: boolean; category: string; dailyRate: number },
+  input: { published: boolean; category: string; dailyRate: number; weeklyRate: number; monthlyRate: number },
 ): Promise<void> {
   await canManageFleetForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const actorId = await requireAuth();
   if (!Number.isInteger(input.dailyRate) || input.dailyRate < 0) throw new Error("Daily rate must be a non-negative integer");
+  if (!Number.isInteger(input.weeklyRate) || input.weeklyRate < 0) throw new Error("Weekly rate must be a non-negative integer");
+  if (!Number.isInteger(input.monthlyRate) || input.monthlyRate < 0) throw new Error("Monthly rate must be a non-negative integer");
   if (input.category.length > 80) throw new Error("Category must be 80 characters or fewer");
 
   await withDrizzleTenant(tenantId, async (tx) => {
@@ -42,6 +44,8 @@ export async function setWebsiteListing(
         websitePublished: input.published,
         websiteCategory: input.category.trim() || null,
         dailyRate: input.dailyRate,
+        weeklyRate: input.weeklyRate,
+        monthlyRate: input.monthlyRate,
         updatedAt: new Date(),
       })
       .where(eq(vehicle.id, vehicleId))
@@ -53,7 +57,7 @@ export async function setWebsiteListing(
       action: "vehicle.website.update",
       entityType: "vehicle",
       entityId: vehicleId,
-      intent: `${input.published ? "Published" : "Unpublished"} website vehicle; rate ${input.dailyRate} AED; category ${input.category.trim() || "-"}`,
+      intent: `${input.published ? "Published" : "Unpublished"} website vehicle; rates ${input.dailyRate}/${input.weeklyRate}/${input.monthlyRate} AED (d/w/m); category ${input.category.trim() || "-"}`,
     });
   });
   refreshWebsiteSettings();

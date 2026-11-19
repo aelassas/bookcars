@@ -29,6 +29,8 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
           model: car.model,
           plate: car.plate,
           dailyRate: car.dailyRate,
+          weeklyRate: car.weeklyRate,
+          monthlyRate: car.monthlyRate,
           published: car.websitePublished,
           category: car.websiteCategory,
           photos: car.photos ?? [],

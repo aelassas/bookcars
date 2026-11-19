@@ -36,6 +36,8 @@ type Rental = {
   balanceDue: number;
   status: string;
   notes: string | null;
+  dailyMileageLimitKm: number | null;
+  startOdometer: number | null;
 };
 
 type RentalRow = {
@@ -288,6 +290,8 @@ export default function RentalsList({
             returnDate: returnRental.rental.returnDate,
             dailyRate: returnRental.rental.dailyRate,
             balanceDue: returnRental.rental.balanceDue,
+            dailyMileageLimitKm: returnRental.rental.dailyMileageLimitKm,
+            startOdometer: returnRental.rental.startOdometer,
           }}
           onClose={() => setReturnRental(null)}
           onReturned={() => window.location.reload()}

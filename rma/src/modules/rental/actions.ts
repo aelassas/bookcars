@@ -19,6 +19,8 @@ import { computeDepositResolution, depositNotification, type DepositOutcome } fr
 import { isBookingBasis } from "./booking";
 import { parseTarsDocumentNumber } from "@/platform/integrations/tars/handoff";
 import { calculateMileageUsage } from "./mileage";
+import { assertValidCustomerRating, calculateReturnCharges } from "./return-charges";
+import { resolveRentalPricing, type CustomerType } from "./pricing";
 
 function daysBetween(a: Date, b: Date) {
   const ms = b.getTime() - a.getTime();
@@ -128,13 +130,9 @@ export interface ReturnInspectionInput {
   finalOdometer?: number;
   fuelLevel?: number;
   damageNotes?: string;
+  customerRating?: number;
   extraChargeAmount?: number;
   extraChargeReason?: string;
-}
-
-function extraDays(returnDate: Date, actualReturnDate: Date): number {
-  const ms = actualReturnDate.getTime() - returnDate.getTime();
-  return ms > 0 ? Math.ceil(ms / (1000 * 60 * 60 * 24)) : 0;
 }
 
 export async function processReturn(
@@ -148,6 +146,7 @@ export async function processReturn(
   await canManageRentalsForTenant(tenantId);
   void actorId;
   const trustedActorId = await requireAuth();
+  assertValidCustomerRating(data.customerRating);
   // Shared fleet: rental + vehicle + audit rows live in fleet-home.
   const home = await requireFleetHomeTenantId();
   return withDrizzleTenant(home, async (tx) => {
@@ -156,6 +155,10 @@ export async function processReturn(
     if (current.status !== "active") throw new Error(`Cannot process return for rental with status ${current.status}`);
 
     const actualReturnDate = data.actualReturnDate ?? new Date();
+    if (Number.isNaN(actualReturnDate.getTime())) throw new Error("Invalid actual return date");
+    if (data.fuelLevel !== undefined && (!Number.isInteger(data.fuelLevel) || data.fuelLevel < 0 || data.fuelLevel > 100)) {
+      throw new Error("Fuel level must be a whole number from 0 to 100");
+    }
     if (data.finalOdometer !== undefined && (!Number.isInteger(data.finalOdometer) || data.finalOdometer < 0)) {
       throw new Error("Final odometer must be a non-negative integer");
     }
@@ -166,12 +169,14 @@ export async function processReturn(
       startOdometer: current.startOdometer,
       finalOdometer: data.finalOdometer ?? null,
       dailyMileageLimitKm: current.dailyMileageLimitKm,
-      startDate: current.startDate,
-      actualReturnDate,
+      totalDays: current.totalDays,
     });
-    const lateFee = extraDays(current.returnDate, actualReturnDate) * current.dailyRate;
-    const manualExtra = data.extraChargeAmount ?? 0;
-    const totalExtra = lateFee + manualExtra;
+    const { lateFee, extraChargeAmount: manualExtra, totalExtra } = calculateReturnCharges({
+      returnDate: current.returnDate,
+      actualReturnDate,
+      dailyRate: current.dailyRate,
+      extraChargeAmount: data.extraChargeAmount ?? 0,
+    });
 
     const [row] = await tx
       .update(rental)
@@ -181,6 +186,7 @@ export async function processReturn(
         finalOdometer: data.finalOdometer ?? null,
         fuelLevel: data.fuelLevel ?? null,
         damageNotes: data.damageNotes ?? null,
+        customerRating: data.customerRating ?? null,
         extraChargeAmount: manualExtra,
         extraChargeReason: data.extraChargeReason ?? null,
         total: current.total + totalExtra,
@@ -374,9 +380,9 @@ export async function resolveDeposit(
 // deposit lifecycle, payments FK, status machine). `booking` is the legacy
 // read-only import of Babek's sheet — the calendar still shows those rows, but
 // nothing new is ever written to it. This action is the ONLY way the UI
-// creates a rental: price comes from the real `price_tier` data via
-// quoteRental(), never hand-typed (manual rate is a clearly-flagged fallback
-// for the vehicles that have no tiers yet).
+// creates a rental: price comes from the real `price_tier` data by default;
+// an explicitly selected manual rate is audited as a manager override and is
+// also the fallback for vehicles without tiers.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -647,6 +653,8 @@ export interface CreateRentalFromQuoteInput {
   returnDate: Date;
   /** Pricing channel for the tier lookup. Defaults to b2c. */
   channel?: Channel;
+  /** Deposit profile; independent of the B2B/B2C pricing channel. */
+  customerType?: CustomerType;
   bookingBasis?: string;
   /** Deal this rental was created from (deal → rental link). */
   dealId?: string;
@@ -655,7 +663,7 @@ export interface CreateRentalFromQuoteInput {
   notes?: string;
   salesAgentId?: string;
   dailyMileageLimitKm?: number;
-  /** Fallback ONLY for vehicles without price tiers; ignored when a tier matches. */
+  /** Explicit manager override; also the fallback when no price tier matches. */
   manualDailyRate?: number;
   /** Overrides the tier deposit when provided. */
   manualDeposit?: number;
@@ -703,6 +711,10 @@ async function createRentalFromQuoteImpl(
   if (!data.customerId) throw new Error("Customer is required");
   if (!data.vehicleId) throw new Error("Vehicle is required");
   const channel: Channel = data.channel === "b2b" ? "b2b" : "b2c";
+  if (data.customerType !== undefined && data.customerType !== "tourist" && data.customerType !== "resident") {
+    throw new Error("Customer type must be tourist or resident");
+  }
+  const customerType: CustomerType = data.customerType ?? "tourist";
   if (data.dailyMileageLimitKm !== undefined && (!Number.isInteger(data.dailyMileageLimitKm) || data.dailyMileageLimitKm <= 0)) {
     throw new Error("Daily mileage limit must be a positive integer");
   }
@@ -774,26 +786,18 @@ async function createRentalFromQuoteImpl(
       .limit(1);
     if (overlappingLegacy.length > 0) throw new Error("Vehicle already has a booking (imported calendar) in this period");
 
-    // 2) Price from the real tiers.
+    // 2) Tier price by default; the manager can adjust the actual rate and deposit.
     const totalDays = daysBetween(data.startDate, data.returnDate);
-    let dailyRate: number;
-    let deposit: number;
-    let pricedFromTier = true;
-    try {
-      const q = await quoteRental(tx, home, data.vehicleId, totalDays, channel);
-      dailyRate = q.dailyRate;
-      deposit = data.manualDeposit ?? q.deposit ?? 0;
-    } catch {
-      if (typeof data.manualDailyRate === "number" && data.manualDailyRate > 0) {
-        pricedFromTier = false;
-        dailyRate = data.manualDailyRate;
-        deposit = data.manualDeposit ?? 0;
-      } else {
-        throw new Error(
-          `No price tier for this vehicle (${channel}, ${totalDays} day${totalDays === 1 ? "" : "s"}) — set a manual rate or add tiers.`
-        );
-      }
-    }
+    const tier = await quoteRental(tx, home, data.vehicleId, totalDays, channel).catch(() => null);
+    const { dailyRate, deposit, pricedFromTier } = resolveRentalPricing({
+      totalDays,
+      channel,
+      customerType,
+      tierDailyRate: tier?.dailyRate,
+      tierDeposit: tier?.deposit,
+      manualDailyRate: data.manualDailyRate,
+      manualDeposit: data.manualDeposit,
+    });
     const subtotal = dailyRate * totalDays;
     const total = subtotal + deposit;
 
@@ -826,6 +830,7 @@ async function createRentalFromQuoteImpl(
         salesAgentId: trustedActorId,
         bookingBasis: isBookingBasis(data.bookingBasis) ? data.bookingBasis : "booked",
         channel,
+        customerType,
         startDate: data.startDate,
         returnDate: data.returnDate,
         dailyRate,
@@ -838,8 +843,6 @@ async function createRentalFromQuoteImpl(
         dailyMileageLimitKm: data.dailyMileageLimitKm ?? null,
         // TODO(deposit): when the payment step lands, collect/hold `deposit`
         // here (payment row + gateway); depositStatus already defaults to "held".
-        // TODO(contract): generate the rental-agreement PDF and set contractUrl —
-        // the column exists (migration 0006) so the driver-bot/contract step can fill it.
         contractUrl: null,
       })
       .returning();
@@ -859,8 +862,8 @@ async function createRentalFromQuoteImpl(
       // Mention the deal only when it was actually linked (sales/home path) —
       // on the rent path the column stays NULL and the audit must not claim it.
       intent: pricedFromTier
-        ? `Created rental from live quote: ${dailyRate} AED × ${totalDays}d (${channel}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`
-        : `Created rental with MANUAL rate (no price tier): ${dailyRate} AED × ${totalDays}d + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`,
+        ? `Created rental from live quote: ${dailyRate} AED × ${totalDays}d (${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`
+        : `Created rental with CUSTOM rate: ${dailyRate} AED × ${totalDays}d (${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`,
     });
 
     if (tenantSlug) {

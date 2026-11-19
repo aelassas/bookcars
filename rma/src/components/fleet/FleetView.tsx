@@ -317,8 +317,20 @@ export function FleetView({
                     </div>
                     {v.dailyRate > 0 && (
                       <div className="flex items-center justify-between gap-2">
-                        <dt className="text-ink-3">Daily rate</dt>
+                        <dt className="text-ink-3">Day rate</dt>
                         <dd className="font-medium text-ink tnum">{v.dailyRate} AED</dd>
+                      </div>
+                    )}
+                    {v.weeklyRate > 0 && (
+                      <div className="flex items-center justify-between gap-2">
+                        <dt className="text-ink-3">Week rate</dt>
+                        <dd className="font-medium text-ink tnum">{v.weeklyRate} AED</dd>
+                      </div>
+                    )}
+                    {v.monthlyRate > 0 && (
+                      <div className="flex items-center justify-between gap-2">
+                        <dt className="text-ink-3">Month rate</dt>
+                        <dd className="font-medium text-ink tnum">{v.monthlyRate} AED</dd>
                       </div>
                     )}
                     <div className="flex items-center justify-between gap-2">

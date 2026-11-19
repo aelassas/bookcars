@@ -26,6 +26,8 @@ export interface FleetVehicle {
   location?: string | null;
   odometer: number;
   dailyRate: number;
+  weeklyRate: number;
+  monthlyRate: number;
   nextServiceDate?: string | null;
   nextServiceOdometer?: number | null;
   oilChangeIntervalKm: number;
@@ -93,6 +95,8 @@ export async function createVehicle(
     year?: number;
     plate: string;
     dailyRate?: number;
+    weeklyRate?: number;
+    monthlyRate?: number;
     imei?: string;
     division?: string;
   }
@@ -109,6 +113,8 @@ export async function createVehicle(
         year: data.year ?? null,
         plate: data.plate,
         dailyRate: data.dailyRate ?? 0,
+        weeklyRate: data.weeklyRate ?? 0,
+        monthlyRate: data.monthlyRate ?? 0,
         imei: data.imei ?? null,
         division: data.division ?? "rent",
         status: "available",
@@ -255,6 +261,8 @@ export async function getFleetForTenant(tenantId: string): Promise<{
       location: dbv.location,
       odometer: dbv.odometer,
       dailyRate: dbv.dailyRate,
+      weeklyRate: dbv.weeklyRate,
+      monthlyRate: dbv.monthlyRate,
       nextServiceDate: dbv.nextServiceDate,
       nextServiceOdometer: dbv.nextServiceOdometer,
       oilChangeIntervalKm: dbv.oilChangeIntervalKm,
@@ -286,6 +294,8 @@ export async function getFleetForTenant(tenantId: string): Promise<{
         status: deriveVehicleStatus(live.blocked, live.ignition, live.speed, live.lastFixAt),
         odometer: Math.round(live.odometerKm),
         dailyRate: 0,
+        weeklyRate: 0,
+        monthlyRate: 0,
         nextServiceDate: null,
         nextServiceOdometer: null,
         oilChangeIntervalKm: 8000,

@@ -1,6 +1,6 @@
 "use server";
 
-import { rental, customer, vehicle, payment } from "@/platform/db/schema";
+import { rental, customer, vehicle, payment, rentalCharge } from "@/platform/db/schema";
 import { quoteRental, type Channel } from "@/platform/db/rental-extras";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { eq, desc, sql, and, ne, lte, gte } from "drizzle-orm";
@@ -64,6 +64,7 @@ export type RentalWithDetails = {
   vehicleVin: string | null;
   vehicleOdometer: number | null;
   payments: (typeof payment.$inferSelect)[];
+  charges: (typeof rentalCharge.$inferSelect)[];
 };
 
 export async function getRentalWithDetails(tenantId: string, id: string): Promise<RentalWithDetails | null> {
@@ -98,7 +99,8 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
       .where(eq(payment.rentalId, id))
       .orderBy(desc(payment.createdAt));
 
-    return { ...row, payments };
+    const charges = await tx.select().from(rentalCharge).where(eq(rentalCharge.rentalId, id)).orderBy(desc(rentalCharge.occurredAt));
+    return { ...row, payments, charges };
   });
 }
 

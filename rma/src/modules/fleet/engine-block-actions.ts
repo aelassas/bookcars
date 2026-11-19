@@ -33,13 +33,13 @@ export async function blockVehicleEngine(
   if (!target.imei) throw new Error("Add the vehicle IMEI before using Pilot engine block");
 
   const pilot = getPilotClient();
-  const live = (await pilot.getFleet()).find((candidate) => candidate.imei === target.imei);
-  if (!live) throw new Error("No configured Pilot account owns this vehicle");
+  const live = await pilot.getStatus(target.imei);
   assertEngineBlockAllowed({
     vehicleStatus: target.status,
     blocked: live.blocked,
     ignition: live.ignition,
     speed: live.speed,
+    lastFixAt: live.lastFixAt,
   });
 
   const result = await pilot.blockEngine(target.imei);

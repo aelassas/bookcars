@@ -13,6 +13,8 @@ export interface WebsiteVehicle {
   model: string;
   plate: string;
   dailyRate: number;
+  weeklyRate: number;
+  monthlyRate: number;
   published: boolean;
   category: string | null;
   photos: WebsiteCarPhoto[];
@@ -78,6 +80,8 @@ export function WebsiteFleetManager({ tenantId, vehicles }: { tenantId: string; 
                 published: fd.get("published") === "on",
                 category: String(fd.get("category") ?? ""),
                 dailyRate: Number(fd.get("dailyRate")),
+                weeklyRate: Number(fd.get("weeklyRate")),
+                monthlyRate: Number(fd.get("monthlyRate")),
               }));
             }}
           >
@@ -88,6 +92,14 @@ export function WebsiteFleetManager({ tenantId, vehicles }: { tenantId: string; 
             <div>
               <Label>Daily rate (AED)</Label>
               <Input name="dailyRate" type="number" min={0} step={1} required defaultValue={car.dailyRate} className="w-full" />
+            </div>
+            <div>
+              <Label>Weekly rate (AED)</Label>
+              <Input name="weeklyRate" type="number" min={0} step={1} required defaultValue={car.weeklyRate} className="w-full" />
+            </div>
+            <div>
+              <Label>Monthly rate (AED)</Label>
+              <Input name="monthlyRate" type="number" min={0} step={1} required defaultValue={car.monthlyRate} className="w-full" />
             </div>
             <label className="flex items-center gap-2 text-sm text-ink-2">
               <input type="checkbox" name="published" defaultChecked={car.published} />

@@ -18,11 +18,15 @@ import { ProcessReturnModal } from "@/components/modals/ProcessReturnModal";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
 import { ContractSection } from "@/components/rental/ContractSection";
 import { TarsSection } from "@/components/rental/TarsSection";
+import { ChargesBoard } from "@/components/rental/ChargesBoard";
+import { RentalExtensionPanel } from "@/components/rental/RentalExtensionPanel";
+import type { rentalCharge } from "@/platform/db/schema";
 import { startRental, completeRental, cancelRental, resolveDeposit } from "@/modules/rental/actions";
-import { confirmPayment } from "@/modules/rental/payment-actions";
+import { confirmPayment, rejectPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { calculateMileageUsage } from "@/modules/rental/mileage";
+import { calculateReturnCharges } from "@/modules/rental/return-charges";
 import {
   Play,
   RotateCcw,
@@ -37,6 +41,7 @@ import {
   Receipt,
   StickyNote,
   FileText,
+  Star,
 } from "lucide-react";
 
 type Rental = {
@@ -52,14 +57,19 @@ type Rental = {
   status: string;
   finalOdometer: number | null;
   fuelLevel: number | null;
-  extraDays: number | null;
-  lateFee: number | null;
-  damageFee: number | null;
+  damageNotes: string | null;
+  customerRating: number | null;
+  customerType?: string | null;
+  extraChargeAmount: number | null;
+  extraChargeReason: string | null;
   depositRefunded: number | null;
-  returnNotes: string | null;
   notes: string | null;
   dailyMileageLimitKm: number | null;
   startOdometer: number | null;
+  extensionStatus: string;
+  returnReminderSentAt: Date | null;
+  customerResponseAt: Date | null;
+  customerResponse: string | null;
   // Deposit-contract lifecycle (optional — present on the DB row at runtime).
   contractType?: string | null;
   bookingBasis?: string | null;
@@ -110,6 +120,7 @@ export function RentalDetail({
   vehicleVin,
   vehicleOdometer,
   payments: initialPayments,
+  charges,
   actorId,
   canConfirm = false,
 }: {
@@ -124,6 +135,7 @@ export function RentalDetail({
   vehicleVin: string | null;
   vehicleOdometer: number | null;
   payments: Payment[];
+  charges: Array<{ charge: typeof rentalCharge.$inferSelect; customerName: string; plate: string }>;
   actorId?: string;
   canConfirm?: boolean;
 }) {
@@ -193,6 +205,19 @@ export function RentalDetail({
     }
   }
 
+  async function handleReject(paymentId: string) {
+    if (!confirm("Reject this payment? The rental balance will not change.")) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await rejectPayment(tenantId, paymentId, tenantSlug);
+      window.location.reload();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Reject failed");
+      setBusy(false);
+    }
+  }
+
   async function handleResolveDeposit(outcome: "returned" | "partial" | "withheld") {
     let refundedAmount: number | undefined;
     let reason: string | undefined;
@@ -230,11 +255,18 @@ export function RentalDetail({
   const showPaymentButton = (r.status === "active" || r.status === "returned") && r.balanceDue > 0;
   const mileage = calculateMileageUsage({
     startOdometer: r.startOdometer,
-    finalOdometer: r.finalOdometer,
+    finalOdometer: r.finalOdometer ?? (r.status === "active" ? vehicleOdometer : null),
     dailyMileageLimitKm: r.dailyMileageLimitKm,
-    startDate: r.startDate,
-    actualReturnDate: r.actualReturnDate,
+    totalDays: r.totalDays,
   });
+  const returnCharges = r.returnDate && r.actualReturnDate
+    ? calculateReturnCharges({
+        returnDate: r.returnDate,
+        actualReturnDate: r.actualReturnDate,
+        dailyRate: r.dailyRate,
+        extraChargeAmount: r.extraChargeAmount ?? 0,
+      })
+    : { extraDays: 0, lateFee: 0 };
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -346,6 +378,7 @@ export function RentalDetail({
             )}
             <Row label="Duration" value={`${r.totalDays} days`} />
             <Row label="Daily rate" value={formatCurrency(r.dailyRate)} />
+            {r.customerType && <Row label="Renter" value={r.customerType === "resident" ? "Local / UAE resident" : "Tourist"} />}
             <Row label="Daily mileage limit" value={r.dailyMileageLimitKm != null ? `${r.dailyMileageLimitKm} km` : "Unlimited"} />
             {mileage && (
               <>
@@ -359,17 +392,18 @@ export function RentalDetail({
         <Card>
           <CardHeader title="Financials" icon={<Wallet className="h-3.5 w-3.5" />} />
           <dl className="space-y-3 p-4 text-sm">
-            <Row label="Rental total" value={formatCurrency(r.total)} />
+            <Row label="Rent subtotal" value={formatCurrency(r.dailyRate * r.totalDays)} />
             <Row label="Deposit" value={formatCurrency(r.deposit)} />
+            <Row label="Total incl. deposit" value={formatCurrency(r.total)} />
             <Row
               label="Late fee"
-              value={formatCurrency(r.lateFee ?? 0)}
-              valueClass={(r.lateFee ?? 0) > 0 ? "text-danger" : "text-ink-3"}
+              value={formatCurrency(returnCharges.lateFee)}
+              valueClass={returnCharges.lateFee > 0 ? "text-danger" : "text-ink-3"}
             />
             <Row
-              label="Damage fee"
-              value={formatCurrency(r.damageFee ?? 0)}
-              valueClass={(r.damageFee ?? 0) > 0 ? "text-danger" : "text-ink-3"}
+              label="Extra charge"
+              value={formatCurrency(r.extraChargeAmount ?? 0)}
+              valueClass={(r.extraChargeAmount ?? 0) > 0 ? "text-danger" : "text-ink-3"}
             />
             <div className="flex items-baseline justify-between gap-3 border-t border-line-soft pt-3">
               <dt className="font-medium text-ink">Balance due</dt>
@@ -397,13 +431,25 @@ export function RentalDetail({
                     </span>
                   }
                 />
-                <Row label="Extra days" value={r.extraDays ?? 0} />
+                <Row label="Extra days" value={returnCharges.extraDays} />
+                <Row
+                  label="Customer rating"
+                  value={r.customerRating ? (
+                    <span className="inline-flex items-center gap-0.5" aria-label={`${r.customerRating} out of 5 stars`}>
+                      {[1, 2, 3, 4, 5].map((rating) => (
+                        <Star key={rating} className="h-4 w-4 text-amber-500" fill={rating <= r.customerRating! ? "currentColor" : "none"} />
+                      ))}
+                      <span className="ml-1">{r.customerRating}/5</span>
+                    </span>
+                  ) : "Not rated"}
+                />
                 <Row label="Deposit refunded" value={formatCurrency(r.depositRefunded ?? 0)} />
-                {r.returnNotes && (
+                {r.extraChargeReason && <Row label="Extra charge reason" value={r.extraChargeReason} />}
+                {r.damageNotes && (
                   <div className="pt-2">
-                    <dt className="text-ink-2">Notes</dt>
+                    <dt className="text-ink-2">Damage / inspection notes</dt>
                     <dd className="mt-1 whitespace-pre-wrap rounded-field bg-sunken p-2 text-ink">
-                      {r.returnNotes}
+                      {r.damageNotes}
                     </dd>
                   </div>
                 )}
@@ -412,6 +458,16 @@ export function RentalDetail({
           </div>
         </Card>
       </div>
+
+      <Card className="mt-5">
+        <CardHeader title="Return reminder & extension" icon={<Calendar className="h-3.5 w-3.5" />} />
+        <div className="p-4"><RentalExtensionPanel tenantId={tenantId} tenantSlug={tenantSlug} rentalId={r.id} status={r.extensionStatus} returnDate={r.returnDate!} reminderSentAt={r.returnReminderSentAt} response={r.customerResponse} responseAt={r.customerResponseAt} active={r.status === "active" || r.status === "reserved"} /></div>
+      </Card>
+
+      <Card className="mt-5">
+        <CardHeader title="Fines, Salik & paid parking" count={charges.length} icon={<Receipt className="h-3.5 w-3.5" />} />
+        <div className="p-4"><ChargesBoard tenantId={tenantId} tenantSlug={tenantSlug} charges={charges} allowEntry={false} /></div>
+      </Card>
 
       <Card className="mt-5">
         <CardHeader title="Contract" icon={<FileText className="h-3.5 w-3.5" />} />
@@ -515,7 +571,7 @@ export function RentalDetail({
               {payments.map((p) => (
                 <tr key={p.id} className="transition-colors hover:bg-sunken/50">
                   <TD className="whitespace-nowrap tnum">{formatDate(p.createdAt)}</TD>
-                  <TD className="capitalize">{p.method}</TD>
+                  <TD className="capitalize">{p.method.replaceAll("_", " ")}</TD>
                   <TD>
                     {p.status === "confirmed" ? (
                       <Badge tone="success">confirmed</Badge>
@@ -535,9 +591,14 @@ export function RentalDetail({
                   </TD>
                   <TD className="text-right">
                     {p.status === "pending" && canConfirm && (
-                      <Button size="sm" onClick={() => handleConfirm(p.id)} disabled={busy}>
-                        Confirm &amp; post
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button size="sm" onClick={() => handleConfirm(p.id)} disabled={busy}>
+                          Confirm &amp; post
+                        </Button>
+                        <Button size="sm" variant="secondary" onClick={() => handleReject(p.id)} disabled={busy}>
+                          Reject
+                        </Button>
+                      </div>
                     )}
                   </TD>
                 </tr>

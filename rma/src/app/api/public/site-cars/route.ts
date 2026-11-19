@@ -20,6 +20,8 @@ export async function GET(req: Request) {
       model: vehicle.model,
       plate: vehicle.plate,
       dailyRate: vehicle.dailyRate,
+      weeklyRate: vehicle.weeklyRate,
+      monthlyRate: vehicle.monthlyRate,
       category: vehicle.websiteCategory,
       photos: vehicle.photos,
     })
@@ -36,6 +38,9 @@ export async function GET(req: Request) {
     name: `${car.make} ${car.model}`.trim(),
     plate: car.plate,
     price: car.dailyRate,
+    dailyRate: car.dailyRate,
+    weeklyRate: car.weeklyRate,
+    monthlyRate: car.monthlyRate,
     category: car.category || "Premium",
     photo: (car.photos ?? []).map((photo: WebsiteCarPhoto) => publicPhotoUrl(photo.url)).find(Boolean) ?? null,
   }));

@@ -48,6 +48,7 @@ export interface PilotClient {
   getFleet(): Promise<PilotFleetVehicle[]>;
   getStatus(imei: string): Promise<PilotStatus>;
   blockEngine(imei: string): Promise<PilotCommandResult>;
+  unblockEngine(imei: string): Promise<PilotCommandResult>;
 }
 
 const BASE = process.env.PILOT_BASE_URL ?? "https://pilot-gps.com";
@@ -223,19 +224,25 @@ export class LivePilotClient implements PilotClient {
     };
   }
 
-  async blockEngine(imei: string): Promise<PilotCommandResult> {
+  private async engineCommand(imei: string, template: string): Promise<PilotCommandResult> {
     const data = await this.req(`/vehicles/commands?imei=${encodeURIComponent(imei)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        template_name: process.env.PILOT_ENGINE_BLOCK_TEMPLATE ?? "engine_block",
-      }),
+      body: JSON.stringify({ template_name: template }),
     });
     const commandId = Number(data?.command_id ?? data?.data?.command_id);
     if ((data?.code !== undefined && data.code !== 0) || !Number.isInteger(commandId) || commandId <= 0) {
-      throw new Error(`Pilot rejected engine block: ${data?.msg ?? "missing command id"}`);
+      throw new Error(`Pilot rejected engine command: ${data?.msg ?? "missing command id"}`);
     }
     return { commandId, accepted: true };
+  }
+
+  async blockEngine(imei: string): Promise<PilotCommandResult> {
+    return this.engineCommand(imei, process.env.PILOT_ENGINE_BLOCK_TEMPLATE ?? "engine_block");
+  }
+
+  async unblockEngine(imei: string): Promise<PilotCommandResult> {
+    return this.engineCommand(imei, process.env.PILOT_ENGINE_UNBLOCK_TEMPLATE ?? "engine_unblock");
   }
 
 }
@@ -292,6 +299,11 @@ class MockPilotClient implements PilotClient {
     return { commandId: 1001, accepted: true };
   }
 
+  async unblockEngine(imei: string): Promise<PilotCommandResult> {
+    if (!MOCK_FLEET.some((vehicle) => vehicle.imei === imei)) throw new Error("Mock vehicle not found");
+    return { commandId: 1002, accepted: true };
+  }
+
 }
 
 // Multi-account: the holding runs several Pilot logins (TAKE Auto fleet +
@@ -331,12 +343,22 @@ class MultiPilotClient implements PilotClient {
     return this.clients[0].getStatus(imei);
   }
 
-  async blockEngine(imei: string): Promise<PilotCommandResult> {
+  private async ownedCommand(imei: string, command: "block" | "unblock"): Promise<PilotCommandResult> {
     for (const client of this.clients) {
       const fleet = await client.getFleet();
-      if (fleet.some((vehicle) => vehicle.imei === imei)) return client.blockEngine(imei);
+      if (fleet.some((vehicle) => vehicle.imei === imei)) {
+        return command === "block" ? client.blockEngine(imei) : client.unblockEngine(imei);
+      }
     }
     throw new Error("No configured Pilot account owns this vehicle");
+  }
+
+  async blockEngine(imei: string): Promise<PilotCommandResult> {
+    return this.ownedCommand(imei, "block");
+  }
+
+  async unblockEngine(imei: string): Promise<PilotCommandResult> {
+    return this.ownedCommand(imei, "unblock");
   }
 }
 

@@ -115,7 +115,7 @@ export async function getDashboardStats(tenantId: string) {
     // no company_id — it inherits one through its rental (rental_id is NOT NULL,
     // so this join drops nothing).
     const [rentalRevenue] = await tx
-      .select({ value: sql<number>`coalesce(sum(${payment.amount}), 0)` })
+      .select({ value: sql<number>`coalesce(sum(${payment.amount}), 0)::float8` })
       .from(payment)
       .innerJoin(rental, eq(payment.rentalId, rental.id))
       .where(and(gte(payment.createdAt, monthStart), rentalCo));

@@ -52,3 +52,6 @@ qa-screenshots/
 
 # TARS session cookie jar (RTA SSO login state — a live credential)
 .tars-session.json
+
+# Salik customer-portal credentials
+scripts/.salik-accounts.json

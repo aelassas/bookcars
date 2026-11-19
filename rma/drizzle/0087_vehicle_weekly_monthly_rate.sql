@@ -1,0 +1,2 @@
+ALTER TABLE vehicle ADD COLUMN IF NOT EXISTS weekly_rate integer NOT NULL DEFAULT 0;
+ALTER TABLE vehicle ADD COLUMN IF NOT EXISTS monthly_rate integer NOT NULL DEFAULT 0;

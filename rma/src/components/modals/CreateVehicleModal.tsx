@@ -32,6 +32,8 @@ export function CreateVehicleModal({
         year: Number(fd.get("year")) || undefined,
         plate: String(fd.get("plate")),
         dailyRate: Number(fd.get("dailyRate")) || undefined,
+        weeklyRate: Number(fd.get("weeklyRate")) || undefined,
+        monthlyRate: Number(fd.get("monthlyRate")) || undefined,
         imei: String(fd.get("imei") || ""),
         division: String(fd.get("division") || "rent"),
       });
@@ -78,21 +80,30 @@ export function CreateVehicleModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div>
             <Label>Daily Rate (AED)</Label>
             <Input name="dailyRate" type="number" min={0} className="w-full" placeholder="0" />
           </div>
           <div>
-            <Label>Division</Label>
-            <Select name="division" className="w-full">
-              {DIVISIONS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </Select>
+            <Label>Weekly Rate (AED)</Label>
+            <Input name="weeklyRate" type="number" min={0} className="w-full" placeholder="0" />
           </div>
+          <div>
+            <Label>Monthly Rate (AED)</Label>
+            <Input name="monthlyRate" type="number" min={0} className="w-full" placeholder="0" />
+          </div>
+        </div>
+
+        <div>
+          <Label>Division</Label>
+          <Select name="division" className="w-full">
+            {DIVISIONS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </Select>
         </div>
 
         <div>

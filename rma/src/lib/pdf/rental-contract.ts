@@ -54,7 +54,7 @@ export interface RentalContractPdfData {
   totalDays: number | null;
   dailyRate: number | null;
   deposit: number | null;
-  total: number | null;
+  rentalSubtotal: number | null;
   /** Handover address, free text. */
   address?: string | null;
 
@@ -443,7 +443,7 @@ function drawPage1(doc: PDFKit.PDFDocument, data: RentalContractPdfData): void {
   y = fieldRow(doc, leftX, y, leftW, ["Drop Off Date", fmtDate(data.startDate)], ["Pickup Date", fmtDate(data.returnDate)]);
   y = fieldRow(doc, leftX, y, leftW, ["Drop Off Time", fmtTime(data.startDate)], ["Pickup Time", fmtTime(data.returnDate)]);
   y = fieldRow(doc, leftX, y, leftW, ["Address", txt(data.address)]);
-  y = fieldRow(doc, leftX, y, leftW, ["Rate per day", fmtMoney(data.dailyRate)], ["Total Rent price", fmtMoney(data.total)]);
+  y = fieldRow(doc, leftX, y, leftW, ["Rate per day", fmtMoney(data.dailyRate)], ["Total Rent price", fmtMoney(data.rentalSubtotal)]);
   y = fieldRow(doc, leftX, y, leftW, ["Total Rent Days", txt(data.totalDays)], ["Security Deposit", fmtMoney(data.deposit)]);
 
   // ADDITIONAL REMARKS

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Star } from "lucide-react";
 import { processReturn } from "@/modules/rental/actions";
+import { calculateReturnCharges } from "@/modules/rental/return-charges";
 import { formatDate, formatCurrency } from "@/lib/format";
 import { Button, Input, Label, Textarea } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
@@ -35,16 +37,17 @@ export function ProcessReturnModal({
   const expectedReturn = rental.returnDate ? rental.returnDate.toISOString().slice(0, 10) : today;
 
   const [actualReturnDate, setActualReturnDate] = useState(expectedReturn);
+  const [customerRating, setCustomerRating] = useState(0);
   const [extraCharge, setExtraCharge] = useState("0");
   const [extraReason, setExtraReason] = useState("");
 
   const lateFee = useMemo(() => {
     if (!rental.returnDate || !actualReturnDate) return 0;
-    const actual = new Date(actualReturnDate);
-    const expected = rental.returnDate;
-    const ms = actual.getTime() - expected.getTime();
-    if (ms <= 0) return 0;
-    return Math.ceil(ms / (1000 * 60 * 60 * 24)) * rental.dailyRate;
+    return calculateReturnCharges({
+      returnDate: rental.returnDate,
+      actualReturnDate: new Date(actualReturnDate),
+      dailyRate: rental.dailyRate,
+    }).lateFee;
   }, [actualReturnDate, rental.returnDate, rental.dailyRate]);
 
   const totalExtra = lateFee + (Number(extraCharge) || 0);
@@ -63,9 +66,10 @@ export function ProcessReturnModal({
         rental.id,
         {
           actualReturnDate: new Date(String(fd.get("actualReturnDate"))),
-          finalOdometer: Number(fd.get("finalOdometer")) || undefined,
-          fuelLevel: Number(fd.get("fuelLevel")) || undefined,
+          finalOdometer: String(fd.get("finalOdometer")) === "" ? undefined : Number(fd.get("finalOdometer")),
+          fuelLevel: String(fd.get("fuelLevel")) === "" ? undefined : Number(fd.get("fuelLevel")),
           damageNotes: String(fd.get("damageNotes") || ""),
+          customerRating: customerRating || undefined,
           extraChargeAmount: Number(extraCharge) || 0,
           extraChargeReason: extraReason || undefined,
         },
@@ -111,7 +115,7 @@ export function ProcessReturnModal({
 
         {rental.dailyMileageLimitKm != null && (
           <div className="rounded-field border border-line bg-sunken px-3 py-2 text-sm text-ink-2">
-            Daily limit: {rental.dailyMileageLimitKm} km
+            Allowance: {rental.dailyMileageLimitKm} km per paid day, shared across the whole rental
             {rental.startOdometer != null ? ` · start odometer: ${rental.startOdometer} km` : " · start odometer was not recorded"}
           </div>
         )}
@@ -124,6 +128,26 @@ export function ProcessReturnModal({
           <div>
             <Label>Fuel Level (%)</Label>
             <Input name="fuelLevel" type="number" min={0} max={100} className="w-full" />
+          </div>
+        </div>
+
+        <div>
+          <Label>Customer rating</Label>
+          <div className="flex items-center gap-1" role="radiogroup" aria-label="Customer rating from 1 to 5">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                type="button"
+                role="radio"
+                aria-checked={customerRating === rating}
+                aria-label={`${rating} star${rating === 1 ? "" : "s"}`}
+                onClick={() => setCustomerRating(customerRating === rating ? 0 : rating)}
+                className="rounded-field p-1 text-amber-500 transition hover:bg-amber-50"
+              >
+                <Star className="h-6 w-6" fill={rating <= customerRating ? "currentColor" : "none"} />
+              </button>
+            ))}
+            <span className="ml-2 text-sm text-ink-3">{customerRating ? `${customerRating}/5` : "Not rated"}</span>
           </div>
         </div>
 

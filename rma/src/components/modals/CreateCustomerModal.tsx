@@ -16,6 +16,13 @@ export type EditableCustomer = {
   division: string;
   source: string | null;
   notes: string | null;
+  dateOfBirth?: string | null;
+  nationality?: string | null;
+  emiratesId?: string | null;
+  emiratesIdExpiry?: string | null;
+  passportNumber?: string | null;
+  driverLicenseNumber?: string | null;
+  driverLicenseExpiry?: string | null;
 };
 
 export function CreateCustomerModal({
@@ -26,7 +33,7 @@ export function CreateCustomerModal({
 }: {
   tenantId: string;
   onClose: () => void;
-  onCreated?: () => void;
+  onCreated?: (customer: { id: string; name: string }) => void;
   customer?: EditableCustomer;
 }) {
   const fieldId = useId();
@@ -47,10 +54,18 @@ export function CreateCustomerModal({
         division: String(fd.get("division") || "rent"),
         source: String(fd.get("source") || ""),
         notes: String(fd.get("notes") || ""),
+        dateOfBirth: String(fd.get("dateOfBirth") || ""),
+        nationality: String(fd.get("nationality") || ""),
+        emiratesId: String(fd.get("emiratesId") || ""),
+        emiratesIdExpiry: String(fd.get("emiratesIdExpiry") || ""),
+        passportNumber: String(fd.get("passportNumber") || ""),
+        driverLicenseNumber: String(fd.get("driverLicenseNumber") || ""),
+        driverLicenseExpiry: String(fd.get("driverLicenseExpiry") || ""),
       };
-      if (customer) await updateCustomer(tenantId, customer.id, data);
-      else await createCustomer(tenantId, data);
-      onCreated?.();
+      const saved = customer
+        ? await updateCustomer(tenantId, customer.id, data)
+        : await createCustomer(tenantId, data);
+      onCreated?.({ id: saved.id, name: saved.name });
       onClose();
     } catch (err) {
       setError(err instanceof Error && err.message ? err.message : "Could not save customer. Please try again.");
@@ -103,6 +118,16 @@ export function CreateCustomerModal({
               ))}
             </Select>
           </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div><Label htmlFor={`${fieldId}-emiratesId`}>Emirates ID</Label><Input id={`${fieldId}-emiratesId`} name="emiratesId" defaultValue={customer?.emiratesId ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-emiratesIdExpiry`}>Emirates ID expiry</Label><Input id={`${fieldId}-emiratesIdExpiry`} name="emiratesIdExpiry" type="date" defaultValue={customer?.emiratesIdExpiry ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-passportNumber`}>Passport number</Label><Input id={`${fieldId}-passportNumber`} name="passportNumber" defaultValue={customer?.passportNumber ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-driverLicenseNumber`}>Driving licence number</Label><Input id={`${fieldId}-driverLicenseNumber`} name="driverLicenseNumber" defaultValue={customer?.driverLicenseNumber ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-driverLicenseExpiry`}>Licence expiry</Label><Input id={`${fieldId}-driverLicenseExpiry`} name="driverLicenseExpiry" type="date" defaultValue={customer?.driverLicenseExpiry ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-nationality`}>Nationality</Label><Input id={`${fieldId}-nationality`} name="nationality" defaultValue={customer?.nationality ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-dateOfBirth`}>Date of birth</Label><Input id={`${fieldId}-dateOfBirth`} name="dateOfBirth" type="date" defaultValue={customer?.dateOfBirth ?? ""} className="w-full" /></div>
         </div>
 
         <div>
