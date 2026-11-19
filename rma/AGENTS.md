@@ -46,7 +46,7 @@ TAKE Auto is a vertical SaaS for car rental operations in MENA. It replaces Bitr
 | Messaging | **Live** — inbox with heuristic AI classification + draft replies | `modules/messaging/`, `messages/page.tsx` |
 | pg-boss jobs | **Live** — queue + tenant-scoped workers | `platform/jobs/` |
 | Pilot GPS | **Live** — fleet fetch, engine block/unblock | `platform/integrations/pilot/` |
-| Navigation | **Live** — sidebar with CRM / Customers / Messages / Fleet | `app/(tenant)/[tenantSlug]/layout.tsx` |
+| Navigation | **Live** — desktop sidebar, mobile bottom navigation and full-menu drawer | `app/(tenant)/[tenantSlug]/layout.tsx`, `components/layout/Sidebar.tsx` |
 
 ### Database Schema (13 tables)
 

@@ -49,24 +49,24 @@ export default function Topbar({ tenantSlug, lang = "ru" }: { tenantSlug: string
   const initial = (display || "?").slice(0, 1).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-line bg-surface/85 px-4 pl-14 backdrop-blur lg:px-6 lg:pl-6">
+    <header className="sticky top-0 z-20 flex h-[calc(3.5rem+env(safe-area-inset-top))] shrink-0 items-center gap-2 border-b border-line bg-surface/90 px-3 pl-16 pt-[env(safe-area-inset-top)] backdrop-blur sm:gap-3 lg:px-6 lg:pl-6">
       <h2 className="min-w-0 truncate text-[15px] font-semibold tracking-tight text-ink">
         {title}
       </h2>
 
       <div className="ml-auto flex items-center gap-2">
         <LanguageSwitcher lang={lang} compact />
-        <ThemeToggle />
+        <div className="hidden sm:block"><ThemeToggle /></div>
         <Link
           href={`/${tenantSlug}/search`}
-          className="flex h-8 items-center gap-2 rounded-field border border-line bg-surface px-2.5 text-sm text-ink-3 shadow-card transition-colors hover:border-brand-300 hover:text-ink-2 sm:w-56"
+          className="flex h-11 w-11 items-center justify-center gap-2 rounded-field border border-line bg-surface px-2.5 text-sm text-ink-3 shadow-card transition-colors hover:border-brand-300 hover:text-ink-2 sm:w-56 sm:justify-start"
         >
           <Search className="h-3.5 w-3.5 shrink-0" />
           <span className="hidden truncate sm:inline">Search: customers, plates…</span>
         </Link>
 
         {user && (
-          <div className="flex items-center gap-2 pl-1">
+          <div className="hidden items-center gap-2 pl-1 sm:flex">
             <span
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white"
               title={display}
@@ -78,7 +78,7 @@ export default function Topbar({ tenantSlug, lang = "ru" }: { tenantSlug: string
             </span>
             <button
               onClick={() => hostAgnosticSignOut()}
-              className="rounded-field p-2 text-ink-3 transition-colors hover:bg-sunken hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center rounded-field text-ink-3 transition-colors hover:bg-sunken hover:text-ink"
               title="Sign out"
               aria-label="Sign out"
             >

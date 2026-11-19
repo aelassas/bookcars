@@ -22,7 +22,9 @@ export default function LanguageSwitcher({ lang, compact }: { lang: Lang; compac
           onClick={() => set(l)}
           aria-pressed={l === lang}
           style={{
-            padding: compact ? "3px 8px" : "5px 10px",
+            minWidth: 44,
+            minHeight: 44,
+            padding: compact ? "0 8px" : "5px 10px",
             border: "none",
             cursor: "pointer",
             fontWeight: l === lang ? 700 : 500,

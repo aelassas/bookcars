@@ -9,6 +9,7 @@ import { moveRentalDates, startRental, cancelRental } from "@/modules/rental/act
 import { CreateRentalModal } from "@/components/modals/CreateRentalModal";
 import { t, type Lang } from "@/platform/i18n/dict";
 import type { CalendarSlot } from "@/modules/rental/booking-queries";
+import { currentEvent, eventOnDay, groupUpcomingEvents, nextDays } from "./fleet-board-mobile";
 
 /**
  * Yango-style booking board on DayPilot Lite (open-source, Apache-2.0).
@@ -148,22 +149,38 @@ export function FleetSchedulerBoard({
   const [editEnd, setEditEnd] = useState("");
   const [detailMsg, setDetailMsg] = useState<string | null>(null);
   const [arrange, setArrange] = useState<ArrangeMode>("modelLine");
-  useEffect(() => setMounted(true), []);
+  const [phone, setPhone] = useState(false);
+  const [view, setView] = useState<"board" | "list" | null>(null);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setPhone(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  const shownView = view ?? (phone ? "list" : "board");
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
   // localStorage is client-only — read it after mount to keep SSR/CSR markup equal.
   useEffect(() => {
-    try {
-      setHintVisible(!localStorage.getItem(HINT_KEY));
-    } catch {
-      setHintVisible(true);
-    }
-    try {
-      const saved = localStorage.getItem(ARRANGE_KEY);
-      if (saved === "modelLine" || saved === "plate" || saved === "status" || saved === "utilisation") {
-        setArrange(saved);
+    const id = setTimeout(() => {
+      try {
+        setHintVisible(!localStorage.getItem(HINT_KEY));
+      } catch {
+        setHintVisible(true);
       }
-    } catch {
-      /* private mode — keep the model-line default */
-    }
+      try {
+        const saved = localStorage.getItem(ARRANGE_KEY);
+        if (saved === "modelLine" || saved === "plate" || saved === "status" || saved === "utilisation") {
+          setArrange(saved);
+        }
+      } catch {
+        /* private mode — keep the model-line default */
+      }
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   function changeArrange(mode: ArrangeMode) {
@@ -312,6 +329,14 @@ export function FleetSchedulerBoard({
     .filter((e) => !hidden.has(e.tags.status))
     .filter((e) => visibleVehicles.some((v) => v.id === e.resource));
 
+  const stripDays = nextDays(today);
+  const eventsByCar = groupUpcomingEvents(events, today);
+  const shortDate = (value: string) =>
+    new Date(`${value}T12:00:00.000Z`).toLocaleDateString(lang === "ru" ? "ru-RU" : "en-GB", {
+      day: "numeric",
+      month: "short",
+    });
+
   function toggleStatus(key: string) {
     setHidden((prev) => {
       const next = new Set(prev);
@@ -422,18 +447,34 @@ export function FleetSchedulerBoard({
   }
 
   return (
-    <div className="rounded-card border border-line bg-surface p-2">
-      <div className="mb-2 flex flex-wrap items-center gap-3 px-1 text-[11px] text-ink-2">
-        <span className="font-semibold text-ink">Fleet board</span>
-        <span className="inline-flex items-center gap-1 rounded-field border border-line bg-surface px-2 py-1">
-          <Search className="h-3 w-3 text-ink-3" />
+    <div className="min-w-0 rounded-card border border-line bg-surface p-2">
+      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top))] z-10 mb-2 flex flex-wrap items-center gap-2 bg-surface px-1 py-2 text-[11px] text-ink-2 sm:gap-3 lg:static lg:py-0">
+        <span className="hidden font-semibold text-ink sm:inline">Fleet board</span>
+        <span className="inline-flex min-h-11 overflow-hidden rounded-field border border-line" aria-label="Calendar view">
+          {(["list", "board"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setView(value)}
+              aria-pressed={shownView === value}
+              className={`min-h-11 min-w-16 px-3 py-2 font-semibold transition-colors ${
+                shownView === value ? "bg-brand-600 text-white" : "bg-surface text-ink-2 hover:bg-sunken"
+              }`}
+            >
+              {value === "list" ? (lang === "ru" ? "Список" : "List") : (lang === "ru" ? "Доска" : "Board")}
+            </button>
+          ))}
+        </span>
+        <label className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-field border border-line bg-surface px-3 sm:flex-none">
+          <Search className="h-4 w-4 shrink-0 text-ink-3" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Plate, make, model…"
-            className="w-32 bg-transparent text-[11px] text-ink outline-none placeholder:text-ink-3"
+            aria-label="Search cars"
+            className="min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-3 sm:w-40 sm:text-[11px]"
           />
-        </span>
+        </label>
         {STATUS_FILTERS.map(({ key, label }) => {
           const off = hidden.has(key);
           return (
@@ -441,7 +482,7 @@ export function FleetSchedulerBoard({
               key={key}
               type="button"
               onClick={() => toggleStatus(key)}
-              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 transition-opacity ${
+              className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 py-2 transition-opacity ${
                 off ? "border-line opacity-40" : "border-transparent"
               }`}
               aria-pressed={!off}
@@ -451,13 +492,14 @@ export function FleetSchedulerBoard({
             </button>
           );
         })}
-        <label className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-2 py-1">
-          <ArrowUpDown className="h-3 w-3 text-ink-3" />
-          <span className="text-ink-3">{t(lang, "fleetBoard.arrange")}:</span>
+        <label className="inline-flex min-h-11 items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-2">
+          <ArrowUpDown className="h-4 w-4 text-ink-3" />
+          <span className="hidden text-ink-3 sm:inline">{t(lang, "fleetBoard.arrange")}:</span>
           <select
             value={arrange}
             onChange={(e) => changeArrange(e.target.value as ArrangeMode)}
-            className="bg-transparent text-[11px] font-medium text-ink outline-none"
+            aria-label={t(lang, "fleetBoard.arrange")}
+            className="min-h-11 bg-transparent text-[11px] font-medium text-ink outline-none"
           >
             <option value="modelLine">{t(lang, "fleetBoard.arrangeModelLine")}</option>
             <option value="plate">{t(lang, "fleetBoard.arrangePlate")}</option>
@@ -466,18 +508,19 @@ export function FleetSchedulerBoard({
           </select>
         </label>
         <span className="text-ink-3">
-          · {resources.length} cars · % = booked days in window · drag/resize to reschedule · click for details
+          · {resources.length} cars · % = booked days in window
+          {shownView === "board" ? " · drag/resize to reschedule · click for details" : " · tap a booking for details"}
         </span>
         {busy && <span className="text-brand-600">{t(lang, "fleet.saving")}</span>}
       </div>
 
-      {hintVisible && (
+      {hintVisible && shownView === "board" && (
         <div className="mb-2 flex items-center gap-2 rounded-field border border-line bg-sunken px-3 py-1.5 text-[11px] text-ink-2">
           <span className="flex-1">{t(lang, "fleet.hint")}</span>
           <button
             type="button"
             onClick={dismissHint}
-            className="rounded px-1.5 py-0.5 text-ink-3 hover:bg-surface hover:text-ink"
+            className="min-h-11 rounded px-3 py-2 text-ink-3 hover:bg-surface hover:text-ink"
           >
             {t(lang, "fleet.hintDismiss")}
           </button>
@@ -490,18 +533,90 @@ export function FleetSchedulerBoard({
         </div>
       )}
 
-      <div className="overflow-auto">
+      {shownView === "list" && (
+        <ul className="divide-y divide-line-soft">
+          {visibleVehicles.map((vehicle) => {
+            const meta = rowMeta.get(vehicle.id);
+            const list = eventsByCar.get(vehicle.id) ?? [];
+            const now = currentEvent(list, today);
+            return (
+              <li key={vehicle.id} className="px-2 py-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 flex-none rounded-full" style={{ background: meta?.dot ?? "#94a3b8" }} />
+                      <span className="font-mono text-[13px] font-semibold text-ink">{vehicle.plate ?? "—"}</span>
+                      <span className="truncate text-xs text-ink-3">{meta?.makeModel ?? ""}</span>
+                    </div>
+                    <div className="mt-0.5 text-xs">
+                      {now ? (
+                        <button
+                          type="button"
+                          onClick={() => openDetail(now.tags)}
+                          className="min-h-11 py-2 text-left"
+                          style={{ color: STATUS_COLOR[now.tags.status] }}
+                        >
+                          {now.tags.status === "overdue" ? "⚠ " : "● "}
+                          {now.tags.customerName} · {lang === "ru" ? "до" : "until"} {shortDate(now.tags.endYmd)}
+                        </button>
+                      ) : (
+                        <span className="flex min-h-11 items-center text-success">
+                          {lang === "ru" ? "Свободна сейчас" : "Free now"}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <span className="flex-none rounded-full border border-line bg-sunken px-2 py-1 text-[10px] font-semibold text-ink-2">
+                    {occupancy.get(vehicle.id) ?? 0}%
+                  </span>
+                </div>
+                <div className="mt-1.5 flex gap-[3px]" aria-label={lang === "ru" ? "Следующие 14 дней" : "Next 14 days"}>
+                  {stripDays.map((day) => {
+                    const status = eventOnDay(list, day)?.tags.status;
+                    return (
+                      <div key={day} className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+                        <span
+                          className={`h-3.5 w-full rounded-[3px] ${day === today ? "ring-1 ring-amber-400" : ""}`}
+                          style={{ background: status ? STATUS_COLOR[status] : "#e2e8f0" }}
+                        />
+                        <span className="text-[9px] leading-none text-ink-3">{Number(day.slice(8))}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                {list.filter((event) => event !== now).slice(0, 3).map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => openDetail(event.tags)}
+                    className="mt-1.5 flex min-h-11 w-full items-center gap-2 rounded-field border border-line-soft px-2 py-2 text-left text-xs transition-colors hover:bg-sunken"
+                  >
+                    <span className="h-2 w-2 flex-none rounded-full" style={{ background: STATUS_COLOR[event.tags.status] }} />
+                    <span className="flex-none text-ink-2 tnum">
+                      {shortDate(event.tags.startYmd)} → {shortDate(event.tags.endYmd)}
+                    </span>
+                    <span className="truncate text-ink">{event.tags.customerName}</span>
+                  </button>
+                ))}
+              </li>
+            );
+          })}
+          {!visibleVehicles.length && <li className="p-4 text-sm text-ink-3">No cars match.</li>}
+        </ul>
+      )}
+
+      <div className={shownView === "board" ? "touch-scroll overflow-auto" : "hidden"}>
         <DayPilotScheduler
           ref={schedulerRef as never}
           startDate={startDate}
           days={days}
           scale="Day"
           timeHeaders={[{ groupBy: "Month" }, { groupBy: "Day", format: "d" }]}
-          cellWidth={34}
-          rowHeaderWidth={230}
-          eventHeight={30}
-          rowMarginTop={3}
-          rowMarginBottom={3}
+          cellWidth={phone ? 30 : 34}
+          rowHeaderWidth={phone ? 92 : 230}
+          eventHeight={phone ? 44 : 30}
+          rowMarginTop={phone ? 2 : 3}
+          rowMarginBottom={phone ? 2 : 3}
           resources={resources}
           events={events}
           onBeforeRowHeaderRender={(args: { row: { id: string | number; html: string; toolTip: string } }) => {
@@ -519,7 +634,7 @@ export function FleetSchedulerBoard({
               `<span style="flex:none;width:8px;height:8px;border-radius:9999px;background:${meta.dot};"></span>` +
               `<span style="font-size:12px;font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta.plate)}</span>` +
               `</span>` +
-              `<span style="flex:none;font-size:10px;font-weight:600;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9999px;padding:1px 7px;">${pct}%</span>` +
+              (phone ? "" : `<span style="flex:none;font-size:10px;font-weight:600;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:9999px;padding:1px 7px;">${pct}%</span>`) +
               `</div>` +
               `<div style="padding-left:14px;font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta.makeModel)}</div>` +
               `</div>`;
@@ -564,15 +679,15 @@ export function FleetSchedulerBoard({
         const isActive = selected.status === "active" || selected.status === "overdue";
         const canAct = selected.source === "rental" && (isReserved || isActive);
         return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
           <div className="absolute inset-0 bg-ink/40" role="button" aria-label="Close" onClick={closeDetail} />
-          <div className="relative z-10 w-full max-w-md rounded-card border border-line bg-surface shadow-pop">
+          <div className="mobile-sheet relative z-10 max-h-[90dvh] w-full overflow-y-auto rounded-t-card border border-line bg-surface pb-[env(safe-area-inset-bottom)] shadow-pop sm:max-w-md sm:rounded-card sm:pb-0">
             <div className="flex items-center justify-between border-b border-line-soft px-5 py-3">
               <div className="flex items-center gap-2">
                 <span className="inline-block h-3 w-3 rounded-sm" style={{ background: STATUS_COLOR[selected.status] ?? "#64748b" }} />
                 <h3 className="text-sm font-semibold text-ink">{selected.customerName}</h3>
               </div>
-              <button onClick={closeDetail} className="rounded p-1 text-ink-3 hover:bg-sunken hover:text-ink">✕</button>
+              <button onClick={closeDetail} aria-label="Close" className="flex h-11 w-11 items-center justify-center rounded text-ink-3 hover:bg-sunken hover:text-ink">✕</button>
             </div>
             <div className="space-y-2 px-5 py-4 text-sm">
               <div className="flex justify-between"><span className="text-ink-3">Car</span><span className="text-ink">{selected.vehicleName}</span></div>
@@ -587,7 +702,7 @@ export function FleetSchedulerBoard({
                       min={isReserved ? today : undefined}
                       disabled={isActive}
                       onChange={(e) => setEditStart(e.target.value)}
-                      className="rounded-field border border-line bg-surface px-2 py-1 text-xs text-ink disabled:opacity-50"
+                      className="min-h-11 rounded-field border border-line bg-surface px-2 py-2 text-xs text-ink disabled:opacity-50"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-3">
@@ -598,7 +713,7 @@ export function FleetSchedulerBoard({
                       value={editEnd}
                       min={editStart}
                       onChange={(e) => setEditEnd(e.target.value)}
-                      className="rounded-field border border-line bg-surface px-2 py-1 text-xs text-ink"
+                      className="min-h-11 rounded-field border border-line bg-surface px-2 py-2 text-xs text-ink"
                     />
                   </div>
                 </div>
@@ -629,7 +744,7 @@ export function FleetSchedulerBoard({
                         setEditEnd(selected.endYmd);
                         setEditing(true);
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink disabled:opacity-50"
                     >
                       <Pencil className="h-4 w-4" /> {t(lang, "fleet.editDates")}
                     </button>
@@ -643,7 +758,7 @@ export function FleetSchedulerBoard({
                           setEditing(false);
                           setDetailMsg(null);
                         }}
-                        className="rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink disabled:opacity-50"
+                        className="rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink disabled:opacity-50"
                       >
                         {t(lang, "fleet.cancel")}
                       </button>
@@ -651,7 +766,7 @@ export function FleetSchedulerBoard({
                         type="button"
                         disabled={busy}
                         onClick={saveDates}
-                        className="rounded-field bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                        className="rounded-field bg-brand-600 min-h-11 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
                       >
                         {t(lang, "fleet.save")}
                       </button>
@@ -663,7 +778,7 @@ export function FleetSchedulerBoard({
                         type="button"
                         disabled={busy}
                         onClick={handleStart}
-                        className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-green-700 hover:bg-sunken disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-green-700 hover:bg-sunken disabled:opacity-50"
                       >
                         <Play className="h-4 w-4" /> {t(lang, "fleet.startRental")}
                       </button>
@@ -671,7 +786,7 @@ export function FleetSchedulerBoard({
                         type="button"
                         disabled={busy}
                         onClick={handleCancel}
-                        className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-sunken disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-red-600 hover:bg-sunken disabled:opacity-50"
                       >
                         <XCircle className="h-4 w-4" /> {t(lang, "fleet.cancelBooking")}
                       </button>
@@ -679,19 +794,19 @@ export function FleetSchedulerBoard({
                   )}
                   <Link
                     href={`/${tenantSlug}/rentals/${selected.rentalId}#chat`}
-                    className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink"
+                    className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink"
                   >
                     <MessageSquare className="h-4 w-4" /> Chat
                   </Link>
                   <Link
                     href={`/${tenantSlug}/rentals/${selected.rentalId}#return-checklist`}
-                    className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink"
+                    className="inline-flex items-center gap-1.5 rounded-field border border-line bg-surface min-h-11 px-3 py-2 text-sm font-medium text-ink-2 hover:bg-sunken hover:text-ink"
                   >
                     <ClipboardCheck className="h-4 w-4" /> Return checklist
                   </Link>
                   <Link
                     href={`/${tenantSlug}/rentals/${selected.rentalId}`}
-                    className="rounded-field bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
+                    className="rounded-field bg-brand-600 min-h-11 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700"
                   >
                     Open rental →
                   </Link>

@@ -72,7 +72,14 @@
   --brand-muted: #667085;
 }
 
+html,
 body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  min-height: 100dvh;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -196,4 +203,31 @@ a:focus-visible {
 }
 :root.dark *::-webkit-scrollbar-thumb:hover {
   background: #3d4460;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+@media (max-width: 639px) and (prefers-reduced-motion: no-preference) {
+  .mobile-sheet {
+    animation: mobile-sheet-in 180ms ease-out;
+  }
+
+  @keyframes mobile-sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

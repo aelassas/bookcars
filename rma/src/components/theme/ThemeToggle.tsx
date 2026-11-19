@@ -9,7 +9,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      className="rounded-field p-2 text-ink-3 transition-colors hover:bg-sunken hover:text-ink"
+      className="flex h-11 w-11 items-center justify-center rounded-field text-ink-3 transition-colors hover:bg-sunken hover:text-ink"
       title={theme === "dark" ? "Light mode" : "Dark mode"}
     >
       {theme === "dark" ? (

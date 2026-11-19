@@ -63,7 +63,7 @@ export default async function FleetAvailabilityPage({
   ]);
 
   return (
-    <main className="p-6">
+    <main className="min-w-0 p-3 sm:p-6">
       <PageHeader
         title={isRent ? `${t.name} — Rentals` : "TAKE Auto — Fleet"}
         subtitle={
@@ -76,13 +76,13 @@ export default async function FleetAvailabilityPage({
           <div className="inline-flex overflow-hidden rounded-field border border-line text-xs font-medium">
             <Link
               href={`/${tenantSlug}/fleet/availability`}
-              className={boardMode ? "bg-brand-600 px-3 py-1.5 text-white" : "bg-surface px-3 py-1.5 text-ink-2 hover:bg-sunken"}
+              className={`flex min-h-11 items-center px-4 py-2 transition-colors ${boardMode ? "bg-brand-600 text-white" : "bg-surface text-ink-2 hover:bg-sunken"}`}
             >
               Board
             </Link>
             <Link
               href={`/${tenantSlug}/fleet/availability?view=month`}
-              className={!boardMode ? "bg-brand-600 px-3 py-1.5 text-white" : "bg-surface px-3 py-1.5 text-ink-2 hover:bg-sunken"}
+              className={`flex min-h-11 items-center px-4 py-2 transition-colors ${!boardMode ? "bg-brand-600 text-white" : "bg-surface text-ink-2 hover:bg-sunken"}`}
             >
               Month
             </Link>
@@ -113,7 +113,7 @@ export default async function FleetAvailabilityPage({
         </div>
         <Link
           href={`/${tenantSlug}/returns`}
-          className="ml-auto rounded-field bg-brand-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-brand-700"
+          className="ml-auto flex min-h-11 items-center rounded-field bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700"
         >
           Open returns
         </Link>

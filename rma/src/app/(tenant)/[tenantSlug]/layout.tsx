@@ -99,7 +99,7 @@ export default async function TenantLayout({
   const lang = await getServerLang();
 
   return (
-    <div className="flex min-h-screen bg-canvas">
+    <div className="flex min-h-dvh min-w-0 bg-canvas">
       <StaleActionReloader />
       <Sidebar
         tenantSlug={tenantSlug}
@@ -134,8 +134,8 @@ export default async function TenantLayout({
           </div>
         )}
         <Topbar tenantSlug={tenantSlug} lang={lang} />
-        <main className="flex-1 px-4 py-5 lg:px-8 lg:py-6">
-          <div className="mx-auto w-full max-w-[1440px]">{children}</div>
+        <main className="min-w-0 flex-1 px-3 py-4 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-4 lg:px-8 lg:py-6">
+          <div className="mx-auto w-full min-w-0 max-w-[1440px]">{children}</div>
         </main>
       </div>
     </div>

@@ -131,7 +131,7 @@ function NavItem({
       href={full}
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
-      className={`group relative flex items-center gap-2.5 rounded-field px-3 py-2 text-[13px] font-medium transition-colors ${
+      className={`group relative flex min-h-11 items-center gap-2.5 rounded-field px-3 py-2 text-[13px] font-medium transition-colors ${
         active ? "font-semibold" : "text-ink-2 hover:bg-sunken hover:text-ink"
       }`}
       style={
@@ -153,6 +153,38 @@ function NavItem({
         className={`h-4 w-4 shrink-0 ${active ? "" : "text-ink-3 group-hover:text-ink-2"}`}
       />
       {label}
+    </Link>
+  );
+}
+
+function MobileNavItem({
+  href,
+  label,
+  icon: Icon,
+  tenantSlug,
+  accent,
+  pathname,
+}: {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  tenantSlug: string;
+  accent: string;
+  pathname: string;
+}) {
+  const full = `/${tenantSlug}${href}`;
+  const active = pathname === full || pathname.startsWith(`${full}/`);
+  return (
+    <Link
+      href={full}
+      aria-current={active ? "page" : undefined}
+      className={`flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-field px-1 text-[10px] font-medium transition-colors ${
+        active ? "" : "text-ink-3 hover:bg-sunken hover:text-ink"
+      }`}
+      style={active ? { color: accent, background: `color-mix(in srgb, ${accent} 9%, transparent)` } : undefined}
+    >
+      <Icon className="h-5 w-5 shrink-0" />
+      <span className="max-w-full truncate">{label}</span>
     </Link>
   );
 }
@@ -206,6 +238,27 @@ export default function Sidebar({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const enabledModules = normalizeModules(modules);
+  const isRent = RENT_SLUGS.includes(tenantSlug);
+  const pureSales = (roles?.length ?? 0) > 0 && roles!.every((role) => role === "sales");
+  const isAdmin = (roles ?? []).some((role) => role === "tenant_admin" || role === "platform_admin");
+  const visibleGroups = GROUPS.map((group) => ({
+    ...group,
+    links: group.links.filter(
+      (link) =>
+        enabledModules.includes(link.module) &&
+        (!link.slugs || link.slugs.includes(tenantSlug)) &&
+        !(isRent && link.hideForRent) &&
+        !(!isRent && link.rentOps) &&
+        !(pureSales && link.managerOnly) &&
+        !(link.adminOnly && !isAdmin),
+    ),
+  }));
+  const allLinks = visibleGroups.flatMap((group) => group.links);
+  const mobileHrefs = [isRent ? "/rent" : "/crm", "/fleet/availability", "/rentals", "/customers"];
+  const mobileLinks = mobileHrefs.flatMap((href) => {
+    const link = allLinks.find((item) => item.href === href);
+    return link ? [link] : [];
+  });
 
   // Shared props for every NavItem row (see module-scope component above).
   const navCtx = {
@@ -220,7 +273,7 @@ export default function Sidebar({
       {/* Mobile toggle — sits inside the top bar row */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed left-3 top-2.5 z-50 rounded-field border border-line bg-surface p-2 shadow-card lg:hidden"
+        className="fixed left-3 top-[calc(env(safe-area-inset-top)+0.625rem)] z-50 flex h-11 w-11 items-center justify-center rounded-field border border-line bg-surface shadow-card transition-colors hover:bg-sunken lg:hidden"
         aria-label="Toggle menu"
       >
         {open ? <X className="h-5 w-5 text-ink-2" /> : <Menu className="h-5 w-5 text-ink-2" />}
@@ -236,13 +289,13 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-60 transform flex-col border-r border-line bg-surface transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex h-[100dvh] w-60 max-w-[calc(100vw-3rem)] transform flex-col border-r border-line bg-surface transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Per-tenant brand. Logo (if uploaded) is normalized into a fixed box
             via object-contain; otherwise the tenant's name is a wordmark. */}
-        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-line px-4">
+        <div className="flex h-[calc(3.5rem+env(safe-area-inset-top))] shrink-0 items-center gap-2.5 border-b border-line px-4 pt-[env(safe-area-inset-top)]">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -270,31 +323,8 @@ export default function Sidebar({
             <NavItem href="/security" label="Security queue" icon={ShieldAlert} {...navCtx} />
           )}
 
-          {GROUPS.map((group) => {
-            const isRent = RENT_SLUGS.includes(tenantSlug);
-            // Sales-line separation (owner 2026-07-29): a user whose roles are
-            // PURELY "sales" (Azat, Firuz) doesn't get rent-operations links.
-            // Managers (sales_manager/general_manager) keep the full nav.
-            const pureSales = (roles?.length ?? 0) > 0 && roles!.every((r) => r === "sales");
-            const isAdmin = (roles ?? []).some((r) => r === "tenant_admin" || r === "platform_admin");
-            const links = group.links.filter(
-              (l) =>
-                enabledModules.includes(l.module) &&
-                (!l.slugs || l.slugs.includes(tenantSlug)) &&
-                !(isRent && l.hideForRent) &&
-                // What the sales line is kept away from is rent LEADS — a
-                // salesperson pulled into a request that is not their
-                // department (owner 2026-07-29, clarified 2026-08-09). That
-                // separation is structural: rent leads live in the rent
-                // tenants, so a take-auto user never meets one. `rentOps` now
-                // marks only the screens that chase a renter (collections);
-                // the fleet screens above are common to both lines, because
-                // hiding the cars and their plans was never the point.
-                !(!isRent && l.rentOps) &&
-                !(pureSales && l.managerOnly) &&
-                !(l.adminOnly && !isAdmin),
-            );
-            if (links.length === 0) return null;
+          {visibleGroups.map((group) => {
+            if (group.links.length === 0) return null;
             return (
               <div key={group.label ?? "top"}>
                 {group.label && (
@@ -302,7 +332,7 @@ export default function Sidebar({
                     {t(lang, group.label)}
                   </div>
                 )}
-                {links.map((link) => (
+                {group.links.map((link) => (
                   <NavItem key={link.href} {...link} label={t(lang, link.label)} {...navCtx} />
                 ))}
               </div>
@@ -325,7 +355,7 @@ export default function Sidebar({
             /account/password, and a real sign-out. Topbar also has a
             sign-out affordance (desktop, top-right); this is the
             always-visible mobile-friendly counterpart in the sidebar. */}
-        <div className="shrink-0 border-t border-line-soft px-3 py-3">
+        <div className="shrink-0 border-t border-line-soft px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           {userEmail && (
             <div
               className="mb-2 truncate px-1 text-[11px] font-medium text-ink-3"
@@ -338,7 +368,7 @@ export default function Sidebar({
             <Link
               href="/account/password"
               onClick={() => setOpen(false)}
-              className="flex flex-1 items-center gap-1.5 rounded-field px-2 py-1.5 text-xs font-medium text-ink-2 hover:bg-sunken hover:text-ink"
+              className="flex min-h-11 flex-1 items-center gap-1.5 rounded-field px-2 py-2 text-xs font-medium text-ink-2 hover:bg-sunken hover:text-ink"
             >
               <KeyRound className="h-3.5 w-3.5 shrink-0 text-ink-3" />
               {ru.sidebar.myAccount}
@@ -347,7 +377,7 @@ export default function Sidebar({
               type="button"
               onClick={() => hostAgnosticSignOut()}
               aria-label={ru.sidebar.signOut}
-              className="flex items-center gap-1.5 rounded-field px-2 py-1.5 text-xs font-medium text-ink-2 hover:bg-danger-soft hover:text-danger"
+              className="flex min-h-11 items-center gap-1.5 rounded-field px-2 py-2 text-xs font-medium text-ink-2 hover:bg-danger-soft hover:text-danger"
             >
               <LogOut className="h-3.5 w-3.5 shrink-0" />
               {ru.sidebar.signOut}
@@ -355,6 +385,33 @@ export default function Sidebar({
           </div>
         </div>
       </aside>
+
+      <nav
+        aria-label={lang === "ru" ? "Основная навигация" : "Main navigation"}
+        className="fixed inset-x-0 bottom-0 z-20 flex border-t border-line bg-surface/95 px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden"
+      >
+        {mobileLinks.map((link) => (
+          <MobileNavItem
+            key={link.href}
+            {...link}
+            label={t(lang, link.label)}
+            tenantSlug={tenantSlug}
+            accent={accent}
+            pathname={pathname}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label={lang === "ru" ? "Открыть меню" : "Open menu"}
+          className={`flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-field px-1 text-[10px] font-medium transition-colors ${
+            open ? "bg-sunken text-ink" : "text-ink-3 hover:bg-sunken hover:text-ink"
+          }`}
+        >
+          <Menu className="h-5 w-5" />
+          <span>{lang === "ru" ? "Меню" : "Menu"}</span>
+        </button>
+      </nav>
     </>
   );
 }
