@@ -192,16 +192,30 @@ export async function loginWithPlaywright(opts: TarsLoginOptions): Promise<TarsC
     await page.locator(`input[name="sfaChoice"][value="${radioValue}"]`).check();
     await page.locator('button:has-text("Send OTP")').first().click();
 
-    const otp = await opts.getOtp();
     const otpInput = page
-      .locator('input[type="text"]:visible, input[name*="otp" i], input[id*="otp" i]')
+      .locator('input#passcode:visible, input[name="passcode"]:visible, input[placeholder*="OTP" i]:visible')
       .first();
+    try {
+      await otpInput.waitFor({ state: "visible", timeout: 30_000 });
+    } catch {
+      const inputs = await page.locator("input").evaluateAll((nodes) =>
+        nodes.map((node) => ({
+          type: node.getAttribute("type"),
+          name: node.getAttribute("name"),
+          id: node.getAttribute("id"),
+          visible: Boolean((node as HTMLElement).offsetParent),
+        })),
+      );
+      throw new Error(`TARS login: OTP input not found at ${page.url()}; inputs ${JSON.stringify(inputs)}`);
+    }
+    const otp = await opts.getOtp();
     await otpInput.fill(otp);
-    await page
-      .locator('button[type="submit"]:visible, button:has-text("Verify"), button:has-text("Submit"), input[type="submit"]:visible')
-      .first()
-      .click();
-    await page.waitForTimeout(8000);
+    await page.locator('button#btn_mfa_login:visible, button:has-text("Verify"):visible').first().click();
+    await page.locator("#passcode").waitFor({ state: "hidden", timeout: 30_000 }).catch(() => {});
+    if (await page.locator("#passcode:visible").count()) {
+      const text = await page.locator("body").innerText();
+      throw new Error(`TARS login: OTP was not accepted: ${text.slice(0, 500)}`);
+    }
 
     // Consent page, if shown.
     for (let i = 0; i < 3 && !page.url().includes("tars.rta.ae"); i++) {

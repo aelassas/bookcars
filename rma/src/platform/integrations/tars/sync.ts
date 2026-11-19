@@ -2,10 +2,9 @@
 // vehicle / customer / rental tables and upserts them.
 //
 // Identity rules (mirroring the probe data, verified 2026-10-23):
-//   vehicle  — match by normalized plate FIRST, then VIN. A UAE plate can be
-//              reassigned to another car, so plate rows win; the VIN
-//              (vehicle.vin, also external_source="tars" / external_id=VIN on
-//              TARS-born rows) is the fallback that never lies.
+//   vehicle  — match by VIN FIRST, then normalized plate. Each existing CRM
+//              vehicle can be claimed only once per plan, so a reassigned UAE
+//              plate can never merge two physical cars into one rental history.
 //   customer — the contract driver with isCustomer=true (fallback: drivers[0]).
 //              Match by Emirates ID first, then phone tail-9.
 //   rental   — match by rental.tars_document_number ("55606-3350"), unique per
@@ -239,13 +238,13 @@ export function matchVehicle(m: MappedVehicle, existing: ExistingVehicleRow[]): 
   row: ExistingVehicleRow | null;
   matchedBy: "plate" | "vin" | null;
 } {
-  const plate = normalizePlate(m.plate);
-  const byPlate = existing.find((r) => normalizePlate(r.plate) === plate);
-  if (byPlate) return { row: byPlate, matchedBy: "plate" };
   const byVin = existing.find(
     (r) => r.vin === m.vin || (r.externalSource === "tars" && r.externalId === m.vin),
   );
   if (byVin) return { row: byVin, matchedBy: "vin" };
+  const plate = normalizePlate(m.plate);
+  const byPlate = existing.find((r) => normalizePlate(r.plate) === plate);
+  if (byPlate) return { row: byPlate, matchedBy: "plate" };
   return { row: null, matchedBy: null };
 }
 
@@ -283,20 +282,27 @@ export function buildPlan(
   const existingVehicles = existing?.vehicles ?? [];
   const existingCustomers = existing?.customers ?? [];
   const existingRentals = existing?.rentals ?? [];
+  const remainingVehicles = [...existingVehicles];
   const plan: SyncPlan = { vehicles: [], customers: [], rentals: [], skipped: [] };
   const action = (matched: unknown): PlanAction => (offline ? "unknown" : matched ? "update" : "insert");
 
-  // Vehicles — fleet endpoint.
   const plannedVehicles = new Map<string, MappedVehicle>(); // vin → mapped
+  const addVehicle = (mapped: MappedVehicle) => {
+    if (plannedVehicles.has(mapped.vin)) return;
+    const { row, matchedBy } = matchVehicle(mapped, remainingVehicles);
+    if (row) remainingVehicles.splice(remainingVehicles.findIndex((r) => r.id === row.id), 1);
+    plannedVehicles.set(mapped.vin, mapped);
+    plan.vehicles.push({ action: action(row), mapped, existingId: row?.id ?? null, matchedBy });
+  };
+
+  // Vehicles — fleet endpoint.
   for (const raw of tarsVehicles) {
     const mapped = mapTarsVehicle(raw);
     if (!mapped) {
       plan.skipped.push(`vehicle ${raw.did ?? raw.sourceKey ?? "?"}: no plate or VIN`);
       continue;
     }
-    plannedVehicles.set(mapped.vin, mapped);
-    const { row, matchedBy } = matchVehicle(mapped, existingVehicles);
-    plan.vehicles.push({ action: action(row), mapped, existingId: row?.id ?? null, matchedBy });
+    addVehicle(mapped);
   }
 
   // Rentals — contracts; their embedded vehicles/customers join the plan.
@@ -311,11 +317,7 @@ export function buildPlan(
     // Contract car not in the fleet list (sold/transferred since) — still sync it.
     if (!plannedVehicles.has(mapped.vehicleVin) && mapped.vehicleSnapshot) {
       const snap = mapTarsVehicle(mapped.vehicleSnapshot);
-      if (snap && !existingVehicles.some((r) => r.vin === snap.vin)) {
-        plannedVehicles.set(snap.vin, snap);
-        const { row, matchedBy } = matchVehicle(snap, existingVehicles);
-        plan.vehicles.push({ action: action(row), mapped: snap, existingId: row?.id ?? null, matchedBy });
-      }
+      if (snap) addVehicle(snap);
     }
 
     const custKey = mapped.customer.emiratesId ?? phoneTail9(mapped.customer.phone) ??

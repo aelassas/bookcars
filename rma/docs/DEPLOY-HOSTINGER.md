@@ -111,7 +111,9 @@ TARS_OTP_CHANNEL=email npx tsx scripts/tars-fetch-to-json.ts
 chmod 600 /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json
 ```
 
-The email radio is `input[name="sfaChoice"][value="mail"]`; mobile is preselected by TARS. The session code checks the email input directly and aborts if it cannot. Do not click labels or change to SMS. A valid `.tars-session.json` may reuse an existing session without another OTP; keep that file local and gitignored.
+The email radio is `input[name="sfaChoice"][value="mail"]`; mobile is preselected by TARS. The session code checks the email input directly and aborts if it cannot. Do not click labels or change to SMS. The OTP entry form uses `#passcode` and `#btn_mfa_login`. RTA's real email currently contains a **4-digit** code in the phrase `Authentication Code (OTP)`; the poller accepts 4–8 digits only in that phrase, after quoted-printable and HTML decoding. Never extract a bare six-digit number from the email's CSS. A valid `.tars-session.json` may reuse an existing session without another OTP; keep that file local and gitignored.
+
+Fleet and rental exports follow `meta.hits` across pages and deduplicate by TARS identity; `size: 500` is page size, not a 500-contract history limit. After the fetch, check unique contract counts and the earliest/latest rental dates before importing.
 
 Expected local outputs:
 
@@ -125,7 +127,7 @@ Review the fetch summary counts. If OTP times out, discard the code file and sta
 
 ```bash
 ssh rma-vps 'install -d -m 700 /root/rma-tars-import'
-rsync -a --chmod=600 \
+rsync -a \
   /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json \
   rma-vps:/root/rma-tars-import/
 ```

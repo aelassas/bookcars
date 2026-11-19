@@ -15,7 +15,7 @@ PASSWORD = os.environ.get("TARS_OTP_IMAP_PASSWORD", "")
 OTP_FILE = Path(os.environ.get("TARS_OTP_FILE", "/tmp/tars-otp.txt"))
 POLL_INTERVAL = 3
 MAX_WAIT_SECONDS = int(os.environ.get("TARS_OTP_TIMEOUT_SECONDS", "600"))
-OTP_RE = re.compile(r"(?<!\d)(\d{6})(?!\d)")
+OTP_RE = re.compile(r"Authentication\s+Code\s*\(OTP\).*?\bis\s+(\d{4,8})\b", re.IGNORECASE | re.DOTALL)
 
 
 def extract_code(message) -> str | None:
@@ -26,7 +26,7 @@ def extract_code(message) -> str | None:
     parts = [message] if not message.is_multipart() else message.walk()
     body = ""
     for part in parts:
-        if part.get_content_type() != "text/plain":
+        if part.get_content_type() not in {"text/plain", "text/html"}:
             continue
         try:
             body += part.get_content()
@@ -35,7 +35,8 @@ def extract_code(message) -> str | None:
             if payload:
                 body += payload.decode("utf-8", "ignore")
 
-    match = OTP_RE.search(message.get("Subject", "") + "\n" + body)
+    text = re.sub(r"<[^>]*>", " ", body)
+    match = OTP_RE.search(message.get("Subject", "") + "\n" + text)
     return match.group(1) if match else None
 
 

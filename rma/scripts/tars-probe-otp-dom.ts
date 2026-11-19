@@ -1,5 +1,5 @@
-// Probe: reach the TARS OTP screen and dump the radio/button DOM so we can
-// write the exact selector to pick EMAIL instead of the default (mobile).
+// Probe: select EMAIL and dump the OTP radio screen plus the actual OTP-entry
+// form, buttons, and visible input attributes. Never dumps field values.
 import { chromium } from "playwright";
 import { config } from "dotenv";
 config({ path: ".env.local" });
@@ -56,21 +56,38 @@ async function main() {
   );
   console.log("BUTTONS:", JSON.stringify(buttons, null, 2));
 
-  // Try to select the email option via a few strategies and report checked state.
-  const emailText = page.locator('text=/Send OTP to email/i').first();
-  console.log("emailText count:", await emailText.count());
-  await emailText.click().catch((e) => console.log("email click err:", String(e)));
-  await page.waitForTimeout(1500);
-  const after = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll('input[type="radio"]')).map((r) => ({
-      value: r.getAttribute("value"),
-      checked: (r as HTMLInputElement).checked,
-    }));
-  });
-  console.log("AFTER email click radios:", JSON.stringify(after));
-
-  await page.screenshot({ path: "/tmp/tars-otp-screen.png", fullPage: true });
-  console.log("screenshot saved /tmp/tars-otp-screen.png");
+  // Select email directly, then inspect the actual OTP-entry form.
+  await page.locator('input[name="sfaChoice"][value="mail"]').check();
+  await page.locator('button:has-text("Send OTP")').first().click();
+  await page.waitForTimeout(3000);
+  const form = await page.evaluate(() => ({
+    url: location.href,
+    body: (document.body.innerText ?? "").slice(0, 500),
+    forms: Array.from(document.querySelectorAll("form")).map((f) => ({
+      action: f.getAttribute("action"),
+      id: f.id,
+    })),
+    inputs: Array.from(document.querySelectorAll("input")).map((input) => ({
+      type: input.type,
+      name: input.name,
+      id: input.id,
+      placeholder: input.placeholder,
+      autocomplete: input.autocomplete,
+      visible: Boolean(input.offsetParent),
+    })),
+    buttons: Array.from(document.querySelectorAll("button, input[type=submit], input[type=button]")).map((button) => ({
+      tag: button.tagName,
+      type: button.getAttribute("type"),
+      name: button.getAttribute("name"),
+      id: button.id,
+      value: button.getAttribute("value"),
+      text: (button.textContent ?? "").trim().slice(0, 80),
+      visible: Boolean((button as HTMLElement).offsetParent),
+    })),
+  }));
+  console.log("OTP ENTRY:", JSON.stringify(form, null, 2));
+  await page.screenshot({ path: "/tmp/tars-otp-entry.png", fullPage: true });
+  console.log("screenshot saved /tmp/tars-otp-entry.png");
   await browser.close();
 }
 
