@@ -1,264 +1,154 @@
-# Deploy RMA CRM to Hostinger KVM2
+# RMA CRM production: Hostinger deploy + TARS import
 
-Target: Ruslan's Hostinger KVM2 server, reachable at `crm.rma.network`.
-Scope of this doc: everything up to and including Ruslan logging in and
-opening `/lines` to pair his WhatsApp handset. The Baileys observer is
-flagged where it slots in; it is **not built yet** and is required before
-`/lines` can actually accept a QR scan.
+## 1. Target — check this first
 
-## 0. Prerequisites
+- **Only production host:** `rma-vps` = `31.97.105.52` = `srv2077538.hstgr.cloud` (RMA's own Hostinger VDS).
+- **Never use `takevps` / `187.127.219.106` for RMA.** It belongs to TAKE Auto and is not an RMA deployment target, database, backup location, or dependency.
+- Public app: `https://crm.rma.network` (DNS points directly to `31.97.105.52`).
+- Do not provision Neon or move the database elsewhere. RMA production uses its own local PostgreSQL container.
 
-- Hostinger KVM2 with Ubuntu 24.04 LTS (or similar) and sudo access
-- A DNS record `crm.rma.network` pointing to the box's public IP
-- Ports 80 + 443 open; 3000 bound to loopback only (reverse-proxied)
-
-Install on the box:
+Guard every production session:
 
 ```bash
-# Node 20 LTS, Postgres 16, nginx, certbot, build toolchain
-sudo apt update
-sudo apt install -y curl build-essential nginx certbot python3-certbot-nginx postgresql-16
-
-# Node 20 via nodesource
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# pm2 process manager (global)
-sudo npm install -g pm2
-pm2 startup systemd        # run the command it prints to make pm2 survive reboots
+ssh rma-vps 'hostname'       # must print srv2077538
+dig +short A crm.rma.network # must print 31.97.105.52
 ```
 
-Confirm versions:
+## 2. Live topology
+
+- App source: `/opt/rma-crm/platform` (plain deployed copy, not a git checkout).
+- Process: systemd `rma-crm`; Next.js listens on port `3003`.
+- Reverse proxy and TLS: Caddy on the same VDS; `crm.rma.network` proxies to `127.0.0.1:3003`.
+- Database: Docker `rma-platform-db`, PostgreSQL database `platform`, loopback port `5434`.
+- OTP mailbox: Docker `rma-mail` on the same VDS.
+- WhatsApp: `wa@rma.service` and the existing `wa-*` timers. A normal app deploy does not restart or reconfigure them.
+- Backups: `/root/rma-backups/`.
+
+Runtime secrets live in the live systemd unit and server-only files. Do not print them, copy them into git, or overwrite the live unit with a repository template. `deploy/rma-crm.service` and `deploy/Caddyfile.rma` describe the target topology, not a command to replace live configuration wholesale.
+
+## 3. Deploy a committed branch
+
+Run from the repository root on the operator Mac. Deploy `HEAD`, not untracked files or the whole working directory. Commit and push before deploying; never amend or force-push.
 
 ```bash
-node -v     # expect v20.x
-npm -v
-psql --version
+cd /Users/ceo/orca/R-CRM
+ssh rma-vps 'hostname'  # srv2077538; stop if different
+
+tmp="$(mktemp -d)"
+git archive --format=tar HEAD:rma | tar -xf - -C "$tmp"
+
+# Review changed/deleted paths first. Excluded server files are preserved.
+rsync -ain --delete \
+  --exclude='.env' --exclude='.env.*' \
+  --exclude='node_modules' --exclude='.next' \
+  --exclude='.tars-session.json' --exclude='__pycache__' \
+  "$tmp"/ rma-vps:/opt/rma-crm/platform/
+
+# Repeat without -n only after reviewing the dry-run.
+rsync -a --delete \
+  --exclude='.env' --exclude='.env.*' \
+  --exclude='node_modules' --exclude='.next' \
+  --exclude='.tars-session.json' --exclude='__pycache__' \
+  "$tmp"/ rma-vps:/opt/rma-crm/platform/
+rm -rf "$tmp"
 ```
 
-## 1. Database bring-up
+Back up immediately before migrations:
 
 ```bash
-# As the postgres superuser
-sudo -u postgres psql <<'SQL'
-CREATE USER rma_owner WITH PASSWORD 'REPLACE_ME_STRONG_PW';
-CREATE DATABASE rma_crm OWNER rma_owner;
-GRANT ALL PRIVILEGES ON DATABASE rma_crm TO rma_owner;
-SQL
+ssh rma-vps 'bash -o pipefail -c '\''set -e; file=/root/rma-backups/pre-deploy-$(date +%Y%m%d-%H%M%S).sql.gz; docker exec rma-platform-db pg_dump -U take -d platform | gzip > "$file"; gzip -t "$file"; stat -c "%n %s bytes" "$file"'\'''
 ```
 
-The project enforces Postgres RLS. Two things to know:
-
-- **The owner role is BYPASSRLS by default.** That is fine for the migration
-  runner (DDL only) but the application must connect through a non-bypass
-  role so `FORCE ROW LEVEL SECURITY` can do its job. `scripts/create-app-role.ts`
-  creates that role; it is called from `npm run db:app-role`.
-- The repo's migration runner is not drizzle-kit. It is
-  `scripts/migrate-sql.ts`, invoked as `npm run migrate`, which also applies
-  `drizzle/tighten-rls.sql` (`FORCE RLS`) after every forward step.
-
-## 2. Clone and build the app
+Install the locked dependencies, migrate with the live service environment, build, and restart:
 
 ```bash
-# As the deploy user (not root). Pick a home dir for the app.
-cd ~
-git clone https://github.com/PrimeTurkmen/R-CRM.git
-cd R-CRM
-git checkout fix/backend-test-esm-import
-cd rma
-npm ci
+ssh rma-vps 'cd /opt/rma-crm/platform && npm ci'
+ssh rma-vps 'cd /opt/rma-crm/platform && python3 scripts/with-rma-service-env.py npm run migrate:status'
+ssh rma-vps 'cd /opt/rma-crm/platform && python3 scripts/with-rma-service-env.py npm run migrate'
+ssh rma-vps 'cd /opt/rma-crm/platform && python3 scripts/with-rma-service-env.py npm run build'
+ssh rma-vps 'systemctl restart rma-crm && systemctl is-active rma-crm'
 ```
 
-Now populate `rma/.env.local`. The file is gitignored on purpose — nothing
-below should ever be checked in. Minimum set:
+`with-rma-service-env.py` reads the live `rma-crm` environment without printing secrets. This is required because runtime variables are in systemd, not in the server's `.env.local`; a bare `npm run migrate` is not a valid substitute on this VDS.
 
-```ini
-# — Base
-AUTH_URL=https://crm.rma.network
-AUTH_SECRET=                       # openssl rand -base64 32
-PORT=3000
-
-# — Postgres
-DATABASE_URL=postgresql://rma_owner:REPLACE_ME_STRONG_PW@127.0.0.1:5432/rma_crm?sslmode=disable
-DATABASE_URL_DIRECT=postgresql://rma_owner:REPLACE_ME_STRONG_PW@127.0.0.1:5432/rma_crm?sslmode=disable
-DB_APP_ROLE=app_runtime            # created in step 3
-
-# — Platform admin (grants /lines + /admin without the LINES_ADMIN_NAMES fallback)
-PLATFORM_ADMIN_EMAILS=ruslan@rma.network,marat@rma.network
-
-# — WhatsApp observer
-WA_OBSERVER_DIR=/home/<deploy-user>/wa-observer
-
-# — Optional AI (Kimberly / drafting)
-# ANTHROPIC_API_KEY=sk-ant-…
-
-# — TARS / Salik (RTA business portal; different from the demo creds)
-TARS_USERNAME=rmacarrental
-TARS_PASSWORD=                     # provided separately by Ruslan
-TARS_ORG_DID=did:rta:51646245
-TARS_BASE_URL=https://tars.rta.ae
-SALIK_USERNAME=rmacarrental
-SALIK_PASSWORD=
-```
-
-Build:
+Smoke-test:
 
 ```bash
-npm run build
+curl -sS -o /dev/null -w '%{http_code} %{remote_ip} %{redirect_url}\n' https://crm.rma.network/
+# Expected: 307 31.97.105.52 https://crm.rma.network/login
+curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' https://crm.rma.network/rma/fleet
+# Expected: 307 to /login/rma when signed out
+ssh rma-vps 'systemctl is-active rma-crm; docker ps --format "{{.Names}} {{.Status}}"'
 ```
 
-## 3. First-time schema + role + seed
+## 4. TARS: one read-only fetch, then one reviewed import
+
+TARS access is read-only apart from the SSO login itself. Do not add POST/PUT/DELETE calls to TARS business APIs. The only CRM writes are made by `tars-sync.ts --commit` after reviewing a dry-run.
+
+### A. Start a fresh email-OTP poller on the operator Mac
+
+Use the mailbox credential store. `TARS_OTP_IMAP_PASSWORD` must be supplied in the environment; never commit it or paste it into logs. Host and user default to `mail.rma.network` and `ruslan@rma.network`.
 
 ```bash
-# 1. If the DB already has the schema from an earlier manual load, baseline
-#    the journal FIRST so the runner does not try to replay 0000. Fresh DBs
-#    skip this step.
-npm run migrate:baseline        # only if applicable
-
-# 2. Apply all pending migrations + FORCE RLS
-npm run migrate
-
-# 3. Status check (expect all applied, none pending)
-npm run migrate:status
-
-# 4. Create the non-bypass app role (DB_APP_ROLE above)
-npm run db:app-role
-
-# 5. Promote ruslan@rma.network / marat@rma.network to platform_admin
-npm run bootstrap:admin
-
-# 6. Seed the RMA tenant + staff users + 20-car fleet + narrative anchors
-npx tsx scripts/setup-rma-tenant.ts
+cd /Users/ceo/orca/R-CRM/rma
+export TARS_OTP_IMAP_PASSWORD='<from the RMA mailbox credential store>'
+python3 scripts/tars-otp-poller.py
 ```
 
-Login credentials from `setup-rma-tenant.ts`:
+The poller deletes any stale `/tmp/tars-otp.txt`, accepts only new RTA/TARS mail, writes the new code with mode `0600`, and never prints the code. Keep it running in terminal A.
 
-| User | Email | Password |
-|---|---|---|
-| Ruslan (owner) | `ruslan@rma.network` | `Welcome1!` |
-| Marat (son / manager) | `marat@rma.network` | `Welcome1!` |
-| Lilia (wife / finance) | `lilia@rma.network` | `Welcome1!` |
-
-`Welcome1!` is the dev-seed default. Migration `0038_must_change_password`
-exists to force a rotation on first login. Flip the flag before handing the
-box to Ruslan:
-
-```sql
-UPDATE "user"
-SET must_change_password = true
-WHERE email IN ('ruslan@rma.network','marat@rma.network','lilia@rma.network');
-```
-
-## 4. Reverse proxy + SSL
-
-The project ships `rma/server.cjs` as a custom entry that trusts the
-inbound `Host` header blindly and reflects it as `x-forwarded-host`.
-Combined with Auth.js `trustHost: true`, that is a **host-header
-injection / auth-link-poisoning primitive**: an attacker who can send a
-raw request with `Host: evil.com` can bake `evil.com` into magic-link
-emails sent out to real users.
-
-Mitigation on this box:
-
-1. **Set `AUTH_URL=https://crm.rma.network` in `.env.local`** (done above —
-   this takes precedence over anything derived from the Host header).
-2. **Reject requests whose Host is not the real hostname at nginx**, so a
-   crafted Host never reaches Node:
-
-```nginx
-# /etc/nginx/sites-available/crm.rma.network
-server {
-    listen 80;
-    server_name _;
-    return 444;                        # anything that isn't our hostname: drop
-}
-
-server {
-    listen 80;
-    server_name crm.rma.network;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name crm.rma.network;
-
-    ssl_certificate     /etc/letsencrypt/live/crm.rma.network/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/crm.rma.network/privkey.pem;
-
-    client_max_body_size 25m;          # WhatsApp media uploads
-
-    location / {
-        proxy_pass         http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header   Host              $host;
-        proxy_set_header   X-Real-IP         $remote_addr;
-        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Proto $scheme;
-        proxy_set_header   X-Forwarded-Host  $host;
-        proxy_read_timeout 300s;
-    }
-}
-```
+### B. Fetch TARS once in terminal B
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/crm.rma.network /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d crm.rma.network     # issues + wires the cert
+cd /Users/ceo/orca/R-CRM/rma
+TARS_OTP_CHANNEL=email npx tsx scripts/tars-fetch-to-json.ts
+chmod 600 /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json
 ```
 
-## 5. Start the app under pm2
+The email radio is `input[name="sfaChoice"][value="mail"]`; mobile is preselected by TARS. The session code checks the email input directly and aborts if it cannot. Do not click labels or change to SMS. A valid `.tars-session.json` may reuse an existing session without another OTP; keep that file local and gitignored.
+
+Expected local outputs:
+
+- `/tmp/tars-agency.json`
+- `/tmp/tars-vehicles.json`
+- `/tmp/tars-rentals.json`
+
+Review the fetch summary counts. If OTP times out, discard the code file and start both sides again; never guess or reuse an old code.
+
+### C. Copy only the JSON exports to the RMA VDS
 
 ```bash
-cd ~/R-CRM/rma
-pm2 start "node server.cjs" --name rma-crm --cwd $(pwd)
-pm2 save                                # persist across reboot (startup set in step 0)
-pm2 logs rma-crm --lines 50             # verify it comes up clean
+ssh rma-vps 'install -d -m 700 /root/rma-tars-import'
+rsync -a --chmod=600 \
+  /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json \
+  rma-vps:/root/rma-tars-import/
 ```
 
-The RLS boot-guard runs on startup: if any tenant table is missing its
-RLS triad the process exits with a loud error — treat that as a real
-bug and fix the migration, do not patch around it.
+### D. Dry-run against the real RMA database
 
-## 6. WhatsApp observer (NOT YET BUILT)
-
-The `/lines` page already knows how to display Ruslan's `rma-main` slug,
-poll `qr-rma-main.txt` / `pair-code-rma-main.txt` / `status-rma-main.json`
-from `$WA_OBSERVER_DIR`, and run `relink-web.sh` to re-start a worker.
-The **observer process that writes those files is not yet in this repo**.
-It needs to be built from Baileys/Neonize/Savos references and will live
-alongside the Next app on this same box.
-
-When the observer lands:
+`--from-samples` is mandatory here: without it the script performs another live TARS login instead of reading the exported files.
 
 ```bash
-mkdir -p $WA_OBSERVER_DIR
-cd $WA_OBSERVER_DIR
-# install observer package + its deps (TBD once scaffolded)
-pm2 start wa-line-rma-main.js --name wa-rma-main --restart-delay 300000
-pm2 save
+ssh rma-vps 'cd /opt/rma-crm/platform && python3 scripts/with-rma-service-env.py npx tsx scripts/tars-sync.ts --from-samples --vehicles-file=/root/rma-tars-import/tars-vehicles.json --rentals-file=/root/rma-tars-import/tars-rentals.json'
 ```
 
-Ruslan then opens https://crm.rma.network/login, signs in as
-`ruslan@rma.network`, navigates to `/lines`, clicks Pair → QR, scans with
-WhatsApp on the RMA business handset (`+971 58 196 5238`), and the status flips to
-`online` once the session is written.
+Review vehicle/customer/rental actions and every skipped row. Resolve unexpected replacements or duplicates before committing. A dry-run writes nothing.
 
-## 7. Smoke tests
+### E. Commit the reviewed plan and verify
 
-- `https://crm.rma.network/` → redirects to `/login`
-- Login as `ruslan@rma.network` → lands on the RMA workspace
-- `https://crm.rma.network/lines` → shows `rma-main` with badge
-  `no_session` (expected until the observer is running)
-- `https://crm.rma.network/rma/fleet` → shows the 20 seeded vehicles
-- `https://crm.rma.network/rma/messages` → shows the seeded inbox
-- `pm2 status` → `rma-crm` online, uptime climbing
-- `psql $DATABASE_URL -c "SELECT count(*) FROM tenant;"` → 1 row (`rma`)
+```bash
+ssh rma-vps 'cd /opt/rma-crm/platform && python3 scripts/with-rma-service-env.py npx tsx scripts/tars-sync.ts --from-samples --commit --vehicles-file=/root/rma-tars-import/tars-vehicles.json --rentals-file=/root/rma-tars-import/tars-rentals.json'
+```
 
-## 8. Known gaps parked for later
+Record inserted/updated/skipped counts, then verify the RMA UI (`/rma/fleet` and rental profiles) using real application calls. Re-running the same dry-run should show updates/no-ops rather than duplicate inserts.
 
-- **TARS portal needs its own user** per owner note 2026-10-30. The
-  current `.env.local` TARS creds are the demo set; swap when Ruslan
-  provisions a dedicated TARS user for the automation.
-- **WhatsApp observer** — see §6; blocks actual pairing. The dedicated RMA
-  business number is `971581965238`; the `rma-main` slug stays unchanged.
+After verification, remove the OTP file and temporary JSON exports; keep the database backup:
+
+```bash
+rm -f /tmp/tars-otp.txt /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json
+ssh rma-vps 'rm -f /root/rma-tars-import/tars-agency.json /root/rma-tars-import/tars-vehicles.json /root/rma-tars-import/tars-rentals.json'
+```
+
+## 5. Handoff rule
+
+Report the deployed commit, migration range, smoke-test results, TARS counts, and backup path. Clearly separate verified facts from anything not run. Do not claim success from a build alone, and do not silently deploy or import to any host other than `rma-vps`.

@@ -1,3 +1,7 @@
+# Production hosting comes first
+
+- **RMA CRM deploys only to its own Hostinger VDS: `rma-vps` (`31.97.105.52`). Never use `takevps` / `187.127.219.106` for RMA deployments, databases, backups, or runtime dependencies.** The public URL is `https://crm.rma.network`; see `rma/AGENTS.md` before any work.
+
 # Project identity
 
 - MyCRM is the underlying CRM built by the owner.

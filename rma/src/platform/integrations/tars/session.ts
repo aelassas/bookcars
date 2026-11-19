@@ -189,10 +189,7 @@ export async function loginWithPlaywright(opts: TarsLoginOptions): Promise<TarsC
     // pre-selected) and value="mail" (email). Clicking the label text does NOT
     // toggle the radio (probed 2026-11-19), so check the input directly.
     const radioValue = channel === "email" ? "mail" : "mobile";
-    await page
-      .locator(`input[name="sfaChoice"][value="${radioValue}"]`)
-      .check()
-      .catch(() => {});
+    await page.locator(`input[name="sfaChoice"][value="${radioValue}"]`).check();
     await page.locator('button:has-text("Send OTP")').first().click();
 
     const otp = await opts.getOtp();

@@ -123,10 +123,12 @@ async function main() {
   // reachable from a workstation); REQUIRED for --commit.
   let tenantId: string | null = null;
   let existing: ExistingState | null = null;
+  let closeDb: (() => Promise<void>) | undefined;
   const hasDb = Boolean(process.env.DATABASE_URL);
   if (hasDb) {
     try {
       const { db, pool } = await import("../src/platform/db/client");
+      closeDb = () => pool.end();
       const { tenant } = await import("../src/platform/db/schema");
       const { eq } = await import("drizzle-orm");
       const t = await db
@@ -142,7 +144,6 @@ async function main() {
         `[tars-sync] tenant ${tenantId} · existing: ${existing.vehicles.length} vehicles, ` +
           `${existing.customers.length} customers, ${existing.rentals.length} TARS rentals`,
       );
-      await pool.end();
     } catch (e) {
       if (COMMIT) throw e;
       console.log(
@@ -170,6 +171,7 @@ async function main() {
   } else {
     console.log(`\n[tars-sync] dry-run — nothing written. Re-run with --commit to apply.`);
   }
+  await closeDb?.();
 }
 
 main().catch((e) => {

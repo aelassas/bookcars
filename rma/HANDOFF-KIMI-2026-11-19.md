@@ -1,5 +1,7 @@
 # Handoff → Kimi (2026-11-19)
 
+> **HOSTING CORRECTION — READ FIRST:** RMA production is only `rma-vps` (`31.97.105.52`, Hostinger), with public URL `https://crm.rma.network`. The earlier deployment to `takevps` (`187.127.219.106`) described below was made to the wrong server; do not use it or repeat those steps. Follow `rma/AGENTS.md` and `rma/docs/DEPLOY-HOSTINGER.md`.
+
 Scope: RMA CRM. Branch `feat/rma-meeting-20261117`. This session stabilized production and got TARS one step from completing.
 
 ## What changed this session (committed)

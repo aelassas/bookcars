@@ -1,3 +1,10 @@
+# RMA production comes first
+
+- **RMA has its own Hostinger VDS. Always deploy to `rma-vps` (`31.97.105.52`, `srv2077538.hstgr.cloud`).**
+- **Never deploy RMA to `takevps` / `187.127.219.106`. That is the TAKE Auto server, not an RMA host, database, backup target, or runtime dependency.**
+- Public URL: `https://crm.rma.network` → this VDS. App: `/opt/rma-crm/platform`, systemd `rma-crm`, Next.js port `3003`, Caddy reverse proxy. PostgreSQL and OTP mail are local Docker containers `rma-platform-db` (loopback port `5434`) and `rma-mail`.
+- Before any production action, verify `ssh rma-vps 'hostname'` returns `srv2077538`. Keep `.env*` and server credentials out of git and deploy logs.
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 

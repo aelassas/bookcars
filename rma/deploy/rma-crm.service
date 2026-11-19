@@ -11,7 +11,7 @@ Environment=NODE_ENV=production
 Environment=DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform
 Environment=DATABASE_URL_DIRECT=postgresql://take:take_dev@127.0.0.1:5434/platform
 Environment=AUTH_SECRET=RMA_DEMO_ONLY_CHANGE_BEFORE_PRODUCTION
-Environment=AUTH_URL=http://187.127.219.106:8087
+Environment=AUTH_URL=https://crm.rma.network
 Environment="NEXT_PUBLIC_PLATFORM_NAME=RMA CRM"
 Environment=FLEET_HOME_SLUG=rma
 Environment=RENTAL_DISTRIBUTOR=off

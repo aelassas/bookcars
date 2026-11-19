@@ -1,5 +1,7 @@
 # Handoff — next agent (2026-11-19)
 
+> **Superseded operational notes.** RMA deploys only to its own Hostinger VDS, `rma-vps` (`31.97.105.52`); never use TAKE infrastructure or provision Neon for RMA production. Use `HANDOFF-KIMI-2026-11-19.md` and `docs/DEPLOY-HOSTINGER.md` for the current path. The historical TARS notes below explain the OTP investigation, not the current hosting target.
+
 Branch: `feat/rma-meeting-20261117`
 PR: https://github.com/PrimeTurkmen/R-CRM/pull/5
 
