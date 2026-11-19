@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
-import { deleteVehicle, updateVehicle } from "@/modules/fleet/actions";
+import { deleteVehicle, markVehicleAsSold, updateVehicle } from "@/modules/fleet/actions";
 import { EDITABLE_VEHICLE_STATUSES } from "@/modules/fleet/vehicle-options";
 import { Button, Input, Label, Select } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
@@ -71,6 +71,7 @@ export function EditVehicleModal({
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [canMarkSold, setCanMarkSold] = useState(false);
 
   // Only hand-managed statuses are selectable; a rental-derived status means an
   // active rental owns it, so the select locks instead of offering fake choices.
@@ -81,14 +82,30 @@ export function EditVehicleModal({
     if (confirmation !== "DELETE") return;
     setSubmitting(true);
     setError(null);
+    setCanMarkSold(false);
     try {
       const result = await deleteVehicle(tenantId, vehicle.id, confirmation);
       if (result.error) {
         setError(result.error);
+        setCanMarkSold(Boolean(result.canMarkSold));
         setSubmitting(false);
         return;
       }
       window.location.href = `/${window.location.pathname.split("/")[1]}/fleet`;
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));
+      setSubmitting(false);
+    }
+  }
+
+  async function handleMarkSold() {
+    setSubmitting(true);
+    setError(null);
+    try {
+      await markVehicleAsSold(tenantId, vehicle.id);
+      setCanMarkSold(false);
+      router.refresh();
+      onClose();
     } catch (err) {
       setError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));
       setSubmitting(false);
@@ -129,7 +146,24 @@ export function EditVehicleModal({
 
   return (
     <Modal title={t(lang, "vehicle.editTitle")} onClose={onClose} busy={submitting} protectChanges width="lg">
-      {error && <ModalError>{error}</ModalError>}
+      {error && (
+        <ModalError>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            {canMarkSold && (
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={handleMarkSold}
+                disabled={submitting}
+              >
+                {submitting ? t(lang, "vehicle.markingSold") : t(lang, "vehicle.markSold")}
+              </Button>
+            )}
+          </div>
+        </ModalError>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">

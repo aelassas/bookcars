@@ -94,6 +94,8 @@ export const DICT: Record<string, Entry> = {
   "vehicle.dailyRate": { ru: "Ставка (AED/день)", en: "Daily rate (AED)" },
   "vehicle.weeklyRate": { ru: "Ставка (AED/неделя)", en: "Weekly rate (AED)" },
   "vehicle.monthlyRate": { ru: "Ставка (AED/месяц)", en: "Monthly rate (AED)" },
+  "vehicle.markSold": { ru: "Отметить проданным", en: "Mark as Sold" },
+  "vehicle.markingSold": { ru: "Отмечаем…", en: "Marking…" },
   "vehicle.odometer": { ru: "Пробег, км", en: "Odometer, km" },
   "vehicle.location": { ru: "Локация", en: "Location" },
   "vehicle.nextServiceDate": { ru: "Следующий сервис — дата", en: "Next service date" },

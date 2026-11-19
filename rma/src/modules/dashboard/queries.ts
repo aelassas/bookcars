@@ -1,6 +1,6 @@
 "use server";
 
-import { lead, deal, message, vehicle, rental, payment, customer, lease, leasePayment, leaseInstallment } from "@/platform/db/schema";
+import { lead, deal, message, vehicle, rental, payment, customer, lease, leasePayment, leaseInstallment, rentalCharge, engineBlock, document } from "@/platform/db/schema";
 import { boardItem } from "@/platform/db/board-schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { getUserScope, getActiveCompany } from "@/platform/auth/scope";
@@ -194,6 +194,64 @@ export async function getDashboardStats(tenantId: string) {
 
     const todayEvents = Number(todayLeadCount.count) + Number(todayBoardCount.count);
 
+    // ── Rental-operations gates (meeting 2026-11-17) ───────────────────────
+    //
+    // These counts surface the 9 rental-operations items on the main dashboard
+    // so the manager does not have to click into /operations, /charges and the
+    // customer pages just to see what needs attention.
+
+    // Item #1: customer documents OCR'd and waiting for staff to review+apply.
+    const [docsAwaitingReview] = await tx
+      .select({ count: sql<number>`count(distinct ${document.entityId})` })
+      .from(document)
+      .where(and(eq(document.entityType, "customer"), eq(document.recognitionStatus, "review_required")));
+
+    // Item #7: 48h reminder sent and the customer has not answered yet.
+    const [returnsAwaitingReply] = await tx
+      .select({ count: sql<number>`count(*)` })
+      .from(rental)
+      .where(and(inArray(rental.status, ["active", "reserved"]), eq(rental.extensionStatus, "awaiting_response")));
+
+    // Item #7: customer asked to extend — manager must confirm new dates.
+    const [extensionsPendingConfirm] = await tx
+      .select({ count: sql<number>`count(*)` })
+      .from(rental)
+      .where(and(inArray(rental.status, ["active", "reserved"]), eq(rental.extensionStatus, "wants_extension")));
+
+    // Item #6: vehicles that have crossed the warn or limit threshold since
+    // their last service (serviceLimitIntervalKm, defaults 10000; warn at
+    // oilChangeIntervalKm, defaults 8000). Sold cars are out of scope.
+    const [vehiclesServiceDueSoon] = await tx
+      .select({ count: sql<number>`count(*)` })
+      .from(vehicle)
+      .where(and(
+        sql`${vehicle.status} <> 'sold'`,
+        sql`${vehicle.lastServiceOdometer} is not null`,
+        sql`${vehicle.odometer} - coalesce(${vehicle.lastServiceOdometer}, 0) >= ${vehicle.oilChangeIntervalKm}`,
+        sql`${vehicle.odometer} - coalesce(${vehicle.lastServiceOdometer}, 0) < ${vehicle.serviceLimitIntervalKm}`,
+      ));
+    const [vehiclesServiceOverdue] = await tx
+      .select({ count: sql<number>`count(*)` })
+      .from(vehicle)
+      .where(and(
+        sql`${vehicle.status} <> 'sold'`,
+        sql`${vehicle.lastServiceOdometer} is not null`,
+        sql`${vehicle.odometer} - coalesce(${vehicle.lastServiceOdometer}, 0) >= ${vehicle.serviceLimitIntervalKm}`,
+      ));
+
+    // Items #4, #5, #9: outstanding rental charges (fines, Salik, Parkin,
+    // Parkonic) across all active rentals.
+    const [outstandingCharges] = await tx
+      .select({ count: sql<number>`count(*)`, value: sql<number>`coalesce(sum(${rentalCharge.amount}), 0)::float8` })
+      .from(rentalCharge)
+      .where(sql`${rentalCharge.status} <> 'paid'`);
+
+    // Item #4: engine blocks currently in force (requested or active).
+    const [activeEngineBlocks] = await tx
+      .select({ count: sql<number>`count(*)` })
+      .from(engineBlock)
+      .where(sql`${engineBlock.status} in ('requested', 'active')`);
+
     // ── List data ──────────────────────────────────────────────────────────
 
     const recentLeasePayments = await tx
@@ -290,6 +348,14 @@ export async function getDashboardStats(tenantId: string) {
       bookingsPendingConfirm: Number(bookingsPendingConfirm.count),
       dealsWithoutOwner: Number(dealsWithoutOwner.count),
       todayEvents,
+      docsAwaitingReview: Number(docsAwaitingReview.count),
+      returnsAwaitingReply: Number(returnsAwaitingReply.count),
+      extensionsPendingConfirm: Number(extensionsPendingConfirm.count),
+      vehiclesServiceDueSoon: Number(vehiclesServiceDueSoon.count),
+      vehiclesServiceOverdue: Number(vehiclesServiceOverdue.count),
+      outstandingChargesCount: Number(outstandingCharges.count),
+      outstandingChargesValue: Number(outstandingCharges.value ?? 0),
+      activeEngineBlocks: Number(activeEngineBlocks.count),
       recentLeasePayments,
       upcomingReturns,
       recentRentals,

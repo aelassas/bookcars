@@ -24,6 +24,11 @@ import {
   UserX,
   Activity,
   ShieldAlert,
+  FileSearch,
+  Wrench,
+  Receipt,
+  PowerOff,
+  MailQuestion,
 } from "lucide-react";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 
@@ -276,6 +281,86 @@ export default function OverviewDashboard({
             count={stats.fleet.overdue}
             label="overdue rentals"
             sub="Past return date — collect now"
+            tone="danger"
+          />
+        </div>
+      </Card>
+
+      {/* ── Rental operations (meeting 2026-11-17) ───────────────────────────
+          Surfaces the nine rental-ops items (customer docs, mileage, fines,
+          Salik, service, extension, blocks, parking) so the manager sees them
+          without drilling into /operations and /charges. */}
+      <Card className="overflow-hidden">
+        <CardHeader
+          title="Rental operations"
+          icon={<Activity className="h-4 w-4 text-brand-600" />}
+          action={
+            <Link href={`/${tenantSlug}/operations`} className="text-xs font-medium text-brand-700 hover:underline">
+              Open per-car board →
+            </Link>
+          }
+        />
+        <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* #1 — docs OCR'd and waiting for staff review. */}
+          <GateCard
+            href={`/${tenantSlug}/customers`}
+            icon={<FileSearch className="h-5 w-5" />}
+            count={stats.docsAwaitingReview}
+            label="customer docs awaiting review"
+            sub="OCR done — staff must verify before saving"
+            tone="brand"
+          />
+          {/* #7 — 48h reminder sent, no reply yet. */}
+          <GateCard
+            href={`/${tenantSlug}/operations`}
+            icon={<MailQuestion className="h-5 w-5" />}
+            count={stats.returnsAwaitingReply}
+            label="returns awaiting a reply"
+            sub="Reminder sent — customer hasn't answered"
+            tone="info"
+          />
+          {/* #7 — customer wants to extend; manager confirms new dates. */}
+          <GateCard
+            href={`/${tenantSlug}/operations`}
+            icon={<Handshake className="h-5 w-5" />}
+            count={stats.extensionsPendingConfirm}
+            label="extensions to confirm"
+            sub="Customer asked to extend — manager approves"
+            tone="warn"
+          />
+          {/* #6 — service due (soft warning) and overdue (hard limit). */}
+          <GateCard
+            href={`/${tenantSlug}/operations`}
+            icon={<Wrench className="h-5 w-5" />}
+            count={stats.vehiclesServiceDueSoon + stats.vehiclesServiceOverdue}
+            label="vehicles at service limit"
+            sub={
+              stats.vehiclesServiceOverdue > 0
+                ? `${formatNumber(stats.vehiclesServiceOverdue)} past 10,000 km limit`
+                : "8,000 km+ since last service"
+            }
+            tone={stats.vehiclesServiceOverdue > 0 ? "danger" : "warn"}
+          />
+          {/* #4 + #5 + #9 — outstanding fines, Salik, Parkin, Parkonic. */}
+          <GateCard
+            href={`/${tenantSlug}/charges`}
+            icon={<Receipt className="h-5 w-5" />}
+            count={stats.outstandingChargesCount}
+            label="unpaid fines, Salik, parking"
+            sub={
+              stats.outstandingChargesCount > 0
+                ? `${formatCurrency(stats.outstandingChargesValue)} outstanding`
+                : "No outstanding charges"
+            }
+            tone={stats.outstandingChargesCount > 0 ? "warn" : "info"}
+          />
+          {/* #4 — engine blocks currently in force. */}
+          <GateCard
+            href={`/${tenantSlug}/charges`}
+            icon={<PowerOff className="h-5 w-5" />}
+            count={stats.activeEngineBlocks}
+            label="active engine blocks"
+            sub="Unblock after payment confirmed"
             tone="danger"
           />
         </div>

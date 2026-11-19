@@ -119,13 +119,13 @@ export async function updateVehicle(
   }
 }
 
-export async function deleteVehicle(tenantId: string, vehicleId: string, confirmation: string): Promise<{ error: string | null }> {
+export async function deleteVehicle(tenantId: string, vehicleId: string, confirmation: string): Promise<{ error: string | null; canMarkSold?: boolean }> {
   await canManageFleetForTenant(tenantId);
   await assertNotPreviewMode(tenantId);
   const actorId = await requireAuth();
   if (confirmation !== "DELETE") return { error: "Type DELETE to confirm" };
 
-  const result: { error: string | null; slug?: string } = await withDrizzleTenant(tenantId, async (tx) => {
+  const result: { error: string | null; canMarkSold?: boolean; slug?: string } = await withDrizzleTenant(tenantId, async (tx) => {
     const [target] = await tx.select({ plate: vehicle.plate }).from(vehicle).where(eq(vehicle.id, vehicleId)).limit(1);
     if (!target) return { error: "Vehicle not found" };
 
@@ -134,7 +134,10 @@ export async function deleteVehicle(tenantId: string, vehicleId: string, confirm
     const [linkedEvent] = await tx.select({ id: vehicleTimelineEvent.id }).from(vehicleTimelineEvent).where(eq(vehicleTimelineEvent.vehicleId, vehicleId)).limit(1);
     const [linkedDocument] = await tx.select({ id: document.id }).from(document).where(and(eq(document.entityType, "vehicle"), eq(document.entityId, vehicleId))).limit(1);
     if (linkedRental || linkedLease || linkedEvent || linkedDocument) {
-      return { error: "This vehicle has linked history. Mark it Sold instead of deleting it" };
+      return {
+        error: "This vehicle has linked history. Mark it Sold instead of deleting it",
+        canMarkSold: true,
+      };
     }
 
     await tx.delete(vehicle).where(eq(vehicle.id, vehicleId));
@@ -154,5 +157,44 @@ export async function deleteVehicle(tenantId: string, vehicleId: string, confirm
     revalidatePath(`/${result.slug}/fleet/${vehicleId}`);
     revalidatePath(`/${result.slug}/fleet`);
   }
-  return { error: result.error };
+  return { error: result.error, canMarkSold: result.canMarkSold };
+}
+
+/**
+ * Flip a vehicle to "sold" without going through the full Edit form. Used as
+ * the one-click fallback when delete is blocked by linked history — the owner
+ * wants the car out of operations, not out of the database.
+ */
+export async function markVehicleAsSold(tenantId: string, vehicleId: string): Promise<{ error: string | null }> {
+  await canManageFleetForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+
+  const { slug } = await withDrizzleTenant(tenantId, async (tx) => {
+    const [current] = await tx.select({ status: vehicle.status, plate: vehicle.plate }).from(vehicle).where(eq(vehicle.id, vehicleId)).limit(1);
+    if (!current) throw new Error("Vehicle not found");
+    // Reserved / on_rent are rental-derived — flipping those to sold would
+    // orphan an active rental. The Edit modal already locks status in that
+    // case; mirror the same guard here so the one-click button cannot bypass.
+    if (!EDITABLE_VEHICLE_STATUSES.includes(current.status as (typeof EDITABLE_VEHICLE_STATUSES)[number])) {
+      throw new Error(`Cannot mark a ${current.status} vehicle as sold`);
+    }
+    await tx.update(vehicle).set({ status: "sold", updatedAt: new Date() }).where(eq(vehicle.id, vehicleId));
+    await tx.insert(auditEvent).values({
+      tenantId,
+      actorId,
+      action: "vehicle.markSold",
+      entityType: "vehicle",
+      entityId: vehicleId,
+      intent: `Marked ${current.plate} as sold (delete blocked by linked history)`,
+    });
+    const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
+    return { slug: t?.slug ?? null };
+  });
+
+  if (slug) {
+    revalidatePath(`/${slug}/fleet/${vehicleId}`);
+    revalidatePath(`/${slug}/fleet`);
+  }
+  return { error: null };
 }
