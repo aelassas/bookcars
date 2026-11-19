@@ -7,6 +7,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
 import { requireAuth } from "@/platform/auth/authorization";
 import { canManageFleetForTenant } from "./policies";
+import { permanentlyDeleteVehicle } from "./permanent-delete";
 import { EDITABLE_VEHICLE_STATUSES } from "./vehicle-options";
 
 /**
@@ -162,10 +163,23 @@ export async function deleteVehicle(tenantId: string, vehicleId: string, confirm
   return { error: result.error, canMarkSold: result.canMarkSold };
 }
 
+export async function deleteVehiclePermanently(tenantId: string, vehicleId: string, confirmation: string): Promise<{ error: string | null }> {
+  await canManageFleetForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+  if (confirmation !== "DELETE") return { error: "Type DELETE to confirm permanent deletion" };
+
+  const slug = await permanentlyDeleteVehicle(tenantId, vehicleId, actorId);
+  if (slug) {
+    revalidatePath(`/${slug}/fleet/${vehicleId}`);
+    revalidatePath(`/${slug}/fleet`);
+  }
+  return { error: null };
+}
+
 /**
- * Flip a vehicle to "sold" without going through the full Edit form. Used as
- * the one-click fallback when delete is blocked by linked history — the owner
- * wants the car out of operations, not out of the database.
+ * Keep a vehicle in the Sold filter, out of daily operations. Live reserved and
+ * on_rent handoffs still block this shortcut and must be settled first.
  */
 export async function markVehicleAsSold(tenantId: string, vehicleId: string): Promise<{ error: string | null }> {
   await canManageFleetForTenant(tenantId);

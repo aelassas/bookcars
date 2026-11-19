@@ -87,7 +87,7 @@ export const DICT: Record<string, Entry> = {
   "vehicle.edit": { ru: "Редактировать", en: "Edit" },
   "vehicle.editTitle": { ru: "Редактировать автомобиль", en: "Edit vehicle" },
   "vehicle.delete": { ru: "Удалить", en: "Delete" },
-  "vehicle.deletePrompt": { ru: "Введите DELETE для удаления автомобиля", en: "Type DELETE to delete this vehicle" },
+  "vehicle.deletePrompt": { ru: "Введите DELETE, чтобы НАВСЕГДА удалить автомобиль и все связанные аренды, платежи, документы и историю. Восстановление невозможно.", en: "Type DELETE to PERMANENTLY delete this vehicle and all linked rentals, payments, documents and history. This cannot be undone." },
   "vehicle.make": { ru: "Марка", en: "Make" },
   "vehicle.model": { ru: "Модель", en: "Model" },
   "vehicle.year": { ru: "Год", en: "Year" },

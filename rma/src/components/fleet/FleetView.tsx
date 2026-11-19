@@ -7,7 +7,7 @@ import { PageHeader, Badge, Button, ButtonLink, Input, EmptyState } from "@/comp
 import { VehicleDrawer } from "./VehicleDrawer";
 import { BrandLogo } from "./BrandLogo";
 import { EditVehicleButton } from "./EditVehicleModal";
-import { deleteVehicle, markVehicleAsSold, restoreVehicle } from "@/modules/fleet/actions";
+import { deleteVehiclePermanently, markVehicleAsSold, restoreVehicle } from "@/modules/fleet/actions";
 import { CreateVehicleModal } from "@/components/modals/CreateVehicleModal";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
 import { Paperclip, Car, Plus, MapPin, Gauge, Clock, SearchX, CalendarDays, Trash2 } from "lucide-react";
@@ -72,7 +72,6 @@ export function FleetView({
   const [docVehicle, setDocVehicle] = useState<FleetVehicle | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState("");
-  const [markSoldForId, setMarkSoldForId] = useState<string | null>(null);
   const [markSoldBusy, setMarkSoldBusy] = useState(false);
   const vehicleList = vehicles;
 
@@ -81,17 +80,11 @@ export function FleetView({
     if (confirmation !== "DELETE") return;
     setDeletingId(vehicle.id);
     setDeleteError("");
-    setMarkSoldForId(null);
     try {
-      const result = await deleteVehicle(tenantId, vehicle.id, confirmation);
+      const result = await deleteVehiclePermanently(tenantId, vehicle.id, confirmation);
       if (result.error) {
         setDeleteError(result.error);
-        if (result.canMarkSold) {
-          // Offer a one-click fallback inline — the error alone is not actionable.
-          setMarkSoldForId(vehicle.id);
-        } else {
-          alert(result.error);
-        }
+        alert(result.error);
         return;
       }
       window.location.reload();
@@ -126,7 +119,6 @@ export function FleetView({
       setDeleteError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));
     } finally {
       setMarkSoldBusy(false);
-      setMarkSoldForId(null);
     }
   }
 
@@ -260,18 +252,8 @@ export function FleetView({
       </div>
 
       {deleteError && (
-        <div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-field border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
-          <span>{deleteError}</span>
-          {markSoldForId && (
-            <Button
-              variant="secondary"
-              size="sm"
-              disabled={markSoldBusy}
-              onClick={() => handleMarkSold(markSoldForId)}
-            >
-              {markSoldBusy ? t(lang, "vehicle.markingSold") : t(lang, "vehicle.markSold")}
-            </Button>
-          )}
+        <div role="alert" className="mb-4 rounded-field border border-danger-line bg-danger-soft px-3 py-2 text-sm text-danger">
+          {deleteError}
         </div>
       )}
 
@@ -434,15 +416,23 @@ export function FleetView({
                         <Button
                           variant="secondary"
                           size="sm"
-                          disabled={restoringId === v.id}
+                          disabled={restoringId === v.id || deletingId === v.id}
                           onClick={() => handleRestore(v.id)}
                         >
                           {restoringId === v.id ? "Restoring…" : "Restore"}
+                        </Button>
+                        <Button variant="danger" size="sm" disabled={deletingId === v.id} onClick={() => handleDelete(v)}>
+                          {deletingId === v.id ? "Deleting…" : t(lang, "vehicle.delete")}
                         </Button>
                       </>
                     ) : (
                       <>
                         <EditVehicleButton tenantId={tenantId} vehicle={v} lang={lang} />
+                        {v.status !== "sold" && (
+                          <Button variant="secondary" size="sm" disabled={markSoldBusy || deletingId === v.id} onClick={() => handleMarkSold(v.id)}>
+                            {markSoldBusy ? t(lang, "vehicle.markingSold") : t(lang, "vehicle.markSold")}
+                          </Button>
+                        )}
                         <Button variant="danger" size="sm" disabled={deletingId === v.id} onClick={() => handleDelete(v)}>
                           <Trash2 className="h-3.5 w-3.5" />
                           {deletingId === v.id ? "Deleting…" : t(lang, "vehicle.delete")}

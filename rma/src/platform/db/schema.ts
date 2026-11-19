@@ -660,9 +660,8 @@ export const vehicle = tenantTable(
     dailyRate: integer("daily_rate").notNull().default(0),
     weeklyRate: integer("weekly_rate").notNull().default(0),
     monthlyRate: integer("monthly_rate").notNull().default(0),
-    // Soft-delete: rentals, leases, documents and timeline events reference
-    // vehicles with foreign keys, so a hard DELETE is almost never legal.
-    // `deleted_at` lets managers archive a car and still browse history.
+    // Soft-delete archive for unused vehicles. Permanent deletion of a vehicle
+    // and its operational history is available through the confirmed fleet action.
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     // Planned next service (0079) — the Service panel on the vehicle profile
     // highlights the car once either threshold is reached. NULL = not planned.
@@ -697,7 +696,7 @@ export const vehicle = tenantTable(
     sheetBrandKey: text("sheet_brand_key"),
     // TARS carry-through (0080): the RTA fleet registry is the legal record of
     // the car — chassis number and registration (mulkiya) expiry. The TARS
-    // sync (integrations/tars) matches on plate first, then on this VIN.
+    // sync (integrations/tars) matches on VIN first, then normalized plate.
     vin: text("vin"),
     registrationExpiry: date("registration_expiry"),
     websitePublished: boolean("website_published").notNull().default(false),
