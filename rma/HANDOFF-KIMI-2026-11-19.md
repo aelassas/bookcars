@@ -45,6 +45,7 @@ Commit: `45337fe1`.
 - **Delete** now means permanent deletion after typing `DELETE` in an explicit irreversible-history warning.
 - `deleteVehiclePermanently()` removes the vehicle and linked operational history in one transaction: rentals, leases, payments, charges, engine blocks, documents, timeline and ledger. Customers and CRM deals are preserved; deal vehicle links are cleared, and an audit event remains.
 - `src/modules/fleet/permanent-delete.test.ts` verifies the full dependency chain and cleans up its isolated tenant. It passed locally and on the actual RMA production schema; the real 23 vehicles and 53 TARS rentals were unchanged.
+- Production browser E2E also passed with a disposable RMA member and vehicle: **Mark as Sold** appeared in the Sold filter, then **Delete → DELETE** removed the vehicle from the UI and database. Temporary user, membership, vehicle, and test audit rows were cleaned afterward.
 
 ## 3. Validation record
 
