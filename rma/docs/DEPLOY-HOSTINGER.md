@@ -42,6 +42,9 @@ rsync -ain --delete \
   --exclude='.env' --exclude='.env.*' \
   --exclude='node_modules' --exclude='.next' \
   --exclude='.tars-session.json' --exclude='__pycache__' \
+  --exclude='public/site-cars/' --exclude='next-env.d.ts' \
+  --exclude='tsconfig.tsbuildinfo' --exclude='verification/' \
+  --exclude='.playwright-cli/' \
   "$tmp"/ rma-vps:/opt/rma-crm/platform/
 
 # Repeat without -n only after reviewing the dry-run.
@@ -49,6 +52,9 @@ rsync -a --delete \
   --exclude='.env' --exclude='.env.*' \
   --exclude='node_modules' --exclude='.next' \
   --exclude='.tars-session.json' --exclude='__pycache__' \
+  --exclude='public/site-cars/' --exclude='next-env.d.ts' \
+  --exclude='tsconfig.tsbuildinfo' --exclude='verification/' \
+  --exclude='.playwright-cli/' \
   "$tmp"/ rma-vps:/opt/rma-crm/platform/
 rm -rf "$tmp"
 ```
