@@ -1,44 +1,62 @@
-# Handoff → Kimi (2026-11-19)
+# Handoff → next agent (2026-11-19)
 
-> **HOSTING CORRECTION — READ FIRST:** RMA production is only `rma-vps` (`31.97.105.52`, Hostinger), with public URL `https://crm.rma.network`. The earlier deployment to `takevps` (`187.127.219.106`) described below was made to the wrong server; do not use it or repeat those steps. Follow `rma/AGENTS.md` and `rma/docs/DEPLOY-HOSTINGER.md`.
+Scope: RMA CRM, branch `feat/rma-meeting-20261117`.
 
-Scope: RMA CRM. Branch `feat/rma-meeting-20261117`. This session stabilized production and got TARS one step from completing.
+## 1. Production hosting — read this first
 
-## What changed this session (committed)
+- **RMA deploys only to `rma-vps` (`31.97.105.52`, `srv2077538.hstgr.cloud`), its own Hostinger VDS.**
+- **Never use `takevps` / `187.127.219.106` for RMA.** The earlier agent deployed there by mistake. That copy is not used by RMA production and has no runtime role; it was not touched further.
+- Public URL: `https://crm.rma.network`; DNS points directly to `31.97.105.52`.
+- App: `/opt/rma-crm/platform`; systemd `rma-crm`; Next.js port `3003`; Caddy on the same VDS.
+- PostgreSQL: local Docker `rma-platform-db`, loopback port `5434`, database `platform`.
+- OTP mail: local Docker `rma-mail` on the same VDS. No Neon or external production DB is used.
+- Canonical deploy and TARS runbook: `rma/docs/DEPLOY-HOSTINGER.md`. The same hosting warning is the first block in both root `AGENTS.md` and `rma/AGENTS.md`.
 
-1. **Production was DOWN.** The RMA Postgres container (`rma-platform-db`, docker, `127.0.0.1:5434`, db `platform`, user `take` / pw `take_dev`) had exited ~4 weeks ago (Oct 17). The app 500'd on `ECONNREFUSED 127.0.0.1:5434`. Fixed with `docker start rma-platform-db` + `systemctl restart rma-crm`. It is back up and serving (login 307 → expected).
-2. **Deployed the whole recent branch to prod** (`takevps` = root@187.127.219.106, app at `/opt/rma-crm/platform`, Next.js on :3003, Caddy on :8087). Prod was a stale Oct 14 snapshot with NO git. Deploy = rsync `rma/` → `/opt/rma-crm/platform` (exclude node_modules/.next/.env*, no `--delete` concerns beyond tracked source), then `DATABASE_URL=postgresql://take:take_dev@127.0.0.1:5434/platform npx tsx scripts/migrate-sql.ts` (applied 0079–0089), `npm run build`, `systemctl restart rma-crm`. Verified: 10 migrations applied, build green, app serving.
-3. **Lexus fix.** `Lexus NX · DXB L 11911` was `status="overdue"` (rented Oct 4, never returned). The "Mark as Sold" fallback threw `Cannot mark a overdue vehicle as sold` because the guard only allowed `available/in_service/sold`. Fixed `src/modules/fleet/actions.ts` `markVehicleAsSold` to block only live `reserved`/`on_rent` handoffs — `overdue` (and `available/in_service/sold`) are now sellable. Deployed.
-4. **Weekly/monthly rate** were already in the branch (migration 0087); they now show on fleet card + vehicle profile after deploy.
+## 2. Delivered and verified
 
-## TARS import — the remaining blocker (one step from done)
+### Correct production deploy
 
-Goal: pull real fleet + rental contracts from `tars.rta.ae` into the RMA DB.
+- `cee299a6` corrected the production topology and deployed migrations `0083`, `0084`, `0086–0089` to the real RMA VDS.
+- `45337fe1` adds the final fleet UI/actions covered below.
+- `scripts/with-rma-service-env.py` runs migrations/scripts with the live systemd environment without printing secrets. A bare `npm run migrate` on the VDS is invalid because the server does not keep those variables in `.env.local`.
+- Final migration status: zero pending.
 
-**Root cause found and fixed (unverified end-to-end):** the OTP screen's email radio is `value="mail"` (NOT "email"), and clicking the label text does NOT toggle it — the `mobile` radio stays checked, so the OTP goes out as SMS (unreadable) instead of email. Fixed in `src/platform/integrations/tars/session.ts`: now `input[name="sfaChoice"][value="mail"].check()`. Probe that proved it: `scripts/tars-probe-otp-dom.ts` (reaches OTP screen, dumps radio DOM, screenshots `/tmp/tars-otp-screen.png`).
+### TARS full-history import — complete
 
-**Credentials** (in `rma/.env.local`, gitignored): `TARS_USERNAME=rmacarrental`, `TARS_PASSWORD=…`, `TARS_ORG_DID=did:rta:51646245`, `TARS_BASE_URL=https://tars.rta.ae`. The OTP **email** now goes to `ru…@rma.network` (= `ruslan@rma.network`, the operator's OWN mail server — this is what "otp comes to our own server" meant).
+Commits: `4c774afd`, `8fba69fb`, `fdb7f711`.
 
-**To finish TARS:**
-```bash
-cd rma
-# terminal A: start fetch (launches Chrome, clicks Send OTP → email, waits for /tmp/tars-otp.txt)
-npx tsx scripts/tars-fetch-to-json.ts     # writes /tmp/tars-agency.json /tmp/tars-vehicles.json /tmp/tars-rentals.json
-# terminal B: poll the mailbox, write the 6-digit code
-python3 /tmp/rma_otp_poller.py            # watches ruslan@rma.network, writes /tmp/tars-otp.txt
-# then import into prod (from the box, or rsync the JSON + run there):
-npx tsx scripts/tars-sync.ts --commit --vehicles-file=/tmp/tars-vehicles.json --rentals-file=/tmp/tars-rentals.json
-```
-Note: the mailbox poller (`/tmp/rma_otp_poller.py`) only checks INBOX and matches From/Subject containing rta/tars/otp. The OTP email sender is `Notifications@rta.ae`, subject `One time password for your Online Transaction`.
+- Email OTP works end to end. TARS selects `input[name="sfaChoice"][value="mail"]`; the entry form is `#passcode` + `#btn_mfa_login`.
+- RTA currently sends a **4-digit** code in `Authentication Code (OTP)`. `scripts/tars-otp-poller.py` extracts 4–8 digits only from that phrase after quoted-printable/HTML decoding. Do not extract a bare six-digit number from HTML/CSS.
+- 53 unique rental documents imported, with start dates from **2026-01-16 through 2026-11-19**. `size: 500` is page size, not a history limit; the client follows `meta.hits` and deduplicates by TARS identity.
+- 21 VINs: 17 existing vehicles updated, 4 inserted; **23 vehicles total**.
+- 41 customers planned: 40 inserted, 1 existing updated; **49 customers total**.
+- Rentals: 52 inserted and one existing active rental updated with its TARS document number; **53 unique TARS rentals total**.
+- Vehicle matching is VIN-first, then normalized plate, with one CRM row claimed at most once. Two different VINs sharing `G 5902` remain separate with separate histories.
+- Legacy rental adoption requires matching VIN, UTC calendar dates, **and current status**. The active TARS contract was linked to the existing active row; the cancelled duplicate was not reactivated.
+- Repeat dry-run after import: **21/41/53 updates, zero inserts and zero skips**.
+- Last pre-import backup: `/root/rma-backups/pre-tars-import-final-20261119-143008.sql.gz` (gzip integrity checked).
+- Temporary OTP and exported JSON files containing personal data were removed after verification. The gitignored local TARS session remains available for its normal short TTL.
 
-## Still open (not this session's blockers)
+### Fleet Sold and permanent deletion
 
-- Onboarding kanban (`/{tenant}/onboarding`) — migration 0089 + `onboarding/setup/` + Taqeeq integration are in the branch but the kanban page itself is not finished.
-- Parkin/Parkonic operator feeds still manual (separate from Salik).
-- `backend/babel.config.js` is an UNRELATED bookcars diff — do not commit it.
-- Do not amend existing commits; new commits only; no force-push.
+Commit: `45337fe1`.
 
-## Production access
+- **Mark as Sold** keeps the vehicle in the **Sold** filter and out of operations. `reserved` and `on_rent` still block this shortcut; overdue cars can be sold.
+- **Delete** now means permanent deletion after typing `DELETE` in an explicit irreversible-history warning.
+- `deleteVehiclePermanently()` removes the vehicle and linked operational history in one transaction: rentals, leases, payments, charges, engine blocks, documents, timeline and ledger. Customers and CRM deals are preserved; deal vehicle links are cleared, and an audit event remains.
+- `src/modules/fleet/permanent-delete.test.ts` verifies the full dependency chain and cleans up its isolated tenant. It passed locally and on the actual RMA production schema; the real 23 vehicles and 53 TARS rentals were unchanged.
 
-- `ssh takevps` (root@187.127.219.106). App: `/opt/rma-crm/platform` (NO git), systemd `rma-crm`, log `/var/log/rma-crm.log`, Caddy `deploy/Caddyfile.rma`.
-- DB: `docker exec rma-platform-db psql -U take -d platform`. Backups in `/root/rma-backups/`.
+## 3. Validation record
+
+- Production build passed locally and on `rma-vps`.
+- Targeted TARS sync tests, auth action-guard tests, OTP plain/HTML self-checks, changed-file ESLint, and the permanent-delete DB test passed.
+- `migrate:status` on production: zero pending.
+- Production HTTP checks passed against `crm.rma.network` on `31.97.105.52`; root redirects to login and `/api/public/site-cars` returns 200.
+- An older full-suite run had 1348 passes and one unrelated availability/store failure. The change set does not touch that module; it was not silently fixed.
+- The repository-wide lint command still has its existing unrelated errors, and Next.js emits the already-known Edge/NFT warnings. Changed files lint clean.
+
+## 4. What remains out of scope
+
+- No recurring automatic TARS schedule was enabled. The verified path is fetch → JSON → reviewed dry-run → commit; no automatic RTA business writes were added.
+- Onboarding kanban follow-up and Parkin/Parkonic operator feeds remain separate work.
+- `backend/babel.config.js` is an unrelated pre-existing Bookcars modification and was never staged or committed by this work.

@@ -160,3 +160,23 @@ ssh rma-vps 'rm -f /root/rma-tars-import/tars-agency.json /root/rma-tars-import/
 ## 5. Handoff rule
 
 Report the deployed commit, migration range, smoke-test results, TARS counts, and backup path. Clearly separate verified facts from anything not run. Do not claim success from a build alone, and do not silently deploy or import to any host other than `rma-vps`.
+
+## 6. Verified TARS import and vehicle deletion (2026-11-19)
+
+Production commits were pushed to both RMA remotes: `cee299a6` (correct Hostinger deploy), `4c774afd`, `8fba69fb`, `fdb7f711` (TARS login/import), and `45337fe1` (Sold + permanent deletion).
+
+Verified TARS result on `rma-vps`:
+
+- 53 unique rental documents imported; start dates span 2026-01-16 through 2026-11-19.
+- 21 VINs: 17 existing vehicles updated and 4 inserted (23 vehicles total).
+- 41 customers in the plan: 40 inserted and 1 existing row updated (49 customers total).
+- One existing active rental was adopted by matching VIN, UTC calendar dates, and current status; its cancelled duplicate was not reactivated.
+- Two vehicles legitimately sharing plate `G 5902` remain separate by VIN and keep separate rental history.
+- Re-running the same dry-run after import reports 21/41/53 updates and zero inserts or skips.
+- Last pre-import backup: `/root/rma-backups/pre-tars-import-final-20261119-143008.sql.gz` (gzip integrity checked).
+
+Fleet deletion behavior:
+
+- **Mark as Sold** keeps the vehicle in the **Sold** filter and out of operations. Live `reserved` and `on_rent` handoffs must be settled first; overdue vehicles can be marked sold.
+- **Delete** requires typing `DELETE` in a prompt that explicitly warns about permanent history deletion. `deleteVehiclePermanently()` deletes the vehicle, rentals, leases, payments, charges, engine blocks, documents, timeline events, and vehicle ledger rows in one transaction. Customers and CRM deals are preserved; deal vehicle links are cleared, and an audit event remains.
+- `src/modules/fleet/permanent-delete.test.ts` verifies the complete dependency chain and cleans up its isolated tenant. It passed locally and on the RMA production schema without changing the real 23 vehicles or 53 TARS rentals.
