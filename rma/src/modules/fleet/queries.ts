@@ -3,7 +3,7 @@
 import { vehicle, integrationEvent, auditEvent, company } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, isNull, isNotNull, and } from "drizzle-orm";
 import { getPilotClient } from "@/platform/integrations/pilot/client";
 import { normalizePilotVehicle } from "@/platform/integrations/pilot/normalize";
 import { canManageFleetForTenant } from "./policies";
@@ -48,14 +48,29 @@ export interface FleetVehicle {
   speed?: number;
   ignition?: boolean;
   lastFixAt?: string;
+  // Non-null for soft-deleted (archived) rows; the operational fleet view
+  // filters these out, the Deleted filter pulls them back in.
+  deletedAt?: string | null;
 }
 
-export async function getVehicles(tenantId: string) {
+export async function getVehicles(tenantId: string, opts: { includeArchived?: boolean } = {}) {
   await canManageFleetForTenant(tenantId);
   // Shared physical fleet: fleet reads are holding-wide (see companyReadScope).
   const scope = await companyReadScope(tenantId, vehicle.companyId);
+  // Archived (soft-deleted) vehicles stay out of every operational view unless
+  // the caller explicitly asks for them (archive page, admin tools).
+  const notArchived = opts.includeArchived ? sql`true` : isNull(vehicle.deletedAt);
   return withDrizzleTenant(tenantId, async (tx) => {
-    return tx.select().from(vehicle).where(scope ?? sql`true`).orderBy(desc(vehicle.createdAt));
+    return tx.select().from(vehicle).where(and(scope ?? sql`true`, notArchived)).orderBy(desc(vehicle.createdAt));
+  });
+}
+
+/** Archived vehicles only (for the Deleted filter + Restore action). */
+export async function getArchivedVehicles(tenantId: string) {
+  await canManageFleetForTenant(tenantId);
+  const scope = await companyReadScope(tenantId, vehicle.companyId);
+  return withDrizzleTenant(tenantId, async (tx) => {
+    return tx.select().from(vehicle).where(and(scope ?? sql`true`, isNotNull(vehicle.deletedAt))).orderBy(desc(vehicle.deletedAt));
   });
 }
 

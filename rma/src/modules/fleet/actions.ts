@@ -140,14 +140,16 @@ export async function deleteVehicle(tenantId: string, vehicleId: string, confirm
       };
     }
 
-    await tx.delete(vehicle).where(eq(vehicle.id, vehicleId));
+    // Soft-delete so the car is removed from every operational view but the
+    // archive page can still surface it and the audit trail stays intact.
+    await tx.update(vehicle).set({ deletedAt: new Date(), updatedAt: new Date() }).where(eq(vehicle.id, vehicleId));
     await tx.insert(auditEvent).values({
       tenantId,
       actorId,
       action: "vehicle.delete",
       entityType: "vehicle",
       entityId: vehicleId,
-      intent: `Deleted unused vehicle ${target.plate}`,
+      intent: `Archived (soft-delete) unused vehicle ${target.plate}`,
     });
     const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
     return { error: null, slug: t?.slug };
@@ -198,3 +200,45 @@ export async function markVehicleAsSold(tenantId: string, vehicleId: string): Pr
   }
   return { error: null };
 }
+
+/**
+ * Bring a soft-deleted vehicle back into the operational fleet. Flipping the
+ * status to `in_service` makes the recovery explicit — the car is in the DB
+ * but should be inspected before it can be rented again.
+ */
+export async function restoreVehicle(tenantId: string, vehicleId: string): Promise<void> {
+  await canManageFleetForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+
+  const { slug } = await withDrizzleTenant(tenantId, async (tx) => {
+    const [current] = await tx
+      .select({ plate: vehicle.plate, deletedAt: vehicle.deletedAt })
+      .from(vehicle)
+      .where(eq(vehicle.id, vehicleId))
+      .limit(1);
+    if (!current) throw new Error("Vehicle not found");
+    if (!current.deletedAt) throw new Error("Vehicle is already active");
+
+    await tx
+      .update(vehicle)
+      .set({ deletedAt: null, status: "in_service", updatedAt: new Date() })
+      .where(eq(vehicle.id, vehicleId));
+    await tx.insert(auditEvent).values({
+      tenantId,
+      actorId,
+      action: "vehicle.restore",
+      entityType: "vehicle",
+      entityId: vehicleId,
+      intent: `Restored vehicle ${current.plate} from archive`,
+    });
+    const [t] = await tx.select({ slug: tenant.slug }).from(tenant).where(eq(tenant.id, tenantId)).limit(1);
+    return { slug: t?.slug ?? null };
+  });
+
+  if (slug) {
+    revalidatePath(`/${slug}/fleet/${vehicleId}`);
+    revalidatePath(`/${slug}/fleet`);
+  }
+}
+

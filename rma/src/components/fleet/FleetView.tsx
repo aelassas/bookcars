@@ -7,7 +7,7 @@ import { PageHeader, Badge, Button, ButtonLink, Input, EmptyState } from "@/comp
 import { VehicleDrawer } from "./VehicleDrawer";
 import { BrandLogo } from "./BrandLogo";
 import { EditVehicleButton } from "./EditVehicleModal";
-import { deleteVehicle, markVehicleAsSold } from "@/modules/fleet/actions";
+import { deleteVehicle, markVehicleAsSold, restoreVehicle } from "@/modules/fleet/actions";
 import { CreateVehicleModal } from "@/components/modals/CreateVehicleModal";
 import { DocumentPanel } from "@/components/documents/DocumentPanel";
 import { Paperclip, Car, Plus, MapPin, Gauge, Clock, SearchX, CalendarDays, Trash2 } from "lucide-react";
@@ -44,10 +44,11 @@ function relTime(iso?: string): string {
   return `${Math.round(hr / 24)} d ago`;
 }
 
-type Filter = "all" | "moving" | "parked" | "blocked" | "sold";
+type Filter = "all" | "moving" | "parked" | "blocked" | "sold" | "deleted";
 
 export function FleetView({
   vehicles,
+  archivedVehicles = [],
   mode,
   tenantSlug,
   tenantId,
@@ -55,6 +56,8 @@ export function FleetView({
   canBlockEngine,
 }: {
   vehicles: FleetVehicle[];
+  /** Soft-deleted (archived) cars, only rendered when the Deleted chip is on. */
+  archivedVehicles?: FleetVehicle[];
   mode: "live" | "mock";
   tenantSlug: string;
   tenantId: string;
@@ -63,6 +66,7 @@ export function FleetView({
 }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [docVehicle, setDocVehicle] = useState<FleetVehicle | null>(null);
@@ -99,6 +103,19 @@ export function FleetView({
     }
   }
 
+  async function handleRestore(vehicleId: string) {
+    setRestoringId(vehicleId);
+    setDeleteError("");
+    try {
+      await restoreVehicle(tenantId, vehicleId);
+      window.location.reload();
+    } catch (err) {
+      setDeleteError(err instanceof Error && err.message ? err.message : t(lang, "vehicle.saveError"));
+    } finally {
+      setRestoringId(null);
+    }
+  }
+
   async function handleMarkSold(vehicleId: string) {
     setMarkSoldBusy(true);
     setDeleteError("");
@@ -119,6 +136,9 @@ export function FleetView({
     { id: "parked", label: "Parked" },
     { id: "blocked", label: "Engine blocked" },
     { id: "sold", label: t(lang, "fleetBoard.filterSold") },
+    // Archive view: soft-deleted cars. Separate list — not merged into the main
+    // grid so the daily operational numbers stay honest.
+    { id: "deleted", label: archivedVehicles.length > 0 ? `Deleted (${archivedVehicles.length})` : "Deleted" },
   ];
 
   // Operational counts exclude sold cars — they've left the fleet.
@@ -134,7 +154,13 @@ export function FleetView({
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return vehicleList.filter((v) => {
+    // Deleted filter switches the source list to the archived rows.
+    const source = filter === "deleted" ? archivedVehicles : vehicleList;
+    return source.filter((v) => {
+      if (filter === "deleted") {
+        if (q && !`${v.make} ${v.model} ${v.plate} ${v.imei ?? ""}`.toLowerCase().includes(q)) return false;
+        return true;
+      }
       // Sold cars stay out of every operational view; the Sold chip is the
       // only place they're listed (never lost, just out of the way).
       if (filter === "sold") {
@@ -146,7 +172,7 @@ export function FleetView({
       if (q && !`${v.make} ${v.model} ${v.plate} ${v.imei ?? ""}`.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [vehicleList, query, filter]);
+  }, [vehicleList, archivedVehicles, query, filter]);
 
   // Select by id (not imei): demo/Pilot vehicles can have null imei, which would
   // make a null selectedImei match a row and auto-open the drawer un-closeably.
@@ -400,11 +426,29 @@ export function FleetView({
                 </div>
                 {cardHref && (
                   <div className="flex items-center justify-end gap-2 border-t border-line-soft px-3 py-2">
-                    <EditVehicleButton tenantId={tenantId} vehicle={v} lang={lang} />
-                    <Button variant="danger" size="sm" disabled={deletingId === v.id} onClick={() => handleDelete(v)}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                      {deletingId === v.id ? "Deleting…" : t(lang, "vehicle.delete")}
-                    </Button>
+                    {v.deletedAt ? (
+                      <>
+                        <span className="mr-auto text-[11px] text-ink-3">
+                          Archived {new Date(v.deletedAt).toLocaleDateString()}
+                        </span>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          disabled={restoringId === v.id}
+                          onClick={() => handleRestore(v.id)}
+                        >
+                          {restoringId === v.id ? "Restoring…" : "Restore"}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <EditVehicleButton tenantId={tenantId} vehicle={v} lang={lang} />
+                        <Button variant="danger" size="sm" disabled={deletingId === v.id} onClick={() => handleDelete(v)}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                          {deletingId === v.id ? "Deleting…" : t(lang, "vehicle.delete")}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
