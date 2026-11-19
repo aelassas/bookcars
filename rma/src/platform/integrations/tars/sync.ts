@@ -19,7 +19,7 @@
 // every entry point takes its inputs as arguments. (pg-boss registration comes
 // later; until then scripts/tars-sync.ts is the only caller.)
 
-import { eq, isNotNull } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { customer, rental, vehicle } from "@/platform/db/schema";
 import type { TarsDriver, TarsRental, TarsVehicle } from "./client";
@@ -196,6 +196,9 @@ export interface ExistingCustomerRow {
 
 export interface ExistingRentalRow {
   id: string;
+  vehicleId: string;
+  startDate: Date;
+  returnDate: Date;
   tarsDocumentNumber: string | null;
 }
 
@@ -283,6 +286,7 @@ export function buildPlan(
   const existingCustomers = existing?.customers ?? [];
   const existingRentals = existing?.rentals ?? [];
   const remainingVehicles = [...existingVehicles];
+  const usedRentalIds = new Set<string>();
   const plan: SyncPlan = { vehicles: [], customers: [], rentals: [], skipped: [] };
   const action = (matched: unknown): PlanAction => (offline ? "unknown" : matched ? "update" : "insert");
 
@@ -332,7 +336,14 @@ export function buildPlan(
       });
     }
 
-    const existingRental = existingRentals.find((r) => r.tarsDocumentNumber === mapped.documentNumber);
+    const vehicleId = plan.vehicles.find((v) => v.mapped.vin === mapped.vehicleVin)?.existingId;
+    const day = (value: Date) => value.toISOString().slice(0, 10);
+    const existingRental = existingRentals.find((r) => r.tarsDocumentNumber === mapped.documentNumber)
+      ?? existingRentals.find((r) =>
+        !r.tarsDocumentNumber && !usedRentalIds.has(r.id) && r.vehicleId === vehicleId &&
+        day(r.startDate) === day(mapped.startDate) && day(r.returnDate) === day(mapped.returnDate)
+      );
+    if (existingRental) usedRentalIds.add(existingRental.id);
     plan.rentals.push({
       action: action(existingRental),
       mapped,
@@ -378,9 +389,14 @@ export async function loadExisting(tenantId: string): Promise<ExistingState> {
       })
       .from(customer),
     rentals: await tx
-      .select({ id: rental.id, tarsDocumentNumber: rental.tarsDocumentNumber })
-      .from(rental)
-      .where(isNotNull(rental.tarsDocumentNumber)),
+      .select({
+        id: rental.id,
+        vehicleId: rental.vehicleId,
+        startDate: rental.startDate,
+        returnDate: rental.returnDate,
+        tarsDocumentNumber: rental.tarsDocumentNumber,
+      })
+      .from(rental),
   }));
 }
 
@@ -499,7 +515,7 @@ export async function applyPlan(tenantId: string, plan: SyncPlan): Promise<SyncC
         ...(m.status ? { status: m.status } : {}),
       };
       if (item.existingId) {
-        await tx.update(rental).set(data).where(eq(rental.id, item.existingId));
+        await tx.update(rental).set({ ...data, tarsDocumentNumber: m.documentNumber }).where(eq(rental.id, item.existingId));
         counts.rentalsUpdated++;
       } else {
         await tx.insert(rental).values({

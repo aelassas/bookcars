@@ -178,7 +178,8 @@ main().catch((e) => {
   if (e instanceof TarsSessionExpiredError) {
     console.error(`[tars-sync] TARS session expired and re-login failed: ${e.message}`);
   } else {
-    console.error(`[tars-sync] failed: ${e instanceof Error ? e.message : e}`);
+    const root = e instanceof Error && e.cause instanceof Error ? e.cause : e;
+    console.error(`[tars-sync] failed: ${root instanceof Error ? root.message : root}`);
   }
   process.exit(1);
 });
