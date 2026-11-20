@@ -517,6 +517,16 @@ export const updateImage = async (req: Request, res: Response) => {
     const car = await Car.findById(id)
 
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.updateImage] Unauthorized attempt to update image of car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this car image')
+        return
+      }
+      // end of security check
+
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await helper.pathExists(image)) {
@@ -565,6 +575,16 @@ export const deleteImage = async (req: Request, res: Response) => {
     const car = await Car.findById(id)
 
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.deleteImage] Unauthorized attempt to delete image of car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this car image')
+        return
+      }
+      // end of security check
+
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await helper.pathExists(image)) {

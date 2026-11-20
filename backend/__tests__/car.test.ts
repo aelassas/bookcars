@@ -446,15 +446,26 @@ describe('PUT /api/update-car', () => {
 describe('POST /api/delete-car-image/:id', () => {
   it('should delete a car image', async () => {
     const token = await testHelper.signinAsAdmin()
+    const supplier1Token = await testHelper.generateToken(SUPPLIER1_ID)
+    const supplier2Token = await testHelper.generateToken(SUPPLIER2_ID)
 
-    // test success
+    // test failure (Supplier 2 cannot delete Supplier 1's car image)
     const car = await Car.findById(CAR1_ID)
     const image = path.join(env.CDN_CARS, car?.image as string)
     let imageExists = await helper.pathExists(image)
     expect(imageExists).toBeTruthy()
     let res = await request(app)
       .post(`/api/delete-car-image/${CAR1_ID}`)
-      .set(env.X_ACCESS_TOKEN, token)
+      .set(env.X_ACCESS_TOKEN, supplier2Token)
+    expect(res.statusCode).toBe(403)
+    imageExists = await helper.pathExists(image)
+    expect(imageExists).toBeTruthy()
+    expect((await Car.findById(CAR1_ID))?.image).toBeTruthy()
+
+    // test success (Supplier 1 can delete own car image)
+    res = await request(app)
+      .post(`/api/delete-car-image/${CAR1_ID}`)
+      .set(env.X_ACCESS_TOKEN, supplier1Token)
     expect(res.statusCode).toBe(200)
     imageExists = await helper.pathExists(image)
     expect(imageExists).toBeFalsy()

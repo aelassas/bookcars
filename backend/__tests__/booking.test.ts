@@ -2667,4 +2667,55 @@ describe('Security Regression Tests - Issue #124', () => {
     expect(res.body.driver).toBeDefined()
     expect(res.body.driver.password).toBeUndefined()
   })
+
+  it("should prevent Supplier A from creating a booking for Supplier B's car", async () => {
+    const carB = await Car.findOne({ supplier: supplierBId })
+    expect(carB).not.toBeNull()
+
+    const payload: bookcarsTypes.UpsertBookingPayload = {
+      booking: {
+        supplier: supplierBId,
+        car: carB!._id.toString(),
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2027, 2, 1),
+        to: new Date(2027, 2, 8),
+        status: bookcarsTypes.BookingStatus.Paid,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 100,
+        additionalDriver: false,
+      },
+    }
+
+    // Supplier A attempts to book Supplier B's car (with supplierBId)
+    let res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierAToken)
+      .send(payload)
+    expect(res.statusCode).toBe(403)
+
+    // Supplier A attempts to book Supplier B's car (even with own supplierAId)
+    payload.booking.supplier = supplierAId
+    res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierAToken)
+      .send(payload)
+    expect(res.statusCode).toBe(403)
+
+    // Supplier B can create a booking for own car (and supplier is enforced to supplierBId)
+    payload.booking.supplier = supplierAId // spoofed supplier ID is overridden
+    res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierBToken)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.supplier).toBe(supplierBId)
+
+    await Booking.deleteOne({ _id: res.body._id })
+  })
 })

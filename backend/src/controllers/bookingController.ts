@@ -74,6 +74,43 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
 export const create = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
+    if (!body?.booking || typeof body.booking !== 'object') {
+      res.status(400).send(i18n.t('ERROR') + 'Booking missing')
+      return
+    }
+
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser.type !== bookcarsTypes.UserType.Supplier)) {
+      logger.error(`[booking.create] Unauthorized attempt to create booking by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot create a booking')
+      return
+    }
+
+    const carId = typeof body.booking.car === 'string' ? body.booking.car : String(body.booking.car || '')
+    if (!helper.isValidObjectId(carId)) {
+      res.status(400).send(i18n.t('ERROR') + 'Invalid car')
+      return
+    }
+
+    const car = await Car.findById(carId)
+    if (!car) {
+      res.status(400).send(i18n.t('ERROR') + 'Car not found')
+      return
+    }
+
+    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+      if (car.supplier?.toString() !== sessionUser._id.toString()) {
+        logger.error(`[booking.create] Unauthorized attempt by supplier ${sessionUserId} to book car ${car._id} owned by ${car.supplier}`)
+        res.status(403).send('Forbidden: You cannot create a booking for another supplier\'s car')
+        return
+      }
+      body.booking.supplier = sessionUser._id.toString()
+    } else if (body.booking.supplier && body.booking.supplier.toString() !== car.supplier?.toString()) {
+      res.status(400).send(i18n.t('ERROR') + 'Invalid supplier')
+      return
+    }
+
     if (body.booking.additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
