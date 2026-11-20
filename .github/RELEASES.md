@@ -1,5 +1,17 @@
 # Releases
 
+## [BookCars 9.6](https://github.com/aelassas/bookcars/releases/tag/v9.6) – 2026-11-20
+
+* fix(security): enforce supplier ownership checks on booking creation and car image endpoints by @kats1123 ([GHSA-9xq3-vxmc-7mrj](https://github.com/aelassas/bookcars/security/advisories/GHSA-9xq3-vxmc-7mrj))
+
+### Assets
+- [bookcars-9.6.apk](https://github.com/aelassas/bookcars/releases/download/v9.6/bookcars-9.6.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.6/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.6)
+
 ## [BookCars 9.5](https://github.com/aelassas/bookcars/releases/tag/v9.5) – 2026-11-17
 
 * fix(security): prevent NoSQL operator injection in /api/activate by @destinyfkrr ([GHSA-59w5-463c-8j6g](https://github.com/aelassas/bookcars/security/advisories/GHSA-59w5-463c-8j6g))
