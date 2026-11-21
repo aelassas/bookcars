@@ -114,7 +114,7 @@ export function httpParkingConnector(operator: ParkingOperator, env: Record<stri
       const token = env[`${prefix}_API_TOKEN`]?.trim();
       if (!token) throw new Error(`${prefix}_API_TOKEN is required when ${prefix}_API_URL is configured`);
       const url = new URL(endpoint);
-      if (!["https:", "http:"].includes(url.protocol)) throw new Error(`${prefix}_API_URL must use HTTPS`);
+      if (url.protocol !== "https:") throw new Error(`${prefix}_API_URL must use HTTPS`);
       url.searchParams.set("from", from.toISOString());
       url.searchParams.set("to", to.toISOString());
       const response = await fetch(url, {

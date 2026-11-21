@@ -66,7 +66,7 @@ async function runTestFixture() {
     await confirmRentalExtensionForTenant(home, null, rentalId, new Date(originalReturn.getTime() + 2 * 86_400_000));
     const verification = await withDrizzleTenant(home, async (tx) => {
       const [extended] = await tx.select().from(rental).where(eq(rental.id, rentalId)).limit(1);
-      const charges = await tx.select().from(rentalCharge).where(eq(rental.rentalId, rentalId));
+      const charges = await tx.select().from(rentalCharge).where(eq(rentalCharge.rentalId, rentalId));
       const outbound = await tx.select({ id: message.id }).from(message).where(eq(message.tenantId, home));
       const payments = await tx.select({ id: payment.id }).from(payment).where(eq(payment.tenantId, home));
       const blocks = await tx.select({ id: engineBlock.id }).from(engineBlock).where(eq(engineBlock.tenantId, home));
