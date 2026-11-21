@@ -180,3 +180,14 @@ Fleet deletion behavior:
 - **Mark as Sold** keeps the vehicle in the **Sold** filter and out of operations. Live `reserved` and `on_rent` handoffs must be settled first; overdue vehicles can be marked sold.
 - **Delete** requires typing `DELETE` in a prompt that explicitly warns about permanent history deletion. `deleteVehiclePermanently()` deletes the vehicle, rentals, leases, payments, charges, engine blocks, documents, timeline events, and vehicle ledger rows in one transaction. Customers and CRM deals are preserved; deal vehicle links are cleared, and an audit event remains.
 - `src/modules/fleet/permanent-delete.test.ts` verifies the complete dependency chain and cleans up its isolated tenant. It passed locally and on the RMA production schema without changing the real 23 vehicles or 53 TARS rentals. A production browser run with a disposable member/vehicle also verified Sold listing and permanent Delete through the actual buttons; all test fixtures were removed afterward.
+
+## 7. Long-term rentals in the calendar (2026-11-21)
+
+Commits `75ea6487` and `64c0dc0c` add open-ended rentals using the existing `rental.extension_status = 'long_term'` value and migration `0090_rental_long_term.sql`.
+
+- Active long-term rentals remain visible in both the DayPilot scheduler and month calendar after the original TARS return date. The original dates remain unchanged; no extension date is invented.
+- `markRentalAsLongTerm()` is manager-only and audited. Confirming a fixed return through the existing extension flow changes the status back to `extension_confirmed`.
+- Long-term rentals are occupied in vehicle finder, booking creation/rescheduling, and the database exclusion constraint. Old return reminders and overdue flags are suppressed.
+- Production rows marked after review: `cb6f6cb3-8f7a-456b-877e-e1c42620c34d` (C 82118), `e383a5fe-82a0-4892-b80a-3a076e084e9a` (E 35092), and `da875d96-fa26-4659-9a06-8273a84cabff` (Y 70946). Each has an audit event.
+- Migration backup: `/root/rma-backups/pre-long-term-0090-20261121-145059.sql.gz` (gzip integrity checked).
+- A transactional overlap test was rejected by `rental_no_overlap_active`. Production browser verification showed all three rentals as `Long-term`; the E 35092 detail reads `Dates 2026-05-16 → open-ended` and `Status long-term`. The temporary browser user was removed afterward.
