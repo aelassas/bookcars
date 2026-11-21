@@ -5,7 +5,7 @@
 - Separate `parkin` and `parkonic` connectors write to the existing `rental_charge` ledger.
 - Assignment uses normalized plate plus the event timestamp, including late events after return. If two VINs share a plate, exactly one covering rental must identify the vehicle; otherwise the row is reported instead of guessed.
 - `(tenant, operator, reference)` is idempotent. API and CSV rows can safely overlap.
-- `scripts/run-rental-operations.ts --commit --sync-parking` pulls both operators. The production timer includes this flag.
+- `scripts/run-rental-operations.ts --commit --sync-parking` (run standalone scripts with `npx tsx --conditions=react-server`) pulls both operators. The production timer includes this flag.
 - Managers can sync a selected car or upload a CSV on `/charges`. Bulk feed/CSV imports never queue customer WhatsApp messages automatically; existing manager-controlled notification and statement rules remain in force.
 - Every outbound API call has a 30-second timeout. API errors and row-level assignment errors are returned and logged by the scheduler.
 
