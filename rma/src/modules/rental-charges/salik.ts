@@ -1,5 +1,5 @@
 import "server-only";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { ne } from "drizzle-orm";
 import { rental } from "@/platform/db/schema";
@@ -11,7 +11,9 @@ import { upsertRentalCharge, vehiclesForChargeEntry } from "./core";
 import { salikChargeReference } from "./salik-rules";
 
 function salikAccounts(): Array<{ user: string; pass: string }> {
-  const path = process.env.SALIK_ACCOUNTS_PATH || join(/*turbopackIgnore: true*/ process.cwd(), "scripts", ".salik-accounts.json");
+  const configuredPath = process.env.SALIK_ACCOUNTS_PATH?.trim();
+  const path = configuredPath || join(/*turbopackIgnore: true*/ process.cwd(), "scripts", ".salik-accounts.json");
+  if (!configuredPath && !existsSync(path)) return [];
   const accounts = JSON.parse(readFileSync(path, "utf8")) as Array<{ user?: string; pass?: string }>;
   if (!Array.isArray(accounts) || accounts.length === 0 || accounts.some((account) => !account.user || !account.pass)) {
     throw new Error("Salik accounts must contain at least one user and password");
@@ -20,6 +22,8 @@ function salikAccounts(): Array<{ user: string; pass: string }> {
 }
 
 export async function syncSalikCharges(home: string, actorId: string | null, vehicleId?: string, now = new Date()) {
+  const accounts = salikAccounts();
+  if (accounts.length === 0) return { configured: false, accountsReady: 0, vehicles: 0, found: 0, created: 0, skippedNoAccount: 0, errors: [] as string[] };
   const [vehicles, rentals] = await Promise.all([
     vehiclesForChargeEntry(home),
     withDrizzleTenant(home, (tx) => tx.select({ vehicleId: rental.vehicleId, startDate: rental.startDate }).from(rental).where(ne(rental.status, "cancelled"))),
@@ -34,7 +38,7 @@ export async function syncSalikCharges(home: string, actorId: string | null, veh
   const errors: string[] = [];
   let accountsReady = 0;
 
-  for (const account of salikAccounts()) {
+  for (const account of accounts) {
     try {
       const jar = await salik.login(account.user, account.pass);
       const salikVehicles = await salik.getVehicles(jar);
@@ -98,5 +102,5 @@ export async function syncSalikCharges(home: string, actorId: string | null, veh
     }
   }
 
-  return { accountsReady, vehicles: selected.length, found, created, skippedNoAccount, errors };
+  return { configured: true, accountsReady, vehicles: selected.length, found, created, skippedNoAccount, errors };
 }

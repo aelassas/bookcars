@@ -87,7 +87,7 @@ export function ChargesBoard({ tenantId, tenantSlug, charges, vehicles = [], all
     }
     await run(async () => {
       const result = await syncVehicleSalik(tenantId, tenantSlug, vehicleId);
-      setNotice(`Salik returned ${result.found} trips; ${result.created} new charges were assigned to their rental periods.${result.skippedNoAccount ? " The plate is not on a configured Salik account." : ""}${result.errors.length ? ` Errors: ${result.errors.join("; ")}` : ""}`);
+      setNotice(result.configured === false ? "Salik credentials are not configured on the server; no account was contacted." : `Salik returned ${result.found} trips; ${result.created} new charges were assigned to their rental periods.${result.skippedNoAccount ? " The plate is not on a configured Salik account." : ""}${result.errors.length ? ` Errors: ${result.errors.join("; ")}` : ""}`);
     });
   }
 
