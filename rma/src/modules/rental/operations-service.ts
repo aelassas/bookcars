@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, eq, gt, isNull, lte, or, sql } from "drizzle-orm";
+import { and, asc, eq, gt, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { customer, message, rental, tenantMember, vehicle } from "@/platform/db/schema";
 import { MIN_PHONE_MATCH_DIGITS, normalizePhone, PG_NON_DIGIT_RE } from "@/platform/messaging/phone";
 import { sendNotification } from "@/modules/notify/send";
@@ -8,6 +8,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { buildReturnReminder, classifyExtensionReply, returnReminderIsDue } from "./operations";
 import { buildChargeStatement } from "@/modules/rental-charges/rules";
 import { chargeAndRentalsForStatement, markStatementSent, statementChargesDue, statementIsDue } from "@/modules/rental-charges/core";
+import { automaticCustomerNotificationPolicy } from "./notification-policy";
 
 function senderLine(tenantSlug: string): string {
   const line = process.env.CUSTOMER_WA_SENDER_LINE?.trim() || (tenantSlug === "rma" ? "rma-main" : "");
@@ -43,10 +44,12 @@ async function sendCustomerText(home: string, tenantSlug: string, input: {
   }));
 }
 
-export async function sendDueReturnReminders(home: string, tenantSlug: string, now = new Date()): Promise<{ sent: number; errors: string[] }> {
+export async function sendDueReturnReminders(home: string, tenantSlug: string, now = new Date()): Promise<{ sent: number; errors: string[]; disabled?: boolean }> {
+  const policy = automaticCustomerNotificationPolicy();
+  if (!policy.enabled) return { sent: 0, errors: [], disabled: true };
   const rows = await withDrizzleTenant(home, (tx) => tx.select({ rental, phone: customer.phone, customerName: customer.name, plate: vehicle.plate })
     .from(rental).innerJoin(customer, eq(customer.id, rental.customerId)).innerJoin(vehicle, eq(vehicle.id, rental.vehicleId))
-    .where(and(eq(rental.status, "active"), isNull(rental.returnReminderSentAt), lte(rental.returnDate, new Date(now.getTime() + 48 * 60 * 60 * 1000)))));
+    .where(and(eq(rental.status, "active"), isNull(rental.returnReminderSentAt), gte(rental.createdAt, policy.after), lte(rental.returnDate, new Date(now.getTime() + 48 * 60 * 60 * 1000)))));
   let sent = 0;
   const errors: string[] = [];
   for (const row of rows) {
@@ -69,11 +72,13 @@ export async function sendDueReturnReminders(home: string, tenantSlug: string, n
   return { sent, errors };
 }
 
-export async function sendDueChargeStatements(home: string, tenantSlug: string, now = new Date()): Promise<{ sent: number; errors: string[] }> {
+export async function sendDueChargeStatements(home: string, tenantSlug: string, now = new Date()): Promise<{ sent: number; errors: string[]; disabled?: boolean }> {
+  const policy = automaticCustomerNotificationPolicy();
+  if (!policy.enabled) return { sent: 0, errors: [], disabled: true };
   let sent = 0;
   const errors: string[] = [];
   for (const final of [false, true]) {
-    const candidates = await statementChargesDue(home, now, final);
+    const candidates = await statementChargesDue(home, now, final, policy.after);
     for (const candidate of candidates) {
       if (!final && !statementIsDue(candidate.startDate, candidate.statementCount, now)) continue;
       const data = await chargeAndRentalsForStatement(home, candidate.id);

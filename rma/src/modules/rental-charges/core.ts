@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq, lte, ne, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lte, ne, sql } from "drizzle-orm";
 import type { db } from "@/platform/db/client";
 import { auditEvent, customer, integrationEvent, message, rental, rentalCharge, vehicle } from "@/platform/db/schema";
 import { enqueueDistributorWhatsApp } from "@/modules/rental/outbox";
@@ -189,11 +189,11 @@ export async function chargeAndRentalsForStatement(home: string, rentalId: strin
   });
 }
 
-export async function statementChargesDue(home: string, now: Date, final: boolean) {
+export async function statementChargesDue(home: string, now: Date, final: boolean, after: Date) {
   return withDrizzleTenant(home, async (tx) => tx.select({ id: rental.id, startDate: rental.startDate, statementCount: rental.statementCount })
-    .from(rental).where(final
+    .from(rental).where(and(final
       ? and(sql`${rental.status} in ('returned', 'completed')`, sql`${rental.finalStatementSentAt} is null`)
-      : and(eq(rental.status, "active"), lte(rental.startDate, now))));
+      : and(eq(rental.status, "active"), lte(rental.startDate, now)), gte(rental.createdAt, after))));
 }
 
 export function statementIsDue(startDate: Date, statementCount: number, now: Date): boolean {

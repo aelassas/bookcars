@@ -5,5 +5,6 @@ After=network.target docker.service
 [Service]
 Type=oneshot
 WorkingDirectory=/opt/rma-crm/platform
+Environment=RMA_OPERATIONS_NOTIFICATIONS_ENABLED=false
 EnvironmentFile=/etc/rma-crm-notify.env
-ExecStart=/usr/bin/npx tsx scripts/run-rental-operations.ts --commit --sync-fines --sync-salik --sync-parking
+ExecStart=/usr/bin/npx tsx --conditions=react-server scripts/run-rental-operations.ts --commit --sync-fines --sync-salik --sync-parking

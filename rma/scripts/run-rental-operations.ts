@@ -9,6 +9,7 @@ import { markDeliveredChargeNotifications } from "@/modules/rental-charges/deliv
 import { syncSalikCharges } from "@/modules/rental-charges/salik";
 import { syncParkingCharges } from "@/modules/rental-charges/parking";
 import { captureExtensionReplies, sendDueChargeStatements, sendDueReturnReminders } from "@/modules/rental/operations-service";
+import { automaticCustomerNotificationPolicy } from "@/modules/rental/notification-policy";
 
 const tenantSlug = process.env.RMA_OPERATIONS_TENANT_SLUG?.trim() || "rma";
 const commit = process.argv.includes("--commit");
@@ -27,6 +28,8 @@ async function main() {
     return;
   }
 
+  const notificationPolicy = automaticCustomerNotificationPolicy();
+  console.log(JSON.stringify({ automaticCustomerNotifications: notificationPolicy.enabled ? { enabled: true, after: notificationPolicy.after.toISOString() } : { enabled: false } }));
   const reminders = await sendDueReturnReminders(tenant.id, tenantSlug);
   const replies = await captureExtensionReplies(tenant.id);
   const statements = await sendDueChargeStatements(tenant.id, tenantSlug);
@@ -55,7 +58,9 @@ async function main() {
             });
             if (saved.created) {
               created++;
-              await notifyRentalChargeById(tenant.id, tenantSlug, saved.charge.id);
+              if (notificationPolicy.enabled && new Date(fine.ticketDate) >= notificationPolicy.after) {
+                await notifyRentalChargeById(tenant.id, tenantSlug, saved.charge.id);
+              }
             }
           } catch (error) {
             errors.push(error instanceof Error ? error.message : "Fine import failed");
