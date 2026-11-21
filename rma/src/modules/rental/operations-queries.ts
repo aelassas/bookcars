@@ -25,6 +25,13 @@ export async function getOperationsBoard(tenantId: string) {
       const currentRental = rentalRow?.rental ?? null;
       const vehicleCharges = charges.filter((charge) => charge.vehicleId === car.id && charge.status !== "void");
       const outstandingCharges = Math.round(vehicleCharges.filter((charge) => charge.status !== "paid").reduce((sum, charge) => sum + charge.amount, 0) * 100) / 100;
+      const chargeSummary = (kind: string) => {
+        const rows = vehicleCharges.filter((charge) => charge.kind === kind);
+        return {
+          count: rows.length,
+          unpaid: Math.round(rows.filter((charge) => charge.status !== "paid").reduce((sum, charge) => sum + charge.amount, 0) * 100) / 100,
+        };
+      };
       const mileage = currentRental ? calculateMileageUsage({
         startOdometer: currentRental.startOdometer,
         finalOdometer: currentRental.status === "active" ? car.odometer : currentRental.finalOdometer,
@@ -43,9 +50,10 @@ export async function getOperationsBoard(tenantId: string) {
         rental: currentRental,
         customerName: rentalRow?.customerName ?? null,
         charges: {
-          fines: vehicleCharges.filter((charge) => charge.kind === "fine").length,
-          salik: vehicleCharges.filter((charge) => charge.kind === "salik").length,
-          parking: vehicleCharges.filter((charge) => ["parkin", "parkonic"].includes(charge.kind)).length,
+          fines: chargeSummary("fine"),
+          salik: chargeSummary("salik"),
+          parkin: chargeSummary("parkin"),
+          parkonic: chargeSummary("parkonic"),
           outstanding: outstandingCharges,
         },
         totalDebt: (currentRental?.balanceDue ?? 0) + outstandingCharges,
@@ -55,14 +63,30 @@ export async function getOperationsBoard(tenantId: string) {
     });
   });
 
+  const baseRows = rows.map((row) => ({
+    ...row,
+    telemetry: null as null | { lastFixAt: string; fresh: boolean; speed: number; ignition: boolean },
+    overdue: row.rental?.status === "active" && row.rental.returnDate.getTime() < Date.now(),
+  }));
+
   try {
     const live = await getPilotClient().getFleet();
     const byImei = new Map(live.map((car) => [car.imei, car]));
-    return rows.map((row) => {
+    return baseRows.map((row) => {
       const telemetry = row.vehicle.imei ? byImei.get(row.vehicle.imei) : undefined;
       if (!telemetry) return row;
       const currentOdometer = Math.max(row.vehicle.odometer, Math.round(telemetry.odometerKm));
-      const updated: (typeof rows)[number] = { ...row, vehicle: { ...row.vehicle, odometer: currentOdometer, gpsBlocked: telemetry.blocked } };
+      const lastFixMs = Date.parse(telemetry.lastFixAt);
+      const updated: (typeof baseRows)[number] = {
+        ...row,
+        vehicle: { ...row.vehicle, odometer: currentOdometer, gpsBlocked: telemetry.blocked },
+        telemetry: {
+          lastFixAt: telemetry.lastFixAt,
+          fresh: Number.isFinite(lastFixMs) && Date.now() - lastFixMs >= 0 && Date.now() - lastFixMs <= 5 * 60_000,
+          speed: telemetry.speed,
+          ignition: telemetry.ignition,
+        },
+      };
       if (row.rental?.status === "active" && row.mileage) {
         updated.mileage = calculateMileageUsage({
           startOdometer: row.rental.startOdometer,
@@ -81,6 +105,6 @@ export async function getOperationsBoard(tenantId: string) {
       return updated;
     });
   } catch {
-    return rows;
+    return baseRows;
   }
 }
