@@ -130,6 +130,8 @@ export function RentalDetail({
   charges,
   actorId,
   canConfirm = false,
+  tarsAutoEnabled,
+  tarsAutoDryRun,
 }: {
   tenantId: string;
   tenantSlug: string;
@@ -146,6 +148,8 @@ export function RentalDetail({
   charges: Array<{ charge: typeof rentalCharge.$inferSelect; customerName: string; plate: string }>;
   actorId?: string;
   canConfirm?: boolean;
+  tarsAutoEnabled: boolean;
+  tarsAutoDryRun: boolean;
 }) {
   const [r, setR] = useState<Rental>(initialRental);
   const [payments] = useState<Payment[]>(initialPayments);
@@ -503,8 +507,8 @@ export function RentalDetail({
                 startAt={r.startDate.toISOString()}
                 returnAt={r.returnDate.toISOString()}
                 canManage={canConfirm}
-                autoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
-                autoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}
+                autoEnabled={tarsAutoEnabled}
+                autoDryRun={tarsAutoDryRun}
                 submissionStatus={r.tarsSubmissionStatus ?? "not_started"}
                 submissionHash={r.tarsSubmissionHash ?? null}
                 submissionAttempts={r.tarsSubmissionAttempts ?? 0}

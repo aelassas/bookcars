@@ -140,13 +140,14 @@ async function resolveContractPath(home: string, value: TarsSubmissionPackage): 
 }
 
 async function runBrowserSubmission(home: string, value: TarsSubmissionPackage, dryRun: boolean) {
+  const contractPath = await resolveContractPath(home, value);
   const handoffPath = path.join(tmpdir(), `rma-tars-${value.handoff.rentalId}-${Date.now()}.json`);
   await writeFile(handoffPath, JSON.stringify(value.handoff), { mode: 0o600 });
   const args = [
     path.join(process.cwd(), "scripts", "tars-prepare.ts"),
     handoffPath,
     "--contract",
-    await resolveContractPath(home, value),
+    contractPath,
     "--json",
     dryRun ? "--dry-run" : "--submit",
   ];

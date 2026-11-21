@@ -44,6 +44,8 @@ export default async function RentalDetailPage({ params }: Props) {
         charges={data.charges.map((charge) => ({ charge, customerName: data.customerName ?? "Customer", plate: data.vehiclePlate ?? "—" }))}
         actorId={session.user.id}
         canConfirm={canConfirm}
+        tarsAutoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
+        tarsAutoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}
       />
 
       {/* Car panel additions (slice 2): the return close-out + a jump to the
