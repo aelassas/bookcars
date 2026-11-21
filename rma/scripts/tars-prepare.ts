@@ -4,9 +4,52 @@ import { extname, resolve } from "node:path";
 import { parseTarsHandoff, type TarsHandoff } from "../src/platform/integrations/tars/handoff";
 
 const SESSION = "rma-tars";
-const CLI = resolve(process.cwd(), "node_modules", ".bin", "agent-browser");
+const CLI = process.env.TARS_AGENT_BROWSER_CLI ?? resolve(process.cwd(), "node_modules", ".bin", "agent-browser");
 const ORG_DID = process.env.TARS_ORG_DID ?? "did:rta:51646245";
 const EMPLOYEE_USER_ID = process.env.TARS_EMPLOYEE_USER_ID ?? "rmacarrental";
+
+type RunnerResult = { status: "dry_run" | "succeeded"; documentNumber?: string; summary: string };
+
+function outputResult(result: RunnerResult, json: boolean): void {
+  if (json) console.log(JSON.stringify(result));
+  else console.log(`${result.summary}\n${result.status === "dry_run" ? "DRY RUN COMPLETE — no final Submit button was pressed." : `TARS DOCUMENT: ${result.documentNumber}`}`);
+}
+
+function findExistingDocument(handoff: TarsHandoff): string | null {
+  return evaluate<string | null>(`(async () => {
+    const response = await fetch('/api/agencies/${ORG_DID}/rentals/100?q=' + encodeURIComponent(${JSON.stringify(handoff.agreementNumber)}));
+    if (!response.ok) throw new Error('Unable to reconcile the TARS agreement before submission');
+    const payload = await response.json();
+    const matches = (payload.data || []).filter(row => row.documentNumber === ${JSON.stringify(handoff.agreementNumber)});
+    if (matches.length > 1) throw new Error('More than one existing TARS agreement matches this handoff');
+    return matches[0]?.documentNumber || null;
+  })()`);
+}
+
+function finishAutomaticSubmission(handoff: TarsHandoff, submit: boolean, dryRun: boolean): RunnerResult {
+  const summary = browser(["get", "text", "body"]);
+  const normalizedSummary = summary.toUpperCase();
+  if (!normalizedSummary.includes(handoff.vehicle.vin.toUpperCase()) ||
+      !normalizedSummary.includes(handoff.agreementNumber.toUpperCase()) ||
+      !summary.replace(/\D/g, "").includes(handoff.customer.emiratesId)) {
+    throw new Error("TARS Summary does not match the reviewed customer, agreement and VIN; nothing was submitted");
+  }
+  if (dryRun) return { status: "dry_run", summary: summary.slice(0, 4000) };
+  if (!submit) return { status: "dry_run", summary: summary.slice(0, 4000) };
+
+  evaluate(`(() => {
+    const button = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Submit' && b.getClientRects().length);
+    if (!button) throw new Error('Final TARS Submit button was not found');
+    button.click();
+  })()`);
+  browser(["wait", "--fn", `(() => {
+    const text = document.body.innerText.toLowerCase();
+    return text.includes('success') || text.includes('rental contracts') || !Array.from(document.querySelectorAll('button')).some(b => b.textContent.trim() === 'Submit' && b.getClientRects().length);
+  })()`]);
+  const documentNumber = findExistingDocument(handoff);
+  if (!documentNumber) throw new Error("TARS submission outcome unknown: the agreement was not found after Submit; reconciliation is required before retrying");
+  return { status: "succeeded", documentNumber, summary: summary.slice(0, 4000) };
+}
 
 function browser(args: string[], input?: string): string {
   const result = spawnSync(CLI, ["--session", SESSION, "--session-name", SESSION, ...args], {
@@ -157,8 +200,12 @@ function prepareContractDetails(handoff: TarsHandoff, contractPath: string): voi
 function main(): void {
   const [handoffArg, ...flags] = process.argv.slice(2);
   const contractFlag = flags.indexOf("--contract");
+  const json = flags.includes("--json");
+  const submit = flags.includes("--submit");
+  const dryRun = flags.includes("--dry-run");
+  if (submit && dryRun) throw new Error("Choose either --submit or --dry-run");
   if (!handoffArg || contractFlag < 0 || !flags[contractFlag + 1]) {
-    throw new Error("Usage: npx tsx scripts/tars-prepare.ts <handoff.json> --contract <signed.pdf>");
+    throw new Error("Usage: npx tsx scripts/tars-prepare.ts <handoff.json> --contract <signed.pdf> [--submit|--dry-run] [--json]");
   }
 
   const handoff = parseTarsHandoff(JSON.parse(readFileSync(resolve(handoffArg), "utf8")));
@@ -176,14 +223,22 @@ function main(): void {
     throw new Error("TARS login is required. Complete it interactively in the rma-tars agent-browser session, then rerun.");
   }
   waitForStep("vehicle-step");
+  const existingDocument = findExistingDocument(handoff);
+  if (existingDocument) {
+    outputResult({ status: "succeeded", documentNumber: existingDocument, summary: "Existing TARS agreement reconciled; no duplicate was submitted." }, json);
+    return;
+  }
   selectVehicle(handoff);
   selectCustomer(handoff);
   prepareContractDetails(handoff, contractPath);
   submitCurrentStep();
   waitForStep("summary-step");
-
-  console.log(browser(["get", "text", "body"]));
-  console.log("\nREADY FOR HUMAN REVIEW — the script stopped at Summary and did not submit the contract.");
+  const result = finishAutomaticSubmission(handoff, submit, dryRun);
+  if (submit || dryRun || json) outputResult(result, json);
+  else {
+    console.log(browser(["get", "text", "body"]));
+    console.log("\nREADY FOR HUMAN REVIEW — the script stopped at Summary and did not submit the contract.");
+  }
 }
 
 try {

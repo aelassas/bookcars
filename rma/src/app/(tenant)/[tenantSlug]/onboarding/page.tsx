@@ -72,8 +72,14 @@ export default async function RentalOnboardingPage({ params }: { params: Promise
                     tenantId={tenant.id} tenantSlug={tenantSlug} rentalId={rental.id}
                     contractUrl={rental.contractUrl} tarsDocumentNumber={rental.tarsDocumentNumber}
                     customerName={customer.name} customerEmiratesId={customer.emiratesId}
+                    customerDocumentsReviewed={Boolean(customer.documentsReviewedAt)}
                     vehiclePlate={vehicle.plate} vehicleVin={vehicle.vin} vehicleOdometer={vehicle.odometer}
                     startAt={rental.startDate.toISOString()} returnAt={rental.returnDate.toISOString()} canManage
+                    autoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
+                    autoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}
+                    submissionStatus={rental.tarsSubmissionStatus} submissionHash={rental.tarsSubmissionHash}
+                    submissionAttempts={rental.tarsSubmissionAttempts} submissionError={rental.tarsSubmissionError}
+                    initialSubmission={(rental.tarsSubmissionPayload ?? null) as import("@/platform/integrations/tars/submission").TarsSubmissionPackage | null}
                   />}
                   {stage.id === "tars" && <div className="flex items-center gap-1.5 text-xs text-success"><CheckCircle2 className="h-3.5 w-3.5" /> {rental.tarsDocumentNumber ?? "Recorded"}</div>}
                 </div>

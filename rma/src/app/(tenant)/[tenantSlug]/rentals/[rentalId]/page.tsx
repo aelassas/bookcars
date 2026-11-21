@@ -35,6 +35,7 @@ export default async function RentalDetailPage({ params }: Props) {
         customerName={data.customerName}
         customerPhone={data.customerPhone}
         customerEmiratesId={data.customerEmiratesId}
+        customerDocumentsReviewed={Boolean(data.customerDocumentsReviewedAt)}
         vehicleLabel={`${data.vehicleMake} ${data.vehicleModel} (${data.vehiclePlate})`}
         vehiclePlate={data.vehiclePlate ?? ""}
         vehicleVin={data.vehicleVin}

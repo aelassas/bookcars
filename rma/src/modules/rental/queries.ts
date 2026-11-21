@@ -58,6 +58,7 @@ export type RentalWithDetails = {
   customerName: string | null;
   customerPhone: string | null;
   customerEmiratesId: string | null;
+  customerDocumentsReviewedAt: Date | null;
   vehiclePlate: string | null;
   vehicleMake: string | null;
   vehicleModel: string | null;
@@ -79,6 +80,7 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
         customerName: customer.name,
         customerPhone: customer.phone,
         customerEmiratesId: customer.emiratesId,
+        customerDocumentsReviewedAt: customer.documentsReviewedAt,
         vehiclePlate: vehicle.plate,
         vehicleMake: vehicle.make,
         vehicleModel: vehicle.model,

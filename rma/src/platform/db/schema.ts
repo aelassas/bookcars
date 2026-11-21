@@ -1054,6 +1054,14 @@ export const rental = tenantTable(
     // TARS contract identity (0080, e.g. "55606-3350") — the TARS sync
     // (integrations/tars) upserts on it; unique per tenant.
     tarsDocumentNumber: text("tars_document_number"),
+    tarsSubmissionStatus: text("tars_submission_status").notNull().default("not_started"),
+    tarsSubmissionHash: text("tars_submission_hash"),
+    tarsSubmissionPayload: jsonb("tars_submission_payload"),
+    tarsSubmissionAttempts: integer("tars_submission_attempts").notNull().default(0),
+    tarsSubmissionError: text("tars_submission_error"),
+    tarsSubmissionReviewedBy: uuid("tars_submission_reviewed_by").references(() => user.id),
+    tarsSubmissionReviewedAt: timestamp("tars_submission_reviewed_at", { withTimezone: true }),
+    tarsSubmissionCompletedAt: timestamp("tars_submission_completed_at", { withTimezone: true }),
     onboardingStage: text("onboarding_stage").notNull().default("new_lead"),
     taqeeqSubmissionId: text("taqeeq_submission_id"),
     taqeeqSignedAt: timestamp("taqeeq_signed_at", { withTimezone: true }),

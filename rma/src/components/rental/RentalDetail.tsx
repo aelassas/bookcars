@@ -21,6 +21,7 @@ import { TarsSection } from "@/components/rental/TarsSection";
 import { ChargesBoard } from "@/components/rental/ChargesBoard";
 import { RentalExtensionPanel } from "@/components/rental/RentalExtensionPanel";
 import type { rentalCharge } from "@/platform/db/schema";
+import type { TarsSubmissionPackage } from "@/platform/integrations/tars/submission";
 import { startRental, completeRental, cancelRental, resolveDeposit } from "@/modules/rental/actions";
 import { confirmPayment, rejectPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
@@ -79,6 +80,11 @@ type Rental = {
   salesAgentId?: string | null;
   contractUrl?: string | null;
   tarsDocumentNumber?: string | null;
+  tarsSubmissionStatus?: string;
+  tarsSubmissionHash?: string | null;
+  tarsSubmissionPayload?: unknown;
+  tarsSubmissionAttempts?: number;
+  tarsSubmissionError?: string | null;
 };
 
 type Payment = {
@@ -115,6 +121,7 @@ export function RentalDetail({
   customerName,
   customerPhone,
   customerEmiratesId,
+  customerDocumentsReviewed,
   vehicleLabel,
   vehiclePlate,
   vehicleVin,
@@ -130,6 +137,7 @@ export function RentalDetail({
   customerName: string | null;
   customerPhone: string | null;
   customerEmiratesId: string | null;
+  customerDocumentsReviewed: boolean;
   vehicleLabel: string;
   vehiclePlate: string;
   vehicleVin: string | null;
@@ -488,12 +496,20 @@ export function RentalDetail({
                 tarsDocumentNumber={r.tarsDocumentNumber ?? null}
                 customerName={customerName ?? "Unknown"}
                 customerEmiratesId={customerEmiratesId}
+                customerDocumentsReviewed={customerDocumentsReviewed}
                 vehiclePlate={vehiclePlate}
                 vehicleVin={vehicleVin}
                 vehicleOdometer={vehicleOdometer}
                 startAt={r.startDate.toISOString()}
                 returnAt={r.returnDate.toISOString()}
                 canManage={canConfirm}
+                autoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
+                autoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}
+                submissionStatus={r.tarsSubmissionStatus ?? "not_started"}
+                submissionHash={r.tarsSubmissionHash ?? null}
+                submissionAttempts={r.tarsSubmissionAttempts ?? 0}
+                submissionError={r.tarsSubmissionError ?? null}
+                initialSubmission={(r.tarsSubmissionPayload ?? null) as TarsSubmissionPackage | null}
               />
             </div>
           )}
