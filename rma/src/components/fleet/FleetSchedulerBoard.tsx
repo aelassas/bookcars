@@ -10,6 +10,7 @@ import { CreateRentalModal } from "@/components/modals/CreateRentalModal";
 import { t, type Lang } from "@/platform/i18n/dict";
 import type { CalendarSlot } from "@/modules/rental/booking-queries";
 import { currentEvent, eventOnDay, groupUpcomingEvents, nextDays } from "./fleet-board-mobile";
+import { rentalIsLongTerm } from "@/modules/rental/operations";
 
 /**
  * Yango-style booking board on DayPilot Lite (open-source, Apache-2.0).
@@ -57,6 +58,7 @@ type Tags = {
   salesAgentName: string | null;
   vehicleName: string;
   editable: boolean;
+  longTerm: boolean;
   startYmd: string;
   endYmd: string; // inclusive display end (return day)
 };
@@ -202,6 +204,11 @@ export function FleetSchedulerBoard({
   }
 
   const today = todayYmd();
+  const boardEnd = useMemo(() => {
+    const value = new Date(`${startDate}T00:00:00.000Z`);
+    value.setUTCDate(value.getUTCDate() + days - 1);
+    return value;
+  }, [startDate, days]);
 
   // Land the viewport on TODAY (the range starts a month back for history,
   // but opening the board on the 1st of last month was the #1 confusion).
@@ -218,9 +225,9 @@ export function FleetSchedulerBoard({
     const counts = new Map<string, Set<string>>();
     for (const s of slots) {
       if (s.rental.status === "cancelled") continue;
-      if (!s.rental.startDate || !(s.rental.actualReturnDate || s.rental.returnDate)) continue;
+      if (!s.rental.startDate || (!rentalIsLongTerm(s.rental) && !(s.rental.actualReturnDate || s.rental.returnDate))) continue;
       const start = new Date(s.rental.startDate as Date);
-      const end = new Date((s.rental.actualReturnDate || s.rental.returnDate) as Date);
+      const end = rentalIsLongTerm(s.rental) ? new Date(boardEnd) : new Date((s.rental.actualReturnDate || s.rental.returnDate) as Date);
       const set = counts.get(s.rental.vehicleId) ?? new Set<string>();
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const key = ymd(d);
@@ -234,7 +241,7 @@ export function FleetSchedulerBoard({
       pct.set(v.id, Math.min(100, Math.round((n / days) * 100)));
     }
     return pct;
-  }, [slots, vehicles, startDate, days]);
+  }, [slots, vehicles, startDate, days, boardEnd]);
 
   // Short label for the click-a-bar detail card (the row header itself is a
   // two-line HTML block, see onBeforeRowHeaderRender).
@@ -292,14 +299,15 @@ export function FleetSchedulerBoard({
   }));
 
   const events = slots
-    .filter((s) => s.rental.startDate && (s.rental.actualReturnDate || s.rental.returnDate))
+    .filter((s) => s.rental.startDate && (rentalIsLongTerm(s.rental) || s.rental.actualReturnDate || s.rental.returnDate))
     .map((s) => {
+      const longTerm = rentalIsLongTerm(s.rental);
       const start = new Date(s.rental.startDate as Date);
-      const rawEnd = new Date((s.rental.actualReturnDate || s.rental.returnDate) as Date);
+      const rawEnd = longTerm ? new Date(boardEnd) : new Date((s.rental.actualReturnDate || s.rental.returnDate) as Date);
       const endExcl = new Date(rawEnd);
       endExcl.setDate(endExcl.getDate() + 1); // +1: cover the return day at Day scale
-      const dispStatus = displayStatus(s.rental.status, ymd(rawEnd), today);
-      const editable = s.source === "rental" && (s.rental.status === "reserved" || s.rental.status === "active");
+      const dispStatus = longTerm ? "active" : displayStatus(s.rental.status, ymd(rawEnd), today);
+      const editable = !longTerm && s.source === "rental" && (s.rental.status === "reserved" || s.rental.status === "active");
       const tags: Tags = {
         source: s.source,
         rentalId: s.rental.id,
@@ -308,6 +316,7 @@ export function FleetSchedulerBoard({
         salesAgentName: s.salesAgentName ?? null,
         vehicleName: vName.get(s.rental.vehicleId) ?? "—",
         editable,
+        longTerm,
         startYmd: ymd(start),
         endYmd: ymd(rawEnd),
       };
@@ -319,7 +328,7 @@ export function FleetSchedulerBoard({
         resource: s.rental.vehicleId,
         start: ymd(start),
         end: ymd(endExcl),
-        text: dispStatus === "overdue" ? `⚠ ${tagText}` : tagText,
+        text: longTerm ? `Long-term · ${tagText}` : dispStatus === "overdue" ? `⚠ ${tagText}` : tagText,
         backColor: STATUS_COLOR[dispStatus] ?? "#64748b",
         fontColor: "#ffffff",
         borderColor: "darker",
@@ -677,7 +686,7 @@ export function FleetSchedulerBoard({
         // "overdue" is the display form of an active rental past its return day.
         const isReserved = selected.status === "reserved";
         const isActive = selected.status === "active" || selected.status === "overdue";
-        const canAct = selected.source === "rental" && (isReserved || isActive);
+        const canAct = selected.source === "rental" && selected.editable && (isReserved || isActive);
         return (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
           <div className="absolute inset-0 bg-ink/40" role="button" aria-label="Close" onClick={closeDetail} />
@@ -718,12 +727,12 @@ export function FleetSchedulerBoard({
                   </div>
                 </div>
               ) : (
-                <div className="flex justify-between"><span className="text-ink-3">Dates</span><span className="text-ink tnum">{selected.startYmd} → {selected.endYmd}</span></div>
+                <div className="flex justify-between"><span className="text-ink-3">Dates</span><span className="text-ink tnum">{selected.startYmd} → {selected.longTerm ? "open-ended" : selected.endYmd}</span></div>
               )}
               {selected.salesAgentName && (
                 <div className="flex justify-between"><span className="text-ink-3">Booked by</span><span className="text-ink">{selected.salesAgentName}</span></div>
               )}
-              <div className="flex justify-between"><span className="text-ink-3">Status</span><span className="capitalize text-ink">{selected.status}</span></div>
+              <div className="flex justify-between"><span className="text-ink-3">Status</span><span className="capitalize text-ink">{selected.longTerm ? "long-term" : selected.status}</span></div>
               <div className="flex justify-between"><span className="text-ink-3">Type</span><span className="text-ink">{selected.source === "rental" ? "Platform rental" : "Imported (sheet)"}</span></div>
               {detailMsg && (
                 <div className="rounded-field border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs text-amber-800">
