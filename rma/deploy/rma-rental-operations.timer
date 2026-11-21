@@ -1,5 +1,5 @@
 [Unit]
-Description=Run RMA CRM rental operations and RTA/Salik sync hourly
+Description=Run RMA CRM rental operations and RTA/Salik/parking sync hourly
 
 [Timer]
 OnBootSec=5min

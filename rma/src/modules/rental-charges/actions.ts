@@ -15,6 +15,8 @@ import { notifyRentalChargeById, upsertRentalCharge } from "./core";
 import { blockChargeEngine, releaseChargeEngineBlocks } from "./engine-service";
 import type { RentalChargeInput } from "./rules";
 import { syncSalikCharges } from "./salik";
+import { importParkingEvents, syncParkingCharges } from "./parking";
+import { PARKING_OPERATORS, parseParkingCsv, type ParkingOperator } from "@/platform/integrations/parking/connectors";
 
 export async function syncVehicleSalik(tenantId: string, tenantSlug: string, vehicleId: string) {
   await canManageRentalsForTenant(tenantId);
@@ -24,6 +26,31 @@ export async function syncVehicleSalik(tenantId: string, tenantSlug: string, veh
   const result = await syncSalikCharges(home, actorId, vehicleId);
   revalidatePath(`/${tenantSlug}/charges`);
   return result;
+}
+
+export async function importParkingCsv(tenantId: string, tenantSlug: string, operator: ParkingOperator, csv: string) {
+  await canManageRentalsForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  if (!PARKING_OPERATORS.includes(operator)) throw new Error("Unsupported parking operator");
+  if (!csv || Buffer.byteLength(csv, "utf8") > 2 * 1024 * 1024) throw new Error("CSV must be non-empty and no larger than 2 MB");
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  const result = await importParkingEvents(home, actorId, operator, parseParkingCsv(csv));
+  revalidatePath(`/${tenantSlug}/charges`);
+  revalidatePath(`/${tenantSlug}/operations`);
+  return result;
+}
+
+export async function syncVehicleParking(tenantId: string, tenantSlug: string, operator: ParkingOperator, vehicleId: string) {
+  await canManageRentalsForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  if (!PARKING_OPERATORS.includes(operator)) throw new Error("Unsupported parking operator");
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  const result = await syncParkingCharges(home, actorId, vehicleId);
+  revalidatePath(`/${tenantSlug}/charges`);
+  revalidatePath(`/${tenantSlug}/operations`);
+  return result.results.find((row) => row.operator === operator)!;
 }
 
 export async function createRentalCharge(tenantId: string, tenantSlug: string, input: RentalChargeInput, notify: boolean) {

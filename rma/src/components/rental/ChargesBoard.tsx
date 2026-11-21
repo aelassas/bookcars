@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Button, Input, Label, Select, Textarea } from "@/components/ui";
-import { blockOverdueFine, createRentalCharge, notifyRentalCharge, syncVehicleFines, syncVehicleSalik } from "@/modules/rental-charges/actions";
+import { blockOverdueFine, createRentalCharge, importParkingCsv, notifyRentalCharge, syncVehicleFines, syncVehicleParking, syncVehicleSalik } from "@/modules/rental-charges/actions";
 import type { rentalCharge } from "@/platform/db/schema";
 import { CHARGE_KINDS, chargeKindLabel, type ChargeKind } from "@/modules/rental-charges/rules";
+import type { ParkingOperator } from "@/platform/integrations/parking/connectors";
 import { formatCurrency } from "@/lib/format";
 import { ChargePaymentButton } from "./ChargePaymentButton";
 
@@ -23,6 +24,7 @@ export function ChargesBoard({ tenantId, tenantSlug, charges, vehicles = [], all
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [vehicleId, setVehicleId] = useState("");
+  const [parkingOperator, setParkingOperator] = useState<ParkingOperator>("parkin");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -89,9 +91,33 @@ export function ChargesBoard({ tenantId, tenantSlug, charges, vehicles = [], all
     });
   }
 
+  async function syncParking(operator: ParkingOperator) {
+    if (!vehicleId) {
+      setError(`Select a vehicle in the charge form, then sync its ${operator} charges`);
+      setOpen(true);
+      return;
+    }
+    await run(async () => {
+      const result = await syncVehicleParking(tenantId, tenantSlug, operator, vehicleId);
+      setNotice(`${operator}: ${result.found} feed rows; ${result.created} new and ${result.duplicates} duplicates.${result.errors.length ? ` Errors: ${result.errors.join("; ")}` : ""}`);
+    });
+  }
+
+  async function importCsv(event: React.ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    if (!file) return;
+    await run(async () => {
+      const result = await importParkingCsv(tenantId, tenantSlug, parkingOperator, await file.text());
+      setNotice(`${parkingOperator} CSV: ${result.found} rows; ${result.created} new and ${result.duplicates} duplicates. No customer notifications were queued.${result.errors.length ? ` Errors: ${result.errors.join("; ")}` : ""}`);
+    });
+    input.value = "";
+  }
+
   return (
     <div className="space-y-4">
-      {allowEntry && <div className="flex flex-wrap gap-2"><Button size="sm" onClick={() => setOpen(!open)}>{open ? "Close charge form" : "Add fine / Salik / parking"}</Button><Button size="sm" variant="secondary" disabled={busy} onClick={syncFines}>Sync selected car from RTA</Button><Button size="sm" variant="secondary" disabled={busy} onClick={syncSalik}>Sync selected car from Salik</Button></div>}
+      {allowEntry && <div className="flex flex-wrap gap-2"><Button size="sm" onClick={() => setOpen(!open)}>{open ? "Close charge form" : "Add fine / Salik / parking"}</Button><Button size="sm" variant="secondary" disabled={busy} onClick={syncFines}>Sync selected car from RTA</Button><Button size="sm" variant="secondary" disabled={busy} onClick={syncSalik}>Sync selected car from Salik</Button><Button size="sm" variant="secondary" disabled={busy} onClick={() => syncParking("parkin")}>Sync selected car from Parkin</Button><Button size="sm" variant="secondary" disabled={busy} onClick={() => syncParking("parkonic")}>Sync selected car from Parkonic</Button></div>}
+      {allowEntry && <div className="flex flex-wrap items-end gap-2 rounded-field bg-sunken p-3"><div><Label htmlFor="parking-operator">Operator CSV fallback</Label><Select id="parking-operator" value={parkingOperator} onChange={(event) => setParkingOperator(event.target.value as ParkingOperator)}><option value="parkin">Parkin</option><option value="parkonic">Parkonic</option></Select></div><div><Label htmlFor="parking-csv">CSV file (max 2 MB)</Label><Input id="parking-csv" type="file" accept=".csv,text/csv" disabled={busy} onChange={importCsv} /></div><p className="text-xs text-ink-3">Columns: reference, plate, occurredAt (with timezone), amount, location, description. Imports never bulk-notify customers.</p></div>}
       {error && <p role="alert" className="rounded-field bg-danger-soft px-3 py-2 text-sm text-danger">{error}</p>}
       {notice && <p role="status" className="rounded-field bg-success-soft px-3 py-2 text-sm text-success">{notice}</p>}
       {allowEntry && open && (

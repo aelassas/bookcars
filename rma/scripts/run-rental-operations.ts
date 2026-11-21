@@ -7,12 +7,14 @@ import { notifyRentalChargeById, upsertRentalCharge, vehiclesForChargeEntry } fr
 import { blockEligibleFineCharges } from "@/modules/rental-charges/engine-service";
 import { markDeliveredChargeNotifications } from "@/modules/rental-charges/delivery";
 import { syncSalikCharges } from "@/modules/rental-charges/salik";
+import { syncParkingCharges } from "@/modules/rental-charges/parking";
 import { captureExtensionReplies, sendDueChargeStatements, sendDueReturnReminders } from "@/modules/rental/operations-service";
 
 const tenantSlug = process.env.RMA_OPERATIONS_TENANT_SLUG?.trim() || "rma";
 const commit = process.argv.includes("--commit");
 const syncFines = process.argv.includes("--sync-fines");
 const syncSalik = process.argv.includes("--sync-salik");
+const syncParking = process.argv.includes("--sync-parking");
 const blockFines = process.argv.includes("--block-overdue-fines");
 
 async function main() {
@@ -20,7 +22,7 @@ async function main() {
   if (!tenant) throw new Error(`Tenant ${tenantSlug} not found`);
   if (!commit) {
     console.log(`[rental-operations] dry run only for ${tenantSlug}; no database writes, WhatsApp messages or Pilot commands. Use --commit to run.`);
-    console.log(`Optional feeds: --sync-fines --sync-salik. Safety-critical blocking additionally requires --block-overdue-fines.`);
+    console.log(`Optional feeds: --sync-fines --sync-salik --sync-parking. Safety-critical blocking additionally requires --block-overdue-fines.`);
     await pool.end();
     return;
   }
@@ -67,6 +69,7 @@ async function main() {
   }
 
   if (syncSalik) console.log(JSON.stringify({ salik: await syncSalikCharges(tenant.id, null) }));
+  if (syncParking) console.log(JSON.stringify({ parking: await syncParkingCharges(tenant.id, null) }));
   if (blockFines) console.log(JSON.stringify({ engineBlocks: await blockEligibleFineCharges(tenant.id) }));
   await pool.end();
 }
