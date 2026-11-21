@@ -26,6 +26,30 @@ export async function setRentalExtensionStatus(tenantId: string, tenantSlug: str
   revalidatePath(`/${tenantSlug}/operations`);
 }
 
+export async function markRentalAsLongTerm(tenantId: string, tenantSlug: string, rentalId: string): Promise<void> {
+  await canManageRentalsForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  await withDrizzleTenant(home, async (tx) => {
+    const [current] = await tx.select({ status: rental.status, extensionStatus: rental.extensionStatus }).from(rental).where(eq(rental.id, rentalId)).limit(1);
+    if (!current || current.status !== "active") throw new Error("Active rental not found");
+    if (current.extensionStatus === "long_term") return;
+    await tx.update(rental).set({ extensionStatus: "long_term", updatedAt: new Date() }).where(eq(rental.id, rentalId));
+    await tx.insert(auditEvent).values({
+      tenantId: home,
+      actorId,
+      action: "rental.long_term.marked",
+      entityType: "rental",
+      entityId: rentalId,
+      intent: "Manager marked the rental as long-term/open-ended; old return reminders are paused",
+    });
+  });
+  revalidatePath(`/${tenantSlug}/rentals/${rentalId}`);
+  revalidatePath(`/${tenantSlug}/operations`);
+  revalidatePath(`/${tenantSlug}/fleet/availability`);
+}
+
 export async function confirmRentalExtension(tenantId: string, tenantSlug: string, rentalId: string, newReturnDate: Date): Promise<{ ok: true } | { ok: false; error: string }> {
   await canManageRentalsForTenant(tenantId);
   await assertNotPreviewMode(tenantId);

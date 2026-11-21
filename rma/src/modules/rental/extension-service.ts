@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, gte, inArray, lte, ne } from "drizzle-orm";
+import { and, eq, gte, inArray, lte, ne, or } from "drizzle-orm";
 import { auditEvent, rental, vehicleTimelineEvent } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { booking as legacyBooking } from "@/platform/db/rental-extras";
@@ -15,8 +15,10 @@ export async function confirmRentalExtensionForTenant(home: string, actorId: str
       eq(rental.vehicleId, current.vehicleId),
       inArray(rental.status, ["reserved", "active"]),
       ne(rental.id, rentalId),
-      lte(rental.startDate, newReturnDate),
-      gte(rental.returnDate, current.returnDate),
+      or(
+        and(lte(rental.startDate, newReturnDate), gte(rental.returnDate, current.returnDate)),
+        and(eq(rental.status, "active"), eq(rental.extensionStatus, "long_term")),
+      ),
     )).limit(1);
     if (overlap) throw new Error("Another booking overlaps the extension period");
     const [legacyOverlap] = await tx.select({ id: legacyBooking.id }).from(legacyBooking).where(and(

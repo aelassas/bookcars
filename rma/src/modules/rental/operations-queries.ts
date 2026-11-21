@@ -7,6 +7,7 @@ import { getPilotClient } from "@/platform/integrations/pilot/client";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { serviceState } from "@/modules/fleet/maintenance";
 import { calculateMileageUsage } from "./mileage";
+import { rentalIsLongTerm } from "./operations";
 import { canManageRentalsForTenant } from "./policies";
 
 export async function getOperationsBoard(tenantId: string) {
@@ -66,7 +67,7 @@ export async function getOperationsBoard(tenantId: string) {
   const baseRows = rows.map((row) => ({
     ...row,
     telemetry: null as null | { lastFixAt: string; fresh: boolean; speed: number; ignition: boolean },
-    overdue: row.rental?.status === "active" && row.rental.returnDate.getTime() < Date.now(),
+    overdue: row.rental?.status === "active" && !rentalIsLongTerm(row.rental) && row.rental.returnDate.getTime() < Date.now(),
   }));
 
   try {

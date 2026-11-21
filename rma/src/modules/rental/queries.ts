@@ -3,7 +3,7 @@
 import { rental, customer, vehicle, payment, rentalCharge } from "@/platform/db/schema";
 import { quoteRental, type Channel } from "@/platform/db/rental-extras";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
-import { eq, desc, sql, and, ne, lte, gte } from "drizzle-orm";
+import { eq, desc, sql, and, ne, lte, gte, or } from "drizzle-orm";
 import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 
@@ -140,6 +140,7 @@ export async function getRentalsInDateRange(tenantId: string, start: Date, end: 
           returnDate: rental.returnDate,
           actualReturnDate: rental.actualReturnDate,
           status: rental.status,
+          extensionStatus: rental.extensionStatus,
         },
         customerName: customer.name,
       })
@@ -148,7 +149,10 @@ export async function getRentalsInDateRange(tenantId: string, start: Date, end: 
       .where(
         and(
           lte(rental.startDate, end),
-          gte(rental.returnDate, start)
+          or(
+            gte(rental.returnDate, start),
+            and(eq(rental.status, "active"), eq(rental.extensionStatus, "long_term")),
+          ),
         )
       )
       .orderBy(rental.startDate);

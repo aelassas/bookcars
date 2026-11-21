@@ -2,7 +2,7 @@
 
 import { rental, customer, vehicle } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, ne } from "drizzle-orm";
 import { canManageRentalsForTenant } from "@/modules/rental/policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 
@@ -101,6 +101,7 @@ export async function getRentalsOverdue(tenantId: string) {
       .where(
         and(
           eq(rental.status, "active"),
+          ne(rental.extensionStatus, "long_term"),
           lte(rental.returnDate, now)
         )
       )

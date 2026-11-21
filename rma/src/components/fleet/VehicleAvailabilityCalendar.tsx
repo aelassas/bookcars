@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { PageHeader, Button, ButtonLink, EmptyState, cx } from "@/components/ui";
 import { getCalendarSlots } from "@/modules/rental/booking-queries";
+import { rentalIsLongTerm } from "@/modules/rental/operations";
 import { CreateRentalModal } from "@/components/modals/CreateRentalModal";
 import { ChevronLeft, ChevronRight, CalendarRange, Car, Plus } from "lucide-react";
 
@@ -22,6 +23,7 @@ type RentalSlot = {
     returnDate: Date | null;
     actualReturnDate: Date | null;
     status: string;
+    extensionStatus?: string | null;
   };
   customerName: string | null;
   /** "rental" = canonical platform rental (clickable); "booking" = legacy sheet import (display-only). */
@@ -279,10 +281,10 @@ function VehicleRow({
       const covering = rentals.filter((r) => {
         const start = parseDate(r.rental.startDate);
         const end = parseDate(r.rental.actualReturnDate ?? r.rental.returnDate);
-        if (!start || !end) return false;
+        if (!start) return false;
         const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
         const dayEnd = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59, 999);
-        return start <= dayEnd && end >= dayStart;
+        return start <= dayEnd && (rentalIsLongTerm(r.rental) || Boolean(end && end >= dayStart));
       });
       return { day, covering };
     });
@@ -322,7 +324,7 @@ function VehicleRow({
                     <Link
                       key={r.rental.id}
                       href={`/${tenantSlug}/rentals/${r.rental.id}`}
-                      title={`${r.customerName ?? "Rental"} · ${r.rental.status}`}
+                      title={`${r.customerName ?? "Rental"} · ${r.rental.status}${rentalIsLongTerm(r.rental) ? " · long-term" : ""}`}
                       className={cx(
                         "block h-2 w-full rounded-full transition-opacity hover:opacity-75",
                         STATUS_STYLE[r.rental.status] ?? "bg-line"

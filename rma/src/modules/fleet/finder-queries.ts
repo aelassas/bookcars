@@ -5,6 +5,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { vehicle, company } from "@/platform/db/schema";
 import { companyReadScope } from "@/platform/auth/scope";
 import { getCalendarSlots } from "@/modules/rental/booking-queries";
+import { rentalIsLongTerm } from "@/modules/rental/operations";
 import { canManageFleetForTenant } from "./policies";
 import { canManageCRMForTenant } from "@/modules/crm/policies";
 
@@ -78,15 +79,16 @@ export async function findVehiclesForDeal(
 
   // vehicleId → the blocking slots that touch [start, …], for the busy/free
   // decision and the free-from date.
-  const blocking = new Map<string, { start: Date; end: Date }[]>();
+  const blocking = new Map<string, { start: Date; end: Date | null; openEnded: boolean }[]>();
   for (const s of slots) {
     if (!BUSY.has(s.rental.status)) continue;
     const st = s.rental.startDate;
-    const en = s.rental.actualReturnDate ?? s.rental.returnDate;
-    if (!st || !en) continue;
-    if (en < opts.start) continue; // fully in the past — car is back
+    const openEnded = rentalIsLongTerm(s.rental);
+    const en = openEnded ? null : s.rental.actualReturnDate ?? s.rental.returnDate;
+    if (!st || (!en && !openEnded)) continue;
+    if (!openEnded && en && en < opts.start) continue; // fully in the past — car is back
     const list = blocking.get(s.rental.vehicleId) ?? [];
-    list.push({ start: st, end: en });
+    list.push({ start: st, end: en, openEnded });
     blocking.set(s.rental.vehicleId, list);
   }
 
@@ -130,7 +132,7 @@ export async function findVehiclesForDeal(
     const holds = blocking.get(r.id) ?? [];
     // Busy in the requested window? Any platform booking overlapping [start,end]
     // OR the car's own fleet status says it is out.
-    const overlapsWindow = holds.some((h) => h.start <= opts.end && h.end >= opts.start);
+    const overlapsWindow = holds.some((h) => h.start <= opts.end && (h.openEnded || Boolean(h.end && h.end >= opts.start)));
     const statusBusy = STATUS_BUSY.has(r.status);
     // The date the car frees: latest end among platform bookings reaching into/
     // after the window. A status-only hold (Kaiten BOOKED, no platform dates)
@@ -138,7 +140,7 @@ export async function findVehiclesForDeal(
     let freeFrom: Date | null = null;
     if (overlapsWindow) {
       for (const h of holds) {
-        if (h.end >= opts.start && (!freeFrom || h.end > freeFrom)) freeFrom = h.end;
+        if (!h.openEnded && h.end && h.end >= opts.start && (!freeFrom || h.end > freeFrom)) freeFrom = h.end;
       }
     }
     const photos = (r.photos as { url: string; name: string }[] | null) ?? [];
@@ -207,17 +209,18 @@ export async function getVehicleAvailabilitySummary(
     .filter((s) => s.rental.vehicleId === vehicleId && BUSY.has(s.rental.status))
     .map((s) => ({
       start: s.rental.startDate,
-      end: s.rental.actualReturnDate ?? s.rental.returnDate,
+      end: rentalIsLongTerm(s.rental) ? null : s.rental.actualReturnDate ?? s.rental.returnDate,
+      openEnded: rentalIsLongTerm(s.rental),
     }))
-    .filter((h): h is { start: Date; end: Date } => !!h.start && !!h.end);
+    .filter((h): h is { start: Date; end: Date | null; openEnded: boolean } => Boolean(h.start && (h.openEnded || h.end)));
 
   let calendarBusy = false;
   let freeFrom: Date | null = null;
   let nextBookingStart: Date | null = null;
   for (const h of holds) {
-    if (h.start <= now && h.end >= now) {
+    if (h.start <= now && (h.openEnded || Boolean(h.end && h.end >= now))) {
       calendarBusy = true;
-      if (!freeFrom || h.end > freeFrom) freeFrom = h.end;
+      if (!h.openEnded && h.end && (!freeFrom || h.end > freeFrom)) freeFrom = h.end;
     } else if (h.start > now) {
       if (!nextBookingStart || h.start < nextBookingStart) nextBookingStart = h.start;
     }

@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, gte, inArray, lte } from "drizzle-orm";
+import { and, eq, gte, inArray, lte, or } from "drizzle-orm";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { booking } from "@/platform/db/rental-extras";
 import { rental, customer, user } from "@/platform/db/schema";
@@ -20,6 +20,7 @@ export type CalendarSlot = {
     returnDate: Date | null;
     actualReturnDate: Date | null;
     status: string;
+    extensionStatus: string | null;
   };
   customerName: string | null;
   // Manager who owns the booking (rental.salesAgent). Null for imported sheet
@@ -52,13 +53,20 @@ export async function getCalendarSlots(tenantId: string, start: Date, end: Date)
           returnDate: rental.returnDate,
           actualReturnDate: rental.actualReturnDate,
           status: rental.status,
+          extensionStatus: rental.extensionStatus,
           customerName: customer.name,
           salesAgentName: user.name,
         })
         .from(rental)
         .leftJoin(customer, eq(rental.customerId, customer.id))
         .leftJoin(user, eq(rental.salesAgentId, user.id))
-        .where(and(lte(rental.startDate, end), gte(rental.returnDate, start)))
+        .where(and(
+          lte(rental.startDate, end),
+          or(
+            gte(rental.returnDate, start),
+            and(eq(rental.status, "active"), eq(rental.extensionStatus, "long_term")),
+          ),
+        ))
         .orderBy(rental.startDate),
       tx
         .select({
@@ -81,6 +89,7 @@ export async function getCalendarSlots(tenantId: string, start: Date, end: Date)
         returnDate: r.returnDate,
         actualReturnDate: r.actualReturnDate,
         status: r.status,
+        extensionStatus: r.extensionStatus,
       },
       customerName: r.customerName ?? null,
       salesAgentName: r.salesAgentName ?? null,
@@ -97,6 +106,7 @@ export async function getCalendarSlots(tenantId: string, start: Date, end: Date)
           actualReturnDate: null,
           // Map the sheet's "booked" onto the canonical "reserved" tone.
           status: b.status === "booked" ? "reserved" : b.status,
+          extensionStatus: null,
         },
         customerName: b.customerName ?? null,
         salesAgentName: null, // imported sheet rows have no platform manager

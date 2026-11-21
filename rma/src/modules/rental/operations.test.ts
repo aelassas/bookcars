@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildReturnReminder, classifyExtensionReply, returnReminderIsDue } from "./operations";
+import { buildReturnReminder, classifyExtensionReply, rentalIsLongTerm, returnReminderIsDue } from "./operations";
 
 describe("return and extension operations", () => {
   const now = new Date("2026-11-18T12:00:00Z");
@@ -20,5 +20,11 @@ describe("return and extension operations", () => {
     const text = buildReturnReminder({ customerName: "Ruslan", plate: "B 1", returnDate: new Date("2026-11-20T12:00:00Z") });
     expect(text).toContain("2026-11-20 12:00 UTC");
     expect(text).toContain("manager will confirm");
+  });
+
+  it("recognizes long-term only while the rental is active", () => {
+    expect(rentalIsLongTerm({ status: "active", extensionStatus: "long_term" })).toBe(true);
+    expect(rentalIsLongTerm({ status: "completed", extensionStatus: "long_term" })).toBe(false);
+    expect(rentalIsLongTerm({ status: "active", extensionStatus: "extension_confirmed" })).toBe(false);
   });
 });

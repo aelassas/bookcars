@@ -1,4 +1,8 @@
-export type ExtensionStatus = "awaiting_response" | "wants_extension" | "returning" | "extension_confirmed";
+export type ExtensionStatus = "awaiting_response" | "wants_extension" | "returning" | "extension_confirmed" | "long_term";
+
+export function rentalIsLongTerm(rental: { status: string; extensionStatus?: string | null }): boolean {
+  return rental.status === "active" && rental.extensionStatus === "long_term";
+}
 
 export function returnReminderIsDue(returnDate: Date, reminderSentAt: Date | null, now: Date): boolean {
   return reminderSentAt == null && returnDate.getTime() - now.getTime() <= 48 * 60 * 60 * 1000;

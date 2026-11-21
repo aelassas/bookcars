@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, eq, gt, gte, isNull, lte, or, sql } from "drizzle-orm";
+import { and, asc, eq, gt, gte, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { customer, message, rental, tenantMember, vehicle } from "@/platform/db/schema";
 import { MIN_PHONE_MATCH_DIGITS, normalizePhone, PG_NON_DIGIT_RE } from "@/platform/messaging/phone";
 import { sendNotification } from "@/modules/notify/send";
@@ -49,7 +49,7 @@ export async function sendDueReturnReminders(home: string, tenantSlug: string, n
   if (!policy.enabled) return { sent: 0, errors: [], disabled: true };
   const rows = await withDrizzleTenant(home, (tx) => tx.select({ rental, phone: customer.phone, customerName: customer.name, plate: vehicle.plate })
     .from(rental).innerJoin(customer, eq(customer.id, rental.customerId)).innerJoin(vehicle, eq(vehicle.id, rental.vehicleId))
-    .where(and(eq(rental.status, "active"), isNull(rental.returnReminderSentAt), gte(rental.createdAt, policy.after), lte(rental.returnDate, new Date(now.getTime() + 48 * 60 * 60 * 1000)))));
+    .where(and(eq(rental.status, "active"), ne(rental.extensionStatus, "long_term"), isNull(rental.returnReminderSentAt), gte(rental.createdAt, policy.after), lte(rental.returnDate, new Date(now.getTime() + 48 * 60 * 60 * 1000)))));
   let sent = 0;
   const errors: string[] = [];
   for (const row of rows) {
@@ -105,7 +105,7 @@ export async function sendDueChargeStatements(home: string, tenantSlug: string, 
 export async function captureExtensionReplies(home: string, now = new Date()): Promise<{ saved: number; errors: string[] }> {
   const rentals = await withDrizzleTenant(home, (tx) => tx.select({ rental, phone: customer.phone })
     .from(rental).innerJoin(customer, eq(customer.id, rental.customerId))
-    .where(and(eq(rental.status, "active"), sql`${rental.returnReminderSentAt} is not null`, isNull(rental.customerResponseAt))));
+    .where(and(eq(rental.status, "active"), ne(rental.extensionStatus, "long_term"), sql`${rental.returnReminderSentAt} is not null`, isNull(rental.customerResponseAt))));
   let saved = 0;
   const errors: string[] = [];
   for (const row of rentals) {

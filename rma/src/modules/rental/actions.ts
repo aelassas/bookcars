@@ -5,7 +5,7 @@ import { normalizePhone, PG_NON_DIGIT_RE, MIN_PHONE_MATCH_DIGITS } from "@/platf
 import { quoteRental, booking as legacyBooking, type Channel } from "@/platform/db/rental-extras";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
-import { eq, and, asc, lte, gte, inArray, sql } from "drizzle-orm";
+import { eq, and, asc, lte, gte, inArray, or, sql } from "drizzle-orm";
 import type { db } from "@/platform/db/client";
 
 // Transaction handle passed through by withDrizzleTenant.
@@ -600,8 +600,10 @@ export async function moveRentalDates(
           eq(rental.vehicleId, r.vehicleId),
           inArray(rental.status, ["reserved", "active"]),
           sql`${rental.id} <> ${rentalId}`,
-          lte(rental.startDate, returnDate),
-          gte(rental.returnDate, start),
+          or(
+            and(lte(rental.startDate, returnDate), gte(rental.returnDate, start)),
+            and(eq(rental.status, "active"), eq(rental.extensionStatus, "long_term")),
+          ),
         ),
       )
       .limit(1);
@@ -762,8 +764,10 @@ async function createRentalFromQuoteImpl(
         and(
           eq(rental.vehicleId, data.vehicleId),
           inArray(rental.status, ["reserved", "active"]),
-          lte(rental.startDate, data.returnDate),
-          gte(rental.returnDate, data.startDate)
+          or(
+            and(lte(rental.startDate, data.returnDate), gte(rental.returnDate, data.startDate)),
+            and(eq(rental.status, "active"), eq(rental.extensionStatus, "long_term")),
+          )
         )
       )
       .limit(1);
