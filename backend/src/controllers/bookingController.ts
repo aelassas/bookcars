@@ -1,4 +1,4 @@
-import mongoose,{ HydratedDocument } from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
@@ -957,6 +957,30 @@ export const update = async (req: Request, res: Response) => {
       if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
         logger.error(`[booking.update] Unauthorized attempt to update booking ${booking._id.toString()} by user ${sessionUserId}`)
         res.status(403).send('Forbidden: You cannot update booking information')
+        return
+      }
+
+      const targetCarId = typeof body.booking.car === 'string' ? body.booking.car : String(body.booking.car || '')
+      if (!helper.isValidObjectId(targetCarId)) {
+        res.status(400).send(i18n.t('ERROR') + 'Invalid car')
+        return
+      }
+
+      const targetCar = await Car.findById(targetCarId)
+      if (!targetCar) {
+        res.status(400).send(i18n.t('ERROR') + 'Car not found')
+        return
+      }
+
+      if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+        if (targetCar.supplier?.toString() !== sessionUser._id.toString()) {
+          logger.error(`[booking.update] Unauthorized attempt by supplier ${sessionUserId} to assign booking ${booking._id.toString()} to car ${targetCar._id} owned by ${targetCar.supplier}`)
+          res.status(403).send('Forbidden: You cannot assign a booking to another supplier\'s car')
+          return
+        }
+        body.booking.supplier = sessionUser._id.toString()
+      } else if (body.booking.supplier && body.booking.supplier.toString() !== targetCar.supplier?.toString()) {
+        res.status(400).send(i18n.t('ERROR') + 'Invalid supplier')
         return
       }
       // end of security check

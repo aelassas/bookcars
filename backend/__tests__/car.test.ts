@@ -243,6 +243,72 @@ describe('POST /api/create-car', () => {
 
     await testHelper.signout(token)
   })
+
+  it('should enforce authenticated supplier ownership when a supplier creates a car', async () => {
+    const supplier1Token = await testHelper.generateToken(SUPPLIER1_ID)
+    const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
+    if (!(await helper.pathExists(tempImage))) {
+      await asyncFs.copyFile(IMAGE1_PATH, tempImage)
+    }
+
+    const payload: bookcarsTypes.CreateCarPayload = {
+      loggedUser: SUPPLIER2_ID,
+      name: 'Injected Car',
+      licensePlate: `INJ-${nanoid(6)}`,
+      supplier: SUPPLIER2_ID, // Supplier 1 attempts to assign car to Supplier 2
+      minimumAge: 21,
+      locations: [LOCATION1_ID],
+      dailyPrice: 78,
+      discountedDailyPrice: null,
+      hourlyPrice: null,
+      discountedHourlyPrice: null,
+      biWeeklyPrice: null,
+      discountedBiWeeklyPrice: null,
+      weeklyPrice: null,
+      discountedWeeklyPrice: null,
+      monthlyPrice: null,
+      discountedMonthlyPrice: null,
+      deposit: 950,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      image: IMAGE1,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 4,
+      isDateBasedPrice: false,
+      dateBasedPrices: [],
+    }
+
+    const res = await request(app)
+      .post('/api/create-car')
+      .set(env.X_ACCESS_TOKEN, supplier1Token)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.supplier).toBe(SUPPLIER1_ID)
+
+    const createdCar = await Car.findById(res.body._id)
+    expect(createdCar?.supplier.toString()).toBe(SUPPLIER1_ID)
+    if (createdCar?.image) {
+      const imgPath = path.join(env.CDN_CARS, createdCar.image)
+      if (await helper.pathExists(imgPath)) {
+        await asyncFs.unlink(imgPath)
+      }
+    }
+    await createdCar?.deleteOne()
+    await testHelper.deleteCarNotifications(res.body._id)
+  })
 })
 
 describe('PUT /api/update-car', () => {
@@ -440,6 +506,97 @@ describe('PUT /api/update-car', () => {
     expect(res.statusCode).toBe(500)
 
     await testHelper.signout(token)
+  })
+
+  it("should prevent a supplier from transferring a car to another supplier or updating another supplier's car", async () => {
+    const supplier1Token = await testHelper.generateToken(SUPPLIER1_ID)
+    const supplier2Token = await testHelper.generateToken(SUPPLIER2_ID)
+
+    const car = new Car({
+      name: 'Transfer Guard Car',
+      supplier: SUPPLIER1_ID,
+      minimumAge: 21,
+      locations: [LOCATION1_ID],
+      dailyPrice: 78,
+      deposit: 950,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      image: 'guard.png',
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
+      range: bookcarsTypes.CarRange.Midi,
+    })
+    await car.save()
+
+    try {
+      const payload: bookcarsTypes.UpdateCarPayload = {
+        loggedUser: SUPPLIER1_ID,
+        _id: car._id.toString(),
+        name: 'Transfer Guard Car Updated',
+        licensePlate: `TRN-${nanoid(6)}`,
+        supplier: SUPPLIER2_ID, // Supplier 1 attempts to transfer ownership to Supplier 2
+        minimumAge: 21,
+        locations: [LOCATION1_ID],
+        dailyPrice: 80,
+        discountedDailyPrice: null,
+        hourlyPrice: null,
+        discountedHourlyPrice: null,
+        biWeeklyPrice: null,
+        discountedBiWeeklyPrice: null,
+        weeklyPrice: null,
+        discountedWeeklyPrice: null,
+        monthlyPrice: null,
+        discountedMonthlyPrice: null,
+        deposit: 950,
+        available: true,
+        type: bookcarsTypes.CarType.Diesel,
+        gearbox: bookcarsTypes.GearboxType.Automatic,
+        aircon: true,
+        seats: 5,
+        doors: 4,
+        fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+        mileage: -1,
+        cancellation: 0,
+        amendments: 0,
+        theftProtection: 9,
+        collisionDamageWaiver: 12,
+        fullInsurance: 20,
+        additionalDriver: 20,
+        range: bookcarsTypes.CarRange.Midi,
+        multimedia: [],
+        rating: 4,
+        isDateBasedPrice: false,
+        dateBasedPrices: [],
+      }
+
+      // Supplier 2 cannot update Supplier 1's car
+      let res = await request(app)
+        .put('/api/update-car')
+        .set(env.X_ACCESS_TOKEN, supplier2Token)
+        .send(payload)
+      expect(res.statusCode).toBe(403)
+
+      // Supplier 1 updates own car, but supplier field remains locked to SUPPLIER1_ID
+      res = await request(app)
+        .put('/api/update-car')
+        .set(env.X_ACCESS_TOKEN, supplier1Token)
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+      expect(res.body.supplier).toBe(SUPPLIER1_ID)
+      expect((await Car.findById(car._id))?.supplier.toString()).toBe(SUPPLIER1_ID)
+    } finally {
+      await car.deleteOne()
+    }
   })
 })
 

@@ -2718,4 +2718,101 @@ describe('Security Regression Tests - Issue #124', () => {
 
     await Booking.deleteOne({ _id: res.body._id })
   })
+
+  it("should prevent Supplier A from moving a booking onto Supplier B's car or into Supplier B's account", async () => {
+    const carB = await Car.findOne({ supplier: supplierBId })
+    expect(carB).not.toBeNull()
+
+    const carA = new Car({
+      name: 'Supplier A Car',
+      supplier: supplierAId,
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 5,
+    })
+    await carA.save()
+
+    const bookingA = new Booking({
+      supplier: supplierAId,
+      car: carA._id,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: new Date(2027, 3, 1),
+      to: new Date(2027, 3, 5),
+      status: bookcarsTypes.BookingStatus.Reserved,
+      price: 400,
+    })
+    await bookingA.save()
+
+    try {
+      const payload: bookcarsTypes.UpsertBookingPayload = {
+        booking: {
+          _id: bookingA._id.toString(),
+          supplier: supplierBId,
+          car: carB!._id.toString(),
+          driver: DRIVER1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2027, 3, 1),
+          to: new Date(2027, 3, 5),
+          status: bookcarsTypes.BookingStatus.Reserved,
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 400,
+          additionalDriver: false,
+        },
+      }
+
+      // Supplier A attempts to retarget own booking onto Supplier B's car and supplier B
+      let res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(403)
+
+      // Even with supplierAId in payload, targeting Supplier B's car is rejected
+      payload.booking.supplier = supplierAId
+      res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(403)
+
+      // Updating own booking on own car succeeds and forces supplier to supplierAId
+      payload.booking.car = carA._id.toString()
+      payload.booking.supplier = supplierBId // spoofed supplier ID is overridden
+      res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+      expect(res.body.supplier).toBe(supplierAId)
+      expect(res.body.car).toBe(carA._id.toString())
+    } finally {
+      await Booking.deleteOne({ _id: bookingA._id })
+      await carA.deleteOne()
+    }
+  })
 })
