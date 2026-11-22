@@ -1,5 +1,17 @@
 # Releases
 
+## [BookCars 9.7](https://github.com/aelassas/bookcars/releases/tag/v9.7) – 2026-11-22
+
+* fix(security): enforce supplier ownership checks on car creation, car updates, and booking updates by @carfeii ([GHSA-jp68-gx5m-hw75](https://github.com/aelassas/bookcars/security/advisories/GHSA-jp68-gx5m-hw75))
+
+### Assets
+- [bookcars-9.7.apk](https://github.com/aelassas/bookcars/releases/download/v9.7/bookcars-9.7.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.7/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.7)
+
 ## [BookCars 9.6](https://github.com/aelassas/bookcars/releases/tag/v9.6) – 2026-11-20
 
 * fix(security): enforce supplier ownership checks on booking creation and car image endpoints by @kats1123 ([GHSA-9xq3-vxmc-7mrj](https://github.com/aelassas/bookcars/security/advisories/GHSA-9xq3-vxmc-7mrj))
