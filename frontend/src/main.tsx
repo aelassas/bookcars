@@ -52,6 +52,7 @@ import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
+import '@/assets/css/luxury-theme.css'
 
 if (env.isProduction) {
   disableDevTools()
@@ -186,30 +187,21 @@ const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#1a1a1a',
+        main: '#059669',
+        dark: '#047857',
+        contrastText: '#ffffff',
         // contrastText: '#003B95',
         // dark: '#003B95',
       },
     },
     typography: {
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     },
     components: {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            backgroundColor: '#FAFAFA',
+            backgroundColor: '#F8FAFC',
           },
         },
       },

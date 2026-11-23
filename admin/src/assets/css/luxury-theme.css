@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
+:root {
+  --sr-obsidian: #0b1120;
+  --sr-sidebar: #0f172a;
+  --sr-emerald: #059669;
+  --sr-emerald-dark: #047857;
+  --sr-alabaster: #f8fafc;
+  --sr-border: #e2e8f0;
+  --sr-muted: #64748b;
+  --sr-shadow: 0 4px 20px rgba(11, 17, 32, 0.06);
+}
+
+body {
+  background: var(--sr-alabaster) !important;
+  color: var(--sr-obsidian);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.035em;
+}
+
+.price,
+.price-main,
+.booking-price,
+[data-currency],
+[data-booking-id] {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.MuiPaper-root,
+.MuiCard-root,
+.maintenance-page > .MuiCard-root,
+.maintenance-form,
+.settings-form,
+.pricing-plan {
+  border: 1px solid var(--sr-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--sr-shadow) !important;
+}
+
+.MuiButton-root {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+}
+
+.btn-primary,
+.MuiButton-containedPrimary {
+  background: var(--sr-emerald) !important;
+  color: #fff !important;
+}
+
+.btn-primary:hover,
+.MuiButton-containedPrimary:hover {
+  background: var(--sr-emerald-dark) !important;
+}
+
+.header .MuiAppBar-root {
+  background: var(--sr-sidebar) !important;
+  box-shadow: 0 8px 22px rgba(11, 17, 32, 0.16) !important;
+}
+
+.header .toolbar {
+  min-height: 72px !important;
+  padding: 0 clamp(16px, 3vw, 36px) !important;
+}
+
+.side-menu .MuiDrawer-paper {
+  width: 280px;
+  background: var(--sr-sidebar);
+  color: #cbd5e1;
+}
+
+.side-menu .MuiListItemIcon-root {
+  color: #94a3b8;
+}
+
+.side-menu .MuiListItem-root:hover,
+.side-menu .MuiListItemButton-root:hover {
+  background: rgba(5, 150, 105, 0.14);
+}
+
+.maintenance-page,
+[class*='col:1-'] {
+  padding: 28px !important;
+}
+
+.maintenance-page > .MuiTypography-h4 {
+  margin-bottom: 8px;
+}
+
+input,
+textarea,
+select,
+.MuiOutlinedInput-root,
+.MuiInputBase-root {
+  border-radius: 10px !important;
+}
+
+@media (max-width: 767px) {
+  .maintenance-page,
+  [class*='col:1-'] {
+    padding: 16px !important;
+  }
+}

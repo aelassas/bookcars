@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+
+:root {
+  --sr-obsidian: #0b1120;
+  --sr-obsidian-soft: #0f172a;
+  --sr-emerald: #059669;
+  --sr-emerald-dark: #047857;
+  --sr-alabaster: #f8fafc;
+  --sr-border: #e2e8f0;
+  --sr-muted: #64748b;
+  --sr-card-shadow: 0 4px 20px rgba(11, 17, 32, 0.06);
+  --sr-radius: 16px;
+}
+
+html {
+  background: var(--sr-alabaster);
+}
+
+body {
+  background: var(--sr-alabaster) !important;
+  color: var(--sr-obsidian) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.035em;
+}
+
+.price,
+.price-main,
+.price-day-value,
+.booking-price,
+.booking-detail-value,
+[data-currency],
+[data-cnic],
+[data-booking-id] {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.MuiPaper-root,
+.checkout-details-container,
+.payment-options-container,
+.driver-details,
+.payment-info,
+.search-form,
+.home-search,
+.car-container,
+.booking-container,
+.form,
+.form-wrapper {
+  border: 1px solid var(--sr-border) !important;
+  border-radius: var(--sr-radius) !important;
+  box-shadow: var(--sr-card-shadow) !important;
+}
+
+.MuiButton-root,
+button {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+}
+
+.btn-primary,
+.MuiButton-containedPrimary {
+  background: var(--sr-emerald) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.2) !important;
+}
+
+.btn-primary:hover,
+.MuiButton-containedPrimary:hover {
+  background: var(--sr-emerald-dark) !important;
+}
+
+input,
+textarea,
+select,
+.MuiOutlinedInput-root,
+.MuiInputBase-root {
+  border-radius: 10px !important;
+}
+
+.header {
+  position: sticky !important;
+  top: 0;
+  z-index: 1400;
+}
+
+.header .MuiAppBar-root {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 18px rgba(11, 17, 32, 0.05) !important;
+  backdrop-filter: blur(16px);
+}
+
+.header .toolbar {
+  min-height: 72px !important;
+  padding: 0 clamp(16px, 4vw, 56px) !important;
+}
+
+.header .btn-auth {
+  background: var(--sr-obsidian) !important;
+  color: #fff !important;
+  margin-left: 8px;
+}
+
+.sr-kyc-pill {
+  color: var(--sr-emerald) !important;
+  background: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+  margin-right: 8px !important;
+}
+
+.sr-kyc-pill .MuiButton-startIcon {
+  margin-right: 2px;
+}
+
+.header .btn-auth:first-of-type {
+  background: var(--sr-emerald) !important;
+}
+
+.home-search-form {
+  padding: 20px !important;
+}
+
+.home-search-form .MuiButton-root[type='submit'] {
+  min-height: 48px;
+  background: var(--sr-emerald) !important;
+}
+
+.car-container {
+  overflow: hidden;
+  background: #fff;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.car-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(11, 17, 32, 0.11) !important;
+}
+
+.car-img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.car-info-list {
+  color: var(--sr-muted);
+}
+
+.car-info-header .name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  color: var(--sr-obsidian);
+}
+
+.car-info-header .price-main,
+.price-main {
+  color: var(--sr-emerald) !important;
+}
+
+div.checkout {
+  background: var(--sr-alabaster);
+  margin-top: 40px !important;
+}
+
+div.checkout .checkout-form {
+  border-radius: 20px !important;
+  box-shadow: 0 10px 35px rgba(11, 17, 32, 0.08) !important;
+}
+
+div.checkout .checkout-details-container,
+div.checkout .payment-options-container,
+div.checkout .driver-details {
+  background: #fff !important;
+}
+
+div.checkout .checkout-buttons .btn-checkout,
+div.checkout .checkout-buttons .btn-primary {
+  background: var(--sr-emerald) !important;
+}
+
+.sr-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .header .toolbar {
+    min-height: 64px !important;
+  }
+
+  .header-desktop {
+    display: none !important;
+  }
+
+  .sr-mobile-nav {
+    position: fixed;
+    display: flex;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 1400;
+    justify-content: space-around;
+    padding: 8px;
+    border: 1px solid var(--sr-border);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 10px 30px rgba(11, 17, 32, 0.14);
+    backdrop-filter: blur(16px);
+  }
+
+  .home-cover {
+    font-size: clamp(30px, 8vw, 44px) !important;
+  }
+
+  .home-search {
+    width: calc(100% - 24px) !important;
+  }
+
+  .car-info-list {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

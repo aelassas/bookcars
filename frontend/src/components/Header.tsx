@@ -33,6 +33,7 @@ import {
   QuestionAnswer as FaqIcon,
   PersonOutline as SignUpIcon,
   Cookie as CookiePolicyIcon,
+  Check as CheckIcon,
 } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { CircleFlag } from 'react-circle-flags'
@@ -43,6 +44,7 @@ import { strings as suStrings } from '@/lang/sign-up'
 import { strings } from '@/lang/header'
 import * as UserService from '@/services/UserService'
 import * as PaymentService from '@/services/PaymentService'
+import * as KycService from '@/services/KycService'
 import Avatar from './Avatar'
 import * as langHelper from '@/utils/langHelper'
 import * as helper from '@/utils/helper'
@@ -79,6 +81,7 @@ const Header = ({
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [kycStatus, setKycStatus] = useState<bookcarsTypes.KycStatus | null>(null)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -116,9 +119,13 @@ const Header = ({
     if (user) {
       setCurrentUser(user)
       setIsSignedIn(true)
+      KycService.getMine()
+        .then((kyc) => setKycStatus(kyc?.status || null))
+        .catch(() => setKycStatus(null))
     } else {
       setCurrentUser(undefined)
       setIsSignedIn(false)
+      setKycStatus(null)
     }
     setIsLoaded(true)
   }, [user])
@@ -494,6 +501,16 @@ const Header = ({
 
             {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
             <div className="header-desktop">
+              {isSignedIn && (
+                <Button
+                  size="small"
+                  onClick={() => navigate('/kyc')}
+                  className="sr-kyc-pill"
+                  startIcon={kycStatus === 'approved' ? <CheckIcon /> : undefined}
+                >
+                  {kycStatus === 'approved' ? 'CNIC Verified ✓' : 'Complete KYC'}
+                </Button>
+              )}
               {isLoaded && (
                 <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn bold">
                   {PaymentService.getCurrency()}
@@ -570,6 +587,13 @@ const Header = ({
             </div>
           </Toolbar>
         </AppBar>
+
+        <nav className="sr-mobile-nav" aria-label="Mobile navigation">
+          <Button size="small" onClick={() => navigate('/')}><HomeIcon fontSize="small" />Home</Button>
+          <Button size="small" onClick={() => navigate('/locations')}><LocationIcon fontSize="small" />Hubs</Button>
+          {isSignedIn && <Button size="small" onClick={() => navigate('/bookings')}><BookingsIcon fontSize="small" />Bookings</Button>}
+          {isSignedIn && <Button size="small" onClick={() => navigate('/kyc')}><SignUpIcon fontSize="small" />KYC</Button>}
+        </nav>
 
         {renderMobileMenu}
         {renderMenu}
