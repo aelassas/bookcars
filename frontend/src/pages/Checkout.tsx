@@ -160,6 +160,9 @@ const Checkout = () => {
   const payLater = useWatch({ control, name: 'payLater' })
   const payDeposit = useWatch({ control, name: 'payDeposit' })
   const payInFull = useWatch({ control, name: 'payInFull' })
+  const paymentMethod = useWatch({ control, name: 'paymentMethod' })
+  const paymentReference = useWatch({ control, name: 'paymentReference' })
+  const paymentProof = useWatch({ control, name: 'paymentProof' })
 
   const validatePhone = (phone: string) => {
     return validator.isMobilePhone(phone)
@@ -246,6 +249,17 @@ const Checkout = () => {
         fullInsurance: data.fullInsurance,
         additionalDriver,
         price: basePrice,
+        paymentMethod: data.paymentMethod === 'jazzCash'
+          ? bookcarsTypes.PaymentMethod.JazzCash
+          : data.paymentMethod === 'easypaisa'
+            ? bookcarsTypes.PaymentMethod.Easypaisa
+            : data.paymentMethod === 'payLater'
+              ? bookcarsTypes.PaymentMethod.PayLater
+              : data.paymentMethod === 'stripe'
+                ? bookcarsTypes.PaymentMethod.Stripe
+                : data.paymentMethod === 'payPal'
+                  ? bookcarsTypes.PaymentMethod.PayPal
+                  : undefined,
       }
 
       if (adRequired && additionalDriver && data.additionalDriverBirthDate) {
@@ -301,6 +315,13 @@ const Checkout = () => {
         sessionId: _sessionId,
         customerId: _customerId,
         payPal: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal,
+        paymentMethod: paymentMethod === 'jazzCash'
+          ? bookcarsTypes.PaymentMethod.JazzCash
+          : paymentMethod === 'easypaisa'
+            ? bookcarsTypes.PaymentMethod.Easypaisa
+            : undefined,
+        paymentReference,
+        paymentProof,
       }
 
       const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
@@ -784,9 +805,14 @@ const Checkout = () => {
                           <RadioGroup
                             defaultValue={depositPrice > 0 ? 'payOnline' : 'payInFull'}
                             onChange={(e) => {
-                              setValue('payLater', e.target.value === 'payLater')
+                              setValue('payLater', e.target.value === 'payLater' || e.target.value === 'jazzCash' || e.target.value === 'easypaisa')
                               setValue('payDeposit', e.target.value === 'payDeposit')
                               setValue('payInFull', e.target.value === 'payInFull')
+                              setValue('paymentMethod',
+                                e.target.value === 'jazzCash' ? 'jazzCash'
+                                  : e.target.value === 'easypaisa' ? 'easypaisa'
+                                    : e.target.value === 'payLater' ? 'payLater'
+                                      : undefined)
                             }}
                           >
                             {car.supplier.payLater && (
@@ -803,6 +829,16 @@ const Checkout = () => {
                                 )}
                               />
                             )}
+                            <FormControlLabel
+                              value="jazzCash"
+                              control={<Radio />}
+                              label={<span className="payment-button"><span>JazzCash</span><span className="payment-info">Manual payment verification required</span></span>}
+                            />
+                            <FormControlLabel
+                              value="easypaisa"
+                              control={<Radio />}
+                              label={<span className="payment-button"><span>Easypaisa</span><span className="payment-info">Manual payment verification required</span></span>}
+                            />
                             {
                               car.deposit > 0 && (
                                 <FormControlLabel
@@ -848,6 +884,22 @@ const Checkout = () => {
                               )}
                             />
                           </RadioGroup>
+                          {(paymentMethod === 'jazzCash' || paymentMethod === 'easypaisa') && (
+                            <div style={{ marginTop: 12 }}>
+                              <OutlinedInput
+                                fullWidth
+                                {...register('paymentReference')}
+                                placeholder="Transaction reference"
+                              />
+                              <OutlinedInput
+                                fullWidth
+                                {...register('paymentProof')}
+                                placeholder="Optional proof URL or screenshot reference"
+                                sx={{ mt: 1 }}
+                              />
+                              <FormHelperText error={!paymentReference}>Transaction reference is required for manual payment verification.</FormHelperText>
+                            </div>
+                          )}
                         </FormControl>
                       </div>
                     </div>

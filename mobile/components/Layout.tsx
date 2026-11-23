@@ -19,7 +19,7 @@ interface LayoutProps {
   hideTitle?: boolean
   avatar?: string | null
   children: React.ReactNode
-  onLoad: (user?: bookcarsTypes.User) => void
+  onLoad?: (user?: bookcarsTypes.User) => void
 }
 
 const Layout = ({

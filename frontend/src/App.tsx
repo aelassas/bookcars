@@ -39,6 +39,8 @@ const Locations = lazy(() => import('@/pages/Locations'))
 const Suppliers = lazy(() => import('@/pages/Suppliers'))
 const Faq = lazy(() => import('@/pages/Faq'))
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'))
+const Kyc = lazy(() => import('@/pages/Kyc'))
+const Handover = lazy(() => import('@/pages/Handover'))
 
 const AppLayout = () => {
   const location = useLocation()
@@ -97,6 +99,8 @@ const router = createBrowserRouter([
       { path: 'locations', element: <Locations /> },
       { path: 'faq', element: <Faq /> },
       { path: 'cookie-policy', element: <CookiePolicy /> },
+      { path: 'kyc', element: <Kyc /> },
+      { path: 'handover', element: <Handover /> },
       ...(env.HIDE_SUPPLIERS ? [] : [{ path: 'suppliers', element: <Suppliers /> }]),
       { path: '*', element: <NoMatch /> }
     ]

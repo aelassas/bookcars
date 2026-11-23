@@ -94,6 +94,16 @@ const bookingSchema = new Schema<env.Booking>(
       type: String,
       index: true,
     },
+    paymentMethod: {
+      type: String,
+      enum: ['payLater', 'stripe', 'payPal', 'jazzCash', 'easypaisa'],
+    },
+    paymentReference: { type: String, trim: true, maxlength: 100 },
+    paymentProof: { type: String, trim: true },
+    paymentVerificationStatus: {
+      type: String,
+      enum: ['pending', 'verified', 'rejected'],
+    },
     paymentIntentId: {
       type: String,
       unique: true,

@@ -48,6 +48,9 @@ const AIIntake = lazy(() => import('@/pages/AIIntake'))
 const Maintenance = lazy(() => import('@/pages/Maintenance'))
 const VehicleDocuments = lazy(() => import('@/pages/VehicleDocuments'))
 const OperationsDashboard = lazy(() => import('@/pages/OperationsDashboard'))
+const Kyc = lazy(() => import('@/pages/Kyc'))
+const Handover = lazy(() => import('@/pages/Handover'))
+const ManualPayments = lazy(() => import('@/pages/ManualPayments'))
 
 const AppLayout = () => {
   const location = useLocation()
@@ -120,6 +123,9 @@ const router = createBrowserRouter([
       { path: 'maintenance', element: <Maintenance /> },
       { path: 'vehicle-documents', element: <VehicleDocuments /> },
       { path: 'operations-dashboard', element: <OperationsDashboard /> },
+      { path: 'kyc', element: <Kyc /> },
+      { path: 'handover', element: <Handover /> },
+      { path: 'manual-payments', element: <ManualPayments /> },
       { path: '*', element: <NoMatch /> }
     ]
   }

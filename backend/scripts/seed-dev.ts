@@ -22,8 +22,8 @@ import NotificationCounter from '../src/models/NotificationCounter'
 
 const SEED_ID = 'bookcars-dev-seed-v1'
 const SEED_COLLECTION = 'BookCarsDevSeed'
-const DEV_SUPPLIER_EMAIL = process.env.SEED_DEV_SUPPLIER_EMAIL || 'dev-seed-supplier@bookcars.ma'
-const DEV_CUSTOMER_EMAIL = process.env.SEED_DEV_CUSTOMER_EMAIL || 'dev-seed-customer@bookcars.ma'
+const DEV_SUPPLIER_EMAIL = process.env.SEED_DEV_SUPPLIER_EMAIL || 'dev-seed-supplier@safarrent.pk'
+const DEV_CUSTOMER_EMAIL = process.env.SEED_DEV_CUSTOMER_EMAIL || 'dev-seed-customer@safarrent.pk'
 const DEFAULT_DEV_PASSWORD = process.env.SEED_DEV_PASSWORD || 'B00kC4r5'
 
 type SeedManifest = {
@@ -32,6 +32,7 @@ type SeedManifest = {
   supplierId?: mongoose.Types.ObjectId
   customerId?: mongoose.Types.ObjectId
   locationId?: mongoose.Types.ObjectId
+  locationIds?: mongoose.Types.ObjectId[]
   countryId?: mongoose.Types.ObjectId
   locationValueIds?: mongoose.Types.ObjectId[]
   countryValueIds?: mongoose.Types.ObjectId[]
@@ -83,8 +84,8 @@ const copyCarImage = async (carId: string | mongoose.Types.ObjectId, sourceFilen
 const seedCars = [
   {
     name: 'Volkswagen Golf',
-    dailyPrice: 35,
-    deposit: 200,
+    dailyPrice: 9500,
+    deposit: 25000,
     type: bookcarsTypes.CarType.Gasoline,
     gearbox: bookcarsTypes.GearboxType.Manual,
     seats: 5,
@@ -102,8 +103,8 @@ const seedCars = [
   },
   {
     name: 'Toyota Camry',
-    dailyPrice: 55,
-    deposit: 350,
+    dailyPrice: 14000,
+    deposit: 35000,
     type: bookcarsTypes.CarType.Gasoline,
     gearbox: bookcarsTypes.GearboxType.Automatic,
     seats: 5,
@@ -121,8 +122,8 @@ const seedCars = [
   },
   {
     name: 'Tesla Model 3',
-    dailyPrice: 65,
-    deposit: 400,
+    dailyPrice: 18000,
+    deposit: 50000,
     type: bookcarsTypes.CarType.Electric,
     gearbox: bookcarsTypes.GearboxType.Automatic,
     seats: 5,
@@ -162,7 +163,7 @@ const createSeedCustomer = async () => {
     fullName: process.env.SEED_DEV_CUSTOMER_NAME || 'Alex Morgan',
     password: passwordHash,
     avatar: 'customer.png',
-    phone: process.env.SEED_DEV_CUSTOMER_PHONE || '+12025550123',
+    phone: process.env.SEED_DEV_CUSTOMER_PHONE || '+923001234567',
     language: env.DEFAULT_LANGUAGE,
     type: bookcarsTypes.UserType.User,
     active: true,
@@ -172,31 +173,46 @@ const createSeedCustomer = async () => {
 
 const createSeedLocation = async (supplierId: mongoose.Types.ObjectId) => {
   const countryValues = await LocationValue.create([
-    { language: 'en', value: 'United States' },
-    { language: 'fr', value: 'États-Unis' },
+    { language: 'en', value: 'Pakistan' },
+    { language: 'ur', value: 'پاکستان' },
   ])
   const country = await Country.create({
     values: countryValues.map((value) => value._id),
     supplier: supplierId,
   })
-  const locationValues = await LocationValue.create([
-    { language: 'en', value: 'San Francisco Airport (SFO)' },
-    { language: 'fr', value: 'Aéroport de San Francisco (SFO)' },
-  ])
-  const location = await Location.create({
-    country: country._id,
-    values: locationValues.map((value) => value._id),
-    supplier: supplierId,
-    latitude: 37.7749,
-    longitude: -122.4194,
-    image: 'location.png',
-  })
+  const hubs = [
+    { en: 'Blue Area, Islamabad', ur: 'بلیو ایریا، اسلام آباد', latitude: 33.7077, longitude: 73.0504 },
+    { en: 'Murree Mall Road', ur: 'مری مال روڈ', latitude: 33.9062, longitude: 73.3903 },
+    { en: 'Liberty, Lahore', ur: 'لبرٹی، لاہور', latitude: 31.5110, longitude: 74.3455 },
+    { en: 'Clifton, Karachi', ur: 'کلفٹن، کراچی', latitude: 24.8138, longitude: 67.0290 },
+  ]
+
+  const locations: any[] = []
+  const locationValueIds: mongoose.Types.ObjectId[] = []
+  for (const hub of hubs) {
+    const values = await LocationValue.create([
+      { language: 'en', value: hub.en },
+      { language: 'ur', value: hub.ur },
+    ])
+    const loc = await Location.create({
+      country: country._id,
+      values: values.map((value) => value._id),
+      supplier: supplierId,
+      latitude: hub.latitude,
+      longitude: hub.longitude,
+      image: 'location.png',
+    })
+    locations.push(loc)
+    locationValueIds.push(...values.map((value) => value._id))
+  }
+  const location = locations[0]
 
   return {
     country,
     location,
+    locationIds: locations.map((item) => item._id),
     countryValues,
-    locationValues,
+    locationValues: locationValueIds,
   }
 }
 
@@ -295,6 +311,7 @@ async function main(): Promise<void> {
       let locationId = location?._id
       let countryId: mongoose.Types.ObjectId | undefined
       let locationValueIds: mongoose.Types.ObjectId[] | undefined
+      let locationIds: mongoose.Types.ObjectId[] | undefined
       let countryValueIds: mongoose.Types.ObjectId[] | undefined
       let ownsLocation = false
       let ownsCountry = false
@@ -304,6 +321,7 @@ async function main(): Promise<void> {
         locationId = seedLocation.location._id
         countryId = seedLocation.country._id
         locationValueIds = seedLocation.locationValues.map((value) => value._id)
+        locationIds = seedLocation.locationIds
         countryValueIds = seedLocation.countryValues.map((value) => value._id)
         ownsLocation = true
         ownsCountry = true
@@ -314,6 +332,7 @@ async function main(): Promise<void> {
         supplierId: supplier._id,
         customerId: customer._id,
         locationId,
+        locationIds,
         countryId,
         locationValueIds,
         countryValueIds,
@@ -415,7 +434,7 @@ async function main(): Promise<void> {
       car = await Car.create({
         ...carData,
         supplier: supplierId,
-        locations: [locationId],
+        locations: await Location.find({ supplier: supplierId }).distinct('_id'),
         minimumAge: env.MINIMUM_AGE,
         available: true,
         aircon: true,
@@ -427,7 +446,7 @@ async function main(): Promise<void> {
         trips: 10,
         rating: 4.5,
         co2: 120,
-        blockOnPay: false,
+        blockOnPay: true,
       })
 
       const imageFilename = await copyCarImage(car._id, sourceImage)
@@ -453,7 +472,7 @@ async function main(): Promise<void> {
         status: bookcarsTypes.BookingStatus.Paid,
         daysOffsetStart: 10,
         daysDuration: 4,
-        price: 140,
+        price: 38000,
         cancellation: true,
         hasAdditionalDriver: false,
       },
@@ -462,7 +481,7 @@ async function main(): Promise<void> {
         status: bookcarsTypes.BookingStatus.Deposit,
         daysOffsetStart: 20,
         daysDuration: 5,
-        price: 275,
+        price: 70000,
         isDeposit: true,
         hasAdditionalDriver: true,
       },
@@ -471,7 +490,7 @@ async function main(): Promise<void> {
         status: bookcarsTypes.BookingStatus.PaidInFull,
         daysOffsetStart: -30,
         daysDuration: 5,
-        price: 325,
+        price: 90000,
         isPayedInFull: true,
         hasAdditionalDriver: false,
       },
@@ -480,7 +499,7 @@ async function main(): Promise<void> {
         status: bookcarsTypes.BookingStatus.Cancelled,
         daysOffsetStart: -15,
         daysDuration: 3,
-        price: 105,
+        price: 28500,
         cancellation: true,
         hasAdditionalDriver: false,
       },
@@ -514,7 +533,7 @@ async function main(): Promise<void> {
         const additionalDriver = await AdditionalDriver.create({
           fullName: process.env.SEED_DEV_EXTRA_DRIVER_NAME || 'Sarah Jenkins',
           email: process.env.SEED_DEV_EXTRA_DRIVER_EMAIL || 'dev-extra-driver@bookcars.ma',
-          phone: process.env.SEED_DEV_EXTRA_DRIVER_PHONE || '+12025550199',
+          phone: process.env.SEED_DEV_EXTRA_DRIVER_PHONE || '+923001239999',
           birthDate: new Date('1995-05-15'),
         })
         additionalDriverId = additionalDriver._id

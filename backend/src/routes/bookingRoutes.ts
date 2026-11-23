@@ -17,5 +17,7 @@ routes.route(routeNames.getBookingId).get(bookingController.getBookingId)
 routes.route(routeNames.getBookings).post(authJwt.verifyToken, bookingController.getBookings)
 routes.route(routeNames.hasBookings).get(authJwt.verifyToken, bookingController.hasBookings)
 routes.route(routeNames.cancelBooking).post(authJwt.verifyToken, bookingController.cancelBooking)
+routes.route(routeNames.reviewPayment).post(authJwt.verifyToken, authJwt.authSupplier, bookingController.reviewManualPayment)
+routes.route(routeNames.getPendingManualPayments).get(authJwt.verifyToken, authJwt.authSupplier, bookingController.getPendingManualPayments)
 
 export default routes

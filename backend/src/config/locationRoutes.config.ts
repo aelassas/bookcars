@@ -6,6 +6,7 @@ const routes = {
   getLocation: '/api/location/:id/:language',
   getLocations: '/api/locations/:page/:size/:language',
   getLocationsWithPosition: '/api/locations-with-position/:language',
+  resolveHub: '/api/location/resolve-hub/:language',
   checkLocation: '/api/check-location/:id',
   getLocationId: '/api/location-id/:name/:language',
   createImage: '/api/create-location-image',

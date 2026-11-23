@@ -678,6 +678,100 @@ export const getLocationsWithPosition = async (req: Request, res: Response) => {
   }
 }
 
+const haversineKm = (latitude1: number, longitude1: number, latitude2: number, longitude2: number): number => {
+  const earthRadiusKm = 6371
+  const toRadians = (value: number) => value * Math.PI / 180
+  const dLatitude = toRadians(latitude2 - latitude1)
+  const dLongitude = toRadians(longitude2 - longitude1)
+  const a =
+    Math.sin(dLatitude / 2) ** 2 +
+    Math.cos(toRadians(latitude1)) * Math.cos(toRadians(latitude2)) *
+    Math.sin(dLongitude / 2) ** 2
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+/**
+ * Resolve a text place or coordinate to the nearest registered pickup hub.
+ * The built-in Pakistan place map is a deterministic fallback until a
+ * third-party geocoding provider is configured.
+ */
+export const resolveHub = async (req: Request, res: Response) => {
+  try {
+    const language = String(req.params.language || env.DEFAULT_LANGUAGE)
+    const body = req.body as { name?: string, latitude?: number, longitude?: number, radiusKm?: number }
+    const pakistanPlaces: Record<string, [number, number]> = {
+      murree: [33.9062, 73.3903],
+      'blue area': [33.7077, 73.0504],
+      islamabad: [33.6844, 73.0479],
+      rawalpindi: [33.6007, 73.0679],
+      lahore: [31.5204, 74.3587],
+      karachi: [24.8607, 67.0011],
+      faisalabad: [31.4504, 73.1350],
+      peshawar: [34.0151, 71.5249],
+      quetta: [30.1798, 66.9750],
+      multan: [30.1972, 71.4748],
+    }
+
+    let latitude = typeof body.latitude === 'number' ? body.latitude : undefined
+    let longitude = typeof body.longitude === 'number' ? body.longitude : undefined
+    let resolvedName = typeof body.name === 'string' ? body.name.trim() : ''
+
+    if ((!latitude || !longitude) && resolvedName) {
+      const place = resolvedName.toLowerCase()
+      const coordinates = pakistanPlaces[place]
+      if (coordinates) {
+        ;[latitude, longitude] = coordinates
+      } else {
+        const partial = Object.entries(pakistanPlaces).find(([name]) => place.includes(name) || name.includes(place))
+        if (partial) {
+          resolvedName = partial[0]
+          ;[latitude, longitude] = partial[1]
+        }
+      }
+    }
+
+    if (typeof latitude !== 'number' || typeof longitude !== 'number') {
+      res.status(400).json({ message: 'A valid Pakistan place name or latitude/longitude is required' })
+      return
+    }
+
+    const hubs = await Location.find({
+      latitude: { $ne: null },
+      longitude: { $ne: null },
+    }).populate<{ values: env.LocationValue[] }>('values').lean()
+
+    const ranked = hubs.map((hub) => {
+      const distanceKm = haversineKm(latitude!, longitude!, Number(hub.latitude), Number(hub.longitude))
+      const translated = (hub.values as env.LocationValue[]).find((value) => value.language === language)
+        || (hub.values as env.LocationValue[]).find((value) => value.language === env.DEFAULT_LANGUAGE)
+      return {
+        _id: hub._id.toString(),
+        name: translated?.value || resolvedName || 'Registered pickup hub',
+        latitude: hub.latitude,
+        longitude: hub.longitude,
+        distanceKm: Number(distanceKm.toFixed(2)),
+      }
+    }).sort((a, b) => a.distanceKm - b.distanceKm)
+
+    const nearestHub = ranked[0] || null
+    const radiusKm = Number.isFinite(body.radiusKm) ? Math.max(1, Math.min(Number(body.radiusKm), 500)) : 50
+    const withinRadius = Boolean(nearestHub && nearestHub.distanceKm <= radiusKm)
+
+    res.json({
+      resolvedName,
+      input: { latitude, longitude },
+      radiusKm,
+      withinRadius,
+      fallbackUsed: !withinRadius,
+      nearestHub,
+      nearbyHubs: ranked.filter((hub) => hub.distanceKm <= radiusKm).slice(0, 10),
+    })
+  } catch (err) {
+    logger.error('[location.resolveHub]', err)
+    res.status(500).json({ message: 'Unable to resolve the nearest pickup hub' })
+  }
+}
+
 /**
  * Check if a Location is used by a Car.
  *

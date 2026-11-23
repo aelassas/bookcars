@@ -41,7 +41,7 @@ routes.route(routeNames.verifyRecaptcha).post(userController.verifyRecaptcha)
 // Fail-closed in production to prevent spam/abuse if Redis goes down; fail-open in dev/testing so emails work without Redis
 routes.route(routeNames.sendEmail).post(createRateLimiter('send-email', () => process.env.NODE_ENV === 'production'), userController.sendEmail)
 routes.route(routeNames.hasPassword).get(authJwt.verifyToken, userController.hasPassword)
-routes.route(routeNames.createLicense).post([multer({ storage: multer.memoryStorage() }).single('file')], userController.createLicense)
+routes.route(routeNames.createLicense).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('file')], userController.createLicense)
 routes.route(routeNames.updateLicense).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('file')], userController.updateLicense)
 routes.route(routeNames.deleteLicense).post(authJwt.verifyToken, userController.deleteLicense)
 routes.route(routeNames.deleteTempLicense).post(userController.deleteTempLicense)

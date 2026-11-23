@@ -92,3 +92,15 @@ export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: num
       { withCredentials: true }
     )
     .then((res) => res.data)
+
+export const reviewManualPayment = (
+  id: string,
+  status: 'pending' | 'verified' | 'rejected',
+) => axiosInstance
+  .post(`/api/review-payment/${id}`, { status }, { withCredentials: true })
+  .then((res) => res.data)
+
+export const getPendingManualPayments = (): Promise<bookcarsTypes.Booking[]> =>
+  axiosInstance
+    .get('/api/pending-manual-payments', { withCredentials: true })
+    .then((res) => res.data)

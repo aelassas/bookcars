@@ -13,6 +13,8 @@ import User from '../models/User'
 import Token from '../models/Token'
 import Car from '../models/Car'
 import Location from '../models/Location'
+import Kyc from '../models/Kyc'
+import { parseLocalDate } from '../utils/timezone'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import PushToken from '../models/PushToken'
@@ -289,8 +291,14 @@ export const checkout = async (req: Request, res: Response) => {
 
     const fromValue: unknown = bookingInput.from
     const toValue: unknown = bookingInput.to
-    const fromDate = typeof fromValue === 'string' || fromValue instanceof Date ? new Date(fromValue) : new Date(NaN)
-    const toDate = typeof toValue === 'string' || toValue instanceof Date ? new Date(toValue) : new Date(NaN)
+    const fromDate = typeof fromValue === 'string'
+      && /^\d{4}-\d{2}-\d{2}$/.test(fromValue)
+      ? parseLocalDate(fromValue)
+      : typeof fromValue === 'string' || fromValue instanceof Date ? new Date(fromValue) : new Date(NaN)
+    const toDate = typeof toValue === 'string'
+      && /^\d{4}-\d{2}-\d{2}$/.test(toValue)
+      ? parseLocalDate(toValue)
+      : typeof toValue === 'string' || toValue instanceof Date ? new Date(toValue) : new Date(NaN)
 
     if (
       Number.isNaN(fromDate.getTime())
@@ -440,7 +448,19 @@ export const checkout = async (req: Request, res: Response) => {
 
     let paymentIntentCustomerId: string | undefined
 
-    if (body.payLater) {
+    if (body.payLater && ['jazzCash', 'easypaisa'].includes(body.paymentMethod || '')) {
+      const paymentReference = typeof body.paymentReference === 'string' ? body.paymentReference.trim() : ''
+      if (!paymentReference) {
+        res.status(400).send('Payment transaction reference is required')
+        return
+      }
+      bookingData.status = bookcarsTypes.BookingStatus.Pending
+      bookingData.sessionId = body.sessionId
+      bookingData.paymentMethod = body.paymentMethod as bookcarsTypes.PaymentMethod
+      bookingData.paymentReference = paymentReference
+      bookingData.paymentProof = typeof body.paymentProof === 'string' ? body.paymentProof.trim() : undefined
+      bookingData.paymentVerificationStatus = 'pending'
+    } else if (body.payLater) {
       // Server explicitly decides payment status for payLater
       bookingData.status = bookcarsTypes.BookingStatus.Pending
       bookingData.sessionId = body.sessionId
@@ -574,6 +594,14 @@ export const checkout = async (req: Request, res: Response) => {
     if (supplier.licenseRequired && !(await helper.pathExists(path.join(env.CDN_LICENSES, user!.license!)))) {
       res.status(400).send("Driver's license file not found")
       return
+    }
+
+    if (env.KYC_REQUIRED) {
+      const kyc = await Kyc.findOne({ user: user._id, status: 'approved' }).select('_id').lean()
+      if (!kyc) {
+        res.status(403).send('Approved CNIC/KYC verification is required before checkout')
+        return
+      }
     }
 
     // Revalidate date availability (TOCTOU guard)
@@ -1534,6 +1562,61 @@ export const hasBookings = async (req: Request, res: Response) => {
  * @param {Response} res
  * @returns {unknown}
  */
+export const getPendingManualPayments = async (req: Request, res: Response) => {
+  const filter: Record<string, unknown> = {
+    paymentMethod: { $in: ['jazzCash', 'easypaisa'] },
+    paymentVerificationStatus: 'pending',
+  }
+  if (req.user?.type === bookcarsTypes.UserType.Supplier) {
+    filter.supplier = new mongoose.Types.ObjectId(req.user._id)
+  }
+  const rows = await Booking.find(filter)
+    .populate('driver', 'fullName email phone')
+    .populate('car', 'name licensePlate')
+    .populate('supplier', 'fullName')
+    .sort({ createdAt: -1 })
+    .lean()
+  res.json(rows)
+}
+
+export const reviewManualPayment = async (req: Request, res: Response) => {
+  const id = String(req.params.id)
+  if (!helper.isValidObjectId(id)) {
+    res.status(400).json({ message: 'Invalid booking ID' })
+    return
+  }
+  const status = String(req.body?.status || '')
+  if (!['pending', 'verified', 'rejected'].includes(status)) {
+    res.status(400).json({ message: 'Payment verification status must be pending, verified, or rejected' })
+    return
+  }
+  const booking = await Booking.findById(id)
+  if (!booking) {
+    res.status(404).json({ message: 'Booking not found' })
+    return
+  }
+  if (req.user?.type !== bookcarsTypes.UserType.Admin
+    && booking.supplier.toString() !== req.user?._id) {
+    res.status(403).json({ message: 'Forbidden: booking does not belong to this supplier' })
+    return
+  }
+  if (!['jazzCash', 'easypaisa'].includes(booking.paymentMethod || '')) {
+    res.status(400).json({ message: 'This booking does not use manual payment verification' })
+    return
+  }
+  booking.paymentVerificationStatus = status as 'pending' | 'verified' | 'rejected'
+  if (status === 'verified') {
+    booking.status = booking.isDeposit
+      ? bookcarsTypes.BookingStatus.Deposit
+      : bookcarsTypes.BookingStatus.Paid
+  }
+  if (status === 'rejected') {
+    booking.status = bookcarsTypes.BookingStatus.Cancelled
+  }
+  await saveBookingWithAvailability(booking)
+  res.json(booking)
+}
+
 export const cancelBooking = async (req: Request, res: Response) => {
   const { id } = req.params
 

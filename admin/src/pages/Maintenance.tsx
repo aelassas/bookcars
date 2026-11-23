@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import * as CarService from '@/services/CarService'
 import * as MaintenanceService from '@/services/MaintenanceService'
 import * as helper from '@/utils/helper'
+import { parseKarachiDate } from '@/utils/timezone'
 
 import '@/assets/css/maintenance.css'
 
@@ -49,8 +50,8 @@ const Maintenance = () => {
         vehicle: vehicleId,
         type,
         status,
-        startDate: new Date(`${startDate}T00:00:00.000Z`),
-        expectedCompletionDate: new Date(`${expectedCompletionDate}T00:00:00.000Z`),
+        startDate: parseKarachiDate(startDate),
+        expectedCompletionDate: parseKarachiDate(expectedCompletionDate),
         description,
         cost: cost ? Number(cost) : undefined,
       })

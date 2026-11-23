@@ -25,6 +25,8 @@ import maintenanceRoutes from './routes/maintenanceRoutes'
 import vehicleDocumentRoutes from './routes/vehicleDocumentRoutes'
 import operationsDashboardRoutes from './routes/operationsDashboardRoutes'
 import * as helper from './utils/helper'
+import kycRoutes from './routes/kycRoutes'
+import handoverRoutes from './routes/handoverRoutes'
 
 const app = express()
 
@@ -134,6 +136,8 @@ app.use('/', aiRoutes)
 app.use('/', maintenanceRoutes)
 app.use('/', vehicleDocumentRoutes)
 app.use('/', operationsDashboardRoutes)
+app.use('/', kycRoutes)
+app.use('/', handoverRoutes)
 
 if (env.ENABLE_SENTRY) {
   Sentry.setupExpressErrorHandler(app)

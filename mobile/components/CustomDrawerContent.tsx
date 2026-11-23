@@ -150,6 +150,15 @@ const CustomDrawerContent = ({ closeDrawer }: CustomDrawerContentProps) => {
               <Text style={[styles.text, pathname === '/settings' && styles.activeText]}>{i18n.t('SETTINGS')}</Text>
             </Pressable>
           )}
+          {loggedIn && (
+            <Pressable
+              style={[styles.menuItem, pathname === '/kyc' && styles.activeMenuItem]}
+              onPress={() => navigateTo('/kyc')}
+            >
+              <MaterialIcons name="badge" size={24} color={pathname === '/kyc' ? '#f37022' : 'rgba(0, 0, 0, 0.54)'} />
+              <Text style={[styles.text, pathname === '/kyc' && styles.activeText]}>CNIC / KYC</Text>
+            </Pressable>
+          )}
 
           {/* 7. Sign In - Visible only when NOT logged in */}
           {!loggedIn && (

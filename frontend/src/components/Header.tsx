@@ -382,6 +382,17 @@ const Header = ({
                     <ListItemText primary={strings.BOOKINGS} />
                   </ListItemButton>
                 )}
+                {isSignedIn && (
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/kyc')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><SignUpIcon /></ListItemIcon>
+                    <ListItemText primary="CNIC / KYC" />
+                  </ListItemButton>
+                )}
                 {!env.HIDE_SUPPLIERS && (
                   <ListItemButton
                     onClick={() => {

@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
+  Alert,
 } from '@mui/material'
 import { addHours } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
@@ -47,6 +48,7 @@ const SearchForm = ({
   const [minDate, setMinDate] = useState<Date | null>(null)
   const [fromMinDate, setFromMinDate] = useState<Date | null>(null)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
+  const [hubMessage, setHubMessage] = useState('')
 
   useEffect(() => {
     if (settings) {
@@ -245,6 +247,21 @@ const SearchForm = ({
     if (_pickupLocationId) {
       const location = await LocationService.getLocation(_pickupLocationId) as LocationField
       setValue('pickupLocation', location)
+      try {
+        const resolved = await LocationService.resolveHub({
+          name: location.name,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          radiusKm: 50,
+        })
+        if (resolved.nearestHub) {
+          setHubMessage(`Nearest pickup hub: ${resolved.nearestHub.name} (${resolved.nearestHub.distanceKm} km).`)
+        } else {
+          setHubMessage('No registered pickup hub was found within 50 km.')
+        }
+      } catch {
+        setHubMessage('')
+      }
       if (sameLocation) {
         setValue('dropOffLocation', location)
       }
@@ -308,6 +325,7 @@ const SearchForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="home-search-form">
+      {hubMessage && <Alert severity="info" sx={{ gridColumn: '1 / -1' }}>{hubMessage}</Alert>}
       <FormControl className="pickup-location">
         <LocationSelectList
           {...register('pickupLocation')}

@@ -47,3 +47,12 @@ export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCa
       { withCredentials: true }
     )
     .then((res) => res.data)
+
+export const getNearbyAvailability = (payload: {
+  pickupLocation: string
+  from: Date
+  to: Date
+  radiusDays?: number
+}) => axiosInstance
+  .post('/api/nearby-availability', payload)
+  .then((res) => res.data as { suggestions: Array<{ from: string, to: string, availableCars: number }> })

@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import * as CarService from '@/services/CarService'
 import * as VehicleDocumentService from '@/services/VehicleDocumentService'
 import * as helper from '@/utils/helper'
+import { parseKarachiDate } from '@/utils/timezone'
 
 const labels: Record<bookcarsTypes.VehicleDocumentType, string> = {
   registration: 'Registration',
@@ -44,7 +45,7 @@ const VehicleDocuments = () => {
       return
     }
     try {
-      await VehicleDocumentService.upsert({ vehicle: vehicleId, type, status, expiryDate: new Date(`${expiryDate}T00:00:00.000Z`), notes })
+      await VehicleDocumentService.upsert({ vehicle: vehicleId, type, status, expiryDate: parseKarachiDate(expiryDate), notes })
       setMessage('Vehicle document saved.')
       await load()
     } catch (error) {

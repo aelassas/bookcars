@@ -22,6 +22,7 @@ export interface BookingIntakeData {
 const locations = [
   'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Gujranwala',
   'Karachi', 'Hyderabad', 'Sukkur', 'Peshawar', 'Abbottabad', 'Quetta', 'Gwadar',
+  'Murree',
 ]
 
 const months: Record<string, string> = {
@@ -30,8 +31,16 @@ const months: Record<string, string> = {
 }
 
 const getLocation = (text: string, start = 0): string | null => {
-  const match = locations.find((location) => new RegExp(`\\b${location}\\b`, 'i').test(text.slice(start)))
-  return match || null
+  const slice = text.slice(start)
+  let earliest: { location: string, index: number } | null = null
+  for (const location of locations) {
+    const match = slice.match(new RegExp(`\\b${location}\\b`, 'i'))
+    if (match?.index !== undefined
+      && (!earliest || match.index < earliest.index)) {
+      earliest = { location, index: match.index }
+    }
+  }
+  return earliest?.location || null
 }
 
 const getDate = (text: string): string | null => {

@@ -33,6 +33,9 @@ const baseSchema = z.object({
     payLater: z.boolean().default(false).optional(),
     payDeposit: z.boolean().default(false).optional(),
     payInFull: z.boolean().default(false).optional(),
+    paymentMethod: z.enum(['payLater', 'stripe', 'payPal', 'jazzCash', 'easypaisa']).optional(),
+    paymentReference: z.string().trim().max(100).optional(),
+    paymentProof: z.string().trim().max(500).optional(),
 
     // Booking options
     cancellation: z.boolean().default(false).optional(),

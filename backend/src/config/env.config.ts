@@ -388,6 +388,7 @@ export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'en')
  * @type {number}
  */
 export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'), 10)
+export const KYC_REQUIRED = /^true$/i.test(__env__('BC_KYC_REQUIRED', false, 'false'))
 
 /**
  * Expo push access token.
@@ -690,6 +691,10 @@ export interface Booking extends Document {
   isDeposit: boolean
   isPayedInFull?: boolean
   paypalOrderId?: string
+  paymentMethod?: bookcarsTypes.PaymentMethod
+  paymentReference?: string
+  paymentProof?: string
+  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
 }
 
 /**

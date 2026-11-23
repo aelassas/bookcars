@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   FormControl,
   FormControlLabel,
@@ -32,6 +33,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import '@/assets/css/booking.css'
 
 const Booking = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
@@ -323,6 +325,9 @@ const Booking = () => {
     <Layout onLoad={onLoad} strict>
       {visible && booking && (
         <div className="booking">
+          <Button sx={{ mb: 2 }} variant="outlined" onClick={() => navigate(`/handover?booking=${booking._id}`)}>
+            View digital handover
+          </Button>
           <div className="col-1">
             <form onSubmit={handleSubmit}>
               {!env.HIDE_SUPPLIERS && (

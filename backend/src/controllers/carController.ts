@@ -19,6 +19,7 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import * as mailHelper from '../utils/mailHelper'
 import Location from '../models/Location'
+import Maintenance from '../models/Maintenance'
 
 /**
  * Create a Car.
@@ -965,6 +966,79 @@ export const getBookingCars = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[car.getBookingCars] ${i18n.t('ERROR')} ${req.query.s}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/**
+ * Return nearby date ranges that have at least one available car.
+ */
+export const getNearbyAvailability = async (req: Request, res: Response) => {
+  try {
+    const body = req.body as { pickupLocation?: string, from?: string | Date, to?: string | Date, radiusDays?: number }
+    if (!body.pickupLocation || !helper.isValidObjectId(body.pickupLocation)
+      || !body.from || !body.to) {
+      res.status(400).json({ message: 'Pickup location and date range are required' })
+      return
+    }
+    const from = new Date(body.from)
+    const to = new Date(body.to)
+    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime()) || to <= from) {
+      res.status(400).json({ message: 'Invalid date range' })
+      return
+    }
+    const durationMs = to.getTime() - from.getTime()
+    const radiusDays = Math.min(Math.max(Number(body.radiusDays || 14), 1), 30)
+    const suggestions: Array<{ from: Date, to: Date, availableCars: number }> = []
+    const locIds = await Location.find({
+      $or: [
+        { _id: new mongoose.Types.ObjectId(body.pickupLocation) },
+        { parentLocation: new mongoose.Types.ObjectId(body.pickupLocation) },
+      ],
+    }).distinct('_id')
+    const candidateCars = await Car.find({
+      locations: { $in: locIds },
+      available: true,
+      fullyBooked: { $in: [false, null] },
+    }).select('_id').lean()
+    const candidateCarIds = candidateCars.map((car) => car._id)
+
+    for (let offset = 1; offset <= radiusDays; offset++) {
+      for (const direction of [-1, 1]) {
+        const candidateFrom = new Date(from.getTime() + direction * offset * 24 * 60 * 60 * 1000)
+        const candidateTo = new Date(candidateFrom.getTime() + durationMs)
+        const availableCars = candidateCarIds.length
+        if (availableCars > 0) {
+          const overlappingCars = await Booking.distinct('car', {
+            car: { $in: candidateCarIds },
+            status: { $in: BOOKING_RESERVATION_STATUSES },
+            $and: [
+              { to: { $gt: candidateFrom } },
+              { from: { $lt: candidateTo } },
+            ],
+          })
+          const maintenanceCars = await Maintenance.distinct('vehicle', {
+            vehicle: { $in: candidateCarIds },
+            startDate: { $lt: candidateTo },
+            expectedCompletionDate: { $gt: candidateFrom },
+            status: { $nin: ['completed', 'cancelled'] },
+          })
+          const unavailable = new Set([
+            ...overlappingCars.map((id) => id.toString()),
+            ...maintenanceCars.map((id) => id.toString()),
+          ])
+          const remaining = candidateCarIds.filter((id) => !unavailable.has(id.toString())).length
+          if (remaining > 0) {
+            suggestions.push({ from: candidateFrom, to: candidateTo, availableCars: remaining })
+          }
+        }
+      }
+      if (suggestions.length >= 5) break
+    }
+
+    res.json({ suggestions: suggestions.slice(0, 5) })
+  } catch (err) {
+    logger.error('[car.getNearbyAvailability]', err)
+    res.status(500).json({ message: 'Unable to calculate nearby availability' })
   }
 }
 

@@ -81,6 +81,14 @@ export enum PaymentGateway {
   Stripe = 'stripe',
 }
 
+export enum PaymentMethod {
+  PayLater = 'payLater',
+  Stripe = 'stripe',
+  PayPal = 'payPal',
+  JazzCash = 'jazzCash',
+  Easypaisa = 'easypaisa',
+}
+
 export interface Booking {
   _id?: string
   supplier: string | User
@@ -101,6 +109,10 @@ export interface Booking {
   cancelRequest?: boolean
   price?: number
   sessionId?: string
+  paymentMethod?: PaymentMethod
+  paymentReference?: string
+  paymentProof?: string
+  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
@@ -118,6 +130,9 @@ export interface CheckoutPayload {
   paymentIntentId?: string
   customerId?: string
   payPal?: boolean
+  paymentMethod?: PaymentMethod
+  paymentReference?: string
+  paymentProof?: string
 }
 
 export interface Filter {
@@ -711,6 +726,51 @@ export interface VehicleDocument {
   expiryDate: Date
   status: VehicleDocumentStatus
   notes?: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export type KycStatus = 'pending_review' | 'approved' | 'rejected' | 'suspended'
+export type KycDocumentType = 'cnic' | 'passport' | 'driving_license'
+
+export interface Kyc {
+  _id?: string
+  user: string
+  documentType: KycDocumentType
+  documentNumber: string
+  documentFront?: string
+  documentBack?: string
+  selfie?: string
+  status: KycStatus
+  rejectionReason?: string
+  reviewedBy?: string
+  reviewedAt?: Date
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export type HandoverStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled'
+
+export interface Handover {
+  _id?: string
+  booking: string
+  vehicle: string
+  customer: string
+  supplier: string
+  status: HandoverStatus
+  odometerAtPickup?: number
+  odometerAtReturn?: number
+  fuelLevelAtPickup?: number
+  fuelLevelAtReturn?: number
+  checklistAtPickup?: Record<string, boolean>
+  checklistAtReturn?: Record<string, boolean>
+  pickupPhotos?: string[]
+  returnPhotos?: string[]
+  customerSignature?: string
+  supplierSignature?: string
+  damageNotes?: string
+  scheduledAt?: Date
+  completedAt?: Date
   createdAt?: Date
   updatedAt?: Date
 }

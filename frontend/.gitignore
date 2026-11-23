@@ -32,3 +32,6 @@ vite.config.js
 .cache/
 
 .eslintcache
+
+# Large generated/4K media; host separately or use Git LFS
+public/*-4k*.mp4

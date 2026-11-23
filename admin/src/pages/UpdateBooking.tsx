@@ -861,6 +861,11 @@ const UpdateBooking = () => {
                   <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate('/')}>
                     {commonStrings.CANCEL}
                   </Button>
+                  {booking?._id && (
+                    <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={() => navigate(`/handover?booking=${booking._id}`)}>
+                      Digital handover
+                    </Button>
+                  )}
                 </div>
               </div>
             </form>

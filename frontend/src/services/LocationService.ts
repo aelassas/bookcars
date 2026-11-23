@@ -55,3 +55,20 @@ export const getLocationId = (name: string, language: string): Promise<{ status:
       `/api/location-id/${encodeURIComponent(name)}/${language}`
     )
     .then((res) => ({ status: res.status, data: res.data }))
+
+export interface HubResolution {
+  resolvedName: string
+  input: { latitude: number, longitude: number }
+  radiusKm: number
+  withinRadius: boolean
+  fallbackUsed: boolean
+  nearestHub: { _id: string, name: string, latitude: number, longitude: number, distanceKm: number } | null
+  nearbyHubs: Array<{ _id: string, name: string, latitude: number, longitude: number, distanceKm: number }>
+}
+
+export const resolveHub = (
+  payload: { name?: string, latitude?: number, longitude?: number, radiusKm?: number },
+): Promise<HubResolution> =>
+  axiosInstance
+    .post(`/api/location/resolve-hub/${UserService.getLanguage()}`, payload)
+    .then((res) => res.data)

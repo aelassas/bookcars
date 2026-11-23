@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Alert, Button, Stack, Typography } from '@mui/material'
 import { Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -9,6 +9,7 @@ import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
 import * as LocationService from '@/services/LocationService'
 import * as SupplierService from '@/services/SupplierService'
+import * as CarService from '@/services/CarService'
 // import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import NoMatch from './NoMatch'
@@ -59,6 +60,8 @@ const Search = () => {
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [nearbySuggestions, setNearbySuggestions] = useState<Array<{ from: string, to: string, availableCars: number }>>([])
+  const [hubFallback, setHubFallback] = useState<string | null>(null)
   // const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
@@ -225,6 +228,36 @@ const Search = () => {
       setSuppliers(_suppliers)
       setSupplierIds(_supplierIds)
 
+      try {
+        const nearby = await CarService.getNearbyAvailability({
+          pickupLocation: _pickupLocation._id,
+          from: new Date(_from),
+          to: new Date(_to),
+          radiusDays: 14,
+        })
+        setNearbySuggestions(nearby.suggestions)
+      } catch {
+        setNearbySuggestions([])
+      }
+
+      if (_pickupLocation.name && /murree/i.test(_pickupLocation.name)) {
+        try {
+          const resolution = await LocationService.resolveHub({
+            name: _pickupLocation.name,
+            latitude: _pickupLocation.latitude,
+            longitude: _pickupLocation.longitude,
+            radiusKm: 50,
+          })
+          setHubFallback(
+            resolution.nearestHub
+              ? `Nearest registered pickup hub: ${resolution.nearestHub.name} (${resolution.nearestHub.distanceKm} km).`
+              : 'No registered pickup hub was found near Murree.',
+          )
+        } catch {
+          setHubFallback('Murree inventory was searched directly; no nearest-hub confirmation was available.')
+        }
+      }
+
       const { ranges: _ranges } = state
       if (_ranges) {
         setRanges(_ranges)
@@ -311,6 +344,27 @@ const Search = () => {
               )}
             </div>
             <div className="col-2">
+              {hubFallback && <Alert severity="info" sx={{ mb: 2 }}>{hubFallback}</Alert>}
+              {nearbySuggestions.length > 0 && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2">Nearby available dates</Typography>
+                  <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
+                    {nearbySuggestions.map((suggestion) => (
+                      <Button
+                        key={`${suggestion.from}-${suggestion.to}`}
+                        size="small"
+                        variant="outlined"
+                        onClick={() => {
+                          setFrom(new Date(suggestion.from))
+                          setTo(new Date(suggestion.to))
+                        }}
+                      >
+                        {new Date(suggestion.from).toLocaleDateString()} - {new Date(suggestion.to).toLocaleDateString()} ({suggestion.availableCars})
+                      </Button>
+                    ))}
+                  </Stack>
+                </Alert>
+              )}
               <CarList
                 carSpecs={carSpecs}
                 suppliers={supplierIds}
