@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
-import { GoogleSignin, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin'
+import Constants from 'expo-constants'
 import * as AppleAuthentication from 'expo-apple-authentication'
-import { AccessToken, GraphRequest, GraphRequestManager, LoginManager, Profile } from 'react-native-fbsdk-next'
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import * as bookcarsTypes from ':bookcars-types'
 
@@ -11,13 +10,6 @@ import i18n from '@/lang/i18n'
 import * as helper from '@/utils/helper'
 import * as UserService from '@/services/UserService'
 import * as env from '@/config/env.config'
-
-
-GoogleSignin.configure({
-  webClientId: env.GOOGLE_WEB_CLIENT_ID,
-  offlineAccess: true,
-  scopes: ['profile', 'email'],
-})
 
 interface SocialLoginProps {
   stayConnected?: boolean
@@ -36,6 +28,11 @@ const SocialLogin = (
 ) => {
   const router = useRouter()
   const [openErrorDialog, setOpenErrorDialog] = useState(false)
+
+  const isExpoGo = Constants.appOwnership === 'expo'
+  const showGoogleSignIn = !isExpoGo && Boolean(
+    env.GOOGLE_WEB_CLIENT_ID && env.GOOGLE_WEB_CLIENT_ID !== 'GOOGLE_WEB_CLIENT_ID'
+  )
 
   const longinError = () => {
     setOpenErrorDialog(true)
@@ -99,6 +96,46 @@ const SocialLogin = (
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const { GoogleSignin } = await import('@react-native-google-signin/google-signin')
+
+      GoogleSignin.configure({
+        webClientId: env.GOOGLE_WEB_CLIENT_ID,
+        offlineAccess: true,
+        scopes: ['profile', 'email'],
+      })
+
+      await GoogleSignin.hasPlayServices()
+      await GoogleSignin.signOut()
+
+      const userInfo = await GoogleSignin.signIn()
+      const user = userInfo.data?.user
+      const idToken = userInfo.data?.idToken
+
+      if (!user || !idToken) {
+        console.log('Google login cancelled before token was received')
+        return
+      }
+
+      await loginSuccess(
+        bookcarsTypes.SocialSignInType.Google,
+        idToken,
+        user.email,
+        user.name || user.email,
+        user.photo || ''
+      )
+    } catch (err: any) {
+      if (err?.code === 'SIGN_IN_CANCELLED') {
+        console.log('Google login cancelled')
+        return
+      }
+
+      console.error('Google login failed:', err?.message || err)
+      longinError()
+    }
+  }
+
   const getEmail = (jwtToken: string) => {
     const jwt = UserService.parseJwt(jwtToken)
     const { email } = jwt
@@ -107,76 +144,28 @@ const SocialLogin = (
 
   return (
     <View style={styles.view}>
-      <View style={styles.or}>
-        <View style={styles.orHr} />
-        <Text style={styles.orText}>{i18n.t('OR')}</Text>
-        <View style={styles.orHr} />
-      </View>
+      {(showGoogleSignIn || helper.ios()) && (
+        <View style={styles.or}>
+          <View style={styles.orHr} />
+          <Text style={styles.orText}>{i18n.t('OR')}</Text>
+          <View style={styles.orHr} />
+        </View>
+      )}
+      {!showGoogleSignIn && !helper.ios() && (
+        <Text style={styles.expoGoNote}>
+          {isExpoGo
+            ? 'Google sign-in needs the SafarRent native build. Use email and password in Expo Go.'
+            : 'Google sign-in is not configured for this build. Use email and password.'}
+        </Text>
+      )}
 
       <View style={styles.buttons}>
 
-        {/* GOOGLE */}
-        <Pressable
-          onPress={async () => {
-            try {
-              await GoogleSignin.hasPlayServices()
-
-              // Force account picker
-              await GoogleSignin.signOut()
-
-              const userInfo = await GoogleSignin.signIn()
-
-              const user = userInfo.data?.user
-              const idToken = userInfo.data?.idToken
-
-              if (!user || !idToken) {
-                // user probably cancelled the login flow
-                console.log('Google login aborted before token received')
-                return
-              }
-
-              await loginSuccess(
-                bookcarsTypes.SocialSignInType.Google,
-                idToken,
-                user.email,
-                user.name || user.email,
-                user.photo || ''
-              )
-            } catch (err: any) {
-              let error = false
-              if (isErrorWithCode(err)) {
-                switch (err.code) {
-                  case statusCodes.SIGN_IN_CANCELLED:
-                    // user cancelled the login flow
-                    console.log('Google login cancelled')
-                    break
-                  case statusCodes.IN_PROGRESS:
-                    // operation (eg. login) already in progress
-                    console.log('Google login in progress')
-                    error = true
-                    break
-                  case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-                    console.error('Google play services not available')
-                    error = true
-                    break
-                  default:
-                    console.error('Google login error:', err.message)
-                    error = true
-                    break
-                }
-              } else {
-                // an error that's not related to google login occurred
-                console.error('Google login error:', err)
-                error = true
-              }
-
-              if (error) {
-                longinError()
-              }
-            }
-          }}>
-          <Image source={require('@/assets/google-icon.png')} style={styles.google} />
-        </Pressable>
+        {showGoogleSignIn && (
+          <Pressable onPress={handleGoogleSignIn}>
+            <Image source={require('@/assets/google-icon.png')} style={styles.google} />
+          </Pressable>
+        )}
 
         {/* APPLE */}
         {helper.ios() && (
@@ -229,81 +218,6 @@ const SocialLogin = (
           </Pressable>
         )}
 
-        {/* FACEBOOK */}
-        <Pressable
-          // style={{ display: 'none' }}
-          onPress={async () => {
-            LoginManager.logInWithPermissions(['public_profile', 'email'])
-              .then(
-                async (result: any) => {
-                  if (result.isCancelled) {
-                    console.log('Facebook login cancelled')
-                  } else {
-                    let error = false
-                    const currentAccessToken = await AccessToken.getCurrentAccessToken()
-                    if (currentAccessToken) {
-                      const req = new GraphRequest('/me', {
-                        httpMethod: 'GET',
-                        version: 'v20.0',
-                        accessToken: currentAccessToken.accessToken,
-                        parameters: {
-                          fields: {
-                            string: 'email,name,picture'
-                          }
-                        }
-                      }, async (err: any, res: any) => {
-                        let fbError = false
-                        if (err) {
-                          console.log(err)
-                          fbError = true
-                        } else {
-                          const currentProfile = await Profile.getCurrentProfile()
-
-                          if (res && currentProfile) {
-                            const email = res.email as string
-                            const imageURL = (res.picture as any).data.url as string
-                            const { name } = currentProfile
-                            // const { name, imageURL } = currentProfile
-                            // console.log('email', email)
-                            // console.log('name', name)
-                            // console.log('imageURL', imageURL)
-
-                            if (email && name) {
-                              await loginSuccess(bookcarsTypes.SocialSignInType.Facebook, currentAccessToken.accessToken, email, name || email, imageURL || '')
-                            } else {
-                              fbError = true
-                            }
-                          } else {
-                            fbError = true
-                          }
-                        }
-
-                        if (fbError) {
-                          console.error('Facebook GraphRequest error')
-                          longinError()
-                        }
-                      })
-                      new GraphRequestManager().addRequest(req).start()
-                    } else {
-                      error = true
-                    }
-
-                    if (error) {
-                      console.error('Facebook login error')
-                      longinError()
-                    }
-                  }
-                },
-                (error: any) => {
-                  console.error(`Facebook login fail with error: ${error}`)
-
-                  longinError()
-                }
-              )
-          }}>
-          <Image source={require('@/assets/facebook-blue-icon.png')} style={styles.facebook} />
-        </Pressable>
-
         <Portal>
           <Dialog style={styles.dialog} visible={openErrorDialog} dismissable={false}>
             <Dialog.Title style={styles.dialogTitleContent}>{i18n.t('ERROR')}</Dialog.Title>
@@ -329,6 +243,13 @@ const SocialLogin = (
 }
 
 const styles = StyleSheet.create({
+  expoGoNote: {
+    color: '#62656B',
+    fontSize: 13,
+    lineHeight: 19,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
   view: {
     display: 'flex',
     flexDirection: 'column',
@@ -367,10 +288,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   apple: {
-    height: 48,
-    resizeMode: 'contain',
-  },
-  facebook: {
     height: 48,
     resizeMode: 'contain',
   },

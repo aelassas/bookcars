@@ -13,6 +13,7 @@ import {
   RadioGroup,
   Radio,
   CircularProgress,
+  Alert,
 } from '@mui/material'
 import {
   DirectionsCar as CarIcon,
@@ -43,6 +44,7 @@ import { strings as commonStrings } from '@/lang/common'
 import { strings as csStrings } from '@/lang/cars'
 import { strings } from '@/lang/checkout'
 import * as helper from '@/utils/helper'
+import { isPakistanPhone } from '@/utils/pakistanValidation'
 import * as UserService from '@/services/UserService'
 import * as CarService from '@/services/CarService'
 import * as LocationService from '@/services/LocationService'
@@ -65,6 +67,7 @@ import ViewOnMapButton from '@/components/ViewOnMapButton'
 import MapDialog from '@/components/MapDialog'
 import Backdrop from '@/components/SimpleBackdrop'
 import Unauthorized from '@/components/Unauthorized'
+import { PakistanPayments } from '@/components/PakistanPayments'
 
 import '@/assets/css/checkout.css'
 
@@ -72,7 +75,10 @@ import '@/assets/css/checkout.css'
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 //
-const stripePromise = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe ? loadStripe(env.STRIPE_PUBLISHABLE_KEY) : null
+const onlinePaymentConfigured = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe
+  ? /^pk_(live|test)_/.test(env.STRIPE_PUBLISHABLE_KEY)
+  : Boolean(env.PAYPAL_CLIENT_ID) && !env.PAYPAL_CLIENT_ID.includes('PAYPAL_CLIENT_ID')
+const stripePromise = env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe && onlinePaymentConfigured ? loadStripe(env.STRIPE_PUBLISHABLE_KEY) : null
 
 const Checkout = () => {
   const location = useLocation()
@@ -110,6 +116,9 @@ const Checkout = () => {
   const [payPalLoaded, setPayPalLoaded] = useState(false)
   const [payPalInit, setPayPalInit] = useState(false)
   const [payPalProcessing, setPayPalProcessing] = useState(false)
+  const [rentalMode, setRentalMode] = useState<bookcarsTypes.RentalMode>(bookcarsTypes.RentalMode.WithDriver)
+  const [tripScope, setTripScope] = useState<bookcarsTypes.TripScope>(bookcarsTypes.TripScope.IntraCity)
+  const [quote, setQuote] = useState<BookingService.PakistanQuote>()
 
   const birthDateRef = useRef<HTMLInputElement | null>(null)
   const additionalDriverBirthDateRef = useRef<HTMLInputElement | null>(null)
@@ -160,18 +169,60 @@ const Checkout = () => {
   const payLater = useWatch({ control, name: 'payLater' })
   const payDeposit = useWatch({ control, name: 'payDeposit' })
   const payInFull = useWatch({ control, name: 'payInFull' })
-  const paymentMethod = useWatch({ control, name: 'paymentMethod' })
-  const paymentReference = useWatch({ control, name: 'paymentReference' })
-  const paymentProof = useWatch({ control, name: 'paymentProof' })
+  const cancellation = useWatch({ control, name: 'cancellation' }) || false
+  const amendments = useWatch({ control, name: 'amendments' }) || false
+  const theftProtection = useWatch({ control, name: 'theftProtection' }) || false
+  const collisionDamageWaiver = useWatch({ control, name: 'collisionDamageWaiver' }) || false
+  const fullInsurance = useWatch({ control, name: 'fullInsurance' }) || false
+
+  const updateQuote = async (
+    mode = rentalMode,
+    scope = tripScope,
+  ) => {
+    if (!car || !from || !to) {
+return
+}
+    try {
+      const result = await BookingService.calculatePakistanQuote({
+        carId: car._id,
+        from,
+        to,
+        rentalMode: mode,
+        tripScope: scope,
+        options: { cancellation, amendments, theftProtection, collisionDamageWaiver, fullInsurance, additionalDriver },
+      })
+      setQuote(result)
+      setPrice(result.baseRentPKR + result.driverAllowancePKR + result.outOfCitySurchargePKR)
+      setDepositPrice(result.securityDepositPKR)
+    } catch {
+      setQuote(undefined)
+    }
+  }
 
   const validatePhone = (phone: string) => {
-    return validator.isMobilePhone(phone)
+    return isPakistanPhone(phone)
   }
 
   const onSubmit = async (data: FormFields) => {
     try {
+      if (!data.payLater && !onlinePaymentConfigured) {
+        helper.error()
+        return
+      }
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
         helper.error()
+        return
+      }
+
+      const submittedCnic = data.cnicNumber || user?.cnicNumber || ''
+      const submittedLicenseNumber = data.drivingLicenseNumber || user?.drivingLicenseNumber || ''
+      if (!/^\d{5}-\d{7}-\d$/.test(submittedCnic)) {
+        helper.error(undefined, 'Enter a valid CNIC in your profile or the driver details to continue.')
+        return
+      }
+      if (rentalMode === bookcarsTypes.RentalMode.SelfDrive
+        && (user?.kycStatus !== bookcarsTypes.KycStatus.Verified || !submittedLicenseNumber)) {
+        helper.error(undefined, 'Self-drive requires an admin-verified CNIC and driving license number. Complete KYC in Settings first.')
         return
       }
 
@@ -206,6 +257,8 @@ const Checkout = () => {
           birthDate: data.birthDate,
           language: UserService.getLanguage(),
           license: license || undefined,
+          cnicNumber: submittedCnic,
+          drivingLicenseNumber: submittedLicenseNumber,
         }
       }
 
@@ -213,17 +266,24 @@ const Checkout = () => {
       // Payments are always made in the base currency.
       // The prices displayed in the selected currency are only estimates.
       //
-      const priceChangeRate = car.supplier.priceChangeRate || 0
-      const baseTotalPrice = bookcarsHelper.calculateTotalPrice(car, from, to, priceChangeRate, {
-        cancellation: data.cancellation,
-        amendments: data.amendments,
-        theftProtection: data.theftProtection,
-        collisionDamageWaiver: data.collisionDamageWaiver,
-        fullInsurance: data.fullInsurance,
-        additionalDriver,
+      const currentQuote = await BookingService.calculatePakistanQuote({
+        carId: car._id,
+        from,
+        to,
+        rentalMode,
+        tripScope,
+        options: {
+          cancellation: data.cancellation,
+          amendments: data.amendments,
+          theftProtection: data.theftProtection,
+          collisionDamageWaiver: data.collisionDamageWaiver,
+          fullInsurance: data.fullInsurance,
+          additionalDriver,
+        },
       })
-      let baseDepositPrice = car.deposit > 0 ? car.deposit : 0
-      baseDepositPrice += baseDepositPrice * (priceChangeRate / 100)
+      setQuote(currentQuote)
+      const baseTotalPrice = currentQuote.baseRentPKR + currentQuote.driverAllowancePKR + currentQuote.outOfCitySurchargePKR
+      let baseDepositPrice = currentQuote.securityDepositPKR
 
       let basePrice = baseTotalPrice
       if (payDeposit) {
@@ -242,6 +302,15 @@ const Checkout = () => {
         from,
         to,
         status: bookcarsTypes.BookingStatus.Pending,
+        rentalMode,
+        tripScope,
+        priceBreakdown: {
+          baseRentPkr: currentQuote.baseRentPKR,
+          driverAllowancePkr: currentQuote.driverAllowancePKR,
+          outOfCitySurchargePkr: currentQuote.outOfCitySurchargePKR,
+          securityDepositPkr: currentQuote.securityDepositPKR,
+          totalPayablePkr: currentQuote.totalPayablePKR,
+        },
         cancellation: data.cancellation,
         amendments: data.amendments,
         theftProtection: data.theftProtection,
@@ -249,17 +318,6 @@ const Checkout = () => {
         fullInsurance: data.fullInsurance,
         additionalDriver,
         price: basePrice,
-        paymentMethod: data.paymentMethod === 'jazzCash'
-          ? bookcarsTypes.PaymentMethod.JazzCash
-          : data.paymentMethod === 'easypaisa'
-            ? bookcarsTypes.PaymentMethod.Easypaisa
-            : data.paymentMethod === 'payLater'
-              ? bookcarsTypes.PaymentMethod.PayLater
-              : data.paymentMethod === 'stripe'
-                ? bookcarsTypes.PaymentMethod.Stripe
-                : data.paymentMethod === 'payPal'
-                  ? bookcarsTypes.PaymentMethod.PayPal
-                  : undefined,
       }
 
       if (adRequired && additionalDriver && data.additionalDriverBirthDate) {
@@ -315,13 +373,8 @@ const Checkout = () => {
         sessionId: _sessionId,
         customerId: _customerId,
         payPal: env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal,
-        paymentMethod: paymentMethod === 'jazzCash'
-          ? bookcarsTypes.PaymentMethod.JazzCash
-          : paymentMethod === 'easypaisa'
-            ? bookcarsTypes.PaymentMethod.Easypaisa
-            : undefined,
-        paymentReference,
-        paymentProof,
+        cnicNumber: authenticated ? submittedCnic : undefined,
+        drivingLicenseNumber: authenticated ? submittedLicenseNumber : undefined,
       }
 
       const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
@@ -429,12 +482,31 @@ const Checkout = () => {
       const _price = await PaymentService.convertPrice(bookcarsHelper.calculateTotalPrice(_car, _from, _to, priceChangeRate))
       let _depositPrice = _car.deposit > 0 ? await PaymentService.convertPrice(_car.deposit) : 0
       _depositPrice += _depositPrice * (priceChangeRate / 100)
+      const initialMode = state.rentalMode === bookcarsTypes.RentalMode.SelfDrive && _car.selfDriveAvailable
+        ? bookcarsTypes.RentalMode.SelfDrive
+        : bookcarsTypes.RentalMode.WithDriver
+      const initialScope = dropOffLocationId === pickupLocationId ? bookcarsTypes.TripScope.IntraCity : bookcarsTypes.TripScope.OutOfCity
+      const initialQuote = await BookingService.calculatePakistanQuote({
+        carId: _car._id,
+        from: _from,
+        to: _to,
+        rentalMode: initialMode,
+        tripScope: initialScope,
+        options: {
+          cancellation: _car.cancellation === 0,
+          amendments: _car.amendments === 0,
+          theftProtection: _car.theftProtection === 0,
+          collisionDamageWaiver: _car.collisionDamageWaiver === 0,
+          fullInsurance: _car.fullInsurance === 0,
+        },
+      })
 
       const included = (val: number) => val === 0
 
       setCar(_car)
-      setPrice(_price)
-      setDepositPrice(_depositPrice)
+      setQuote(initialQuote)
+      setPrice(initialQuote.baseRentPKR + initialQuote.driverAllowancePKR + initialQuote.outOfCitySurchargePKR || _price)
+      setDepositPrice(initialQuote.securityDepositPKR || _depositPrice)
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
@@ -444,6 +516,10 @@ const Checkout = () => {
       setValue('theftProtection', included(_car.theftProtection))
       setValue('collisionDamageWaiver', included(_car.collisionDamageWaiver))
       setValue('fullInsurance', included(_car.fullInsurance))
+      setValue('cnicNumber', _user?.cnicNumber || '')
+      setValue('drivingLicenseNumber', _user?.drivingLicenseNumber || '')
+      setRentalMode(initialMode)
+      setTripScope(dropOffLocationId === pickupLocationId ? bookcarsTypes.TripScope.IntraCity : bookcarsTypes.TripScope.OutOfCity)
       setLicense(_user?.license || null)
       setVisible(true)
     } catch (err) {
@@ -451,57 +527,110 @@ const Checkout = () => {
     }
   }
 
+  const fareTotal = quote?.totalPayablePKR ?? (price + depositPrice)
+  const demoAdvance = Math.round(fareTotal * 0.2)
+
   return (
     <>
       <Layout onLoad={onLoad} strict={false}>
         {!user?.blacklisted && visible && car && from && to && pickupLocation && dropOffLocation && (
           <>
             <div className="checkout">
-              <Paper className="checkout-form" elevation={10}>
-                <h1 className="checkout-form-title">{strings.BOOKING_HEADING}</h1>
-                <form onSubmit={handleSubmit(onSubmit, onError)}>
-                  <div>
-                    {(
-                      (pickupLocation.latitude && pickupLocation.longitude)
-                      || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)
-                    ) && (
-                        <Map
-                          position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
-                          initialZoom={10}
-                          parkingSpots={pickupLocation.parkingSpots}
-                          locations={[pickupLocation]}
-                          className="map"
-                        >
-                          <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
-                        </Map>
-                      )}
+              <div className="checkout-main-column">
+                <Paper className="checkout-form" elevation={6}>
+                  <div className="checkout-stepper-header">
+                    <a className="stepper-step" href="#checkout-step-1">
+                      <span className="step-number">1</span>
+                      <span className="step-text">Rental options</span>
+                    </a>
+                    <span className="stepper-arrow">›</span>
+                    <a className="stepper-step" href="#checkout-step-2">
+                      <span className="step-number">2</span>
+                      <span className="step-text">Identity details</span>
+                    </a>
+                    <span className="stepper-arrow">›</span>
+                    <a className="stepper-step" href="#checkout-step-3">
+                      <span className="step-number">3</span>
+                      <span className="step-text">Payment</span>
+                    </a>
+                  </div>
 
-                    <CarList
-                      cars={[car]}
-                      // pickupLocationName={pickupLocation.name}
-                      // distance={distance}
-                      hidePrice
-                      sizeAuto
-                      onLoad={() => setLoadingPage(false)}
-                      hideSupplier={env.HIDE_SUPPLIERS}
-                    />
+                  <form onSubmit={handleSubmit(onSubmit, onError)}>
+                    <div>
+                      {/* STEP 1: Protection & Chauffeur */}
+                      <div className="checkout-step-section" id="checkout-step-1">
+                        <div className="checkout-step-title">
+                          <span className="step-badge">STEP 1</span>
+                          <h2>Protection & Chauffeur Experience</h2>
+                        </div>
 
-                    <CheckoutOptions
-                      car={car}
-                      from={from}
-                      to={to}
-                      language={language}
-                      clientSecret={clientSecret}
-                      payPalLoaded={payPalLoaded}
-                      onPriceChange={(value) => setPrice(value)}
-                      onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
-                      onCancellationChange={(value) => setValue('cancellation', value)}
-                      onAmendmentsChange={(value) => setValue('amendments', value)}
-                      onTheftProtectionChange={(value) => setValue('theftProtection', value)}
-                      onCollisionDamageWaiverChange={(value) => setValue('collisionDamageWaiver', value)}
-                      onFullInsuranceChange={(value) => setValue('fullInsurance', value)}
-                      onAdditionalDriverChange={(value) => setValue('additionalDriver', value)}
-                    />
+                        <section className="checkout-details-container" aria-label="Rental mode and Pakistani KYC">
+                          <div className="checkout-info"><DriverIcon /><span>Select Rental Mode & Route Type</span></div>
+                          <FormControl fullWidth>
+                            <RadioGroup value={rentalMode} onChange={(event) => {
+                              const next = event.target.value as bookcarsTypes.RentalMode
+                              setRentalMode(next)
+                              void updateQuote(next, tripScope)
+                            }}>
+                              <FormControlLabel value={bookcarsTypes.RentalMode.WithDriver} control={<Radio />} label="👔 With Executive Chauffeur (Relaxed travel, host-managed driver)" />
+                              <FormControlLabel value={bookcarsTypes.RentalMode.SelfDrive} control={<Radio />} disabled={!car.selfDriveAvailable} label="🚗 Self-Drive (Requires verified CNIC & Pakistani Driving License)" />
+                            </RadioGroup>
+                            <div className="trip-scope-header">Route Terrain & Scope:</div>
+                            <RadioGroup row value={tripScope} onChange={(event) => {
+                              const next = event.target.value as bookcarsTypes.TripScope
+                              setTripScope(next)
+                              void updateQuote(rentalMode, next)
+                            }}>
+                              <FormControlLabel value={bookcarsTypes.TripScope.IntraCity} control={<Radio />} label="In-City Travel" />
+                              <FormControlLabel value={bookcarsTypes.TripScope.OutOfCity} control={<Radio />} label="Inter-City Highway" />
+                              <FormControlLabel value={bookcarsTypes.TripScope.NorthernTour} control={<Radio />} label="Northern Tour (4x4 Hill Routes)" disabled={car.terrainCapability !== bookcarsTypes.TerrainCapability.NorthernMountains} />
+                            </RadioGroup>
+                          </FormControl>
+                        </section>
+
+                        <CheckoutOptions
+                          car={car}
+                          from={from}
+                          to={to}
+                          language={language}
+                          clientSecret={clientSecret}
+                          payPalLoaded={payPalLoaded}
+                          onPriceChange={() => {
+ void updateQuote() 
+}}
+                          onAdManuallyCheckedChange={(value) => setAdManuallyChecked(value)}
+                          onCancellationChange={(value) => setValue('cancellation', value)}
+                          onAmendmentsChange={(value) => setValue('amendments', value)}
+                          onTheftProtectionChange={(value) => setValue('theftProtection', value)}
+                          onCollisionDamageWaiverChange={(value) => setValue('collisionDamageWaiver', value)}
+                          onFullInsuranceChange={(value) => setValue('fullInsurance', value)}
+                          onAdditionalDriverChange={(value) => setValue('additionalDriver', value)}
+                        />
+                      </div>
+
+                      {/* STEP 2: 2-Minute CNIC & KYC */}
+                      <div className="checkout-step-section" id="checkout-step-2">
+                        <div className="checkout-step-title">
+                          <span className="step-badge">STEP 2</span>
+                          <h2>2-Minute CNIC & Digital KYC Verification</h2>
+                        </div>
+
+                        <section className="checkout-details-container">
+                          <div className="checkout-info"><DriverIcon /><span>Pakistani National Identity (CNIC)</span></div>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel required>CNIC (12345-1234567-1)</InputLabel>
+                            <OutlinedInput {...register('cnicNumber')} label="CNIC (12345-1234567-1)" autoComplete="off" placeholder="35201-1234567-1" />
+                            <FormHelperText>Required by SBP & Government for vehicle release. Matches your Nadra registration.</FormHelperText>
+                          </FormControl>
+                          {rentalMode === bookcarsTypes.RentalMode.SelfDrive && (
+                            <FormControl fullWidth margin="dense">
+                              <InputLabel required>Driving License Number</InputLabel>
+                              <OutlinedInput {...register('drivingLicenseNumber')} label="Driving License Number" autoComplete="off" placeholder="ICT-LE-12345" />
+                              <FormHelperText>Required for self-drive. Must be valid on the trip dates.</FormHelperText>
+                            </FormControl>
+                          )}
+                          {quote && <Alert severity="info" sx={{ mt: 1 }}>Your itemized PKR quote is ready.</Alert>}
+                        </section>
 
                     <div className="checkout-details-container">
                       <div className="checkout-info">
@@ -532,8 +661,10 @@ const Checkout = () => {
                             <span className="checkout-detail-title">{commonStrings.SUPPLIER}</span>
                             <div className="checkout-detail-value">
                               <div className="car-supplier">
-                                <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
-                                <span className="car-supplier-name">{car.supplier.fullName}</span>
+                                {car.supplier?.avatar && env.CDN_USERS
+                                  ? <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName || 'Rental supplier'} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                                  : <span className="car-supplier-avatar-fallback" aria-hidden="true">{car.supplier?.fullName?.slice(0, 1) || 'S'}</span>}
+                                <span className="car-supplier-name">{car.supplier?.fullName || 'Rental supplier'}</span>
                               </div>
                             </div>
                           </div>
@@ -792,27 +923,30 @@ const Checkout = () => {
                         </div>
                       </div>
                     )}
-
-                    {/* Payment options */}
-
-                    <div className="payment-options-container">
-                      <div className="checkout-info">
-                        <PaymentOptionsIcon />
-                        <span>{strings.PAYMENT_OPTIONS}</span>
                       </div>
+
+                    {/* STEP 3: JazzCash / Easypaisa / Raast 20% Escrow Lock */}
+                    <div className="checkout-step-section" id="checkout-step-3">
+                      <div className="checkout-step-title">
+                        <span className="step-badge">STEP 3</span>
+                        <h2>Payment</h2>
+                      </div>
+
+                      <PakistanPayments />
+
+                      <div className="payment-options-container">
+                        <div className="checkout-info">
+                          <PaymentOptionsIcon />
+                          <span>{strings.PAYMENT_OPTIONS}</span>
+                        </div>
                       <div className="payment-options">
                         <FormControl>
                           <RadioGroup
                             defaultValue={depositPrice > 0 ? 'payOnline' : 'payInFull'}
                             onChange={(e) => {
-                              setValue('payLater', e.target.value === 'payLater' || e.target.value === 'jazzCash' || e.target.value === 'easypaisa')
+                              setValue('payLater', e.target.value === 'payLater')
                               setValue('payDeposit', e.target.value === 'payDeposit')
                               setValue('payInFull', e.target.value === 'payInFull')
-                              setValue('paymentMethod',
-                                e.target.value === 'jazzCash' ? 'jazzCash'
-                                  : e.target.value === 'easypaisa' ? 'easypaisa'
-                                    : e.target.value === 'payLater' ? 'payLater'
-                                      : undefined)
                             }}
                           >
                             {car.supplier.payLater && (
@@ -829,16 +963,6 @@ const Checkout = () => {
                                 )}
                               />
                             )}
-                            <FormControlLabel
-                              value="jazzCash"
-                              control={<Radio />}
-                              label={<span className="payment-button"><span>JazzCash</span><span className="payment-info">Manual payment verification required</span></span>}
-                            />
-                            <FormControlLabel
-                              value="easypaisa"
-                              control={<Radio />}
-                              label={<span className="payment-button"><span>Easypaisa</span><span className="payment-info">Manual payment verification required</span></span>}
-                            />
                             {
                               car.deposit > 0 && (
                                 <FormControlLabel
@@ -884,22 +1008,6 @@ const Checkout = () => {
                               )}
                             />
                           </RadioGroup>
-                          {(paymentMethod === 'jazzCash' || paymentMethod === 'easypaisa') && (
-                            <div style={{ marginTop: 12 }}>
-                              <OutlinedInput
-                                fullWidth
-                                {...register('paymentReference')}
-                                placeholder="Transaction reference"
-                              />
-                              <OutlinedInput
-                                fullWidth
-                                {...register('paymentProof')}
-                                placeholder="Optional proof URL or screenshot reference"
-                                sx={{ mt: 1 }}
-                              />
-                              <FormHelperText error={!paymentReference}>Transaction reference is required for manual payment verification.</FormHelperText>
-                            </div>
-                          )}
                         </FormControl>
                       </div>
                     </div>
@@ -945,6 +1053,21 @@ const Checkout = () => {
                         }
                       </div>
                     </div>
+                    {quote && (
+                      <div className="checkout-price-breakdown" aria-label="Itemized PKR quote">
+                        <div><span>Base rent</span><strong>{bookcarsHelper.formatPrice(quote.baseRentPKR, 'PKR', language)}</strong></div>
+                        <div><span>Driver allowance</span><strong>{bookcarsHelper.formatPrice(quote.driverAllowancePKR, 'PKR', language)}</strong></div>
+                        <div><span>Inter-city / northern surcharge</span><strong>{bookcarsHelper.formatPrice(quote.outOfCitySurchargePKR, 'PKR', language)}</strong></div>
+                        <div><span>Security deposit</span><strong>{bookcarsHelper.formatPrice(quote.securityDepositPKR, 'PKR', language)}</strong></div>
+                        <div className="checkout-price-breakdown-total"><span>Total payable</span><strong>{bookcarsHelper.formatPrice(quote.totalPayablePKR, 'PKR', language)}</strong></div>
+                      </div>
+                    )}
+
+                    {!onlinePaymentConfigured && !car.supplier.payLater && (
+                      <Alert severity="info" sx={{ my: 2, color: '#f5f5f7', bgcolor: '#24211a', border: '1px solid rgba(212,175,55,.4)' }}>
+                        Online checkout is unavailable until a payment provider is connected. Please contact the rental supplier to arrange payment.
+                      </Alert>
+                    )}
 
                     {(!car.supplier.payLater || !payLater) && (
                       env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe
@@ -1013,15 +1136,15 @@ const Checkout = () => {
                     )}
                     <div className="checkout-buttons">
                       {(
-                        (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe && !clientSecret)
-                        || (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal && !payPalInit)
+                        (onlinePaymentConfigured && env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe && !clientSecret)
+                        || (onlinePaymentConfigured && env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal && !payPalInit)
                         || payLater) && (
                           <Button
                             type="submit"
                             variant="contained"
                             className="btn-checkout btn-margin-bottom"
                             aria-label="Checkout"
-                            disabled={isSubmitting || (payPalLoaded && !payPalInit)}
+                            disabled={isSubmitting || (payPalLoaded && !payPalInit) || (!onlinePaymentConfigured && !payLater)}
                           >
                             {
                               (isSubmitting || (payPalLoaded && !payPalInit))
@@ -1058,6 +1181,7 @@ const Checkout = () => {
                         {commonStrings.CANCEL}
                       </Button>
                     </div>
+                    </div>
                   </div>
                   <div className="form-error">
                     {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
@@ -1067,6 +1191,88 @@ const Checkout = () => {
                 </form>
               </Paper>
             </div>
+
+            <aside className="checkout-fare-sidebar">
+              <div className="fare-sidebar-card">
+                <div className="fare-vehicle-preview">
+                  {car.image && env.CDN_CARS ? (
+                    <img
+                      src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)}
+                      alt={car.name}
+                      className="fare-vehicle-img"
+                    />
+                  ) : (
+                    <div className="fare-vehicle-placeholder">🚗</div>
+                  )}
+                  <div className="fare-vehicle-info">
+                    <h3 className="fare-vehicle-name">{car.name}</h3>
+                    <span className="fare-supplier-tag">{car.supplier?.fullName || 'Rental supplier'}</span>
+                  </div>
+                </div>
+
+                <div className="fare-trip-route">
+                  <div className="fare-route-point">
+                    <span className="route-dot start"></span>
+                    <div className="route-details">
+                      <span className="route-type">PICKUP HUB</span>
+                      <span className="route-name">{pickupLocation.name}</span>
+                      <span className="route-time">{from && format(from, 'eee, d MMM yyyy, p')}</span>
+                    </div>
+                  </div>
+                  <div className="fare-route-line"></div>
+                  <div className="fare-route-point">
+                    <span className="route-dot end"></span>
+                    <div className="route-details">
+                      <span className="route-type">DROP-OFF HUB</span>
+                      <span className="route-name">{dropOffLocation.name}</span>
+                      <span className="route-time">{to && format(to, 'eee, d MMM yyyy, p')}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="fare-breakdown-box">
+                  <div className="fare-breakdown-title">Itemized Fare Breakdown</div>
+                  <div className="fare-row">
+                    <span>Base Rent ({days} {days > 1 ? 'days' : 'day'})</span>
+                    <strong className="tabular-nums pkr-price">{bookcarsHelper.formatPrice(quote?.baseRentPKR || price, 'PKR', language)}</strong>
+                  </div>
+                  {quote && quote.driverAllowancePKR > 0 && (
+                    <div className="fare-row">
+                      <span>Chauffeur Daily Allowance</span>
+                      <strong className="tabular-nums pkr-price">{bookcarsHelper.formatPrice(quote.driverAllowancePKR, 'PKR', language)}</strong>
+                    </div>
+                  )}
+                  {quote && quote.outOfCitySurchargePKR > 0 && (
+                    <div className="fare-row">
+                      <span>Inter-City / Northern Surcharge</span>
+                      <strong className="tabular-nums pkr-price">{bookcarsHelper.formatPrice(quote.outOfCitySurchargePKR, 'PKR', language)}</strong>
+                    </div>
+                  )}
+                  <div className="fare-row">
+                    <span>Refundable Security Deposit</span>
+                    <strong className="tabular-nums pkr-price">{bookcarsHelper.formatPrice(depositPrice, 'PKR', language)}</strong>
+                  </div>
+                  <div className="fare-divider"></div>
+                  <div className="fare-row fare-total-row">
+                    <span>Total Payable</span>
+                    <strong className="tabular-nums pkr-price">{bookcarsHelper.formatPrice(fareTotal, 'PKR', language)}</strong>
+                  </div>
+                  {env.FYP_DEMO_MODE && (
+                    <div className="fare-escrow-split" aria-label="Illustrative payment schedule">
+                      <div className="escrow-split-box now">
+                        <span className="escrow-split-label">Demo advance · 20%</span>
+                        <strong className="escrow-split-amount pkr-price">{bookcarsHelper.formatPrice(demoAdvance, 'PKR', language)}</strong>
+                      </div>
+                      <div className="escrow-split-box handover">
+                        <span className="escrow-split-label">Demo handover balance · 80%</span>
+                        <strong className="escrow-split-amount pkr-price">{bookcarsHelper.formatPrice(fareTotal - demoAdvance, 'PKR', language)}</strong>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </aside>
+          </div>
 
             <Footer />
           </>

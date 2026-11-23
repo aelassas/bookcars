@@ -28,6 +28,6 @@ div.rating-filter div.filter-elements div.filter-element .rating {
 
 div.rating-filter div.filter-elements div.filter-element span.rating-text {
   font-size: 12px;
-  color: #a3a3a3;
+  color: var(--sr-muted);
   margin-top: 4px;
 }

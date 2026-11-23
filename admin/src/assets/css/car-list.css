@@ -39,7 +39,7 @@ section.car-list div.car-header div.location {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: #232323;
+  color: var(--sr-text);
   font-size: 18px;
 }
 
@@ -64,10 +64,10 @@ section.car-list {
 }
 
 section.car-list article {
-  background: #fff;
+  background: var(--sr-surface);
   border: 1px solid #eee;
   border-radius: 5px;
-  color: #333;
+  color: var(--sr-text);
   font-size: 12px;
   margin-bottom: 10px;
   width: 800px;
@@ -176,7 +176,7 @@ section.car-list article div.car-info div.car-info-header div.name {
 section.car-list article div.price {
   display: table;
   border-collapse: separate;
-  color: #383838;
+  color: var(--sr-muted);
   font-size: 2em;
   font-weight: 700;
   white-space: nowrap;
@@ -218,7 +218,7 @@ section.car-list article div.car-info .accordion {
 }
 
 section.car-list article div.car-info .accordion::before {
-  background-color: #fff;
+  background-color: var(--sr-surface);
 }
 
 section.car-list article div.car-info .accordion-summary {
@@ -238,11 +238,11 @@ section.car-list article div.car-info ul.extras-list li {
 }
 
 section.car-list article div.car-info ul.extras-list li.car-available {
-  color: #1f9201;
+  color: var(--sr-success);
 }
 
 section.car-list article div.car-info ul.extras-list li.car-coming-soon {
-  color: #1f9201;
+  color: var(--sr-success);
 }
 
 section.car-list article div.car-info ul.extras-list li.car-unavailable {
@@ -255,7 +255,7 @@ section.car-list article div.car-info ul.extras-list span.car-info-list-text {
 }
 
 section.car-list article div.car-info ul.car-info-list div.car-info-list-item {
-  color: #000;
+  color: var(--sr-text);
 }
 
 section.car-list article div.car-info ul.car-info-list li.mileage div.car-info-list-item,

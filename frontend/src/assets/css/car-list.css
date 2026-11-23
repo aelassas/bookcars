@@ -11,6 +11,99 @@ section.car-list .empty-list {
   width: 250px;
 }
 
+/* Zero-result recovery card */
+.zero-result-recovery-card {
+  margin-top: 25px;
+  width: 100%;
+  max-width: 800px;
+  background: var(--sr-surface-raised, #ffffff);
+  border: 1.5px solid rgba(217, 119, 6, 0.4);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 25px -5px rgba(11, 17, 32, 0.08);
+  color: var(--sr-text, #0f172a);
+}
+
+.recovery-header {
+  margin-bottom: 20px;
+}
+
+.recovery-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #d97706;
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+}
+
+.recovery-title {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--sr-text, #0f172a);
+}
+
+.recovery-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sr-muted, #64748b);
+  line-height: 1.5;
+}
+
+.recovery-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.recovery-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sr-text, #0f172a);
+  margin-bottom: 8px;
+}
+
+.recovery-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recovery-chip {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recovery-chip:hover {
+  background: #ecfdf5;
+  border-color: #059669;
+  color: #047857;
+  transform: translateY(-1px);
+}
+
+.recovery-chip.hub-chip:hover {
+  background: #fffbeb;
+  border-color: #d97706;
+  color: #b45309;
+}
+
 section.car-list div.title {
   text-align: left;
   width: 100%;
@@ -19,16 +112,18 @@ section.car-list div.title {
 }
 
 section.car-list div.title div.bookcars {
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 section.car-list div.title div.bookcars span.title-bookcars {
-  color: #212121;
-  font-weight: 500;
+  color: #D97706;
+  font-weight: 800;
 }
 
 section.car-list div.title div.car-count {
-  color: #717171;
+  color: var(--sr-muted);
   font-size: 14px;
 }
 

@@ -18,7 +18,7 @@ div.settings .settings-form-wrapper {
 div.settings .settings-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #232323;
+  color: var(--sr-text);
 }
 
 div.settings .settings-net-wrapper {

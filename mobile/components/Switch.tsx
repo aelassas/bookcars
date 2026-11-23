@@ -47,7 +47,7 @@ const Switch = ({
 
   return (
     <View style={{ ...styles.container, ...style }}>
-      <ReactSwitch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor="#f37022" value={value} onValueChange={onValueChange} disabled={disabled} />
+      <ReactSwitch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor="#D4AF37" value={value} onValueChange={onValueChange} disabled={disabled} />
       {typeof label !== 'undefined' && (
         <Pressable style={styles.pressable} onPress={onPress}>
           <Text style={{ ...styles.text, ...textStyle }}>{label}</Text>

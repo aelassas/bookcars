@@ -7,7 +7,7 @@ div.checkout-status div.details {
   display: flex;
   flex-direction: row;
   margin-top: 20px;
-  background-color: #fff;
+  background-color: var(--sr-surface);
 }
 
 div.checkout-status div.details div.status-details-container {
@@ -25,7 +25,7 @@ div.checkout-status div.details div.status-info {
 }
 
 div.checkout-status div.details div.status-info span {
-  color: #444;
+  color: var(--sr-muted);
   display: inline-block;
   font-size: 17px;
   font-weight: 700;
@@ -34,7 +34,7 @@ div.checkout-status div.details div.status-info span {
 
 div.checkout-status div.details div.status-details {
   display: table;
-  color: #333;
+  color: var(--sr-text);
   font-size: 15px;
   padding: 0 40px 20px 0;
 }
@@ -45,7 +45,7 @@ div.checkout-status div.details div.status-details div.status-detail-value {
 }
 
 div.checkout-status div.details div.status-details div.status-detail div.status-detail-value {
-  color: rgb(0 0 0 / 55%);
+  color: var(--sr-muted);
   word-break: break-word;
   vertical-align: middle;
 }
@@ -58,17 +58,79 @@ div.checkout-status div.details div.status-details div.status-detail span.status
 div.checkout-status div.details div.status-details div.status-detail div.status-price {
   font-size: 17px;
   font-weight: 700;
-  color: #333;
+  color: var(--sr-text);
 }
 
 div.checkout-status div.details div.side-panel {
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* background-color: #1a1a1a; */
-  background-color: #121212;
+  /* background-color: var(--sr-text); */
+  background-color: var(--sr-text);
   color: #fff;
   padding: 40px;
+}
+
+.checkout-status .fyp-demo-payment {
+  margin-top: 28px;
+  padding: 20px;
+  border: 1px solid rgba(212, 175, 55, .65);
+  border-radius: 16px;
+  background: rgba(15, 15, 16, .72);
+  color: #f5f5f7;
+}
+
+.checkout-status .fyp-demo-payment-label {
+  color: #e5c653;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.checkout-status .fyp-demo-payment h2 {
+  margin: 8px 0;
+  color: #fff;
+  font-size: 20px;
+}
+
+.checkout-status .fyp-demo-payment p {
+  margin: 0 0 16px;
+  color: #e0e0e4;
+  line-height: 1.55;
+}
+
+.checkout-status .fyp-demo-payment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkout-status .fyp-demo-payment .MuiButton-root {
+  min-height: 42px;
+  border-radius: 10px;
+  text-transform: none;
+  font-weight: 700;
+}
+
+.checkout-status .fyp-demo-payment-history {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  color: #f5f5f7;
+}
+
+.checkout-status .fyp-demo-payment-attempt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  font-size: 13px;
+}
+
+.checkout-status .fyp-demo-payment-attempt code {
+  color: #e5c653;
 }
 
 
@@ -81,4 +143,20 @@ div.checkout-status div.details div.side-panel {
     flex-direction: column;
     padding: 60px 10px;
   }
+}
+.safarrent-e-parchi {
+  margin-top: 20px;
+  padding: 22px;
+  color: #172033;
+  background: #fff;
+  border: 1px solid #d8c16b;
+  border-radius: 14px;
+}
+.safarrent-e-parchi h2 { margin: 8px 0 16px; }
+.safarrent-e-parchi p { margin: 7px 0; }
+@media print {
+  body * { visibility: hidden !important; }
+  .safarrent-e-parchi, .safarrent-e-parchi * { visibility: visible !important; }
+  .safarrent-e-parchi { position: absolute; inset: 0; width: 100%; border: 0; box-shadow: none; }
+  .safarrent-e-parchi button { display: none !important; }
 }

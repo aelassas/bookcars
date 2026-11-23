@@ -1,9 +1,28 @@
-/* Header */
+/* Header & Admin Command Sidebar */
 
 .header {
   position: sticky !important;
   top: 0;
-  z-index: 1400;
+  z-index: 1200;
+}
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  background-color: #0F172A;
+  color: #F8FAFC;
+  z-index: 1250;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-topbar {
+  transition: left 0.2s ease, width 0.2s ease;
+  z-index: 1200 !important;
 }
 
 .menu {
@@ -15,25 +34,33 @@
 }
 
 .side-menu li:hover {
-  background-color: #f1f1f1;
+  background-color: var(--sr-surface-raised);
 }
 
 .header-action {
   margin-right: 20px;
 }
 
-.header-desktop {
-  display: none;
-}
+/* Offsets when Desktop Sidebar is active */
+@media only screen and (min-width: 1200px) {
+  body.admin-sidebar-open .admin-topbar {
+    left: 260px !important;
+    width: calc(100% - 260px) !important;
+  }
 
-.header-mobile {
-  display: flex;
-  margin-right: -13px;
+  body.admin-sidebar-open .app > .content {
+    margin-inline-start: 260px;
+    min-width: 0;
+  }
+
+  /* These split views position their outer frame against the viewport. */
+  body.admin-sidebar-open :is(div.bookings, div.scheduler, div.users) {
+    left: 260px;
+  }
 }
 
 /* Device width is less than or equal to 960px */
-
-@media only screen and (width <=960px) {
+@media only screen and (max-width: 960px) {
   .header {
     min-height: 56px;
   }
@@ -44,21 +71,8 @@
 }
 
 /* Device width is greater than or equal to 960px */
-
-@media only screen and (width >=960px) {
+@media only screen and (min-width: 960px) {
   .header {
     min-height: 64px;
-  }
-
-  .header-desktop {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .header-mobile {
-    display: none;
   }
 }

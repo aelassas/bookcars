@@ -1,5 +1,5 @@
 div.user-type-filter {
-  background: #fafafa;
+  background: var(--sr-surface-raised);
   margin: 10px 10px 0 0;
   padding: 5px;
   border: 1px solid #dadada;
@@ -64,5 +64,5 @@ div.user-type-filter div.filter-actions {
 div.user-type-filter div.filter-actions span.uncheckall {
   text-decoration: underline;
   cursor: pointer;
-  color: #0064c8;
+  color: var(--sr-accent-text);
 }

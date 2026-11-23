@@ -1,6 +1,6 @@
 div.date-based-price-edit-list {
   padding: 20px;
-  background-color: #f7f7f7;
+  background-color: var(--sr-surface-raised);
 }
 
 div.date-based-price-edit-list span.title {

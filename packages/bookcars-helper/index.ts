@@ -257,6 +257,10 @@ export const currencyRTL = (currencySymbol: string) => {
  * @returns {boolean}
  */
 export const formatPrice = (price: number, currency: string, language: string) => {
+  if (currency.toUpperCase() === 'PKR') {
+    return `PKR ${new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 }).format(price)}`
+  }
+
   const formatedPrice = formatNumber(price, language)
 
   if (currencyRTL(currency)) {

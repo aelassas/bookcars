@@ -1,28 +1,24 @@
 {
-  "name": "bookcars",
+  "name": "safarrent",
   "version": "9.3.0",
-  "description": "Car Rental Booking System",
+  "description": "Pakistan-focused car rental marketplace prototype",
   "keywords": [
-    "react",
-    "react-native",
     "mongodb",
-    "stripe",
-    "paypal",
+    "typescript",
+    "pk",
     "car-rental",
-    "car-rental-system",
-    "aggregator",
-    "bookcars"
+    "safarrent",
+    "ollama"
   ],
-  "homepage": "https://github.com/aelassas/bookcars#readme",
+  "homepage": "https://github.com/Ume-Rabab/bookcars#readme",
   "bugs": {
-    "url": "https://github.com/aelassas/bookcars/issues"
+    "url": "https://github.com/Ume-Rabab/bookcars/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aelassas/bookcars.git"
+    "url": "git+https://github.com/Ume-Rabab/bookcars.git"
   },
-  "funding": "https://github.com/sponsors/aelassas",
-  "author": "Akram El Assas",
+  "author": "SafarRent FYP Project Team",
   "license": "MIT",
   "type": "module",
   "main": "pre-commit.js",

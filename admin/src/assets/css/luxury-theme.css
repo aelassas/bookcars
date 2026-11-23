@@ -1,121 +1,304 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-
 :root {
-  --sr-obsidian: #0b1120;
-  --sr-sidebar: #0f172a;
-  --sr-emerald: #059669;
-  --sr-emerald-dark: #047857;
-  --sr-alabaster: #f8fafc;
-  --sr-border: #e2e8f0;
+  color-scheme: light;
+  --sr-ink: #f1f5f9; /* Cool Slate Admin Canvas */
+  --sr-surface: #ffffff;
+  --sr-surface-raised: #e2e8f0;
+  --sr-obsidian: #0f172a; /* Admin Dark Sidebar */
+  --sr-emerald: #059669; /* Primary Action */
+  --sr-emerald-hover: #047857;
+  --sr-emerald-soft: #ecfdf5;
+  --sr-mint: #10b981;
+  --sr-gold: #d97706;
+  --sr-gold-soft: #fffbeb;
+  --sr-accent-text: #059669;
+  --sr-success: #059669;
+  --sr-button-bg: #059669;
+  --sr-button-text: #ffffff;
+  --sr-on-gold: #0b1120;
+  --sr-text: #0f172a;
   --sr-muted: #64748b;
-  --sr-shadow: 0 4px 20px rgba(11, 17, 32, 0.06);
+  --sr-border: rgba(15, 23, 42, 0.12);
+  --sr-header: #ffffff;
+  --sr-font-heading: 'Plus Jakarta Sans', sans-serif;
+  --sr-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sr-font-mono: 'JetBrains Mono', monospace;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --sr-ink: #0b1120;
+  --sr-surface: #0f172a;
+  --sr-surface-raised: #1e293b;
+  --sr-obsidian: #020617;
+  --sr-emerald: #10b981;
+  --sr-emerald-hover: #059669;
+  --sr-emerald-soft: rgba(16, 185, 129, 0.12);
+  --sr-mint: #34d399;
+  --sr-gold: #f59e0b;
+  --sr-gold-soft: rgba(245, 158, 11, 0.12);
+  --sr-text: #f8fafc;
+  --sr-accent-text: #10b981;
+  --sr-success: #10b981;
+  --sr-button-bg: #059669;
+  --sr-button-text: #ffffff;
+  --sr-on-gold: #0b1120;
+  --sr-muted: #94a3b8;
+  --sr-border: rgba(255, 255, 255, 0.1);
+  --sr-header: #0f172a;
+}
+
+/* Typography & Tabular Figures */
+body, #root {
+  font-family: var(--sr-font-body);
+}
+
+h1, h2, h3, h4, h5, h6, .sr-heading {
+  font-family: var(--sr-font-heading);
+  letter-spacing: -0.02em;
+}
+
+.tabular-nums,
+.pkr-price,
+.cnic-number,
+.odometer-digit,
+.booking-id {
+  font-family: var(--sr-font-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--sr-ink);
+  color: var(--sr-text);
 }
 
 body {
-  background: var(--sr-alabaster) !important;
-  color: var(--sr-obsidian);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  color: var(--sr-text);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.MuiTypography-h1,
-.MuiTypography-h2,
-.MuiTypography-h3,
-.MuiTypography-h4,
-.MuiTypography-h5,
-.MuiTypography-h6 {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.035em;
+#root .MuiPaper-root,
+#root .MuiAccordion-root,
+#root .MuiDataGrid-root,
+#root .MuiTableContainer-root {
+  color: var(--sr-text);
+  background-color: var(--sr-surface);
+  border-color: var(--sr-border);
 }
 
-.price,
-.price-main,
-.booking-price,
-[data-currency],
-[data-booking-id] {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-variant-numeric: tabular-nums;
+#root .MuiFormControlLabel-label,
+#root .MuiFormLabel-root,
+#root .MuiInputLabel-root,
+#root .MuiFormHelperText-root,
+#root .MuiTab-root,
+#root .MuiMenuItem-root {
+  color: var(--sr-text);
 }
 
-.MuiPaper-root,
-.MuiCard-root,
-.maintenance-page > .MuiCard-root,
-.maintenance-form,
-.settings-form,
-.pricing-plan {
-  border: 1px solid var(--sr-border) !important;
-  border-radius: 16px !important;
-  box-shadow: var(--sr-shadow) !important;
+#root .MuiInputLabel-root,
+#root .MuiFormHelperText-root:not(.Mui-error) {
+  color: var(--sr-muted);
 }
 
-.MuiButton-root {
-  border-radius: 10px !important;
-  font-weight: 600 !important;
-  text-transform: none !important;
+#root .MuiOutlinedInput-root,
+#root .MuiInputBase-root,
+#root .MuiSelect-select {
+  color: var(--sr-text);
+  background-color: rgba(255, 255, 255, .035);
 }
 
-.btn-primary,
-.MuiButton-containedPrimary {
-  background: var(--sr-emerald) !important;
-  color: #fff !important;
+#root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--sr-border);
 }
 
-.btn-primary:hover,
-.MuiButton-containedPrimary:hover {
-  background: var(--sr-emerald-dark) !important;
+#root .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+#root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--sr-gold);
 }
 
-.header .MuiAppBar-root {
-  background: var(--sr-sidebar) !important;
-  box-shadow: 0 8px 22px rgba(11, 17, 32, 0.16) !important;
+#root .MuiSvgIcon-root {
+  color: inherit;
+}
+#root .MuiIconButton-root { color: var(--sr-text); }
+
+#root .MuiCheckbox-root.Mui-checked,
+#root .MuiRadio-root.Mui-checked,
+#root .MuiSwitch-switchBase.Mui-checked {
+  color: var(--sr-accent-text);
+}
+html[data-theme='dark'] #root .MuiCheckbox-root:not(.Mui-checked),
+html[data-theme='dark'] #root .MuiRadio-root:not(.Mui-checked) { color: rgba(245,245,247,.78); }
+
+#root .MuiButton-containedPrimary,
+#root .MuiButton-contained:not(.btn-search) {
+  color: var(--sr-on-gold);
+  background: linear-gradient(135deg, #e4c55d, #bd9829);
 }
 
-.header .toolbar {
-  min-height: 72px !important;
-  padding: 0 clamp(16px, 3vw, 36px) !important;
+#root .MuiButton-outlined,
+#root .MuiButton-text {
+  color: var(--sr-gold);
 }
 
-.side-menu .MuiDrawer-paper {
-  width: 280px;
-  background: var(--sr-sidebar);
-  color: #cbd5e1;
+#root .MuiMenu-paper,
+#root .MuiPopover-paper,
+#root .MuiAutocomplete-paper,
+#root .MuiPickersPopper-paper {
+  color: var(--sr-text);
+  background: var(--sr-surface-raised);
+  border: 1px solid var(--sr-border);
 }
 
-.side-menu .MuiListItemIcon-root {
-  color: #94a3b8;
+#root .MuiMenuItem-root:hover,
+#root .MuiAutocomplete-option[aria-selected="true"],
+#root .MuiAutocomplete-option.Mui-focused {
+  background: rgba(212, 175, 55, .16);
 }
 
-.side-menu .MuiListItem-root:hover,
-.side-menu .MuiListItemButton-root:hover {
-  background: rgba(5, 150, 105, 0.14);
+#root .MuiTableCell-root,
+#root .MuiDataGrid-cell,
+#root .MuiDataGrid-columnHeader {
+  color: var(--sr-text);
+  border-color: rgba(245, 245, 247, .12);
 }
 
-.maintenance-page,
-[class*='col:1-'] {
-  padding: 28px !important;
+#root .MuiTableHead-root,
+#root .MuiDataGrid-columnHeaders {
+  background: var(--sr-surface-raised);
 }
 
-.maintenance-page > .MuiTypography-h4 {
-  margin-bottom: 8px;
+#root .MuiDialog-paper,
+#root .MuiDrawer-paper {
+  color: var(--sr-text);
+  background: var(--sr-surface);
+  border: 1px solid var(--sr-border);
 }
 
-input,
-textarea,
-select,
-.MuiOutlinedInput-root,
-.MuiInputBase-root {
-  border-radius: 10px !important;
+
+
+#root .Mui-disabled {
+  color: var(--sr-muted) !important;
 }
 
-@media (max-width: 767px) {
-  .maintenance-page,
-  [class*='col:1-'] {
-    padding: 16px !important;
-  }
+/* Operations screens use live API results in compact, readable bento panels. */
+#root .operations-dashboard { max-width: 1500px; margin: 0 auto; padding: clamp(20px, 3vw, 42px); }
+#root .operations-heading { margin: 4px 0 28px; }
+#root .operations-heading h4 { margin: 8px 0 5px; font-weight: 750; letter-spacing: -.045em; }
+#root .operations-eyebrow { color: var(--sr-gold); font-size: 11px; font-weight: 700; letter-spacing: .16em; }
+#root .operations-dashboard .MuiCard-root {
+  overflow: hidden;
+  border: 1px solid rgba(212,175,55,.18);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #1c1c1f, #141416);
+  box-shadow: 0 14px 36px rgba(0,0,0,.2);
 }
+#root .operations-kpis { margin-bottom: 18px; }
+#root .operations-kpi { min-height: 120px; position: relative; }
+#root .operations-kpi::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--sr-gold); opacity: .75; }
+#root .operations-kpi .MuiCardContent-root { padding: 22px; }
+#root .operations-kpi .MuiTypography-h4 { margin-top: 10px; color: #f5f5f7; font-weight: 750; font-variant-numeric: tabular-nums; }
+#root .operations-dashboard .MuiCardContent-root { padding: 24px; }
+#root .operations-dashboard .MuiCardContent-root > .MuiTypography-h6 { margin-bottom: 14px; font-weight: 700; }
+#root .operations-dashboard .MuiCardContent-root > .MuiTypography-root + .MuiTypography-root { line-height: 1.8; }
+#root .operations-dashboard .MuiAlert-root { margin: 14px 0; }
+@media (max-width: 600px) {
+  #root .operations-dashboard { padding: 16px 12px 32px; }
+  #root .operations-dashboard .MuiCardContent-root { padding: 18px; }
+  #root .operations-heading h4 { font-size: 1.8rem; }
+}
+
+/* Global page palette: defaults to accessible light surfaces, follows data-theme. */
+html[data-theme='light'] body,
+html[data-theme='light'] #root,
+html[data-theme='light'] #root .app,
+html[data-theme='light'] #root .content { background-color: var(--sr-ink); color: var(--sr-text); }
+html[data-theme='light'] #root .MuiPaper-root,
+html[data-theme='light'] #root .MuiAccordion-root,
+html[data-theme='light'] #root .MuiDataGrid-root,
+html[data-theme='light'] #root .MuiTableContainer-root,
+html[data-theme='light'] #root .MuiDialog-paper,
+html[data-theme='light'] #root .MuiDrawer-paper { color: var(--sr-text) !important; background-color: var(--sr-surface) !important; border-color: var(--sr-border); }
+html[data-theme='light'] html[data-theme='light'] #root .MuiFormControlLabel-label,
+html[data-theme='light'] #root .MuiFormLabel-root,
+html[data-theme='light'] #root .MuiInputLabel-root,
+html[data-theme='light'] #root .MuiFormHelperText-root,
+html[data-theme='light'] #root .MuiTab-root,
+html[data-theme='light'] #root .MuiMenuItem-root,
+html[data-theme='light'] #root .MuiTableCell-root,
+html[data-theme='light'] #root .MuiDataGrid-cell,
+html[data-theme='light'] #root .MuiDataGrid-columnHeader { color: var(--sr-text); }
+html[data-theme='light'] #root .MuiTypography-colorTextSecondary,
+html[data-theme='light'] #root .MuiFormHelperText-root:not(.Mui-error) { color: var(--sr-muted); }
+html[data-theme='light'] #root .MuiInputBase-root,
+html[data-theme='light'] #root .MuiSelect-select { color: var(--sr-text); background-color: var(--sr-surface); }
+html[data-theme='light'] #root input::placeholder,
+html[data-theme='light'] #root textarea::placeholder { color: #696a70; opacity: 1; }
+html[data-theme='light'] #root .MuiOutlinedInput-notchedOutline { border-color: rgba(25,25,28,.22); }
+html[data-theme='light'] #root .MuiTableHead-root,
+html[data-theme='light'] #root .MuiDataGrid-columnHeaders { color: var(--sr-text); background: #f0efec; }
+html[data-theme='light'] #root .MuiMenu-paper,
+html[data-theme='light'] #root .MuiPopover-paper,
+html[data-theme='light'] #root .MuiAutocomplete-paper,
+html[data-theme='light'] #root .MuiPickersPopper-paper { color: var(--sr-text); background: var(--sr-surface); border-color: var(--sr-border); }
+html[data-theme='light'] #root .MuiButton-text,
+html[data-theme='light'] #root .MuiButton-outlined { color: var(--sr-accent-text); }
+html[data-theme='dark'] #root .MuiButton-text,
+html[data-theme='dark'] #root .MuiButton-outlined { color: var(--sr-accent-text); }
+html[data-theme='light'] #root .header .MuiAppBar-root,
+html[data-theme='light'] #root .header .MuiButtonBase-root { color: var(--sr-text); }
+html[data-theme='light'] #root .header .MuiAppBar-root { background: var(--sr-header) !important; border-bottom: 1px solid var(--sr-border); }
+html[data-theme='light'] #root .maintenance-page { color: var(--sr-text); }
+html[data-theme='light'] #root .maintenance-page > h1,
+html[data-theme='light'] #root .maintenance-page > h2,
+html[data-theme='light'] #root .maintenance-page > h3,
+html[data-theme='light'] #root .maintenance-page > h4 { color: var(--sr-text); }
+html[data-theme='light'] #root .maintenance-page .MuiCard-root { color: var(--sr-text); background: var(--sr-surface); border-color: var(--sr-border); }
+html[data-theme='light'] #root .operations-dashboard .MuiCard-root { background: linear-gradient(145deg,#fff,#f7f6f3); }
+html[data-theme='light'] #root .operations-kpi .MuiTypography-h4 { color: #171719; }
+html[data-theme='light'] #root .sr-theme-toggle { color: inherit; }
+
+html[data-theme='dark'] #root body,
+html[data-theme='dark'] #root .app,
+html[data-theme='dark'] #root .content { background-color: var(--sr-ink); color: var(--sr-text); }
+html[data-theme='dark'] #root .MuiPaper-root,
+html[data-theme='dark'] #root .MuiAccordion-root,
+html[data-theme='dark'] #root .MuiDataGrid-root,
+html[data-theme='dark'] #root .MuiTableContainer-root,
+html[data-theme='dark'] #root .MuiDialog-paper,
+html[data-theme='dark'] #root .MuiDrawer-paper { color: var(--sr-text) !important; background-color: var(--sr-surface) !important; border-color: var(--sr-border); }
+html[data-theme='dark'] #root .MuiFormControlLabel-label,
+html[data-theme='dark'] #root .MuiFormLabel-root,
+html[data-theme='dark'] #root .MuiInputLabel-root,
+html[data-theme='dark'] #root .MuiTab-root,
+html[data-theme='dark'] #root .MuiMenuItem-root,
+html[data-theme='dark'] #root .MuiTableCell-root,
+html[data-theme='dark'] #root .MuiDataGrid-cell,
+html[data-theme='dark'] #root .MuiDataGrid-columnHeader { color: var(--sr-text); }
+html[data-theme='dark'] #root .MuiTypography-colorTextSecondary,
+html[data-theme='dark'] #root .MuiFormHelperText-root:not(.Mui-error) { color: var(--sr-muted); }
+html[data-theme='dark'] #root .MuiInputBase-root,
+html[data-theme='dark'] #root .MuiSelect-select { color: var(--sr-text); background-color: rgba(255,255,255,.035); }
+html[data-theme='dark'] #root .MuiOutlinedInput-notchedOutline { border-color: rgba(245,245,247,.24); }
+html[data-theme='dark'] #root .MuiTableHead-root,
+html[data-theme='dark'] #root .MuiDataGrid-columnHeaders { background: #202023; }
+html[data-theme='dark'] #root .MuiMenu-paper,
+html[data-theme='dark'] #root .MuiPopover-paper,
+html[data-theme='dark'] #root .MuiAutocomplete-paper,
+html[data-theme='dark'] #root .MuiPickersPopper-paper { color: var(--sr-text); background: #202023; border-color: var(--sr-border); }
+html[data-theme='dark'] #root .header .MuiAppBar-root { background: var(--sr-header) !important; border-bottom: 1px solid var(--sr-border); color: var(--sr-text); }
+html[data-theme='dark'] #root .operations-dashboard .MuiCard-root { background: linear-gradient(145deg,#1c1c1f,#141416); }
+html[data-theme] .MuiDialog-paper,
+html[data-theme] .MuiDrawer-paper,
+html[data-theme] .MuiMenu-paper,
+html[data-theme] .MuiPopover-paper,
+html[data-theme] .MuiAutocomplete-paper,
+html[data-theme] .MuiPickersPopper-paper { color: var(--sr-text); background: var(--sr-surface); border-color: var(--sr-border); }
+/* Drawer content is portaled outside #root; explicitly theme its default-dark icons. */
+html[data-theme] .MuiDrawer-paper .MuiListItemIcon-root,
+html[data-theme] .MuiDrawer-paper .MuiSvgIcon-root,
+html[data-theme] .MuiDrawer-paper .MuiButtonBase-root { color: var(--sr-text) !important; }
+html[data-theme] .MuiDrawer-paper .MuiListItemText-primary,
+html[data-theme] .MuiDrawer-paper .MuiListItemText-secondary { color: var(--sr-text); }
+html[data-theme] #root .header .MuiAppBar-root .MuiIconButton-root,
+html[data-theme] #root .header .MuiAppBar-root .MuiIconButton-root .MuiSvgIcon-root { color: var(--sr-text); }

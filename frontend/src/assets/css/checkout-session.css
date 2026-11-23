@@ -1,5 +1,5 @@
 div.checkout-session {
-  background-color: #F5F5F5;
+  background-color: var(--sr-surface-raised);
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;

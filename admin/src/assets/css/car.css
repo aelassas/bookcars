@@ -53,12 +53,12 @@ div.car section.car-sec div.license-plate {
   div.car div.col-1 {
     width: 100%;
     padding-top: 5px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-bottom: #eee solid 1px;
   }
 
   div.car section.car-sec {
-    color: #333;
+    color: var(--sr-text);
     font-size: 12px;
     padding: 5px;
   }
@@ -74,7 +74,7 @@ div.car section.car-sec div.license-plate {
   }
 
   div.car section.car-sec div.car-img div.car-supplier span.car-supplier-info {
-    color: #a8a8a8;
+    color: var(--sr-muted);
     display: inline-block;
     font-size: 0.9em;
     line-height: 1em;
@@ -84,7 +84,7 @@ div.car section.car-sec div.license-plate {
 
   div.car section.car-sec div.price {
     text-align: right;
-    color: #383838;
+    color: var(--sr-muted);
     font-size: 1.4em;
     font-weight: 700;
     white-space: nowrap;
@@ -151,7 +151,7 @@ div.car section.car-sec div.license-plate {
   }
 
   div.car section.car-sec div.car-info ul.extras-list li.car-available {
-    color: #1f9201;
+    color: var(--sr-success);
   }
 
   div.car section.car-sec div.car-info ul.extras-list li.car-unavailable {
@@ -190,13 +190,13 @@ div.car section.car-sec div.license-plate {
     left: 0;
     width: 400px;
     padding-top: 20px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-right: #eee solid 1px;
     overflow: auto;
   }
 
   div.car section.car-sec {
-    color: #333;
+    color: var(--sr-text);
     font-size: 12px;
     padding: 5px;
   }
@@ -212,7 +212,7 @@ div.car section.car-sec div.license-plate {
   }
 
   div.car section.car-sec div.car-img div.car-supplier span.car-supplier-info {
-    color: #a8a8a8;
+    color: var(--sr-muted);
     display: inline-block;
     font-size: 0.9em;
     line-height: 1em;
@@ -222,7 +222,7 @@ div.car section.car-sec div.license-plate {
 
   div.car section.car-sec div.price {
     text-align: right;
-    color: #383838;
+    color: var(--sr-muted);
     font-size: 1.4em;
     font-weight: 700;
     white-space: nowrap;
@@ -289,7 +289,7 @@ div.car section.car-sec div.license-plate {
   }
 
   div.car section.car-sec div.car-info ul.extras-list li.car-available {
-    color: #1f9201;
+    color: var(--sr-success);
   }
 
   div.car section.car-sec div.car-info ul.extras-list li.car-unavailable {

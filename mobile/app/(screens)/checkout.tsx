@@ -704,7 +704,7 @@ const CheckoutScreen = () => {
             const { error: initPaymentSheetError } = await initPaymentSheet({
               customerId,
               paymentIntentClientSecret: clientSecret,
-              merchantDisplayName: 'BookCars',
+              merchantDisplayName: 'SafarRent',
               googlePay: {
                 merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
                 testEnv: env.STRIPE_PUBLISHABLE_KEY.includes('_test_'),
@@ -1255,7 +1255,7 @@ const CheckoutScreen = () => {
           </Dialog.Content>
           <Dialog.Actions style={styles.dialogActions}>
             <NativeButton
-              textColor="#f37022"
+              textColor="#D4AF37"
               onPress={() => setErrorDialogOpen(false)}
             >
               {i18n.t('CLOSE')}

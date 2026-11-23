@@ -28,6 +28,94 @@ import { BookingConflictError, saveBookingWithAvailability, saveBookingsWithAvai
 import stripeAPI from '../payment/stripe'
 import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 
+const isPakistaniCnic = (value: unknown): value is string => typeof value === 'string' && /^\d{5}-\d{7}-\d$/.test(value)
+
+export const calculatePakistanQuote = async (req: Request, res: Response) => {
+  const { carId, from, to, rentalMode, tripScope, options } = req.body || {}
+  if (!helper.isValidObjectId(carId)
+    || !Object.values(bookcarsTypes.RentalMode).includes(rentalMode)
+    || !Object.values(bookcarsTypes.TripScope).includes(tripScope)) {
+    res.status(400).json({ message: 'Car, rental mode, and trip scope are required.' })
+    return
+  }
+  const start = new Date(from)
+  const end = new Date(to)
+  if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end <= start) {
+    res.status(400).json({ message: 'Provide a valid pickup and return date.' })
+    return
+  }
+  const car = await Car.findById(carId).lean()
+  if (!car) {
+    res.status(404).json({ message: 'Vehicle not found.' })
+    return
+  }
+  if (rentalMode === bookcarsTypes.RentalMode.SelfDrive && !car.selfDriveAvailable) {
+    res.status(409).json({ message: 'This vehicle is not offered for self-drive.' })
+    return
+  }
+  if (rentalMode === bookcarsTypes.RentalMode.WithDriver && !car.withDriverAvailable) {
+    res.status(409).json({ message: 'This vehicle is not offered with a driver.' })
+    return
+  }
+  if (tripScope === bookcarsTypes.TripScope.NorthernTour
+    && car.terrainCapability !== bookcarsTypes.TerrainCapability.NorthernMountains) {
+    res.status(409).json({ message: 'This vehicle is not approved for northern mountain routes.' })
+    return
+  }
+  const days = Math.max(1, bookcarsHelper.days(start, end))
+  const supplier = await User.findById(car.supplier).select('priceChangeRate')
+  const changeRate = supplier?.priceChangeRate || 0
+  const baseRentPKR = Number((bookcarsHelper.calculateTotalPrice(car as unknown as bookcarsTypes.Car, start, end, changeRate, options) || 0).toFixed(0))
+  const driverAllowancePKR = rentalMode === bookcarsTypes.RentalMode.WithDriver ? (car.driverDailyAllowancePkr || 2500) * days : 0
+  const outOfCitySurchargePKR = tripScope === bookcarsTypes.TripScope.IntraCity ? 0 : (car.outOfCitySurchargePkr || 1500)
+  const securityDepositPKR = car.securityDepositPkr ?? car.deposit ?? 0
+  const totalPayablePKR = baseRentPKR + driverAllowancePKR + outOfCitySurchargePKR + securityDepositPKR
+  res.json({
+    currency: 'PKR',
+    days,
+    rentalMode,
+    tripScope,
+    baseRentPKR,
+    driverAllowancePKR,
+    outOfCitySurchargePKR,
+    securityDepositPKR,
+    totalPayablePKR,
+    terrainCapability: car.terrainCapability || bookcarsTypes.TerrainCapability.HighwayIntercity,
+  })
+}
+
+export const updateHandoverChecklist = async (req: Request, res: Response) => {
+  const bookingId = String(req.params.id || '')
+  const { fuelLevel, odometerStart, spareTirePresent, exteriorNotes } = req.body || {}
+  if (!helper.isValidObjectId(bookingId)
+    || typeof fuelLevel !== 'string' || !fuelLevel.trim() || fuelLevel.length > 40
+    || !Number.isFinite(Number(odometerStart)) || Number(odometerStart) < 0
+    || typeof spareTirePresent !== 'boolean'
+    || typeof exteriorNotes !== 'string' || exteriorNotes.length > 1500) {
+    res.status(400).json({ message: 'Provide fuel level, valid odometer, spare tire status, and notes (up to 1500 characters).' })
+    return
+  }
+  const booking = await Booking.findById(bookingId)
+  if (!booking) {
+    res.sendStatus(404)
+    return
+  }
+  if (req.user?.type === bookcarsTypes.UserType.Supplier && !booking.supplier.equals(req.user._id)) {
+    res.sendStatus(403)
+    return
+  }
+  booking.handoverChecklist = {
+    fuelLevel: fuelLevel.trim(),
+    odometerStart: Number(odometerStart),
+    spareTirePresent,
+    exteriorNotes: exteriorNotes.trim(),
+    completedAt: new Date(),
+    verifiedBySupplier: req.user?.type === bookcarsTypes.UserType.Supplier,
+  }
+  await booking.save()
+  res.json({ handoverChecklist: booking.handoverChecklist })
+}
+
 /**
  * In-process per-property async mutex.
  * Serialises concurrent checkout requests for the same property so that
@@ -76,6 +164,16 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
 export const create = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
+    const carId = typeof body.booking.car === 'string' ? body.booking.car : body.booking.car?._id
+    if (!carId || !helper.isValidObjectId(carId)) {
+      res.status(400).json({ message: 'A valid vehicle is required.' })
+      return
+    }
+    const car = await Car.findById(carId).select('listingStatus')
+    if (!car || car.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
+      res.status(409).json({ message: 'This vehicle is not approved for booking.' })
+      return
+    }
     if (body.booking.additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
@@ -124,7 +222,7 @@ export const notify = async (driver: env.User, bookingId: string, user: env.User
   }
 
   // mail
-  if (user.enableEmailNotifications) {
+  if (user.enableEmailNotifications && !(process.env.NODE_ENV === 'development' && env.FYP_DEMO_MODE)) {
     const mailOptions: SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
@@ -219,7 +317,11 @@ export const confirm = async (user: env.User, supplier: env.User, booking: env.B
     }
   }
 
-  await mailHelper.sendMail(mailOptions)
+  if (process.env.NODE_ENV === 'development' && env.FYP_DEMO_MODE) {
+    logger.info(`[FYP demo] Booking confirmation email not sent for ${booking._id}; use in-app booking status.`)
+  } else {
+    await mailHelper.sendMail(mailOptions)
+  }
 
   return true
 }
@@ -288,6 +390,10 @@ export const checkout = async (req: Request, res: Response) => {
       res.status(400).send('Car not found')
       return
     }
+    if (carObj.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
+      res.status(409).json({ message: 'This vehicle is not approved for booking.' })
+      return
+    }
 
     const fromValue: unknown = bookingInput.from
     const toValue: unknown = bookingInput.to
@@ -328,8 +434,28 @@ export const checkout = async (req: Request, res: Response) => {
       return
     }
 
-    // Calculate expected total price
-    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+    // Recompute the quote from server-owned vehicle pricing and route rules.
+    const rentalMode = bookingInput.rentalMode || bookcarsTypes.RentalMode.WithDriver
+    const tripScope = bookingInput.tripScope || bookcarsTypes.TripScope.IntraCity
+    if (!Object.values(bookcarsTypes.RentalMode).includes(rentalMode)
+      || !Object.values(bookcarsTypes.TripScope).includes(tripScope)) {
+      res.status(400).json({ message: 'Invalid rental mode or trip scope.' })
+      return
+    }
+    if (rentalMode === bookcarsTypes.RentalMode.SelfDrive && !carObj.selfDriveAvailable) {
+      res.status(409).json({ message: 'This vehicle is not offered for self-drive.' })
+      return
+    }
+    if (rentalMode === bookcarsTypes.RentalMode.WithDriver && !carObj.withDriverAvailable) {
+      res.status(409).json({ message: 'This vehicle is not offered with a driver.' })
+      return
+    }
+    if (tripScope === bookcarsTypes.TripScope.NorthernTour
+      && carObj.terrainCapability !== bookcarsTypes.TerrainCapability.NorthernMountains) {
+      res.status(409).json({ message: 'This vehicle is not approved for northern mountain routes.' })
+      return
+    }
+    const baseRentPKR = bookcarsHelper.calculateTotalPrice(
       carObj as unknown as bookcarsTypes.Car,
       fromDate,
       toDate,
@@ -343,6 +469,10 @@ export const checkout = async (req: Request, res: Response) => {
         additionalDriver: bookingInput.additionalDriver,
       }
     )
+    const rentalDays = Math.max(1, bookcarsHelper.days(fromDate, toDate))
+    const driverAllowancePKR = rentalMode === bookcarsTypes.RentalMode.WithDriver ? (carObj.driverDailyAllowancePkr || 2500) * rentalDays : 0
+    const outOfCitySurchargePKR = tripScope === bookcarsTypes.TripScope.IntraCity ? 0 : (carObj.outOfCitySurchargePkr || 1500)
+    const expectedBasePrice = baseRentPKR + driverAllowancePKR + outOfCitySurchargePKR
     const expectedBasePriceInBaseCurrency = await bookcarsHelper.convertPrice(expectedBasePrice, env.BASE_CURRENCY, env.BASE_CURRENCY)
     if (!Number.isFinite(expectedBasePriceInBaseCurrency) || expectedBasePriceInBaseCurrency < 0) {
       res.status(400).send('Invalid booking price')
@@ -409,6 +539,9 @@ export const checkout = async (req: Request, res: Response) => {
         phone: driver.phone,
         birthDate: parsedBirthDate,
         language: language.toLowerCase(),
+        cnicNumber: driver.cnicNumber,
+        drivingLicenseNumber: driver.drivingLicenseNumber,
+        kycStatus: driver.cnicNumber ? bookcarsTypes.KycStatus.Pending : bookcarsTypes.KycStatus.Unverified,
         type: bookcarsTypes.UserType.User,
         verified: false,
         blacklisted: false,
@@ -440,10 +573,16 @@ export const checkout = async (req: Request, res: Response) => {
       }
     }
 
+    if (bookingInput.rentalMode !== undefined && !Object.values(bookcarsTypes.RentalMode).includes(bookingInput.rentalMode)) {
+      res.status(400).json({ message: 'Invalid rental mode.' })
+      return
+    }
     const bookingData: bookcarsTypes.Booking = {
       ...bookingInput,
       supplier: carObj.supplier.toString(),
       driver: (req.user ? user!._id.toString() : undefined) as any,
+      rentalMode: bookingInput.rentalMode || bookcarsTypes.RentalMode.WithDriver,
+      tripScope: bookingInput.tripScope || bookcarsTypes.TripScope.IntraCity,
     }
 
     let paymentIntentCustomerId: string | undefined
@@ -495,8 +634,8 @@ export const checkout = async (req: Request, res: Response) => {
         // Validate currency and amount
         const expectedAmount = helper.getPaymentAmount(
           expectedBasePriceInBaseCurrency,
-          carObj.deposit,
-          supplier.priceChangeRate || 0,
+          carObj.securityDepositPkr ?? carObj.deposit,
+          0,
           bookingData.isDeposit,
           bookingData.isPayedInFull,
         )
@@ -585,6 +724,37 @@ export const checkout = async (req: Request, res: Response) => {
       throw new Error('Driver not found')
     }
 
+    if (req.user && (body.cnicNumber !== undefined || body.drivingLicenseNumber !== undefined)) {
+      if (body.cnicNumber !== undefined) {
+        if (body.cnicNumber !== user.cnicNumber) {
+          user.cnicNumber = body.cnicNumber || undefined
+          user.kycStatus = body.cnicNumber ? bookcarsTypes.KycStatus.Pending : bookcarsTypes.KycStatus.Unverified
+        }
+      }
+      if (body.drivingLicenseNumber !== undefined) {
+user.drivingLicenseNumber = body.drivingLicenseNumber || undefined
+}
+      await user.save()
+    }
+
+    if (!isPakistaniCnic(user.cnicNumber)) {
+      res.status(403).json({ message: 'Add a valid CNIC in your profile before requesting a booking.' })
+      return
+    }
+    if (bookingData.rentalMode === bookcarsTypes.RentalMode.SelfDrive
+      && (user.kycStatus !== bookcarsTypes.KycStatus.Verified || !user.drivingLicenseNumber?.trim())) {
+      res.status(403).json({ message: 'Self-drive bookings require an admin-verified CNIC and a driving license number. Complete KYC in your profile.' })
+      return
+    }
+    if (bookingData.rentalMode === bookcarsTypes.RentalMode.SelfDrive && !carObj.selfDriveAvailable) {
+      res.status(409).json({ message: 'This vehicle is not offered for self-drive.' })
+      return
+    }
+    if (bookingData.rentalMode === bookcarsTypes.RentalMode.WithDriver && !carObj.withDriverAvailable) {
+      res.status(409).json({ message: 'This vehicle is not offered with a driver.' })
+      return
+    }
+
     bookingData.driver = user._id.toString()
 
     if (supplier.licenseRequired && !user!.license) {
@@ -633,6 +803,14 @@ export const checkout = async (req: Request, res: Response) => {
     }
 
     bookingData.price = expectedBasePriceInBaseCurrency
+    const securityDepositPkr = carObj.securityDepositPkr ?? carObj.deposit ?? 0
+    bookingData.priceBreakdown = {
+      baseRentPkr: baseRentPKR,
+      driverAllowancePkr: driverAllowancePKR,
+      outOfCitySurchargePkr: outOfCitySurchargePKR,
+      securityDepositPkr,
+      totalPayablePkr: expectedBasePriceInBaseCurrency + securityDepositPkr,
+    }
     const booking = new Booking(bookingData)
 
     // Save the booking inside the per-property lock when exclusive
@@ -820,7 +998,7 @@ const notifyDriver = async (booking: env.Booking) => {
   }
 
   // mail
-  if (driver.enableEmailNotifications) {
+  if (driver.enableEmailNotifications && !(process.env.NODE_ENV === 'development' && env.FYP_DEMO_MODE)) {
     const mailOptions: SendMailOptions = {
       from: env.SMTP_FROM,
       to: driver.email,
@@ -1219,6 +1397,11 @@ export const getBooking = async (req: Request, res: Response) => {
         logger.error(`[booking.getBooking] Forbidden access to booking ${id}`)
         res.status(403).send('Forbidden: Access denied')
         return
+      }
+
+      if (isOwner || isAdmin || isValidSession) {
+        const customerKyc = await User.findById(booking.driver._id).select('cnicNumber')
+        booking.driver.cnicNumber = customerKyc?.cnicNumber
       }
 
       const { language } = req.params

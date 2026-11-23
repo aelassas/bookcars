@@ -1,40 +1,39 @@
 {
   "expo": {
-    "name": "BookCars",
-    "version": "9.3.0",
-    "scheme": "bookcars",
-    "slug": "bookcars",
+    "name": "SafarRent",
+    "version": "1.0.0",
+    "scheme": "safarrent",
+    "slug": "safarrent",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "versionCode": 930,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
       "icon": "./assets/icon.png",
-      "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.bookcars",
-      "backgroundColor": "#00000000"
+      "package": "pk.safarrent.mobile",
+      "backgroundColor": "#0F0F10"
     },
     "ios": {
-      "buildNumber": "9.3.0",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
-      "bundleIdentifier": "com.bookcars",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "pk.safarrent.mobile"
     },
     "plugins": [
       "expo-localization",
+      "expo-location",
       "./plugins/usesCleartextTraffic",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#f37022",
-          "image": "./assets/icon.png",
-          "imageWidth": 200
+          "backgroundColor": "#0F0F10",
+          "image": "./assets/splash.png",
+          "imageWidth": 280
         }
       ],
       [
@@ -52,40 +51,19 @@
       ],
       "@react-native-google-signin/google-signin",
       "expo-apple-authentication",
-      [
-        "react-native-fbsdk-next",
-        {
-          "appID": "FACEBOOK_APP_ID",
-          "clientToken": "FACEBOOK_CLIENT_TOKEN",
-          "displayName": "BookCars",
-          "scheme": "FACEBOOK_SCHEME",
-          "advertiserIDCollectionEnabled": false,
-          "autoLogAppEventsEnabled": false,
-          "isAutoInitEnabled": true
-        }
-      ],
       "expo-asset",
       "expo-font",
-      "react-native-fbsdk-next",
       "@react-native-community/datetimepicker",
       "expo-router"
     ],
-    "owner": "aelassas",
-    "extra": {
-      "eas": {
-        "projectId": "fe1ab335-41ae-4a35-960b-0052b493db49"
-      }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/fe1ab335-41ae-4a35-960b-0052b493db49"
-    },
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F0F10"
     }
   }
 }
-

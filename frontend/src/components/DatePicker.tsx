@@ -80,6 +80,8 @@ const DatePicker = ({
           textField: {
             variant: variant || 'standard',
             required,
+            // Keep the label above date sections instead of overlapping the placeholder.
+            InputLabelProps: { shrink: true },
           },
           actionBar: {
             actions: ['accept', 'cancel', 'clear'],

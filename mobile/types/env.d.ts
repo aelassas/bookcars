@@ -1,5 +1,6 @@
 declare module '@env' {
   export const BC_API_HOST: string
+  export const BC_WEB_APP_URL: string
   export const BC_DEFAULT_LANGUAGE: string
   export const BC_PAGE_SIZE: string
   export const BC_CARS_PAGE_SIZE: string

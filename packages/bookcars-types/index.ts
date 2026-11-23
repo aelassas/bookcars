@@ -45,6 +45,54 @@ export enum FuelPolicy {
   FreeTank = 'freeTank',
   FullToFull = 'fullToFull',
   FullToEmpty = 'FullToEmpty',
+  TankToTank = 'TANK_TO_TANK',
+  SameToSame = 'SAME_TO_SAME',
+  FuelIncluded = 'FUEL_INCLUDED',
+}
+
+export enum TerrainCapability {
+  CityOnly = 'CITY_ONLY',
+  HighwayIntercity = 'HIGHWAY_INTERCITY',
+  NorthernMountains = 'NORTHERN_MOUNTAINS',
+}
+
+export enum ListingStatus {
+  PendingReview = 'PENDING_REVIEW',
+  Approved = 'APPROVED',
+  Suspended = 'SUSPENDED',
+}
+
+export enum RentalMode {
+  SelfDrive = 'SELF_DRIVE',
+  WithDriver = 'WITH_DRIVER',
+}
+
+export enum TripScope {
+  IntraCity = 'INTRA_CITY',
+  OutOfCity = 'OUT_OF_CITY',
+  NorthernTour = 'NORTHERN_TOUR',
+}
+
+export enum KycStatus {
+  Unverified = 'UNVERIFIED',
+  Pending = 'PENDING',
+  Verified = 'VERIFIED',
+  Rejected = 'REJECTED',
+}
+
+export enum RentalPaymentMethod {
+  JazzCash = 'JAZZCASH',
+  Easypaisa = 'EASYPAISA',
+  Raast = 'RAAST',
+  CardDemo = 'CARD_DEMO',
+}
+
+export enum RentalPaymentStatus {
+  PendingPayment = 'PENDING_PAYMENT',
+  Processing = 'PROCESSING',
+  Paid = 'PAID',
+  Failed = 'FAILED',
+  Refunded = 'REFUNDED',
 }
 
 export enum BookingStatus {
@@ -81,14 +129,6 @@ export enum PaymentGateway {
   Stripe = 'stripe',
 }
 
-export enum PaymentMethod {
-  PayLater = 'payLater',
-  Stripe = 'stripe',
-  PayPal = 'payPal',
-  JazzCash = 'jazzCash',
-  Easypaisa = 'easypaisa',
-}
-
 export interface Booking {
   _id?: string
   supplier: string | User
@@ -109,16 +149,51 @@ export interface Booking {
   cancelRequest?: boolean
   price?: number
   sessionId?: string
-  paymentMethod?: PaymentMethod
-  paymentReference?: string
-  paymentProof?: string
-  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
   paymentIntentId?: string
   customerId?: string
   expireAt?: Date
   isDeposit?: boolean
   isPayedInFull?: boolean
   paypalOrderId?: string
+  demoPaymentAttempts?: DemoPaymentAttempt[]
+  rentalMode?: RentalMode
+  tripScope?: TripScope
+  destinationRegion?: string
+  priceBreakdown?: RentalPriceBreakdown
+  paymentMethod?: RentalPaymentMethod
+  paymentStatus?: RentalPaymentStatus
+  paymentState?: 'PENDING_PAYMENT' | 'PROCESSING' | 'CONFIRMED' | 'FAILED'
+  transactionRef?: string
+  handoverChecklist?: HandoverChecklist
+}
+
+export interface RentalPriceBreakdown {
+  baseRentPkr: number
+  driverAllowancePkr: number
+  outOfCitySurchargePkr: number
+  securityDepositPkr: number
+  totalPayablePkr: number
+}
+
+export interface HandoverChecklist {
+  completedAt?: Date
+  odometerStart?: number
+  fuelLevel?: string
+  spareTirePresent?: boolean
+  exteriorNotes?: string
+  verifiedBySupplier?: boolean
+}
+
+export type DemoPaymentOutcome = 'success' | 'failed' | 'cancelled'
+
+export interface DemoPaymentAttempt {
+  reference: string
+  idempotencyKey: string
+  outcome: DemoPaymentOutcome
+  paymentMethod?: RentalPaymentMethod
+  amount: number
+  currency: string
+  createdAt: Date
 }
 
 export interface CheckoutPayload {
@@ -130,9 +205,8 @@ export interface CheckoutPayload {
   paymentIntentId?: string
   customerId?: string
   payPal?: boolean
-  paymentMethod?: PaymentMethod
-  paymentReference?: string
-  paymentProof?: string
+  cnicNumber?: string
+  drivingLicenseNumber?: string
 }
 
 export interface Filter {
@@ -141,6 +215,9 @@ export interface Filter {
   to?: Date
   keyword?: string
   pickupLocation?: string
+  pickupLatitude?: number
+  pickupLongitude?: number
+  pickupLabel?: string
   dropOffLocation?: string
 }
 
@@ -268,6 +345,9 @@ export interface GetCarsPayload {
   deposit?: number
   availability?: string[]
   pickupLocation?: string
+  pickupLatitude?: number
+  pickupLongitude?: number
+  pickupLabel?: string
   ranges?: string[]
   multimedia?: string[]
   rating?: number
@@ -290,6 +370,8 @@ export interface SignUpPayload {
   type?: string
   avatar?: string
   birthDate?: number | Date
+  cnicNumber?: string
+  drivingLicenseNumber?: string
 }
 
 export type Contract = { language: string, file: string | null }
@@ -321,6 +403,8 @@ export interface CreateUserPayload {
 export interface UpdateUserPayload extends CreateUserPayload {
   _id: string
   enableEmailNotifications?: boolean
+  cnicNumber?: string
+  drivingLicenseNumber?: string
 }
 
 export interface CheckPasswordPayload {
@@ -427,6 +511,11 @@ export interface User {
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
   isSocial?: boolean
+  cnicNumber?: string
+  drivingLicenseNumber?: string
+  kycStatus?: KycStatus
+  cnicFrontImage?: string
+  licenseFrontImage?: string
 }
 
 export interface Option {
@@ -489,6 +578,18 @@ export interface Car {
   _id: string
   name: string
   licensePlate?: string
+  registrationPlate?: string
+  engineCc?: number
+  terrainCapability?: TerrainCapability
+  selfDriveAvailable?: boolean
+  withDriverAvailable?: boolean
+  driverDailyAllowancePkr?: number
+  outOfCitySurchargePkr?: number
+  securityDepositPkr?: number
+  listingStatus?: ListingStatus
+  complianceNotes?: string
+  reviewedBy?: string | User
+  reviewedAt?: Date | string
   supplier: User
   minimumAge: number
   locations: Location[]
@@ -670,6 +771,7 @@ export interface BookingIntakeData {
   passengerCount: number | null
   extras: string[]
   paymentMethod: string | null
+  rentalMode?: RentalMode | null
   missingFields: string[]
   ambiguities: string[]
   confidence: number
@@ -726,51 +828,6 @@ export interface VehicleDocument {
   expiryDate: Date
   status: VehicleDocumentStatus
   notes?: string
-  createdAt?: Date
-  updatedAt?: Date
-}
-
-export type KycStatus = 'pending_review' | 'approved' | 'rejected' | 'suspended'
-export type KycDocumentType = 'cnic' | 'passport' | 'driving_license'
-
-export interface Kyc {
-  _id?: string
-  user: string
-  documentType: KycDocumentType
-  documentNumber: string
-  documentFront?: string
-  documentBack?: string
-  selfie?: string
-  status: KycStatus
-  rejectionReason?: string
-  reviewedBy?: string
-  reviewedAt?: Date
-  createdAt?: Date
-  updatedAt?: Date
-}
-
-export type HandoverStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled'
-
-export interface Handover {
-  _id?: string
-  booking: string
-  vehicle: string
-  customer: string
-  supplier: string
-  status: HandoverStatus
-  odometerAtPickup?: number
-  odometerAtReturn?: number
-  fuelLevelAtPickup?: number
-  fuelLevelAtReturn?: number
-  checklistAtPickup?: Record<string, boolean>
-  checklistAtReturn?: Record<string, boolean>
-  pickupPhotos?: string[]
-  returnPhotos?: string[]
-  customerSignature?: string
-  supplierSignature?: string
-  damageNotes?: string
-  scheduledAt?: Date
-  completedAt?: Date
   createdAt?: Date
   updatedAt?: Date
 }

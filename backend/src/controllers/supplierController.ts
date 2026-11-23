@@ -18,6 +18,7 @@ import * as helper from '../utils/helper'
 import * as logger from '../utils/logger'
 import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 import Location from '../models/Location'
+import { getPickupLocationIds } from '../utils/searchLocation'
 
 /**
  * Restricted supplier fields. Only admins can update these fields.
@@ -388,7 +389,15 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
   try {
     let data = await User.aggregate(
       [
-        { $match: { type: bookcarsTypes.UserType.Supplier, avatar: { $ne: null } } },
+        {
+          $match: {
+            type: bookcarsTypes.UserType.Supplier,
+            active: true,
+            verified: true,
+            blacklisted: false,
+            avatar: { $ne: null },
+          },
+        },
         { $sort: { fullName: 1, _id: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
@@ -417,7 +426,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
 export const getFrontendSuppliers = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
-    const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
+    const locationIds = await getPickupLocationIds(body)
     const {
       carType,
       gearbox,
@@ -441,18 +450,9 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       throw new Error('to date is required')
     }
 
-    // Include pickupLocation and child locations in search results
-    const locIds = await Location.find({
-      $or: [
-        { _id: pickupLocation },
-        { parentLocation: pickupLocation },
-      ],
-    }).select('_id').lean()
-
-    const locationIds = locIds.map((loc) => loc._id)
-
     const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
+        { listingStatus: bookcarsTypes.ListingStatus.Approved },
         // { locations: pickupLocation },
         { locations: { $in: locationIds } },
         { type: { $in: carType } },
@@ -520,6 +520,21 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
     }
 
+    // Synthetic FYP suppliers are not real verified businesses. Expose their
+    // approved demo cars only when local demo mode is explicitly enabled.
+    const supplierVerificationFilter = process.env.NODE_ENV === 'development' && process.env.BC_ENABLE_FYP_DEMO === 'true'
+      ? {
+        $or: [
+          { verified: true },
+          {
+            verified: false,
+            fullName: { $regex: 'FYP Demo Fleet$', $options: 'i' },
+            bio: { $regex: 'Synthetic FYP demo supplier', $options: 'i' },
+          },
+        ],
+      }
+      : { verified: true }
+
     const data = await Car.aggregate(
       [
         { $match },
@@ -531,7 +546,13 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
               {
                 $match: {
                   // $expr: { $eq: ['$_id', '$$userId'] },
-                  $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
+                  $and: [
+                    { $expr: { $eq: ['$_id', '$$userId'] } },
+                    { type: bookcarsTypes.UserType.Supplier },
+                    { active: true },
+                    supplierVerificationFilter,
+                    { blacklisted: false },
+                  ]
                 },
               },
             ],

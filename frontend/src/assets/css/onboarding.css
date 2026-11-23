@@ -1,0 +1,71 @@
+.sr-onboarding {
+  position: fixed;
+  z-index: 1500;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: clamp(22px, 5vw, 56px) clamp(20px, 7vw, 90px) 28px;
+  color: #f5f5f7;
+  background: #0f0f10;
+  isolation: isolate;
+}
+.sr-onboarding-art,
+.sr-onboarding-shade { position: absolute; z-index: -1; inset: 0; }
+.sr-onboarding-art {
+  background-position: center 58%;
+  background-size: cover;
+  transform: scale(1.015);
+  animation: sr-onboarding-arrive 1.4s ease-out both;
+}
+.sr-onboarding-shade {
+  background: linear-gradient(90deg, rgba(9,9,10,.93) 0%, rgba(9,9,10,.69) 44%, rgba(9,9,10,.16) 100%),
+    linear-gradient(0deg, rgba(9,9,10,.86), transparent 38%, rgba(9,9,10,.32));
+}
+.sr-onboarding-top { display: flex; align-items: center; justify-content: space-between; }
+.sr-onboarding-top > button {
+  border: 1px solid rgba(245,245,247,.28);
+  border-radius: 999px;
+  padding: 9px 17px;
+  color: #f5f5f7;
+  background: rgba(15,15,16,.32);
+  font: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+.sr-onboarding-copy { max-width: 680px; margin: auto 0; padding: 45px 0; }
+.sr-onboarding-kicker { color: #e3c45b; font-size: 11px; font-weight: 800; letter-spacing: .2em; }
+.sr-onboarding-copy h1 { max-width: 650px; margin: 16px 0; font-size: clamp(42px, 7.2vw, 88px); line-height: .99; letter-spacing: -.065em; font-weight: 750; text-wrap: balance; }
+.sr-onboarding-copy p { max-width: 490px; margin: 0; color: rgba(245,245,247,.76); font-size: clamp(15px, 1.6vw, 19px); line-height: 1.7; }
+.sr-onboarding-controls { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 650px; }
+.sr-onboarding-controls .MuiButton-root { min-width: 210px; min-height: 54px; display: flex; gap: 24px; border: 1px solid rgba(255,226,133,.45); border-radius: 15px; color: #171512; background: linear-gradient(135deg,#f0d477,#c6a02f); font-weight: 800; text-transform: none; box-shadow: 0 12px 36px rgba(0,0,0,.32); }
+.sr-onboarding-controls .MuiButton-root:hover { background: linear-gradient(135deg,#f7df8b,#d4af37); }
+.sr-onboarding-dots { display: flex; gap: 8px; }
+.sr-onboarding-dots span { width: 7px; height: 7px; border-radius: 50px; background: rgba(245,245,247,.45); transition: width .2s, background .2s; }
+.sr-onboarding-dots span.active { width: 28px; background: #d4af37; }
+.sr-onboarding-location { align-self: flex-end; position: absolute; right: clamp(20px, 7vw, 90px); bottom: 34px; color: rgba(245,245,247,.56); font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.sr-onboarding.is-splash { align-items: center; justify-content: center; text-align: center; animation: sr-onboarding-fade .35s ease both; }
+.sr-onboarding.is-splash .sr-onboarding-art { filter: brightness(.45); }
+.sr-onboarding.is-splash .sr-onboarding-shade { background: radial-gradient(ellipse at center, rgba(15,15,16,.2), rgba(15,15,16,.86)); }
+.sr-onboarding.is-splash .sr-onboarding-top { display: flex; position: absolute; top: 22%; left: 50%; transform: translateX(-50%); }
+.sr-onboarding.is-splash .sr-onboarding-top > button,
+.sr-onboarding.is-splash .sr-onboarding-location { display: none; }
+.sr-onboarding.is-splash .sr-onboarding-copy { margin: 0; padding: 0; }
+.sr-onboarding.is-splash .sr-onboarding-copy h1 { margin: 24px 0 0; font-size: clamp(38px, 6vw, 68px); }
+.sr-onboarding.is-splash .sr-onboarding-kicker { color: #e3c45b; }
+@keyframes sr-onboarding-arrive { from { transform: scale(1.08); filter: brightness(.78); } to { transform: scale(1.015); filter: brightness(1); } }
+@keyframes sr-onboarding-fade { from { opacity: .4; } to { opacity: 1; } }
+@media (max-width: 640px) {
+  .sr-onboarding { padding: 24px 22px 30px; }
+  .sr-onboarding-art { background-position: 62% center; }
+  .sr-onboarding-shade { background: linear-gradient(0deg, rgba(9,9,10,.96), rgba(9,9,10,.58) 56%, rgba(9,9,10,.3)); }
+  .sr-onboarding-copy { margin-top: auto; padding: 34px 0 28px; }
+  .sr-onboarding-copy h1 { max-width: 440px; font-size: clamp(42px, 12vw, 62px); }
+  .sr-onboarding-controls { align-items: flex-end; }
+  .sr-onboarding-controls .MuiButton-root { min-width: 178px; gap: 12px; }
+  .sr-onboarding-location { right: 22px; bottom: 9px; font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-onboarding-art, .sr-onboarding.is-splash { animation: none; }
+}

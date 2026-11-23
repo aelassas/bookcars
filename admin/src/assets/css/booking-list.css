@@ -40,9 +40,9 @@ div.bs-list span.bp {
 
 div.bs-list div.booking-details {
   display: table;
-  color: #333;
+  color: var(--sr-text);
   font-size: 15px;
-  background-color: #fff;
+  background-color: var(--sr-surface);
   margin: 10px 0;
   padding: 10px;
   border: 1px solid #d9d8d9;
@@ -108,7 +108,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value {
   display: table-row;
   line-height: 25px;
   font-size: 13px;
-  color: rgb(0 0 0 / 47%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
@@ -116,7 +116,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   font-weight: 700;
   width: 250px;
   font-size: 15px;
-  color: rgb(0 0 0 / 87%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
@@ -133,7 +133,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   font-size: 0.9em;
   line-height: 1em;
   margin-left: 5px;
@@ -142,7 +142,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value span
 div.bs-list div.booking-details div.booking-detail div.booking-price {
   font-size: 17px;
   font-weight: 700;
-  color: rgb(0 0 0 / 87%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.extras {
@@ -161,7 +161,7 @@ div.bs-list div.extras div.extra {
 }
 
 div.bs-list div.extras div.extra .extra-icon {
-  color: #1f9201;
+  color: var(--sr-success);
   height: 20px;
 }
 
@@ -173,7 +173,7 @@ div.bs-list div.extras div.extra span.extra-title {
 
 div.bs-list div.extras div.extra span.extra-text {
   font-size: 12px;
-  color: rgb(0 0 0 / 47%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.bs-buttons {
@@ -200,4 +200,27 @@ div.bs-list div.bs-buttons button {
     inset: 0;
     overflow-y: auto;
   }
+}
+.fyp-demo-payment-history-admin {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid rgba(212, 175, 55, .55);
+  border-radius: 12px;
+  color: var(--sr-text, #191919);
+  font-size: 13px;
+}
+
+.fyp-demo-payment-history-admin > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid rgba(127, 127, 127, .22);
+  padding-top: 7px;
+}
+
+.fyp-demo-payment-history-admin code {
+  color: #8a6c00;
 }

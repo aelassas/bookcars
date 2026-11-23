@@ -3,6 +3,7 @@ import path from 'node:path'
 import { nanoid } from 'nanoid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
+import axios from 'axios'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from ':bookcars-types'
 import * as helper from '../utils/helper'
@@ -14,6 +15,59 @@ import Car from '../models/Car'
 import User from '../models/User'
 import ParkingSpot from '../models/ParkingSpot'
 import * as logger from '../utils/logger'
+import { findPakistanPlace } from '../utils/pakistanPlaces'
+
+const resolvedPlaceCache = new Map<string, { expiresAt: number; value: { name: string; latitude: number; longitude: number } }>()
+
+/** Resolve a one-off Pakistan place search to coordinates (called on submit, not per keystroke). */
+export const resolvePlace = async (req: Request, res: Response) => {
+  const query = String(req.query.q || '').trim().slice(0, 120)
+  if (query.length < 2) {
+    res.status(400).json({ message: 'Enter a city or place name.' })
+    return
+  }
+
+  const cacheKey = query.toLocaleLowerCase()
+  const cached = resolvedPlaceCache.get(cacheKey)
+  if (cached && cached.expiresAt > Date.now()) {
+    res.json(cached.value)
+    return
+  }
+
+  const localPlace = findPakistanPlace(query)
+  if (localPlace) {
+    const value = { name: localPlace.name, latitude: localPlace.latitude, longitude: localPlace.longitude }
+    resolvedPlaceCache.set(cacheKey, { expiresAt: Date.now() + 6 * 60 * 60 * 1000, value })
+    res.json(value)
+    return
+  }
+
+  try {
+    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+      params: { q: `${query}, Pakistan`, format: 'jsonv2', countrycodes: 'pk', limit: 1, addressdetails: 1 },
+      headers: { 'User-Agent': 'SafarRent-FYP-Demo/1.0' },
+      timeout: 2500,
+    })
+    const result = Array.isArray(response.data) ? response.data[0] : undefined
+    const latitude = Number(result?.lat)
+    const longitude = Number(result?.lon)
+    if (!result || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      res.status(404).json({ message: 'We could not locate that place in Pakistan. Try a nearby city or use your current location.' })
+      return
+    }
+
+    const value = {
+      name: String(result.name || result.display_name || query).split(',')[0],
+      latitude,
+      longitude,
+    }
+    resolvedPlaceCache.set(cacheKey, { expiresAt: Date.now() + 6 * 60 * 60 * 1000, value })
+    res.json(value)
+  } catch (err) {
+    logger.error('[location.resolvePlace] Geocoding provider unavailable', err)
+    res.status(503).json({ message: 'Place search is temporarily unavailable. Choose a listed pickup point or use your current location.' })
+  }
+}
 
 /**
  * Validate a Location name with language code.

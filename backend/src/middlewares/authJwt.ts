@@ -51,7 +51,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     // 3. Fetch the user and attach to the request object
     const user = await User.findById(sessionData.id)
 
-    if (!user || user.blacklisted) {
+    if (!user || user.blacklisted || !user.active || !user.verified) {
       res.status(401).send({ message: 'Unauthorized!' })
       return
     }
@@ -91,7 +91,7 @@ const verifyTokenOptional = async (req: Request, res: Response, next: NextFuncti
     const sessionData = await authHelper.decryptJWT(token)
     if (sessionData && helper.isValidObjectId(sessionData.id)) {
       const user = await User.findById(sessionData.id)
-      if (user && !user.blacklisted) {
+      if (user && !user.blacklisted && user.active && user.verified) {
         req.user = { _id: user._id.toString(), type: user.type as bookcarsTypes.UserType }
       }
     }

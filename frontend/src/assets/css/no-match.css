@@ -3,5 +3,5 @@
 }
 
 .no-match h2 {
-  color: #232323;
+  color: var(--sr-text);
 }

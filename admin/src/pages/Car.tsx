@@ -195,7 +195,7 @@ const Car = () => {
                 />
                 <div className="car-supplier">
                   <span className="car-supplier-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
+                    <img src={helper.getUserAvatarUrl(car.supplier.avatar)} alt={car.supplier.fullName} />
                   </span>
                   <span className="car-supplier-info">{car.supplier.fullName}</span>
                 </div>

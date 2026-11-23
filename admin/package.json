@@ -1,6 +1,6 @@
 {
-  "name": "bookcars-admin",
-  "description": "Admin panel for managing BookCars",
+  "name": "safarrent-admin",
+  "description": "SafarRent operations portal",
   "private": true,
   "version": "9.3.0",
   "type": "module",

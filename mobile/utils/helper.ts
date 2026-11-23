@@ -84,6 +84,11 @@ export const registerPushToken = async (userId: string) => {
       }
 
       if (Device.isDevice) {
+        const projectId = Constants.expoConfig?.extra?.eas?.projectId
+        if (!projectId) {
+          console.info('Push notifications are disabled until a SafarRent Expo project is configured.')
+          return ''
+        }
         const settings = await Notifications.getPermissionsAsync()
         let granted = ('granted' in settings && settings.granted) || settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
 

@@ -3,7 +3,7 @@ div.pager-container {
   width: 100%;
   padding: 5px 10px 5px 0;
   margin-bottom: 15px;
-  background-color: #fff;
+  background-color: var(--sr-surface);
   border-radius: 5px;
   display: flex;
   flex-direction: row;

@@ -1,7 +1,7 @@
 div.supplier-badge {
     display: flex;
     align-items: center;
-    color: rgb(0 0 0 / 60%);
+    color: var(--sr-muted);
     font-size: 1em;
     line-height: 1em;
     max-width: 200px;
@@ -25,7 +25,7 @@ div.supplier-badge {
   }
   
   div.supplier-badge a.supplier-badge-info {
-    color: #0064c8;
+    color: var(--sr-accent-text);
     font-size: 0.9em;
     /* line-height: 1em; */
     white-space: nowrap;

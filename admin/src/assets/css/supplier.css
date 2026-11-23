@@ -46,7 +46,7 @@ div.supplier {
 }
 
 .supplier div.col-1 div.car-supplier span.car-supplier-info {
-  color: #a8a8a8;
+  color: var(--sr-muted);
   display: inline-block;
   font-size: 0.9em;
   line-height: 1em;
@@ -63,7 +63,7 @@ div.supplier {
 
   .supplier div.col-1 {
     padding: 10px 0;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-bottom: #eee solid 1px;
   }
 
@@ -89,7 +89,7 @@ div.supplier {
     width: 300px;
     min-height: 100vh;
     padding-top: 20px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-right: #eee solid 1px;
   }
 

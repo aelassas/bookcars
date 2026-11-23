@@ -41,9 +41,9 @@ div.bs-list span.bp {
 
 div.bs-list div.booking-details {
   display: table;
-  color: #333;
+  color: var(--sr-text);
   font-size: 15px;
-  background-color: #fff;
+  background-color: var(--sr-surface);
   margin: 10px;
   padding: 10px;
   border: 1px solid #d9d8d9;
@@ -59,7 +59,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value {
   display: table-row;
   line-height: 25px;
   font-size: 13px;
-  color: rgb(0 0 0 / 47%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
@@ -67,7 +67,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   font-weight: 700;
   width: 250px;
   font-size: 15px;
-  color: rgb(0 0 0 / 87%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
@@ -84,7 +84,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   font-size: 0.9em;
   line-height: 1em;
   margin-left: 5px;
@@ -93,7 +93,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value span
 div.bs-list div.booking-details div.booking-detail div.booking-price {
   font-size: 17px;
   font-weight: 700;
-  color: rgb(0 0 0 / 87%);
+  color: var(--sr-muted);
 }
 
 div.bs-list div.booking-details div.bs {

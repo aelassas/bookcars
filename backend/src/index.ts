@@ -7,6 +7,7 @@ import * as env from './config/env.config'
 import * as databaseHelper from './utils/databaseHelper'
 import app from './app'
 import * as logger from './utils/logger'
+import { warmBookingIntakeProvider } from './ai/bookingIntakeProvider'
 
 /**
  * Creates and returns an HTTP or HTTPS server based on environment configuration.
@@ -54,6 +55,7 @@ const start = async (): Promise<void> => {
 
     server.listen(env.PORT, () => {
       logger.info(`${protocol} server is running on port ${env.PORT}`)
+      void warmBookingIntakeProvider()
     })
 
     const shutdown = async (signal: string): Promise<void> => {

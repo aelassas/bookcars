@@ -3,7 +3,16 @@
 /**/*.pem
 /**/*.pem-chain
 /**/*.ca.pem
+/.env
+/.env.*
+!/.env.compose.example
+/.data/
 /**/.DS_Store
 /**/dist
 /node_modules
 .eslintcache
+
+
+# Local CDN file storage (runtime data)
+/cdn/
+frontend/public/safarrent-hero-4k.mp4

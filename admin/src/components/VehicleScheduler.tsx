@@ -37,15 +37,6 @@ const VehicleScheduler = (
   }, [filterFromProps])
 
   const fetchBookings = useCallback(async (query: RemoteQuery): Promise<ProcessedEvent[]> => {
-    const emptyEvents: ProcessedEvent[] = [
-      {
-        event_id: '1',
-        title: 'Dummy Event',
-        start: new Date(1970, 0, 1),
-        end: new Date(1970, 0, 2),
-      }
-    ]
-
     const dateBetween = new Date(query.end.getTime() - Math.ceil(query.end.getTime() - query.start.getTime()) / 2)
     dateBetween.setHours(10, 0, 0, 0)
 
@@ -63,29 +54,34 @@ const VehicleScheduler = (
       user: (user && user._id) || undefined,
     }
 
-    const data = await BookingService.getBookings(payload, 1, 10000)
-    const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
-    if (!_data) {
-      helper.error()
-      return emptyEvents
+    try {
+      const data = await BookingService.getBookings(payload, 1, 10000)
+      const bookings = data?.[0]?.resultData || []
+
+      return bookings.flatMap((booking): ProcessedEvent[] => {
+        const start = new Date(booking.from)
+        const end = new Date(booking.to)
+        if (!booking._id || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+          return []
+        }
+
+        const car = booking.car as bookcarsTypes.Car | undefined
+        const supplier = booking.supplier as bookcarsTypes.User | undefined
+        return [{
+          event_id: booking._id,
+          title: `${car?.name || 'Vehicle'} / ${supplier?.fullName || 'Supplier'} / ${helper.getBookingStatus(booking.status)}`,
+          start,
+          end,
+          color: helper.getBookingStatusBackgroundColor(booking.status),
+          textColor: helper.getBookingStatusTextColor(booking.status),
+        }]
+      })
+    } catch (err) {
+      helper.error(err)
+      return []
+    } finally {
+      setInit(false)
     }
-    const bookings = _data.resultData
-
-    const events = bookings.map((booking): ProcessedEvent => ({
-      event_id: booking._id as string,
-      title: `${(booking.car as bookcarsTypes.Car).name} / ${(booking.supplier as bookcarsTypes.User).fullName} / ${helper.getBookingStatus(booking.status)}`,
-      start: new Date(booking.from),
-      end: new Date(booking.to),
-      color: helper.getBookingStatusBackgroundColor(booking.status),
-      textColor: helper.getBookingStatusTextColor(booking.status),
-    }))
-
-    setInit(false)
-
-    if (events.length === 0) {
-      return emptyEvents
-    }
-    return events
   }, [filter, statuses, suppliers, user])
 
   useEffect(() => {

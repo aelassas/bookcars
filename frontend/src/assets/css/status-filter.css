@@ -1,5 +1,5 @@
 div.status-filter {
-  background: #fff;
+  background: var(--sr-surface);
   margin: 10px 10px 0 0;
   border: 1px solid #dadada;
   font-size: 13px;
@@ -41,5 +41,5 @@ div.status-filter div.filter-actions {
 div.status-filter div.filter-actions span.uncheckall {
   text-decoration: underline;
   cursor: pointer;
-  color: #0064c8;
+  color: var(--sr-accent-text);
 }

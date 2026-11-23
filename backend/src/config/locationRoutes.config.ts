@@ -9,6 +9,7 @@ const routes = {
   resolveHub: '/api/location/resolve-hub/:language',
   checkLocation: '/api/check-location/:id',
   getLocationId: '/api/location-id/:name/:language',
+  resolvePlace: '/api/location/resolve-place',
   createImage: '/api/create-location-image',
   updateImage: '/api/update-location-image/:id',
   deleteImage: '/api/delete-location-image/:id',

@@ -13,7 +13,12 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  ListItem
+  ListItemButton,
+  ListSubheader,
+  Divider,
+  Box,
+  Chip,
+  Tooltip
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -30,19 +35,24 @@ import {
   InfoTwoTone as AboutIcon,
   DescriptionTwoTone as TosIcon,
   ExitToApp as SignoutIcon,
-  Flag as CountriesIcon,
   CalendarMonth as SchedulerIcon,
   AccountBalance as BankDetailsIcon,
   MonetizationOn as PricingIcon,
   AutoAwesome as AIIcon,
   Assessment as OperationsIcon,
+  Build as MaintenanceIcon,
+  FolderShared as DocumentsIcon,
+  Add as AddIcon,
+  ChevronLeft as ChevronLeftIcon
 } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import env from '@/config/env.config'
 import { strings } from '@/lang/header'
 import { strings as commonStrings } from '@/lang/common'
 import * as UserService from '@/services/UserService'
+import SafarRentLogo from '@/components/SafarRentLogo'
+import ThemeToggle from '@/components/ThemeToggle'
 import * as BankDetailsService from '@/services/BankDetailsService'
 import Avatar from './Avatar'
 import * as langHelper from '@/utils/langHelper'
@@ -60,6 +70,7 @@ const Header = ({
   hidden,
 }: HeaderProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const { user } = useUserContext() as UserContextType
   const { notificationCount } = useNotificationContext() as NotificationContextType
@@ -69,34 +80,36 @@ const Header = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
-  const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [bankDetails, setBankDetails] = useState<bookcarsTypes.BankDetails | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(typeof window !== 'undefined' ? window.innerWidth >= 1200 : true)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1200 && sidebarOpen) {
+        setSidebarOpen(false)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [sidebarOpen])
+
+  useEffect(() => {
+    if (sidebarOpen && isSignedIn && window.innerWidth >= 1200) {
+      document.body.classList.add('admin-sidebar-open')
+    } else {
+      document.body.classList.remove('admin-sidebar-open')
+    }
+    return () => {
+      document.body.classList.remove('admin-sidebar-open')
+    }
+  }, [sidebarOpen, isSignedIn])
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
   const isLangMenuOpen = Boolean(langAnchorEl)
-  const isSideMenuOpen = Boolean(sideAnchorEl)
-
-  const classes = {
-    list: {
-      width: 250,
-    },
-    formControl: {
-      margin: 1,
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: 2,
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: 2,
-    },
-  }
 
   const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -111,16 +124,6 @@ const Header = ({
   }
 
   const refreshPage = () => {
-    // const params = new URLSearchParams(window.location.search)
-
-    // if (params.has('l')) {
-    //   params.delete('l')
-    //   // window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : '')
-    //   window.location.replace(window.location.href.split('?')[0] + ([...params].length > 0 ? `?${params}` : ''))
-    // } else {
-    //   // window.location.reload()
-    //   window.location.replace(window.location.href)
-    // }
     navigate(0)
   }
 
@@ -132,7 +135,6 @@ const Header = ({
       setLang(helper.getLanguage(code))
       const currentLang = UserService.getLanguage()
       if (isSignedIn && user) {
-        // Update user language
         const data: bookcarsTypes.UpdateLanguagePayload = {
           id: user._id as string,
           language: code,
@@ -141,7 +143,6 @@ const Header = ({
         if (status === 200) {
           UserService.setLanguage(code)
           if (code && code !== currentLang) {
-            // Refresh page
             refreshPage()
           }
         } else {
@@ -150,7 +151,6 @@ const Header = ({
       } else {
         UserService.setLanguage(code)
         if (code && code !== currentLang) {
-          // Refresh page
           refreshPage()
         }
       }
@@ -176,12 +176,19 @@ const Header = ({
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const handleSideMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setSideAnchorEl(event.currentTarget)
+  const handleToggleSidebar = () => {
+    if (window.innerWidth < 1200) {
+      setMobileDrawerOpen(!mobileDrawerOpen)
+    } else {
+      setSidebarOpen(!sidebarOpen)
+    }
   }
 
-  const handleSideMenuClose = () => {
-    setSideAnchorEl(null)
+  const handleNavClick = (path: string) => {
+    navigate(path)
+    if (window.innerWidth < 1200) {
+      setMobileDrawerOpen(false)
+    }
   }
 
   const handleNotificationsClick = () => {
@@ -219,6 +226,16 @@ const Header = ({
 
     init()
   }, [hidden, currentUser])
+
+  const isCurrent = (path: string) => {
+    if (path === '/' && location.pathname === '/') {
+return true
+}
+    if (path !== '/' && location.pathname.startsWith(path)) {
+return true
+}
+    return false
+  }
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
@@ -301,214 +318,418 @@ const Header = ({
     </Menu>
   )
 
+  const renderSidebarContent = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: 'var(--sr-surface)', color: 'var(--sr-text)' }}>
+      {/* Brand Header */}
+      <Box sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box onClick={() => handleNavClick('/')} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <SafarRentLogo variant="dark" size="small" showBadge={false} />
+          </Box>
+          {window.innerWidth < 1200 && (
+            <IconButton onClick={() => setMobileDrawerOpen(false)} sx={{ color: 'var(--sr-muted)' }} size="small">
+              <ChevronLeftIcon />
+            </IconButton>
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Chip
+            label={currentUser?.type === bookcarsTypes.UserType.Admin ? 'SUPER ADMIN' : 'FLEET PARTNER'}
+            size="small"
+            sx={{
+              bgcolor: '#107487',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              fontSize: 10,
+              letterSpacing: '0.06em',
+              fontFamily: 'var(--sr-font-mono, monospace)',
+              height: 20
+            }}
+          />
+          <Chip
+            label="PKR CONSOLE"
+            size="small"
+            variant="outlined"
+            sx={{
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: 'var(--sr-muted)',
+              fontSize: 9,
+              letterSpacing: '0.06em',
+              fontFamily: 'var(--sr-font-mono, monospace)',
+              height: 20
+            }}
+          />
+        </Box>
+      </Box>
+
+      {/* Nav List */}
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', py: 1.5, px: 1 }}>
+        <List dense disablePadding>
+          {/* Group 1: Operations */}
+          <ListSubheader disableSticky sx={{ bgcolor: 'transparent', color: 'var(--sr-muted)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', px: 1.5, pt: 1, pb: 0.5 }}>
+            Operations
+          </ListSubheader>
+
+          <ListItemButton
+            selected={isCurrent('/operations-dashboard')}
+            onClick={() => handleNavClick('/operations-dashboard')}
+            sx={sidebarItemStyle(isCurrent('/operations-dashboard'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/operations-dashboard') ? '#10B981' : '#94A3B8' }}>
+              <OperationsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Command Center" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/operations-dashboard') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/scheduler')}
+            onClick={() => handleNavClick('/scheduler')}
+            sx={sidebarItemStyle(isCurrent('/scheduler'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/scheduler') ? '#10B981' : '#94A3B8' }}>
+              <SchedulerIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Live Scheduler" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/scheduler') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/')}
+            onClick={() => handleNavClick('/')}
+            sx={sidebarItemStyle(isCurrent('/'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/') ? '#10B981' : '#94A3B8' }}>
+              <DashboardIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="All Bookings" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <Divider sx={{ my: 1.5, borderColor: 'rgba(255, 255, 255, 0.08)' }} />
+
+          {/* Group 2: Fleet & AI */}
+          <ListSubheader disableSticky sx={{ bgcolor: 'transparent', color: 'var(--sr-muted)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', px: 1.5, pt: 0.5, pb: 0.5 }}>
+            Fleet & AI
+          </ListSubheader>
+
+          <ListItemButton
+            selected={isCurrent('/cars')}
+            onClick={() => handleNavClick('/cars')}
+            sx={sidebarItemStyle(isCurrent('/cars'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/cars') ? '#10B981' : '#94A3B8' }}>
+              <CarsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Vehicle Fleet" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/cars') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/ai-intake')}
+            onClick={() => handleNavClick('/ai-intake')}
+            sx={sidebarItemStyle(isCurrent('/ai-intake'), true)}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: '#F59E0B' }}>
+              <AIIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="✨ AI Fleet Intake" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/ai-intake') ? 700 : 600, color: 'var(--sr-accent-text)' }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/maintenance')}
+            onClick={() => handleNavClick('/maintenance')}
+            sx={sidebarItemStyle(isCurrent('/maintenance'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/maintenance') ? '#10B981' : '#94A3B8' }}>
+              <BuildIconSmall />
+            </ListItemIcon>
+            <ListItemText primary="Maintenance Logs" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/maintenance') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/vehicle-documents')}
+            onClick={() => handleNavClick('/vehicle-documents')}
+            sx={sidebarItemStyle(isCurrent('/vehicle-documents'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/vehicle-documents') ? '#10B981' : '#94A3B8' }}>
+              <DocumentsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Smart Card Vault" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/vehicle-documents') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <Divider sx={{ my: 1.5, borderColor: 'rgba(255, 255, 255, 0.08)' }} />
+
+          {/* Group 3: Network & Finance */}
+          <ListSubheader disableSticky sx={{ bgcolor: 'transparent', color: 'var(--sr-muted)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', px: 1.5, pt: 0.5, pb: 0.5 }}>
+            Network & Finance
+          </ListSubheader>
+
+          <ListItemButton
+            selected={isCurrent('/locations')}
+            onClick={() => handleNavClick('/locations')}
+            sx={sidebarItemStyle(isCurrent('/locations'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/locations') ? '#10B981' : '#94A3B8' }}>
+              <LocationsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Pickup Hubs" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/locations') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/suppliers')}
+            onClick={() => handleNavClick('/suppliers')}
+            sx={sidebarItemStyle(isCurrent('/suppliers'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/suppliers') ? '#10B981' : '#94A3B8' }}>
+              <SuppliersIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Fleet Suppliers" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/suppliers') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/pricing')}
+            onClick={() => handleNavClick('/pricing')}
+            sx={sidebarItemStyle(isCurrent('/pricing'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/pricing') ? '#10B981' : '#94A3B8' }}>
+              <PricingIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Dynamic PKR Pricing" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/pricing') ? 700 : 500 }} />
+          </ListItemButton>
+
+          {bankDetails?.showBankDetailsPage && (
+            <ListItemButton
+              selected={isCurrent('/bank-details')}
+              onClick={() => handleNavClick('/bank-details')}
+              sx={sidebarItemStyle(isCurrent('/bank-details'))}
+            >
+              <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/bank-details') ? '#10B981' : '#94A3B8' }}>
+                <BankDetailsIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Payout Bank Details" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/bank-details') ? 700 : 500 }} />
+            </ListItemButton>
+          )}
+
+          <ListItemButton
+            selected={isCurrent('/users')}
+            onClick={() => handleNavClick('/users')}
+            sx={sidebarItemStyle(isCurrent('/users'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/users') ? '#10B981' : '#94A3B8' }}>
+              <UsersIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Renters & KYC" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/users') ? 700 : 500 }} />
+          </ListItemButton>
+
+          <ListItemButton
+            selected={isCurrent('/settings')}
+            onClick={() => handleNavClick('/settings')}
+            sx={sidebarItemStyle(isCurrent('/settings'))}
+          >
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/settings') ? '#10B981' : '#94A3B8' }}>
+              <SettingsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Console Settings" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/settings') ? 700 : 500 }} />
+          </ListItemButton>
+        </List>
+      </Box>
+
+      {/* Footer Utility links */}
+      <Box sx={{ p: 1.5, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1 }}>
+          <Button size="small" onClick={() => handleNavClick('/about')} sx={{ color: 'var(--sr-muted)', fontSize: 11, minWidth: 'auto', p: 0.5, textTransform: 'none' }}>
+            About
+          </Button>
+          <Button size="small" onClick={() => handleNavClick('/tos')} sx={{ color: 'var(--sr-muted)', fontSize: 11, minWidth: 'auto', p: 0.5, textTransform: 'none' }}>
+            Terms
+          </Button>
+          <Button size="small" onClick={() => handleNavClick('/contact')} sx={{ color: 'var(--sr-muted)', fontSize: 11, minWidth: 'auto', p: 0.5, textTransform: 'none' }}>
+            Contact
+          </Button>
+          <Button size="small" onClick={handleSignout} sx={{ color: '#F87171', fontSize: 11, minWidth: 'auto', p: 0.5, textTransform: 'none' }}>
+            Sign Out
+          </Button>
+        </Box>
+      </Box>
+    </Box>
+  )
+
   return !hidden && (
-    <div style={classes.grow} className="header">
-      <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
-        <Toolbar className="toolbar">
+    <>
+      {/* Desktop Persistent Sidebar */}
+      {isLoaded && isSignedIn && sidebarOpen && (
+        <aside className="admin-sidebar">
+          {renderSidebarContent()}
+        </aside>
+      )}
+
+      {/* Mobile / Collapsed Drawer */}
+      <Drawer
+        open={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        className="menu side-menu"
+        PaperProps={{
+          sx: { width: 260, bgcolor: 'var(--sr-surface)', color: 'var(--sr-text)' }
+        }}
+      >
+        {renderSidebarContent()}
+      </Drawer>
+
+      {/* Top Utility Bar */}
+      <AppBar
+        position="fixed"
+        className="admin-topbar"
+        sx={{
+          bgcolor: 'var(--sr-header, #FFFFFF)',
+          color: 'var(--sr-text, #0F172A)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+          borderBottom: '1px solid var(--sr-border, #E2E8F0)'
+        }}
+      >
+        <Toolbar className="toolbar" sx={{ minHeight: 64, px: { xs: 2, sm: 3 } }}>
+          {/* Hamburger toggle */}
           {isLoaded && isSignedIn && (
-            <IconButton edge="start" sx={classes.menuButton} color="inherit" aria-label="open drawer" onClick={handleSideMenuOpen}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="toggle sidebar"
+              onClick={handleToggleSidebar}
+              sx={{ mr: 1.5, color: 'var(--sr-text)' }}
+            >
               <MenuIcon />
             </IconButton>
           )}
-          <>
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu  side-menu">
-              <List sx={classes.list}>
-                <ListItem
-                  onClick={() => {
-                    navigate('/')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><DashboardIcon /></ListItemIcon>
-                  <ListItemText primary={strings.DASHBOARD} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/scheduler')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SchedulerIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SCHEDULER} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/suppliers')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SuppliersIcon /></ListItemIcon>
-                  <ListItemText primary={strings.COMPANIES} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/countries')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CountriesIcon /></ListItemIcon>
-                  <ListItemText primary={strings.COUNTRIES} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/locations')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><LocationsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.LOCATIONS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/cars')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CarsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CARS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/users')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><UsersIcon /></ListItemIcon>
-                  <ListItemText primary={strings.USERS} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/pricing')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><PricingIcon /></ListItemIcon>
-                  <ListItemText primary={strings.PRICING} />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/ai-intake')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><AIIcon /></ListItemIcon>
-                  <ListItemText primary="AI Booking Intake" />
-                </ListItem>
-                <ListItem
-                  onClick={() => {
-                    navigate('/operations-dashboard')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><OperationsIcon /></ListItemIcon>
-                  <ListItemText primary="Operations dashboard" />
-                </ListItem>
-                {bankDetails?.showBankDetailsPage && (
-                  <ListItem
-                    onClick={() => {
-                      navigate('/bank-details')
-                      handleSideMenuClose()
-                    }}
-                  >
-                    <ListItemIcon><BankDetailsIcon /></ListItemIcon>
-                    <ListItemText primary={strings.BANK_DETAILS} />
-                  </ListItem>
-                )}
-                <ListItem
-                  onClick={() => {
-                    navigate('/settings')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><SettingsIcon /></ListItemIcon>
-                  <ListItemText primary={strings.SETTINGS} />
-                </ListItem>
-              </List>
-              <ListItem
-                onClick={() => {
-                  navigate('/about')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><AboutIcon /></ListItemIcon>
-                <ListItemText primary={strings.ABOUT} />
-              </ListItem>
-              <ListItem
-                onClick={() => {
-                  navigate('/tos')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><TosIcon /></ListItemIcon>
-                <ListItemText primary={strings.TOS} />
-              </ListItem>
-              <ListItem
-                onClick={() => {
-                  navigate('/contact')
-                  handleSideMenuClose()
-                }}
-              >
-                <ListItemIcon><MailIcon /></ListItemIcon>
-                <ListItemText primary={strings.CONTACT} />
-              </ListItem>
-            </Drawer>
-          </>
-          <Button onClick={() => navigate('/')} sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none', ml: 1 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: 6, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', fontWeight: 800, fontSize: 16 }}>
-              S
-            </span>
-            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.5px', color: '#fff' }}>
-              Safar<span style={{ color: '#10b981' }}>Rent</span>
-            </span>
-            <span style={{ fontSize: 9, fontWeight: 700, background: '#064e3b', color: '#6ee7b7', padding: '2px 5px', borderRadius: 4, border: '1px solid #047857', textTransform: 'uppercase' }}>
-              ADMIN PK
-            </span>
-          </Button>
-          <div style={classes.grow} />
-          <div className="header-desktop">
+
+          {/* Logo fallback for when sidebar is collapsed or mobile */}
+          {(!sidebarOpen || !isSignedIn) && (
+            <Box className="admin-topbar-brand" onClick={() => navigate('/')} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', mr: 2 }}>
+              <SafarRentLogo variant="dark" size="small" badgeText="CONSOLE" />
+            </Box>
+          )}
+
+          {/* Quick Context Title on large screens */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'var(--sr-text)', letterSpacing: '-0.01em' }}>
+              Rental Management
+            </Typography>
+            <Chip
+              label="Operations"
+              size="small"
+              sx={{
+                bgcolor: 'rgba(5, 150, 105, 0.1)',
+                color: 'var(--sr-emerald)',
+                fontWeight: 600,
+                fontSize: 11,
+                height: 22
+              }}
+            />
+          </Box>
+
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* Right Utility Actions */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            {/* Quick "+ Add Vehicle" CTA Button */}
             {isSignedIn && (
-              <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              <Button
+                variant="contained"
+                size="small"
+                className="admin-add-vehicle" aria-label="Add vehicle" startIcon={<AddIcon />}
+                onClick={() => navigate('/create-car')}
+                sx={{
+                  bgcolor: '#107487',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  fontSize: 13,
+                  textTransform: 'none',
+                  borderRadius: '8px',
+                  boxShadow: 'none',
+                  px: 1.8,
+                  py: 0.6,
+                  '&:hover': {
+                    bgcolor: '#047857',
+                    boxShadow: '0 2px 4px rgba(5, 150, 105, 0.2)'
+                  }
+                }}
+              >
+                + Add Vehicle
+              </Button>
             )}
-            <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation className="btn-primary">
+
+            <ThemeToggle />
+
+            {/* Notifications */}
+            {isSignedIn && (
+              <Tooltip title="Notifications">
+                <IconButton aria-label="notifications" color="inherit" onClick={handleNotificationsClick} size="small" sx={{ p: 1 }}>
+                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
+                    <NotificationsIcon fontSize="small" />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {/* Language Selector */}
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<LanguageIcon fontSize="small" />}
+              onClick={handleLangMenuOpen}
+              sx={{
+                borderColor: 'var(--sr-border, #CBD5E1)',
+                color: 'var(--sr-text, #334155)',
+                textTransform: 'none',
+                fontWeight: 600,
+                fontSize: 12,
+                borderRadius: '8px',
+                height: 32,
+                display: { xs: 'none', sm: 'inline-flex' }
+              }}
+            >
               {lang?.label}
             </Button>
+
+            {/* User Avatar & Menu */}
             {isSignedIn && user && (
-              <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} color="inherit">
+              <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} color="inherit" sx={{ ml: 0.5 }}>
                 <Avatar record={user} type={user.type} size="small" readonly />
               </IconButton>
             )}
-          </div>
-          <div className="header-mobile">
-            {!isSignedIn && (
-              <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation className="btn-primary">
-                {lang?.label}
-              </Button>
-            )}
-            {isSignedIn && (
-              <IconButton color="inherit" onClick={handleNotificationsClick}>
-                <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-            )}
-            {isSignedIn && (
-              <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            )}
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
 
       {renderMobileMenu}
       {renderMenu}
       {renderLanguageMenu}
-    </div>
+    </>
   )
+}
+
+function BuildIconSmall() {
+  return <MaintenanceIcon fontSize="small" />
+}
+
+function sidebarItemStyle(selected: boolean, isAi: boolean = false) {
+  if (selected) {
+    return {
+      mb: 0.5,
+      borderRadius: '8px',
+      bgcolor: isAi ? 'rgba(245, 158, 11, 0.15)' : 'rgba(5, 150, 105, 0.15)',
+      color: 'var(--sr-accent-text)',
+      borderLeft: `3px solid ${isAi ? '#F59E0B' : '#10B981'}`,
+      '&:hover': {
+        bgcolor: isAi ? 'rgba(245, 158, 11, 0.22)' : 'rgba(5, 150, 105, 0.22)',
+      }
+    }
+  }
+  return {
+    mb: 0.5,
+    borderRadius: '8px',
+    color: 'var(--sr-text)',
+    borderLeft: '3px solid transparent',
+    '&:hover': {
+      bgcolor: 'rgba(255, 255, 255, 0.05)',
+      color: 'var(--sr-text)'
+    }
+  }
 }
 
 export default Header

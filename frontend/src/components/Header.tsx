@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -33,7 +33,11 @@ import {
   QuestionAnswer as FaqIcon,
   PersonOutline as SignUpIcon,
   Cookie as CookiePolicyIcon,
-  Check as CheckIcon,
+  Language as LanguageIcon,
+  KeyboardArrowDown as ExpandMoreIcon,
+  Explore as ExploreIcon,
+  Search as SearchNavIcon,
+  PersonOutline as ProfileNavIcon,
 } from '@mui/icons-material'
 import { toast } from 'react-toastify'
 import { CircleFlag } from 'react-circle-flags'
@@ -44,7 +48,8 @@ import { strings as suStrings } from '@/lang/sign-up'
 import { strings } from '@/lang/header'
 import * as UserService from '@/services/UserService'
 import * as PaymentService from '@/services/PaymentService'
-import * as KycService from '@/services/KycService'
+import SafarRentLogo from '@/components/SafarRentLogo'
+import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from './Avatar'
 import * as langHelper from '@/utils/langHelper'
 import * as helper from '@/utils/helper'
@@ -67,6 +72,8 @@ const Header = ({
   headerTitle,
 }: HeaderProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   const { user } = useUserContext() as UserContextType
   const { notificationCount } = useNotificationContext() as NotificationContextType
@@ -81,7 +88,6 @@ const Header = ({
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [kycStatus, setKycStatus] = useState<bookcarsTypes.KycStatus | null>(null)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -105,7 +111,7 @@ const Header = ({
     },
     menuButton: {
       marginRight: 2,
-      color: '#121212',
+          color: isHome ? '#F5F5F7' : '#121212',
     },
   }
 
@@ -119,13 +125,9 @@ const Header = ({
     if (user) {
       setCurrentUser(user)
       setIsSignedIn(true)
-      KycService.getMine()
-        .then((kyc) => setKycStatus(kyc?.status || null))
-        .catch(() => setKycStatus(null))
     } else {
       setCurrentUser(undefined)
       setIsSignedIn(false)
-      setKycStatus(null)
     }
     setIsLoaded(true)
   }, [user])
@@ -278,6 +280,11 @@ const Header = ({
         <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>
+      <MenuItem onClick={() => {
+ handleNotificationsClick(); handleMobileMenuClose() 
+}}>
+        <NotificationsIcon className="header-action" />{strings.NOTIFICATIONS}
+      </MenuItem>
       {/* <MenuItem onClick={handleLangMenuOpen}>
         <IconButton aria-label="language of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
           <LanguageIcon />
@@ -342,264 +349,286 @@ const Header = ({
 
   return (
     (!hidden && (
-      <div style={classes.grow} className="header">
-        <AppBar position="relative" sx={{ bgcolor: '#fff', boxShadow: 'none', borderBottom: '1px solid #ddd' }}>
-          <Toolbar className="toolbar">
-            {isLoaded && (
-              <>
-                <IconButton edge="start" sx={classes.menuButton} aria-label="open drawer" onClick={handleSideMenuOpen}>
-                  <MenuIcon />
-                </IconButton>
-
-                <Button onClick={() => navigate('/')} className="logo" sx={{ display: 'flex', alignItems: 'center', gap: 1, textTransform: 'none' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', fontWeight: 800, fontSize: 18, boxShadow: '0 2px 8px rgba(5,150,105,0.35)' }}>
-                    S
-                  </span>
-                  <span style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px', color: '#0f172a' }}>
-                    Safar<span style={{ color: '#059669' }}>Rent</span>
-                  </span>
-                  <span style={{ fontSize: 10, fontWeight: 700, background: '#ecfdf5', color: '#059669', padding: '2px 6px', borderRadius: 4, border: '1px solid #a7f3d0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    PK
-                  </span>
-                </Button>
-
-                {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
-              </>
-            )}
-
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu">
-              <List sx={classes.list}>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><HomeIcon /></ListItemIcon>
-                  <ListItemText primary={strings.HOME} />
-                </ListItemButton>
-                {isSignedIn && (
-                  <ListItemButton
-                    onClick={() => {
-                      navigate('/bookings')
-                      handleSideMenuClose()
-                    }}
-                  >
-                    <ListItemIcon><BookingsIcon /></ListItemIcon>
-                    <ListItemText primary={strings.BOOKINGS} />
-                  </ListItemButton>
-                )}
-                {isSignedIn && (
-                  <ListItemButton
-                    onClick={() => {
-                      navigate('/kyc')
-                      handleSideMenuClose()
-                    }}
-                  >
-                    <ListItemIcon><SignUpIcon /></ListItemIcon>
-                    <ListItemText primary="CNIC / KYC" />
-                  </ListItemButton>
-                )}
-                {!env.HIDE_SUPPLIERS && (
-                  <ListItemButton
-                    onClick={() => {
-                      navigate('/suppliers')
-                      handleSideMenuClose()
-                    }}
-                  >
-                    <ListItemIcon><SupplierIcon /></ListItemIcon>
-                    <ListItemText primary={strings.SUPPLIERS} />
-                  </ListItemButton>
-                )}
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/locations')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><LocationIcon /></ListItemIcon>
-                  <ListItemText primary={strings.LOCATIONS} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/about')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><AboutIcon /></ListItemIcon>
-                  <ListItemText primary={strings.ABOUT} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/cookie-policy')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><CookiePolicyIcon /></ListItemIcon>
-                  <ListItemText primary={strings.COOKIE_POLICY} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/privacy')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><PrivacyIcon /></ListItemIcon>
-                  <ListItemText primary={strings.PRIVACY_POLICY} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/tos')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><TosIcon /></ListItemIcon>
-                  <ListItemText primary={strings.TOS} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/faq')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><FaqIcon /></ListItemIcon>
-                  <ListItemText primary={strings.FAQ} />
-                </ListItemButton>
-                <ListItemButton
-                  onClick={() => {
-                    navigate('/contact')
-                    handleSideMenuClose()
-                  }}
-                >
-                  <ListItemIcon><MailIcon /></ListItemIcon>
-                  <ListItemText primary={strings.CONTACT} />
-                </ListItemButton>
-                {env.isMobile && !hideSignin && !isSignedIn && isLoaded && (
-                  <>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate('/sign-in')
-                        handleSideMenuClose()
-                      }}
-                    >
-                      <ListItemIcon><LoginIcon /></ListItemIcon>
-                      <ListItemText primary={strings.SIGN_IN} />
-                    </ListItemButton>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(`/sign-up?d=${Date.now()}`)
-                        handleSideMenuClose()
-                      }}
-                    >
-                      <ListItemIcon><SignUpIcon /></ListItemIcon>
-                      <ListItemText primary={suStrings.SIGN_UP} />
-                    </ListItemButton>
-                  </>
-                )}
-              </List>
-            </Drawer>
-
-            {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
-            <div className="header-desktop">
-              {isSignedIn && (
-                <Button
-                  size="small"
-                  onClick={() => navigate('/kyc')}
-                  className="sr-kyc-pill"
-                  startIcon={kycStatus === 'approved' ? <CheckIcon /> : undefined}
-                >
-                  {kycStatus === 'approved' ? 'CNIC Verified ✓' : 'Complete KYC'}
-                </Button>
-              )}
+      <>
+        <div style={classes.grow} className={`header${isHome ? ' header-home' : ''}`}>
+          <AppBar position="relative" sx={{ bgcolor: 'transparent', boxShadow: 'none', borderBottom: isHome ? '1px solid rgba(255,255,255,.08)' : '1px solid var(--sr-border)' }}>
+            <Toolbar className="toolbar">
               {isLoaded && (
-                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn bold">
+                <>
+                  <IconButton edge="start" sx={classes.menuButton} aria-label="open drawer" onClick={handleSideMenuOpen}>
+                    <MenuIcon />
+                  </IconButton>
+
+                  <Button onClick={() => navigate('/')} className="logo" aria-label="SafarRent home" sx={{ p: 0.5, minWidth: 0, textTransform: 'none' }}>
+                    <SafarRentLogo variant={isHome ? 'light' : 'dark'} size="medium" showBadge={false} />
+                  </Button>
+
+                  <nav className="sr-desktop-nav" aria-label="Primary navigation">
+                    <Button onClick={() => {
+                      navigate('/')
+                      window.setTimeout(() => document.querySelector('.home-search-dock-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80)
+                    }}>Search cars</Button>
+                    <Button onClick={() => navigate('/locations')}>Pickup locations</Button>
+                    <Button onClick={() => navigate('/faq')}>How it works</Button>
+                  </nav>
+
+                  {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
+                </>
+              )}
+
+              <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu">
+                <List sx={classes.list}>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><HomeIcon /></ListItemIcon>
+                    <ListItemText primary={strings.HOME} />
+                  </ListItemButton>
+                  {isSignedIn && (
+                    <ListItemButton
+                      onClick={() => {
+                        navigate('/bookings')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><BookingsIcon /></ListItemIcon>
+                      <ListItemText primary={strings.BOOKINGS} />
+                    </ListItemButton>
+                  )}
+                  {!env.HIDE_SUPPLIERS && (
+                    <ListItemButton
+                      onClick={() => {
+                        navigate('/suppliers')
+                        handleSideMenuClose()
+                      }}
+                    >
+                      <ListItemIcon><SupplierIcon /></ListItemIcon>
+                      <ListItemText primary={strings.SUPPLIERS} />
+                    </ListItemButton>
+                  )}
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/locations')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><LocationIcon /></ListItemIcon>
+                    <ListItemText primary={strings.LOCATIONS} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/about')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><AboutIcon /></ListItemIcon>
+                    <ListItemText primary={strings.ABOUT} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/cookie-policy')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><CookiePolicyIcon /></ListItemIcon>
+                    <ListItemText primary={strings.COOKIE_POLICY} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/privacy')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><PrivacyIcon /></ListItemIcon>
+                    <ListItemText primary={strings.PRIVACY_POLICY} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/tos')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><TosIcon /></ListItemIcon>
+                    <ListItemText primary={strings.TOS} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/faq')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><FaqIcon /></ListItemIcon>
+                    <ListItemText primary={strings.FAQ} />
+                  </ListItemButton>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate('/contact')
+                      handleSideMenuClose()
+                    }}
+                  >
+                    <ListItemIcon><MailIcon /></ListItemIcon>
+                    <ListItemText primary={strings.CONTACT} />
+                  </ListItemButton>
+                  {env.isMobile && !hideSignin && !isSignedIn && isLoaded && (
+                    <>
+                      <ListItemButton
+                        onClick={() => {
+                          navigate('/sign-in')
+                          handleSideMenuClose()
+                        }}
+                      >
+                        <ListItemIcon><LoginIcon /></ListItemIcon>
+                        <ListItemText primary={strings.SIGN_IN} />
+                      </ListItemButton>
+                      <ListItemButton
+                        onClick={() => {
+                          navigate(`/sign-up?d=${Date.now()}`)
+                          handleSideMenuClose()
+                        }}
+                      >
+                        <ListItemIcon><SignUpIcon /></ListItemIcon>
+                        <ListItemText primary={suStrings.SIGN_UP} />
+                      </ListItemButton>
+                    </>
+                  )}
+                </List>
+              </Drawer>
+
+              {(env.isMobile || !headerTitle) && <div style={classes.grow} />}
+              <div className="header-desktop">
+                {isSignedIn && user && (
+                  <button type="button" className="sr-kyc-pill" onClick={() => navigate('/settings')}>
+                    KYC · {user.kycStatus || bookcarsTypes.KycStatus.Unverified}
+                  </button>
+                )}
+                <div className="header-preferences">
+                  <ThemeToggle />
+                  {isLoaded && (
+                    <Button
+                      variant="contained"
+                      onClick={handleCurrencyMenuOpen}
+                      disableElevation
+                      className="btn header-control header-currency"
+                      aria-label={commonStrings.CURRENCY}
+                    >
+                      <span>{PaymentService.getCurrency()}</span>
+                      <ExpandMoreIcon aria-hidden="true" />
+                    </Button>
+                  )}
+                  {isLoaded && (
+                    <Button
+                      variant="contained"
+                      onClick={handleLangMenuOpen}
+                      disableElevation
+                      className="btn header-control header-language"
+                      aria-label={`${strings.LANGUAGE}: ${lang?.label}`}
+                      title={lang?.label}
+                    >
+                      <LanguageIcon aria-hidden="true" />
+                      <span>{lang?.code.toUpperCase()}</span>
+                      <ExpandMoreIcon aria-hidden="true" />
+                    </Button>
+                  )}
+                </div>
+                {!hideSignin && !isSignedIn && isLoaded && <span className="header-actions-divider" aria-hidden="true" />}
+                {!hideSignin && !isSignedIn && isLoaded && (
+                  <div className="header-auth-actions">
+                    <Button
+                      variant="outlined"
+                      size="medium"
+                      startIcon={<SignUpIcon />}
+                      onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
+                      disableElevation
+                      className="btn btn-auth btn-register"
+                      aria-label={suStrings.SIGN_UP}
+                    >
+                      <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      startIcon={<LoginIcon />}
+                      onClick={() => navigate('/sign-in')}
+                      disableElevation
+                      className="btn btn-auth btn-sign-in"
+                      aria-label={strings.SIGN_IN}
+                    >
+                      <span className="btn-auth-txt">{strings.SIGN_IN}</span>
+                    </Button>
+                  </div>
+                )}
+                {isSignedIn && (
+                  <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn">
+                    <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                )}
+                {isSignedIn && (
+                  <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} className="btn">
+                    <Avatar loggedUser={currentUser} user={currentUser} size="small" readonly />
+                  </IconButton>
+                )}
+              </div>
+              <div className="header-mobile">
+                <ThemeToggle />
+                <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation className="btn header-control header-currency">
                   {PaymentService.getCurrency()}
                 </Button>
-              )}
-              {isLoaded && (
-                <Button variant="contained" onClick={handleLangMenuOpen} disableElevation className="btn">
-                  <div className="language">
-                    <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />
-                  </div>
-                </Button>
-              )}
-              {!hideSignin && !isSignedIn && isLoaded && (
                 <Button
                   variant="contained"
-                  size="medium"
-                  startIcon={<SignUpIcon />}
-                  onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
+                  onClick={handleLangMenuOpen}
                   disableElevation
-                  className="btn btn-auth"
-                  aria-label={suStrings.SIGN_UP}
+                  className="btn header-control header-language"
+                  aria-label={`${strings.LANGUAGE}: ${lang?.label}`}
+                  title={lang?.label}
                 >
-                  <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
+                  <LanguageIcon aria-hidden="true" />
+                  <span>{lang?.code.toUpperCase()}</span>
                 </Button>
-              )}
-              {!hideSignin && !isSignedIn && isLoaded && (
-                <Button
-                  variant="contained"
-                  size="medium"
-                  startIcon={<LoginIcon />}
-                  onClick={() => navigate('/sign-in')}
-                  disableElevation
-                  className="btn btn-auth"
-                  aria-label={strings.SIGN_IN}
-                >
-                  <span className="btn-auth-txt">{strings.SIGN_IN}</span>
-                </Button>
-              )}
-              {isSignedIn && (
-                <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn">
-                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              )}
-              {isSignedIn && (
-                <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} className="btn">
-                  <Avatar loggedUser={currentUser} user={currentUser} size="small" readonly />
-                </IconButton>
-              )}
-            </div>
-            <div className="header-mobile">
-              <Button variant="contained" onClick={handleCurrencyMenuOpen} disableElevation fullWidth className="btn bold">
-                {PaymentService.getCurrency()}
-              </Button>
-              <Button variant="contained" onClick={handleLangMenuOpen} disableElevation fullWidth className="btn">
-                <div className="language">
-                  <CircleFlag countryCode={lang?.countryCode as string} height={flagHeight} className="flag" title={lang?.label} />
-                  {/* <span>{lang?.label}</span> */}
-                </div>
-              </Button>
-              {isSignedIn && (
-                <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn">
-                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              )}
-              {isSignedIn && (
-                <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} className="btn">
-                  <MoreIcon />
-                </IconButton>
-              )}
-            </div>
-          </Toolbar>
-        </AppBar>
+                {isSignedIn && (
+                  <IconButton aria-label={strings.NOTIFICATIONS} onClick={handleNotificationsClick} className="btn mobile-notifications">
+                    <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                )}
+                {isSignedIn && (
+                  <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} className="btn">
+                    <MoreIcon />
+                  </IconButton>
+                )}
+              </div>
+            </Toolbar>
+          </AppBar>
+        </div>
 
-        <nav className="sr-mobile-nav" aria-label="Mobile navigation">
-          <Button size="small" onClick={() => navigate('/')}><HomeIcon fontSize="small" />Home</Button>
-          <Button size="small" onClick={() => navigate('/locations')}><LocationIcon fontSize="small" />Hubs</Button>
-          {isSignedIn && <Button size="small" onClick={() => navigate('/bookings')}><BookingsIcon fontSize="small" />Bookings</Button>}
-          {isSignedIn && <Button size="small" onClick={() => navigate('/kyc')}><SignUpIcon fontSize="small" />KYC</Button>}
+        <nav className="sr-mobile-bottom-nav" aria-label="Primary navigation">
+          <button type="button" aria-current={isHome ? 'page' : undefined} onClick={() => navigate('/')}>
+            <ExploreIcon fontSize="small" /><span>Explore</span>
+          </button>
+          <button type="button" onClick={() => {
+            navigate('/')
+            window.setTimeout(() => document.querySelector('.home-search-dock-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80)
+          }}>
+            <SearchNavIcon fontSize="small" /><span>Search</span>
+          </button>
+          <button type="button" aria-current={location.pathname.startsWith('/bookings') ? 'page' : undefined} onClick={() => navigate(isSignedIn ? '/bookings' : '/sign-in')}>
+            <BookingsIcon fontSize="small" /><span>My Trips</span>
+          </button>
+          <button type="button" aria-current={location.pathname === '/settings' ? 'page' : undefined} onClick={() => navigate(isSignedIn ? '/settings' : '/sign-in')}>
+            <ProfileNavIcon fontSize="small" /><span>Profile</span>
+          </button>
         </nav>
 
         {renderMobileMenu}
         {renderMenu}
         {renderLanguageMenu}
         {renderCurrencyMenu}
-      </div>
+      </>
     )) || <></>
   )
 }

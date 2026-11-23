@@ -72,7 +72,7 @@ When you make a reservation with ${env.WEBSITE_NAME}, you agree to provide accur
 
 4. Cancellation Policy
 
-Cancellations made 24 hours before the rental date may be eligible for a full refund. Cancellations made less than 24 hours prior to the rental date may incur a cancellation fee. Please refer to our cancellation policy for detailed information.
+Cancellation, deposit, and refund terms are determined by the supplier and are shown with the listing or booking details. Review those terms before placing a booking. Any refund is subject to the supplier's stated terms and the payment provider's processing rules.
 
 
 5. Rental Conditions

@@ -14,7 +14,7 @@ div.bookings div.col-1 {
   left: 0;
   width: 336px;
   padding: 12px 0 0 12px;
-  background-color: #FAFAFA;
+  background-color: var(--sr-surface-raised);
   overflow: auto;
 }
 
@@ -69,13 +69,13 @@ div.bookings div.col-2 {
   div.bookings div.col-1 .cl-supplier-filter label.accordion,
   div.bookings div.col-1 .cl-status-filter label.accordion,
   div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fff;
+    background: var(--sr-surface);
   }
 
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
-    background-color: #fff;
+    background-color: var(--sr-surface);
     width: calc(100% - 10px);
     max-width: 480px;
   }

@@ -1,7 +1,7 @@
 .contact-form .contact-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #232323;
+  color: var(--sr-text);
 }
 
 @media only screen and (width <=960px) {

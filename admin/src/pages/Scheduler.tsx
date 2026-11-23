@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button, Box, Chip, Typography } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings } from '@/lang/bookings'
@@ -85,6 +85,15 @@ const Scheduler = () => {
             )}
           </div>
           <div className="col-2">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 2, py: 1.2, bgcolor: 'var(--sr-surface-raised, #F8FAFC)', borderBottom: '1px solid var(--sr-border, #E2E8F0)', flexWrap: 'wrap' }}>
+              <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Timeline Legend:
+              </Typography>
+              <Chip size="small" label="Confirmed (Paid / Deposit)" sx={{ bgcolor: '#107487', color: '#FFFFFF', fontWeight: 600, fontSize: 11, height: 22 }} />
+              <Chip size="small" label="Reserved / Scheduled" sx={{ bgcolor: '#036a9f', color: '#FFFFFF', fontWeight: 600, fontSize: 11, height: 22 }} />
+              <Chip size="small" label="Pending KYC / Payment" sx={{ bgcolor: '#995000', color: '#FFFFFF', fontWeight: 600, fontSize: 11, height: 22 }} />
+              <Chip size="small" label="Cancelled / Void" sx={{ bgcolor: '#DC2626', color: '#FFFFFF', fontWeight: 600, fontSize: 11, height: 22 }} />
+            </Box>
             <VehicleScheduler
               suppliers={suppliers}
               statuses={statuses}

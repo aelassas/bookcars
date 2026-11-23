@@ -16,7 +16,7 @@ div.create-booking {
 .booking-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 .checkbox-fc {
@@ -24,7 +24,7 @@ div.create-booking {
 }
 
 .checkbox-fc .checkbox-fcl {
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   font-size: 0.9em;
   line-height: 1em;
 }

@@ -1,3 +1,4 @@
+import { Link, useLocation } from 'react-router-dom'
 import React, { useState, useEffect, CSSProperties, ReactNode } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
@@ -22,6 +23,7 @@ const Layout = ({
   children,
   onLoad
 }: LayoutProps) => {
+  const page = useLocation().pathname.slice(1) || 'home'
   const { user, userLoaded, setUnauthorized, unauthorized } = useUserContext() as UserContextType
   const [loading, setLoading] = useState(true)
 
@@ -70,7 +72,10 @@ const Layout = ({
   return (
     <>
       {((!user && !loading) || (user && user.verified) || !strict) && !unauthorized ? (
-        <div className="content" style={style || {}}>
+        <div className="content" data-page={page} style={style || {}}>
+          {userLoaded && user && !['home', 'scheduler', 'users', 'sign-in'].includes(page) && (
+            <nav className="sr-admin-breadcrumb" aria-label="Breadcrumb"><Link to="/operations-dashboard">Dashboard</Link><span aria-hidden="true">/</span><span style={{ textTransform: 'capitalize' }}>{page.replace(/-/g, ' ')}</span></nav>
+          )}
           {userLoaded && children}
         </div>
       ) : (
@@ -89,3 +94,4 @@ const Layout = ({
 }
 
 export default Layout
+

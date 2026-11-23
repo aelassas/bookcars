@@ -1,5 +1,5 @@
 div.info-box {
-  background: #fafafa;
+  background: var(--sr-surface-raised);
   margin: 10px 0;
   border: 1px solid #dadada;
   border-radius: 5px;
@@ -16,7 +16,7 @@ div.info-box .info-box-icon {
 }
 
 div.info-box span.info-box-text {
-  color: rgb(0 0 0 / 63%);
+  color: var(--sr-muted);
   flex-grow: 1;
   font-size: 17px;
   font-weight: 700;

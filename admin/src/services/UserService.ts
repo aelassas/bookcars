@@ -84,7 +84,7 @@ export const resend = (email?: string, reset = false, appType: string = bookcars
 export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =>
   axiosInstance
     .post(
-      '/api/activate/ ',
+      '/api/activate',
       data,
       { withCredentials: true }
     )
@@ -359,6 +359,9 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
       { withCredentials: true }
     )
     .then((res) => res.status)
+
+export const updateKycStatus = (id: string, status: bookcarsTypes.KycStatus): Promise<bookcarsTypes.User> =>
+  axiosInstance.patch(`/api/users/${encodeURIComponent(id)}/kyc`, { status }, { withCredentials: true }).then((res) => res.data)
 
 /**
  * Update email notifications flag.

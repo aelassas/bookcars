@@ -1,5 +1,5 @@
 div.vehicle-scheduler-filter {
-  background: #fafafa;
+  background: var(--sr-surface-raised);
   margin: 10px 10px 0 0;
   border: 1px solid #dadada;
   font-size: 13px;

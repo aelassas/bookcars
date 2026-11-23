@@ -32,6 +32,20 @@ export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
     )
     .then((res) => res.status)
 
+/** Review a vehicle listing (platform admin only). */
+export const reviewListing = (
+  id: string,
+  listingStatus: bookcarsTypes.ListingStatus,
+  complianceNotes?: string,
+): Promise<Pick<bookcarsTypes.Car, '_id' | 'listingStatus' | 'complianceNotes' | 'reviewedAt'>> =>
+  axiosInstance
+    .patch(
+      `/api/cars/${encodeURIComponent(id)}/review`,
+      { listingStatus, complianceNotes },
+      { withCredentials: true },
+    )
+    .then((res) => res.data)
+
 /**
  * Check if a Car is related to a booking.
  *

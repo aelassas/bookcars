@@ -26,6 +26,7 @@ routes.route(routeNames.validateAccessToken).post(authJwt.verifyToken, userContr
 routes.route(routeNames.confirmEmail).get(userController.confirmEmail)
 routes.route(routeNames.resendLink).post(authJwt.verifyToken, rateLimiter, userController.resendLink)
 routes.route(routeNames.update).post(authJwt.verifyToken, userController.update)
+routes.patch('/api/users/:id/kyc', authJwt.verifyToken, authJwt.authAdmin, userController.updateKyc)
 routes.route(routeNames.updateEmailNotifications).post(authJwt.verifyToken, userController.updateEmailNotifications)
 routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, userController.updateLanguage)
 routes.route(routeNames.getUser).get(authJwt.verifyToken, userController.getUser)

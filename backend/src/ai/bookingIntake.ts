@@ -1,4 +1,6 @@
 import { addDays, isValidIsoDate } from './bookingIntakeDate'
+import { normalizeRelativeDate } from '../utils/tripSchemaValidator'
+import * as bookcarsTypes from ':bookcars-types'
 
 export type BookingIntakeRentalType = 'self-drive' | 'chauffeur' | 'airport-transfer' | 'intercity' | 'corporate' | null
 
@@ -13,6 +15,7 @@ export interface BookingIntakeData {
   passengerCount: number | null
   extras: string[]
   paymentMethod: string | null
+  rentalMode?: bookcarsTypes.RentalMode | null
   missingFields: string[]
   ambiguities: string[]
   confidence: number
@@ -20,9 +23,9 @@ export interface BookingIntakeData {
 }
 
 const locations = [
-  'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Gujranwala',
-  'Karachi', 'Hyderabad', 'Sukkur', 'Peshawar', 'Abbottabad', 'Quetta', 'Gwadar',
-  'Murree',
+  'Muzaffarabad', 'Rawalakot', 'Gilgit', 'Skardu', 'Hunza', 'Chitral', 'Mardan', 'Swat', 'Abbottabad', 'Mansehra', 'Murree', 'Naran', 'Kaghan', 'Peshawar',
+  'Islamabad', 'Rawalpindi', 'Jhelum', 'Gujrat', 'Sialkot', 'Gujranwala', 'Lahore', 'Kasur', 'Okara', 'Sahiwal', 'Chichawatni', 'Pakpattan', 'Arifwala',
+  'Faisalabad', 'Sargodha', 'Dera Ghazi Khan', 'Multan', 'Bahawalpur', 'Rahim Yar Khan', 'Karachi', 'Hyderabad', 'Sukkur', 'Larkana', 'Quetta', 'Gwadar',
 ]
 
 const months: Record<string, string> = {
@@ -31,16 +34,15 @@ const months: Record<string, string> = {
 }
 
 const getLocation = (text: string, start = 0): string | null => {
-  const slice = text.slice(start)
-  let earliest: { location: string, index: number } | null = null
-  for (const location of locations) {
-    const match = slice.match(new RegExp(`\\b${location}\\b`, 'i'))
-    if (match?.index !== undefined
-      && (!earliest || match.index < earliest.index)) {
-      earliest = { location, index: match.index }
-    }
-  }
-  return earliest?.location || null
+  const remainingText = text.slice(start)
+  const matches = locations
+    .map((location) => ({
+      location,
+      index: remainingText.search(new RegExp(`\\b${location}\\b`, 'i')),
+    }))
+    .filter((match) => match.index >= 0)
+    .sort((left, right) => left.index - right.index || right.location.length - left.location.length)
+  return matches[0]?.location || null
 }
 
 const getDate = (text: string): string | null => {
@@ -99,11 +101,14 @@ export const extractBookingIntake = (originalRequest: string): BookingIntakeData
   const text = originalRequest.trim()
   const pickupLocation = getLocation(text)
   const dropoffLocation = pickupLocation ? getLocation(text, text.toLowerCase().indexOf(pickupLocation.toLowerCase()) + pickupLocation.length) : null
-  const startDate = getDate(text)
+  const startDate = getDate(text) || normalizeRelativeDate(text)
   const duration = getDuration(text)
   const endDate = startDate && duration ? addDays(startDate, duration) : null
   const rentalType = getRentalType(text)
   const chauffeurRequired = rentalType === 'chauffeur' || /\bchauffeur\b|\bwith driver\b/i.test(text)
+  const rentalMode = /\bself[- ]?drive\b|\bwithout driver\b/i.test(text)
+    ? bookcarsTypes.RentalMode.SelfDrive
+    : chauffeurRequired ? bookcarsTypes.RentalMode.WithDriver : null
   const missingFields: string[] = []
   const ambiguities: string[] = []
 
@@ -143,6 +148,7 @@ export const extractBookingIntake = (originalRequest: string): BookingIntakeData
     passengerCount: text.match(/\b(\d+)\s+(?:passengers?|people|persons?)\b/i)?.[1] ? Number(text.match(/\b(\d+)\s+(?:passengers?|people|persons?)\b/i)?.[1]) : null,
     extras: [],
     paymentMethod: getPaymentMethod(text),
+    rentalMode,
     missingFields,
     ambiguities,
     confidence,

@@ -1,3 +1,42 @@
+/* Rental Mode Segmented Pill */
+.rental-mode-pill-group {
+  display: inline-flex;
+  grid-column: 1 / -1;
+  width: fit-content;
+  background: var(--sr-surface-raised);
+  border: 1px solid var(--sr-border);
+  border-radius: 9999px;
+  padding: 4px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.rental-mode-pill {
+  border: 0;
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--sr-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--sr-font-heading);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rental-mode-pill:hover {
+  color: var(--sr-text);
+}
+
+.rental-mode-pill.active {
+  background: #059669;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+}
+
 form.home-search-form .btn-search,
 form.home-search-form .btn-cancel {
   font-size: 18px;
@@ -7,21 +46,21 @@ form.home-search-form .btn-cancel {
 }
 
 form.home-search-form .btn-search {
-  color: #fff;
+  color: #0F172A;
   border: 0;
   border-radius: 10px;
   margin: 0;
   white-space: nowrap;
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  font-weight: 700;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  font-weight: 800;
   letter-spacing: 0.3px;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.4);
   transition: all 0.2s ease;
 }
 
 form.home-search-form .btn-search:hover {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+  box-shadow: 0 6px 24px rgba(217, 119, 6, 0.55);
   transform: translateY(-1px);
   opacity: 1;
 }
@@ -32,7 +71,7 @@ form.home-search-form .btn-cancel:hover {
 
 form.home-search-form .chk-same-location {
   display: table-row;
-  color: rgb(0 0 0 / 70%);
+  color: var(--sr-muted);
   font-weight: 400;
   line-height: 1.4em;
   font-size: 0.9em;
@@ -49,77 +88,109 @@ form.home-search-form .chk-same-location input[type='checkbox'] {
   cursor: pointer;
 }
 
-@media only screen and (width <=960px) {
-  form.home-search-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 480px;
-  }
+form.home-search-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 18px;
+  box-sizing: border-box;
+}
 
-  form.home-search-form .pickup-location,
-  form.home-search-form .drop-off-location,
-  form.home-search-form .from,
-  form.home-search-form .to {
-    width: 100%;
-    padding: 10px;
-  }
+.home-search-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+}
 
-  form.home-search-form .chk-same-location {
-    align-self: flex-start;
-    margin-left: 10px;
-  }
+.home-search-locations-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  width: 100%;
+}
 
-  form.home-search-form .btn-search,
-  form.home-search-form .btn-cancel {
-    width: calc(100% - 20px);
+.home-search-dates-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+form.home-search-form .btn-search {
+  height: 56px;
+  min-width: 180px;
+  padding: 0 32px;
+}
+
+@media only screen and (max-width: 900px) {
+  .home-search-dates-row {
+    grid-template-columns: 1fr;
   }
 
   form.home-search-form .btn-search {
-    margin: 4px 0;
-  }
-
-  form.home-search-form .btn-cancel {
-    margin: 5px 0;
+    width: 100%;
   }
 }
 
-@media only screen and (width >=960px) {
-  form.home-search-form {
-    display: table;
-    width: 100%;
-  }
+/* Dark SafarRent search surface: force readable labels over MUI's light defaults. */
+form.home-search-form .MuiInputLabel-root,
+form.home-search-form .MuiInputLabel-root.Mui-focused,
+form.home-search-form .MuiFormControlLabel-label,
+form.home-search-form .chk-same-location,
+form.home-search-form .MuiFormHelperText-root:not(.Mui-error) {
+  color: #f5f5f7 !important;
+}
 
-  form.home-search-form .pickup-location {
-    display: table-cell;
-    width: 350px;
-    padding-right: 2px;
-    padding-bottom: 10px;
-  }
+form.home-search-form .MuiOutlinedInput-root,
+form.home-search-form .MuiInputBase-root {
+  color: #f5f5f7 !important;
+  background: rgba(255, 255, 255, .045) !important;
+}
 
-  form.home-search-form .drop-off-location {
-    display: table-row;
-    width: 350px;
-    height: 66px;
-  }
+form.home-search-form .MuiOutlinedInput-input,
+form.home-search-form .MuiInputBase-input {
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
 
-  form.home-search-form .drop-off-location>.multiple-select {
-    width: 348px;
-  }
+/* MUI X DateTimePicker uses segmented contenteditable fields instead of a
+   native input. Color those sections explicitly; input color alone leaves
+   the date/time digits black in dark mode. */
+form.home-search-form .MuiPickersInputBase-root,
+form.home-search-form .MuiPickersInputBase-sectionsContainer,
+form.home-search-form .MuiPickersSectionList-root,
+form.home-search-form .MuiPickersSectionList-section,
+form.home-search-form .MuiPickersSectionList-sectionContent,
+form.home-search-form .MuiPickersSectionList-sectionSeparator {
+  color: #f5f5f7 !important;
+  -webkit-text-fill-color: #f5f5f7 !important;
+}
 
-  form.home-search-form .from,
-  form.home-search-form .to {
-    display: table-cell;
-    width: 235px;
-    padding: 0 2px;
-  }
+form.home-search-form .MuiPickersInputBase-root {
+  background: rgba(255, 255, 255, .045) !important;
+}
 
-  form.home-search-form .btn-search {
-    margin: 0 4px;
-  }
+form.home-search-form .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(245, 245, 247, .25) !important;
+}
 
-  form.home-search-form .btn-cancel {
-    margin: 0 2px;
-  }
+form.home-search-form .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+form.home-search-form .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #d4af37 !important;
+}
+
+form.home-search-form .MuiSvgIcon-root {
+  color: #d4af37 !important;
+}
+
+form.home-search-form .chk-same-location .MuiCheckbox-root {
+  color: rgba(245, 245, 247, .75) !important;
+}
+
+form.home-search-form .chk-same-location .MuiCheckbox-root.Mui-checked {
+  color: #d4af37 !important;
 }

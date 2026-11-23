@@ -11,7 +11,7 @@ div.locations .search {
 }
 
 div.locations .info-box {
-  background-color: #fff;
+  background-color: var(--sr-surface);
 }
 
 /* Device width is less than or equal to 960px */

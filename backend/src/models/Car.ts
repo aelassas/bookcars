@@ -15,6 +15,28 @@ const carSchema = new Schema<env.Car>(
       index: true,
       trim: true,
     },
+    registrationPlate: { type: String, index: true, trim: true, uppercase: true },
+    engineCc: { type: Number, min: 0, max: 20000 },
+    terrainCapability: {
+      type: String,
+      enum: Object.values(bookcarsTypes.TerrainCapability),
+      default: bookcarsTypes.TerrainCapability.HighwayIntercity,
+      index: true,
+    },
+    selfDriveAvailable: { type: Boolean, default: true },
+    withDriverAvailable: { type: Boolean, default: true },
+    driverDailyAllowancePkr: { type: Number, default: 2500, min: 0 },
+    outOfCitySurchargePkr: { type: Number, default: 1500, min: 0 },
+    securityDepositPkr: { type: Number, default: 15000, min: 0 },
+    listingStatus: {
+      type: String,
+      enum: Object.values(bookcarsTypes.ListingStatus),
+      default: bookcarsTypes.ListingStatus.PendingReview,
+      index: true,
+    },
+    complianceNotes: { type: String, trim: true, maxlength: 1000 },
+    reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    reviewedAt: { type: Date },
     supplier: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
@@ -141,6 +163,9 @@ const carSchema = new Schema<env.Car>(
         bookcarsTypes.FuelPolicy.FreeTank,
         bookcarsTypes.FuelPolicy.FullToFull,
         bookcarsTypes.FuelPolicy.FullToEmpty,
+        bookcarsTypes.FuelPolicy.TankToTank,
+        bookcarsTypes.FuelPolicy.SameToSame,
+        bookcarsTypes.FuelPolicy.FuelIncluded,
       ],
       required: [true, "can't be blank"],
     },
@@ -227,6 +252,7 @@ const carSchema = new Schema<env.Car>(
 carSchema.index({ updatedAt: -1, _id: 1 })
 carSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -1, _id: 1 })
 carSchema.index({ available: 1, gearbox: 1, deposit: 1 })
+carSchema.index({ listingStatus: 1, available: 1, supplier: 1 })
 carSchema.index({ seats: 1, doors: 1 })
 carSchema.index({ mileage: 1, fuelPolicy: 1 })
 carSchema.index({ locations: 1, available: 1, fullyBooked: 1 })

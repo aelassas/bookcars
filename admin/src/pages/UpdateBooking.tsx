@@ -11,7 +11,8 @@ import {
   DialogActions,
   FormHelperText,
   InputLabel,
-  Input
+  Input,
+  TextField,
 } from '@mui/material'
 import {
   Info as InfoIcon,
@@ -169,6 +170,32 @@ const UpdateBooking = () => {
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
   const [price, setPrice] = useState<number>()
+  const [handoverFuelLevel, setHandoverFuelLevel] = useState('')
+  const [handoverOdometer, setHandoverOdometer] = useState('')
+  const [handoverSpareTire, setHandoverSpareTire] = useState(false)
+  const [handoverNotes, setHandoverNotes] = useState('')
+  const [handoverSaving, setHandoverSaving] = useState(false)
+
+  const saveHandover = async () => {
+    if (!booking?._id) {
+return
+}
+    setHandoverSaving(true)
+    try {
+      const handoverChecklist = await BookingService.updateHandover(booking._id, {
+        fuelLevel: handoverFuelLevel,
+        odometerStart: Number(handoverOdometer),
+        spareTirePresent: handoverSpareTire,
+        exteriorNotes: handoverNotes,
+      })
+      setBooking({ ...booking, handoverChecklist })
+      helper.info('Handover inspection saved.')
+    } catch (err) {
+      helper.error(err)
+    } finally {
+      setHandoverSaving(false)
+    }
+  }
 
   const {
     register,
@@ -346,6 +373,10 @@ const UpdateBooking = () => {
               }
 
               setBooking(_booking)
+              setHandoverFuelLevel(_booking.handoverChecklist?.fuelLevel || '')
+              setHandoverOdometer(_booking.handoverChecklist?.odometerStart?.toString() || '')
+              setHandoverSpareTire(_booking.handoverChecklist?.spareTirePresent || false)
+              setHandoverNotes(_booking.handoverChecklist?.exteriorNotes || '')
               setPrice(_booking.price)
               setLoading(false)
               setVisible(true)
@@ -849,6 +880,17 @@ const UpdateBooking = () => {
                   language={language}
                 />
               )}
+
+              <section style={{ margin: '20px 0', padding: 18, border: '1px solid #d7bd54', borderRadius: 14 }} aria-label="Handover inspection">
+                <h3>Handover Inspection</h3>
+                <TextField fullWidth margin="dense" label="Fuel level" value={handoverFuelLevel} onChange={(event) => setHandoverFuelLevel(event.target.value)} placeholder="Full / 3/4 / 1/2 / 1/4" />
+                <TextField fullWidth margin="dense" type="number" label="Odometer at handover" value={handoverOdometer} onChange={(event) => setHandoverOdometer(event.target.value)} inputProps={{ min: 0 }} />
+                <FormControlLabel control={<Switch checked={handoverSpareTire} onChange={(event) => setHandoverSpareTire(event.target.checked)} />} label="Spare tire present" />
+                <TextField fullWidth multiline minRows={2} margin="dense" label="Exterior notes" value={handoverNotes} onChange={(event) => setHandoverNotes(event.target.value.slice(0, 1500))} inputProps={{ maxLength: 1500 }} />
+                <Button variant="outlined" type="button" disabled={handoverSaving || !handoverFuelLevel.trim() || !handoverOdometer} onClick={saveHandover}>
+                  {handoverSaving ? 'Saving…' : 'Save Handover Inspection'}
+                </Button>
+              </section>
 
               <div>
                 <div className="buttons">

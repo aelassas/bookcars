@@ -71,5 +71,5 @@ div.supplier-filter div.filter-actions {
 div.supplier-filter div.filter-actions span.uncheckall {
   text-decoration: underline;
   cursor: pointer;
-  color: #0064c8;
+  color: var(--sr-accent-text);
 }

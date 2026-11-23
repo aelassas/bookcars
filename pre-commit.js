@@ -21,17 +21,17 @@ const config = {
   projects: {
     backend: {
       folder: 'backend',
-      container: 'bc-dev-backend',
+      container: 'safarrent-dev-api',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
     admin: {
       folder: 'admin',
-      container: 'bc-dev-admin',
+      container: 'safarrent-dev-admin',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
     frontend: {
       folder: 'frontend',
-      container: 'bc-dev-frontend',
+      container: 'safarrent-dev-frontend',
       checks: [checkTypes.lint, checkTypes.typeCheck, checkTypes.sizeCheck],
     },
     mobile: {

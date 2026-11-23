@@ -7,26 +7,26 @@ div.about {
   white-space: pre-wrap;
   padding: 50px 20% 120px 20%;
   font-size: 15px;
-  color: #1a1a1a;
+  color: var(--sr-text);
   min-height: 100vh;
-  background-color: #FFF;
+  background-color: var(--sr-surface);
 }
 
 div.about h1 {
   font-size: 36px;
-  color: #1a1a1a;
+  color: var(--sr-text);
 }
 
 div.about h2 {
   font-size: 24px;
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--sr-text);
 }
 
 div.about p {
   font-size: 20px;
   /* font-weight: 400; */
-  color: #000;
+  color: var(--sr-text);
   margin-bottom: 40px;
 }
 

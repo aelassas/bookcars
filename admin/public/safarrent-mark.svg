@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="emeraldMintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="highwaySheen" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#34D399" />
+    </linearGradient>
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#059669" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Obsidian Dark Surface Shield Canvas -->
+  <rect width="64" height="64" rx="18" fill="#0B1120"/>
+
+  <!-- Subtle Outer Border -->
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="17.25" stroke="rgba(16, 185, 129, 0.25)" stroke-width="1.5"/>
+
+  <!-- Interlocking S-Curve Highway Ribbon + Location Pin Monogram -->
+  <g filter="url(#softGlow)">
+    <!-- Lower Highway Loop -->
+    <path d="M16 46C22 46 28 41 33 34L37 28C41 22 45 20 49 20" stroke="url(#emeraldMintGrad)" stroke-width="4.5" stroke-linecap="round"/>
+
+    <!-- Upper S-Loop & Shield Arc -->
+    <path d="M48 18C42 18 36 23 31 30L27 36C23 42 19 44 15 44" stroke="url(#highwaySheen)" stroke-width="4.5" stroke-linecap="round"/>
+
+    <!-- Central Highway Meridian Ribbon (Interlock) -->
+    <path d="M22 28L32 14C37 12 43 14 47 18C50 22 49 27 44 32L34 44C30 48 24 50 19 47C15 44 14 38 18 33L26 23" stroke="url(#emeraldMintGrad)" stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round" opacity="0.85"/>
+    <!-- Location Pin Node -->
+    <circle cx="48" cy="19" r="3" fill="#10B981"/>
+    <circle cx="48" cy="19" r="1.5" fill="#0B1120"/>
+  </g>
+</svg>

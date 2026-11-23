@@ -1,5 +1,5 @@
 div.accordion-container {
-  background: #fff;
+  background: var(--sr-surface);
   margin: 10px 0;
   border: 1px solid #dadada;
   border-radius: 5px;
@@ -14,11 +14,11 @@ div.accordion-container span.accordion {
   display: inline-block;
   width: 100%;
   text-align: center;
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   font-weight: 400;
   font-size: 13px;
   line-height: 2em;
-  background: #fff;
+  background: var(--sr-surface);
   border-radius: 5px;
 }
 
@@ -29,7 +29,7 @@ div.accordion-container span.accordion-active {
 
 div.accordion-container span.accordion-active,
 div.accordion-container span.accordion:hover {
-  background: #fff;
+  background: var(--sr-surface);
 }
 
 div.accordion-container span.accordion::after {

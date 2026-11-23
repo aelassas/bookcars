@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "SafarRent | Pakistan Car Rental",
+  "short_name": "SafarRent",
+  "description": "Search and book verified rental cars across Pakistan.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en-PK",
+  "dir": "ltr",
+  "theme_color": "#0f0f10",
+  "background_color": "#f6f6f7",
+  "icons": [
+    {
+      "src": "/safarrent-app-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ div.extras div.extra {
 }
 
 div.extras div.extra .extra-icon {
-  color: #1f9201;
+  color: var(--sr-success);
   height: 20px;
 }
 
@@ -26,5 +26,5 @@ div.extras div.extra span.extra-title {
 
 div.extras div.extra span.extra-text {
   font-size: 12px;
-  color: rgb(0 0 0 / 47%);
+  color: var(--sr-muted);
 }

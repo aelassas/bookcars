@@ -15,7 +15,7 @@ div.update-user .user-form-wrapper {
 div.update-user .user-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 div.update-user .resend-activation-link {

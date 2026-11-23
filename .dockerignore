@@ -6,9 +6,12 @@
 /**/vite.config.d.ts
 /**/vite.config.js
 /**/.env
+/**/.env.*
 /**/.env.example
 /**/.env.development
 /**/.env.production
+!/frontend/.env.docker
+!/admin/.env.docker
 /**/.dockerignore
 /**/Dockerfile
 mobile/

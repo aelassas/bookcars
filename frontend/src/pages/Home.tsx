@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Button,
+  Alert,
+  CircularProgress,
+  TextField,
   // Checkbox,
   Dialog,
   DialogContent,
   // FormControlLabel,
   Tab,
-  Tabs
+  Tabs,
+  Chip,
+  Box,
+  Typography
 } from '@mui/material'
 import {
   RoomService,
@@ -19,35 +25,42 @@ import {
   Public,
   FlashOn,
   CheckBox,
+  AutoAwesome as AutoAwesomeIcon,
+  Search as SearchIcon,
+  VerifiedUser as ShieldIcon,
+  AccountBalanceWallet as WalletIcon,
+  CameraAlt as CameraIcon,
+  Terrain as TerrainIcon,
+  ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material'
 import L from 'leaflet'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
-import { strings as commonStrings } from '@/lang/common'
 import { strings as carsStrings } from '@/lang/cars'
 import { strings } from '@/lang/home'
-import * as UserService from '@/services/UserService'
 import * as SupplierService from '@/services/SupplierService'
 import * as CountryService from '@/services/CountryService'
 import * as LocationService from '@/services/LocationService'
-import * as PaymentService from '@/services/PaymentService'
 import Layout from '@/components/Layout'
 import SupplierCarrousel from '@/components/SupplierCarrousel'
 import TabPanel, { a11yProps } from '@/components/TabPanel'
 import LocationCarrousel from '@/components/LocationCarrousel'
 import SearchForm from '@/components/SearchForm'
+import * as BookingService from '@/services/BookingService'
 import Map from '@/components/Map'
 import Footer from '@/components/Footer'
 import FaqList from '@/components/FaqList'
 
-import Mini from '@/assets/img/mini.png'
-import Midi from '@/assets/img/midi.png'
-import Maxi from '@/assets/img/maxi.png'
-
+import bookingGuideImage from '@/assets/img/safarrent_hero.jpg'
 import '@/assets/css/home.css'
 
 const Home = () => {
+  const carRangePhotos = {
+    mini: 'https://images.unsplash.com/photo-1564760290219-0160f95e611b?auto=format&fit=crop&w=1200&q=85',
+    midi: 'https://images.unsplash.com/photo-1653596898542-016afc02039b?auto=format&fit=crop&w=1200&q=85',
+    maxi: 'https://images.unsplash.com/photo-1637751333815-bf48b6d0b395?auto=format&fit=crop&w=1200&q=85',
+  }
   const navigate = useNavigate()
 
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
@@ -60,47 +73,47 @@ const Home = () => {
   const [locations, setLocations] = useState<bookcarsTypes.Location[]>([])
   const [ranges, setRanges] = useState([bookcarsTypes.CarRange.Mini, bookcarsTypes.CarRange.Midi])
   const [openRangeSearchFormDialog, setOpenRangeSearchFormDialog] = useState(false)
-  const [videoLoaded, setVideoLoaded] = useState(false)
-  const [miniPricePhr, setMiniPricePhr] = useState(2.5)
-  const [miniPricePday, setMiniPricePday] = useState(40)
-  const [midiPricePhr, setMidiPricePhr] = useState(3.5)
-  const [midiPricePday, setMidiPricePday] = useState(50)
-  const [maxiPricePhr, setMaxiPricePhr] = useState(4.5)
-  const [maxiPricePday, setMaxiPricePday] = useState(80)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [searchDockTab, setSearchDockTab] = useState<'precision' | 'ai'>('precision')
+  const aiPresets = [
+    '3-day Murree family SUV from Islamabad',
+    '4-day Hunza 4x4 from Rawalpindi with driver',
+    'Lahore to Sahiwal executive sedan for 2 days',
+    'Karachi airport to Clifton weekend self-drive'
+  ]
+  const [tripRequest, setTripRequest] = useState('')
+  const [tripDraft, setTripDraft] = useState<BookingService.TripDraftResult | null>(null)
+  const [tripParsing, setTripParsing] = useState(false)
+  const [tripError, setTripError] = useState('')
 
-  useEffect(() => {
-    const init = async () => {
-      const _miniPricePhr = await PaymentService.convertPrice(miniPricePhr)
-      setMiniPricePhr(_miniPricePhr)
-      const _miniPricePday = await PaymentService.convertPrice(miniPricePday)
-      setMiniPricePday(_miniPricePday)
-      const _midiPricePhr = await PaymentService.convertPrice(midiPricePhr)
-      setMidiPricePhr(_midiPricePhr)
-      const _midiPricePday = await PaymentService.convertPrice(midiPricePday)
-      setMidiPricePday(_midiPricePday)
-      const _maxiPricePhr = await PaymentService.convertPrice(maxiPricePhr)
-      setMaxiPricePhr(_maxiPricePhr)
-      const _maxiPricePday = await PaymentService.convertPrice(maxiPricePday)
-      setMaxiPricePday(_maxiPricePday)
+  const parseTrip = async (customPrompt?: string) => {
+    const promptToUse = customPrompt || tripRequest
+    if (!promptToUse.trim()) {
+return
+}
+    setTripParsing(true)
+    setTripError('')
+    setTripDraft(null)
+    try {
+      setTripDraft(await BookingService.parseTripDraft(promptToUse))
+    } catch {
+      setTripError('Trip assistant is unavailable right now. You can still use the regular search form.')
+    } finally {
+      setTripParsing(false)
     }
-
-    init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue)
   }
 
-  const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-    entries.forEach((entry) => {
-      const video = entry.target as HTMLVideoElement
-      if (entry.isIntersecting) {
-        video.muted = true
-        video.play()
-      } else {
-        video.pause()
-      }
-    })
+  useEffect(() => {
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updateMotionPreference = () => setPrefersReducedMotion(motionPreference.matches)
+
+    updateMotionPreference()
+    motionPreference.addEventListener('change', updateMotionPreference)
+
+    return () => motionPreference.removeEventListener('change', updateMotionPreference)
+  }, [])
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue)
   }
 
   const onLoad = async () => {
@@ -115,17 +128,10 @@ const Home = () => {
     setCountries(_countries)
     const _locations = await LocationService.getLocationsWithPosition()
     setLocations(_locations)
-
-    const observer = new IntersectionObserver(handleIntersection)
-    const video = document.getElementById('cover') as HTMLVideoElement
-    if (video) {
-      observer.observe(video)
-    } else {
-      console.error('Cover video not found')
-    }
   }
 
-  const language = UserService.getLanguage()
+  // The platform is nationwide; the actual pickup choices below come from live locations.
+  const cityLabel = 'PAKISTAN · NATIONWIDE CAR RENTALS'
 
   return (
     <Layout onLoad={onLoad} strict={false}>
@@ -133,53 +139,327 @@ const Home = () => {
       <div className="home">
         <div className="home-content">
 
-          <div className="video">
+          <div className="video-background" aria-hidden="true">
             <video
-              id="cover"
-              muted={!env.isSafari}
-              autoPlay={!env.isSafari}
+              autoPlay={!prefersReducedMotion}
+              muted
               loop
               playsInline
-              disablePictureInPicture
-              onLoadedData={async () => {
-                setVideoLoaded(true)
+              preload="auto"
+              poster="/safarrent-hero-poster-4k.jpg"
+              tabIndex={-1}
+              aria-hidden="true"
+              onLoadedMetadata={(event) => {
+                event.currentTarget.playbackRate = 0.82
+                if (!prefersReducedMotion) {
+event.currentTarget.play().catch(() => {})
+}
               }}
             >
-              <source src="cover.mp4" type="video/mp4" />
-              <track kind="captions" />
+              {/* 4K road video by Oskar Gross, Pexels asset 37528377; free under the Pexels License. */}
+              <source src="/safarrent-hero-4k.mp4" type="video/mp4" />
+              <source src="/cover.mp4" type="video/mp4" />
             </video>
-            {!videoLoaded && (
-              <div className="video-background" />
-            )}
           </div>
 
-          <div className="home-title">🇵🇰 {strings.TITLE}</div>
+          <div className="home-title"><span className="home-location-mark">⌖</span> {cityLabel}</div>
           <div className="home-cover">{strings.COVER}</div>
           <div className="home-subtitle">{strings.SUBTITLE}</div>
 
-          {/* Pakistan Trust & Fleet Highlights */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginTop: '18px', zIndex: 2 }}>
-            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
-              🚗 Self-Drive &amp; Chauffeur
-            </span>
-            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
-              🛡️ GPS Tracker &amp; Insured
-            </span>
-            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
-              ⚡ JazzCash • EasyPaisa • Raast
-            </span>
-            <span style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', color: '#ecfdf5', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>
-              🏔️ Northern Areas 4x4
-            </span>
+          <div className="home-assurances" aria-label="Booking features">
+            <span><CheckBox /> Availability checked for your dates</span>
+            <span><CheckBox /> Pickup and return locations</span>
+            <span><CheckBox /> Final price shown before booking</span>
           </div>
 
         </div>
 
+        {/* Floating Dual-Mode Search Dock */}
         <div className="search">
-          <div className="home-search">
-            <SearchForm />
+          <div className="home-search-dock-container">
+            <div className="search-dock-tabs" role="group" aria-label="Search mode">
+              <button
+                type="button"
+                className={`search-dock-tab ${searchDockTab === 'precision' ? 'active' : ''}`}
+                aria-pressed={searchDockTab === 'precision'}
+                onClick={() => setSearchDockTab('precision')}
+              >
+                <SearchIcon sx={{ fontSize: 18 }} />
+                <span>Precision Search</span>
+              </button>
+              <button
+                type="button"
+                className={`search-dock-tab ${searchDockTab === 'ai' ? 'active' : ''}`}
+                aria-pressed={searchDockTab === 'ai'}
+                onClick={() => setSearchDockTab('ai')}
+              >
+                <AutoAwesomeIcon sx={{ fontSize: 18, color: searchDockTab === 'ai' ? '#10B981' : '#F59E0B' }} />
+                <span>AI Trip Planner</span>
+              </button>
+            </div>
+
+            <div className="home-search">
+              {searchDockTab === 'precision' ? (
+                <SearchForm />
+              ) : (
+                <div className="ai-planner-panel">
+                  <div className="ai-planner-copy">
+                    <h3>Describe your Pakistan journey</h3>
+                    <p>Tell us where you are traveling, duration, and if you prefer self-drive or a chauffeur. Our on-premises AI extracts parameters and flags mountain terrain advisories.</p>
+                  </div>
+
+                  {/* Clickable Preset Chips */}
+                  <div className="ai-preset-chips" aria-label="Suggested trips">
+                    {aiPresets.map((preset) => (
+                      <Chip
+                        key={preset}
+                        label={preset}
+                        size="small"
+                        clickable
+                        onClick={() => {
+                          setTripRequest(preset)
+                          parseTrip(preset)
+                        }}
+                        className="ai-preset-chip"
+                      />
+                    ))}
+                  </div>
+
+                  <div className="home-trip-assistant-form">
+                    <TextField
+                      fullWidth
+                      multiline
+                      minRows={2}
+                      maxRows={4}
+                      value={tripRequest}
+                      onChange={(event) => setTripRequest(event.target.value.slice(0, 2000))}
+                      placeholder="e.g., 3-day Murree family SUV from Islamabad with chauffeur"
+                      inputProps={{ 'aria-label': 'Describe your rental trip', maxLength: 2000 }}
+                    />
+                    <Button
+                      className="btn-primary"
+                      variant="contained"
+                      disabled={!tripRequest.trim() || tripParsing}
+                      onClick={() => parseTrip()}
+                      sx={{ bgcolor: '#107487', '&:hover': { bgcolor: '#047857' }, textTransform: 'none', fontWeight: 700 }}
+                    >
+                      {tripParsing ? <CircularProgress size={20} color="inherit" /> : 'Parse Trip Details'}
+                    </Button>
+                  </div>
+
+                  {tripError && <Alert severity="warning" sx={{ mt: 2 }}>{tripError}</Alert>}
+
+                  {tripDraft && (
+                    <div className="home-trip-draft" aria-live="polite">
+                      <div className="draft-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <strong>Trip Candidate Extracted</strong>
+                        <Chip
+                          size="small"
+                          label={tripDraft.degraded ? 'Rules Fallback' : 'Local Ollama SLM'}
+                          sx={{ bgcolor: tripDraft.degraded ? '#FEF3C7' : '#ECFDF5', color: tripDraft.degraded ? '#B45309' : '#047857', fontWeight: 700 }}
+                        />
+                      </div>
+                      <p><strong>Route:</strong> {tripDraft.extractedData.pickupLocation || 'Unspecified'} → {tripDraft.extractedData.dropoffLocation || 'Unspecified'}</p>
+                      <p><strong>Dates:</strong> {tripDraft.extractedData.startDate || 'Select on search'} to {tripDraft.extractedData.endDate || 'Select on search'} · <strong>Mode:</strong> {tripDraft.extractedData.rentalType || 'Self-Drive / Chauffeur'}</p>
+                      {tripDraft.terrainAdvisory && (
+                        <Alert severity="warning" sx={{ my: 1.5, border: '1px solid #F59E0B', fontWeight: 600 }}>
+                          ⚠️ {tripDraft.terrainAdvisory}
+                        </Alert>
+                      )}
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        sx={{ mt: 1.5, bgcolor: '#107487', '&:hover': { bgcolor: '#047857' }, textTransform: 'none', fontWeight: 700 }}
+                        onClick={() => {
+                          const matchedLoc = locations.find((l) => (l.name || '').toLowerCase().includes((tripDraft.extractedData.pickupLocation || '').toLowerCase()))
+                          const pickupId = matchedLoc?._id || (locations[0]?._id)
+                          const now = new Date()
+                          const fromDate = new Date(now.setDate(now.getDate() + 1))
+                          const toDate = new Date(now.setDate(now.getDate() + 4))
+                          navigate('/search', {
+                            state: {
+                              pickupLocationId: pickupId,
+                              dropOffLocationId: pickupId,
+                              from: fromDate,
+                              to: toDate,
+                              pickupPlace: tripDraft.extractedData.pickupLocation || '',
+                            }
+                          })
+                        }}
+                      >
+                        Explore Vehicles for This Trip
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Honest demo-ready booking steps */}
+        <section className="home-escrow-strip" aria-labelledby="booking-guide-title">
+          <img className="booking-guide-image" src={bookingGuideImage} alt="An SUV on a mountain road" loading="lazy" />
+          <h2 id="booking-guide-title">How to rent with SafarRent</h2>
+          <div className="escrow-card">
+            <div className="escrow-icon-wrap">
+              <ShieldIcon sx={{ fontSize: 28, color: 'var(--sr-emerald)' }} />
+              <span className="escrow-num">1</span>
+            </div>
+            <div className="escrow-text">
+              <h4>Complete your profile</h4>
+              <p>Add your CNIC details. Self-drive bookings also require a driving licence and verified KYC status.</p>
+            </div>
+          </div>
+
+          <div className="escrow-card">
+            <div className="escrow-icon-wrap">
+              <WalletIcon sx={{ fontSize: 28, color: 'var(--sr-emerald)' }} />
+              <span className="escrow-num">2</span>
+            </div>
+            <div className="escrow-text">
+              <h4>Review your checkout</h4>
+              <p>Choose a payment option in the FYP demo. Demo confirmations are simulated; no money is transferred or held.</p>
+            </div>
+          </div>
+
+          <div className="escrow-card">
+            <div className="escrow-icon-wrap">
+              <CameraIcon sx={{ fontSize: 28, color: 'var(--sr-emerald)' }} />
+              <span className="escrow-num">3</span>
+            </div>
+            <div className="escrow-text">
+              <h4>Record the handover</h4>
+              <p>The demo checklist can record fuel level, odometer, spare tyre, and exterior notes.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 3-Column Corridor Showcase Cards */}
+        <section className="home-corridor-showcase" aria-labelledby="corridors-title">
+          <div className="corridor-header">
+            <span className="corridor-eyebrow">POPULAR TRAVEL CORRIDORS</span>
+            <h2 id="corridors-title">Engineered for Pakistan&apos;s Highways & Hills</h2>
+            <p>These are example routes. Search for your dates to see vehicles currently listed at available pickup locations.</p>
+          </div>
+
+          <div className="corridor-grid">
+            {/* Corridor 1: Islamabad -> Murree */}
+            <div className="corridor-card">
+              <div className="corridor-badge hill-route">
+                <TerrainIcon sx={{ fontSize: 16 }} />
+                <span>Mountain route example</span>
+              </div>
+              <h3>Islamabad → Murree & Galiyat</h3>
+              <p className="corridor-route">Islamabad Hub / Airport → Murree Expressway (64 km)</p>
+              <p className="corridor-desc">Check current vehicle details and confirm route suitability with the supplier before booking.</p>
+              <div className="corridor-meta">
+                <span className="corridor-fleet">Availability and prices depend on your dates and pickup point.</span>
+              </div>
+              <Button
+                variant="outlined"
+                fullWidth
+                endIcon={<ArrowForwardIcon />}
+                className="corridor-btn"
+                onClick={() => {
+                  const isb = locations.find((l) => (l.name || '').toLowerCase().includes('islamabad') || (l.name || '').toLowerCase().includes('isb')) || locations[0]
+                  if (isb) {
+                    const now = new Date()
+                    const fromDate = new Date(now.setDate(now.getDate() + 1))
+                    const toDate = new Date(now.setDate(now.getDate() + 4))
+                    navigate('/search', {
+                      state: {
+                        pickupLocationId: isb._id,
+                        dropOffLocationId: isb._id,
+                        from: fromDate,
+                        to: toDate,
+                        pickupPlace: 'Murree',
+                      }
+                    })
+                  }
+                }}
+              >
+                Browse Hill-Route Fleet
+              </Button>
+            </div>
+
+            {/* Corridor 2: Lahore Executive */}
+            <div className="corridor-card">
+              <div className="corridor-badge executive">
+                <span>Executive Chauffeur</span>
+              </div>
+              <h3>Lahore Executive & Motorway</h3>
+              <p className="corridor-route">Allama Iqbal Int&apos;l / Gulberg → M-2 / M-3 Motorway</p>
+              <p className="corridor-desc">Explore current listings for city and motorway trips; confirm chauffeur details with the supplier.</p>
+              <div className="corridor-meta">
+                <span className="corridor-fleet">Availability and prices depend on your dates and pickup point.</span>
+              </div>
+              <Button
+                variant="outlined"
+                fullWidth
+                endIcon={<ArrowForwardIcon />}
+                className="corridor-btn"
+                onClick={() => {
+                  const lhe = locations.find((l) => (l.name || '').toLowerCase().includes('lahore') || (l.name || '').toLowerCase().includes('lhe')) || locations[0]
+                  if (lhe) {
+                    const now = new Date()
+                    const fromDate = new Date(now.setDate(now.getDate() + 1))
+                    const toDate = new Date(now.setDate(now.getDate() + 3))
+                    navigate('/search', {
+                      state: {
+                        pickupLocationId: lhe._id,
+                        dropOffLocationId: lhe._id,
+                        from: fromDate,
+                        to: toDate,
+                        pickupPlace: 'Lahore',
+                      }
+                    })
+                  }
+                }}
+              >
+                Browse Executive Fleet
+              </Button>
+            </div>
+
+            {/* Corridor 3: Sahiwal City Hub */}
+            <div className="corridor-card">
+              <div className="corridor-badge city-hub">
+                <span>City & Local Transit</span>
+              </div>
+              <h3>Sahiwal City & South Punjab</h3>
+              <p className="corridor-route">Sahiwal Center → Faisalabad • Multan • Pakpattan</p>
+              <p className="corridor-desc">Search current local listings for city errands, visits, and regional travel.</p>
+              <div className="corridor-meta">
+                <span className="corridor-fleet">Availability and prices depend on your dates and pickup point.</span>
+              </div>
+              <Button
+                variant="outlined"
+                fullWidth
+                endIcon={<ArrowForwardIcon />}
+                className="corridor-btn"
+                onClick={() => {
+                  const shw = locations.find((l) => (l.name || '').toLowerCase().includes('sahiwal')) || locations[0]
+                  if (shw) {
+                    const now = new Date()
+                    const fromDate = new Date(now.setDate(now.getDate() + 1))
+                    const toDate = new Date(now.setDate(now.getDate() + 3))
+                    navigate('/search', {
+                      state: {
+                        pickupLocationId: shw._id,
+                        dropOffLocationId: shw._id,
+                        from: fromDate,
+                        to: toDate,
+                        pickupPlace: 'Sahiwal',
+                      }
+                    })
+                  }
+                }}
+              >
+                Browse Sahiwal Fleet
+              </Button>
+            </div>
+          </div>
+        </section>
 
         <div className="why">
 
@@ -354,7 +634,9 @@ const Home = () => {
           <div className="boxes">
             <div className="box">
               <div className="box-img">
-                <img alt="Mini" src={Mini} />
+                <img alt="Red compact hatchback, Unsplash photo" loading="lazy" decoding="async" src={carRangePhotos.mini} onError={(event) => {
+ event.currentTarget.closest('.box-img')?.classList.add('is-image-unavailable'); event.currentTarget.remove() 
+}} />
               </div>
               <div className="box-content">
                 {/* <FormControlLabel
@@ -375,23 +657,12 @@ const Home = () => {
                   label={strings.MINI}
                 /> */}
                 <span>{carsStrings.CAR_RANGE_MINI}</span>
-                <ul>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(miniPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(miniPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
-                  </li>
-                </ul>
               </div>
               <div className="car-size-action">
                 <Button
                   variant="contained"
                   className="btn-primary btn-car-size"
                   aria-label="Search for a car"
-                  disabled={ranges.length === 0}
                   onClick={() => {
                     setRanges([bookcarsTypes.CarRange.Mini])
                     setOpenRangeSearchFormDialog(true)
@@ -403,7 +674,9 @@ const Home = () => {
             </div>
             <div className="box">
               <div className="box-img">
-                <img alt="Midi" src={Midi} />
+                <img alt="Black sedan, Unsplash photo" loading="lazy" decoding="async" src={carRangePhotos.midi} onError={(event) => {
+ event.currentTarget.closest('.box-img')?.classList.add('is-image-unavailable'); event.currentTarget.remove() 
+}} />
               </div>
               <div className="box-content">
                 {/* <FormControlLabel
@@ -424,23 +697,12 @@ const Home = () => {
                   label={strings.MIDI}
                 /> */}
                 <span>{carsStrings.CAR_RANGE_MIDI}</span>
-                <ul>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(midiPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(midiPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
-                  </li>
-                </ul>
               </div>
               <div className="car-size-action">
                 <Button
                   variant="contained"
                   className="btn-primary btn-car-size"
                   aria-label="Search for a car"
-                  disabled={ranges.length === 0}
                   onClick={() => {
                     setRanges([bookcarsTypes.CarRange.Midi])
                     setOpenRangeSearchFormDialog(true)
@@ -452,7 +714,9 @@ const Home = () => {
             </div>
             <div className="box">
               <div className="box-img">
-                <img alt="Maxi" src={Maxi} />
+                <img alt="White SUV, Unsplash photo" loading="lazy" decoding="async" src={carRangePhotos.maxi} onError={(event) => {
+ event.currentTarget.closest('.box-img')?.classList.add('is-image-unavailable'); event.currentTarget.remove() 
+}} />
               </div>
               <div className="box-content">
                 {/* <FormControlLabel
@@ -472,23 +736,12 @@ const Home = () => {
                   label={strings.MAXI}
                 /> */}
                 <span>{carsStrings.CAR_RANGE_MAXI}</span>
-                <ul>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(maxiPricePhr, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · phr</span>
-                  </li>
-                  <li>
-                    <span className="price">{bookcarsHelper.formatPrice(maxiPricePday, commonStrings.CURRENCY, language)}</span>
-                    <span className="unit"> · pday</span>
-                  </li>
-                </ul>
               </div>
               <div className="car-size-action">
                 <Button
                   variant="contained"
                   className="btn-primary btn-car-size"
                   aria-label="Search for a car"
-                  disabled={ranges.length === 0}
                   onClick={() => {
                     setRanges([bookcarsTypes.CarRange.Maxi])
                     setOpenRangeSearchFormDialog(true)
@@ -571,7 +824,9 @@ const Home = () => {
             </div>
 
             <div className="customer-care-img">
-              <img src="/customer-care.png" alt="" />
+              <img src={carRangePhotos.midi} alt="Black sedan on a city street, Unsplash photo" loading="lazy" decoding="async" onError={(event) => {
+ event.currentTarget.remove() 
+}} />
             </div>
           </div>
         </div>

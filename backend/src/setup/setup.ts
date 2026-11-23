@@ -15,10 +15,16 @@ try {
   }
 
   // create admin user if it doesn't exist
+  if (!env.ADMIN_EMAIL) {
+    throw new Error('Set BC_ADMIN_EMAIL before running setup.')
+  }
   const adminUser = await User.findOne({ email: env.ADMIN_EMAIL })
 
   if (!adminUser) {
-    const password = 'B00kC4r5'
+    const password = process.env.BC_ADMIN_PASSWORD?.trim()
+    if (!password || password.length < 12) {
+      throw new Error('Set a BC_ADMIN_PASSWORD of at least 12 characters before creating the administrator.')
+    }
     const passwordHash = await authHelper.hashPassword(password)
 
     const newAdmin = new User({

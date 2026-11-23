@@ -17,10 +17,10 @@ section.supplier-list article {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: #fff;
+  background: var(--sr-surface);
   border: 1px solid #ddd;
   border-radius: 5px;
-  color: #333;
+  color: var(--sr-text);
   font-size: 12px;
   padding: 25px;
   margin-bottom: 15px;
@@ -49,7 +49,7 @@ section.supplier-list article .supplier-item .supplier-item-title {
   display: inline-block;
   font-size: 1.7em;
   margin-left: 10px;
-  color: #333;
+  color: var(--sr-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

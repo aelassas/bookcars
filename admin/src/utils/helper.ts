@@ -7,6 +7,13 @@ import { strings } from '@/lang/cars'
 import env from '@/config/env.config'
 import * as UserService from '@/services/UserService'
 
+/** Build a supplier avatar URL only when both optional URL parts exist. */
+export const getUserAvatarUrl = (avatar?: string | null) => {
+  const path = avatar?.trim()
+  const base = env.CDN_USERS
+  return path && base && base !== 'undefined' ? bookcarsHelper.joinURL(base, path) : undefined
+}
+
 /**
  * Get language.
  *
@@ -436,28 +443,28 @@ export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
 export const getBookingStatusBackgroundColor = (status?: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
-      return '#D9D9D9'
+      return '#64748B'
 
     case bookcarsTypes.BookingStatus.Pending:
-      return '#FBDCC2'
+      return '#D97706'
 
     case bookcarsTypes.BookingStatus.Deposit:
-      return '#CDECDA'
+      return '#047857'
 
     case bookcarsTypes.BookingStatus.Paid:
-      return '#D1F9D1'
+      return '#10B981'
 
     case bookcarsTypes.BookingStatus.PaidInFull:
-      return '#77BC23'
+      return '#059669'
 
     case bookcarsTypes.BookingStatus.Reserved:
-      return '#D9E7F4'
+      return '#0284C7'
 
     case bookcarsTypes.BookingStatus.Cancelled:
-      return '#FBDFDE'
+      return '#DC2626'
 
     default:
-      return ''
+      return '#64748B'
   }
 }
 
@@ -470,25 +477,16 @@ export const getBookingStatusBackgroundColor = (status?: bookcarsTypes.BookingSt
 export const getBookingStatusTextColor = (status?: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
-      return '#6E7C86'
-
     case bookcarsTypes.BookingStatus.Pending:
-      return '#EF6C00'
-
     case bookcarsTypes.BookingStatus.Deposit:
-      return '#3CB371'
-
     case bookcarsTypes.BookingStatus.Paid:
-      return '#77BC23'
-
+    case bookcarsTypes.BookingStatus.PaidInFull:
     case bookcarsTypes.BookingStatus.Reserved:
-      return '#1E88E5'
-
     case bookcarsTypes.BookingStatus.Cancelled:
-      return '#E53935'
+      return '#FFFFFF'
 
     default:
-      return ''
+      return '#FFFFFF'
   }
 }
 

@@ -24,9 +24,8 @@ import aiRoutes from './routes/aiRoutes'
 import maintenanceRoutes from './routes/maintenanceRoutes'
 import vehicleDocumentRoutes from './routes/vehicleDocumentRoutes'
 import operationsDashboardRoutes from './routes/operationsDashboardRoutes'
+import demoPaymentRoutes from './routes/demoPaymentRoutes'
 import * as helper from './utils/helper'
-import kycRoutes from './routes/kycRoutes'
-import handoverRoutes from './routes/handoverRoutes'
 
 const app = express()
 
@@ -69,21 +68,21 @@ app.get('/', (_req, res) => {
   <title>SafarRent API Engine | Pakistan Vehicle Rental Operations</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: radial-gradient(circle at top, #064e3b 0%, #031e17 40%, #02120e 100%); color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .card { background: rgba(6, 78, 59, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; max-width: 680px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
-    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #6ee7b7; padding: 6px 14px; border-radius: 9999px; font-weight: 600; font-size: 13px; margin-bottom: 20px; }
-    .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
-    h1 { font-size: 30px; font-weight: 700; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.5px; }
-    .subtitle { color: #a7f3d0; font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: radial-gradient(circle at top, #1e293b 0%, #0f172a 50%, #0b0f19 100%); color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: rgba(30, 41, 59, 0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 20px; padding: 40px; max-width: 680px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(245, 158, 11, 0.14); border: 1px solid #d97706; color: #fde68a; padding: 6px 14px; border-radius: 9999px; font-weight: 700; font-size: 13px; margin-bottom: 20px; }
+    .dot { width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; box-shadow: 0 0 10px #f59e0b; }
+    h1 { font-size: 30px; font-weight: 800; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .subtitle { color: #cbd5e1; font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 30px; }
-    .tile { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px 16px; }
-    .tile-lbl { font-size: 11px; text-transform: uppercase; color: #6ee7b7; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .tile { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px 16px; }
+    .tile-lbl { font-size: 11px; text-transform: uppercase; color: #f59e0b; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px; }
     .tile-val { font-size: 14px; color: #f1f5f9; font-weight: 500; word-break: break-all; }
-    .tile-val a { color: #34d399; text-decoration: none; font-weight: 600; }
+    .tile-val a { color: #fcd34d; text-decoration: none; font-weight: 600; }
     .tile-val a:hover { text-decoration: underline; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; background: #059669; color: white; padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); }
-    .btn:hover { background: #10b981; transform: translateY(-1px); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #0f172a; padding: 12px 22px; border-radius: 10px; font-weight: 800; font-size: 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4); }
+    .btn:hover { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); transform: translateY(-1px); }
     .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: none; color: #e2e8f0; }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.14); }
   </style>
@@ -136,8 +135,7 @@ app.use('/', aiRoutes)
 app.use('/', maintenanceRoutes)
 app.use('/', vehicleDocumentRoutes)
 app.use('/', operationsDashboardRoutes)
-app.use('/', kycRoutes)
-app.use('/', handoverRoutes)
+app.use('/', demoPaymentRoutes)
 
 if (env.ENABLE_SENTRY) {
   Sentry.setupExpressErrorHandler(app)

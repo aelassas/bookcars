@@ -1,6 +1,11 @@
 import * as bookcarsTypes from ':bookcars-types'
 import Const from './const'
 
+const API_PORT = Number(new URL(String(import.meta.env.VITE_BC_API_HOST || 'http://localhost:4002')).port) || 4002
+const API_HOST = (import.meta.env.VITE_BC_API_SAME_HOST || '').toLowerCase() === 'true'
+  ? `${window.location.protocol}//${window.location.hostname}:${API_PORT}`
+  : String(import.meta.env.VITE_BC_API_HOST)
+
 //
 // ISO 639-1 language codes and their labels
 // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
@@ -51,7 +56,7 @@ const env = {
   WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'SafarRent'),
 
   APP_TYPE: bookcarsTypes.AppType.Admin,
-  API_HOST: String(import.meta.env.VITE_BC_API_HOST),
+  API_HOST,
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),

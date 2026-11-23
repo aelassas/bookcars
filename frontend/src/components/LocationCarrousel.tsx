@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useRef } from 'react'
+import React, { ReactNode, useMemo, useRef, useState } from 'react'
 import ReactSlick from 'react-slick'
 import { Button } from '@mui/material'
 import {
@@ -26,6 +26,7 @@ const LocationCarrousel = ({
   onSelect,
 }: LocationCarrouselProps) => {
   const slider = useRef<ReactSlick>(null)
+  const [unavailableImages, setUnavailableImages] = useState<Set<string>>(() => new Set())
 
   const sliderSettings = useMemo(() => ({
     arrows: false,
@@ -63,8 +64,13 @@ const LocationCarrousel = ({
           <div key={location._id} className="box">
             <div className="location-image">
               {
-                location.image ? (
-                  <img alt="" src={bookcarsHelper.joinURL(env.CDN_LOCATIONS, location.image)} />
+                location.image && !unavailableImages.has(location._id) ? (
+                  <img
+                    alt={`${location.name} rental location`}
+                    loading="lazy"
+                    src={bookcarsHelper.joinURL(env.CDN_LOCATIONS, location.image)}
+                    onError={() => setUnavailableImages((current) => new Set(current).add(location._id))}
+                  />
                 )
                   : <LocationIcon className="location-icon" />
               }

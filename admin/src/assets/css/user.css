@@ -43,7 +43,7 @@ div.user div.col-1 .user-actions {
   div.user div.col-1 {
     padding-top: 10px;
     padding-bottom: 15px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-bottom: #eee solid 1px;
   }
 
@@ -74,7 +74,7 @@ div.user div.col-1 .user-actions {
     left: 0;
     width: 300px;
     padding-top: 20px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-right: #eee solid 1px;
   }
 

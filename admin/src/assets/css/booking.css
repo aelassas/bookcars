@@ -13,7 +13,7 @@ div.booking div.col-2 div.col-2-header div.price {
 }
 
 div.booking div.col-2 div.col-2-header span.price-main {
-  color: #383838;
+  color: var(--sr-muted);
   font-size: 2em;
   font-weight: 700;
   line-height: 1em;
@@ -35,7 +35,7 @@ div.booking div.col-2 div.col-2-header span.price-day {
 @media only screen and (width <=960px) {
   div.booking div.col-1 {
     padding: 20px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-bottom: #eee solid 1px;
   }
 
@@ -54,7 +54,7 @@ div.booking div.col-2 div.col-2-header span.price-day {
 
 @media only screen and (width >=960px) {
   div.booking div.col-1 {
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-right: #eee solid 1px;
     padding: 25px;
     flex: 0 1 30%;

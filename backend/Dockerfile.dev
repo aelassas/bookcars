@@ -49,7 +49,6 @@ COPY --from=build /bookcars/backend/node_modules ./node_modules
 COPY --from=packages /bookcars/packages /bookcars/packages
 
 COPY ./backend ./
-COPY ./backend/.env.docker .env
 
 EXPOSE 4002
 

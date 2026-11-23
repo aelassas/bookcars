@@ -259,7 +259,7 @@ const MultipleSelect = ({
                     startAdornment: (
                       <>
                         <InputAdornment position="start">
-                          <LocationIcon />
+                          <LocationIcon className="location-select-icon" />
                         </InputAdornment>
                         {params.InputProps.startAdornment}
                       </>

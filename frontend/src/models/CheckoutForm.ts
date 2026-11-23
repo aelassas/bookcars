@@ -4,6 +4,7 @@ import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '@/utils/helper'
+import { isPakistanPhone } from '@/utils/pakistanValidation'
 import { strings as commonStrings } from '@/lang/common'
 
 const validateBirthDate = (car?: bookcarsTypes.Car, date?: Date) => {
@@ -21,10 +22,12 @@ const baseSchema = z.object({
     email: z.string().refine((value) => !value || validator.isEmail(value), {
         message: commonStrings.EMAIL_NOT_VALID,
     }).optional(),
-    phone: z.string().refine((value) => !value || validator.isMobilePhone(value), {
+    phone: z.string().refine((value) => !value || isPakistanPhone(value), {
         message: commonStrings.PHONE_NOT_VALID,
     }).optional(),
     birthDate: z.date().optional(),
+    cnicNumber: z.string().refine((value) => !value || /^\d{5}-\d{7}-\d$/.test(value), { message: 'Use CNIC format 12345-1234567-1.' }).optional(),
+    drivingLicenseNumber: z.string().max(80).optional(),
     tos: z.boolean().refine((val) => val, {
         message: commonStrings.TOS_ERROR,
     }).optional(),
@@ -53,7 +56,7 @@ const baseSchema = z.object({
         }).optional(),
     additionalDriverPhone: z
         .string()
-        .refine((value) => !value || validator.isMobilePhone(value), {
+        .refine((value) => !value || isPakistanPhone(value), {
             message: commonStrings.PHONE_NOT_VALID,
         }).optional()
     ,

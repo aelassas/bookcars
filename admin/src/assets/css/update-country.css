@@ -16,7 +16,7 @@ div.update-country {
 .country-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 /* Device width is less than or equal to 960px */

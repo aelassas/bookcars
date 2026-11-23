@@ -18,7 +18,7 @@ div.booking div.col-2 div.col-2-header div.price {
 }
 
 div.booking div.col-2 div.col-2-header span.price-main {
-  color: #383838;
+  color: var(--sr-muted);
   font-size: 2em;
   font-weight: 700;
   line-height: 1em;
@@ -40,7 +40,7 @@ div.booking div.col-2 div.col-2-header span.price-day {
 @media only screen and (width <=960px) {
   div.booking div.col-1 {
     padding: 20px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-bottom: #eee solid 1px;
   }
 
@@ -59,7 +59,7 @@ div.booking div.col-2 div.col-2-header span.price-day {
 
 @media only screen and (width >=960px) {
   div.booking div.col-1 {
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     border-right: #eee solid 1px;
     padding: 25px;
     flex: 0 1 30%;
@@ -76,4 +76,390 @@ div.booking div.col-2 div.col-2-header span.price-day {
     flex-direction: row;
     justify-content: flex-end;
   }
+}
+
+/* Apple-Wallet-Style Digital Trip Pass */
+.digital-trip-pass {
+  margin: 15px 25px 25px 0;
+}
+
+.trip-pass-card {
+  position: relative;
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  color: #ffffff;
+  box-shadow: 0 16px 36px rgba(11, 17, 32, 0.35);
+  overflow: hidden;
+}
+
+.trip-pass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #059669 0%, #10b981 50%, #d97706 100%);
+}
+
+.pass-notch {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #f8fafc;
+  border-radius: 50%;
+  top: 55%;
+}
+
+.pass-notch.left {
+  left: -9px;
+}
+
+.pass-notch.right {
+  right: -9px;
+}
+
+.pass-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.pass-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pass-brand-mark {
+  font-size: 11px;
+  font-weight: 800;
+  background: #059669;
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.pass-brand-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.pass-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+
+.status-dot-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.pass-body {
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pass-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.pass-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pass-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pass-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.pass-value.booking-id {
+  font-family: 'JetBrains Mono', monospace;
+  color: #d97706;
+  font-size: 15px;
+}
+
+.pass-value.cnic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #10b981;
+  font-size: 12px;
+}
+
+.pass-value.vehicle-title {
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.pass-subvalue.plate-number {
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.pass-route-strip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pass-route-hub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.hub-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.pass-route-divider {
+  color: #059669;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.pass-qr-section {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.qr-container {
+  padding: 6px;
+  background: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pass-qr-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.caption-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.caption-subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* 6-Point Handover Checklist Card */
+.handover-checklist-card {
+  margin: 0 25px 25px 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.handover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.handover-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.handover-title h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.handover-counter {
+  font-size: 11px;
+  font-weight: 800;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  padding: 3px 9px;
+  border-radius: 9999px;
+}
+
+.handover-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.handover-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .handover-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.handover-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.handover-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.handover-item.checked {
+  background: #ecfdf5;
+  border-color: rgba(5, 150, 105, 0.4);
+}
+
+.item-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #059669;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.handover-item.checked .item-checkbox {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+}
+
+.item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.item-sub {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.handover-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.handover-timestamp {
+  font-size: 11px;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.handover-guarantee {
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+}
+
+#root .handover-item { font: inherit; text-align: start; }
+@media (max-width: 540px) {
+  .trip-pass-card .pass-header, .trip-pass-card .pass-qr-section { flex-wrap: wrap; }
+  .trip-pass-card .pass-row { grid-template-columns: minmax(0, 1fr); }
+  .trip-pass-card .pass-route-strip { flex-wrap: wrap; }
+}
+
+@media (max-width: 960px) {
+  #root .booking { flex-direction: column; }
+  #root .booking .col-2 { display: block; padding: 16px; min-width: 0; }
+  #root .booking .col-2-header { display: flow-root; margin-bottom: 12px; }
+  #root .booking :is(.digital-trip-pass, .handover-checklist-card) { margin: 0 0 16px; }
 }

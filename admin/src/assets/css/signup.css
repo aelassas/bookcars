@@ -11,7 +11,7 @@ div.signup {
 .signup-form-title {
   text-align: center;
   text-transform: capitalize;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 .signup .buttons {

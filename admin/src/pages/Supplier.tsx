@@ -156,7 +156,7 @@ const Supplier = () => {
               ) : (
                 <div className="car-supplier">
                   <span className="car-supplier-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} style={{ width: env.SUPPLIER_IMAGE_WIDTH }} />
+                    <img src={helper.getUserAvatarUrl(supplier.avatar)} alt={supplier.fullName} style={{ width: env.SUPPLIER_IMAGE_WIDTH }} />
                   </span>
                   <span className="car-supplier-info">{supplier.fullName}</span>
                 </div>

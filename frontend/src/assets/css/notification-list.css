@@ -36,7 +36,7 @@ div.notifications div.header-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff;
+  background-color: var(--sr-surface);
   border-bottom: 1px solid #ddd;
   padding: 5px 0;
 }
@@ -107,10 +107,10 @@ div.notifications div.notifications-list div.notification-container div.notifica
 }
 
 div.notifications div.notifications-list div.notification-container div.notification {
-  background: #fff;
+  background: var(--sr-surface);
   border: 1px solid #ddd;
   border-radius: 5px;
-  color: #333;
+  color: var(--sr-text);
   margin-bottom: 10px;
   min-height: 75px;
   word-break: break-word;

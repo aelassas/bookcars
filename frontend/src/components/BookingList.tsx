@@ -16,11 +16,18 @@ import {
   DialogActions,
   Button,
   CircularProgress,
-  Stack
+  Stack,
+  Box,
+  Chip,
+  Typography
 } from '@mui/material'
 import {
   Visibility as ViewIcon,
-  Cancel as CancelIcon
+  Cancel as CancelIcon,
+  QrCode2 as QrCodeIcon,
+  FactCheck as HandoverIcon,
+  ReceiptLong as InvoiceIcon,
+  LocationOn as LocationIcon
 } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { getDateLocale } from '@/utils/dateLocale'
@@ -202,12 +209,16 @@ const BookingList = ({
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const getDate = (date?: string) => {
-    if (date) {
-      const d = new Date(date)
-      return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
+    if (!date) {
+      return '—'
     }
 
-    throw new Error('Invalid date')
+    const d = new Date(date)
+    if (Number.isNaN(d.getTime())) {
+      return '—'
+    }
+
+    return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
   }
 
   const getColumns = (): GridColDef<bookcarsTypes.Booking>[] => {
@@ -227,8 +238,32 @@ const BookingList = ({
       {
         field: 'price',
         headerName: strings.PRICE,
-        flex: 1,
-        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <span className="bp">{value}</span>,
+        flex: 1.2,
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => {
+          const isPaid = row.status === bookcarsTypes.BookingStatus.Paid || row.status === bookcarsTypes.BookingStatus.PaidInFull
+          const isDeposit = row.status === bookcarsTypes.BookingStatus.Deposit
+          const isCancelled = row.status === bookcarsTypes.BookingStatus.Cancelled
+          return (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3, py: 0.5 }}>
+              <span className="bp" style={{ fontFamily: 'var(--sr-font-mono, monospace)', fontWeight: 800, fontSize: 13 }}>
+                {value}
+              </span>
+              <Chip
+                size="small"
+                label={isPaid ? '20% Locked ✓' : isDeposit ? 'Deposit Locked ✓' : isCancelled ? 'Refunded ↺' : 'Pending ⏳'}
+                sx={{
+                  height: 18,
+                  fontSize: 9,
+                  fontWeight: 700,
+                  bgcolor: (isPaid || isDeposit) ? 'rgba(5, 150, 105, 0.12)' : isCancelled ? 'rgba(0,0,0,0.06)' : 'rgba(217, 119, 6, 0.12)',
+                  color: (isPaid || isDeposit) ? 'var(--sr-emerald)' : isCancelled ? 'text.secondary' : 'var(--sr-accent-text)',
+                  fontFamily: 'var(--sr-font-mono, monospace)',
+                  alignSelf: 'flex-start'
+                }}
+              />
+            </Box>
+          )
+        },
         valueGetter: (value: number) => bookcarsHelper.formatPrice(value, commonStrings.CURRENCY, language as string),
       },
       {
@@ -243,6 +278,7 @@ const BookingList = ({
         headerName: '',
         sortable: false,
         disableColumnMenu: true,
+        flex: 1.2,
         renderCell: ({ row }: GridRenderCellParams<bookcarsTypes.Booking>) => {
           const cancelBooking = (e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation() // don't select this row after clicking
@@ -257,23 +293,38 @@ const BookingList = ({
           today.setMilliseconds(0)
 
           return (
-            <>
-              <Tooltip title={strings.VIEW}>
-                <IconButton onClick={() => navigate(`/booking?b=${row._id}`)}>
-                  <ViewIcon />
-                </IconButton>
-              </Tooltip>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<QrCodeIcon sx={{ fontSize: '14px !important' }} />}
+                onClick={() => navigate(`/booking?b=${row._id}`)}
+                sx={{
+                  borderColor: 'rgba(5, 150, 105, 0.35)',
+                  color: 'var(--sr-emerald)',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: 'none',
+                  borderRadius: '6px',
+                  py: 0.3,
+                  px: 1,
+                  height: 28,
+                  '&:hover': { bgcolor: 'rgba(5, 150, 105, 0.08)', borderColor: '#059669' }
+                }}
+              >
+                QR Pass
+              </Button>
               {row.cancellation
                 && !row.cancelRequest
                 && row.status !== bookcarsTypes.BookingStatus.Cancelled
                 && new Date(row.from) >= today && (
                   <Tooltip title={strings.CANCEL}>
-                    <IconButton onClick={cancelBooking}>
-                      <CancelIcon />
+                    <IconButton size="small" onClick={cancelBooking} sx={{ color: '#DC2626' }}>
+                      <CancelIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 )}
-            </>
+            </Box>
           )
         },
       },
@@ -287,7 +338,36 @@ const BookingList = ({
       _columns.unshift({
         field: 'car',
         headerName: strings.CAR,
-        flex: 1,
+        flex: 1.5,
+        renderCell: ({ row }: GridRenderCellParams<bookcarsTypes.Booking>) => {
+          const c = row.car as bookcarsTypes.Car | undefined
+          const imgUrl = c?.image ? bookcarsHelper.joinURL(env.CDN_CARS, c.image) : undefined
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 0.5 }}>
+              {imgUrl ? (
+                <img
+                  src={imgUrl}
+                  alt={c?.name || ''}
+                  style={{ width: 48, height: 32, objectFit: 'cover', borderRadius: 4, aspectRatio: '16/10' }}
+                />
+              ) : (
+                <Box sx={{ width: 48, height: 32, bgcolor: '#0B1120', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 9, color: 'var(--sr-emerald)', fontWeight: 800 }}>SR</span>
+                </Box>
+              )}
+              <Box sx={{ minWidth: 0 }}>
+                <Typography sx={{ fontWeight: 700, fontSize: 13, color: 'var(--sr-text, #0F172A)' }} noWrap>
+                  {c?.name || '—'}
+                </Typography>
+                {(row.pickupLocation as bookcarsTypes.Location | undefined)?.name && (
+                  <Typography variant="caption" sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', gap: 0.3 }} noWrap>
+                    📍 {(row.pickupLocation as bookcarsTypes.Location).name}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )
+        },
         valueGetter: (value: bookcarsTypes.Car) => value?.name,
       })
     }
@@ -299,7 +379,7 @@ const BookingList = ({
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
           <div className="cell-supplier">
-            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value} />
+            {(row.supplier as bookcarsTypes.User | undefined)?.avatar && <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value || ''} />}
           </div>
         ),
         valueGetter: (value: bookcarsTypes.User) => value?.fullName,
@@ -396,20 +476,46 @@ const BookingList = ({
         && (env.isMobile ? (
           <>
             {rows.map((booking) => {
-              const _bookingCar = booking.car as bookcarsTypes.Car
-              const bookingSupplier = booking.supplier as bookcarsTypes.User
+              const _bookingCar = booking.car as bookcarsTypes.Car | undefined
+              const bookingSupplier = booking.supplier as bookcarsTypes.User | undefined
               const from = new Date(booking.from)
               const to = new Date(booking.to)
               const days = bookcarsHelper.days(from, to)
+              const bookingStatus = booking.status || bookcarsTypes.BookingStatus.Pending
+
+              const isPaid = bookingStatus === bookcarsTypes.BookingStatus.Paid || bookingStatus === bookcarsTypes.BookingStatus.PaidInFull
+              const isDeposit = bookingStatus === bookcarsTypes.BookingStatus.Deposit
+              const isCancelled = bookingStatus === bookcarsTypes.BookingStatus.Cancelled
+              const carImg = _bookingCar?.image ? bookcarsHelper.joinURL(env.CDN_CARS, _bookingCar.image) : undefined
 
               return (
-                <div key={booking._id} className="booking-details">
-                  <div className={`bs bs-${booking.status.toLowerCase()}`}>
-                    <span>{helper.getBookingStatus(booking.status)}</span>
-                  </div>
+                <div key={booking._id} className="booking-details" style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--sr-border, #E2E8F0)', background: 'var(--sr-surface, #FFFFFF)', marginBottom: '16px' }}>
+                  {carImg && (
+                    <div style={{ width: '100%', height: '140px', overflow: 'hidden', background: '#0B1120' }}>
+                      <img src={carImg} alt={_bookingCar?.name || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+
+                  <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                    <div className={`bs bs-${String(bookingStatus).toLowerCase()}`} style={{ margin: 0 }}>
+                      <span>{helper.getBookingStatus(bookingStatus)}</span>
+                    </div>
+                    <Chip
+                      size="small"
+                      label={isPaid ? '20% Escrow Locked ✓' : isDeposit ? 'Deposit Locked ✓' : isCancelled ? 'Deposit Refunded ↺' : 'Escrow Pending ⏳'}
+                      sx={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        fontFamily: 'var(--sr-font-mono, monospace)',
+                        bgcolor: (isPaid || isDeposit) ? 'rgba(5, 150, 105, 0.12)' : isCancelled ? 'rgba(0,0,0,0.06)' : 'rgba(217, 119, 6, 0.12)',
+                        color: (isPaid || isDeposit) ? 'var(--sr-emerald)' : isCancelled ? 'text.secondary' : 'var(--sr-accent-text)'
+                      }}
+                    />
+                  </Box>
+
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.CAR}</span>
-                    <div className="booking-detail-value">{_bookingCar.name}</div>
+                    <div className="booking-detail-value" style={{ fontWeight: 800 }}>{_bookingCar?.name || '—'}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DAYS}</span>
@@ -421,18 +527,18 @@ const BookingList = ({
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{commonStrings.PICK_UP_LOCATION}</span>
-                    <div className="booking-detail-value">{(booking.pickupLocation as bookcarsTypes.Location).name}</div>
+                    <div className="booking-detail-value">📍 {(booking.pickupLocation as bookcarsTypes.Location | undefined)?.name || '—'}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
-                    <div className="booking-detail-value">{(booking.dropOffLocation as bookcarsTypes.Location).name}</div>
+                    <div className="booking-detail-value">{(booking.dropOffLocation as bookcarsTypes.Location | undefined)?.name || '—'}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
                       <div className="car-supplier">
-                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, bookingSupplier.avatar)} alt={bookingSupplier.fullName} />
-                        <span className="car-supplier-name">{bookingSupplier.fullName}</span>
+                        {bookingSupplier?.avatar && env.CDN_USERS && <img src={bookcarsHelper.joinURL(env.CDN_USERS, bookingSupplier.avatar)} alt={bookingSupplier.fullName || ''} />}
+                        <span className="car-supplier-name">{bookingSupplier?.fullName || '—'}</span>
                       </div>
                     </div>
                   </div>
@@ -450,26 +556,62 @@ const BookingList = ({
                     )}
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.COST}</span>
-                    <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(booking.price as number, commonStrings.CURRENCY, language as string)}</div>
+                    <div className="booking-detail-value booking-price" style={{ fontFamily: 'var(--sr-font-mono, monospace)', fontWeight: 800 }}>{bookcarsHelper.formatPrice(booking.price as number, commonStrings.CURRENCY, language as string)}</div>
                   </div>
 
-                  <div className="bs-buttons">
+                  <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      startIcon={<QrCodeIcon />}
+                      onClick={() => navigate(`/booking?b=${booking._id}`)}
+                      sx={{
+                        flexGrow: 1,
+                        bgcolor: '#107487',
+                        '&:hover': { bgcolor: '#047857' },
+                        fontWeight: 700,
+                        fontSize: 12,
+                        textTransform: 'none',
+                        borderRadius: '8px',
+                        py: 0.8
+                      }}
+                    >
+                      View QR Trip Pass
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<HandoverIcon />}
+                      onClick={() => navigate(`/booking?b=${booking._id}#handover`)}
+                      sx={{
+                        borderColor: 'rgba(5, 150, 105, 0.4)',
+                        color: 'var(--sr-emerald)',
+                        fontWeight: 700,
+                        fontSize: 12,
+                        textTransform: 'none',
+                        borderRadius: '8px'
+                      }}
+                    >
+                      6-Pt Handover
+                    </Button>
                     {booking.cancellation
                       && !booking.cancelRequest
                       && booking.status !== bookcarsTypes.BookingStatus.Cancelled
                       && new Date(booking.from) > new Date() && (
                         <Button
-                          variant="contained"
-                          className="btn-secondary"
+                          variant="outlined"
+                          color="error"
+                          size="small"
                           onClick={() => {
                             setSelectedId(booking._id as string)
                             setOpenCancelDialog(true)
                           }}
+                          sx={{ textTransform: 'none', borderRadius: '8px' }}
                         >
                           {strings.CANCEL}
                         </Button>
                       )}
-                  </div>
+                  </Box>
                 </div>
               )
             })}

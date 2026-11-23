@@ -12,7 +12,7 @@ div.signin {
   text-align: center;
   text-transform: capitalize;
   margin-top: 35px;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 .signin-buttons {
@@ -39,7 +39,7 @@ div.signin div.stay-connected input[type='checkbox'] {
 
 div.signin div.stay-connected label {
   cursor: pointer;
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   user-select: none;
 }
 

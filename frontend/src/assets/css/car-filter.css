@@ -1,5 +1,5 @@
 div.car-filter {
-  background: #fff;
+  background: var(--sr-surface);
   margin: 10px 0;
   font-size: 13px;
 }
@@ -24,7 +24,7 @@ div.car-filter .btn-search {
 }
 
 div.car-filter .chk-same-location {
-  color: rgb(0 0 0 / 70%);
+  color: var(--sr-muted);
   font-weight: 400;
   line-height: 1.4em;
   font-size: 0.9em;

@@ -28,7 +28,7 @@ const additionalDriverSchema = new Schema<env.AdditionalDriver>(
           }
 
           // If value is empty will not validate for mobile phone.
-          return validator.isMobilePhone(value)
+          return /^(?:\+923\d{9}|03\d{9})$/.test(value)
         },
         message: '{VALUE} is not valid',
       },

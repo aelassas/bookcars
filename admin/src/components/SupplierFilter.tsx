@@ -4,6 +4,7 @@ import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
 import { strings as commonStrings } from '@/lang/common'
 import Accordion from './Accordion'
+import * as helper from '@/utils/helper'
 
 import '@/assets/css/supplier-filter.css'
 
@@ -135,7 +136,7 @@ const SupplierFilter = ({
                   className="supplier"
                 >
                   <img
-                    src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)}
+                    src={helper.getUserAvatarUrl(supplier.avatar)}
                     alt={supplier.fullName}
                     title={supplier.fullName}
                   />

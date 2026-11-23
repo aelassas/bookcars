@@ -43,6 +43,11 @@ const SocialLogin = ({
   onSignInError,
   onBlackListed }: SocialLoginProps) => {
   const navigate = useNavigate()
+  const isConfigured = (value: string) => Boolean(value && value !== 'undefined' && value !== 'XXXXXXXXXX' && !value.startsWith('YOUR_'))
+  const showFacebook = facebook && isConfigured(env.FB_APP_ID)
+  const showApple = apple && isConfigured(env.APPLE_ID)
+  const showGoogle = google && isConfigured(env.GG_APP_ID)
+  const hasProviders = showFacebook || showApple || showGoogle
 
   const { setUser, setUserLoaded } = useUserContext() as UserContextType
 
@@ -96,14 +101,16 @@ const SocialLogin = ({
 
   return (
     <div className={`${className ? `${className} ` : ''}social-login`}>
-      <div className="separator">
-        <hr />
-        <span>{commonStrings.OR}</span>
-        <hr />
-      </div>
+      {hasProviders && (
+        <div className="separator">
+          <hr />
+          <span>{commonStrings.OR}</span>
+          <hr />
+        </div>
+      )}
 
-      <div className="login-buttons">
-        {facebook && (
+      {hasProviders && <div className="login-buttons">
+        {showFacebook && (
           <LoginSocialFacebook
             appId={env.FB_APP_ID}
             redirect_uri={REDIRECT_URI}
@@ -119,7 +126,7 @@ const SocialLogin = ({
           </LoginSocialFacebook>
         )}
 
-        {apple && (
+        {showApple && (
           <LoginSocialApple
             client_id={env.APPLE_ID}
             scope="name email"
@@ -137,7 +144,7 @@ const SocialLogin = ({
           </LoginSocialApple>
         )}
 
-        {google && (
+        {showGoogle && (
           <LoginSocialGoogle
             client_id={env.GG_APP_ID}
             typeResponse="idToken"
@@ -155,7 +162,7 @@ const SocialLogin = ({
             <img alt="Google" src={GoogleIcon} className="social" />
           </LoginSocialGoogle>
         )}
-      </div>
+      </div>}
     </div>
   )
 }

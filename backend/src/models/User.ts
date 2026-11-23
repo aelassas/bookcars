@@ -30,7 +30,7 @@ const userSchema = new Schema<env.User>(
           }
 
           // If value is empty will not validate for mobile phone.
-          return validator.isMobilePhone(value)
+          return /^(?:\+923\d{9}|03\d{9})$/.test(value)
         },
         message: '{VALUE} is not valid',
       },
@@ -49,6 +49,21 @@ const userSchema = new Schema<env.User>(
     birthDate: {
       type: Date,
     },
+    cnicNumber: {
+      type: String,
+      trim: true,
+      match: [/^\d{5}-\d{7}-\d$/, 'CNIC must use XXXXX-XXXXXXX-X format'],
+      index: { sparse: true },
+    },
+    drivingLicenseNumber: { type: String, trim: true },
+    kycStatus: {
+      type: String,
+      enum: Object.values(bookcarsTypes.KycStatus),
+      default: bookcarsTypes.KycStatus.Unverified,
+      index: true,
+    },
+    cnicFrontImage: { type: String, trim: true },
+    licenseFrontImage: { type: String, trim: true },
     verified: {
       type: Boolean,
       default: false,

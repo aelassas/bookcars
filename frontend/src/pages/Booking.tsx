@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
+import { format } from 'date-fns'
 import {
   FormControl,
   FormControlLabel,
   Switch,
   Button
 } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
+import {
+  Info as InfoIcon,
+  CheckCircle as CheckCircleIcon,
+  FactCheck as HandoverIcon,
+} from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
@@ -33,7 +38,6 @@ import DateTimePicker from '@/components/DateTimePicker'
 import '@/assets/css/booking.css'
 
 const Booking = () => {
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
@@ -56,6 +60,11 @@ const Booking = () => {
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
   const [minDate, setMinDate] = useState<Date>()
+  const [handoverChecks, setHandoverChecks] = useState<Record<number, boolean>>({})
+
+  const toggleHandoverCheck = (num: number) => {
+    setHandoverChecks((prev) => ({ ...prev, [num]: !prev[num] }))
+  }
   const edit = false
 
   const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
@@ -325,9 +334,6 @@ const Booking = () => {
     <Layout onLoad={onLoad} strict>
       {visible && booking && (
         <div className="booking">
-          <Button sx={{ mb: 2 }} variant="outlined" onClick={() => navigate(`/handover?booking=${booking._id}`)}>
-            View digital handover
-          </Button>
           <div className="col-1">
             <form onSubmit={handleSubmit}>
               {!env.HIDE_SUPPLIERS && (
@@ -512,10 +518,142 @@ const Booking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(language, days)}</span>
-                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}`}</span>
+                <span className="price-main tabular-nums pkr-price">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">
+                  <span>{`${csStrings.PRICE_PER_DAY} `}</span>
+                  <span className="tabular-nums pkr-price">{bookcarsHelper.formatPrice((price as number) / days, commonStrings.CURRENCY, language)}</span>
+                </span>
               </div>
             </div>
+
+            {/* Apple-Wallet-Style QR Digital Trip Pass */}
+            <div className="digital-trip-pass">
+              <div className="trip-pass-card">
+                <div className="pass-notch left"></div>
+                <div className="pass-notch right"></div>
+
+                <div className="pass-header">
+                  <div className="pass-brand">
+                    <span className="pass-brand-mark">SR</span>
+                    <span className="pass-brand-name">SAFARRENT DIGITAL TRIP PASS</span>
+                  </div>
+                  <span className="pass-status-pill">
+                    <span className="status-dot-pulse"></span>
+                    {helper.getBookingStatus(booking.status)}
+                  </span>
+                </div>
+
+                <div className="pass-body">
+                  <div className="pass-row">
+                    <div className="pass-col">
+                      <span className="pass-label">BOOKING REFERENCE</span>
+                      <span className="pass-value booking-id tabular-nums">
+                        SR-{((booking._id as string) || 'DEMO').slice(-8).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="pass-col">
+                      <span className="pass-label">CNIC SECURITY STATUS</span>
+                      <span className="pass-value cnic-badge">
+                        {(booking.driver as bookcarsTypes.User)?.kycStatus || 'Status unavailable'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pass-row">
+                    <div className="pass-col">
+                      <span className="pass-label">ASSIGNED VEHICLE & PLATE</span>
+                      <span className="pass-value vehicle-title">
+                        {(booking.car as bookcarsTypes.Car)?.name || 'Pakistani Fleet Vehicle'}
+                      </span>
+                      <span className="pass-subvalue plate-number tabular-nums">
+                        {(booking.car as bookcarsTypes.Car)?.licensePlate || 'Plate unavailable'}
+                      </span>
+                    </div>
+                    <div className="pass-col">
+                      <span className="pass-label">HOST / OPERATOR</span>
+                      <span className="pass-value">
+                        {supplier?.name || 'Operator unavailable'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pass-route-strip">
+                    <div className="pass-route-hub">
+                      <span className="hub-marker start">📍</span>
+                      <div className="hub-info">
+                        <span className="hub-name">{pickupLocation?.name || 'Pickup location unavailable'}</span>
+                        <span className="hub-date">{from && format(from, 'eee, d MMM yyyy, p')}</span>
+                      </div>
+                    </div>
+                    <div className="pass-route-divider">➔</div>
+                    <div className="pass-route-hub">
+                      <span className="hub-marker end">🏁</span>
+                      <div className="hub-info">
+                        <span className="hub-name">{dropOffLocation?.name || 'Drop-off Hub'}</span>
+                        <span className="hub-date">{to && format(to, 'eee, d MMM yyyy, p')}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pass-qr-section">
+                    <div className="qr-container">
+                      <QRCodeSVG
+                        value={new URL('/booking?b=' + encodeURIComponent(booking._id!), window.location.origin).href}
+                        size={132}
+                        marginSize={4}
+                        title="Open this booking"
+                      />
+                    </div>
+                    <div className="pass-qr-caption">
+                      <span className="caption-title">Scan to open booking details</span>
+                      <span className="caption-subtitle">Account access is required to view this booking.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 6-Point Digital Handover Checklist UI */}
+            <div className="handover-checklist-card">
+              <div className="handover-header">
+                <div className="handover-title">
+                  <HandoverIcon sx={{ color: 'var(--sr-emerald)' }} />
+                  <h3>6-Point Digital Handover Checklist</h3>
+                </div>
+                <span className="handover-counter">
+                  {Object.values(handoverChecks).filter(Boolean).length}/6 checked
+                </span>
+              </div>
+              <p className="handover-desc">
+                Review these six items with your host at pickup. Selections last while this page is open.
+              </p>
+
+              <div className="handover-grid">
+                {[
+                  { id: 1, label: 'Front Bumper, Grille & LED Headlights', desc: 'No unrecorded scuffs or chipped lenses' },
+                  { id: 2, label: 'Windshield, Mirrors & Wipers', desc: 'Glass clarity verified, zero rock chips' },
+                  { id: 3, label: 'Left/Right Panels & All-Terrain Tires', desc: 'Tire tread > 4mm, alloy rims intact' },
+                  { id: 4, label: 'Rear Bumper, Tailgate & Lamps', desc: 'Sensor camera clear, reverse lights functional' },
+                  { id: 5, label: 'Fuel Gauge Verification', desc: 'Recorded at Full (Like-for-Like policy)' },
+                  { id: 6, label: 'Odometer Digits & Spare Wheel Tool Kit', desc: 'Odometer matched, jack & spare tire present' },
+                ].map((item) => (
+                  <button type="button" aria-pressed={!!handoverChecks[item.id]}
+                    key={item.id}
+                    className={`handover-item ${handoverChecks[item.id] ? 'checked' : ''}`}
+                    onClick={() => toggleHandoverCheck(item.id)}
+                  >
+                    <span className="item-checkbox" aria-hidden="true">
+                      {handoverChecks[item.id] ? '✓' : ''}
+                    </span>
+                    <span className="item-text">
+                      <span className="item-title">{item.label}</span>
+                      <span className="item-sub">{item.desc}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <CarList
               className="car"
               booking={booking}

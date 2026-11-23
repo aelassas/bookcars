@@ -5,7 +5,7 @@ li.ms-option {
 }
 
 li.ms-option:hover {
-  background: #fafafa;
+  background: var(--sr-surface-raised);
   cursor: pointer;
 }
 
@@ -18,7 +18,7 @@ li.ms-option:hover {
 }
 
 .option-name {
-  color: #333;
+  color: var(--sr-text);
   display: inline-block;
   font-size: 0.9em;
   line-height: 1em;
@@ -28,7 +28,7 @@ li.ms-option:hover {
 }
 
 .car-option-name {
-  color: #333;
+  color: var(--sr-text);
   display: inline-block;
   font-size: 1em;
   font-weight: 600;

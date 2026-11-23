@@ -237,7 +237,7 @@ const CarList = ({
             <View style={styles.container}>
               {
                 footerComponent || (loading
-                  ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
+                  ? <ActivityIndicator size="large" color="#D4AF37" style={styles.indicator} />
                   : null)
               }
             </View>

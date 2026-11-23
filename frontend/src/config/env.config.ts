@@ -60,33 +60,11 @@ const LANGUAGES: Language[] = [
 type Currency = { code: string, symbol: string }
 
 /**
- * The three-letter ISO 4217 alphabetic currency codes, e.g. "USD" or "EUR" and their symbols.
- * https://docs.stripe.com/currencies
+ * SafarRent displays its Pakistan marketplace prices in PKR.
  *
  * @type {Currency[]}
  */
-const CURRENCIES: Currency[] = [
-  {
-    code: 'PKR',
-    symbol: 'Rs',
-  },
-  {
-    code: 'USD',
-    symbol: '$',
-  },
-  {
-    code: 'EUR',
-    symbol: '€',
-  },
-  {
-    code: 'GBP',
-    symbol: '£',
-  },
-  {
-    code: 'AUD',
-    symbol: '$',
-  },
-]
+const CURRENCIES: Currency[] = [{ code: 'PKR', symbol: 'Rs' }]
 
 const getPaymentGateway = () => {
   const paymentGateway = String(import.meta.env.VITE_BC_PAYMENT_GATEWAY || 'stripe').toUpperCase()
@@ -100,6 +78,22 @@ const getPaymentGateway = () => {
 }
 
 const PAYMENT_GATEWAY = getPaymentGateway()
+const API_PORT = Number(new URL(String(import.meta.env.VITE_BC_API_HOST || 'http://localhost:4002')).port) || 4002
+const SAME_HOST_SERVICES = (import.meta.env.VITE_BC_API_SAME_HOST || '').toLowerCase() === 'true'
+const API_HOST = SAME_HOST_SERVICES
+  ? `${window.location.protocol}//${window.location.hostname}:${API_PORT}`
+  : String(import.meta.env.VITE_BC_API_HOST)
+const resolveServiceUrl = (value: string) => {
+  if (!SAME_HOST_SERVICES) {
+return value
+}
+  try {
+    const url = new URL(value)
+    return `${window.location.protocol}//${window.location.hostname}${url.port ? `:${url.port}` : ''}${url.pathname}${url.search}${url.hash}`
+  } catch {
+    return value
+  }
+}
 
 const env = {
   isMobile: window.innerWidth <= 960,
@@ -109,21 +103,22 @@ const env = {
   WEBSITE_NAME: String(import.meta.env.VITE_BC_WEBSITE_NAME || 'SafarRent'),
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
-  API_HOST: String(import.meta.env.VITE_BC_API_HOST),
+  API_HOST,
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
   BASE_CURRENCY: String(import.meta.env.VITE_BC_BASE_CURRENCY || 'PKR'),
+  FYP_DEMO_MODE: (import.meta.env.VITE_BC_FYP_DEMO_MODE || '').toLowerCase() === 'true',
   CURRENCIES,
   PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
   BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
   BOOKINGS_MOBILE_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE), 10) || 10,
-  CDN_USERS: String(import.meta.env.VITE_BC_CDN_USERS),
-  CDN_CARS: String(import.meta.env.VITE_BC_CDN_CARS),
-  CDN_LOCATIONS: String(import.meta.env.VITE_BC_CDN_LOCATIONS),
-  CDN_LICENSES: String(import.meta.env.VITE_BC_CDN_LICENSES),
-  CDN_TEMP_LICENSES: String(import.meta.env.VITE_BC_CDN_TEMP_LICENSES),
+  CDN_USERS: resolveServiceUrl(String(import.meta.env.VITE_BC_CDN_USERS)),
+  CDN_CARS: resolveServiceUrl(String(import.meta.env.VITE_BC_CDN_CARS)),
+  CDN_LOCATIONS: resolveServiceUrl(String(import.meta.env.VITE_BC_CDN_LOCATIONS)),
+  CDN_LICENSES: resolveServiceUrl(String(import.meta.env.VITE_BC_CDN_LICENSES)),
+  CDN_TEMP_LICENSES: resolveServiceUrl(String(import.meta.env.VITE_BC_CDN_TEMP_LICENSES)),
   PAGE_OFFSET: 200,
   INFINITE_SCROLL_OFFSET: 40,
   SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,
@@ -164,8 +159,8 @@ const env = {
    */
   MIN_LOCATIONS: Number.parseInt(String(import.meta.env.VITE_BC_MIN_LOCATIONS), 10) || 4,
   HIDE_SUPPLIERS: (import.meta.env.VITE_BC_HIDE_SUPPLIERS && import.meta.env.VITE_BC_HIDE_SUPPLIERS.toLowerCase()) === 'true',
-  MAP_LATITUDE: Number(String(import.meta.env.VITE_BC_MAP_LATITUDE || '34.0268755')),
-  MAP_LONGITUDE: Number(String(import.meta.env.VITE_BC_MAP_LONGITUDE || '1.6528399999999976')),
+  MAP_LATITUDE: Number(String(import.meta.env.VITE_BC_MAP_LATITUDE || '30.3753')),
+  MAP_LONGITUDE: Number(String(import.meta.env.VITE_BC_MAP_LONGITUDE || '69.3451')),
   MAP_ZOOM: Number(String(import.meta.env.VITE_BC_MAP_ZOOM || '5')),
   PASSWORD_MIN_LENGTH: 6,
 }

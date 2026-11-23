@@ -1,312 +1,206 @@
-import React from 'react'
-import { Box, Typography, Chip, Tooltip } from '@mui/material'
+import React, { useState } from 'react'
+import { Box, Typography, Paper } from '@mui/material'
 import {
-  AccountBalanceWallet as WalletIcon,
-  LocalAtm as CashIcon,
-  AccountBalance as BankIcon,
+  Lock as LockIcon,
+  CheckCircle as CheckCircleIcon,
+  AccountBalance as RaastIcon,
   CreditCard as CardIcon,
-  FlashOn as InstantIcon,
-  VerifiedUser as ShieldIcon,
+  PhoneIphone as MobileWalletIcon
 } from '@mui/icons-material'
 
-interface PaymentBadgeProps {
+interface PaymentMethodTile {
+  id: string
   name: string
-  subtitle: string
+  type: string
   color: string
-  bg: string
-  borderColor: string
-  icon: React.ReactNode
-  tag?: string
+  badgeText: string
+  description: string
 }
 
-const PaymentBadge: React.FC<PaymentBadgeProps> = ({
-  name,
-  subtitle,
-  color,
-  bg,
-  borderColor,
-  icon,
-  tag,
-}) => (
-  <Tooltip title={`${name} - ${subtitle}`} arrow placement="top">
-    <Box
-      sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 1.2,
-        px: 1.8,
-        py: 1,
-        borderRadius: '12px',
-        background: bg,
-        border: `1.5px solid ${borderColor}`,
-        color: color,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-        cursor: 'default',
-        position: 'relative',
-        '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 6px 16px rgba(0,0,0,0.08)',
-          borderColor: color,
-        },
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {icon}
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-          <Typography sx={{ fontWeight: 800, fontSize: '13.5px', lineHeight: 1.2, color: color }}>
-            {name}
-          </Typography>
-          {tag && (
-            <Chip
-              label={tag}
-              size="small"
-              sx={{
-                height: '16px',
-                fontSize: '9.5px',
-                fontWeight: 700,
-                backgroundColor: color,
-                color: '#fff',
-                px: 0.2,
-              }}
-            />
-          )}
-        </Box>
-        <Typography sx={{ fontSize: '10.5px', opacity: 0.85, lineHeight: 1.1, color: '#475569', mt: '2px' }}>
-          {subtitle}
-        </Typography>
-      </Box>
-    </Box>
-  </Tooltip>
-)
+const paymentTiles: PaymentMethodTile[] = [
+  {
+    id: 'jazzcash',
+    name: 'JazzCash',
+    type: 'Mobile Wallet / QR',
+    color: '#D90429',
+    badgeText: 'INSTANT 20% ESCROW',
+    description: 'Pay via JazzCash app or mobile account with zero blank cheque required'
+  },
+  {
+    id: 'easypaisa',
+    name: 'Easypaisa',
+    type: 'Mobile Wallet / QR',
+    color: '#00A859',
+    badgeText: 'INSTANT 20% ESCROW',
+    description: 'Simulated FYP checkout option; no funds are transferred or held'
+  },
+  {
+    id: 'raast',
+    name: 'Raast P2M / IBFT',
+    type: 'State Bank of Pakistan Instant',
+    color: 'var(--sr-emerald)',
+    badgeText: '0% FEE TRANSFER',
+    description: 'Instant bank transfer using SBP Raast QR code or IBAN'
+  },
+  {
+    id: 'card',
+    name: 'Debit / Credit Card',
+    type: 'Visa • Mastercard • PayPak',
+    color: 'var(--sr-text)',
+    badgeText: 'SECURE 3D HOLD',
+    description: 'Standard domestic & international cards with 3D Secure OTP'
+  }
+]
 
-export const PakistanPayments: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
+interface PakistanPaymentsProps {
+  onSelectMethod?: (methodId: string) => void
+  selectedMethod?: string
+}
+
+export const PakistanPayments: React.FC<PakistanPaymentsProps> = ({
+  onSelectMethod,
+  selectedMethod = 'jazzcash'
+}) => {
+  const [active, setActive] = useState(selectedMethod)
+
+  const handleSelect = (id: string) => {
+    setActive(id)
+    if (onSelectMethod) {
+      onSelectMethod(id)
+    }
+  }
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-        py: compact ? 1.5 : 3,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <Box sx={{ width: '100%', my: 2 }}>
+      {/* Escrow Banner */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1,
-          mb: 2,
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
-      >
-        <ShieldIcon sx={{ color: '#059669', fontSize: 20 }} />
-        <Typography
-          sx={{
-            fontSize: '13px',
-            fontWeight: 700,
-            color: '#0f172a',
-            letterSpacing: '0.3px',
-            textTransform: 'uppercase',
-          }}
-        >
-          100% Secure Local Pakistan Payments & Cash on Pickup
-        </Typography>
-        <Chip
-          icon={<InstantIcon sx={{ '&&': { color: '#059669', fontSize: 14 } }} />}
-          label="Zero Transfer Fees"
-          size="small"
-          sx={{
-            bgcolor: '#ecfdf5',
-            color: '#065f46',
-            fontWeight: 700,
-            fontSize: '11px',
-            border: '1px solid #a7f3d0',
-          }}
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
+          justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: 1.5,
-          justifyContent: 'center',
-          alignItems: 'center',
-          maxWidth: '1100px',
+          p: 2,
+          mb: 2.5,
+          borderRadius: 3,
+          bgcolor: 'var(--sr-surface-raised)',
+          border: '1px solid rgba(5, 150, 105, 0.3)'
         }}
       >
-        {/* JazzCash */}
-        <PaymentBadge
-          name="JazzCash"
-          subtitle="Mobile Wallet & QR"
-          color="#dc2626"
-          bg="#fef2f2"
-          borderColor="#fecaca"
-          tag="Popular"
-          icon={
-            <Box
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              bgcolor: 'var(--sr-emerald)',
+              color: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <LockIcon sx={{ fontSize: 18 }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 700, fontSize: 14, color: 'var(--sr-emerald)', fontFamily: 'var(--sr-font-heading)' }}>
+              SafarRent Pakistan Verified Escrow
+            </Typography>
+            <Typography sx={{ fontSize: 12.5, color: 'var(--sr-emerald)' }}>
+              Pay 20% Escrow Lock Now — 80% at Digital Handover
+            </Typography>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            px: 1.5,
+            py: 0.5,
+            bgcolor: 'var(--sr-surface)',
+            borderRadius: 999,
+            border: '1px solid #10B981',
+            color: 'var(--sr-emerald)',
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: '0.04em',
+            fontFamily: 'var(--sr-font-mono)'
+          }}
+        >
+          ZERO BLANK CHEQUE
+        </Box>
+      </Box>
+
+      {/* Payment Method Tiles Grid */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+        {paymentTiles.map((tile) => {
+          const isSelected = active === tile.id
+          return (
+            <Paper
+              key={tile.id}
+              elevation={0}
+              onClick={() => handleSelect(tile.id)}
               sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '8px',
-                bgcolor: '#dc2626',
+                p: 2,
+                cursor: 'pointer',
+                borderRadius: 3,
+                border: isSelected ? '2px solid #059669' : '1px solid var(--sr-border)',
+                bgcolor: isSelected ? 'rgba(5, 150, 105, 0.04)' : 'var(--sr-surface)',
+                transition: 'all 0.2s ease',
+                position: 'relative',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '11px',
+                flexDirection: 'column',
+                gap: 1,
+                '&:hover': {
+                  borderColor: '#059669',
+                  boxShadow: '0 4px 14px rgba(5, 150, 105, 0.12)'
+                }
               }}
             >
-              JC
-            </Box>
-          }
-        />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {tile.id === 'card' ? (
+                    <CardIcon sx={{ color: tile.color, fontSize: 22 }} />
+                  ) : tile.id === 'raast' ? (
+                    <RaastIcon sx={{ color: tile.color, fontSize: 22 }} />
+                  ) : (
+                    <MobileWalletIcon sx={{ color: tile.color, fontSize: 22 }} />
+                  )}
+                  <Typography sx={{ fontWeight: 800, fontSize: 15, color: 'var(--sr-text)', fontFamily: 'var(--sr-font-heading)' }}>
+                    {tile.name}
+                  </Typography>
+                </Box>
+                {isSelected ? (
+                  <CheckCircleIcon sx={{ color: 'var(--sr-emerald)', fontSize: 20 }} />
+                ) : (
+                  <Box sx={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--sr-border)' }} />
+                )}
+              </Box>
 
-        {/* EasyPaisa */}
-        <PaymentBadge
-          name="EasyPaisa"
-          subtitle="Instant Wallet / OTP"
-          color="#059669"
-          bg="#ecfdf5"
-          borderColor="#a7f3d0"
-          tag="Instant"
-          icon={
-            <Box
-              sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '8px',
-                bgcolor: '#059669',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '11px',
-              }}
-            >
-              EP
-            </Box>
-          }
-        />
+              <Typography sx={{ fontSize: 11, color: 'var(--sr-muted)' }}>
+                {tile.description}
+              </Typography>
 
-        {/* Raast */}
-        <PaymentBadge
-          name="Raast SBP"
-          subtitle="Direct State Bank Pay"
-          color="#0284c7"
-          bg="#f0f9ff"
-          borderColor="#bae6fd"
-          tag="Govt ID"
-          icon={
-            <Box
-              sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '8px',
-                bgcolor: '#0284c7',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '10px',
-              }}
-            >
-              RAAST
-            </Box>
-          }
-        />
-
-        {/* SadaPay */}
-        <PaymentBadge
-          name="SadaPay"
-          subtitle="Zero-Fee Number Pay"
-          color="#0d9488"
-          bg="#f0fdfa"
-          borderColor="#99f6e4"
-          icon={
-            <Box
-              sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '8px',
-                bgcolor: '#0d9488',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '11px',
-              }}
-            >
-              SP
-            </Box>
-          }
-        />
-
-        {/* NayaPay */}
-        <PaymentBadge
-          name="NayaPay"
-          subtitle="Visa Debit Wallet"
-          color="#d97706"
-          bg="#fffbeb"
-          borderColor="#fde68a"
-          icon={
-            <Box
-              sx={{
-                width: 28,
-                height: 28,
-                borderRadius: '8px',
-                bgcolor: '#d97706',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '11px',
-              }}
-            >
-              NP
-            </Box>
-          }
-        />
-
-        {/* Cash on Pickup / COD */}
-        <PaymentBadge
-          name="Pay on Pickup"
-          subtitle="Cash to Chauffeur / Depot"
-          color="#166534"
-          bg="#f0fdf4"
-          borderColor="#bbf7d0"
-          tag="COD"
-          icon={<CashIcon sx={{ color: '#166534', fontSize: 24 }} />}
-        />
-
-        {/* 1Link Bank Transfer */}
-        <PaymentBadge
-          name="1Link Interbank"
-          subtitle="Meezan, HBL, Alfalah"
-          color="#4338ca"
-          bg="#eef2ff"
-          borderColor="#c7d2fe"
-          icon={<BankIcon sx={{ color: '#4338ca', fontSize: 24 }} />}
-        />
-
-        {/* Visa / Mastercard / PayPak */}
-        <PaymentBadge
-          name="Cards & PayPak"
-          subtitle="Visa, Mastercard, PayPak"
-          color="#334155"
-          bg="#f8fafc"
-          borderColor="#cbd5e1"
-          icon={<CardIcon sx={{ color: '#334155', fontSize: 24 }} />}
-        />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
+                <Typography sx={{ fontSize: 10.5, fontWeight: 600, color: 'var(--sr-muted)' }}>
+                  {tile.type}
+                </Typography>
+                <Box
+                  sx={{
+                    fontSize: 9.5,
+                    fontWeight: 800,
+                    color: 'var(--sr-emerald)',
+                    bgcolor: 'var(--sr-surface-raised)',
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: 1,
+                    fontFamily: 'var(--sr-font-mono)'
+                  }}
+                >
+                  {tile.badgeText}
+                </Box>
+              </Box>
+            </Paper>
+          )
+        })}
       </Box>
     </Box>
   )

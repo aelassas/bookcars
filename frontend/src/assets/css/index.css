@@ -9,5 +9,5 @@
 } */
 
 .github-fork-ribbon::before {
-  background-color: #272727;
+  background-color: var(--sr-muted);
 }

@@ -1,14 +1,33 @@
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import babelPlugin from '@rolldown/plugin-babel'
+
+const configDir = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), '') }
 
   return defineConfig({
+    // Keep Vite's regenerable optimizer cache on C: so the nearly-full D: project
+    // drive can still serve the app without moving source or Docker data.
+    cacheDir: path.resolve(process.env.TEMP || 'C:/Temp', 'safarrent-vite-cache-admin'),
+    // Emotion ships an isolated HNRS entry that imports this CommonJS module.
+    // Prebundle Emotion and its CommonJS dependency so the browser receives ESM.
+    optimizeDeps: {
+      include: [
+        '@emotion/react',
+        '@emotion/react/_isolated-hnrs',
+        '@emotion/styled',
+        'hoist-non-react-statics',
+        'hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js',
+      ],
+      needsInterop: ['hoist-non-react-statics'],
+      noDiscovery: false,
+    },
     plugins: [
       react(),
       babelPlugin({
@@ -22,7 +41,7 @@ export default ({ mode }: { mode: string }) => {
       createHtmlPlugin({
         inject: {
           data: {
-            WEBSITE_NAME: process.env.VITE_BC_WEBSITE_NAME || 'BookCars',
+            WEBSITE_NAME: process.env.VITE_BC_WEBSITE_NAME || 'SafarRent',
           },
         },
       }),
@@ -31,14 +50,16 @@ export default ({ mode }: { mode: string }) => {
     resolve: {
       preserveSymlinks: true,
       alias: {
-        'react': path.resolve(__dirname, 'node_modules/react'),
-        'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+        'react': path.resolve(configDir, 'node_modules/react'),
+        'react-dom': path.resolve(configDir, 'node_modules/react-dom'),
 
-        '@': path.resolve(__dirname, './src'),
-        ':bookcars-types': path.resolve(__dirname, '../packages/bookcars-types'),
-        ':bookcars-helper': path.resolve(__dirname, '../packages/bookcars-helper'),
-        ':disable-react-devtools': path.resolve(__dirname, '../packages/disable-react-devtools'),
-        ':currency-converter': path.resolve(__dirname, '../packages/currency-converter'),
+        '@': path.resolve(configDir, './src'),
+        ':bookcars-types': path.resolve(configDir, '../packages/bookcars-types'),
+        ':bookcars-helper': path.resolve(configDir, '../packages/bookcars-helper'),
+        ':disable-react-devtools': path.resolve(configDir, '../packages/disable-react-devtools'),
+        ':currency-converter': path.resolve(configDir, '../packages/currency-converter'),
+        'hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js': path.resolve(configDir, '../frontend/src/utils/hoistNonReactStatics.ts'),
+        'hoist-non-react-statics': path.resolve(configDir, '../frontend/src/utils/hoistNonReactStatics.ts'),
       },
     },
 
@@ -51,7 +72,7 @@ export default ({ mode }: { mode: string }) => {
       },
       hmr: {
         protocol: 'ws',
-        host: process.env.VITE_HMR_HOST || 'localhost',
+        host: process.env.VITE_HMR_HOST || undefined,
         port: Number.parseInt(process.env.VITE_HMR_PORT || '3001', 10),
         clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '3001', 10),
       },

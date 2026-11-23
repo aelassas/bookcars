@@ -4,7 +4,7 @@
   right: 10px;
   z-index: 10000;
   /* background-color: #062638; */
-  background-color: #1a1a1a;
+  background-color: var(--sr-text);
   color: #fff;
   border: 0;
   padding: 5px 10px;
@@ -22,4 +22,11 @@
 
 .view-on-map span {
   margin-top: 2px;
+}
+
+html[data-theme='dark'] .view-on-map {
+  color: #f5f5f7;
+  background: rgba(15, 15, 16, .92);
+  border: 1px solid rgba(212, 175, 55, .7);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .28);
 }

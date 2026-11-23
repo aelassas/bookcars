@@ -16,6 +16,7 @@ routes.route(routeNames.getLocationsWithPosition).get(locationController.getLoca
 routes.route(routeNames.resolveHub).post(locationController.resolveHub)
 routes.route(routeNames.checkLocation).get(authJwt.verifyToken, authJwt.authSupplier, locationController.checkLocation)
 routes.route(routeNames.getLocationId).get(locationController.getLocationId)
+routes.route(routeNames.resolvePlace).get(locationController.resolvePlace)
 routes.route(routeNames.createImage).post([authJwt.verifyToken, authJwt.authSupplier, multer({ storage: multer.memoryStorage() }).single('image')], locationController.createImage)
 routes.route(routeNames.updateImage).post([authJwt.verifyToken, authJwt.authSupplier, multer({ storage: multer.memoryStorage() }).single('image')], locationController.updateImage)
 routes.route(routeNames.deleteImage).post(authJwt.verifyToken, authJwt.authSupplier, locationController.deleteImage)

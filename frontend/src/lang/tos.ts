@@ -72,7 +72,7 @@ When you make a reservation with ${env.WEBSITE_NAME}, you agree to provide accur
 
 4. Cancellation Policy
 
-Cancellations made 24 hours before the rental date may be eligible for a full refund. Cancellations made less than 24 hours prior to the rental date may incur a cancellation fee. Please refer to our cancellation policy for detailed information.
+Cancellation, deposit, and refund terms are determined by the supplier and are shown with the listing or booking details. Review those terms before placing a booking. Any refund is subject to the supplier's stated terms and the payment provider's processing rules.
 
 
 5. Rental Conditions
@@ -117,16 +117,16 @@ ${env.WEBSITE_NAME} میں خوش آمدید! ہماری ویب سائٹ اور 
 گاڑی صرف قانونی مقاصد اور اسلامی جمہوریہ پاکستان کے نافذ العمل ٹریفک قوانین کے مطابق چلائی جائے گی۔
 
 3. بکنگ اور ادائیگی
-تمام ادائیگیاں ہمارے تصدیق شدہ پلیٹ فارمز (JazzCash، EasyPaisa، آن لائن کارڈز یا کیش آن پک اپ) کے ذریعے کی جائیں گی۔ بکنگ کے بعد فوری تصدیق جاری کی جائے گی۔
+بکنگ کے لیے درست معلومات فراہم کریں۔ ادائیگی کے دستیاب طریقے اور بکنگ کی حالت چیک آؤٹ پر دکھائی جائے گی۔ ادائیگی فراہم کنندہ کی تصدیق اور سپلائر کی منظوری، جہاں لاگو ہو، کے بعد ہی بکنگ کو حتمی سمجھیں۔
 
 4. منسوخی اور واپسی
-گاڑی وصولی سے 24 گھنٹے قبل منسوخی کی صورت میں مکمل ریفنڈ جاری کیا جائے گا۔
+منسوخی، ڈپازٹ اور ریفنڈ کی شرائط متعلقہ سپلائر کی لسٹنگ یا بکنگ کی تفصیلات میں دی جاتی ہیں۔ بکنگ سے پہلے یہ شرائط پڑھیں۔ ریفنڈ سپلائر کی شرائط اور ادائیگی فراہم کنندہ کے طریقۂ کار کے مطابق ہوگا۔
 
 5. سیکیورٹی ڈپازٹ اور گاڑی کی حفاظت
 گاڑی کی باحفاظت واپسی پر سیکیورٹی ڈپازٹ فوری طور پر مکمل واپس کر دیا جاتا ہے۔
 
 6. رابطہ اور معلومات
-کسی بھی استفسار کے لیے ${env.CONTACT_EMAIL} یا ہماری 24/7 ہیلپ لائن پر رابطہ کریں۔
+کسی بھی استفسار کے لیے ${env.CONTACT_EMAIL} پر رابطہ کریں۔
     `,
   },
   es: {

@@ -113,7 +113,7 @@ const Header = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f37022',
+    backgroundColor: '#D4AF37',
     zIndex: 40,
     elevation: 40,
     height: 52,

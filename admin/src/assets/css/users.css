@@ -56,7 +56,7 @@ div.users {
     left: 0;
     width: 300px;
     padding: 20px 0 0 12px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
   }
 
   div.users div.col-1 .user-type-filter {

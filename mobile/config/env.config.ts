@@ -1,5 +1,6 @@
 import {
   BC_API_HOST,
+  BC_WEB_APP_URL,
   BC_DEFAULT_LANGUAGE,
   BC_PAGE_SIZE,
   BC_CARS_PAGE_SIZE,
@@ -23,6 +24,7 @@ import {
   BC_WEBSITE_NAME,
   BC_GOOGLE_WEB_CLIENT_ID,
 } from '@env'
+import Constants from 'expo-constants'
 
 /**
  * ISO 639-1 languages and their labels.
@@ -104,7 +106,7 @@ export const APP_TYPE: string = 'frontend'
  *
  * @type {string}
  */
-export const WEBSITE_NAME: string = String(BC_WEBSITE_NAME || 'BookCars')
+export const WEBSITE_NAME: string = String(BC_WEBSITE_NAME || 'SafarRent')
 
 /**
  * API host.
@@ -112,6 +114,12 @@ export const WEBSITE_NAME: string = String(BC_WEBSITE_NAME || 'BookCars')
  * @type {string}
  */
 export const API_HOST: string = BC_API_HOST
+
+/** Customer website used inside the mobile app so both clients share the same workflows. */
+const expoHost = Constants.expoConfig?.hostUri?.split(':')[0]
+export const WEB_APP_URL: string = expoHost
+  ? `http://${expoHost}:8080`
+  : BC_WEB_APP_URL
 
 /**
  * Axios timeout in milliseconds.
@@ -258,7 +266,7 @@ export const STRIPE_COUNTRY_CODE: string = BC_STRIPE_COUNTRY_CODE
  *
  * @type {string}
  */
-export const BASE_CURRENCY: string = BC_BASE_CURRENCY || 'USD'
+export const BASE_CURRENCY: string = BC_BASE_CURRENCY || 'PKR'
 
 /**
  * Deposit filter first value.

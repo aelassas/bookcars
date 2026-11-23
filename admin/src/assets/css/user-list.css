@@ -56,5 +56,5 @@ div.us-list span.us-avatar img {
 
 div.us-list .us-blacklisted,
 div.us-list .us-blacklisted:hover {
-  background: #f0f0f0;
+  background: var(--sr-surface-raised);
 }

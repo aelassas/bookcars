@@ -4,9 +4,16 @@ import {
   FormControl,
   FormHelperText,
   Button,
-  Paper,
-  Input
+  Box,
+  Stack,
+  Divider,
+  Input,
 } from '@mui/material'
+import {
+  LocationOn as LocationOnIcon,
+  Apartment as ApartmentIcon,
+  Map as MapIcon,
+} from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import { useForm, useFieldArray, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,12 +35,32 @@ import { Option } from '@/models/common'
 
 import '@/assets/css/create-location.css'
 
+const CARD_STYLE = {
+  backgroundColor: 'var(--sr-surface)',
+  borderRadius: '16px',
+  border: '1px solid #E2E8F0',
+  padding: '24px',
+  marginBottom: '20px',
+}
+
+const SECTION_TITLE_STYLE = {
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  fontWeight: 600,
+  fontSize: '13px',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.08em',
+  color: 'var(--sr-emerald)',
+  margin: '0 0 16px 0',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+}
+
 const CreateLocation = () => {
   const { user } = useUserContext() as UserContextType
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Initialize form with React Hook Form and Zod validation
   const {
     control,
     register,
@@ -58,36 +85,21 @@ const CreateLocation = () => {
     }
   })
 
-  const country = useWatch({
-    control,
-    name: 'country'
-  })
+  const country = useWatch({ control, name: 'country' })
 
-  // Use field array for names and parking spots
-  const { fields: nameFields } = useFieldArray({
-    control,
-    name: 'names'
-  })
+  const { fields: nameFields } = useFieldArray({ control, name: 'names' })
 
   const { fields: parkingSpotFields, append: appendParkingSpot, update: updateParkingSpot, remove: removeParkingSpot } = useFieldArray({
     control,
     name: 'parkingSpots'
   })
 
-  // Watch values from the form
-  const watchImage = useWatch({
-    control,
-    name: 'image'
-  })
-
-  const parentLocation = useWatch({
-    control,
-    name: 'parentLocation'
-  })
+  const watchImage = useWatch({ control, name: 'image' })
+  const parentLocation = useWatch({ control, name: 'parentLocation' })
 
   const handleBeforeUpload = () => {
-    setLoading(true)
-  }
+ setLoading(true) 
+}
 
   const handleImageChange = (_image: bookcarsTypes.Location | string | null) => {
     setLoading(false)
@@ -100,10 +112,7 @@ const CreateLocation = () => {
       const validationPromises = data.names.map((name, index) =>
         LocationService.validate({ language: name.language, name: name.name }).then((status) => {
           if (status !== 200) {
-            setError(`names.${index}.name`, {
-              type: 'manual',
-              message: strings.INVALID_LOCATION
-            })
+            setError(`names.${index}.name`, { type: 'manual', message: strings.INVALID_LOCATION })
             setFocus(`names.${index}.name`)
             isValid = false
           }
@@ -148,8 +157,8 @@ const CreateLocation = () => {
   }
 
   const onLoad = () => {
-    setVisible(true)
-  }
+ setVisible(true) 
+}
 
   const handleCancel = async () => {
     if (watchImage) {
@@ -160,22 +169,41 @@ const CreateLocation = () => {
 
   return (
     <Layout onLoad={onLoad} strict>
-      <div className="create-location">
-        <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="location-form-title">{strings.NEW_LOCATION_HEADING}</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Avatar
-              type={bookcarsTypes.RecordType.Location}
-              avatar={watchImage}
-              mode="create"
-              record={null}
-              size="large"
-              readonly={false}
-              onBeforeUpload={handleBeforeUpload}
-              onChange={handleImageChange}
-              color="disabled"
-              className="avatar-ctn"
-            />
+      <Box sx={{ p: 3, backgroundColor: 'var(--sr-surface-raised)', minHeight: '100vh' }}>
+        {/* Page Header */}
+        <Box sx={{ mb: 3 }}>
+          <p style={{ margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--sr-emerald)' }}>
+            Network
+          </p>
+          <h2 style={{ margin: '4px 0 0', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '24px', color: 'var(--sr-text)' }}>
+            {strings.NEW_LOCATION_HEADING}
+          </h2>
+        </Box>
+
+        <form onSubmit={handleSubmit(onSubmit)} style={{ display: visible ? 'block' : 'none' }}>
+          {/* Card 1 — Hub Identity */}
+          <Box sx={CARD_STYLE}>
+            <p style={SECTION_TITLE_STYLE}>
+              <ApartmentIcon sx={{ fontSize: 16 }} />
+              Hub Identity
+            </p>
+            <Divider sx={{ mb: 3, borderColor: '#F0FDF4' }} />
+
+            {/* Avatar */}
+            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+              <Avatar
+                type={bookcarsTypes.RecordType.Location}
+                avatar={watchImage}
+                mode="create"
+                record={null}
+                size="large"
+                readonly={false}
+                onBeforeUpload={handleBeforeUpload}
+                onChange={handleImageChange}
+                color="disabled"
+                className="avatar-ctn"
+              />
+            </Box>
 
             <FormControl fullWidth margin="dense" error={!!errors.country}>
               <CountrySelectList
@@ -188,9 +216,7 @@ const CreateLocation = () => {
                 value={country}
                 required
               />
-              {errors.country && (
-                <FormHelperText>{errors.country.message}</FormHelperText>
-              )}
+              {errors.country && <FormHelperText>{errors.country.message}</FormHelperText>}
             </FormControl>
 
             <LocationSelectList
@@ -204,8 +230,9 @@ const CreateLocation = () => {
 
             {nameFields.map((field, index) => (
               <FormControl key={field.id} fullWidth margin="dense">
-                <InputLabel className="required">{`${commonStrings.NAME} (${env._LANGUAGES[index].label})`}</InputLabel>
-
+                <InputLabel className="required">
+                  {`${commonStrings.NAME} (${env._LANGUAGES[index].label})`}
+                </InputLabel>
                 <Input
                   {...register(`names.${index}.name`)}
                   onChange={() => {
@@ -216,26 +243,56 @@ const CreateLocation = () => {
                   error={!!errors.names?.[index]?.name}
                   required
                 />
-
                 <FormHelperText error={!!errors.names?.[index]?.name}>
                   {errors.names?.[index]?.name?.message || ''}
                 </FormHelperText>
               </FormControl>
             ))}
+          </Box>
 
-            <FormControl fullWidth margin="dense">
-              <InputLabel>{commonStrings.LATITUDE}</InputLabel>
-              <PositionInput
-                {...register('latitude')}
-              />
-            </FormControl>
+          {/* Card 2 — Map & Operations */}
+          <Box sx={CARD_STYLE}>
+            <p style={SECTION_TITLE_STYLE}>
+              <MapIcon sx={{ fontSize: 16 }} />
+              Map &amp; Operations
+            </p>
+            <Divider sx={{ mb: 3, borderColor: '#F0FDF4' }} />
 
-            <FormControl fullWidth margin="dense" >
-              <InputLabel>{commonStrings.LONGITUDE}</InputLabel>
-              <PositionInput
-                {...register('longitude')}
-              />
-            </FormControl>
+            <Stack direction="row" spacing={2}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.LATITUDE}</InputLabel>
+                <PositionInput
+                  {...register('latitude')}
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="dense">
+                <InputLabel>{commonStrings.LONGITUDE}</InputLabel>
+                <PositionInput
+                  {...register('longitude')}
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                />
+              </FormControl>
+            </Stack>
+
+            {/* Map pin preview hint */}
+            <Box sx={{
+              mt: 2,
+              mb: 2,
+              p: 2,
+              backgroundColor: 'var(--sr-surface-raised)',
+              borderRadius: '10px',
+              border: '1px dashed #BBF7D0',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}>
+              <LocationOnIcon sx={{ color: 'var(--sr-emerald)', fontSize: 20 }} />
+              <span style={{ fontSize: '13px', color: 'var(--sr-muted)', fontFamily: "'Inter', sans-serif" }}>
+                Map pin preview will appear here once coordinates are set
+              </span>
+            </Box>
 
             <ParkingSpotEditList
               title={strings.PARKING_SPOTS}
@@ -258,23 +315,47 @@ const CreateLocation = () => {
               }}
               onDelete={(_, index) => removeParkingSpot(index)}
             />
+          </Box>
 
-            <div className="buttons">
-              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={isSubmitting}>
-                {commonStrings.CREATE}
-              </Button>
-              <Button
-                variant="contained"
-                className="btn-secondary btn-margin-bottom"
-                size="small"
-                onClick={handleCancel}
-              >
-                {commonStrings.CANCEL}
-              </Button>
-            </div>
-          </form>
-        </Paper>
-      </div>
+          {/* Action Buttons */}
+          <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              sx={{
+                background: '#107487',
+                borderRadius: '10px',
+                fontWeight: 600,
+                fontSize: '14px',
+                textTransform: 'none',
+                px: 4,
+                py: 1.2,
+                '&:hover': { background: '#047857' },
+              }}
+            >
+              {commonStrings.CREATE}
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleCancel}
+              sx={{
+                borderRadius: '10px',
+                fontWeight: 600,
+                fontSize: '14px',
+                textTransform: 'none',
+                px: 4,
+                py: 1.2,
+                borderColor: '#E2E8F0',
+                color: 'var(--sr-muted)',
+                '&:hover': { borderColor: '#CBD5E1', backgroundColor: 'var(--sr-surface-raised)' },
+              }}
+            >
+              {commonStrings.CANCEL}
+            </Button>
+          </Stack>
+        </form>
+      </Box>
 
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>

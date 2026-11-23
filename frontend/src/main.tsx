@@ -13,6 +13,26 @@ import * as UserService from '@/services/UserService'
 import * as IpInfoService from '@/services/IpInfoService'
 import env from '@/config/env.config'
 import App from '@/App'
+import { appThemeOptions } from '@/utils/appTheme'
+import { getThemeMode, initThemeMode } from '@/utils/themeMode'
+
+initThemeMode()
+document.documentElement.dataset.app = 'frontend'
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+      console.warn('SafarRent offline shell registration failed:', error)
+    })
+  })
+}
+
+document.title = `${env.WEBSITE_NAME} | Pakistan vehicle rental operations`
+const siteIcon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
+if (siteIcon) {
+  siteIcon.href = '/safarrent-mark.svg'
+  siteIcon.type = 'image/svg+xml'
+}
 
 import { strings as activateStrings } from '@/lang/activate'
 import { strings as bookingStrings } from '@/lang/booking'
@@ -53,6 +73,8 @@ import { strings as checkoutStatusStrings } from '@/lang/checkout-status'
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 import '@/assets/css/luxury-theme.css'
+import '../../packages/safarrent-ui.css'
+
 
 if (env.isProduction) {
   disableDevTools()
@@ -183,98 +205,25 @@ const muiLocales: Record<string, any> = { fr: frFR, es: esES, de: deDE, pt: ptPT
 const dataGridLocales: Record<string, any> = { fr: dataGridfrFR, es: dataGridesEs, de: dataGriddeDE, pt: dataGridptPT, it: dataGriditIT, zh: dataGridzhCN, ja: dataGridjaJP }
 const coreLocales: Record<string, any> = { fr: corefrFR, es: coresES, de: coredeDE, pt: coreptPT, it: coreitIT, zh: corezhCN, ja: corejaJP }
 
-const theme = createTheme(
-  {
-    palette: {
-      primary: {
-        main: '#059669',
-        dark: '#047857',
-        contrastText: '#ffffff',
-        // contrastText: '#003B95',
-        // dark: '#003B95',
-      },
-    },
-    typography: {
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: {
-          body: {
-            backgroundColor: '#F8FAFC',
-          },
-        },
-      },
-      MuiFormControl: {
-        styleOverrides: {
-          root: {
-            '& .Mui-disabled': {
-              color: '#333 !important',
-            },
-          },
-        },
-      },
-      // MuiSwitch: {
-      //   styleOverrides: {
-      //     root: {
-      //       '& .Mui-checked': {
-      //         color: '#1976D2 !important',
-      //       },
-      //       '& .Mui-checked+.MuiSwitch-track': {
-      //         opacity: 0.7,
-      //         backgroundColor: '#1976D2 !important',
-      //       },
-      //     },
-      //   },
-      // },
-      MuiAutocomplete: {
-        styleOverrides: {
-          root: {
-            '& .MuiAutocomplete-inputRoot': {
-              paddingRight: '20px !important',
-            },
-          },
-          listbox: {
-            '& .Mui-focused': {
-              backgroundColor: '#eee !important',
-            },
-          },
-          option: {
-            // Hover
-            // '&[data-focus="true"]': {
-            //     backgroundColor: '#eee !important',
-            //     borderColor: 'transparent',
-            // },
-            // Selected
-            '&[aria-selected="true"]': {
-              // backgroundColor: '#faad43 !important',
-              backgroundColor: '#F7B644 !important',
-            },
-          },
-        },
-      },
-    },
-  },
-  muiLocales[language] || enUS,
-  dataGridLocales[language] || dataGridenUS,
-  coreLocales[language] || coreenUS,
-)
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline>
+const ThemedApp = () => {
+  const [mode, setMode] = React.useState(getThemeMode)
+  React.useEffect(() => {
+    const sync = () => setMode(getThemeMode())
+    window.addEventListener('safarrent-theme-change', sync)
+    window.addEventListener('storage', sync)
+    return () => {
+      window.removeEventListener('safarrent-theme-change', sync)
+      window.removeEventListener('storage', sync)
+    }
+  }, [])
+  const theme = React.useMemo(() => createTheme(appThemeOptions(mode), muiLocales[language] || enUS, dataGridLocales[language] || dataGridenUS, coreLocales[language] || coreenUS), [mode])
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <App />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-      />
-    </CssBaseline>
-  </ThemeProvider>,
-)
+      <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss={false} draggable={false} theme={mode} />
+    </ThemeProvider>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(<ThemedApp />)

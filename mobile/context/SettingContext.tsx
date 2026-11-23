@@ -37,7 +37,7 @@ export const SettingProvider = ({ children }: { children: React.ReactNode }) => 
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#f37022" />
+        <ActivityIndicator size="large" color="#D4AF37" />
       </View>
     )
   }

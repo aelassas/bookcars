@@ -22,8 +22,8 @@
 }
 
 .btn-primary {
-  background-color: #121212 !important;
-  color: #fff !important;
+  background-color: var(--sr-button-bg) !important;
+  color: var(--sr-button-text) !important;
   opacity: 0.9;
 }
 
@@ -48,7 +48,7 @@
 
 .btn-lnk {
   background-color: transparent !important;
-  color: #1a1a1a !important;
+  color: var(--sr-text) !important;
   font-weight: 400 !important;
   text-decoration: underline !important;
   font-size: 16px !important;
@@ -85,12 +85,12 @@
 }
 
 .msg h2 {
-  color: #232323;
+  color: var(--sr-text);
   margin: 0;
 }
 
 .msg p {
-  color: #333;
+  color: var(--sr-text);
 }
 
 /* Avatar */
@@ -218,7 +218,7 @@
 }
 
 .info span {
-  color: #a8a8a8;
+  color: var(--sr-muted);
   display: inline-block;
   font-size: 0.9em;
   line-height: 1em;
@@ -244,7 +244,7 @@
 }
 
 .d-adornment-icon {
-  color: rgb(0 0 0 / 54%);
+  color: var(--sr-muted);
   width: 20px !important;
   height: 20px !important;
 }
@@ -258,7 +258,7 @@ div.content {
 }
 
 .form-label {
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 3px;

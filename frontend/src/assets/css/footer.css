@@ -1,12 +1,12 @@
 div.footer {
   width: 100%;
-  min-height: 300px;
+  min-height: 0;
   flex-shrink: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  background: #f2f2f2;
-  color: #1a1a1a;
+  background: var(--sr-surface-raised);
+  color: var(--sr-text);
   border-top: 1px solid #ebebeb;
   font-size: 13px;
   padding: 12px;
@@ -23,8 +23,10 @@ div.footer section.main {
   width: 100%;
   display: flex;
   flex-direction: row;
-  margin-bottom: 15px;
-  padding-bottom: 80px;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 28px;
 }
 
 div.footer div.main-section {
@@ -68,7 +70,7 @@ div.footer div.footer-contact .icon {
 
 div.footer div.footer-contact a {
   text-decoration: none;
-  color: #1a1a1a;
+  color: var(--sr-text);
 }
 
 div.footer div.footer-contact a:hover {
@@ -82,11 +84,11 @@ div.footer div.footer-contact .social-icon {
 }
 
 div.footer div.footer-contact .social-icon:hover{
-  color: #1a1a1a;
+  color: var(--sr-text);
 }
 
 div.footer div.newsletter {
-  margin-top: 80px;
+  margin-top: 28px;
 }
 
 div.footer section.payment {

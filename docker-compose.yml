@@ -7,28 +7,29 @@ services:
       - openssl rand -base64 756 > /tmp/mongodb-keyfile && chown mongodb:mongodb /tmp/mongodb-keyfile && chmod 400 /tmp/mongodb-keyfile && exec /usr/local/bin/docker-entrypoint.sh mongod --quiet --replSet rs0 --bind_ip_all --keyFile /tmp/mongodb-keyfile
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USERNAME:?Set MONGO_ROOT_USERNAME in the root .env file}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD in the root .env file}"
     ports:
-      - 27018:27017
+      - 127.0.0.1:27018:27017
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --quiet --username admin --password admin --authenticationDatabase admin --eval \"try { rs.status().ok } catch (error) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
+      test: ["CMD-SHELL", "mongosh --quiet --username \"$$MONGO_INITDB_ROOT_USERNAME\" --password \"$$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin --eval \"try { rs.status().ok } catch (error) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
       interval: 5s
       timeout: 5s
       retries: 30
 
   mongo-express:
+    profiles: ["db-tools"]
     image: mongo-express:latest
     restart: always
     ports:
-      - 8084:8081
+      - 127.0.0.1:8084:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      ME_CONFIG_MONGODB_URL: "${BC_DB_URI:?Set BC_DB_URI in the root .env file}"
+      ME_CONFIG_BASICAUTH_USERNAME: "${MONGO_EXPRESS_USERNAME:?Set MONGO_EXPRESS_USERNAME in the root .env file}"
+      ME_CONFIG_BASICAUTH_PASSWORD: "${MONGO_EXPRESS_PASSWORD:?Set MONGO_EXPRESS_PASSWORD in the root .env file}"
     depends_on:
       mongo:
         condition: service_healthy
@@ -36,8 +37,6 @@ services:
   redis:
     image: redis:7-alpine
     restart: always
-    ports:
-      - 6379:6379
     volumes:
       - redis_data:/data
     healthcheck:
@@ -46,14 +45,16 @@ services:
       timeout: 3s
       retries: 5
 
-  bc-backend:
+  safarrent-api:
     build: 
       context: .
       dockerfile: ./backend/Dockerfile
     env_file: ./backend/.env.docker
+    environment:
+      BC_DB_URI: "${BC_DB_URI:?Set BC_DB_URI in the root .env file}"
     restart: always
     ports:
-      - 4002:4002
+      - 127.0.0.1:4002:4002
     depends_on:
       mongo:
         condition: service_healthy
@@ -63,26 +64,26 @@ services:
       - cdn:/var/www/cdn/bookcars
       - backend_logs:/bookcars/backend/logs
 
-  bc-admin:
+  safarrent-admin:
     build: 
       context: .
       dockerfile: ./admin/Dockerfile
     restart: always
     depends_on:
-      - bc-backend
+      - safarrent-api
     ports:
-      - 3001:3001
+      - 127.0.0.1:3001:3001
 
-  bc-frontend:
+  safarrent-frontend:
     build: 
       context: .
       dockerfile: ./frontend/Dockerfile
     restart: always
     depends_on:
-      - bc-backend
+      - safarrent-api
     ports:
-      - 8080:80
-      - 8443:443
+      - 127.0.0.1:8080:80
+      - 127.0.0.1:8443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
 

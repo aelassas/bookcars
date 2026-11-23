@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Alert, Button, Stack, Typography } from '@mui/material'
+import { Button, useMediaQuery } from '@mui/material'
 import { Tune as FiltersIcon } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
@@ -9,7 +9,6 @@ import * as helper from '@/utils/helper'
 import env from '@/config/env.config'
 import * as LocationService from '@/services/LocationService'
 import * as SupplierService from '@/services/SupplierService'
-import * as CarService from '@/services/CarService'
 // import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
 import NoMatch from './NoMatch'
@@ -35,10 +34,12 @@ import '@/assets/css/search.css'
 
 const Search = () => {
   const location = useLocation()
+  const inlineMap = useMediaQuery('(min-width: 1281px)')
 
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
+  const [pickupCoordinates, setPickupCoordinates] = useState<{ latitude: number; longitude: number }>()
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
@@ -60,8 +61,9 @@ const Search = () => {
   const [openMapDialog, setOpenMapDialog] = useState(false)
   // const [distance, setDistance] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-  const [nearbySuggestions, setNearbySuggestions] = useState<Array<{ from: string, to: string, availableCars: number }>>([])
-  const [hubFallback, setHubFallback] = useState<string | null>(null)
+  const [hubLocations, setHubLocations] = useState<bookcarsTypes.Location[]>([])
+  const [searchedPlace, setSearchedPlace] = useState('')
+  const [showMapPane, setShowMapPane] = useState(true)
   // const [loadingPage, setLoadingPage] = useState(true)
 
   useEffect(() => {
@@ -76,6 +78,7 @@ const Search = () => {
     }
 
     fetchSuppliers()
+    LocationService.getLocationsWithPosition().then(setHubLocations).catch(() => setHubLocations([]))
   }, [])
 
   useEffect(() => {
@@ -83,6 +86,8 @@ const Search = () => {
       if (pickupLocation) {
         const payload: bookcarsTypes.GetCarsPayload = {
           pickupLocation: pickupLocation._id,
+          pickupLatitude: pickupCoordinates?.latitude,
+          pickupLongitude: pickupCoordinates?.longitude,
           carSpecs,
           carType,
           gearbox,
@@ -104,7 +109,7 @@ const Search = () => {
     if (from && to) {
       updateSuppliers()
     }
-  }, [pickupLocation, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
+  }, [pickupLocation, pickupCoordinates, carSpecs, carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
 
   const handleCarFilterSubmit = async (filter: bookcarsTypes.CarFilter) => {
     if (suppliers.length < allSuppliers.length) {
@@ -113,6 +118,9 @@ const Search = () => {
     }
 
     setPickupLocation(filter.pickupLocation)
+    if (filter.pickupLocation._id !== pickupLocation?._id) {
+      setPickupCoordinates(undefined)
+    }
     setDropOffLocation(filter.dropOffLocation)
     setFrom(filter.from)
     setTo(filter.to)
@@ -163,14 +171,31 @@ const Search = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    const { state } = location
+    let state = location.state
     if (!state) {
-      setNoMatch(true)
-      return
+      // Direct visits still open a usable search with a real pickup hub.
+      try {
+        const hubs = await LocationService.getLocationsWithPosition()
+        if (!hubs.length) {
+ setLoading(false); setNoMatch(true); return 
+}
+        const start = new Date()
+        start.setDate(start.getDate() + 1)
+        start.setHours(10, 0, 0, 0)
+        const end = new Date(start)
+        end.setDate(end.getDate() + 3)
+        state = { pickupLocationId: hubs[0]._id, dropOffLocationId: hubs[0]._id, from: start, to: end }
+      } catch (error) {
+        helper.error(error)
+        setLoading(false)
+        setNoMatch(true)
+        return
+      }
     }
 
     const { pickupLocationId } = state
     const { dropOffLocationId } = state
+    const { pickupCoordinates: _pickupCoordinates, pickupPlace } = state
     const { from: _from } = state
     const { to: _to } = state
 
@@ -205,6 +230,9 @@ const Search = () => {
 
       const payload: bookcarsTypes.GetCarsPayload = {
         pickupLocation: _pickupLocation._id,
+        pickupLatitude: _pickupCoordinates?.latitude,
+        pickupLongitude: _pickupCoordinates?.longitude,
+        pickupLabel: pickupPlace,
         carSpecs,
         carType,
         gearbox,
@@ -222,41 +250,13 @@ const Search = () => {
       const _supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
 
       setPickupLocation(_pickupLocation)
+      setPickupCoordinates(_pickupCoordinates)
       setDropOffLocation(_dropOffLocation)
-      setFrom(_from)
-      setTo(_to)
+      setSearchedPlace(pickupPlace || '')
+      setFrom(new Date(_from))
+      setTo(new Date(_to))
       setSuppliers(_suppliers)
       setSupplierIds(_supplierIds)
-
-      try {
-        const nearby = await CarService.getNearbyAvailability({
-          pickupLocation: _pickupLocation._id,
-          from: new Date(_from),
-          to: new Date(_to),
-          radiusDays: 14,
-        })
-        setNearbySuggestions(nearby.suggestions)
-      } catch {
-        setNearbySuggestions([])
-      }
-
-      if (_pickupLocation.name && /murree/i.test(_pickupLocation.name)) {
-        try {
-          const resolution = await LocationService.resolveHub({
-            name: _pickupLocation.name,
-            latitude: _pickupLocation.latitude,
-            longitude: _pickupLocation.longitude,
-            radiusKm: 50,
-          })
-          setHubFallback(
-            resolution.nearestHub
-              ? `Nearest registered pickup hub: ${resolution.nearestHub.name} (${resolution.nearestHub.distanceKm} km).`
-              : 'No registered pickup hub was found near Murree.',
-          )
-        } catch {
-          setHubFallback('Murree inventory was searched directly; no nearest-hub confirmation was available.')
-        }
-      }
 
       const { ranges: _ranges } = state
       if (_ranges) {
@@ -277,31 +277,25 @@ const Search = () => {
       }
     } catch (err) {
       helper.error(err)
+      setLoading(false)
+      setNoMatch(true)
     }
   }
+
+  const isFallbackHub = Boolean(
+    (searchedPlace && pickupLocation && !(pickupLocation.name || '').toLowerCase().includes(searchedPlace.toLowerCase().trim()))
+  )
 
   return (
     <>
       <Layout onLoad={onLoad} strict={false}>
         {visible && supplierIds && pickupLocation && dropOffLocation && from && to && (
           <div className="search">
-            <div className="col-1">
+            <div className="col-1 filter-rail">
               {!loading && (
                 <>
-                  {((pickupLocation.latitude && pickupLocation.longitude)
-                    || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
-                      <Map
-                        position={[pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude), pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude)]}
-                        initialZoom={10}
-                        locations={[pickupLocation]}
-                        parkingSpots={pickupLocation.parkingSpots}
-                        className="map"
-                      >
-                        <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
-                      </Map>
-                    )}
-
                   <CarFilter
+                    key={[pickupLocation._id, dropOffLocation._id, from.getTime(), to.getTime()].join('-')}
                     className="filter"
                     pickupLocation={pickupLocation}
                     dropOffLocation={dropOffLocation}
@@ -343,28 +337,35 @@ const Search = () => {
                 </>
               )}
             </div>
-            <div className="col-2">
-              {hubFallback && <Alert severity="info" sx={{ mb: 2 }}>{hubFallback}</Alert>}
-              {nearbySuggestions.length > 0 && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
-                  <Typography variant="subtitle2">Nearby available dates</Typography>
-                  <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
-                    {nearbySuggestions.map((suggestion) => (
-                      <Button
-                        key={`${suggestion.from}-${suggestion.to}`}
-                        size="small"
-                        variant="outlined"
-                        onClick={() => {
-                          setFrom(new Date(suggestion.from))
-                          setTo(new Date(suggestion.to))
-                        }}
-                      >
-                        {new Date(suggestion.from).toLocaleDateString()} - {new Date(suggestion.to).toLocaleDateString()} ({suggestion.availableCars})
-                      </Button>
-                    ))}
-                  </Stack>
-                </Alert>
+            <div className="col-2 vehicle-feed">
+              {isFallbackHub && (
+                <div className="hub-fallback-banner">
+                  <div className="hub-fallback-top">
+                    <span className="hub-fallback-badge">Available pickup point: {pickupLocation.name}</span>
+                    <span className="hub-fallback-status">Confirm route suitability</span>
+                  </div>
+                  <h3 className="hub-fallback-title">No pickup point matched your requested area</h3>
+                  <p className="hub-fallback-desc">
+                    Results use the available pickup point shown above. Contact the supplier to confirm delivery, travel distance, and mountain-route suitability before booking.
+                  </p>
+                  <div className="hub-fallback-footer">
+                    <span className="outstation-delivery-text">Delivery fees and timing require supplier confirmation.</span>
+                  </div>
+                </div>
               )}
+
+              <div className="feed-toolbar">
+                <span className="feed-meta">Showing available listings with PKR pricing</span>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  className="toggle-map-btn"
+                  onClick={() => inlineMap ? setShowMapPane((prev) => !prev) : setOpenMapDialog(true)}
+                >
+                  {inlineMap && showMapPane ? 'Hide map' : 'View hub map'}
+                </Button>
+              </div>
+
               <CarList
                 carSpecs={carSpecs}
                 suppliers={supplierIds}
@@ -374,8 +375,9 @@ const Search = () => {
                 fuelPolicy={fuelPolicy}
                 deposit={deposit}
                 pickupLocation={pickupLocation._id}
+                pickupCoordinates={pickupCoordinates}
+                pickupLocationName={pickupLocation.name}
                 dropOffLocation={dropOffLocation._id}
-                // pickupLocationName={pickupLocation.name}
                 loading={loading}
                 from={from}
                 to={to}
@@ -383,13 +385,62 @@ const Search = () => {
                 multimedia={multimedia}
                 rating={rating}
                 seats={seats}
-                // distance={distance}
-                // onLoad={() => setLoadingPage(false)}
                 hideSupplier={env.HIDE_SUPPLIERS}
-                // includeAlreadyBookedCars
-                includeComingSoonCars
+                rentalMode={location.state?.rentalMode}
+                nearbyHubs={hubLocations
+                  .filter((hub) => hub.name && hub._id !== pickupLocation._id && hub.latitude != null && hub.longitude != null
+                    && pickupLocation.latitude != null && pickupLocation.longitude != null)
+                  .map((hub) => ({ hub, distance: bookcarsHelper.distance(pickupLocation.latitude!, pickupLocation.longitude!, hub.latitude!, hub.longitude!, 'K') }))
+                  .sort((a, b) => a.distance - b.distance)
+                  .slice(0, 3)
+                  .map(({ hub }) => hub)}
+                onDateChange={(newFrom, newTo) => {
+                  setSupplierIds(allSuppliersIds)
+                  setFrom(newFrom)
+                  setTo(newTo)
+                }}
+                onHubChange={(hub) => {
+                  if (pickupLocation._id === dropOffLocation._id) {
+setDropOffLocation(hub)
+}
+                  setPickupLocation(hub)
+                  setPickupCoordinates(undefined)
+                  setSearchedPlace('')
+                  setSupplierIds(allSuppliersIds)
+                }}
               />
             </div>
+
+            {inlineMap && showMapPane && (
+              <div className="col-3 map-pane">
+                <div className="map-pane-header">
+                  <span className="map-pane-title">Pickup hub map</span>
+                  <button
+                    type="button"
+                    className="map-pane-close"
+                    onClick={() => setShowMapPane(false)}
+                    title="Close Map Pane"
+                  >
+                    ✕
+                  </button>
+                </div>
+                {((pickupLocation.latitude && pickupLocation.longitude)
+                  || (pickupLocation.parkingSpots && pickupLocation.parkingSpots.length > 0)) && (
+                    <Map
+                      position={[
+                        pickupLocation.latitude || Number(pickupLocation.parkingSpots![0].latitude),
+                        pickupLocation.longitude || Number(pickupLocation.parkingSpots![0].longitude),
+                      ]}
+                      initialZoom={10}
+                      locations={[pickupLocation]}
+                      parkingSpots={pickupLocation.parkingSpots}
+                      className="search-pane-map"
+                    >
+                      <ViewOnMapButton onClick={() => setOpenMapDialog(true)} />
+                    </Map>
+                  )}
+              </div>
+            )}
           </div>
         )}
 
@@ -401,8 +452,6 @@ const Search = () => {
 
         {noMatch && <NoMatch hideHeader />}
       </Layout>
-
-      {/* {loadingPage && !noMatch && <Progress />} */}
     </>
   )
 }

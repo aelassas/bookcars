@@ -335,7 +335,7 @@ const BookingList = ({
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
           <Link href={`/supplier?c=${(row.supplier as bookcarsTypes.User)._id}`} className="cell-supplier">
-            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value} />
+            <img src={helper.getUserAvatarUrl((row.supplier as bookcarsTypes.User).avatar)} alt={value} />
           </Link>
         ),
         valueGetter: (value: bookcarsTypes.User) => value?.fullName,
@@ -535,7 +535,7 @@ const BookingList = ({
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
                       <div className="car-supplier">
-                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, (booking.supplier as bookcarsTypes.User).avatar)} alt={(booking.supplier as bookcarsTypes.User).fullName} />
+                        <img src={helper.getUserAvatarUrl((booking.supplier as bookcarsTypes.User).avatar)} alt={(booking.supplier as bookcarsTypes.User).fullName} />
                         <span className="car-supplier-name">{(booking.supplier as bookcarsTypes.User).fullName}</span>
                       </div>
                     </div>
@@ -600,6 +600,19 @@ const BookingList = ({
                     <span className="booking-detail-title">{strings.COST}</span>
                     <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(booking.price as number, commonStrings.CURRENCY, language as string)}</div>
                   </div>
+
+                  {booking.demoPaymentAttempts && booking.demoPaymentAttempts.length > 0 && (
+                    <div className="fyp-demo-payment-history-admin">
+                      <strong>FYP test payments · no funds moved</strong>
+                      {booking.demoPaymentAttempts.map((attempt) => (
+                        <div key={attempt.reference}>
+                          <span>{attempt.outcome}</span>
+                          <span>{attempt.currency} {attempt.amount.toLocaleString()}</span>
+                          <code>{attempt.reference}</code>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="bs-buttons">
                     <Button

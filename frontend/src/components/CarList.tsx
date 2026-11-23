@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { addDays, format } from 'date-fns'
 import {
   Card,
   CardContent,
@@ -21,6 +22,7 @@ interface CarListProps {
   to?: Date
   suppliers?: string[]
   pickupLocation?: string
+  pickupCoordinates?: { latitude: number; longitude: number }
   dropOffLocation?: string
   pickupLocationName?: string
   carSpecs?: bookcarsTypes.CarSpecs
@@ -45,6 +47,10 @@ interface CarListProps {
   includeAlreadyBookedCars?: boolean
   includeComingSoonCars?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+  onDateChange?: (newFrom: Date, newTo: Date) => void
+  rentalMode?: bookcarsTypes.RentalMode
+  nearbyHubs?: bookcarsTypes.Location[]
+  onHubChange?: (hub: bookcarsTypes.Location) => void
 }
 
 const CarList = ({
@@ -52,6 +58,7 @@ const CarList = ({
   to,
   suppliers,
   pickupLocation,
+  pickupCoordinates,
   dropOffLocation,
   pickupLocationName,
   carSpecs,
@@ -76,6 +83,10 @@ const CarList = ({
   includeAlreadyBookedCars,
   includeComingSoonCars,
   onLoad,
+  onDateChange,
+  rentalMode,
+  nearbyHubs = [],
+  onHubChange,
 }: CarListProps) => {
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -124,6 +135,8 @@ const CarList = ({
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: _suppliers ?? [],
         pickupLocation: _pickupLocation,
+        pickupLatitude: pickupCoordinates?.latitude,
+        pickupLongitude: pickupCoordinates?.longitude,
         carSpecs: _carSpecs,
         carType: __carType,
         gearbox: _gearbox,
@@ -189,7 +202,7 @@ const CarList = ({
         setInit(false)
       }
     }
-  }, [page, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page, suppliers, pickupLocation, pickupCoordinates, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (cars) {
@@ -204,14 +217,14 @@ const CarList = ({
 
   useEffect(() => {
     setPage(1)
-  }, [suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
+  }, [suppliers, pickupLocation, pickupCoordinates, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats, from, to])
 
   useEffect(() => {
     if (reload) {
       setPage(1)
       fetchData(1, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats)
     }
-  }, [reload, suppliers, pickupLocation, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reload, suppliers, pickupLocation, pickupCoordinates, carSpecs, _carType, gearbox, mileage, fuelPolicy, deposit, ranges, multimedia, rating, seats]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -221,11 +234,45 @@ const CarList = ({
           && !loading
           && !carListLoading
           && (
-            <Card variant="outlined" className="empty-list">
-              <CardContent>
-                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-              </CardContent>
-            </Card>
+            <div className="zero-result-recovery-card">
+              <div className="recovery-header">
+                <span className="recovery-badge">No direct matches for selected dates</span>
+                <h3 className="recovery-title">No vehicles match this search</h3>
+                <p className="recovery-subtitle">
+                  Try different dates, adjust your filters, or search another pickup location.
+                </p>
+              </div>
+              <div className="recovery-actions">
+                {from && to && onDateChange && (
+                  <div className="recovery-section">
+                    <div className="recovery-section-title">Try another date</div>
+                    <div className="recovery-chips">
+                      {[1, 3, 7].map((offset) => {
+                        const start = addDays(from, offset)
+                        const end = addDays(to, offset)
+                        return (
+                          <button type="button" key={offset} className="recovery-chip date-chip" onClick={() => onDateChange(start, end)}>
+                            {format(start, 'd MMM')} – {format(end, 'd MMM')}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+                {onHubChange && nearbyHubs.length > 0 && (
+                  <div className="recovery-section">
+                    <div className="recovery-section-title">Nearby pickup locations</div>
+                    <div className="recovery-chips">
+                      {nearbyHubs.map((hub) => (
+                        <button key={hub._id} type="button" className="recovery-chip hub-chip" onClick={() => onHubChange(hub)}>
+                          {hub.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           )
           : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
           && (
@@ -248,6 +295,7 @@ const CarList = ({
                   key={car._id}
                   car={car}
                   booking={booking}
+                  rentalMode={rentalMode}
                   pickupLocation={pickupLocation}
                   dropOffLocation={dropOffLocation}
                   from={from as Date}

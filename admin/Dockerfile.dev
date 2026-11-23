@@ -38,7 +38,6 @@ COPY ./admin/package*.json ./
 RUN npm install --force --no-audit --no-fund && npm cache clean --force
 
 COPY ./admin ./ 
-COPY ./admin/.env.docker .env
 
 # Copy preinstalled internal packages
 COPY --from=packages /bookcars/packages /bookcars/packages

@@ -1,0 +1,252 @@
+/* Shared foundations for the customer and operations applications. */
+:root {
+  --sr-panel-radius: 16px;
+  --sr-panel-shadow: 0 8px 28px -12px rgba(15, 23, 42, .18);
+  --sr-page-gutter: clamp(16px, 3vw, 44px);
+}
+
+#root :focus-visible {
+  outline: 3px solid var(--sr-emerald);
+  outline-offset: 3px;
+}
+
+#root .MuiButton-root {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+#root :is(.MuiTableCell-root, .MuiDataGrid-cell, .booking-id, .pkr-price) {
+  font-variant-numeric: tabular-nums;
+}
+
+#root .booking-status .bs { min-width: 0; padding: 3px 10px; font-weight: 600; }
+#root .booking-status .bs-pending { background: #fef3c7; color: #92400e; }
+#root .booking-status :is(.bs-deposit, .bs-paid, .bs-paidinfull) { background: #d1fae5; color: #065f46; }
+#root .booking-status .bs-cancelled { background: #fee2e2; color: #991b1b; }
+#root .booking-status .bs-reserved { background: #dbeafe; color: #1e40af; }
+
+/* Reference design system. Theme tokens are shared by every route and portal. */
+html[data-theme] {
+  --sr-ink: #f7f8fa; --sr-surface: #fff; --sr-surface-raised: #f0f3f6;
+  --sr-text: #171b24; --sr-muted: #596273; --sr-border: #dce1e8;
+  --sr-emerald: #107487; --sr-emerald-hover: #0b5d6d; --sr-emerald-soft: #e8f4f6;
+  --sr-mint: #107487; --sr-gold: #ffa62b; --sr-gold-soft: #fff0d9;
+  --sr-accent-text: #995000; --sr-button-bg: #ffa62b; --sr-button-text: #171b24;
+  --sr-on-gold: #171b24; --sr-header: #fff; --sr-panel-radius: 14px;
+  --sr-panel-shadow: 0 8px 30px -14px #17203320;
+}
+html[data-theme='dark'] {
+  --sr-ink: #10151e; --sr-surface: #1a202b; --sr-surface-raised: #252e3c;
+  --sr-text: #f4f5f7; --sr-muted: #b4bdca; --sr-border: #3c485b;
+  --sr-emerald: #58c7d6; --sr-emerald-hover: #8adbe5; --sr-emerald-soft: #173d46;
+  --sr-mint: #58c7d6; --sr-gold-soft: #3b2d1d; --sr-accent-text: #ffc16a;
+  --sr-header: #1a202b; --sr-panel-shadow: 0 8px 30px -14px #0008;
+}
+html[data-app] body { background: var(--sr-ink); color: var(--sr-text); }
+html[data-app] #root { color: var(--sr-text); font-family: var(--sr-font-body); }
+html[data-app] #root :is(.MuiPaper-root,.MuiAccordion-root,.MuiTableContainer-root,.MuiDataGrid-root) {
+  background-color: var(--sr-surface); color: var(--sr-text); border-color: var(--sr-border);
+  background-image: none; border-radius: 14px;
+}
+html[data-app] #root .MuiAppBar-root { border-radius: 0; }
+html[data-app] #root :is(.MuiFormControlLabel-label,.MuiMenuItem-root,.MuiTableCell-body,.MuiDataGrid-cell) { color: inherit; }
+html[data-app] #root :is(.MuiTypography-colorTextSecondary,.MuiInputLabel-root,.MuiFormHelperText-root:not(.Mui-error),.MuiFormLabel-root) { color: var(--sr-muted); }
+html[data-app] #root :is(.MuiInputBase-root,.MuiPickersInputBase-root,.MuiSelect-select) { background: var(--sr-surface-raised); color: var(--sr-text); }
+html[data-app] #root :is(.MuiInputBase-input,.MuiPickersSectionList-root) { color: var(--sr-text); }
+html[data-app] #root .MuiInputBase-input::placeholder { color: var(--sr-muted); opacity: 1; }
+html[data-app] #root :is(.MuiOutlinedInput-notchedOutline,.MuiPickersOutlinedInput-notchedOutline) { border-color: var(--sr-border); }
+html[data-app] #root :is(.MuiButton-containedPrimary,.btn-primary,.btn-search,.btn-build-trip) {
+  background: var(--sr-button-bg) !important; color: var(--sr-button-text) !important;
+  border: 1px solid transparent !important; box-shadow: none !important;
+}
+html[data-app] #root :is(.MuiButton-containedPrimary,.btn-primary,.btn-search,.btn-build-trip):hover { background: #ffb84f !important; color: #171b24 !important; }
+html[data-app] #root :is(.MuiButton-outlined,.MuiButton-text,.MuiTab-root) { color: var(--sr-text); }
+html[data-app] #root :is(.MuiButton-containedSecondary,.btn-secondary) { background: #107487 !important; color: #fff !important; }
+html[data-app] #root .MuiButton-root.Mui-disabled { background: var(--sr-surface-raised) !important; color: var(--sr-muted) !important; opacity: .7; }
+html[data-app] #root .MuiTab-root.Mui-selected { color: var(--sr-accent-text); }
+html[data-app] #root :is(.MuiTableCell-head,.MuiDataGrid-columnHeaders,.MuiDataGrid-columnHeader) { background: var(--sr-surface-raised); color: var(--sr-muted); }
+html[data-app] #root :is(.MuiTableCell-root,.MuiDataGrid-cell,.MuiDataGrid-footerContainer) { border-color: var(--sr-border); }
+html[data-app] #root :is(.MuiCheckbox-root,.MuiRadio-root).Mui-checked { color: var(--sr-emerald); }
+html[data-app] #root :is(.MuiIconButton-root,.MuiSelect-icon,.MuiInputAdornment-root) { color: var(--sr-muted); }
+html[data-app] #root .MuiFormHelperText-root.Mui-error { color: #df5555; }
+html[data-app] #root .MuiAlert-root { border-radius: 10px; }
+html[data-app] #root :is(.MuiTableContainer-root,.MuiDataGrid-root) { box-shadow: none; }
+html[data-app] #root :is(h1,h2,h3,h4,h5,h6) { letter-spacing: -.025em; }
+html[data-app] #root :is(.signin,.signup,.forgot-password,.reset-password,.password-reset,.settings,.bank-details,.create-user,.update-user,.create-supplier,.update-supplier,.create-country,.update-country,.create-car,.update-location,.create-location) {
+  margin-block: 0; min-height: calc(100svh - 160px); padding: clamp(24px,4vw,56px) 20px;
+}
+html[data-app] #root :is(.signin-form,.signup-form,.forgot-password-form,.reset-password-form,.password-reset-form,.settings-form,.settings-net,.bank-details-form,.user-form,.supplier-form,.supplier-form-update,.country-form,.location-form,.car-form,.sr-auth-card) {
+  background: var(--sr-surface); color: var(--sr-text); border: 1px solid var(--sr-border);
+  border-radius: 14px; box-shadow: var(--sr-panel-shadow); max-width: 100%;
+  padding: clamp(20px,3vw,36px); height: auto;
+}
+html[data-app] #root :is(.signin-form-title,.signup-form-title,.settings-form-title,.password-reset-form-title,.country-form-title,.location-form-title,.user-form-title,.supplier-form-title,.bank-details-form-title) {
+  color: var(--sr-text); font-size: clamp(24px,2vw,30px); font-weight: 750; text-align: start; margin-top: 0;
+}
+html[data-app] #root :is(.sr-auth-bg,.sr-content-bg) { background: var(--sr-ink); }
+html[data-app] #root :is(.sr-card-title,.sr-logo-text,.sr-field-label,.sr-label,.sr-content-title) { color: var(--sr-text); }
+html[data-app] #root :is(.sr-card-subtitle,.sr-logo-badge,.sr-auth-footer,.sr-divider,.sr-footer-text) { color: var(--sr-muted); }
+html[data-app] #root :is(.sr-input,.sr-select,.sr-textarea) { background: var(--sr-surface-raised); color: var(--sr-text); border-color: var(--sr-border); }
+html[data-app] #root :is(.filter,.info-box,.booking-details,.maintenance-form,.checkout-step-section,.checkout-form,.checkout-info,.car-info) { border-color: var(--sr-border); color: var(--sr-text); }
+html[data-app] #root :is(.filter-rail,.cl-supplier-filter,.cl-status-filter,.cl-booking-filter,.cl-scheduler-filter) { border-radius: 12px; }
+html[data-app] #root .booking-details { border-radius: 12px; padding: 20px; background: var(--sr-surface); }
+html[data-app] #root :is(.empty-list,.msg) { color: var(--sr-muted); padding: 40px 20px; }
+html[data-app] #root :is(.car-container,.booking,.checkout) { color: var(--sr-text); }
+html[data-app] #root .car-container article { border: 1px solid var(--sr-border); border-radius: 14px; overflow: hidden; background: var(--sr-surface); box-shadow: var(--sr-panel-shadow); }
+html[data-app] #root .car-container .car-img { border-radius: 10px; }
+html[data-app] #root .car-container :is(.car-name,.name) { color: var(--sr-text); font-weight: 750; }
+html[data-app] #root .car-container :is(.car-specs,.car-info-list) { color: var(--sr-muted); }
+html[data-app] #root :is(.car-price,.price-main) { color: var(--sr-emerald); }
+html[data-app] #root .sr-mobile-bottom-nav { background: var(--sr-surface); }
+html[data-app] #root .sr-mobile-bottom-nav button { color: var(--sr-muted); }
+html[data-app] #root .sr-mobile-bottom-nav button[aria-current='page'] { color: var(--sr-accent-text); }
+
+/* Customer pages share the reference's title band and breadcrumb. */
+.sr-page-banner { padding: 36px 20px; text-align: center; background: #15191f; color: #fff; border-bottom: 3px solid #ffa62b; }
+.sr-page-banner h1 { margin: 0 0 12px; font-size: clamp(28px,3vw,42px); line-height: 1.2; }
+.sr-page-banner nav { display: flex; justify-content: center; gap: 12px; font-size: 13px; color: #ffc16a; }
+.sr-page-banner a { color: #fff; text-decoration: none; }
+.sr-page-banner a:hover { text-decoration: underline; }
+html[data-app='frontend'] #root .home :is(.why,.services,.car-size,.faq,.home-map,.home-suppliers,.destinations) { padding-block: clamp(40px,5vw,76px); background: var(--sr-ink) !important; color: var(--sr-text); }
+html[data-app='frontend'] #root .home :is(.why-box,.services-box,.car-size .box) { background: var(--sr-surface) !important; border: 1px solid var(--sr-border); box-shadow: none; color: var(--sr-text); }
+html[data-app='frontend'] #root .home :is(.why-title,.services-title,.box-content h3,.faq h2,.car-size h2,.services h2,.why h2,.home-map h2) { color: var(--sr-text) !important; }
+html[data-app='frontend'] #root .home :is(.services-text,.box-content p,.car-size p) { color: var(--sr-muted) !important; }
+html[data-app='frontend'] #root .home :is(.home-search,.ai-planner-panel) { background: var(--sr-surface) !important; color: var(--sr-text); border-color: var(--sr-border); }
+html[data-app='frontend'] #root .home :is(.home-escrow-strip,.customer-care) { border-color: var(--sr-border); }
+html[data-app='frontend'] #root .home :is(.search-dock-tab,.ai-planner-copy p) { color: var(--sr-muted); }
+html[data-app='frontend'] #root .home .search-dock-tab[aria-pressed='true'] { color: var(--sr-accent-text); border-color: var(--sr-gold); }
+html[data-app='frontend'] #root .footer {
+  --sr-text: #f5f6f8; --sr-muted: #bcc4ce; --sr-surface: #181e27; --sr-surface-raised: #252e3c; --sr-border: #3c485b;
+  background: #11151c; color: #bcc4ce; padding: 48px max(24px,calc((100% - 1180px)/2)) 20px;
+}
+html[data-app='frontend'] #root .footer :is(.title,.header) { color: #fff; }
+html[data-app='frontend'] #root .footer .header { position: static !important; background: none !important; box-shadow: none !important; }
+html[data-app='frontend'] #root .footer :is(.links li,a,.icon) { color: #bcc4ce; }
+html[data-app='frontend'] #root .footer .payment { border-color: #3c485b !important; }
+html[data-app='frontend'] #root .content[data-page='bookings'] .bookings { position: relative; inset: auto; min-height: 65vh; transform: none; }
+html[data-app='frontend'] #root .content[data-page='bookings'] .bookings > .col-1 { border-right: 1px solid var(--sr-border); }
+
+/* Operations workspace: white/charcoal sidebar and generous content panels. */
+html[data-app='admin'] #root .admin-sidebar { background: var(--sr-surface); color: var(--sr-text); box-shadow: none; border-right: 1px solid var(--sr-border); }
+html[data-app='admin'] #root .admin-sidebar .MuiListItemText-primary { color: inherit; }
+html[data-app='admin'] #root .admin-sidebar .MuiListItemButton-root { min-height: 45px; margin-block: 3px; }
+html[data-app='admin'] #root .admin-sidebar .MuiListSubheader-root { border-top: 1px solid var(--sr-border); padding-top: 16px; margin-top: 12px; }
+html[data-app='admin'] #root .admin-topbar { background: var(--sr-surface); border-bottom: 1px solid var(--sr-border); box-shadow: none; }
+html[data-app='admin'] #root .operations-dashboard { max-width: 1440px !important; padding: 32px !important; }
+html[data-app='admin'] #root :is(.maintenance-page,.ai-intake) { max-width: 1280px; }
+html[data-app='admin'] #root :is(.cars,.countries,.suppliers) { padding: 24px; gap: 24px; }
+html[data-app='admin'] #root :is(.cars,.countries,.suppliers) > .col-1 { margin-left: 0; padding: 20px; border: 1px solid var(--sr-border); border-radius: 14px; background: var(--sr-surface); align-self: flex-start; }
+html[data-app='admin'] #root :is(.cars,.countries,.suppliers) > .col-2 { min-width: 0; }
+html[data-app='admin'] #root :is(.MuiCard-root,.maintenance-page > .MuiPaper-root) { border: 1px solid var(--sr-border); box-shadow: none; }
+html[data-app='admin'] #root .maintenance-row { border-color: var(--sr-border); padding: 18px 0; }
+html[data-app='admin'] #root .sr-admin-breadcrumb { padding: 24px 32px 0; display: flex; gap: 10px; color: var(--sr-muted); font-size: 13px; }
+html[data-app='admin'] #root .sr-admin-breadcrumb a { color: var(--sr-emerald); text-decoration: none; }
+@media (max-width: 960px) {
+  html[data-app] #root :is(.settings-form,.settings-net,.bank-details-form,.user-form,.supplier-form,.supplier-form-update,.country-form,.location-form,.car-form) { width: 100%; }
+  html[data-app='admin'] #root :is(.cars,.countries,.suppliers,.operations-dashboard) { padding: 18px !important; gap: 18px; }
+  html[data-app='admin'] #root :is(.cars,.countries,.suppliers) > .col-1 { width: 100%; }
+  html[data-app='admin'] #root .sr-admin-breadcrumb { padding: 20px 18px 0; }
+  html[data-app='frontend'] #root .footer section.main { flex-wrap: wrap; }
+  html[data-app='frontend'] #root .footer .main-section { flex-basis: 240px; }
+}
+@media (max-width: 600px) {
+  html[data-app] #root .MuiDialog-paper { margin: 16px; max-width: calc(100% - 32px); }
+  html[data-app] #root :is(.signin,.signup,.forgot-password,.reset-password,.password-reset,.settings) { padding: 24px 16px; }
+  html[data-app] #root .MuiTableCell-root { padding: 12px; }
+  .sr-page-banner { padding: 28px 16px; }
+}
+
+/* Dark image headers and the footer retain their own readable foregrounds. */
+html[data-app='frontend'] #root .header-home { --sr-text: #fff; --sr-muted: #c4ccd7; --sr-accent-text: #ffb84f; }
+html[data-app='frontend'] #root .header-home :is(.sr-desktop-nav .MuiButton-root,.MuiIconButton-root) { color: #fff; }
+html[data-app='frontend'] #root .header .btn-sign-in { background: #ffa62b !important; color: #171b24 !important; }
+html[data-app='frontend'] #root .header .btn-sign-in :is(span,svg) { color: #171b24 !important; }
+html[data-app='frontend'] #root .home .home-content :is(.home-title,.home-cover,.home-subtitle,.home-assurances) { position: relative; z-index: 4; animation: none; opacity: 1; }
+html[data-app='frontend'] #root .home .home-content .home-cover { color: #fff !important; text-shadow: 0 2px 12px #0007; }
+html[data-app='frontend'] #root .home .home-content .home-subtitle { color: #e3e8ef !important; text-shadow: 0 1px 8px #0008; }
+html[data-app='frontend'] #root .home .home-content .home-title { color: #ffc16a !important; }
+html[data-app='frontend'] #root .home .search-dock-tabs { margin-bottom: 0; padding: 12px 12px 0; background: var(--sr-surface); border-radius: 14px 14px 0 0; }
+html[data-app='frontend'] #root .home .search-dock-tab { background: var(--sr-surface-raised); color: var(--sr-muted); box-shadow: none; backdrop-filter: none; }
+html[data-app='frontend'] #root .home .search-dock-tab.active { background: var(--sr-gold-soft); color: var(--sr-accent-text); }
+html[data-app='frontend'] #root .home .home-search { margin-top: 0 !important; border-radius: 0 0 14px 14px !important; }
+html[data-app] #root :is(.rental-mode-pill.active,.escrow-num) { background: #107487 !important; color: #fff !important; }
+html[data-app] #root :is(.corridor-eyebrow,.corridor-rate,.corridor-btn) { color: var(--sr-emerald) !important; }
+html[data-app] #root .corridor-route { color: var(--sr-muted); }
+html[data-app] #root .corridor-badge.hill-route { color: #8b4900; }
+html[data-app] #root .corridor-badge.city-hub { color: #056047; }
+html[data-app='frontend'] #root .footer .copyright { color: #bcc4ce !important; }
+html[data-app='frontend'] #root .footer { --sr-accent-text: #ffc16a; --sr-emerald: #7ed7e2; --sr-emerald-soft: #173d46; }
+
+.sr-account-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 24px 20px; background: var(--sr-surface); border-bottom: 1px solid var(--sr-border); }
+.sr-account-nav a { padding: 14px 24px; border-radius: 8px; text-decoration: none; color: var(--sr-muted); background: var(--sr-surface-raised); font-size: 14px; font-weight: 600; }
+.sr-account-nav a.active { color: #171b24; background: #ffa62b; }
+.footer-payments { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+.footer-payments > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.footer-payments > div > span { padding: 8px 14px; background: #fff; color: #202632; border-radius: 6px; font-weight: 700; font-size: 12px; }
+html[data-app='frontend'] #root .footer .links a { display: inline-block; padding: 4px 0; text-decoration: none; }
+html[data-app='frontend'] #root .footer .links a:hover { text-decoration: underline; color: #ffc16a; }
+@media(max-width:600px) { .sr-account-nav { gap:8px; padding:16px; } .sr-account-nav a { flex:1 1 40%; text-align:center; padding:12px; font-size:12px; } }
+
+html[data-app] #root .sr-kyc-pill { background: var(--sr-surface-raised); color: var(--sr-text); }
+html[data-app='frontend'] #root .header-home .sr-kyc-pill { background: #303948; color: #e3e8ef; }
+html[data-app] #root .rating-text { color: var(--sr-muted); }
+html[data-app] #root .bs-void { color: #3e4854; background: #e4e8ec; }
+html[data-app] #root .info { color: var(--sr-muted); }
+html[data-app='admin'] #root .operations-dashboard .MuiCard-root { background: var(--sr-surface) !important; }
+html[data-app] #root .MuiLink-root { color: var(--sr-emerald); }
+
+.sr-operations-welcome { display:grid; grid-template-columns:1.35fr 1fr; overflow:hidden; border:1px solid var(--sr-border); border-radius:14px; margin-bottom:24px; background:var(--sr-surface); }
+.sr-operations-welcome > div { padding:32px; align-self:center; }
+.sr-operations-welcome h2 { margin:12px 0; font-size:clamp(24px,2.5vw,34px); line-height:1.2; color:var(--sr-text); }
+.sr-operations-welcome p { font-size:14px; line-height:1.65; color:var(--sr-muted); max-width:48ch; }
+.sr-welcome-kicker { font-size:10px; font-weight:750; letter-spacing:.12em; color:var(--sr-emerald); }
+.sr-welcome-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+.sr-operations-welcome img { width:100%; height:100%; max-height:300px; object-fit:cover; }
+@media(max-width:760px) { .sr-operations-welcome { grid-template-columns:1fr; } .sr-operations-welcome img { max-height:180px; grid-row:1; } .sr-operations-welcome > div { padding:24px; } }
+
+html[data-app] #root .recovery-badge { color: var(--sr-accent-text); background: var(--sr-gold-soft); }
+html[data-app] #root :is(.parking-spot-edit-list .title,.contract-list .title,.contract-list .label,.supplier-item-subtitle) { color: var(--sr-muted); }
+html[data-app] #root .bs.us-user { background:#d9f2ed; color:#07594c; }
+html[data-app] #root .bs.us-supplier { background:#fff0d9; color:#854300; }
+
+html[data-app='admin'] #root .bookings .MuiInputLabel-root { background:var(--sr-surface); }
+html[data-app='admin'] #root .supplier .car-supplier-info { color:var(--sr-accent-text); }
+
+html[data-app] #root .contracts :is(.title,.label) { color:var(--sr-muted); }
+@media(max-width:600px) {
+ html[data-app='frontend'] #root .header .toolbar { padding-inline:10px !important; gap:4px; }
+ html[data-app='frontend'] #root .header .toolbar > .MuiIconButton-root { margin:0; padding:6px; width:32px; flex-shrink:0; }
+ html[data-app='frontend'] #root .header .logo { margin:0 !important; padding:0; flex-shrink:0; }
+ html[data-app='frontend'] #root .header .logo > div { gap:6px !important; }
+ html[data-app='frontend'] #root .header .logo svg { width:26px; height:26px; }
+ html[data-app='frontend'] #root .header .logo > div > div > span { display:none !important; }
+ html[data-app='frontend'] #root .header .logo > div > div > div { gap:2px !important; }
+ html[data-app='frontend'] #root .header .logo > div > div > div > span { font-size:17px !important; }
+ html[data-app='frontend'] #root .header-mobile { gap:3px; margin:0; flex-shrink:0; }
+ html[data-app='frontend'] #root .header-mobile :is(.MuiIconButton-root,.header-control) { min-width:30px !important; min-height:34px; width:auto; padding:5px !important; margin:0 !important; }
+ html[data-app='frontend'] #root .header-mobile .header-language svg { display:none; }
+ html[data-app='frontend'] #root .header-mobile .mobile-notifications { display:none; }
+}
+
+/* Keep intrinsic form widths inside compact viewports. */
+html[data-app] .settings, html[data-app] .create-booking { width:100%; min-width:0; box-sizing:border-box; }
+html[data-app] .settings form, html[data-app] .create-booking form { width:100%; min-width:0; }
+html[data-app] .settings .MuiPaper-root, html[data-app] .create-booking .MuiBox-root { min-width:0; max-width:100%; box-sizing:border-box; }
+html[data-app] .create-booking .form-actions { flex-wrap:wrap; width:100%; }
+@media(max-width:600px) {
+ html[data-app="admin"] .toolbar { padding:0 12px; gap:4px; }
+ html[data-app="admin"] .admin-topbar-brand { margin-right:0; }
+ html[data-app="admin"] .admin-topbar-brand svg { width:28px; height:28px; }
+ html[data-app="admin"] .admin-topbar-brand > div > div > span { display:none !important; }
+ html[data-app="admin"] .admin-topbar-brand > div > div > div > span:first-child { font-size:16px !important; }
+ html[data-app="admin"] .admin-topbar-brand > div > div > div > span + span { display:none !important; }
+ html[data-app="admin"] .admin-topbar-actions { gap:0; }
+ html[data-app="admin"] .admin-add-vehicle { font-size:0; min-width:32px; width:32px; padding:6px; }
+ html[data-app="admin"] .admin-add-vehicle .MuiButton-startIcon { margin:0; }
+ html[data-app="admin"] .create-booking { margin:0; }
+ html[data-app="admin"] .create-booking .buttons { flex-wrap:wrap; }
+}
+
+html[data-app] #root .checkout .step-number { background:#107487; color:#fff; }
+html[data-app] #root .checkout :is(.step-badge,.fare-supplier-tag) { background:var(--sr-emerald-soft); color:var(--sr-emerald); }
+html[data-app] #root .checkout .route-type { color:var(--sr-muted); }

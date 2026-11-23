@@ -23,14 +23,14 @@ div.bookings {
   div.bookings div.col-1 .cl-supplier-filter label.accordion,
   div.bookings div.col-1 .cl-status-filter label.accordion,
   div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fff;
+    background: var(--sr-surface);
   }
 
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
     margin: 5px 10px;
-    background-color: #fff;
+    background-color: var(--sr-surface);
     max-width: 480px;
     width: calc(100% - 20px);
   }
@@ -62,21 +62,21 @@ div.bookings {
     left: 0;
     width: 336px;
     padding: 12px 0 0 12px;
-    background: #fefefe;
+    background: var(--sr-surface-raised);
     overflow: auto;
   }
 
   div.bookings div.col-1 .cl-supplier-filter label.accordion,
   div.bookings div.col-1 .cl-status-filter label.accordion,
   div.bookings div.col-1 .cl-booking-filter label.accordion {
-    background: #fafafa;
+    background: var(--sr-surface-raised);
   }
 
   div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
     margin: 10px 10px 10px 0;
-    background-color: #fafafa;
+    background-color: var(--sr-surface-raised);
   }
 
   div.bookings div.col-1 .cl-booking-filter div.panel,

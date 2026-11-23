@@ -186,7 +186,7 @@ const NotificationList = ({ user, locale }: NotificationListProps) => {
             contentContainerStyle={styles.list}
             keyboardShouldPersistTaps={helper.android() ? 'handled' : 'always'}
           >
-            {loading && <ActivityIndicator size="large" color="#f37022" />}
+            {loading && <ActivityIndicator size="large" color="#D4AF37" />}
             {rows.map((row) => (
               <View key={row._id} style={styles.notificationContainer}>
                 <View style={styles.notificationCheckbox}>
@@ -342,7 +342,7 @@ const NotificationList = ({ user, locale }: NotificationListProps) => {
               </Dialog.Content>
               <Dialog.Actions style={styles.dialogActions}>
                 <NativeButton
-                  // color='#f37022'
+                  // color='#D4AF37'
                   onPress={() => {
                     setOpenDeleteDialog(false)
                   }}
@@ -350,7 +350,7 @@ const NotificationList = ({ user, locale }: NotificationListProps) => {
                   {i18n.t('CANCEL')}
                 </NativeButton>
                 <NativeButton
-                  // color='#f37022'
+                  // color='#D4AF37'
                   onPress={async () => {
                     try {
                       if (user?._id) {

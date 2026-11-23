@@ -14,13 +14,13 @@ div.pricing {
 .pricing-plan-title {
   text-align: center;
   text-transform: capitalize;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 .pricing-plan-price {
   text-align: center;
   font-size: 1.5em;
-  color: #121212;
+  color: var(--sr-text);
 }
 
 ul.pricing-plan-features {
@@ -31,7 +31,7 @@ ul.pricing-plan-features {
 ul.pricing-plan-features li {
   padding: 5px 0;
   text-align: center;
-  color: #444;
+  color: var(--sr-muted);
 }
 
 /* Device width is less than or equal to 960px */

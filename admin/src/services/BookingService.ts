@@ -32,6 +32,9 @@ export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number
     )
     .then((res) => res.status)
 
+export const updateHandover = (id: string, checklist: Pick<bookcarsTypes.HandoverChecklist, 'fuelLevel' | 'odometerStart' | 'spareTirePresent' | 'exteriorNotes'>): Promise<bookcarsTypes.HandoverChecklist> =>
+  axiosInstance.patch(`/api/bookings/${encodeURIComponent(id)}/handover`, checklist, { withCredentials: true }).then((res) => res.data.handoverChecklist)
+
 /**
  * Update a Booking status.
  *

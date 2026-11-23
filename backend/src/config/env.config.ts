@@ -58,6 +58,11 @@ export const expireAt = 'expireAt'
 export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'SafarRent')
 
 /**
+ * Enables local FYP-demo behavior. Keep disabled outside development.
+ */
+export const FYP_DEMO_MODE = helper.StringToBoolean(__env__('BC_FYP_DEMO_MODE', false, 'false'))
+
+/**
  * Base currency. Default is USD.
  *
  * @type {string}
@@ -79,6 +84,7 @@ export const CI = helper.StringToBoolean(__env__('BC_CI', false, 'false'))
  * @type {number}
  */
 export const BATCH_SIZE = Number.parseInt(__env__('BC_BATCH_SIZE', false, '1000'), 10)
+
 
 /**
  * Server Port. Default is 4002.
@@ -113,7 +119,7 @@ export const CERTIFICATE = __env__('BC_CERTIFICATE', HTTPS)
  *
  * @type {string}
  */
-export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars&replicaSet=rs0')
+export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/safarrent?authSource=admin&appName=safarrent&replicaSet=rs0')
 
 /**
  * Indicate whether MongoDB SSL is enabled or not.
@@ -177,7 +183,9 @@ export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'bookcars')
  *
  * @type {string}
  */
-export const AUTH_COOKIE_DOMAIN = __env__('BC_AUTH_COOKIE_DOMAIN', false, 'localhost')
+// An empty domain creates a host-only cookie, which works on localhost and
+// private IP addresses used for phone testing without hard-coding localhost.
+export const AUTH_COOKIE_DOMAIN = __env__('BC_AUTH_COOKIE_DOMAIN', false, '')
 
 /**
  * Cookie options.
@@ -190,7 +198,13 @@ export const AUTH_COOKIE_DOMAIN = __env__('BC_AUTH_COOKIE_DOMAIN', false, 'local
  *
  * @type {CookieOptions}
  */
-export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, signed: true, sameSite: 'strict', domain: AUTH_COOKIE_DOMAIN }
+export const COOKIE_OPTIONS: CookieOptions = {
+  httpOnly: true,
+  secure: HTTPS,
+  signed: true,
+  sameSite: 'strict',
+  ...(AUTH_COOKIE_DOMAIN ? { domain: AUTH_COOKIE_DOMAIN } : {}),
+}
 
 /**
  * frontend authentication cookie name.
@@ -388,7 +402,6 @@ export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'en')
  * @type {number}
  */
 export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'), 10)
-export const KYC_REQUIRED = /^true$/i.test(__env__('BC_KYC_REQUIRED', false, 'false'))
 
 /**
  * Expo push access token.
@@ -608,6 +621,11 @@ export interface User extends Document {
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
   isSocial?: boolean
+  cnicNumber?: string
+  drivingLicenseNumber?: string
+  kycStatus?: bookcarsTypes.KycStatus
+  cnicFrontImage?: string
+  licenseFrontImage?: string
 }
 
 /**
@@ -634,6 +652,9 @@ export interface UserInfo {
   bio?: string
   location?: string
   type?: string
+  cnicNumber?: string
+  drivingLicenseNumber?: string
+  kycStatus?: bookcarsTypes.KycStatus
   blacklisted?: boolean
   payLater?: boolean
   licenseRequired?: boolean
@@ -641,6 +662,8 @@ export interface UserInfo {
   priceChangeRate?: number
   supplierCarLimit?: number
   notifyAdminOnNewCar?: boolean
+  cnicFrontImage?: string
+  licenseFrontImage?: string
 }
 
 /**
@@ -691,10 +714,16 @@ export interface Booking extends Document {
   isDeposit: boolean
   isPayedInFull?: boolean
   paypalOrderId?: string
-  paymentMethod?: bookcarsTypes.PaymentMethod
-  paymentReference?: string
-  paymentProof?: string
-  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
+  demoPaymentAttempts?: bookcarsTypes.DemoPaymentAttempt[]
+  rentalMode?: bookcarsTypes.RentalMode
+  tripScope?: bookcarsTypes.TripScope
+  destinationRegion?: string
+  priceBreakdown?: bookcarsTypes.RentalPriceBreakdown
+  paymentMethod?: bookcarsTypes.RentalPaymentMethod
+  paymentStatus?: bookcarsTypes.RentalPaymentStatus
+  paymentState?: 'PENDING_PAYMENT' | 'PROCESSING' | 'CONFIRMED' | 'FAILED'
+  transactionRef?: string
+  handoverChecklist?: bookcarsTypes.HandoverChecklist
 }
 
 /**
@@ -724,6 +753,18 @@ export interface Car extends Document {
   _id: Types.ObjectId
   name: string
   licensePlate?: string
+  registrationPlate?: string
+  engineCc?: number
+  terrainCapability?: bookcarsTypes.TerrainCapability
+  selfDriveAvailable: boolean
+  withDriverAvailable: boolean
+  driverDailyAllowancePkr: number
+  outOfCitySurchargePkr: number
+  securityDepositPkr: number
+  listingStatus: bookcarsTypes.ListingStatus
+  complianceNotes?: string
+  reviewedBy?: Types.ObjectId
+  reviewedAt?: Date
   supplier: Types.ObjectId
   minimumAge: number
   locations: Types.ObjectId[]

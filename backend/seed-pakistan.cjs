@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 
-const DB_URI = process.env.BC_DB_URI || 'mongodb://admin:admin@mongo:27017/bookcars?authSource=admin&appName=bookcars&replicaSet=rs0';
+if (process.env.BC_ENABLE_DEMO_DATA !== 'true' || process.env.NODE_ENV === 'production') {
+  throw new Error('This script inserts synthetic development data. Set BC_ENABLE_DEMO_DATA=true in a non-production environment to continue.');
+}
+
+const DB_URI = process.env.BC_DB_URI;
+if (!DB_URI) {
+  throw new Error('BC_DB_URI must be configured explicitly.');
+}
 
 const LocationValueSchema = new mongoose.Schema({
   language: { type: String, required: true },
@@ -25,10 +32,10 @@ const UserSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: String,
-  password: { type: String, default: 'P@k1st@n2026!' },
-  active: { type: Boolean, default: true },
-  verified: { type: Boolean, default: true },
-  verifiedAt: { type: Date, default: Date.now },
+  password: String,
+  active: { type: Boolean, default: false },
+  verified: { type: Boolean, default: false },
+  verifiedAt: Date,
   type: { type: String, default: 'supplier' },
   blacklisted: { type: Boolean, default: false },
   payLater: { type: Boolean, default: true }
@@ -46,7 +53,7 @@ const CarSchema = new mongoose.Schema({
   weeklyPrice: Number,
   monthlyPrice: Number,
   deposit: { type: Number, default: 15000 },
-  available: { type: Boolean, default: true },
+  available: { type: Boolean, default: false },
   type: { type: String, default: 'gasoline' },
   gearbox: { type: String, default: 'automatic' },
   aircon: { type: Boolean, default: true },
@@ -96,8 +103,8 @@ async function run() {
       email: 'fleet@safarrent.pk',
       phone: '+92 300 1234567',
       type: 'supplier',
-      active: true,
-      verified: true,
+      active: false,
+      verified: false,
       payLater: true
     });
     console.log('Created SafarRent Fleet Supplier:', supplier._id);
@@ -335,7 +342,7 @@ async function run() {
         seats: carItem.seats,
         doors: carItem.doors,
         aircon: true,
-        available: true,
+        available: false,
         minimumAge: 21,
         fuelPolicy: 'likeForLike',
         mileage: -1,

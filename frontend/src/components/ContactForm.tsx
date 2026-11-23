@@ -52,7 +52,6 @@ const ContactForm = ({ user, className }: ContactFormProps) => {
 
   const onSubmit = async (data: FormFields) => {
     try {
-      console.log('boo')
       let recaptchaToken = ''
       if (reCaptchaLoaded) {
         recaptchaToken = await generateReCaptchaToken()

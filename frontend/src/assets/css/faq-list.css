@@ -21,7 +21,7 @@ div.faq-list div.questions .accordion-title {
 
 
 div.faq-list div.questions .accordion-details {
-  color: #1a1a1a;
+  color: var(--sr-text);
 }
 
 @media only screen and (width <=960px) {

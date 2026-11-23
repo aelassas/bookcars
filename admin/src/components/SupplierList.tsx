@@ -10,7 +10,8 @@ import {
   Tooltip,
   Card,
   CardContent,
-  Typography
+  Typography,
+  Avatar as MaterialAvatar
 } from '@mui/material'
 import {
   Visibility as ViewIcon,
@@ -196,12 +197,19 @@ const SupplierList = ({
           : rows.map((supplier, index) => {
             const edit = admin || (user && user._id === supplier._id)
             const canDelete = admin
+            const avatarUrl = helper.getUserAvatarUrl(supplier.avatar)
 
             return (
               <article key={supplier._id}>
                 <div className="supplier-item">
                   <div className="supplier-item-avatar">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+                    <MaterialAvatar
+                      src={avatarUrl}
+                      alt={supplier.fullName}
+                      sx={{ width: 40, height: 40, bgcolor: 'var(--sr-accent)', color: 'var(--sr-text)' }}
+                    >
+                      {supplier.fullName?.trim().charAt(0).toUpperCase() || '?'}
+                    </MaterialAvatar>
                   </div>
                   <span className="supplier-item-title">{supplier.fullName}</span>
                   {

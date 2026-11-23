@@ -19,7 +19,7 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import * as mailHelper from '../utils/mailHelper'
 import Location from '../models/Location'
-import Maintenance from '../models/Maintenance'
+import { getPickupLocationIds } from '../utils/searchLocation'
 
 /**
  * Create a Car.
@@ -40,6 +40,15 @@ export const create = async (req: Request, res: Response) => {
 
     // date based price
     const { dateBasedPrices, ...carFields } = body
+    const isAdmin = req.user?.type === bookcarsTypes.UserType.Admin
+    const requestedStatus = (body as bookcarsTypes.CreateCarPayload & { listingStatus?: bookcarsTypes.ListingStatus }).listingStatus
+    const listingStatus = isAdmin && requestedStatus && Object.values(bookcarsTypes.ListingStatus).includes(requestedStatus)
+      ? requestedStatus
+      : isAdmin
+        ? bookcarsTypes.ListingStatus.Approved
+        : bookcarsTypes.ListingStatus.PendingReview
+    // Supplier identity and review state are server-owned, never body-controlled.
+    carFields.supplier = isAdmin ? carFields.supplier : req.user!._id
     const dateBasedPriceIds: string[] = []
     if (body.isDateBasedPrice) {
       for (const dateBasePrice of dateBasedPrices) {
@@ -49,7 +58,7 @@ export const create = async (req: Request, res: Response) => {
       }
     }
 
-    const car = new Car({ ...carFields, dateBasedPrices: dateBasedPriceIds })
+    const car = new Car({ ...carFields, listingStatus, dateBasedPrices: dateBasedPriceIds })
     await car.save()
 
     // --------- image ---------
@@ -200,6 +209,13 @@ export const update = async (req: Request, res: Response) => {
         res.status(403).send('Forbidden: You cannot update this location')
         return
       }
+      if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+        // Any supplier edit invalidates the previous compliance review.
+        car.listingStatus = bookcarsTypes.ListingStatus.PendingReview
+        car.complianceNotes = undefined
+        car.reviewedBy = undefined
+        car.reviewedAt = undefined
+      }
       // end of security check
 
       const {
@@ -244,7 +260,9 @@ export const update = async (req: Request, res: Response) => {
         blockOnPay,
       } = body
 
-      car.supplier = new mongoose.Types.ObjectId(supplier)
+      if (sessionUser.type === bookcarsTypes.UserType.Admin) {
+        car.supplier = new mongoose.Types.ObjectId(supplier)
+      }
       car.minimumAge = minimumAge
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
@@ -654,6 +672,14 @@ export const getCar = async (req: Request, res: Response) => {
       .lean()
 
     if (car) {
+      if (car.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
+        const isOwner = req.user?.type === bookcarsTypes.UserType.Supplier && String(car.supplier._id) === req.user._id
+        const isAdmin = req.user?.type === bookcarsTypes.UserType.Admin
+        if (!isOwner && !isAdmin) {
+          res.sendStatus(404)
+          return
+        }
+      }
       const {
         _id,
         fullName,
@@ -700,7 +726,9 @@ export const getCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page as string, 10)
     const size = Number.parseInt(req.params.size as string, 10)
-    const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = req.user?.type === bookcarsTypes.UserType.Supplier
+      ? [new mongoose.Types.ObjectId(req.user._id)]
+      : body.suppliers!.map((id) => new mongoose.Types.ObjectId(id))
     const {
       carType,
       gearbox,
@@ -917,6 +945,10 @@ export const getCars = async (req: Request, res: Response) => {
 export const getBookingCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingCarsPayload } = req
+    if (req.user?.type === bookcarsTypes.UserType.Supplier && body.supplier !== req.user._id) {
+      res.sendStatus(403)
+      return
+    }
     const supplier = new mongoose.Types.ObjectId(body.supplier)
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
@@ -944,6 +976,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
         {
           $match: {
             $and: [
+              { listingStatus: bookcarsTypes.ListingStatus.Approved },
               { 'supplier._id': supplier },
               { locations: pickupLocation },
               { available: true }, { name: { $regex: keyword, $options: options } },
@@ -970,79 +1003,6 @@ export const getBookingCars = async (req: Request, res: Response) => {
 }
 
 /**
- * Return nearby date ranges that have at least one available car.
- */
-export const getNearbyAvailability = async (req: Request, res: Response) => {
-  try {
-    const body = req.body as { pickupLocation?: string, from?: string | Date, to?: string | Date, radiusDays?: number }
-    if (!body.pickupLocation || !helper.isValidObjectId(body.pickupLocation)
-      || !body.from || !body.to) {
-      res.status(400).json({ message: 'Pickup location and date range are required' })
-      return
-    }
-    const from = new Date(body.from)
-    const to = new Date(body.to)
-    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime()) || to <= from) {
-      res.status(400).json({ message: 'Invalid date range' })
-      return
-    }
-    const durationMs = to.getTime() - from.getTime()
-    const radiusDays = Math.min(Math.max(Number(body.radiusDays || 14), 1), 30)
-    const suggestions: Array<{ from: Date, to: Date, availableCars: number }> = []
-    const locIds = await Location.find({
-      $or: [
-        { _id: new mongoose.Types.ObjectId(body.pickupLocation) },
-        { parentLocation: new mongoose.Types.ObjectId(body.pickupLocation) },
-      ],
-    }).distinct('_id')
-    const candidateCars = await Car.find({
-      locations: { $in: locIds },
-      available: true,
-      fullyBooked: { $in: [false, null] },
-    }).select('_id').lean()
-    const candidateCarIds = candidateCars.map((car) => car._id)
-
-    for (let offset = 1; offset <= radiusDays; offset++) {
-      for (const direction of [-1, 1]) {
-        const candidateFrom = new Date(from.getTime() + direction * offset * 24 * 60 * 60 * 1000)
-        const candidateTo = new Date(candidateFrom.getTime() + durationMs)
-        const availableCars = candidateCarIds.length
-        if (availableCars > 0) {
-          const overlappingCars = await Booking.distinct('car', {
-            car: { $in: candidateCarIds },
-            status: { $in: BOOKING_RESERVATION_STATUSES },
-            $and: [
-              { to: { $gt: candidateFrom } },
-              { from: { $lt: candidateTo } },
-            ],
-          })
-          const maintenanceCars = await Maintenance.distinct('vehicle', {
-            vehicle: { $in: candidateCarIds },
-            startDate: { $lt: candidateTo },
-            expectedCompletionDate: { $gt: candidateFrom },
-            status: { $nin: ['completed', 'cancelled'] },
-          })
-          const unavailable = new Set([
-            ...overlappingCars.map((id) => id.toString()),
-            ...maintenanceCars.map((id) => id.toString()),
-          ])
-          const remaining = candidateCarIds.filter((id) => !unavailable.has(id.toString())).length
-          if (remaining > 0) {
-            suggestions.push({ from: candidateFrom, to: candidateTo, availableCars: remaining })
-          }
-        }
-      }
-      if (suggestions.length >= 5) break
-    }
-
-    res.json({ suggestions: suggestions.slice(0, 5) })
-  } catch (err) {
-    logger.error('[car.getNearbyAvailability]', err)
-    res.status(500).json({ message: 'Unable to calculate nearby availability' })
-  }
-}
-
-/**
  * Get Cars available for rental.
  *
  * @export
@@ -1057,7 +1017,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     const page = Number.parseInt(req.params.page as string, 10)
     const size = Number.parseInt(req.params.size as string, 10)
     const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id as string))
-    const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation as string)
+    const locationIds = await getPickupLocationIds(body)
     const {
       carType,
       gearbox,
@@ -1083,26 +1043,23 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       throw new Error('to date is required')
     }
 
-    // Include pickupLocation and child locations in search results
-    const locIds = await Location.find({
-      $or: [
-        { _id: pickupLocation },
-        { parentLocation: pickupLocation },
-      ],
-    }).select('_id').lean()
-
-    const locationIds = locIds.map((loc) => loc._id)
-
     const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
+        { listingStatus: bookcarsTypes.ListingStatus.Approved },
         { supplier: { $in: suppliers } },
         // { locations: pickupLocation },
         { locations: { $in: locationIds } },
-        { type: { $in: carType } },
-        { gearbox: { $in: gearbox } },
         { available: true },
         { fullyBooked: { $in: [false, null] } },
       ],
+    }
+
+    if (Array.isArray(carType) && carType.length > 0) {
+      $match.$and!.push({ type: { $in: carType } })
+    }
+
+    if (Array.isArray(gearbox) && gearbox.length > 0) {
+      $match.$and!.push({ gearbox: { $in: gearbox } })
     }
 
     if (!includeAlreadyBookedCars) {
@@ -1174,6 +1131,22 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       $supplierMatch = { $or: [{ 'supplier.minimumRentalDays': { $lte: days } }, { 'supplier.minimumRentalDays': null }] }
     }
 
+    // FYP sample suppliers are deliberately unverified because they are synthetic.
+    // Show their clearly labelled listings only in explicit local demo mode; never
+    // relax supplier verification in production or ordinary development runs.
+    const supplierVerificationFilter = process.env.NODE_ENV === 'development' && process.env.BC_ENABLE_FYP_DEMO === 'true'
+      ? {
+        $or: [
+          { verified: true },
+          {
+            verified: false,
+            fullName: { $regex: 'FYP Demo Fleet$', $options: 'i' },
+            bio: { $regex: 'Synthetic FYP demo supplier', $options: 'i' },
+          },
+        ],
+      }
+      : { verified: true }
+
     const data = await Car.aggregate(
       [
         { $match },
@@ -1185,7 +1158,13 @@ export const getFrontendCars = async (req: Request, res: Response) => {
               {
                 $match: {
                   // $expr: { $eq: ['$_id', '$$userId'] },
-                  $and: [{ $expr: { $eq: ['$_id', '$$userId'] } }, { blacklisted: false }]
+                  $and: [
+                    { $expr: { $eq: ['$_id', '$$userId'] } },
+                    { type: bookcarsTypes.UserType.Supplier },
+                    { active: true },
+                    supplierVerificationFilter,
+                    { blacklisted: false },
+                  ]
                 },
               },
               {
@@ -1380,5 +1359,39 @@ export const getFrontendCars = async (req: Request, res: Response) => {
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('ERROR')} ${req.query.s}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+/** Platform-admin review gate for supplier vehicle listings. */
+export const reviewListing = async (req: Request, res: Response) => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+  const { listingStatus, complianceNotes } = req.body || {}
+  if (!helper.isValidObjectId(id)) {
+    res.status(400).json({ message: 'Invalid vehicle ID.' })
+    return
+  }
+  if (!Object.values(bookcarsTypes.ListingStatus).includes(listingStatus)) {
+    res.status(400).json({ message: 'A valid listingStatus is required.' })
+    return
+  }
+  if (complianceNotes !== undefined && (typeof complianceNotes !== 'string' || complianceNotes.length > 1000)) {
+    res.status(400).json({ message: 'Compliance notes must be text with at most 1000 characters.' })
+    return
+  }
+  try {
+    const car = await Car.findById(id)
+    if (!car) {
+      res.status(404).json({ message: 'Vehicle not found.' })
+      return
+    }
+    car.listingStatus = listingStatus
+    car.complianceNotes = typeof complianceNotes === 'string' ? complianceNotes.trim() : undefined
+    car.reviewedBy = new mongoose.Types.ObjectId(req.user!._id)
+    car.reviewedAt = new Date()
+    await car.save()
+    res.json({ _id: car._id, listingStatus: car.listingStatus, complianceNotes: car.complianceNotes, reviewedBy: car.reviewedBy, reviewedAt: car.reviewedAt })
+  } catch (err) {
+    logger.error(`[car.reviewListing] Failed to review vehicle ${id}`, err)
+    res.status(500).json({ message: 'Unable to update vehicle review status.' })
   }
 }

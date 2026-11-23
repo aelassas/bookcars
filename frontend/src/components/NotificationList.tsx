@@ -132,6 +132,34 @@ const NotificationList = ({ user }: NotificationListProps) => {
                     }}
                   />
                 </div>
+                {rows.some((row) => !row.isRead) && (
+                  <Button
+                    size="small"
+                    variant="text"
+                    onClick={async () => {
+                      try {
+                        if (!user || !user._id) {
+return
+}
+                        const unreadIds = rows.filter((r) => !r.isRead).map((r) => r._id)
+                        if (unreadIds.length === 0) {
+return
+}
+                        const status = await NotificationService.markAsRead(user._id, unreadIds)
+                        if (status === 200) {
+                          const _rows = rows.map((r) => ({ ...r, isRead: true }))
+                          setRows(_rows)
+                          setNotificationCount(0)
+                        }
+                      } catch (err) {
+                        helper.error(err)
+                      }
+                    }}
+                    sx={{ color: 'var(--sr-emerald)', fontWeight: 700, fontSize: 12, textTransform: 'none', ml: 1 }}
+                  >
+                    Mark All as Read ✓
+                  </Button>
+                )}
                 {checkedRows.length > 0 && (
                   <div className="header-actions">
                     {checkedRows.some((row) => !row.isRead) && (
@@ -213,138 +241,172 @@ const NotificationList = ({ user }: NotificationListProps) => {
               </div>
             </div>
             <div ref={notificationsListRef} className="notifications-list">
-              {rows.map((row, index) => (
-                <div key={row._id} className="notification-container">
-                  <div className="notification-checkbox">
-                    <Checkbox
-                      checked={row.checked}
-                      onChange={(event) => {
-                        row.checked = event.target.checked
-                        setRows(bookcarsHelper.clone(rows))
-                      }}
-                    />
-                  </div>
-                  <div className={`notification${!row.isRead ? ' unread' : ''}`}>
-                    <div className="date">
-                      {row.createdAt && bookcarsHelper.capitalize(
-                        format(new Date(row.createdAt), _format, {
-                          locale: _locale,
-                        }),
-                      )}
-                    </div>
-                    <div className="message-container">
-                      <div className="message">{row.message}</div>
-                      <div className="actions">
-                        {row.booking && (
-                          <Tooltip title={strings.VIEW}>
-                            <IconButton
-                              onClick={async () => {
-                                try {
-                                  if (!user || !user._id) {
-                                    helper.error()
-                                    return
-                                  }
+              {rows.map((row, index) => {
+                const rowDate = row.createdAt ? new Date(row.createdAt) : new Date()
+                const today = new Date()
+                const isRowToday = rowDate.getDate() === today.getDate() && rowDate.getMonth() === today.getMonth() && rowDate.getFullYear() === today.getFullYear()
+                const prevRow = index > 0 ? rows[index - 1] : null
+                const prevDate = prevRow?.createdAt ? new Date(prevRow.createdAt) : null
+                const isPrevToday = prevDate ? (prevDate.getDate() === today.getDate() && prevDate.getMonth() === today.getMonth() && prevDate.getFullYear() === today.getFullYear()) : null
 
-                                  const __navigate__ = () => {
-                                    navigate(`/booking?b=${row.booking}`)
-                                  }
+                const showGroupHeader = index === 0 || (isPrevToday && !isRowToday)
+                const groupLabel = isRowToday ? 'Today' : 'Earlier'
 
-                                  if (!row.isRead) {
-                                    const status = await NotificationService.markAsRead(user._id, [row._id])
+                return (
+                  <React.Fragment key={row._id}>
+                    {showGroupHeader && (
+                      <div style={{ padding: '8px 16px', fontSize: '11px', fontWeight: 800, color: 'var(--sr-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', background: 'var(--sr-surface-raised, #F8FAFC)', borderBottom: '1px solid var(--sr-border, #E2E8F0)' }}>
+                        {groupLabel}
+                      </div>
+                    )}
+                    <div className="notification-container">
+                      <div className="notification-checkbox">
+                        <Checkbox
+                          checked={row.checked}
+                          onChange={(event) => {
+                            row.checked = event.target.checked
+                            setRows(bookcarsHelper.clone(rows))
+                          }}
+                        />
+                      </div>
+                      <div className={`notification${!row.isRead ? ' unread' : ''}`}>
+                        <div className="date">
+                          {row.createdAt && bookcarsHelper.capitalize(
+                            format(new Date(row.createdAt), _format, {
+                              locale: _locale,
+                            }),
+                          )}
+                        </div>
+                        <div className="message-container">
+                          <div className="message" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {!row.isRead && (
+                              <span
+                                style={{
+                                  width: 8,
+                                  height: 8,
+                                  borderRadius: '50%',
+                                  backgroundColor: '#059669',
+                                  display: 'inline-block',
+                                  flexShrink: 0,
+                                  boxShadow: '0 0 0 3px rgba(5, 150, 105, 0.25)'
+                                }}
+                              />
+                            )}
+                            <span>{row.message}</span>
+                          </div>
+                          <div className="actions">
+                            {row.booking && (
+                              <Tooltip title={strings.VIEW}>
+                                <IconButton
+                                  onClick={async () => {
+                                    try {
+                                      if (!user || !user._id) {
+                                        helper.error()
+                                        return
+                                      }
 
-                                    if (status === 200) {
-                                      const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
-                                      _rows[index].isRead = true
-                                      setRows(_rows)
-                                      setNotificationCount((prev) => prev - 1)
-                                      __navigate__()
-                                    } else {
-                                      helper.error()
+                                      const __navigate__ = () => {
+                                        navigate(`/booking?b=${row.booking}`)
+                                      }
+
+                                      if (!row.isRead) {
+                                        const status = await NotificationService.markAsRead(user._id, [row._id])
+
+                                        if (status === 200) {
+                                          const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
+                                          _rows[index].isRead = true
+                                          setRows(_rows)
+                                          setNotificationCount((prev) => prev - 1)
+                                          __navigate__()
+                                        } else {
+                                          helper.error()
+                                        }
+                                      } else {
+                                        __navigate__()
+                                      }
+                                    } catch (err) {
+                                      helper.error(err)
                                     }
-                                  } else {
-                                    __navigate__()
-                                  }
-                                } catch (err) {
-                                  helper.error(err)
-                                }
-                              }}
-                            >
-                              <ViewIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {!row.isRead ? (
-                          <Tooltip title={strings.MARK_AS_READ}>
-                            <IconButton
-                              onClick={async () => {
-                                try {
-                                  if (!user || !user._id) {
-                                    helper.error()
-                                    return
-                                  }
+                                  }}
+                                >
+                                  <ViewIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            {!row.isRead ? (
+                              <Tooltip title={strings.MARK_AS_READ}>
+                                <IconButton
+                                  onClick={async () => {
+                                    try {
+                                      if (!user || !user._id) {
+                                        helper.error()
+                                        return
+                                      }
 
-                                  const status = await NotificationService.markAsRead(user._id, [row._id])
+                                      const status = await NotificationService.markAsRead(user._id, [row._id])
 
-                                  if (status === 200) {
-                                    const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
-                                    _rows[index].isRead = true
-                                    setRows(_rows)
-                                    setNotificationCount((prev) => prev - 1)
-                                  } else {
-                                    helper.error()
-                                  }
-                                } catch (err) {
-                                  helper.error(err)
-                                }
-                              }}
-                            >
-                              <MarkReadIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title={strings.MARK_AS_UNREAD}>
-                            <IconButton
-                              onClick={async () => {
-                                try {
-                                  if (!user || !user._id) {
-                                    helper.error()
-                                    return
-                                  }
+                                      if (status === 200) {
+                                        const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
+                                        _rows[index].isRead = true
+                                        setRows(_rows)
+                                        setNotificationCount((prev) => prev - 1)
+                                      } else {
+                                        helper.error()
+                                      }
+                                    } catch (err) {
+                                      helper.error(err)
+                                    }
+                                  }}
+                                >
+                                  <MarkReadIcon />
+                                </IconButton>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip title={strings.MARK_AS_UNREAD}>
+                                <IconButton
+                                  onClick={async () => {
+                                    try {
+                                      if (!user || !user._id) {
+                                        helper.error()
+                                        return
+                                      }
 
-                                  const status = await NotificationService.markAsUnread(user._id, [row._id])
+                                      const status = await NotificationService.markAsUnread(user._id, [row._id])
 
-                                  if (status === 200) {
-                                    const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
-                                    _rows[index].isRead = false
-                                    setRows(_rows)
-                                    setNotificationCount((prev) => prev + 1)
-                                  } else {
-                                    helper.error()
-                                  }
-                                } catch (err) {
-                                  helper.error(err)
-                                }
-                              }}
-                            >
-                              <MarkUnreadIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        <Tooltip title={commonStrings.DELETE}>
-                          <IconButton
-                            onClick={() => {
-                              setSelectedRows([row])
-                              setOpenDeleteDialog(true)
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
+                                      if (status === 200) {
+                                        const _rows = bookcarsHelper.cloneArray(rows) as bookcarsTypes.Notification[]
+                                        _rows[index].isRead = false
+                                        setRows(_rows)
+                                        setNotificationCount((prev) => prev + 1)
+                                      } else {
+                                        helper.error()
+                                      }
+                                    } catch (err) {
+                                      helper.error(err)
+                                    }
+                                  }}
+                                >
+                                  <MarkUnreadIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            <Tooltip title={commonStrings.DELETE}>
+                              <IconButton
+                                onClick={() => {
+                                  setSelectedRows([row])
+                                  setOpenDeleteDialog(true)
+                                }}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </React.Fragment>
+                )
+              })}
             </div>
             <div className="notifications-footer">
               {rowCount > -1 && <div className="row-count">{`${(page - 1) * env.PAGE_SIZE + 1}-${rowCount} ${commonStrings.OF} ${totalRecords}`}</div>}

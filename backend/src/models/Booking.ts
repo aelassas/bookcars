@@ -123,6 +123,53 @@ const bookingSchema = new Schema<env.Booking>(
     paypalOrderId: {
       type: String,
     },
+    rentalMode: {
+      type: String,
+      enum: Object.values(bookcarsTypes.RentalMode),
+      required: true,
+      default: bookcarsTypes.RentalMode.WithDriver,
+      index: true,
+    },
+    tripScope: {
+      type: String,
+      enum: Object.values(bookcarsTypes.TripScope),
+      default: bookcarsTypes.TripScope.IntraCity,
+      index: true,
+    },
+    destinationRegion: { type: String, trim: true },
+    priceBreakdown: {
+      baseRentPkr: { type: Number, min: 0, default: 0 },
+      driverAllowancePkr: { type: Number, min: 0, default: 0 },
+      outOfCitySurchargePkr: { type: Number, min: 0, default: 0 },
+      securityDepositPkr: { type: Number, min: 0, default: 0 },
+      totalPayablePkr: { type: Number, min: 0, default: 0 },
+    },
+    paymentMethod: { type: String, enum: Object.values(bookcarsTypes.RentalPaymentMethod) },
+    paymentStatus: {
+      type: String,
+      enum: Object.values(bookcarsTypes.RentalPaymentStatus),
+      default: bookcarsTypes.RentalPaymentStatus.PendingPayment,
+      index: true,
+    },
+    paymentState: { type: String, enum: ['PENDING_PAYMENT', 'PROCESSING', 'CONFIRMED', 'FAILED'], default: 'PENDING_PAYMENT', index: true },
+    transactionRef: { type: String, trim: true, unique: true, sparse: true },
+    handoverChecklist: {
+      completedAt: Date,
+      odometerStart: { type: Number, min: 0 },
+      fuelLevel: { type: String, trim: true },
+      spareTirePresent: Boolean,
+      exteriorNotes: { type: String, trim: true },
+      verifiedBySupplier: { type: Boolean, default: false },
+    },
+    demoPaymentAttempts: [{
+      reference: { type: String, required: true },
+      idempotencyKey: { type: String, required: true },
+      outcome: { type: String, required: true, enum: ['success', 'failed', 'cancelled'] },
+      paymentMethod: { type: String, enum: Object.values(bookcarsTypes.RentalPaymentMethod) },
+      amount: { type: Number, required: true, min: 0 },
+      currency: { type: String, required: true },
+      createdAt: { type: Date, required: true },
+    }],
     expireAt: {
       //
       // Bookings created from checkout with Stripe are temporary and

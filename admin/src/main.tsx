@@ -13,10 +13,25 @@ import * as UserService from '@/services/UserService'
 import { strings as commonStrings } from '@/lang/common'
 import env from '@/config/env.config'
 import App from '@/App'
+import { appThemeOptions } from '@/utils/appTheme'
+import { getThemeMode, initThemeMode } from '@/utils/themeMode'
+
+initThemeMode()
+document.documentElement.dataset.app = 'admin'
+
+document.title = `${env.WEBSITE_NAME} Operations`
+const siteIcon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
+if (siteIcon) {
+  siteIcon.href = '/safarrent-mark.svg'
+  siteIcon.type = 'image/svg+xml'
+}
 
 import '@/assets/css/common.css'
 import '@/assets/css/index.css'
 import '@/assets/css/luxury-theme.css'
+
+import '@/assets/css/admin-theme.css'
+import '../../packages/safarrent-ui.css'
 
 if (import.meta.env.VITE_NODE_ENV === 'production') {
   disableDevTools()
@@ -79,50 +94,25 @@ const muiLocales = {
   }
 const muiLocale = muiLocales[language as keyof typeof muiLocales] ?? muiLocales.en
 
-const theme = createTheme(
-  {
-    palette: {
-      primary: {
-        main: '#059669',
-        dark: '#047857',
-        contrastText: '#ffffff',
-        // contrastText: '#003B95',
-        // dark: '#003B95',
-      },
-    },
-    typography: {
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: {
-          body: {
-            backgroundColor: '#f8fafc',
-          },
-        },
-      },
-    },
-  },
-  muiLocale.pickers,
-  muiLocale.dataGrid,
-  muiLocale.core,
-)
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline>
+const ThemedApp = () => {
+  const [mode, setMode] = React.useState(getThemeMode)
+  React.useEffect(() => {
+    const sync = () => setMode(getThemeMode())
+    window.addEventListener('safarrent-theme-change', sync)
+    window.addEventListener('storage', sync)
+    return () => {
+      window.removeEventListener('safarrent-theme-change', sync)
+      window.removeEventListener('storage', sync)
+    }
+  }, [])
+  const theme = React.useMemo(() => createTheme(appThemeOptions(mode), muiLocale.pickers, muiLocale.dataGrid, muiLocale.core), [mode])
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <App />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-      />
-    </CssBaseline>
-  </ThemeProvider>,
-)
+      <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss={false} draggable={false} theme={mode} />
+    </ThemeProvider>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(<ThemedApp />)

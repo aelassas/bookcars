@@ -50,6 +50,9 @@ const isDuplicateEmailError = (err: unknown) =>
  */
 const _signup = async (req: Request, res: Response, userType: bookcarsTypes.UserType) => {
   const { body }: { body: bookcarsTypes.SignUpPayload } = req
+  // Local development can opt into immediately usable accounts. Production
+  // always keeps email verification, even if the flag is misconfigured.
+  const autoVerify = env.AUTO_VERIFY_ON_SIGNUP && process.env.NODE_ENV !== 'production'
 
   //
   // Create user
@@ -58,7 +61,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
   try {
     body.email = helper.trim(body.email, ' ')
     body.active = true
-    body.verified = false
+    body.verified = autoVerify
     body.blacklisted = false
     body.type = userType
 
@@ -67,6 +70,12 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     body.password = passwordHash
 
     user = new User(body)
+    if (body.cnicNumber) {
+user.kycStatus = bookcarsTypes.KycStatus.Pending
+}
+    if (autoVerify) {
+      user.verifiedAt = new Date()
+    }
     await user.save()
 
     // avatar
@@ -126,11 +135,19 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     }
   } catch (err) {
     if (isDuplicateEmailError(err)) {
-      res.sendStatus(200)
+      res.status(409).send('An account with this email already exists.')
       return
     }
     logger.error(`[user.signup] ${i18n.t('ERROR')}`, err)
     res.status(400).send(i18n.t('ERROR'))
+    return
+  }
+
+  // The dev compose profile enables this so local registration works without
+  // depending on external SMTP delivery or an inbox activation step.
+  if (autoVerify) {
+    logger.info('[user.signup] Local development auto-verification enabled; account is ready to sign in.')
+    res.sendStatus(200)
     return
   }
 
@@ -184,7 +201,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
       logger.error(`[user.signup] ${i18n.t('ERROR')}`, deleteErr)
     }
     logger.error(`[user.signup] ${i18n.t('SMTP_ERROR')}`, err)
-    res.sendStatus(200)
+    res.status(503).send('We could not send the activation email. No account was created; please try again later or contact support.')
   }
 }
 
@@ -1268,6 +1285,8 @@ export const update = async (req: Request, res: Response) => {
       supplierCarLimit,
       notifyAdminOnNewCar,
       blacklisted,
+      cnicNumber,
+      drivingLicenseNumber,
     } = body
 
     if (fullName) {
@@ -1277,6 +1296,17 @@ export const update = async (req: Request, res: Response) => {
     user.location = location
     user.bio = bio
     user.birthDate = birthDate ? new Date(birthDate) : undefined
+    if (sessionUser.type === bookcarsTypes.UserType.User && isSelf) {
+      if (typeof cnicNumber !== 'undefined') {
+        if (cnicNumber !== user.cnicNumber) {
+          user.cnicNumber = cnicNumber || undefined
+          user.kycStatus = cnicNumber ? bookcarsTypes.KycStatus.Pending : bookcarsTypes.KycStatus.Unverified
+        }
+      }
+      if (typeof drivingLicenseNumber !== 'undefined') {
+user.drivingLicenseNumber = drivingLicenseNumber || undefined
+}
+    }
     user.minimumRentalDays = minimumRentalDays
     user.priceChangeRate = priceChangeRate
     if (isAdmin) {
@@ -1307,6 +1337,28 @@ export const update = async (req: Request, res: Response) => {
     logger.error(`[user.update] ${i18n.t('ERROR')} ${JSON.stringify(req.body)}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
+}
+
+/** Admin-only KYC review state change. */
+export const updateKyc = async (req: Request, res: Response) => {
+  const id = String(req.params.id || '')
+  const { status } = req.body || {}
+  if (!helper.isValidObjectId(id) || ![bookcarsTypes.KycStatus.Pending, bookcarsTypes.KycStatus.Verified, bookcarsTypes.KycStatus.Rejected].includes(status)) {
+    res.status(400).json({ message: 'Provide a valid customer and KYC status.' })
+    return
+  }
+  const customer = await User.findById(id)
+  if (!customer || customer.type !== bookcarsTypes.UserType.User) {
+    res.sendStatus(404)
+    return
+  }
+  if (status === bookcarsTypes.KycStatus.Verified && !/^\d{5}-\d{7}-\d$/.test(customer.cnicNumber || '')) {
+    res.status(409).json({ message: 'A valid CNIC is required before KYC can be verified.' })
+    return
+  }
+  customer.kycStatus = status
+  await customer.save()
+  res.json({ id: customer._id, kycStatus: customer.kycStatus })
 }
 
 /**
@@ -1427,6 +1479,7 @@ export const getUser = async (req: Request, res: Response) => {
       throw new Error('User id is not valid')
     }
 
+    const includeKyc = req.user?.type === bookcarsTypes.UserType.Admin || req.user?._id === id
     const user = await User.findById(id, {
       supplier: 1,
       email: 1,
@@ -1449,6 +1502,7 @@ export const getUser = async (req: Request, res: Response) => {
       priceChangeRate: 1,
       supplierCarLimit: 1,
       notifyAdminOnNewCar: 1,
+      ...(includeKyc ? { cnicNumber: 1, drivingLicenseNumber: 1, kycStatus: 1 } : {}),
     }).lean()
 
     // begin of security check

@@ -17,7 +17,7 @@ div.signin .signin-form-title {
   text-align: center;
   text-transform: capitalize;
   margin-top: 35px;
-  color: #232323;
+  color: var(--sr-text);
 }
 
 div.signin div.signin-buttons {
@@ -44,7 +44,7 @@ div.signin div.stay-connected input[type='checkbox'] {
 
 div.signin div.stay-connected label {
   cursor: pointer;
-  color: rgb(0 0 0 / 60%);
+  color: var(--sr-muted);
   user-select: none;
 }
 

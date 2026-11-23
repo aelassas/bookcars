@@ -77,7 +77,7 @@ const MapDialog = ({
       <DialogContent className="map-dialog-content">
         {pickupLocation && (
           <Map
-            position={[pickupLocation.latitude || 36.191113, pickupLocation.longitude || 44.009167]}
+            position={[pickupLocation.latitude ?? env.MAP_LATITUDE, pickupLocation.longitude ?? env.MAP_LONGITUDE]}
             initialZoom={pickupLocation.latitude && pickupLocation.longitude ? 10 : 2.5}
             locations={[pickupLocation]}
             parkingSpots={pickupLocation.parkingSpots}

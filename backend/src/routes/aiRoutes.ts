@@ -5,6 +5,7 @@ import * as aiController from '../controllers/aiController'
 
 const routes = express.Router()
 
+routes.post('/api/ai/parse-trip', createRateLimiter('ai-parse-trip'), aiController.parseTrip)
 routes.post('/api/ai/booking-intake', createRateLimiter('ai-booking-intake'), authJwt.verifyToken, authJwt.authSupplier, aiController.bookingIntake)
 routes.get('/api/ai/booking-intake-audits/:page/:size', authJwt.verifyToken, authJwt.authAdmin, aiController.getAudits)
 routes.post('/api/ai/booking-intake-audits/:id/approve', authJwt.verifyToken, authJwt.authAdmin, aiController.approveAudit)

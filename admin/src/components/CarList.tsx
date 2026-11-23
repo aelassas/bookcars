@@ -10,7 +10,9 @@ import {
   Tooltip,
   Card,
   CardContent,
-  Typography
+  Typography,
+  Chip,
+  TextField
 } from '@mui/material'
 import {
   LocalGasStation as CarTypeIcon,
@@ -112,6 +114,10 @@ const CarList = ({
   const [carId, setCarId] = useState('')
   const [carIndex, setCarIndex] = useState(-1)
   const [openInfoDialog, setOpenInfoDialog] = useState(false)
+  const [reviewCar, setReviewCar] = useState<bookcarsTypes.Car | null>(null)
+  const [reviewStatus, setReviewStatus] = useState<bookcarsTypes.ListingStatus>(bookcarsTypes.ListingStatus.PendingReview)
+  const [reviewNotes, setReviewNotes] = useState('')
+  const [savingReview, setSavingReview] = useState(false)
 
   useEffect(() => {
     if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile) {
@@ -353,6 +359,28 @@ const CarList = ({
     setCarId('')
   }
 
+  const openReview = (car: bookcarsTypes.Car, status: bookcarsTypes.ListingStatus) => {
+    setReviewCar(car)
+    setReviewStatus(status)
+    setReviewNotes(car.complianceNotes || '')
+  }
+
+  const saveReview = async () => {
+    if (!reviewCar?._id || savingReview) {
+return
+}
+    setSavingReview(true)
+    try {
+      const updated = await CarService.reviewListing(reviewCar._id, reviewStatus, reviewNotes)
+      setRows((current) => current.map((car) => car._id === updated._id ? { ...car, ...updated } : car))
+      setReviewCar(null)
+    } catch (err) {
+      helper.error(err)
+    } finally {
+      setSavingReview(false)
+    }
+  }
+
   const getExtraIcon = (option: string, extra: number) => {
     let available = false
     if (booking) {
@@ -443,6 +471,63 @@ const CarList = ({
                     <div className="car-info-header">
                       <div className="name"><h2>{car.name}</h2></div>
                       {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.dailyPrice, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
+                    </div>
+                    <div className="listing-review-status">
+                      <Chip
+                        size="small"
+                        label={
+                          car.listingStatus === bookcarsTypes.ListingStatus.Approved
+                            ? 'APPROVED ✓'
+                            : car.listingStatus === bookcarsTypes.ListingStatus.Suspended
+                            ? 'SUSPENDED 🛑'
+                            : 'PENDING REVIEW ⏳'
+                        }
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: 11,
+                          letterSpacing: '0.04em',
+                          fontFamily: 'var(--sr-font-mono, monospace)',
+                          height: 24,
+                          borderRadius: '6px',
+                          bgcolor:
+                            car.listingStatus === bookcarsTypes.ListingStatus.Approved
+                              ? 'rgba(5, 150, 105, 0.12)'
+                              : car.listingStatus === bookcarsTypes.ListingStatus.Suspended
+                              ? 'rgba(220, 38, 38, 0.12)'
+                              : 'rgba(217, 119, 6, 0.12)',
+                          color:
+                            car.listingStatus === bookcarsTypes.ListingStatus.Approved
+                              ? '#059669'
+                              : car.listingStatus === bookcarsTypes.ListingStatus.Suspended
+                              ? '#DC2626'
+                              : '#D97706',
+                          border: `1px solid ${
+                            car.listingStatus === bookcarsTypes.ListingStatus.Approved
+                              ? 'rgba(5, 150, 105, 0.3)'
+                              : car.listingStatus === bookcarsTypes.ListingStatus.Suspended
+                              ? 'rgba(220, 38, 38, 0.3)'
+                              : 'rgba(217, 119, 6, 0.3)'
+                          }`
+                        }}
+                      />
+                      {!admin && car.listingStatus !== bookcarsTypes.ListingStatus.Approved && (
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                          This vehicle is awaiting admin compliance approval and will not appear in customer search.
+                        </Typography>
+                      )}
+                      {admin && edit && (
+                        <div className="listing-review-actions">
+                          {car.listingStatus !== bookcarsTypes.ListingStatus.Approved && (
+                            <Button size="small" onClick={() => openReview(car, bookcarsTypes.ListingStatus.Approved)}>Approve listing</Button>
+                          )}
+                          {car.listingStatus !== bookcarsTypes.ListingStatus.Suspended && (
+                            <Button size="small" color="error" onClick={() => openReview(car, bookcarsTypes.ListingStatus.Suspended)}>Suspend</Button>
+                          )}
+                          {car.listingStatus !== bookcarsTypes.ListingStatus.PendingReview && (
+                            <Button size="small" onClick={() => openReview(car, bookcarsTypes.ListingStatus.PendingReview)}>Return to review</Button>
+                          )}
+                        </div>
+                      )}
                     </div>
                     {car.licensePlate && <div className="license-plate">{car.licensePlate}</div>}
                     <ul className="car-info-list">
@@ -664,6 +749,26 @@ const CarList = ({
               <Button onClick={handleConfirmDelete} variant="contained" color="error">
                 {commonStrings.DELETE}
               </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog maxWidth="sm" fullWidth open={!!reviewCar} onClose={() => !savingReview && setReviewCar(null)}>
+            <DialogTitle>Review vehicle listing</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2" sx={{ mb: 2 }}>{reviewCar?.name} · {reviewStatus}</Typography>
+              <TextField
+                fullWidth
+                multiline
+                minRows={3}
+                label="Compliance note (optional)"
+                value={reviewNotes}
+                onChange={(event) => setReviewNotes(event.target.value)}
+                inputProps={{ maxLength: 1000 }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setReviewCar(null)} disabled={savingReview}>Cancel</Button>
+              <Button onClick={saveReview} disabled={savingReview} variant="contained">{savingReview ? 'Saving…' : 'Save review'}</Button>
             </DialogActions>
           </Dialog>
         </section>

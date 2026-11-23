@@ -385,7 +385,7 @@ const SettingsScreen = () => {
               </Dialog.Content>
               <Dialog.Actions style={styles.dialogActions}>
                 <NativeButton
-                  // color='#f37022'
+                  // color='#D4AF37'
                   onPress={() => {
                     setOpenDeleteDialog(false)
                   }}
@@ -393,7 +393,7 @@ const SettingsScreen = () => {
                   {i18n.t('CANCEL')}
                 </NativeButton>
                 <NativeButton
-                  // color='#f37022'
+                  // color='#D4AF37'
                   onPress={async () => {
                     try {
                       if (user?._id) {

@@ -1,6 +1,6 @@
 {
-  "name": "bookcars-mobile",
-  "description": "Mobile app for BookCars (customer app)",
+  "name": "safarrent-mobile",
+  "description": "SafarRent Pakistan car rental mobile app",
   "version": "9.3.0",
   "main": "expo-router/entry",
   "scripts": {
@@ -73,6 +73,7 @@
     "react-native-svg": "15.16.0",
     "react-native-toast-message": "^2.5.2",
     "react-native-vector-icons": "^10.3.0",
+    "react-native-webview": "14.0.1",
     "react-native-worklets": "0.13.0",
     "validator": "^13.15.35"
   },
