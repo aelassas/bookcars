@@ -134,6 +134,7 @@ const CarList = ({
 
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: _suppliers ?? [],
+        rentalMode,
         pickupLocation: _pickupLocation,
         pickupLatitude: pickupCoordinates?.latitude,
         pickupLongitude: pickupCoordinates?.longitude,

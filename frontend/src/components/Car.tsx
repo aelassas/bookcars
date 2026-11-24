@@ -204,9 +204,12 @@ const Car = ({
       <article>
         <div className="car">
           <div className="car-top-badges">
+            {car.available && !car.comingSoon && !car.fullyBooked && (
+              <span className="car-badge badge-available">Available</span>
+            )}
             {(car.selfDriveAvailable || car.withDriverAvailable) && (
               <span className={car.selfDriveAvailable ? 'car-badge badge-self-drive' : 'car-badge badge-chauffeur'}>
-                {car.selfDriveAvailable ? 'Self-drive' : 'With chauffeur'}
+                {car.selfDriveAvailable ? 'Self-Drive' : 'With Driver'}
               </span>
             )}
             {car.terrainCapability === bookcarsTypes.TerrainCapability.NorthernMountains && (
@@ -260,6 +263,14 @@ const Car = ({
         <div className="car-info">
           <div className="car-info-header">
             <div className="name">{car.name}</div>
+            <div className="sr-spec-pills">
+              {car.engineCc ? <span>{car.engineCc}cc</span> : null}
+              {car.terrainCapability === bookcarsTypes.TerrainCapability.NorthernMountains ? <span>Northern Capable</span> : null}
+              {/4x4|suv|prado|fortuner|revo|hilux/i.test(`${car.name} ${car.type || ''}`) ? <span>4x4</span> : null}
+              {car.selfDriveAvailable ? <span>Self-Drive</span> : null}
+              {car.withDriverAvailable ? <span>With Driver</span> : null}
+            </div>
+            {car.interCityDeliveryBadge && <div className="sr-delivery-badge">{car.interCityDeliveryBadge}</div>}
             {!hidePrice && (
               <div className="price">
                 <span className="price-days">{helper.getDays(language, days)}</span>

@@ -1,0 +1,228 @@
+{
+  "generatedAt": "2026-11-24T10:07:12.615Z",
+  "checks": [
+    {
+      "name": "admin login",
+      "pass": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "customer login",
+      "pass": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "supplier login",
+      "pass": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "other login",
+      "pass": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "search Islamabad",
+      "pass": true,
+      "details": {
+        "cars": 24,
+        "milliseconds": 54
+      }
+    },
+    {
+      "name": "search Rawalpindi",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 48
+      }
+    },
+    {
+      "name": "search Lahore",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 38
+      }
+    },
+    {
+      "name": "search Karachi",
+      "pass": true,
+      "details": {
+        "cars": 23,
+        "milliseconds": 49
+      }
+    },
+    {
+      "name": "search Peshawar",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 39
+      }
+    },
+    {
+      "name": "search Multan",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 39
+      }
+    },
+    {
+      "name": "search Faisalabad",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 41
+      }
+    },
+    {
+      "name": "search Sialkot",
+      "pass": true,
+      "details": {
+        "cars": 22,
+        "milliseconds": 44
+      }
+    },
+    {
+      "name": "search Gilgit",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 25
+      }
+    },
+    {
+      "name": "search Hunza",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 22
+      }
+    },
+    {
+      "name": "search Skardu",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 23
+      }
+    },
+    {
+      "name": "search Swat",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 22
+      }
+    },
+    {
+      "name": "search Murree",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 24
+      }
+    },
+    {
+      "name": "search Naran",
+      "pass": true,
+      "details": {
+        "cars": 7,
+        "milliseconds": 24
+      }
+    },
+    {
+      "name": "AI northern trip with provider fallback",
+      "pass": true,
+      "details": {
+        "provider": "ollama-local",
+        "milliseconds": 5220
+      }
+    },
+    {
+      "name": "PKR quote recalculates driver allowance and total",
+      "pass": true,
+      "details": {
+        "currency": "PKR",
+        "days": 3,
+        "rentalMode": "WITH_DRIVER",
+        "tripScope": "NORTHERN_TOUR",
+        "baseRentPKR": 84000,
+        "driverAllowancePKR": 7500,
+        "outOfCitySurchargePKR": 1500,
+        "securityDepositPKR": 40000,
+        "totalPayablePKR": 133000,
+        "terrainCapability": "NORTHERN_MOUNTAINS"
+      }
+    },
+    {
+      "name": "KYC rejects unverified self-drive",
+      "pass": true,
+      "details": {
+        "status": 403
+      }
+    },
+    {
+      "name": "customer cannot approve KYC or vehicle",
+      "pass": true
+    },
+    {
+      "name": "admin approves submitted KYC",
+      "pass": true
+    },
+    {
+      "name": "admin approval changes listing visibility",
+      "pass": true
+    },
+    {
+      "name": "JAZZCASH checkout, payment, handover and lifecycle",
+      "pass": true,
+      "details": {
+        "reference": "SR-DEMO-JC-E11961FDC36A",
+        "amount": 133000
+      }
+    },
+    {
+      "name": "EASYPAISA checkout, payment, handover and lifecycle",
+      "pass": true,
+      "details": {
+        "reference": "SR-DEMO-EP-0A81B2D11C65",
+        "amount": 125500
+      }
+    },
+    {
+      "name": "RAAST checkout, payment, handover and lifecycle",
+      "pass": true,
+      "details": {
+        "reference": "SR-DEMO-RT-220D0B04E74E",
+        "amount": 133000
+      }
+    },
+    {
+      "name": "CARD_DEMO checkout, payment, handover and lifecycle",
+      "pass": true,
+      "details": {
+        "reference": "SR-DEMO-DC-808FE7B5D78E",
+        "amount": 125500
+      }
+    },
+    {
+      "name": "customer cancellation reflects immediately",
+      "pass": true
+    },
+    {
+      "name": "supplier fleet remains tenant isolated",
+      "pass": true
+    }
+  ]
+}

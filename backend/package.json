@@ -7,6 +7,8 @@
   "scripts": {
     "build:packages": "cd ../packages/bookcars-types && npm i --include=dev && npm run build && cd ../currency-converter && npm i --include=dev && npm run build && cd ../bookcars-helper && npm i --include=dev && npm run build && cd ../../backend",
     "dev": "npm run build:packages && nodemon",
+    "dev:local": "nodemon",
+    "test:evaluation": "node scripts/evaluation-smoke.cjs",
     "dev:setup": "npm run setup && nodemon",
     "build": "npm run build:packages && cross-env NODE_OPTIONS=\"--max-old-space-size=1024\" tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node --import ./dist/src/monitoring/instrument.js dist/src",

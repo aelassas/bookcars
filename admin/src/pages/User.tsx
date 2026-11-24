@@ -246,7 +246,7 @@ return
             <Grid size={{ xs: 12, md: 4 }}>
               <Box sx={{ ...cardStyle, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 1 }}>
                 {/* Avatar 80px */}
-                <Box sx={{ width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', border: `3px solid ${EMERALD}`, flexShrink: 0 }}>
+                  <Box sx={{ width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', border: `3px solid ${EMERALD}`, flexShrink: 0, display: 'grid', placeItems: 'center', '& .MuiSvgIcon-root': { width: '48px !important', height: '48px !important', color: 'var(--sr-muted)' }, '& img, & .MuiAvatar-root': { width: '74px !important', height: '74px !important', objectFit: 'cover' } }}>
                   <Avatar
                     record={user}
                     type={user.type}

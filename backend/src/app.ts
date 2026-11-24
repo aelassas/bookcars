@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/node'
-import express from 'express'
+import express, { type Request, type Response, type NextFunction } from 'express'
+import * as logger from './utils/logger'
 import compression from 'compression'
 import helmet from 'helmet'
 import nocache from 'nocache'
@@ -25,6 +26,8 @@ import maintenanceRoutes from './routes/maintenanceRoutes'
 import vehicleDocumentRoutes from './routes/vehicleDocumentRoutes'
 import operationsDashboardRoutes from './routes/operationsDashboardRoutes'
 import demoPaymentRoutes from './routes/demoPaymentRoutes'
+import kycRoutes from './routes/kycRoutes'
+import handoverRoutes from './routes/handoverRoutes'
 import * as helper from './utils/helper'
 
 const app = express()
@@ -99,7 +102,7 @@ app.get('/', (_req, res) => {
       </div>
       <div class="tile">
         <div class="tile-lbl">Admin &amp; Operations Portal</div>
-        <div class="tile-val"><a href="http://localhost:3001/operations" target="_blank">http://localhost:3001/operations &rarr;</a></div>
+        <div class="tile-val"><a href="http://localhost:3001/operations-dashboard" target="_blank">http://localhost:3001/operations &rarr;</a></div>
       </div>
       <div class="tile">
         <div class="tile-lbl">Pakistan Operations API</div>
@@ -112,7 +115,7 @@ app.get('/', (_req, res) => {
     </div>
     <div class="actions">
       <a href="http://localhost:8080" class="btn">Launch Customer Portal</a>
-      <a href="http://localhost:3001/operations" class="btn btn-secondary">Open Admin Dashboard</a>
+      <a href="http://localhost:3001/operations-dashboard" class="btn btn-secondary">Open Admin Dashboard</a>
     </div>
   </div>
 </body>
@@ -136,6 +139,20 @@ app.use('/', maintenanceRoutes)
 app.use('/', vehicleDocumentRoutes)
 app.use('/', operationsDashboardRoutes)
 app.use('/', demoPaymentRoutes)
+app.use('/', kycRoutes)
+app.use('/', handoverRoutes)
+
+app.use('/api', (_req, res) => {
+ res.status(404).json({ message: 'API route not found.' }) 
+})
+app.use((err: Error & { status?: number; code?: string }, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+ next(err); return 
+}
+  const status = err.name === 'ValidationError' || err.name === 'CastError' || err.code === 'LIMIT_FILE_SIZE' ? 400 : err.status && err.status >= 400 && err.status < 600 ? err.status : 500
+  logger.error(`[api] ${req.method} ${req.path} (${status})`, new Error(err.name))
+  res.status(status).json({ message: status < 500 ? 'The request could not be validated. Check the supplied values.' : 'The service could not complete this request. Please try again.' })
+})
 
 if (env.ENABLE_SENTRY) {
   Sentry.setupExpressErrorHandler(app)

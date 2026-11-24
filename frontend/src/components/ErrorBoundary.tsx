@@ -3,6 +3,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react'
 interface Props {
   children?: ReactNode;
   fallback?: ReactNode;
+  resetKey?: string;
 }
 
 interface State {
@@ -17,6 +18,12 @@ class ErrorBoundary extends Component<Props, State> {
   // Update state so the next render shows the fallback UI.
   public static getDerivedStateFromError(): State {
     return { hasError: true }
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false })
+    }
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {

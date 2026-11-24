@@ -8,6 +8,11 @@ import * as databaseHelper from './utils/databaseHelper'
 import app from './app'
 import * as logger from './utils/logger'
 import { warmBookingIntakeProvider } from './ai/bookingIntakeProvider'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
+import mongoose from 'mongoose'
+
+const execFileAsync = promisify(execFile)
 
 /**
  * Creates and returns an HTTP or HTTPS server based on environment configuration.
@@ -48,6 +53,19 @@ const start = async (): Promise<void> => {
     if (!connected || !initialized) {
       logger.error('Failed to connect or initialize the database')
       process.exit(1)
+    }
+
+    if (env.FYP_DEMO_MODE && process.env.NODE_ENV === 'development') {
+      const carCount = await mongoose.connection.collection('Car').countDocuments()
+      if (carCount === 0) {
+        logger.info('FYP demo mode: Car collection is empty. Running Pakistani demo seeder.')
+        await execFileAsync(process.execPath, ['seed-pakistan-operations.cjs'], {
+          cwd: process.cwd(),
+          env: process.env,
+          timeout: 120_000,
+        })
+        logger.info('FYP demo seeder completed.')
+      }
     }
 
     const protocol = env.HTTPS ? 'HTTPS' : 'HTTP'

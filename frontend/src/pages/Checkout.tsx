@@ -427,6 +427,7 @@ return
     const { state } = location
     if (!state) {
       setNoMatch(true)
+      setLoadingPage(false)
       return
     }
 
@@ -438,6 +439,7 @@ return
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setNoMatch(true)
+      setLoadingPage(false)
       return
     }
 
@@ -449,6 +451,7 @@ return
       _car = await CarService.getCar(carId)
       if (!_car) {
         setNoMatch(true)
+        setLoadingPage(false)
         return
       }
 
@@ -524,6 +527,9 @@ return
       setVisible(true)
     } catch (err) {
       helper.error(err)
+      setNoMatch(true)
+    } finally {
+      setLoadingPage(false)
     }
   }
 

@@ -58,7 +58,7 @@ const strings = new LocalizedStrings({
     PICK_UP_DATE: 'Pick-up Date',
     DROP_OFF_DATE: 'Drop-off Date',
     DROP_OFF: 'Return to same location',
-    COVER: 'Make the road yours.',
+    COVER: 'Explore our verified and professional cars',
     SUPPLIERS_TITLE: 'Rental suppliers',
     MAP_TITLE: 'Explore pickup locations',
     MAP_PICK_UP_SELECTED: 'Pick-up Location selected',
@@ -72,7 +72,7 @@ const strings = new LocalizedStrings({
     SEARCH_FOR_CAR: 'Search for a car',
 
     TITLE: 'SafarRent — Car rentals for the road ahead',
-    SUBTITLE: 'Choose your pickup and return locations, select your dates, and compare vehicles available for your trip.',
+    SUBTITLE: 'Search a pickup hub, dates, and self-drive or with-driver. Prices are shown in PKR before you book.',
     WHY_TITLE: 'A clearer way to book a rental',
     WHY_SERVICE_TITLE: 'Choose your locations',
     WHY_SERVICE: 'Set pickup and return points to find vehicles that work for your route.',

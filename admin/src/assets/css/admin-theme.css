@@ -75,3 +75,13 @@ html[data-theme='dark'] #root :is(.MuiOutlinedInput-root, input, select, textare
     grid-column: 1 / -1;
   }
 }
+
+.data-table-scroll,
+.MuiDataGrid-root,
+.MuiTableContainer-root,
+.table-responsive {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

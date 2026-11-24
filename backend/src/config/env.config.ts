@@ -61,6 +61,7 @@ export const WEBSITE_NAME = __env__('BC_WEBSITE_NAME', false, 'SafarRent')
  * Enables local FYP-demo behavior. Keep disabled outside development.
  */
 export const FYP_DEMO_MODE = helper.StringToBoolean(__env__('BC_FYP_DEMO_MODE', false, 'false'))
+export const KYC_REQUIRED = helper.StringToBoolean(__env__('BC_KYC_REQUIRED', false, 'false'))
 
 /**
  * Base currency. Default is USD.
@@ -689,6 +690,8 @@ export interface AdditionalDriver {
  * @extends {Document}
  */
 export interface Booking extends Document {
+  lifecycleStatus?: bookcarsTypes.BookingLifecycle
+  seedKey?: string
   _id: Types.ObjectId
   supplier: Types.ObjectId
   car: Types.ObjectId
@@ -719,7 +722,10 @@ export interface Booking extends Document {
   tripScope?: bookcarsTypes.TripScope
   destinationRegion?: string
   priceBreakdown?: bookcarsTypes.RentalPriceBreakdown
-  paymentMethod?: bookcarsTypes.RentalPaymentMethod
+  paymentMethod?: bookcarsTypes.RentalPaymentMethod | 'payLater' | 'stripe' | 'payPal' | 'jazzCash' | 'easypaisa'
+  paymentReference?: string
+  paymentProof?: string
+  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
   paymentStatus?: bookcarsTypes.RentalPaymentStatus
   paymentState?: 'PENDING_PAYMENT' | 'PROCESSING' | 'CONFIRMED' | 'FAILED'
   transactionRef?: string
@@ -750,6 +756,7 @@ export interface DateBasedPrice extends Document {
  * @extends {Document}
  */
 export interface Car extends Document {
+  deliveryLocations?: Types.ObjectId[]
   _id: Types.ObjectId
   name: string
   licensePlate?: string

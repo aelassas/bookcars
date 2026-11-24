@@ -7,6 +7,7 @@ import * as bookingController from '../controllers/bookingController'
 const routes = express.Router()
 
 routes.route('/api/bookings/calculate-quote').post(rateLimiter, bookingController.calculatePakistanQuote)
+routes.patch('/api/bookings/:id/lifecycle', authJwt.verifyToken, authJwt.authSupplier, bookingController.updateLifecycle)
 routes.patch('/api/bookings/:id/handover', authJwt.verifyToken, authJwt.authSupplier, bookingController.updateHandoverChecklist)
 routes.route(routeNames.create).post(authJwt.verifyToken, authJwt.authSupplier, bookingController.create)
 routes.route(routeNames.checkout).post(rateLimiter, authJwt.verifyTokenOptional, bookingController.checkout)

@@ -13,6 +13,7 @@ import {
   InputLabel,
   Input,
   TextField,
+  Typography,
 } from '@mui/material'
 import {
   Info as InfoIcon,
@@ -174,6 +175,22 @@ const UpdateBooking = () => {
   const [handoverOdometer, setHandoverOdometer] = useState('')
   const [handoverSpareTire, setHandoverSpareTire] = useState(false)
   const [handoverNotes, setHandoverNotes] = useState('')
+  const [lifecycleSaving, setLifecycleSaving] = useState(false)
+  const advanceLifecycle = async (next: bookcarsTypes.BookingLifecycle) => {
+    if (!booking?._id) {
+return
+}
+    setLifecycleSaving(true)
+    try {
+      const result = await BookingService.updateLifecycle(booking._id, next)
+      setBooking({ ...booking, ...result })
+      helper.info('Trip status updated.')
+    } catch (err) {
+ helper.error(err) 
+} finally {
+ setLifecycleSaving(false) 
+}
+  }
   const [handoverSaving, setHandoverSaving] = useState(false)
 
   const saveHandover = async () => {
@@ -887,6 +904,14 @@ return
                 <TextField fullWidth margin="dense" type="number" label="Odometer at handover" value={handoverOdometer} onChange={(event) => setHandoverOdometer(event.target.value)} inputProps={{ min: 0 }} />
                 <FormControlLabel control={<Switch checked={handoverSpareTire} onChange={(event) => setHandoverSpareTire(event.target.checked)} />} label="Spare tire present" />
                 <TextField fullWidth multiline minRows={2} margin="dense" label="Exterior notes" value={handoverNotes} onChange={(event) => setHandoverNotes(event.target.value.slice(0, 1500))} inputProps={{ maxLength: 1500 }} />
+                <div className="sr-lifecycle-panel">
+                  <Typography variant="subtitle1">Trip status: {booking?.lifecycleStatus || 'PENDING_PAYMENT'}</Typography>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBlock: 12 }}>
+                    {(['CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] as const).map((next) => (
+                      <Button key={next} type="button" size="small" variant="outlined" disabled={lifecycleSaving || booking?.lifecycleStatus === next} onClick={() => advanceLifecycle(next)}>{next.replace(/_/g, ' ')}</Button>
+                    ))}
+                  </div>
+                </div>
                 <Button variant="outlined" type="button" disabled={handoverSaving || !handoverFuelLevel.trim() || !handoverOdometer} onClick={saveHandover}>
                   {handoverSaving ? 'Saving…' : 'Save Handover Inspection'}
                 </Button>

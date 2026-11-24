@@ -11,6 +11,7 @@
     "ts:build": "npm run install:dependencies && tsc --build --verbose",
     "build": "npm run ts:build && cross-env NODE_OPTIONS=--max-old-space-size=1024 vite build",
     "dev": "npm run ts:build && vite",
+    "dev:local": "vite --host 0.0.0.0 --port 8080 --strictPort",
     "dev:web": "vite --host 0.0.0.0 --port 8080 --force",
     "preview:web": "vite preview --host 0.0.0.0 --port 8080 --strictPort",
     "ts:docker-build": "tsc --build --verbose",

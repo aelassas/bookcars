@@ -3,6 +3,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react'
 interface Props {
   children?: ReactNode;
   fallback?: ReactNode;
+  resetKey?: string;
 }
 
 interface State {
@@ -21,6 +22,12 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, errorMessage: error?.message || error?.name || 'Unknown render error' }
   }
 
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false, errorMessage: undefined, componentStack: undefined })
+    }
+  }
+
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Keep the browser console useful during local FYP debugging.
     console.error('Uncaught error:', error, errorInfo)
@@ -33,8 +40,8 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <main role="alert" style={{ maxWidth: 720, margin: '64px auto', padding: '32px', borderRadius: 20, background: 'var(--surface, #fff)', color: 'var(--text-primary, #172033)', boxShadow: '0 18px 48px rgba(15, 23, 42, .12)' }}>
-          <p style={{ margin: '0 0 8px', color: '#b28713', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase' }}>SafarRent Operations</p>
+        <main role="alert" style={{ maxWidth: 720, margin: '64px auto', padding: '32px', borderRadius: 20, background: 'var(--sr-surface, #fff)', color: 'var(--sr-text, #172033)', boxShadow: '0 18px 48px rgba(15, 23, 42, .12)' }}>
+          <p style={{ margin: '0 0 8px', color: 'var(--sr-accent-text)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase' }}>SafarRent Operations</p>
           <h1 style={{ margin: '0 0 10px', fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>This operations page couldn’t load</h1>
           <p style={{ margin: '0 0 24px', lineHeight: 1.6 }}>Your saved booking data is unchanged. Reload the page or return to the operations dashboard.</p>
           {import.meta.env.DEV && this.state.errorMessage && (

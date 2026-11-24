@@ -44,7 +44,7 @@ const EMERALD_HOVER = '#047857'
 const GOLD = '#995000'
 const CRIMSON = '#DC2626'
 const CANVAS = 'var(--sr-ink)'
-const CARD_BG = '#FFFFFF'
+const CARD_BG = 'var(--sr-surface)'
 const CARD_BORDER = '#E2E8F0'
 
 // ─── Status filter chips config ───────────────────────────────────────────────

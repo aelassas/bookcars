@@ -1,0 +1,42 @@
+2026-11-24 14:26:58 [32minfo[39m: [Sentry] Skipped: Disabled or missing DSN.
+2026-11-24 14:27:06 [32minfo[39m: Database connected
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: BankDetails
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: ParkingSpot
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: DateBasedPrice
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: PushToken
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: NotificationCounter
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: AdditionalDriver
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Notification
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Country
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Location
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Token
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: LocationValue
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: User
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Car
+2026-11-24 14:27:06 [32minfo[39m: Indexes created for collection: Booking
+2026-11-24 14:27:06 [32minfo[39m: Text index "value_text" already exists and is up to date
+2026-11-24 14:27:06 [32minfo[39m: Text index "name_text" already exists and is up to date
+2026-11-24 14:27:06 [32minfo[39m: TTL index "Token.expireAt" is already up to date
+2026-11-24 14:27:06 [32minfo[39m: TTL index "User.expireAt" is already up to date
+2026-11-24 14:27:06 [32minfo[39m: TTL index "Booking.expireAt" is already up to date
+2026-11-24 14:27:06 [32minfo[39m: parkingSpots initialized successfully
+2026-11-24 14:27:06 [32minfo[39m: countries initialized successfully
+2026-11-24 14:27:06 [32minfo[39m: locations initialized successfully
+2026-11-24 14:27:06 [32minfo[39m: Database initialized successfully
+2026-11-24 14:27:06 [32minfo[39m: HTTP server is running on port 4002
+2026-11-24 14:28:06 [32minfo[39m: [Redis] Successfully connected to Redis server.
+2026-11-24 14:29:17 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b0558edf036f1f8eeb41323; use in-app booking status.
+2026-11-24 14:29:38 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055902f036f1f8eeb4132b; use in-app booking status.
+2026-11-24 14:30:06 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b05591ef036f1f8eeb41333; use in-app booking status.
+2026-11-24 14:30:36 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b05593bf036f1f8eeb4133b; use in-app booking status.
+2026-11-24 14:34:06 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055a0bf036f1f8eeb4133f; use in-app booking status.
+2026-11-24 14:38:58 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055b32f036f1f8eeb41345; use in-app booking status.
+2026-11-24 14:39:19 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055b47f036f1f8eeb4134d; use in-app booking status.
+2026-11-24 14:39:38 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055b5af036f1f8eeb41355; use in-app booking status.
+2026-11-24 14:39:58 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055b6ef036f1f8eeb4135d; use in-app booking status.
+2026-11-24 14:40:17 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b055b81f036f1f8eeb41365; use in-app booking status.
+2026-11-24 15:05:30 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b05616af036f1f8eeb4136c; use in-app booking status.
+2026-11-24 15:05:53 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b056181f036f1f8eeb41374; use in-app booking status.
+2026-11-24 15:06:15 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b056197f036f1f8eeb4137c; use in-app booking status.
+2026-11-24 15:06:36 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b0561acf036f1f8eeb41384; use in-app booking status.
+2026-11-24 15:06:57 [32minfo[39m: [FYP demo] Booking confirmation email not sent for 6b0561c1f036f1f8eeb4138c; use in-app booking status.

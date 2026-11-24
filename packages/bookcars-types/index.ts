@@ -129,7 +129,10 @@ export enum PaymentGateway {
   Stripe = 'stripe',
 }
 
+export type BookingLifecycle = 'PENDING_PAYMENT' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+
 export interface Booking {
+  lifecycleStatus?: BookingLifecycle
   _id?: string
   supplier: string | User
   car: string | Car
@@ -161,6 +164,9 @@ export interface Booking {
   destinationRegion?: string
   priceBreakdown?: RentalPriceBreakdown
   paymentMethod?: RentalPaymentMethod
+  paymentReference?: string
+  paymentProof?: string
+  paymentVerificationStatus?: 'pending' | 'verified' | 'rejected'
   paymentStatus?: RentalPaymentStatus
   paymentState?: 'PENDING_PAYMENT' | 'PROCESSING' | 'CONFIRMED' | 'FAILED'
   transactionRef?: string
@@ -196,6 +202,46 @@ export interface DemoPaymentAttempt {
   createdAt: Date
 }
 
+export type PaymentMethod = 'payLater' | 'stripe' | 'payPal' | 'jazzCash' | 'easypaisa'
+
+export type KycDocumentType = 'cnic' | 'passport' | 'driving_license'
+
+export interface Kyc {
+  _id?: string
+  user: string | User
+  documentType: KycDocumentType
+  documentNumber: string
+  documentFront?: string
+  documentBack?: string
+  selfie?: string
+  status: 'pending_review' | 'approved' | 'rejected' | 'suspended'
+  rejectionReason?: string
+  reviewedBy?: string
+  reviewedAt?: Date
+}
+
+export interface Handover {
+  _id?: string
+  booking: string | Booking
+  vehicle: string | Car
+  customer: string | User
+  supplier: string | User
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled'
+  odometerAtPickup?: number
+  odometerAtReturn?: number
+  fuelLevelAtPickup?: number
+  fuelLevelAtReturn?: number
+  checklistAtPickup?: unknown
+  checklistAtReturn?: unknown
+  pickupPhotos?: string[]
+  returnPhotos?: string[]
+  customerSignature?: string
+  supplierSignature?: string
+  damageNotes?: string
+  scheduledAt?: Date
+  completedAt?: Date
+}
+
 export interface CheckoutPayload {
   driver?: User
   booking?: Booking
@@ -205,6 +251,9 @@ export interface CheckoutPayload {
   paymentIntentId?: string
   customerId?: string
   payPal?: boolean
+  paymentMethod?: PaymentMethod
+  paymentReference?: string
+  paymentProof?: string
   cnicNumber?: string
   drivingLicenseNumber?: string
 }
@@ -336,6 +385,7 @@ export interface CarSpecs {
 }
 
 export interface GetCarsPayload {
+  rentalMode?: RentalMode
   suppliers?: string[]
   carSpecs?: CarSpecs
   carType?: string[]
@@ -575,6 +625,8 @@ export interface DateBasedPrice {
 }
 
 export interface Car {
+  deliveryLocations?: string[]
+  interCityDeliveryBadge?: string
   _id: string
   name: string
   licensePlate?: string

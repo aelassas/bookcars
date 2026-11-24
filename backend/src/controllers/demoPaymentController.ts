@@ -6,6 +6,7 @@ import Booking from '../models/Booking'
 import User from '../models/User'
 import * as logger from '../utils/logger'
 import * as helper from '../utils/helper'
+import { saveBookingWithAvailability } from '../utils/bookingReservationHelper'
 
 /**
  * Record an explicitly simulated FYP payment response. It never calls a payment
@@ -104,7 +105,7 @@ export const simulate = async (req: Request, res: Response) => {
     if (attempt.outcome === 'success') {
       booking.transactionRef = attempt.reference
     }
-    await booking.save()
+    await saveBookingWithAvailability(booking)
 
     res.status(200).json({
       ...attempt,
@@ -154,10 +155,14 @@ export const confirm = async (req: Request, res: Response) => {
       res.status(409).json({ message: 'This booking already has a demo payment confirmation.' })
       return
     }
+    if (booking.status === bookcarsTypes.BookingStatus.Cancelled || ['CANCELLED', 'COMPLETED'].includes(booking.lifecycleStatus || '')) {
+      res.status(409).json({ message: 'This trip cannot accept payments.' }); return
+    }
     const code = paymentMethod === bookcarsTypes.RentalPaymentMethod.JazzCash ? 'JC'
       : paymentMethod === bookcarsTypes.RentalPaymentMethod.Easypaisa ? 'EP'
         : paymentMethod === bookcarsTypes.RentalPaymentMethod.Raast ? 'RT' : 'DC'
     const reference = `SR-DEMO-${code}-${randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase()}`
+    const originalStatus = booking.status
     const attempt: bookcarsTypes.DemoPaymentAttempt = {
       reference,
       idempotencyKey,
@@ -171,8 +176,14 @@ export const confirm = async (req: Request, res: Response) => {
     booking.paymentMethod = paymentMethod
     booking.paymentStatus = bookcarsTypes.RentalPaymentStatus.Paid
     booking.paymentState = 'CONFIRMED'
+    booking.lifecycleStatus = 'CONFIRMED'
+    booking.status = bookcarsTypes.BookingStatus.Reserved
     booking.transactionRef = reference
-    await booking.save()
+    const saved = await saveBookingWithAvailability(booking, { expectedStatus: originalStatus })
+    if (!saved) {
+      res.status(409).json({ message: 'The booking changed while confirming payment. Refresh its details before retrying.' })
+      return
+    }
     res.json({ simulated: true, charged: false, reference, paymentState: booking.paymentState, paymentStatus: booking.paymentStatus, amount: attempt.amount, currency: attempt.currency })
   } catch (err) {
     logger.error(`[demoPayment.confirm] Failed to save local demo confirmation for ${req.body?.bookingId}`, err)

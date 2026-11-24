@@ -72,7 +72,7 @@ export const getByBooking = async (req: Request, res: Response) => {
     res.status(400).json({ message: 'Invalid booking ID' })
     return
   }
-  const booking = await Booking.findById(bookingId).select('supplier driver')
+  const booking = await Booking.findById(bookingId).select('supplier driver handoverChecklist')
   if (!booking) {
     res.status(404).json({ message: 'Booking not found' })
     return
@@ -85,7 +85,15 @@ export const getByBooking = async (req: Request, res: Response) => {
     return
   }
   const handover = await Handover.findOne({ booking: new mongoose.Types.ObjectId(bookingId) }).lean()
-  res.json(handover)
+  const checklist = booking.handoverChecklist
+  res.json(handover || (checklist?.completedAt ? {
+    booking: booking._id,
+    status: 'pickup recorded',
+    odometerAtPickup: checklist.odometerStart,
+    fuelLevelLabel: checklist.fuelLevel,
+    damageNotes: checklist.exteriorNotes,
+    spareTirePresent: checklist.spareTirePresent,
+  } : null))
 }
 
 export const uploadPhotos = async (req: Request, res: Response) => {
@@ -93,7 +101,7 @@ export const uploadPhotos = async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Unauthorized' })
     return
   }
-  const files = req.files as Express.Multer.File[] | undefined
+  const files = req.files as Array<{ originalname: string; size: number; buffer: Buffer }> | undefined
   if (!files || files.length === 0) {
     res.status(400).json({ message: 'At least one photo is required' })
     return

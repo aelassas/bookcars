@@ -61,7 +61,7 @@ const AppLayout = () => {
   }, [location.pathname])
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary resetKey={location.pathname}>
       <UserProvider refreshKey={refreshKey}>
         <NotificationProvider refreshKey={refreshKey}>
           <RecaptchaProvider>

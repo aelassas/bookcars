@@ -21,8 +21,8 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
 
   const current = iconSizes[size]
   const isLight = variant === 'light'
-  const safarColor = isLight ? '#FFFFFF' : 'var(--sr-text, #171b24)'
-  const rentColor = isLight ? '#ffb84f' : 'var(--sr-accent-text, #995000)' // Trust Emerald
+  const safarColor = isLight ? '#FFA62B' : 'var(--sr-text, #171b24)'
+  const rentColor = isLight ? '#FFFFFF' : '#E8890C'
   const subColor = isLight ? '#b4bdca' : 'var(--sr-muted, #596273)'
 
   return (
@@ -38,12 +38,12 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
       >
         <defs>
           <linearGradient id="emeraldMint" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#059669" />
-            <stop offset="100%" stopColor="#10B981" />
+            <stop offset="0%" stopColor="#FFB020" />
+            <stop offset="100%" stopColor="#F08A12" />
           </linearGradient>
           <linearGradient id="mintGlow" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10B981" />
-            <stop offset="100%" stopColor="#34D399" />
+            <stop offset="0%" stopColor="#FFC14D" />
+            <stop offset="100%" stopColor="#E8890C" />
           </linearGradient>
         </defs>
 
@@ -55,7 +55,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
           height="44"
           rx="13"
           fill={isLight ? '#0B1120' : '#0B1120'}
-          stroke="rgba(16, 185, 129, 0.3)"
+          stroke="rgba(255, 166, 43, 0.45)"
           strokeWidth="1.5"
         />
 
@@ -82,7 +82,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
         />
 
         {/* Location Pin Dot */}
-        <circle cx="37" cy="15" r="2.5" fill="#10B981" />
+        <circle cx="37" cy="15" r="2.5" fill="#FFA62B" />
         <circle cx="37" cy="15" r="1.2" fill="#0B1120" />
       </svg>
 

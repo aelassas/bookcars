@@ -350,8 +350,8 @@ const Header = ({
   return (
     (!hidden && (
       <>
-        <div style={classes.grow} className={`header${isHome ? ' header-home' : ''}`}>
-          <AppBar position="relative" sx={{ bgcolor: 'transparent', boxShadow: 'none', borderBottom: isHome ? '1px solid rgba(255,255,255,.08)' : '1px solid var(--sr-border)' }}>
+        <div style={classes.grow} className="header header-home">
+          <AppBar position="relative" sx={{ bgcolor: '#111111', boxShadow: 'none', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
             <Toolbar className="toolbar">
               {isLoaded && (
                 <>
@@ -360,15 +360,16 @@ const Header = ({
                   </IconButton>
 
                   <Button onClick={() => navigate('/')} className="logo" aria-label="SafarRent home" sx={{ p: 0.5, minWidth: 0, textTransform: 'none' }}>
-                    <SafarRentLogo variant={isHome ? 'light' : 'dark'} size="medium" showBadge={false} />
+                    <SafarRentLogo variant="light" size="medium" showBadge={false} />
                   </Button>
 
                   <nav className="sr-desktop-nav" aria-label="Primary navigation">
+                    <Button onClick={() => navigate('/')}>Home</Button>
                     <Button onClick={() => {
                       navigate('/')
                       window.setTimeout(() => document.querySelector('.home-search-dock-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80)
-                    }}>Search cars</Button>
-                    <Button onClick={() => navigate('/locations')}>Pickup locations</Button>
+                    }}>Listings</Button>
+                    <Button onClick={() => navigate('/locations')}>Locations</Button>
                     <Button onClick={() => navigate('/faq')}>How it works</Button>
                   </nav>
 
@@ -537,17 +538,6 @@ const Header = ({
                 {!hideSignin && !isSignedIn && isLoaded && (
                   <div className="header-auth-actions">
                     <Button
-                      variant="outlined"
-                      size="medium"
-                      startIcon={<SignUpIcon />}
-                      onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
-                      disableElevation
-                      className="btn btn-auth btn-register"
-                      aria-label={suStrings.SIGN_UP}
-                    >
-                      <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
-                    </Button>
-                    <Button
                       variant="contained"
                       size="medium"
                       startIcon={<LoginIcon />}
@@ -557,6 +547,17 @@ const Header = ({
                       aria-label={strings.SIGN_IN}
                     >
                       <span className="btn-auth-txt">{strings.SIGN_IN}</span>
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      startIcon={<SignUpIcon />}
+                      onClick={() => navigate(`/sign-up?d=${Date.now()}`)}
+                      disableElevation
+                      className="btn btn-auth btn-register"
+                      aria-label={suStrings.SIGN_UP}
+                    >
+                      <span className="btn-auth-txt">{suStrings.SIGN_UP}</span>
                     </Button>
                   </div>
                 )}

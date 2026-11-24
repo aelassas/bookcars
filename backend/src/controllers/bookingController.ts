@@ -390,7 +390,7 @@ export const checkout = async (req: Request, res: Response) => {
       res.status(400).send('Car not found')
       return
     }
-    if (carObj.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
+    if (!carObj.available || carObj.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
       res.status(409).json({ message: 'This vehicle is not approved for booking.' })
       return
     }
@@ -578,7 +578,29 @@ export const checkout = async (req: Request, res: Response) => {
       return
     }
     const bookingData: bookcarsTypes.Booking = {
-      ...bookingInput,
+      car: carObj._id.toString(),
+      pickupLocation: bookingInput.pickupLocation,
+      dropOffLocation: bookingInput.dropOffLocation,
+      from: fromDate,
+      to: toDate,
+      status: bookcarsTypes.BookingStatus.Pending,
+      cancellation: bookingInput.cancellation,
+      amendments: bookingInput.amendments,
+      theftProtection: bookingInput.theftProtection,
+      collisionDamageWaiver: bookingInput.collisionDamageWaiver,
+      fullInsurance: bookingInput.fullInsurance,
+      additionalDriver: bookingInput.additionalDriver,
+      isDeposit: !body.payLater && bookingInput.isDeposit === true,
+      isPayedInFull: !body.payLater && bookingInput.isPayedInFull === true,
+      _id: undefined,
+      lifecycleStatus: 'PENDING_PAYMENT',
+      paymentState: 'PENDING_PAYMENT',
+      paymentStatus: bookcarsTypes.RentalPaymentStatus.PendingPayment,
+      transactionRef: undefined,
+      demoPaymentAttempts: [],
+      handoverChecklist: undefined,
+      cancelRequest: false,
+      paymentVerificationStatus: undefined,
       supplier: carObj.supplier.toString(),
       driver: (req.user ? user!._id.toString() : undefined) as any,
       rentalMode: bookingInput.rentalMode || bookcarsTypes.RentalMode.WithDriver,
@@ -595,7 +617,7 @@ export const checkout = async (req: Request, res: Response) => {
       }
       bookingData.status = bookcarsTypes.BookingStatus.Pending
       bookingData.sessionId = body.sessionId
-      bookingData.paymentMethod = body.paymentMethod as bookcarsTypes.PaymentMethod
+      bookingData.paymentMethod = body.paymentMethod as unknown as bookcarsTypes.RentalPaymentMethod
       bookingData.paymentReference = paymentReference
       bookingData.paymentProof = typeof body.paymentProof === 'string' ? body.paymentProof.trim() : undefined
       bookingData.paymentVerificationStatus = 'pending'
@@ -802,8 +824,8 @@ user.drivingLicenseNumber = body.drivingLicenseNumber || undefined
       bookingData._additionalDriver = additionalDriver._id.toString()
     }
 
-    bookingData.price = expectedBasePriceInBaseCurrency
     const securityDepositPkr = carObj.securityDepositPkr ?? carObj.deposit ?? 0
+    bookingData.price = expectedBasePriceInBaseCurrency + securityDepositPkr
     bookingData.priceBreakdown = {
       baseRentPkr: baseRentPKR,
       driverAllowancePkr: driverAllowancePKR,
@@ -1237,8 +1259,8 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     const bookings = await Booking.find(filter)
 
-    if (bookings.length === 0) {
-      res.sendStatus(200)
+    if (bookings.length !== ids.length) {
+      res.sendStatus(403)
       return
     }
 
@@ -1422,8 +1444,8 @@ export const getBooking = async (req: Request, res: Response) => {
         priceChangeRate: booking.car.supplier.priceChangeRate,
       }
 
-      booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
-      booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value
+      booking.pickupLocation.name = resolveLocationTranslation(booking.pickupLocation.values, String(language))
+      booking.dropOffLocation.name = resolveLocationTranslation(booking.dropOffLocation.values, String(language))
 
       res.json(booking)
       return
@@ -1827,7 +1849,13 @@ export const cancelBooking = async (req: Request, res: Response) => {
       }
       // end of security check
 
+      if (booking.from <= new Date() || ['IN_PROGRESS', 'COMPLETED', 'CANCELLED'].includes(booking.lifecycleStatus || '')) {
+        res.status(409).json({ message: 'Only upcoming bookings can be cancelled.' })
+        return
+      }
       booking.cancelRequest = true
+      booking.status = bookcarsTypes.BookingStatus.Cancelled
+      booking.lifecycleStatus = 'CANCELLED'
       await booking.save()
 
       // Notify supplier
@@ -1856,4 +1884,44 @@ export const cancelBooking = async (req: Request, res: Response) => {
     logger.error(`[booking.cancelBooking] ${i18n.t('ERROR')} ${id}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
+}
+
+/** Explicit trip lifecycle, separate from legacy payment-oriented status labels. */
+export const updateLifecycle = async (req: Request, res: Response) => {
+  const id = String(req.params.id)
+  const next = req.body?.lifecycleStatus as bookcarsTypes.BookingLifecycle
+  const transitions: Record<string, string[]> = {
+    PENDING_PAYMENT: ['CONFIRMED', 'CANCELLED'], CONFIRMED: ['IN_PROGRESS', 'CANCELLED'],
+    IN_PROGRESS: ['COMPLETED'], COMPLETED: [], CANCELLED: [],
+  }
+  if (!helper.isValidObjectId(id) || !Object.hasOwn(transitions, next)) {
+    res.status(400).json({ message: 'A valid booking and lifecycle status are required.' }); return
+  }
+  const booking = await Booking.findById(id)
+  if (!booking) {
+ res.status(404).json({ message: 'Booking not found.' }); return 
+}
+  if (req.user?.type === bookcarsTypes.UserType.Supplier && !booking.supplier.equals(req.user._id)) {
+    res.status(403).json({ message: 'This booking belongs to another supplier.' }); return
+  }
+  const current = booking.lifecycleStatus || (booking.status === bookcarsTypes.BookingStatus.Cancelled ? 'CANCELLED' : booking.paymentState === 'CONFIRMED' ? 'CONFIRMED' : 'PENDING_PAYMENT')
+  if (next !== current && !transitions[current]?.includes(next)) {
+    res.status(409).json({ message: `Cannot move a ${current} trip to ${next}.` }); return
+  }
+  if (next === 'CONFIRMED' && booking.paymentState !== 'CONFIRMED') {
+    res.status(409).json({ message: 'Confirm payment before confirming the trip.' }); return
+  }
+  if (next === 'IN_PROGRESS' && !booking.handoverChecklist?.completedAt) {
+    res.status(409).json({ message: 'Save the vehicle handover checklist before starting the trip.' }); return
+  }
+  booking.lifecycleStatus = next
+  if (next === 'CANCELLED') {
+booking.status = bookcarsTypes.BookingStatus.Cancelled
+} else if (next === 'CONFIRMED' || next === 'IN_PROGRESS') {
+booking.status = bookcarsTypes.BookingStatus.Reserved
+} else if (next === 'COMPLETED') {
+booking.status = bookcarsTypes.BookingStatus.PaidInFull
+}
+  await saveBookingWithAvailability(booking)
+  res.json({ lifecycleStatus: booking.lifecycleStatus, status: booking.status })
 }

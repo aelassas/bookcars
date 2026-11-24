@@ -17,11 +17,13 @@ const Kyc = () => {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+  }, [])
 
   const review = async (row: bookcarsTypes.Kyc, status: 'approved' | 'rejected' | 'suspended') => {
     try {
-      await KycService.review(row._id!, status, reason[row._id!] )
+      await KycService.review(row._id!, status, reason[row._id!])
       await load()
     } catch (error) {
       helper.error(error)

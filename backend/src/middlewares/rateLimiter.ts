@@ -70,6 +70,7 @@ export const createRateLimiter = (namespace: string, failClosedOrFn: boolean | (
         return next()
       }
 
+      res.setHeader('Retry-After', Math.ceil(env.RATE_LIMIT_REFILL_RATE_MS / 1000))
       return res.status(429).json({
         message: 'Too many requests, please try again later.',
       })

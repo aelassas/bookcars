@@ -6,7 +6,7 @@ const kycSchema = new Schema({
   documentType: {
     type: String,
     required: true,
-    enum: ['cnic', 'passport', 'driving_license'] satisfies bookcarsTypes.KycDocumentType[],
+    enum: ['cnic', 'passport', 'driving_license'],
   },
   documentNumber: { type: String, required: true, trim: true, maxlength: 32 },
   documentFront: { type: String },
@@ -15,7 +15,7 @@ const kycSchema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['pending_review', 'approved', 'rejected', 'suspended'] satisfies bookcarsTypes.KycStatus[],
+    enum: ['pending_review', 'approved', 'rejected', 'suspended'],
     default: 'pending_review',
     index: true,
   },

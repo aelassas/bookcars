@@ -250,3 +250,7 @@ html[data-app] .create-booking .form-actions { flex-wrap:wrap; width:100%; }
 html[data-app] #root .checkout .step-number { background:#107487; color:#fff; }
 html[data-app] #root .checkout :is(.step-badge,.fare-supplier-tag) { background:var(--sr-emerald-soft); color:var(--sr-emerald); }
 html[data-app] #root .checkout .route-type { color:var(--sr-muted); }
+
+html[data-app] #root .car .car-info-list-text { color:var(--sr-text); }
+
+.sr-delivery-badge { padding:8px 10px; margin-top:10px; border-radius:6px; color:var(--sr-emerald); background:var(--sr-emerald-soft); font-size:12px; line-height:1.5; }

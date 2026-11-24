@@ -1297,6 +1297,11 @@ export const update = async (req: Request, res: Response) => {
     user.bio = bio
     user.birthDate = birthDate ? new Date(birthDate) : undefined
     if (sessionUser.type === bookcarsTypes.UserType.User && isSelf) {
+      if ((cnicNumber !== undefined && cnicNumber !== '' && (typeof cnicNumber !== 'string' || !/^\d{5}-\d{7}-\d$/.test(cnicNumber)))
+        || (drivingLicenseNumber !== undefined && (typeof drivingLicenseNumber !== 'string' || drivingLicenseNumber.length > 60))) {
+        res.status(400).json({ message: 'Use CNIC format 12345-1234567-1 and a license number of at most 60 characters.' }); return
+      }
+
       if (typeof cnicNumber !== 'undefined') {
         if (cnicNumber !== user.cnicNumber) {
           user.cnicNumber = cnicNumber || undefined
@@ -1352,7 +1357,7 @@ export const updateKyc = async (req: Request, res: Response) => {
     res.sendStatus(404)
     return
   }
-  if (status === bookcarsTypes.KycStatus.Verified && !/^\d{5}-\d{7}-\d$/.test(customer.cnicNumber || '')) {
+  if (status === bookcarsTypes.KycStatus.Verified && (!/^\d{5}-\d{7}-\d$/.test(customer.cnicNumber || '') || !customer.drivingLicenseNumber?.trim())) {
     res.status(409).json({ message: 'A valid CNIC is required before KYC can be verified.' })
     return
   }

@@ -41,6 +41,8 @@ const bookingSchema = new Schema<env.Booking>(
       type: Date,
       required: [true, "can't be blank"],
     },
+    lifecycleStatus: { type: String, enum: ['PENDING_PAYMENT', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'], default: 'PENDING_PAYMENT', index: true },
+    seedKey: { type: String, unique: true, sparse: true },
     status: {
       type: String,
       enum: [
@@ -94,10 +96,6 @@ const bookingSchema = new Schema<env.Booking>(
       type: String,
       index: true,
     },
-    paymentMethod: {
-      type: String,
-      enum: ['payLater', 'stripe', 'payPal', 'jazzCash', 'easypaisa'],
-    },
     paymentReference: { type: String, trim: true, maxlength: 100 },
     paymentProof: { type: String, trim: true },
     paymentVerificationStatus: {
@@ -123,6 +121,7 @@ const bookingSchema = new Schema<env.Booking>(
     paypalOrderId: {
       type: String,
     },
+    paymentMethod: { type: String, enum: [...Object.values(bookcarsTypes.RentalPaymentMethod), 'payLater', 'stripe', 'payPal', 'jazzCash', 'easypaisa'] },
     rentalMode: {
       type: String,
       enum: Object.values(bookcarsTypes.RentalMode),
@@ -144,7 +143,6 @@ const bookingSchema = new Schema<env.Booking>(
       securityDepositPkr: { type: Number, min: 0, default: 0 },
       totalPayablePkr: { type: Number, min: 0, default: 0 },
     },
-    paymentMethod: { type: String, enum: Object.values(bookcarsTypes.RentalPaymentMethod) },
     paymentStatus: {
       type: String,
       enum: Object.values(bookcarsTypes.RentalPaymentStatus),
@@ -186,8 +184,12 @@ const bookingSchema = new Schema<env.Booking>(
   },
 )
 
-// Common filter for every query
-bookingSchema.index({ 'supplier._id': 1, status: 1, expireAt: 1 })
+// Common operational queries
+bookingSchema.index({ supplier: 1, status: 1, expireAt: 1 })
+bookingSchema.index({ customer: 1, status: 1 })
+bookingSchema.index({ driver: 1, status: 1 })
+bookingSchema.index({ car: 1, from: 1, to: 1 })
+bookingSchema.index({ status: 1, paymentState: 1 })
 
 // Optional filters (can combine with the above depending on frequency)
 bookingSchema.index({ 'driver._id': 1 })

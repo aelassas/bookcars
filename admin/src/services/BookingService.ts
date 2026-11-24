@@ -107,3 +107,6 @@ export const getPendingManualPayments = (): Promise<bookcarsTypes.Booking[]> =>
   axiosInstance
     .get('/api/pending-manual-payments', { withCredentials: true })
     .then((res) => res.data)
+
+export const updateLifecycle = (id: string, lifecycleStatus: bookcarsTypes.BookingLifecycle) =>
+  axiosInstance.patch(`/api/bookings/${encodeURIComponent(id)}/lifecycle`, { lifecycleStatus }, { withCredentials: true }).then((res) => res.data)

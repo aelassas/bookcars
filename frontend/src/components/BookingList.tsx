@@ -250,7 +250,7 @@ const BookingList = ({
               </span>
               <Chip
                 size="small"
-                label={isPaid ? '20% Locked ✓' : isDeposit ? 'Deposit Locked ✓' : isCancelled ? 'Refunded ↺' : 'Pending ⏳'}
+                label={isCancelled ? 'Cancelled' : isPaid ? 'Payment recorded' : isDeposit ? 'Deposit recorded' : 'Payment pending'}
                 sx={{
                   height: 18,
                   fontSize: 9,
@@ -439,9 +439,11 @@ const BookingList = ({
         const row = rows.find((r) => r._id === selectedId)
         if (row) {
           row.cancelRequest = true
+          row.status = bookcarsTypes.BookingStatus.Cancelled
+          row.lifecycleStatus = 'CANCELLED'
 
           setCancelRequestSent(true)
-          setRows(rows)
+          setRows([...rows])
           setSelectedId('')
           setCancelRequestProcessing(false)
         } else {
@@ -502,7 +504,7 @@ const BookingList = ({
                     </div>
                     <Chip
                       size="small"
-                      label={isPaid ? '20% Escrow Locked ✓' : isDeposit ? 'Deposit Locked ✓' : isCancelled ? 'Deposit Refunded ↺' : 'Escrow Pending ⏳'}
+                      label={isCancelled ? 'Cancelled · refund not confirmed' : isPaid ? 'Payment recorded' : isDeposit ? 'Deposit recorded' : 'Payment pending'}
                       sx={{
                         fontSize: 10,
                         fontWeight: 700,

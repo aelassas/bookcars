@@ -13,9 +13,15 @@ export const uploadDocuments = (files: {
   selfie?: File
 }) => {
   const form = new FormData()
-  if (files.documentFront) form.append('documentFront', files.documentFront)
-  if (files.documentBack) form.append('documentBack', files.documentBack)
-  if (files.selfie) form.append('selfie', files.selfie)
+  if (files.documentFront) {
+    form.append('documentFront', files.documentFront)
+  }
+  if (files.documentBack) {
+    form.append('documentBack', files.documentBack)
+  }
+  if (files.selfie) {
+    form.append('selfie', files.selfie)
+  }
   return axiosInstance.post('/api/kyc/upload', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }).then((res) => res.data as Record<string, string>)

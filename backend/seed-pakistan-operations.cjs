@@ -1,865 +1,171 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
-const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
+require('dotenv').config()
+const bcrypt = require('bcrypt')
 
-if (process.env.BC_ENABLE_FYP_DEMO !== 'true' || process.env.NODE_ENV !== 'development') {
-  throw new Error('This script inserts synthetic FYP demo data. Run only with NODE_ENV=development and BC_ENABLE_FYP_DEMO=true.');
+if (process.env.BC_ENABLE_FYP_DEMO !== 'true' && process.env.BC_FYP_DEMO_MODE !== 'true') {
+  throw new Error('Synthetic seeding requires BC_ENABLE_FYP_DEMO=true or BC_FYP_DEMO_MODE=true.')
 }
 
-const DB_URI = process.env.BC_DB_URI;
-if (!DB_URI) {
-  throw new Error('BC_DB_URI must be configured explicitly.');
-}
+const DB_URI = process.env.BC_DB_URI
+if (!DB_URI) throw new Error('BC_DB_URI must be configured explicitly.')
 
-// Schemas
-const LocationValueSchema = new mongoose.Schema({
-  language: { type: String, required: true },
-  value: { type: String, required: true }
-}, { collection: 'LocationValue', timestamps: true });
+const LocationValue = mongoose.model('FypLocationValue', new mongoose.Schema({ language: { type: String, required: true }, value: { type: String, required: true } }, { collection: 'LocationValue', timestamps: true }), 'LocationValue')
+const Country = mongoose.model('FypCountry', new mongoose.Schema({ values: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FypLocationValue' }], supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser' } }, { collection: 'Country', timestamps: true }), 'Country')
+const Location = mongoose.model('FypLocation', new mongoose.Schema({ country: { type: mongoose.Schema.Types.ObjectId, ref: 'FypCountry', required: true }, latitude: Number, longitude: Number, parentLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'FypLocation' }, values: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FypLocationValue' }], image: String, supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser' } }, { collection: 'Location', timestamps: true }), 'Location')
+const User = mongoose.model('FypUser', new mongoose.Schema({ fullName: { type: String, required: true }, language: { type: String, default: 'en' }, contracts: [Object], enableEmailNotifications: {type: Boolean, default: false}, email: { type: String, required: true, unique: true }, phone: String, password: String, active: { type: Boolean, default: true }, verified: { type: Boolean, default: true }, verifiedAt: Date, type: { type: String, default: 'user' }, avatar: String, bio: String, location: String, blacklisted: { type: Boolean, default: false }, payLater: { type: Boolean, default: true }, cnicNumber: String, drivingLicenseNumber: String, kycStatus: { type: String, enum: ['PENDING', 'VERIFIED', 'REJECTED'], default: 'PENDING' } }, { collection: 'User', timestamps: true }), 'User')
+const Car = mongoose.model('FypCar', new mongoose.Schema({ name: { type: String, required: true }, deliveryLocations: [mongoose.Schema.Types.ObjectId], dateBasedPrices: [mongoose.Schema.Types.ObjectId], multimedia: [String], image: String, licensePlate: String, registrationPlate: String, supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser', required: true, index: true }, minimumAge: { type: Number, default: 21 }, locations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FypLocation', index: true }], dailyPrice: { type: Number, required: true }, hourlyPrice: Number, deposit: { type: Number, default: 15000 }, available: { type: Boolean, default: true, index: true }, fullyBooked: { type: Boolean, default: false }, comingSoon: { type: Boolean, default: false }, engineCc: Number, terrainCapability: { type: String, enum: ['CITY_ONLY', 'HIGHWAY_INTERCITY', 'NORTHERN_MOUNTAINS'], default: 'HIGHWAY_INTERCITY', index: true }, selfDriveAvailable: { type: Boolean, default: true }, withDriverAvailable: { type: Boolean, default: true }, driverDailyAllowancePkr: { type: Number, default: 2500 }, outOfCitySurchargePkr: { type: Number, default: 1500 }, securityDepositPkr: { type: Number, default: 15000 }, listingStatus: { type: String, enum: ['PENDING_REVIEW', 'APPROVED', 'SUSPENDED'], default: 'PENDING_REVIEW', index: true }, complianceNotes: String, reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser' }, reviewedAt: Date, fuelPolicy: { type: String, default: 'TANK_TO_TANK' }, type: { type: String, default: 'gasoline' }, gearbox: { type: String, default: 'automatic' }, aircon: { type: Boolean, default: true }, seats: { type: Number, default: 5 }, doors: { type: Number, default: 4 }, mileage: { type: Number, default: -1 }, cancellation: { type: Number, default: 0 }, amendments: { type: Number, default: 0 }, rating: { type: Number, default: 4.8 }, theftProtection: { type: Number, default: 0 }, collisionDamageWaiver: { type: Number, default: 0 }, fullInsurance: { type: Number, default: 0 }, additionalDriver: { type: Number, default: 0 }, blockOnPay: { type: Boolean, default: false }, range: { type: String, default: 'Midi' } }, { collection: 'Car', timestamps: true }), 'Car')
+const Booking = mongoose.model('FypBooking', new mongoose.Schema({ supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser', required: true, index: true }, car: { type: mongoose.Schema.Types.ObjectId, ref: 'FypCar', required: true, index: true }, driver: { type: mongoose.Schema.Types.ObjectId, ref: 'FypUser', required: true, index: true }, pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'FypLocation', required: true }, dropOffLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'FypLocation', required: true }, from: { type: Date, required: true }, to: { type: Date, required: true }, lifecycleStatus: String, seedKey: String, cancellation: Boolean, status: { type: String, enum: ['void', 'pending', 'deposit', 'paid', 'paidInFull', 'reserved', 'cancelled', 'PENDING_PAYMENT', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'], required: true, index: true }, price: { type: Number, required: true }, rentalMode: { type: String, enum: ['SELF_DRIVE', 'WITH_DRIVER'], default: 'WITH_DRIVER' }, tripScope: { type: String, enum: ['INTRA_CITY', 'OUT_OF_CITY', 'NORTHERN_TOUR'], default: 'INTRA_CITY' }, paymentState: { type: String, enum: ['PENDING_PAYMENT', 'PROCESSING', 'CONFIRMED', 'FAILED'], default: 'PENDING_PAYMENT', index: true }, paymentStatus: { type: String, enum: ['PENDING_PAYMENT', 'PROCESSING', 'PAID', 'FAILED', 'REFUNDED'], default: 'PENDING_PAYMENT' }, isDeposit: Boolean, isPayedInFull: Boolean, handoverChecklist: { completedAt: Date, odometerStart: Number, fuelLevel: String, spareTirePresent: Boolean, exteriorNotes: String, verifiedBySupplier: Boolean }, priceBreakdown: { baseRentPkr: Number, driverAllowancePkr: Number, outOfCitySurchargePkr: Number, securityDepositPkr: Number, totalPayablePkr: Number } }, { collection: 'Booking', timestamps: true }), 'Booking')
 
-const CountrySchema = new mongoose.Schema({
-  values: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LocationValue' }],
-  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-}, { collection: 'Country', timestamps: true });
+const demoPassword = process.env.BC_FYP_DEMO_PASSWORD || 'SafarRent-Demo-2026!'
+const hashDemoPassword = () => bcrypt.hash(demoPassword, 10)
 
-const LocationSchema = new mongoose.Schema({
-  country: { type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true },
-  latitude: Number,
-  longitude: Number,
-  values: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LocationValue' }],
-  image: String,
-  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-}, { collection: 'Location', timestamps: true });
-
-const UserSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phone: String,
-  password: String,
-  active: { type: Boolean, default: false },
-  verified: { type: Boolean, default: false },
-  verifiedAt: Date,
-  type: { type: String, default: 'user' },
-  avatar: String,
-  bio: String,
-  location: String,
-  blacklisted: { type: Boolean, default: false },
-  payLater: { type: Boolean, default: true }
-}, { collection: 'User', timestamps: true });
-
-const CarSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  licensePlate: String,
-  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  minimumAge: { type: Number, default: 21 },
-  locations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Location' }],
-  dailyPrice: { type: Number, required: true },
-  discountedDailyPrice: Number,
-  hourlyPrice: Number,
-  biWeeklyPrice: Number,
-  weeklyPrice: Number,
-  monthlyPrice: Number,
-  deposit: { type: Number, default: 15000 },
-  available: { type: Boolean, default: false },
-  registrationPlate: { type: String, uppercase: true, trim: true },
-  engineCc: { type: Number, min: 0, max: 20000 },
-  terrainCapability: { type: String, enum: ['CITY_ONLY', 'HIGHWAY_INTERCITY', 'NORTHERN_MOUNTAINS'], default: 'HIGHWAY_INTERCITY' },
-  selfDriveAvailable: { type: Boolean, default: true },
-  withDriverAvailable: { type: Boolean, default: true },
-  driverDailyAllowancePkr: { type: Number, default: 2500, min: 0 },
-  outOfCitySurchargePkr: { type: Number, default: 1500, min: 0 },
-  securityDepositPkr: { type: Number, default: 15000, min: 0 },
-  listingStatus: { type: String, enum: ['PENDING_REVIEW', 'APPROVED', 'SUSPENDED'], default: 'PENDING_REVIEW', index: true },
-  complianceNotes: { type: String, trim: true, maxlength: 1000 },
-  reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  reviewedAt: Date,
-  fuelPolicy: { type: String, enum: ['TANK_TO_TANK', 'SAME_TO_SAME', 'FUEL_INCLUDED', 'likeForLike'], default: 'TANK_TO_TANK' },
-  type: { type: String, default: 'gasoline' },
-  gearbox: { type: String, default: 'automatic' },
-  aircon: { type: Boolean, default: true },
-  image: String,
-  seats: { type: Number, default: 5 },
-  doors: { type: Number, default: 4 },
-  fuelPolicy: { type: String, default: 'likeForLike' },
-  mileage: { type: Number, default: -1 },
-  cancellation: { type: Number, default: 0 },
-  amendments: { type: Number, default: 0 },
-  theftProtection: { type: Number, default: 0 },
-  collisionDamageWaiver: { type: Number, default: 0 },
-  fullInsurance: { type: Number, default: 0 },
-  additionalDriver: { type: Number, default: 0 },
-  rating: { type: Number, default: 4.8 },
-  range: { type: String, default: 'Midi' }
-}, { collection: 'Car', timestamps: true });
-
-const BookingSchema = new mongoose.Schema({
-  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true },
-  driver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true },
-  dropOffLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true },
-  from: { type: Date, required: true },
-  to: { type: Date, required: true },
-  status: { type: String, required: true },
-  price: { type: Number, required: true },
-  cancellation: { type: Boolean, default: false },
-  amendments: { type: Boolean, default: false },
-  theftProtection: { type: Boolean, default: false },
-  collisionDamageWaiver: { type: Boolean, default: false },
-  fullInsurance: { type: Boolean, default: false },
-  additionalDriver: { type: Boolean, default: false },
-  isDeposit: { type: Boolean, default: false },
-  isPayedInFull: { type: Boolean, default: false }
-}, { collection: 'Booking', timestamps: true });
-
-const VehicleDocumentSchema = new mongoose.Schema({
-  vehicle: { type: mongoose.Schema.Types.ObjectId, ref: 'Car', index: true },
-  driver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  type: { type: String, required: true },
-  expiryDate: { type: Date, required: true },
-  status: { type: String, default: 'verified' },
-  notes: String
-}, { collection: 'VehicleDocument', timestamps: true });
-
-const MaintenanceSchema = new mongoose.Schema({
-  vehicle: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Car' },
-  reportedBy: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-  supplier: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-  type: { type: String, required: true },
-  description: String,
-  status: { type: String, default: 'scheduled' },
-  startDate: { type: Date, required: true },
-  expectedCompletionDate: { type: Date, required: true },
-  completedDate: Date,
-  mileage: Number,
-  cost: Number,
-  notes: String
-}, { collection: 'Maintenance', timestamps: true });
-
-const LocationValue = mongoose.model('LocationValue', LocationValueSchema);
-const Country = mongoose.model('Country', CountrySchema);
-const Location = mongoose.model('Location', LocationSchema);
-const User = mongoose.model('User', UserSchema);
-const Car = mongoose.model('Car', CarSchema);
-const Booking = mongoose.model('Booking', BookingSchema);
-const VehicleDocument = mongoose.model('VehicleDocument', VehicleDocumentSchema);
-const Maintenance = mongoose.model('Maintenance', MaintenanceSchema);
-const demoPassword = process.env.BC_FYP_DEMO_PASSWORD || 'SafarRent-Demo-2026!';
-const hashDemoPassword = async () => bcrypt.hash(demoPassword, 12);
-const engineCcFor = (name) => {
-  if (/660cc|660/i.test(name)) return 660;
-  const litres = name.match(/\b([1-9])\.(\d)\b/);
-  return litres ? Number(`${litres[1]}${litres[2]}`) * 100 : undefined;
-};
-
-const LANGUAGES = ['en', 'fr', 'es', 'de', 'pt', 'it', 'zh', 'ja', 'ur'];
-
-async function createLocationValues(names) {
-  const ids = [];
-  for (const lang of LANGUAGES) {
-    const val = names[lang] || names['en'];
-    const doc = await LocationValue.create({ language: lang, value: val });
-    ids.push(doc._id);
+async function locationValues(en, ur) {
+  const ids = []
+  for (const language of ['en', 'fr', 'es', 'de', 'pt', 'it', 'zh', 'ja', 'ur']) {
+    const doc = await LocationValue.create({ language, value: language === 'ur' ? ur : en })
+    ids.push(doc._id)
   }
-  return ids;
+  return ids
 }
 
 async function run() {
-  console.log('Connecting to MongoDB...');
-  await mongoose.connect(DB_URI);
-  console.log('Connected to MongoDB successfully.');
+  await mongoose.connect(DB_URI)
 
-  // 1. Country: Pakistan
-  let country = await Country.findOne({});
-  if (!country) {
-    const countryValIds = await createLocationValues({
-      en: 'Pakistan',
-      ur: 'پاکستان',
-      fr: 'Pakistan',
-      es: 'Pakistán',
-      de: 'Pakistan'
-    });
-    country = await Country.create({ values: countryValIds });
-    console.log('Created Country Pakistan:', country._id);
+  // Never remove existing records: users may have completed evaluation workflows.
+  const pakistanValue = await LocationValue.findOne({ language: 'en', value: 'Pakistan' })
+  let country = pakistanValue ? await Country.findOne({ values: pakistanValue._id }) : null
+  if (!country) country = await Country.create({ values: await locationValues('Pakistan', 'پاکستان') })
+
+  const supplierSpecs = [
+    { key: 'margalla', name: 'Margalla Executive Motors', email: 'margalla@safarrent.pk', location: 'Islamabad', bio: 'Synthetic Pakistani fleet for Islamabad and northern inter-city delivery.' },
+    { key: 'lahore', name: 'Lahore Royal Fleet', email: 'lahore@safarrent.pk', location: 'Lahore', bio: 'Synthetic Pakistani fleet for Lahore and Punjab.' },
+    { key: 'karakoram', name: 'Karakoram 4x4 Expeditions', email: 'karakoram@safarrent.pk', location: 'Gilgit / Hunza', bio: 'Synthetic Pakistani northern fleet for Gilgit-Baltistan and mountain routes.' },
+    { key: 'sindh', name: 'Sindh Coastal Rentals', email: 'karachi@safarrent.pk', location: 'Karachi', bio: 'Synthetic Pakistani fleet for Karachi and Sindh.' },
+  ]
+  const suppliers = {}
+  for (const spec of supplierSpecs) {
+    let user = await User.findOne({ email: spec.email })
+    const fields = { fullName: spec.name, email: spec.email, phone: '03005550101', password: await hashDemoPassword(), location: spec.location, bio: spec.bio, type: 'supplier', active: true, verified: true, verifiedAt: new Date(), payLater: true }
+    if (!user) user = await User.create(fields)
+
+    suppliers[spec.key] = user
   }
 
-  // These are synthetic FYP demo identities, not real suppliers. Their active status
-  // is only for local workflow demonstration; never use this seed in production.
-  const suppliersData = [
-    {
-      fullName: 'SafarRent Sahiwal FYP Demo Fleet',
-      email: 'sahiwal@safarrent.pk',
-      phone: '',
-      avatar: '',
-      location: 'Sahiwal GT Road Hub',
-      bio: 'Synthetic FYP demo supplier. Not a real rental business; no real-world bookings are fulfilled. Sample routes cover Sahiwal and Central Punjab.'
-    },
-    {
-      fullName: 'Indus Executive FYP Demo Fleet',
-      email: 'indus@safarrent.pk',
-      phone: '',
-      avatar: '',
-      location: 'Lahore (Gulberg & Airport)',
-      bio: 'Synthetic FYP demo supplier for testing Lahore and Punjab search workflows. Not a real rental business.'
-    },
-    {
-      fullName: 'Margalla 4x4 FYP Demo Fleet',
-      email: 'margalla@safarrent.pk',
-      phone: '',
-      avatar: '',
-      location: 'Islamabad (Blue Area)',
-      bio: 'Synthetic FYP demo supplier for testing Islamabad and northern route workflows. Not a real rental business.'
-    },
-    {
-      fullName: 'Mehran Coastal FYP Demo Fleet',
-      email: 'mehran@safarrent.pk',
-      phone: '',
-      avatar: '',
-      location: 'Karachi (Clifton & Airport)',
-      bio: 'Synthetic FYP demo supplier for testing Karachi search workflows. Not a real rental business.'
-    },
-    {
-      fullName: 'Karakoram Alpine FYP Demo Fleet',
-      email: 'karakoram@safarrent.pk',
-      phone: '',
-      avatar: '',
-      location: 'Skardu & Gilgit Hub',
-      bio: 'Synthetic FYP demo supplier for testing northern Pakistan search workflows. Not a real rental business.'
-    }
-  ];
+  // Stable emails identify the four demonstration agencies.
 
-  const suppliersMap = {};
-  for (const s of suppliersData) {
-    let supplier = await User.findOne({ email: s.email });
-    if (!supplier) {
-      supplier = await User.create({
-        fullName: s.fullName,
-        email: s.email,
-        phone: s.phone,
-        password: await hashDemoPassword(),
-        avatar: s.avatar,
-        bio: s.bio,
-        location: s.location,
-        type: 'supplier',
-        active: true,
-        // Demo identities are active for workflow testing but are not real or verified suppliers.
-        verified: false,
-        payLater: true
-      });
-      console.log(`Created supplier: ${s.fullName}`);
-    } else {
-      supplier.password = await hashDemoPassword();
-      supplier.active = true;
-      supplier.verified = false;
-      supplier.verifiedAt = undefined;
-      supplier.payLater = true;
-      supplier.fullName = s.fullName;
-      supplier.phone = '';
-      supplier.avatar = s.avatar;
-      supplier.bio = s.bio;
-      supplier.location = s.location;
-      await supplier.save();
-      console.log(`Updated supplier: ${s.fullName}`);
-    }
-    suppliersMap[s.email] = supplier;
+
+  const adminEmail = (process.env.BC_FYP_DEMO_ADMIN_EMAIL || 'demo-admin@safarrent.local').trim().toLowerCase()
+  let admin = await User.findOne({ email: adminEmail })
+  if (!admin) admin = await User.create({ fullName: 'SafarRent Demo Admin', email: adminEmail, phone: '03005550100', password: await hashDemoPassword(), location: 'Pakistan', bio: 'Synthetic demo administrator.', type: 'admin', active: true, verified: true, verifiedAt: new Date(), kycStatus: 'VERIFIED' })
+
+
+  const locationSpecs = [
+    ['islamabad','Islamabad','اسلام آباد',33.6844,73.0479], ['rawalpindi','Rawalpindi','راولپنڈی',33.6261,73.0718], ['lahore','Lahore','لاہور',31.5204,74.3587], ['karachi','Karachi','کراچی',24.8607,67.0011], ['peshawar','Peshawar','پشاور',34.0151,71.5249], ['multan','Multan','ملتان',30.1978,71.4711], ['faisalabad','Faisalabad','فیصل آباد',31.4504,73.1350], ['sialkot','Sialkot','سیالکوٹ',32.4945,74.5229], ['gilgit','Gilgit','گلگت',35.9211,74.8750], ['hunza','Hunza','ہنزہ',36.3167,74.6500], ['skardu','Skardu','سکردو',35.2971,75.6333], ['swat','Swat','سوات',35.2227,72.4258], ['murree','Murree','مری',33.9062,73.3903], ['naran','Naran','ناران',34.9093,73.6507]
+  ]
+  const locations = {}
+  for (const [key, en, ur, lat, lng] of locationSpecs) {
+    let loc = await Location.findOne({ latitude: lat, longitude: lng })
+    if (!loc) loc = await Location.create({ country: country._id, latitude: lat, longitude: lng, values: await locationValues(en, ur), supplier: suppliers.margalla._id })
+    else await Location.updateOne({ _id: loc._id }, { $set: { values: loc.values, country: country._id } })
+    locations[key] = loc
   }
 
-  // Dedicated synthetic administrator for local FYP workflow checks. Never
-  // promote or overwrite an existing non-demo account with this role.
-  const demoAdminEmail = (process.env.BC_FYP_DEMO_ADMIN_EMAIL || 'demo-admin@safarrent.local').trim().toLowerCase();
-  let demoAdmin = await User.findOne({ email: demoAdminEmail });
-  if (demoAdmin && demoAdmin.type !== 'admin') {
-    throw new Error(`Refusing to change the role of existing account ${demoAdminEmail}`);
-  }
-  if (!demoAdmin) {
-    demoAdmin = await User.create({
-      fullName: 'SafarRent FYP Demo Admin',
-      email: demoAdminEmail,
-      phone: '',
-      password: await hashDemoPassword(),
-      avatar: '',
-      bio: 'Synthetic administrator for local SafarRent FYP demonstration only.',
-      location: 'Pakistan',
-      type: 'admin',
-      active: true,
-      verified: true,
-      verifiedAt: new Date(),
-    });
-    console.log(`Created local FYP demo administrator: ${demoAdminEmail}`);
-  } else {
-    demoAdmin.password = await hashDemoPassword();
-    demoAdmin.active = true;
-    demoAdmin.verified = true;
-    await demoAdmin.save();
-    console.log(`Updated local FYP demo administrator: ${demoAdminEmail}`);
-  }
-
-  const sahiwalSupplier = suppliersMap['sahiwal@safarrent.pk'];
-  const indusSupplier = suppliersMap['indus@safarrent.pk'];
-  const margallaSupplier = suppliersMap['margalla@safarrent.pk'];
-
-  // 3. Pakistan Locations (prominently featuring Sahiwal)
-  const locationsData = [
-    {
-      key: 'sahiwal_center',
-      en: 'Sahiwal City Center (High Street & Farid Town)',
-      ur: 'ساہیوال سٹی سینٹر (ہائی اسٹریٹ و فرید ٹاؤن)',
-      lat: 30.6682,
-      lng: 73.1114
-    },
-    {
-      key: 'sahiwal_bypass',
-      en: 'Sahiwal Bypass & GT Road Terminal (N-5)',
-      ur: 'ساہیوال بائی پاس و جی ٹی روڈ ٹرمینل',
-      lat: 30.6550,
-      lng: 73.1350
-    },
-    {
-      key: 'sahiwal_station',
-      en: 'Sahiwal Railway Station Hub',
-      ur: 'ساہیوال ریلوے اسٹیشن ہب',
-      lat: 30.6720,
-      lng: 73.1050
-    },
-    {
-      key: 'lhe_airport',
-      en: "Allama Iqbal Int'l Airport (LHE), Lahore",
-      ur: 'علامہ اقبال انٹرنیشنل ایئرپورٹ، لاہور',
-      lat: 31.5216,
-      lng: 74.4036
-    },
-    {
-      key: 'lhe_gulberg',
-      en: 'Gulberg & DHA Phase 5, Lahore',
-      ur: 'گلبرگ و ڈی ایچ اے، لاہور',
-      lat: 31.5102,
-      lng: 74.3441
-    },
-    {
-      key: 'isb_airport',
-      en: "Islamabad Int'l Airport (ISB)",
-      ur: 'اسلام آباد انٹرنیشنل ایئرپورٹ',
-      lat: 33.5651,
-      lng: 72.8540
-    },
-    {
-      key: 'isb_bluearea',
-      en: 'Blue Area & F-7, Islamabad',
-      ur: 'بلیو ایریا و ایف 7، اسلام آباد',
-      lat: 33.7103,
-      lng: 73.0645
-    },
-    {
-      key: 'multan_cantt',
-      en: 'Multan Cantt & Airport Terminal',
-      ur: 'ملتان کینٹ و ایئرپورٹ ٹرمینل',
-      lat: 30.1984,
-      lng: 71.4304
-    },
-    {
-      key: 'fsd_clocktower',
-      en: 'Faisalabad Clock Tower & D-Ground',
-      ur: 'فیصل آباد گھنٹہ گھر و ڈی گراؤنڈ',
-      lat: 31.4187,
-      lng: 73.0791
-    },
-    {
-      key: 'khi_airport',
-      en: "Jinnah Int'l Airport (KHI), Karachi",
-      ur: 'جناح انٹرنیشنل ایئرپورٹ، کراچی',
-      lat: 24.9065,
-      lng: 67.1608
-    },
-    {
-      key: 'skardu_hub',
-      en: 'Skardu & Gilgit Hub (Northern Areas)',
-      ur: 'سکردو و گلگت ہب (شمالی علاقہ جات)',
-      lat: 35.2971,
-      lng: 75.6333
+  const cars = [
+    ['Suzuki Alto VXR 660cc','islamabad','margalla',660,4500,8000,'CITY_ONLY','Mini'],['Suzuki Cultus VXL','rawalpindi','margalla',1000,5800,10000,'HIGHWAY_INTERCITY','Mini'],['Suzuki WagonR VXL','lahore','lahore',1000,6000,11000,'HIGHWAY_INTERCITY','Mini'],['Toyota Yaris ATIV','lahore','lahore',1300,8000,14000,'HIGHWAY_INTERCITY','Midi'],['Toyota Corolla GLi','islamabad','margalla',1300,9500,16000,'HIGHWAY_INTERCITY','Midi'],['Toyota Corolla Altis Grande','lahore','lahore',1800,11500,18000,'HIGHWAY_INTERCITY','Midi'],['Honda City Aspire','lahore','lahore',1500,10000,16000,'HIGHWAY_INTERCITY','Midi'],['Honda Civic RS','islamabad','margalla',1500,14000,22000,'HIGHWAY_INTERCITY','Midi'],['Honda BR-V','rawalpindi','margalla',1500,12500,20000,'HIGHWAY_INTERCITY','Midi'],['Kia Sportage AWD','islamabad','margalla',2000,16500,26000,'NORTHERN_MOUNTAINS','Midi'],['Hyundai Tucson','lahore','lahore',2000,17000,27000,'HIGHWAY_INTERCITY','Midi'],['Toyota Fortuner Legender','islamabad','margalla',2800,28000,40000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota Land Cruiser Prado TX','islamabad','margalla',2800,35000,50000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota HiAce Grand Cabin','lahore','lahore',2800,22000,30000,'HIGHWAY_INTERCITY','Maxi'],
+    ['Suzuki Alto VXR 660cc','karachi','sindh',660,4200,8000,'CITY_ONLY','Mini'],['Suzuki Cultus VXL','karachi','sindh',1000,5500,10000,'HIGHWAY_INTERCITY','Mini'],['Suzuki WagonR VXL','karachi','sindh',1000,5900,11000,'HIGHWAY_INTERCITY','Mini'],['Toyota Yaris ATIV','multan','lahore',1300,7800,14000,'HIGHWAY_INTERCITY','Midi'],['Toyota Corolla GLi','faisalabad','lahore',1300,9200,16000,'HIGHWAY_INTERCITY','Midi'],['Honda Civic RS','sialkot','lahore',1500,13500,22000,'HIGHWAY_INTERCITY','Midi'],['Toyota Fortuner Legender','gilgit','karakoram',2800,30000,45000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota Land Cruiser Prado TX','hunza','karakoram',2800,36000,55000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota HiAce Grand Cabin','skardu','karakoram',2800,24000,35000,'NORTHERN_MOUNTAINS','Maxi'],['Kia Sportage AWD','swat','karakoram',2000,17000,28000,'NORTHERN_MOUNTAINS','Midi']
+  ]
+  cars.push(['Demo Review: Toyota Yaris ATIV','lahore','lahore',1300,8000,14000,'HIGHWAY_INTERCITY','Midi'], ['Demo Review: Kia Sportage AWD','islamabad','margalla',2000,16500,26000,'NORTHERN_MOUNTAINS','Midi'])
+  const carMap = {}
+  for (let i = 0; i < cars.length; i++) {
+    const [name, locKey, supplierKey, engineCc, dailyPrice, deposit, terrain, range] = cars[i]
+    const listingStatus = i >= 24 ? 'PENDING_REVIEW' : 'APPROVED'
+    const plate = `SR-DEMO-${String(i + 1).padStart(2, '0')}`
+    const fields = { name, licensePlate: plate, registrationPlate: plate, engineCc, supplier: suppliers[supplierKey]._id, locations: [locations[locKey]._id], dailyPrice, hourlyPrice: Math.round(dailyPrice / 9), deposit, securityDepositPkr: deposit, available: true, fullyBooked: false, comingSoon: false, minimumAge: 21, terrainCapability: terrain, selfDriveAvailable: true, withDriverAvailable: true, driverDailyAllowancePkr: 2500, outOfCitySurchargePkr: 1500, listingStatus, complianceNotes: listingStatus === 'APPROVED' ? 'Synthetic approved demo listing.' : 'Demo vehicle awaiting admin compliance approval.', reviewedBy: listingStatus === 'APPROVED' ? admin._id : undefined, reviewedAt: listingStatus === 'APPROVED' ? new Date() : undefined, fuelPolicy: 'TANK_TO_TANK', type: engineCc === 2800 ? 'diesel' : 'gasoline', gearbox: 'automatic', aircon: true, seats: terrain === 'NORTHERN_MOUNTAINS' && /Fortuner|Prado|HiAce/.test(name) ? 7 : 5, doors: 4, mileage: -1, cancellation: 0, amendments: 0, theftProtection: 0, collisionDamageWaiver: 0, fullInsurance: 0, additionalDriver: 0, blockOnPay: false, rating: 4.7 + (i % 3) * 0.1, range: String(range).toLowerCase() }
+    let car = await Car.findOne({ licensePlate: plate })
+    if (!car) car = await Car.create(fields)
+    if (car.complianceNotes?.startsWith('Synthetic approved demo listing') || car.complianceNotes === 'Demo vehicle awaiting admin compliance approval.') {
+      await Car.collection.updateOne({ _id: car._id, demoAvailabilityVersion: { $exists: false } }, { $set: { blockOnPay: true, demoAvailabilityVersion: 1 } })
     }
-  ];
 
-  const locationsMap = {};
-  for (const locItem of locationsData) {
-    let loc = await Location.findOne({ latitude: locItem.lat, longitude: locItem.lng });
-    if (!loc) {
-      const valIds = await createLocationValues({ en: locItem.en, ur: locItem.ur });
-      loc = await Location.create({
-        country: country._id,
-        latitude: locItem.lat,
-        longitude: locItem.lng,
-        values: valIds,
-        supplier: sahiwalSupplier._id
-      });
-      console.log(`Created location: ${locItem.en}`);
+    // Migrate the two old pending fixtures now that dedicated review cars exist.
+    // Match the original seed note so subsequent operator reviews are untouched.
+    if (['SR-DEMO-23', 'SR-DEMO-24'].includes(plate)) {
+      await Car.updateOne({ _id: car._id, listingStatus: 'PENDING_REVIEW', complianceNotes: 'Demo vehicle awaiting admin compliance approval.' }, { $set: { listingStatus: 'APPROVED', complianceNotes: 'Synthetic approved demo listing.', reviewedBy: admin._id, reviewedAt: new Date() } })
     }
-    locationsMap[locItem.key] = loc;
+
+    // Upgrade only missing structural fixture fields; retain operator edits and review decisions.
+    if (!car.deliveryLocations?.length) {
+      const deliveryLocations = terrain === 'CITY_ONLY' ? [] : Object.entries(locations).filter(([key]) => terrain === 'NORTHERN_MOUNTAINS' || !['gilgit','hunza','skardu','swat','murree','naran'].includes(key)).map(([, value]) => value._id)
+      await Car.updateOne({ _id: car._id }, { $set: { deliveryLocations } })
+    }
+    await Car.collection.updateOne({ _id: car._id, dateBasedPrices: { $exists: false } }, { $set: { dateBasedPrices: [], multimedia: [] } })
+    carMap[`${name}-${i}`] = car
   }
 
-  // 4. Fleet Vehicles (Realistic Pakistani Cars)
-  const carsData = [
-    {
-      name: 'Toyota Fortuner 2.8L Sigma 4 4x4',
-      locations: ['isb_airport', 'isb_bluearea'],
-      licensePlate: 'ICT-24-0010',
-      type: 'diesel',
-      gearbox: 'automatic',
-      seats: 7,
-      doors: 5,
-      dailyPrice: 28000,
-      hourlyPrice: 2500,
-      deposit: 35000,
-      range: 'Maxi',
-      rating: 4.9,
-      supplier: margallaSupplier._id
-    },
-    {
-      name: 'Toyota Hilux Revo Rocco 4x4',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-24-5500',
-      type: 'diesel',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 24000,
-      hourlyPrice: 2200,
-      deposit: 30000,
-      range: 'Maxi',
-      rating: 4.9,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Honda Civic RS Turbo 1.5',
-      locations: ['lhe_airport', 'lhe_gulberg'],
-      licensePlate: 'LEA-24-7711',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 14000,
-      hourlyPrice: 1400,
-      deposit: 20000,
-      range: 'Midi',
-      rating: 4.9,
-      supplier: indusSupplier._id
-    },
-    {
-      name: 'Toyota Corolla Altis Grande 1.8',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-9012',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 9500,
-      hourlyPrice: 1000,
-      deposit: 15000,
-      range: 'Midi',
-      rating: 4.8,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Toyota Yaris ATIV 1.3 CVT',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-8822',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 8000,
-      hourlyPrice: 850,
-      deposit: 12000,
-      range: 'Midi',
-      rating: 4.8,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'KIA Sportage AWD',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-9911',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 5,
-      dailyPrice: 16500,
-      hourlyPrice: 1600,
-      deposit: 25000,
-      range: 'Midi',
-      rating: 4.8,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Suzuki Cultus Auto Gear Shift (AGS)',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-4501',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 5800,
-      hourlyPrice: 650,
-      deposit: 10000,
-      range: 'Mini',
-      rating: 4.8,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Suzuki Alto VXL 660cc',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-24-1180',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 4,
-      doors: 4,
-      dailyPrice: 4500,
-      hourlyPrice: 500,
-      deposit: 8000,
-      range: 'Mini',
-      rating: 4.7,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Honda City Aspire 1.5 CVT',
-      locations: ['lhe_airport', 'lhe_gulberg'],
-      licensePlate: '',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 9000,
-      hourlyPrice: 900,
-      deposit: 15000,
-      range: 'Midi',
-      rating: 4.7,
-      supplier: indusSupplier._id
-    },
-    {
-      name: 'Suzuki Swift GLX CVT',
-      locations: ['khi_airport'],
-      licensePlate: '',
-      type: 'gasoline',
-      gearbox: 'automatic',
-      seats: 5,
-      doors: 4,
-      dailyPrice: 8500,
-      hourlyPrice: 850,
-      deposit: 14000,
-      range: 'Mini',
-      rating: 4.6,
-      supplier: suppliersMap['mehran@safarrent.pk']._id
-    },
-    {
-      name: 'Toyota HiAce Grand Cabin 14-Seater',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-2211',
-      type: 'diesel',
-      gearbox: 'automatic',
-      seats: 14,
-      doors: 4,
-      dailyPrice: 22000,
-      hourlyPrice: 2000,
-      deposit: 25000,
-      range: 'Maxi',
-      rating: 4.8,
-      supplier: sahiwalSupplier._id
-    },
-    {
-      name: 'Changan Karvaan Plus 7-Seater',
-      locations: ['sahiwal_center', 'sahiwal_bypass', 'sahiwal_station'],
-      licensePlate: 'SL-23-6677',
-      type: 'gasoline',
-      gearbox: 'manual',
-      seats: 7,
-      doors: 4,
-      dailyPrice: 7500,
-      hourlyPrice: 800,
-      deposit: 12000,
-      range: 'Maxi',
-      rating: 4.7,
-      supplier: sahiwalSupplier._id
-    }
-  ];
-
-  const carsMap = {};
-  for (const [carIndex, carItem] of carsData.entries()) {
-    const listingStatus = carIndex >= carsData.length - 2 ? 'PENDING_REVIEW' : 'APPROVED';
-    let car = await Car.findOne({ name: carItem.name });
-    if (!car) {
-      car = await Car.create({
-        name: carItem.name,
-        // Synthetic listings intentionally carry no invented registration number.
-        licensePlate: '',
-        registrationPlate: '',
-        engineCc: engineCcFor(carItem.name),
-        terrainCapability: /Fortuner|Hilux|Revo|4x4/i.test(carItem.name) ? 'NORTHERN_MOUNTAINS' : 'HIGHWAY_INTERCITY',
-        selfDriveAvailable: true,
-        withDriverAvailable: true,
-        driverDailyAllowancePkr: 2500,
-        outOfCitySurchargePkr: 1500,
-        securityDepositPkr: carItem.deposit,
-        listingStatus,
-        complianceNotes: listingStatus === 'APPROVED' ? 'Synthetic FYP demo listing; approval state is for workflow demonstration only.' : undefined,
-        reviewedBy: listingStatus === 'APPROVED' ? demoAdmin._id : undefined,
-        reviewedAt: listingStatus === 'APPROVED' ? new Date() : undefined,
-        supplier: carItem.supplier,
-        locations: carItem.locations.map((key) => locationsMap[key]._id),
-        dailyPrice: carItem.dailyPrice,
-        hourlyPrice: carItem.hourlyPrice,
-        deposit: carItem.deposit,
-        type: carItem.type,
-        gearbox: carItem.gearbox,
-        seats: carItem.seats,
-        doors: carItem.doors,
-        aircon: true,
-        available: true,
-        minimumAge: 21,
-        fuelPolicy: 'TANK_TO_TANK',
-        mileage: -1,
-        rating: undefined,
-        range: carItem.range
-      });
-      console.log(`Created car: ${carItem.name}`);
-    } else {
-      car.licensePlate = '';
-      car.registrationPlate = '';
-      car.engineCc = engineCcFor(carItem.name);
-      car.terrainCapability = /Fortuner|Hilux|Revo|4x4/i.test(carItem.name) ? 'NORTHERN_MOUNTAINS' : 'HIGHWAY_INTERCITY';
-      car.selfDriveAvailable = true;
-      car.withDriverAvailable = true;
-      car.driverDailyAllowancePkr = 2500;
-      car.outOfCitySurchargePkr = 1500;
-      car.securityDepositPkr = carItem.deposit;
-      car.listingStatus = listingStatus;
-      car.complianceNotes = listingStatus === 'APPROVED' ? 'Synthetic FYP demo listing; approval state is for workflow demonstration only.' : undefined;
-      car.reviewedBy = listingStatus === 'APPROVED' ? demoAdmin._id : undefined;
-      car.reviewedAt = listingStatus === 'APPROVED' ? new Date() : undefined;
-      car.fuelPolicy = 'TANK_TO_TANK';
-      car.locations = carItem.locations.map((key) => locationsMap[key]._id);
-      car.supplier = carItem.supplier;
-      car.available = true;
-      car.licensePlate = '';
-      car.rating = undefined;
-      car.trips = 0;
-      await car.save();
-    }
-    carsMap[carItem.name] = car;
-  }
-
-  // 5. Pakistani Customers (Users)
-  const customersData = [
-    {
-      fullName: 'FYP Demo Customer (Sahiwal)',
-      email: 'demo-customer@safarrent.local',
-      phone: '',
-      location: 'Sahiwal, Pakistan'
-    },
-    {
-      fullName: 'FYP Demo Customer (Lahore)',
-      email: 'demo-customer-lahore@safarrent.local',
-      phone: '',
-      location: 'Lahore, Pakistan'
-    },
-    {
-      fullName: 'FYP Demo Customer (Islamabad)',
-      email: 'demo-customer-isb@safarrent.local',
-      phone: '',
-      location: 'Islamabad, Pakistan'
-    },
-    {
-      fullName: 'FYP Demo Customer (Karachi)',
-      email: 'demo-customer-khi@safarrent.local',
-      phone: '',
-      location: 'Karachi, Pakistan'
-    },
-    {
-      fullName: 'FYP Demo Customer (Punjab)',
-      email: 'demo-customer-punjab@safarrent.local',
-      phone: '',
-      location: 'Punjab, Pakistan'
-    }
-  ];
-
-  const customersMap = {};
-  for (const c of customersData) {
-    let customer = await User.findOne({ email: c.email });
-    if (!customer) {
-      customer = await User.create({
-        fullName: c.fullName,
-        email: c.email,
-        phone: c.phone,
-        location: c.location,
-        type: 'user',
-        password: await hashDemoPassword(),
-        active: true,
-        verified: true,
-        verifiedAt: new Date()
-      });
-      console.log(`Created customer: ${c.fullName}`);
-    } else {
-      customer.password = await hashDemoPassword();
-      customer.active = true;
-      customer.verified = true;
-      customer.verifiedAt = customer.verifiedAt || new Date();
-      customer.phone = '';
-      await customer.save();
-    }
-    customersMap[c.email] = customer;
-  }
-
-  // Historical rows are synthetic examples and opt-in only. New demo bookings
-  // should be created through customer checkout and decided through supplier login.
-  const now = new Date();
-  const past3Days = new Date(now.getTime() - 3 * 24 * 3600 * 1000);
-  const past1Day = new Date(now.getTime() - 1 * 24 * 3600 * 1000);
-  const in2Days = new Date(now.getTime() + 2 * 24 * 3600 * 1000);
-  const in5Days = new Date(now.getTime() + 5 * 24 * 3600 * 1000);
-  const in10Days = new Date(now.getTime() + 10 * 24 * 3600 * 1000);
-  if (process.env.BC_FYP_SEED_SAMPLE_BOOKINGS === 'true') {
-  // 6. Synthetic booking history (FYP demo only)
-
-  const bookingsData = [
-    {
-      supplier: sahiwalSupplier._id,
-      car: carsMap['Toyota Corolla Altis Grande 1.8']._id,
-      driver: customersMap['demo-customer@safarrent.local']._id,
-      pickupLocation: locationsMap['sahiwal_center']._id,
-      dropOffLocation: locationsMap['lhe_airport']._id,
-      from: past3Days,
-      to: past1Day,
-      status: 'paid', // Completed
-      price: 19000,
-      isPayedInFull: true
-    },
-    {
-      supplier: sahiwalSupplier._id,
-      car: carsMap['Suzuki Cultus Auto Gear Shift (AGS)']._id,
-      driver: customersMap['demo-customer@safarrent.local']._id,
-      pickupLocation: locationsMap['sahiwal_bypass']._id,
-      dropOffLocation: locationsMap['sahiwal_bypass']._id,
-      from: past1Day,
-      to: in2Days,
-      status: 'paidInFull', // Active / In-Transit
-      price: 17400,
-      isPayedInFull: true
-    },
-    {
-      supplier: margallaSupplier._id,
-      car: carsMap['Toyota Fortuner 2.8L Sigma 4 4x4']._id,
-      driver: customersMap['demo-customer@safarrent.local']._id,
-      pickupLocation: locationsMap['isb_airport']._id,
-      dropOffLocation: locationsMap['skardu_hub']._id,
-      from: in2Days,
-      to: in10Days,
-      status: 'deposit', // Confirmed upcoming
-      price: 224000,
-      isDeposit: true
-    },
-    {
-      supplier: indusSupplier._id,
-      car: carsMap['Honda Civic RS Turbo 1.5']._id,
-      driver: customersMap['demo-customer@safarrent.local']._id,
-      pickupLocation: locationsMap['lhe_gulberg']._id,
-      dropOffLocation: locationsMap['sahiwal_center']._id,
-      from: in5Days,
-      to: in10Days,
-      status: 'reserved', // Confirmed
-      price: 70000,
-      isPayedInFull: false
-    },
-    {
-      supplier: sahiwalSupplier._id,
-      car: carsMap['Toyota Hilux Revo Rocco 4x4']._id,
-      driver: customersMap['demo-customer@safarrent.local']._id,
-      pickupLocation: locationsMap['sahiwal_center']._id,
-      dropOffLocation: locationsMap['multan_cantt']._id,
-      from: past3Days,
-      to: past1Day,
-      status: 'paid', // Completed
-      price: 48000,
-      isPayedInFull: true
-    }
-  ];
-
-  for (const b of bookingsData) {
-    const existing = await Booking.findOne({
-      supplier: b.supplier,
-      car: b.car,
-      driver: b.driver,
-      price: b.price
-    });
-    if (!existing) {
-      await Booking.create(b);
-      console.log(`Created booking for: ${b.price} PKR (${b.status})`);
+  // Repair references left by the old destructive demo seed, only on identified
+  // synthetic vehicles. Existing valid locations and operator decisions survive.
+  const validLocations = new Set(Object.values(locations).map(location => String(location._id)))
+  for (const car of await Car.find({ complianceNotes: /^Synthetic|^Demo vehicle awaiting/ })) {
+    if (!car.locations.length || car.locations.some(id => !validLocations.has(String(id)))) {
+      const agency = Object.entries(suppliers).find(([, user]) => String(user._id) === String(car.supplier))?.[0]
+      const home = locations[({ lahore: 'lahore', sindh: 'karachi', karakoram: 'gilgit' })[agency] || 'islamabad']
+      await Car.updateOne({ _id: car._id }, { $set: { locations: [home._id] } })
     }
   }
+
+  const customerSpecs = [
+    ['demo-customer@safarrent.local','FYP Demo Customer','Islamabad','35202-1234567-1'], ['demo-customer-lahore@safarrent.local','Lahore Demo Customer','Lahore','35202-7654321-2'], ['demo-customer-isb@safarrent.local','Islamabad Demo Customer','Islamabad','61101-1234567-3'], ['demo-customer-khi@safarrent.local','Karachi Demo Customer','Karachi','42101-7654321-4']
+  ]
+  const customers = {}
+  for (const [email, name, location, cnic] of customerSpecs) {
+    let user = await User.findOne({ email })
+    const fields = { fullName: name, email, phone: '03005550201', password: await hashDemoPassword(), location, type: 'user', active: true, verified: true, verifiedAt: new Date(), cnicNumber: cnic, drivingLicenseNumber: 'PK-DL-DEMO-001', kycStatus: 'VERIFIED', payLater: true }
+    if (!user) user = await User.create(fields)
+
+    customers[email] = user
   }
 
-  // 7. Vehicle Documents (Registration, Punjab Token Tax, Insurance)
-  const nextYear = new Date(now.getTime() + 365 * 24 * 3600 * 1000);
-  const revo = carsMap['Toyota Hilux Revo Rocco 4x4'];
-  const altis = carsMap['Toyota Corolla Altis Grande 1.8'];
+  const supplierUser = suppliers.margalla
+  const lahoreUser = suppliers.lahore
+  const karakoramUser = suppliers.karakoram
+  const sindhUser = suppliers.sindh
+  const firstCar = await Car.findOne({ listingStatus: 'APPROVED', supplier: supplierUser._id })
+  const lahoreCar = await Car.findOne({ listingStatus: 'APPROVED', supplier: lahoreUser._id })
+  const northernCar = await Car.findOne({ listingStatus: 'APPROVED', supplier: karakoramUser._id })
+  const coastalCar = await Car.findOne({ listingStatus: 'APPROVED', supplier: sindhUser._id })
+  const customer = customers['demo-customer@safarrent.local']
 
-  if (revo) {
-    await VehicleDocument.findOneAndUpdate(
-      { vehicle: revo._id, type: 'registration' },
-      { expiryDate: nextYear, status: 'pending', notes: 'FYP demo placeholder; no registration document uploaded or verified.' },
-      { upsert: true }
-    );
-    await VehicleDocument.findOneAndUpdate(
-      { vehicle: revo._id, type: 'token_tax' },
-      { expiryDate: nextYear, status: 'pending', notes: 'FYP demo placeholder; no token tax document uploaded or verified.' },
-      { upsert: true }
-    );
-    await VehicleDocument.findOneAndUpdate(
-      { vehicle: revo._id, type: 'insurance' },
-      { expiryDate: nextYear, status: 'pending', notes: 'FYP demo placeholder; no insurance document uploaded or verified.' },
-      { upsert: true }
-    );
+  const now = new Date()
+  const day = 86400000
+  const bookingSpecs = [
+    ['PENDING_PAYMENT','pending', supplierUser._id, firstCar._id, locations.islamabad._id, locations.rawalpindi._id, 2, 4, 'WITH_DRIVER'],['CONFIRMED','reserved', lahoreUser._id, lahoreCar._id, locations.lahore._id, locations.multan._id, 5, 8, 'SELF_DRIVE'],['IN_PROGRESS','paidInFull', karakoramUser._id, northernCar._id, locations.islamabad._id, locations.hunza._id, -2, 5, 'WITH_DRIVER'],['COMPLETED','paid', sindhUser._id, coastalCar._id, locations.karachi._id, locations.karachi._id, -8, -3, 'WITH_DRIVER'],['CANCELLED','cancelled', lahoreUser._id, lahoreCar._id, locations.lahore._id, locations.faisalabad._id, -6, -4, 'SELF_DRIVE'],['PENDING_PAYMENT','pending', supplierUser._id, firstCar._id, locations.rawalpindi._id, locations.murree._id, 8, 10, 'SELF_DRIVE'],['CONFIRMED','deposit', karakoramUser._id, northernCar._id, locations.islamabad._id, locations.skardu._id, 12, 17, 'WITH_DRIVER'],['COMPLETED','paid', lahoreUser._id, lahoreCar._id, locations.lahore._id, locations.sialkot._id, -18, -15, 'SELF_DRIVE'],['IN_PROGRESS','paidInFull', sindhUser._id, coastalCar._id, locations.karachi._id, locations.swat._id, -1, 3, 'WITH_DRIVER'],['CANCELLED','cancelled', supplierUser._id, firstCar._id, locations.islamabad._id, locations.peshawar._id, -12, -10, 'WITH_DRIVER']
+  ]
+  for (let i = 0; i < bookingSpecs.length; i++) {
+    const [paymentState, status, supplierId, carId, pickup, dropoff, startOffset, endOffset, rentalMode] = bookingSpecs[i]
+    const from = new Date(now.getTime() + startOffset * day)
+    const to = new Date(now.getTime() + endOffset * day)
+    // Price is derived from the selected vehicle, not a fixture total.
+    const seedKey = `pakistan-evaluation-booking-${i + 1}`
+    const seeded = await Booking.findOne({ seedKey })
+    // Adopt old fixtures once instead of duplicating the earlier, unkeyed seed.
+    const legacy = await Booking.findOne({ seedKey: { $exists: false }, supplier: supplierId, car: carId, driver: customer._id, status, from: { $gte: new Date(now.getTime() + (startOffset - 1) * day), $lte: new Date(now.getTime() + (startOffset + 1) * day) } })
+    if (legacy) {
+      if (!seeded) await Booking.updateOne({ _id: legacy._id }, { $set: { seedKey, lifecycleStatus: paymentState } })
+    }
+    if (seeded || legacy) continue
+    const seedCar = await Car.findById(carId)
+    const days = Math.max(1, endOffset - startOffset)
+    const breakdown = { baseRentPkr: seedCar.dailyPrice * days, driverAllowancePkr: rentalMode === 'WITH_DRIVER' ? 2500 * days : 0, outOfCitySurchargePkr: 1500, securityDepositPkr: seedCar.securityDepositPkr }
+    breakdown.totalPayablePkr = Object.values(breakdown).reduce((sum, amount) => sum + amount, 0)
+    const key = { seedKey, supplier: supplierId, car: carId, driver: customer._id, price: breakdown.totalPayablePkr, from, to, lifecycleStatus: paymentState, cancellation: true }
+    const seedPaymentState = ['COMPLETED', 'CANCELLED'].includes(paymentState) ? 'CONFIRMED' : paymentState === 'PENDING_PAYMENT' ? 'PENDING_PAYMENT' : 'CONFIRMED'
+    await Booking.create({ ...key, pickupLocation: pickup, dropOffLocation: dropoff, status, rentalMode, tripScope: rentalMode === 'WITH_DRIVER' && [2,6,8].includes(i) ? 'NORTHERN_TOUR' : 'OUT_OF_CITY', paymentState: seedPaymentState, paymentStatus: status === 'paid' || status === 'paidInFull' || seedPaymentState === 'CONFIRMED' ? 'PAID' : 'PENDING_PAYMENT', isDeposit: status === 'deposit', isPayedInFull: status === 'paidInFull' || status === 'paid', handoverChecklist: i === 2 || i === 8 ? { completedAt: new Date(), odometerStart: 12000 + i * 100, fuelLevel: '3/4', spareTirePresent: true, exteriorNotes: 'Demo handover: minor road dust only.', verifiedBySupplier: true } : undefined, priceBreakdown: breakdown })
   }
 
-  if (altis) {
-    await VehicleDocument.findOneAndUpdate(
-      { vehicle: altis._id, type: 'registration' },
-      { expiryDate: nextYear, status: 'pending', notes: 'FYP demo placeholder; no registration document uploaded or verified.' },
-      { upsert: true }
-    );
-    await VehicleDocument.findOneAndUpdate(
-      { vehicle: altis._id, type: 'token_tax' },
-      { expiryDate: nextYear, status: 'pending', notes: 'FYP demo placeholder; no token tax document uploaded or verified.' },
-      { upsert: true }
-    );
-  }
+  await Promise.all([Car.collection.createIndex({ listingStatus: 1, available: 1, supplier: 1 }), Car.collection.createIndex({ locations: 1, available: 1, listingStatus: 1 }), Booking.collection.createIndex({ supplier: 1, status: 1 }), Booking.collection.createIndex({ driver: 1, status: 1 }), Booking.collection.createIndex({ customer: 1, status: 1 }), Booking.collection.createIndex({ status: 1 }), Booking.collection.createIndex({ car: 1, from: 1, to: 1 })])
 
-  // 8. Vehicle Maintenance Records
-  if (revo) {
-    await Maintenance.findOneAndUpdate(
-      { vehicle: revo._id, type: 'oil_change' },
-      {
-        reportedBy: sahiwalSupplier._id,
-        supplier: sahiwalSupplier._id,
-        type: 'oil_change',
-        description: 'Synthetic FYP demo maintenance record.',
-        status: 'scheduled',
-        startDate: past3Days,
-        expectedCompletionDate: past1Day,
-        completedDate: undefined,
-        mileage: 18450,
-        cost: 16500,
-        notes: 'Demo record only; this maintenance work was not performed.'
-      },
-      { upsert: true }
-    );
-  }
-
-  console.log('--- FYP DEMO DATA READY: synthetic listings, no real supplier/payment ---');
-  console.log('Supplier demo login: sahiwal@safarrent.pk / same password printed below');
-  console.log('Customer demo login: demo-customer@safarrent.local / same password printed below');
-  console.log('Other demo suppliers: indus@safarrent.pk, margalla@safarrent.pk, mehran@safarrent.pk, karakoram@safarrent.pk');
-  console.log(`Demo password: ${demoPassword}`);
-  await mongoose.disconnect();
+  console.log(JSON.stringify({ locations: await Location.countDocuments(), suppliers: await User.countDocuments({ type: 'supplier' }), cars: await Car.countDocuments(), approvedCars: await Car.countDocuments({ listingStatus: 'APPROVED' }), pendingCars: await Car.countDocuments({ listingStatus: 'PENDING_REVIEW' }), bookings: await Booking.countDocuments(), seededBookings: await Booking.countDocuments({ seedKey: /^pakistan-evaluation/ }), customers: await User.countDocuments({ type: 'user' }), demoPassword }, null, 2))
+  await mongoose.disconnect()
 }
 
-run().catch((err) => {
-  console.error('Error during seeding:', err);
-  process.exit(1);
-});
+run().catch(async (err) => { console.error('Error during seeding:', err); await mongoose.disconnect(); process.exit(1) })

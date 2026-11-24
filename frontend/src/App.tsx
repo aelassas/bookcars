@@ -90,7 +90,7 @@ const AppLayout = () => {
   }, [location.pathname])
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary resetKey={location.pathname}>
       {showOnboarding && <FirstRunOnboarding onFinish={() => setShowOnboarding(false)} />}
       <SettingProvider>
         <UserProvider refreshKey={refreshKey}>

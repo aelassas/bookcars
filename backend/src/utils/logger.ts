@@ -56,16 +56,22 @@ type LogLevel = 'info' | 'warn' | 'error'
  * @param {string} message - The main log message.
  * @param {*} [obj] - Optional additional data to log (object or string).
  */
+export const redactLog = (value: string): string => value
+  .replace(/("(?:password|newPassword|currentPassword|confirmPassword|token|accessToken|refreshToken|authorization|secret|apiKey|cnicNumber|drivingLicenseNumber)"\s*:\s*)"(?:\\.|[^"\\])*"/gi, '$1"[REDACTED]"')
+  .replace(/(Bearer\s+)[A-Za-z0-9._-]+/gi, '$1[REDACTED]')
+  .replace(/(mongodb(?:\+srv)?:\/\/)[^@\s]+@/gi, '$1[REDACTED]@')
+
 const log = (level: LogLevel, message: string, obj?: any): void => {
   if (!enableLogs || (level === 'error' && !enableErrorLogs)) {
     return
   }
 
-  const finalMessage = obj ? `${message} ${typeof obj === 'string' ? obj : helper.safeStringify(obj)}` : message
+  message = redactLog(message)
+  const finalMessage = redactLog(obj ? `${message} ${typeof obj === 'string' ? obj : helper.safeStringify(obj)}` : message)
 
   if (level === 'error') {
     if (obj instanceof Error) {
-      logger.error(`${message} ${obj.message}\n${obj.stack}`)
+      logger.error(redactLog(`${message} ${obj.message}\n${obj.stack}`))
 
       // Report to Sentry
       if (env.ENABLE_SENTRY) {
@@ -73,8 +79,11 @@ const log = (level: LogLevel, message: string, obj?: any): void => {
         Sentry.withScope((scope) => {
           scope.setLevel('error')
           scope.setExtra('log_message', message)
-          scope.setExtra('log_obj', helper.safeStringify(obj))
-          Sentry.captureException(obj)
+          scope.setExtra('log_obj', redactLog(helper.safeStringify(obj)))
+          const safeError = new Error(redactLog(obj.message))
+          safeError.name = obj.name
+          safeError.stack = obj.stack ? redactLog(obj.stack) : undefined
+          Sentry.captureException(safeError)
         })
       }
     } else {
@@ -84,7 +93,7 @@ const log = (level: LogLevel, message: string, obj?: any): void => {
         if (obj) {
           // If obj is not an Error but some extra data, add it as extra info
           Sentry.withScope(scope => {
-            scope.setExtra('extra_data', helper.safeStringify(obj))
+            scope.setExtra('extra_data', redactLog(helper.safeStringify(obj)))
             Sentry.captureMessage(message)
           })
         } else {

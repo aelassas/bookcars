@@ -375,7 +375,7 @@ return true
             onClick={() => handleNavClick('/operations-dashboard')}
             sx={sidebarItemStyle(isCurrent('/operations-dashboard'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/operations-dashboard') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/operations-dashboard') ? '#E8890C' : '#94A3B8' }}>
               <OperationsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Command Center" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/operations-dashboard') ? 700 : 500 }} />
@@ -386,7 +386,7 @@ return true
             onClick={() => handleNavClick('/scheduler')}
             sx={sidebarItemStyle(isCurrent('/scheduler'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/scheduler') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/scheduler') ? '#E8890C' : '#94A3B8' }}>
               <SchedulerIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Live Scheduler" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/scheduler') ? 700 : 500 }} />
@@ -397,7 +397,7 @@ return true
             onClick={() => handleNavClick('/')}
             sx={sidebarItemStyle(isCurrent('/'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/') ? '#E8890C' : '#94A3B8' }}>
               <DashboardIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="All Bookings" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/') ? 700 : 500 }} />
@@ -415,7 +415,7 @@ return true
             onClick={() => handleNavClick('/cars')}
             sx={sidebarItemStyle(isCurrent('/cars'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/cars') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/cars') ? '#E8890C' : '#94A3B8' }}>
               <CarsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Vehicle Fleet" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/cars') ? 700 : 500 }} />
@@ -437,7 +437,7 @@ return true
             onClick={() => handleNavClick('/maintenance')}
             sx={sidebarItemStyle(isCurrent('/maintenance'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/maintenance') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/maintenance') ? '#E8890C' : '#94A3B8' }}>
               <BuildIconSmall />
             </ListItemIcon>
             <ListItemText primary="Maintenance Logs" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/maintenance') ? 700 : 500 }} />
@@ -448,7 +448,7 @@ return true
             onClick={() => handleNavClick('/vehicle-documents')}
             sx={sidebarItemStyle(isCurrent('/vehicle-documents'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/vehicle-documents') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/vehicle-documents') ? '#E8890C' : '#94A3B8' }}>
               <DocumentsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Smart Card Vault" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/vehicle-documents') ? 700 : 500 }} />
@@ -466,7 +466,7 @@ return true
             onClick={() => handleNavClick('/locations')}
             sx={sidebarItemStyle(isCurrent('/locations'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/locations') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/locations') ? '#E8890C' : '#94A3B8' }}>
               <LocationsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Pickup Hubs" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/locations') ? 700 : 500 }} />
@@ -477,7 +477,7 @@ return true
             onClick={() => handleNavClick('/suppliers')}
             sx={sidebarItemStyle(isCurrent('/suppliers'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/suppliers') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/suppliers') ? '#E8890C' : '#94A3B8' }}>
               <SuppliersIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Fleet Suppliers" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/suppliers') ? 700 : 500 }} />
@@ -488,7 +488,7 @@ return true
             onClick={() => handleNavClick('/pricing')}
             sx={sidebarItemStyle(isCurrent('/pricing'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/pricing') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/pricing') ? '#E8890C' : '#94A3B8' }}>
               <PricingIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Dynamic PKR Pricing" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/pricing') ? 700 : 500 }} />
@@ -500,7 +500,7 @@ return true
               onClick={() => handleNavClick('/bank-details')}
               sx={sidebarItemStyle(isCurrent('/bank-details'))}
             >
-              <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/bank-details') ? '#10B981' : '#94A3B8' }}>
+              <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/bank-details') ? '#E8890C' : '#94A3B8' }}>
                 <BankDetailsIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Payout Bank Details" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/bank-details') ? 700 : 500 }} />
@@ -512,7 +512,7 @@ return true
             onClick={() => handleNavClick('/users')}
             sx={sidebarItemStyle(isCurrent('/users'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/users') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/users') ? '#E8890C' : '#94A3B8' }}>
               <UsersIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Renters & KYC" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/users') ? 700 : 500 }} />
@@ -523,7 +523,7 @@ return true
             onClick={() => handleNavClick('/settings')}
             sx={sidebarItemStyle(isCurrent('/settings'))}
           >
-            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/settings') ? '#10B981' : '#94A3B8' }}>
+            <ListItemIcon sx={{ minWidth: 36, color: isCurrent('/settings') ? '#E8890C' : '#94A3B8' }}>
               <SettingsIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Console Settings" primaryTypographyProps={{ fontSize: 13, fontWeight: isCurrent('/settings') ? 700 : 500 }} />
@@ -634,7 +634,7 @@ return true
                 className="admin-add-vehicle" aria-label="Add vehicle" startIcon={<AddIcon />}
                 onClick={() => navigate('/create-car')}
                 sx={{
-                  bgcolor: '#107487',
+                  bgcolor: '#171717',
                   color: '#FFFFFF',
                   fontWeight: 600,
                   fontSize: 13,
@@ -644,12 +644,12 @@ return true
                   px: 1.8,
                   py: 0.6,
                   '&:hover': {
-                    bgcolor: '#047857',
-                    boxShadow: '0 2px 4px rgba(5, 150, 105, 0.2)'
+                    bgcolor: '#000000',
+                    boxShadow: 'none'
                   }
                 }}
               >
-                + Add Vehicle
+                Add Vehicle
               </Button>
             )}
 
@@ -712,9 +712,9 @@ function sidebarItemStyle(selected: boolean, isAi: boolean = false) {
     return {
       mb: 0.5,
       borderRadius: '8px',
-      bgcolor: isAi ? 'rgba(245, 158, 11, 0.15)' : 'rgba(5, 150, 105, 0.15)',
+      bgcolor: 'rgba(255, 166, 43, 0.18)',
       color: 'var(--sr-accent-text)',
-      borderLeft: `3px solid ${isAi ? '#F59E0B' : '#10B981'}`,
+      borderLeft: '3px solid #FFA62B',
       '&:hover': {
         bgcolor: isAi ? 'rgba(245, 158, 11, 0.22)' : 'rgba(5, 150, 105, 0.22)',
       }

@@ -1016,8 +1016,18 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page as string, 10)
     const size = Number.parseInt(req.params.size as string, 10)
-    const suppliers = body.suppliers!.map((id) => new mongoose.Types.ObjectId(id as string))
+    let suppliers = (body.suppliers?.length ? body.suppliers : []).map((id) => new mongoose.Types.ObjectId(id as string))
+    if (suppliers.length === 0) {
+      const activeSuppliers = await User.find({ type: bookcarsTypes.UserType.Supplier, active: true, blacklisted: false }).select('_id').lean()
+      suppliers = activeSuppliers.map((supplier) => supplier._id)
+    }
     const locationIds = await getPickupLocationIds(body)
+    const pickupLabel = String((body as any).pickupLabel || (body as any).pickupLocationName || '')
+    const resolvedPickupLocations = locationIds.length > 0
+      ? await Location.find({ _id: { $in: locationIds } }).populate<{ values: Array<{ value: string }> }>('values').lean()
+      : []
+    const resolvedPickupText = resolvedPickupLocations.flatMap((location) => location.values.map((value) => value.value)).join(' ')
+    const northernDestination = /\b(Hunza|Skardu|Swat|Naran|Gilgit|Murree|Northern|Naran Kaghan)\b/i.test(`${pickupLabel} ${resolvedPickupText}`)
     const {
       carType,
       gearbox,
@@ -1047,8 +1057,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       $and: [
         { listingStatus: bookcarsTypes.ListingStatus.Approved },
         { supplier: { $in: suppliers } },
-        // { locations: pickupLocation },
-        { locations: { $in: locationIds } },
+        ...(northernDestination ? [{ terrainCapability: bookcarsTypes.TerrainCapability.NorthernMountains }] : []),
+        ...(locationIds.length ? [{ $or: [{ locations: { $in: locationIds } }, { deliveryLocations: { $in: locationIds } }] }] : []),
+        ...(body.rentalMode === bookcarsTypes.RentalMode.SelfDrive ? [{ selfDriveAvailable: true }] : body.rentalMode === bookcarsTypes.RentalMode.WithDriver ? [{ withDriverAvailable: true }] : []),
         { available: true },
         { fullyBooked: { $in: [false, null] } },
       ],
@@ -1173,6 +1184,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                   fullName: 1,
                   avatar: 1,
                   priceChangeRate: 1,
+                  location: 1,
                 },
               }
             ],
@@ -1186,7 +1198,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'DateBasedPrice',
-            let: { dateBasedPrices: '$dateBasedPrices' },
+            let: { dateBasedPrices: { $ifNull: ['$dateBasedPrices', []] } },
             pipeline: [
               {
                 $match: {
@@ -1355,10 +1367,37 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
+    if (Array.isArray(data) && data[0]?.resultData) {
+      data[0].resultData = data[0].resultData.map((car: any) => {
+        if (locationIds.length && !car.locations?.some((id: mongoose.Types.ObjectId) => locationIds.some((requested) => requested.equals(id)))) {
+          car.interCityDeliveryBadge = `Available via ${car.supplier.location || car.supplier.fullName} Hub with Inter-City${northernDestination ? ' / Northern' : ''} Delivery`
+        }
+        return car
+      })
+    }
     res.json(data)
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('ERROR')} ${req.query.s}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
+  }
+}
+
+export const getNearbyAvailability = async (req: Request, res: Response) => {
+  try {
+    const body = req.body as { pickupLocation?: string, pickupLatitude?: number, pickupLongitude?: number }
+    const locationIds = await getPickupLocationIds(body)
+    const match: mongoose.QueryFilter<bookcarsTypes.Car> = {
+      listingStatus: bookcarsTypes.ListingStatus.Approved,
+      available: true,
+      fullyBooked: { $in: [false, null] },
+      ...(locationIds.length > 0 ? { locations: { $in: locationIds } } : {}),
+    }
+    const cars = await Car.find(match).select('_id name dailyPrice terrainCapability locations supplier').limit(50).lean()
+    const deliveredCars = cars.length > 0 ? cars : await Car.find({ listingStatus: bookcarsTypes.ListingStatus.Approved, available: true, terrainCapability: bookcarsTypes.TerrainCapability.NorthernMountains }).select('_id name dailyPrice terrainCapability locations supplier').limit(50).lean()
+    res.json({ cars: deliveredCars, available: deliveredCars.length > 0, interCityFallback: true })
+  } catch (err) {
+    logger.error('[car.getNearbyAvailability]', err)
+    res.status(400).json({ message: 'Unable to check nearby availability.' })
   }
 }
 

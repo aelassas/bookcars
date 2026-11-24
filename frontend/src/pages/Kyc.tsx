@@ -26,7 +26,9 @@ const Kyc = () => {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+  }, [])
 
   const submit = async () => {
     try {

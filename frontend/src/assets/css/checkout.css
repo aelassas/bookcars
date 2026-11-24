@@ -244,7 +244,7 @@ aside.checkout-fare-sidebar {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: #475569;
+  color: var(--sr-muted);
   margin-bottom: 8px;
 }
 
@@ -295,11 +295,11 @@ aside.checkout-fare-sidebar {
 }
 
 .escrow-split-box.handover .escrow-split-label {
-  color: #475569;
+  color: var(--sr-muted);
 }
 
 .escrow-split-box.handover .escrow-split-amount {
-  color: #1e293b;
+  color: var(--sr-text);
 }
 
 .escrow-split-label {
@@ -626,6 +626,15 @@ div.checkout .btn-cancel {
 #root .checkout .step-number { flex-shrink: 0; }
 #root .checkout .checkout-step-section { scroll-margin-top: 88px; }
 #root .checkout .checkout-fare-sidebar { width: 100%; min-width: 0; }
+#root .checkout table,
+#root .checkout-form table,
+#root .checkout-summary table {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 @media (max-width: 960px) {
   #root .checkout { grid-template-columns: minmax(0, 1fr); margin-block: 20px 48px; }
 }

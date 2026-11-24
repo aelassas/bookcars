@@ -17,7 +17,9 @@ const ManualPayments = () => {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+  }, [])
 
   const review = async (row: bookcarsTypes.Booking, status: 'verified' | 'rejected') => {
     try {

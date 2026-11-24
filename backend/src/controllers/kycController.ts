@@ -16,7 +16,7 @@ export const uploadDocuments = async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Unauthorized' })
     return
   }
-  const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined
+  const files = req.files as { [fieldname: string]: Array<{ originalname: string, size: number, buffer: Buffer }> } | undefined
   if (!files || Object.keys(files).length === 0) {
     res.status(400).json({ message: 'At least one document image is required' })
     return
@@ -25,7 +25,9 @@ export const uploadDocuments = async (req: Request, res: Response) => {
   await fs.mkdir(directory, { recursive: true })
   const result: Record<string, string> = {}
   for (const [field, list] of Object.entries(files)) {
-    if (!['documentFront', 'documentBack', 'selfie'].includes(field) || list.length !== 1) continue
+    if (!['documentFront', 'documentBack', 'selfie'].includes(field) || list.length !== 1) {
+      continue
+    }
     const file = list[0]
     const ext = path.extname(file.originalname).toLowerCase()
     if (!env.allowedImageExtensions.includes(ext) || file.size > 5 * 1024 * 1024) {
@@ -131,7 +133,16 @@ export const review = async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(kyc.user, { blacklisted: true })
   }
   if (status === 'approved') {
-    await User.findByIdAndUpdate(kyc.user, { verified: true, active: true })
+    await User.findByIdAndUpdate(kyc.user, {
+      verified: true,
+      active: true,
+      kycStatus: bookcarsTypes.KycStatus.Verified,
+      cnicNumber: kyc.documentType === 'cnic' ? kyc.documentNumber : undefined,
+    })
+  } else if (status === 'rejected') {
+    await User.findByIdAndUpdate(kyc.user, { kycStatus: bookcarsTypes.KycStatus.Rejected })
+  } else if (status === 'suspended') {
+    await User.findByIdAndUpdate(kyc.user, { kycStatus: bookcarsTypes.KycStatus.Pending, blacklisted: true })
   }
   res.json(kyc)
 }

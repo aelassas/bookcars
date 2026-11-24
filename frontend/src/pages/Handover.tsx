@@ -9,7 +9,9 @@ const Handover = () => {
   const [handover, setHandover] = useState<any>(null)
 
   useEffect(() => {
-    if (!bookingId) return
+    if (!bookingId) {
+      return
+    }
     HandoverService.getByBooking(bookingId).then(setHandover).catch(helper.error)
   }, [bookingId])
 
@@ -25,6 +27,8 @@ const Handover = () => {
             {handover.damageNotes && <Typography>Damage notes: {handover.damageNotes}</Typography>}
             {handover.odometerAtPickup !== undefined && <Typography>Pickup odometer: {handover.odometerAtPickup}</Typography>}
             {handover.fuelLevelAtPickup !== undefined && <Typography>Pickup fuel: {handover.fuelLevelAtPickup}%</Typography>}
+            {handover.fuelLevelLabel && <Typography>Pickup fuel: {handover.fuelLevelLabel}</Typography>}
+            {typeof handover.spareTirePresent === 'boolean' && <Typography>Spare tire: {handover.spareTirePresent ? 'Present' : 'Missing'}</Typography>}
           </>
         )}
       </CardContent></Card>

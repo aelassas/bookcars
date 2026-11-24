@@ -43,6 +43,7 @@ const carSchema = new Schema<env.Car>(
       ref: 'User',
       index: true,
     },
+    deliveryLocations: [{ type: Schema.Types.ObjectId, ref: 'Location' }],
     minimumAge: {
       type: Number,
       required: [true, "can't be blank"],
@@ -253,6 +254,7 @@ carSchema.index({ updatedAt: -1, _id: 1 })
 carSchema.index({ supplier: 1, type: 1, available: 1, rating: -1, updatedAt: -1, _id: 1 })
 carSchema.index({ available: 1, gearbox: 1, deposit: 1 })
 carSchema.index({ listingStatus: 1, available: 1, supplier: 1 })
+carSchema.index({ listingStatus: 1, locations: 1, available: 1, terrainCapability: 1 })
 carSchema.index({ seats: 1, doors: 1 })
 carSchema.index({ mileage: 1, fuelPolicy: 1 })
 carSchema.index({ locations: 1, available: 1, fullyBooked: 1 })

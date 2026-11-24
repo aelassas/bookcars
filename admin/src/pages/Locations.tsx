@@ -141,7 +141,7 @@ handleSearch()
                     fontWeight: 500,
                     fontSize: '12px',
                     cursor: 'pointer',
-                    background: countryFilter === c ? '#107487' : '#F1F5F9',
+                    background: countryFilter === c ? '#107487' : 'var(--sr-surface-raised)',
                     color: countryFilter === c ? '#fff' : 'var(--sr-muted)',
                     border: countryFilter === c ? 'none' : '1px solid #E2E8F0',
                     '&:hover': {
