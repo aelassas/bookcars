@@ -20,6 +20,7 @@ import * as langHelper from '@/utils/langHelper'
 import { useUserContext, UserContextType } from '@/context/UserContext'
 import { schema, FormFields } from '@/models/SignInForm'
 import PasswordInput from '@/components/PasswordInput'
+import QuickDemoFill, { DEMO_PASSWORD, DemoAccount } from '@/components/QuickDemoFill'
 
 import '@/assets/css/signin.css'
 
@@ -87,6 +88,14 @@ const SignIn = () => {
     } catch {
       signinError()
     }
+  }
+
+  // One-click demo sign-in: fills the seeded demo credentials and submits the form.
+  const fillDemoAccount = (account: DemoAccount) => {
+    clearErrors()
+    setValue('email', account.email, { shouldValidate: true })
+    setValue('password', DEMO_PASSWORD, { shouldValidate: true })
+    void handleSubmit(onSubmit)()
   }
 
   useEffect(() => {
@@ -178,6 +187,8 @@ const SignIn = () => {
               <div className="forgot-password">
                 <Button variant="text" onClick={() => navigate('/forgot-password')} className="btn-lnk">{strings.RESET_PASSWORD}</Button>
               </div>
+
+              <QuickDemoFill onSelect={fillDemoAccount} disabled={isSubmitting} />
 
               <div className="signin-buttons">
                 <Button type="submit" variant="contained" size="small" className="btn-primary" disabled={isSubmitting}>

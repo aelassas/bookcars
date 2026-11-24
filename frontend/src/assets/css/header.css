@@ -305,3 +305,17 @@ html[data-theme='dark'] .header {
 
 html[data-theme] #root .header.header-home { background: rgba(11, 17, 32, .91) !important; }
 html[data-theme] #root .header .MuiAppBar-root { background-color: transparent !important; border-radius: 0; }
+
+/* Quick switch between the customer storefront and the operations portal */
+.sr-desktop-nav .sr-portal-switch.MuiButton-root {
+  margin-left: 6px;
+  padding: 0 14px;
+  border: 1px solid rgba(217, 119, 6, 0.5);
+  border-radius: 999px;
+  color: #fcd34d;
+  font-weight: 700;
+}
+
+.sr-desktop-nav .sr-portal-switch.MuiButton-root:hover {
+  background: rgba(217, 119, 6, 0.16);
+}

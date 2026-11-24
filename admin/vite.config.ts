@@ -11,6 +11,11 @@ const configDir = path.dirname(fileURLToPath(import.meta.url))
 export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), '') }
 
+  // The API dev proxy target is configurable so containerised runs (Base44 preview)
+  // can point at the API service instead of localhost. Unset keeps the local default.
+  const apiProxyTarget = process.env.VITE_BC_API_PROXY_TARGET || 'http://localhost:4002'
+  const previewHostDomain = process.env.BASE44_PREVIEW_MODE === '1' ? process.env.BASE44_SANDBOX_HOST_DOMAIN : undefined
+
   return defineConfig({
     // Keep Vite's regenerable optimizer cache on C: so the nearly-full D: project
     // drive can still serve the app without moving source or Docker data.
@@ -67,13 +72,14 @@ export default ({ mode }: { mode: string }) => {
       host: '0.0.0.0',
       port: Number.parseInt(process.env.VITE_PORT || '3001', 10),
       strictPort: true,
+      allowedHosts: previewHostDomain ? [`.${previewHostDomain}`] : undefined,
       proxy: {
         '/api': {
-          target: 'http://localhost:4002',
+          target: apiProxyTarget,
           changeOrigin: true,
         },
         '/cdn': {
-          target: 'http://localhost:4002',
+          target: apiProxyTarget,
           changeOrigin: true,
         },
       },

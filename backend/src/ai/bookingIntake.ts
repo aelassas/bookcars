@@ -60,12 +60,17 @@ const getDate = (text: string): string | null => {
 }
 
 const getDuration = (text: string): number | null => {
-  const match = text.match(/\b(?:for|over)\s+(\d+|one|two|three|four|five|six|seven)\s+days?\b/i)
+  // English ("for 4 days") and Roman Urdu ("4 din ke liye") duration phrases.
+  const match = text.match(/\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|ek|do|teen|char|chaar|panch|paanch|chhe|che|saat)\s*(?:days?|din|raat(?:ein)?|nights?)\b/i)
   if (!match) {
     return null
   }
-  const values: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7 }
-  return Number.isNaN(Number(match[1])) ? values[match[1].toLowerCase()] : Number(match[1])
+  const values: Record<string, number> = {
+    one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+    ek: 1, do: 2, teen: 3, char: 4, chaar: 4, panch: 5, paanch: 5, chhe: 6, che: 6, saat: 7,
+  }
+  const parsed = Number.isNaN(Number(match[1])) ? values[match[1].toLowerCase()] : Number(match[1])
+  return parsed && parsed > 0 ? Math.min(parsed, 30) : null
 }
 
 const getRentalType = (text: string): BookingIntakeRentalType => {
@@ -97,12 +102,18 @@ const getPaymentMethod = (text: string): string | null => {
   return match ? match[1].toLowerCase() : null
 }
 
+/** Today's date (YYYY-MM-DD) in the marketplace timezone. */
+const karachiToday = (): string => new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Karachi', year: 'numeric', month: '2-digit', day: '2-digit',
+}).format(new Date())
+
 export const extractBookingIntake = (originalRequest: string): BookingIntakeData => {
   const text = originalRequest.trim()
   const pickupLocation = getLocation(text)
   const dropoffLocation = pickupLocation ? getLocation(text, text.toLowerCase().indexOf(pickupLocation.toLowerCase()) + pickupLocation.length) : null
-  const startDate = getDate(text) || normalizeRelativeDate(text)
   const duration = getDuration(text)
+  // A duration-only prompt ("4 din ke liye") starts tomorrow so the planner still returns a usable window.
+  const startDate = getDate(text) || normalizeRelativeDate(text) || (duration ? addDays(karachiToday(), 1) : null)
   const endDate = startDate && duration ? addDays(startDate, duration) : null
   const rentalType = getRentalType(text)
   const chauffeurRequired = rentalType === 'chauffeur' || /\bchauffeur\b|\bwith driver\b/i.test(text)
@@ -145,7 +156,11 @@ export const extractBookingIntake = (originalRequest: string): BookingIntakeData
     dropoffLocation,
     startDate,
     endDate,
-    passengerCount: text.match(/\b(\d+)\s+(?:passengers?|people|persons?)\b/i)?.[1] ? Number(text.match(/\b(\d+)\s+(?:passengers?|people|persons?)\b/i)?.[1]) : null,
+    passengerCount: (() => {
+      const match = text.match(/\b(\d{1,2})\s+(?:passengers?|people|persons?|log|afraad|bande)\b/i)
+      const count = match ? Number(match[1]) : null
+      return count && count > 0 && count <= 20 ? count : null
+    })(),
     extras: [],
     paymentMethod: getPaymentMethod(text),
     rentalMode,

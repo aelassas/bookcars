@@ -84,11 +84,11 @@ export const normalizeRelativeDate = (text: string, now = new Date()): string | 
   const base = karachiDate(now)
   const lower = text.toLowerCase()
   let add = 0
-  if (/\btoday\b/.test(lower)) {
+  if (/\b(?:today|aaj)\b/.test(lower)) {
 add = 0
-} else if (/\bday after tomorrow\b/.test(lower)) {
+} else if (/\b(?:day after tomorrow|parson|parso)\b/.test(lower)) {
 add = 2
-} else if (/\btomorrow\b/.test(lower)) {
+} else if (/\b(?:tomorrow|kal)\b/.test(lower)) {
 add = 1
 } else {
     const inDays = lower.match(/\bin\s+(\d{1,2})\s+days?\b/)
@@ -109,7 +109,7 @@ add += 7
       }
     }
   }
-  if (!/\btoday\b/.test(lower) && !add) {
+  if (!/\b(?:today|aaj)\b/.test(lower) && !add) {
 return null
 }
   base.setDate(base.getDate() + add)

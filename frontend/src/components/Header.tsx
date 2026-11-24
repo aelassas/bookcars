@@ -371,6 +371,11 @@ const Header = ({
                     }}>Listings</Button>
                     <Button onClick={() => navigate('/locations')}>Locations</Button>
                     <Button onClick={() => navigate('/faq')}>How it works</Button>
+                    {env.ADMIN_HOST && (
+                      <Button href={env.ADMIN_HOST} className="sr-portal-switch" title="Open the Operations Admin & Supplier Portal">
+                        Operations Portal
+                      </Button>
+                    )}
                   </nav>
 
                   {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
