@@ -52,6 +52,7 @@ import { strings } from '@/lang/header'
 import { strings as commonStrings } from '@/lang/common'
 import * as UserService from '@/services/UserService'
 import SafarRentLogo from '@/components/SafarRentLogo'
+import RoleSwitchNav from '@/components/RoleSwitchNav'
 import ThemeToggle from '@/components/ThemeToggle'
 import * as BankDetailsService from '@/services/BankDetailsService'
 import Avatar from './Avatar'
@@ -653,26 +654,7 @@ return true
               </Button>
             )}
 
-            {env.FRONTEND_HOST && (
-              <Button
-                variant="outlined"
-                size="small"
-                href={env.FRONTEND_HOST}
-                title="Open the Customer Storefront"
-                sx={{
-                  borderColor: 'var(--sr-border, #CBD5E1)',
-                  color: 'var(--sr-text, #334155)',
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  fontSize: 12,
-                  borderRadius: '8px',
-                  height: 32,
-                  display: { xs: 'none', md: 'inline-flex' }
-                }}
-              >
-                Customer Storefront
-              </Button>
-            )}
+            <RoleSwitchNav />
 
             <ThemeToggle />
 

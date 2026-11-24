@@ -49,6 +49,7 @@ import { strings } from '@/lang/header'
 import * as UserService from '@/services/UserService'
 import * as PaymentService from '@/services/PaymentService'
 import SafarRentLogo from '@/components/SafarRentLogo'
+import RoleSwitchNav from '@/components/RoleSwitchNav'
 import ThemeToggle from '@/components/ThemeToggle'
 import Avatar from './Avatar'
 import * as langHelper from '@/utils/langHelper'
@@ -371,18 +372,18 @@ const Header = ({
                     }}>Listings</Button>
                     <Button onClick={() => navigate('/locations')}>Locations</Button>
                     <Button onClick={() => navigate('/faq')}>How it works</Button>
-                    {env.ADMIN_HOST && (
-                      <Button href={env.ADMIN_HOST} className="sr-portal-switch" title="Open the Operations Admin & Supplier Portal">
-                        Operations Portal
-                      </Button>
-                    )}
                   </nav>
+
+                  <RoleSwitchNav className="sr-role-switch-nav" />
 
                   {!env.isMobile && headerTitle && <div className="header-title">{headerTitle}</div>}
                 </>
               )}
 
               <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu side-menu">
+                <div className="sr-role-switch-drawer-wrap">
+                  <RoleSwitchNav className="sr-role-switch-drawer" />
+                </div>
                 <List sx={classes.list}>
                   <ListItemButton
                     onClick={() => {

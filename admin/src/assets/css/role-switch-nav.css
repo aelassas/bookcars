@@ -1,0 +1,51 @@
+/* Customer ⇄ Supplier role switch shown in the SafarRent console top bar. */
+.sr-role-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.16);
+  border: 1px solid var(--sr-border, #E2E8F0);
+}
+
+.sr-role-switch-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  color: var(--sr-muted, #64748B);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease;
+}
+
+.sr-role-switch-item:hover {
+  background: rgba(148, 163, 184, 0.22);
+  color: var(--sr-text, #0F172A);
+}
+
+.sr-role-switch-item.is-active,
+.sr-role-switch-item.is-active:hover {
+  background: #107487;
+  color: #FFFFFF;
+}
+
+.sr-role-switch-item svg {
+  font-size: 15px;
+}
+
+@media (max-width: 900px) {
+  .sr-role-switch-text {
+    display: none;
+  }
+
+  .sr-role-switch-item {
+    padding: 6px 9px;
+  }
+}

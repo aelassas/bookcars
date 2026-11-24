@@ -1,0 +1,70 @@
+/* Customer ⇄ Supplier role switch shown in the SafarRent top bar. */
+.sr-role-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.sr-role-switch-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  color: rgba(245, 245, 247, 0.72);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease;
+}
+
+.sr-role-switch-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #F5F5F7;
+}
+
+.sr-role-switch-item.is-active,
+.sr-role-switch-item.is-active:hover {
+  background: #E8890C;
+  color: #111111;
+}
+
+.sr-role-switch-item svg {
+  font-size: 15px;
+}
+
+/* Drawer placement keeps the labels and fills the drawer width. */
+.sr-role-switch-drawer-wrap {
+  padding: 16px 16px 4px;
+}
+
+.sr-role-switch-drawer {
+  display: flex;
+  width: 100%;
+}
+
+.sr-role-switch-drawer .sr-role-switch-item {
+  flex: 1;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .sr-role-switch-text {
+    display: none;
+  }
+
+  .sr-role-switch-item {
+    padding: 6px 9px;
+  }
+
+  .sr-role-switch-drawer .sr-role-switch-text {
+    display: inline;
+  }
+}
