@@ -6,6 +6,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { rental, customer, vehicle, document, company, tenant } from "@/platform/db/schema";
 import { eq } from "drizzle-orm";
 import { buildRentalContractPdf, type RentalContractPdfData } from "@/lib/pdf/rental-contract";
+import { rentalPricingDays } from "@/modules/rental/pricing";
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
@@ -117,7 +118,7 @@ export async function POST(
         totalDays: row.r.totalDays,
         dailyRate: row.r.dailyRate,
         deposit: row.r.deposit,
-        rentalSubtotal: row.r.dailyRate * row.r.totalDays,
+        rentalSubtotal: row.r.dailyRate * rentalPricingDays(row.r.totalDays),
         returnRemarks: row.r.damageNotes ?? null,
       };
 

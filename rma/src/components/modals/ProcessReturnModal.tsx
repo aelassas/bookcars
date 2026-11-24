@@ -23,6 +23,7 @@ export function ProcessReturnModal({
     id: string;
     returnDate: Date | null;
     dailyRate: number;
+    totalDays: number;
     balanceDue: number;
     dailyMileageLimitKm?: number | null;
     startOdometer?: number | null;
@@ -47,8 +48,9 @@ export function ProcessReturnModal({
       returnDate: rental.returnDate,
       actualReturnDate: new Date(actualReturnDate),
       dailyRate: rental.dailyRate,
+      totalDays: rental.totalDays,
     }).lateFee;
-  }, [actualReturnDate, rental.returnDate, rental.dailyRate]);
+  }, [actualReturnDate, rental.returnDate, rental.dailyRate, rental.totalDays]);
 
   const totalExtra = lateFee + (Number(extraCharge) || 0);
   const newBalance = rental.balanceDue + totalExtra;

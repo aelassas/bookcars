@@ -28,6 +28,7 @@ import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { calculateMileageUsage } from "@/modules/rental/mileage";
 import { calculateReturnCharges } from "@/modules/rental/return-charges";
+import { rentalPricingDays } from "@/modules/rental/pricing";
 import {
   Play,
   RotateCcw,
@@ -276,6 +277,7 @@ export function RentalDetail({
         returnDate: r.returnDate,
         actualReturnDate: r.actualReturnDate,
         dailyRate: r.dailyRate,
+        totalDays: r.totalDays,
         extraChargeAmount: r.extraChargeAmount ?? 0,
       })
     : { extraDays: 0, lateFee: 0 };
@@ -305,6 +307,7 @@ export function RentalDetail({
             id: r.id,
             returnDate: r.returnDate,
             dailyRate: r.dailyRate,
+            totalDays: r.totalDays,
             balanceDue: r.balanceDue,
             dailyMileageLimitKm: r.dailyMileageLimitKm,
             startOdometer: r.startOdometer,
@@ -404,7 +407,7 @@ export function RentalDetail({
         <Card>
           <CardHeader title="Financials" icon={<Wallet className="h-3.5 w-3.5" />} />
           <dl className="space-y-3 p-4 text-sm">
-            <Row label="Rent subtotal" value={formatCurrency(r.dailyRate * r.totalDays)} />
+            <Row label="Rent subtotal" value={formatCurrency(r.dailyRate * rentalPricingDays(r.totalDays))} />
             <Row label="Deposit" value={formatCurrency(r.deposit)} />
             <Row label="Total incl. deposit" value={formatCurrency(r.total)} />
             <Row

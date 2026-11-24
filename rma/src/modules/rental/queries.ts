@@ -6,6 +6,7 @@ import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { eq, desc, sql, and, ne, lte, gte, or } from "drizzle-orm";
 import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
+import { rentalPricingDays } from "./pricing";
 
 export async function getRentals(tenantId: string) {
   await canManageRentalsForTenant(tenantId);
@@ -225,9 +226,10 @@ export async function getRentalQuote(
     try {
       const q = await quoteRental(tx, home, vehicleId, days, channel);
       const deposit = q.deposit ?? 0;
+      const subtotal = q.dailyRate * rentalPricingDays(days);
       return {
         ok: true as const,
-        quote: { dailyRate: q.dailyRate, days, subtotal: q.subtotal, deposit, total: q.subtotal + deposit, channel },
+        quote: { dailyRate: q.dailyRate, days, subtotal, deposit, total: subtotal + deposit, channel },
       };
     } catch {
       return {

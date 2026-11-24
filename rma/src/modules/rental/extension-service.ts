@@ -4,6 +4,7 @@ import { and, eq, gte, inArray, lte, ne, or } from "drizzle-orm";
 import { auditEvent, rental, vehicleTimelineEvent } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { booking as legacyBooking } from "@/platform/db/rental-extras";
+import { rentalAdditionalPricingDays } from "./pricing";
 
 export async function confirmRentalExtensionForTenant(home: string, actorId: string | null, rentalId: string, newReturnDate: Date): Promise<void> {
   await withDrizzleTenant(home, async (tx) => {
@@ -29,10 +30,12 @@ export async function confirmRentalExtensionForTenant(home: string, actorId: str
     )).limit(1);
     if (legacyOverlap) throw new Error("An imported calendar booking overlaps the extension period");
     const extraDays = Math.max(1, Math.ceil((newReturnDate.getTime() - current.returnDate.getTime()) / 86_400_000));
-    const extraTotal = extraDays * current.dailyRate;
+    const nextTotalDays = current.totalDays + extraDays;
+    const extraPricedDays = rentalAdditionalPricingDays(current.totalDays, nextTotalDays);
+    const extraTotal = extraPricedDays * current.dailyRate;
     await tx.update(rental).set({
       returnDate: newReturnDate,
-      totalDays: current.totalDays + extraDays,
+      totalDays: nextTotalDays,
       total: current.total + extraTotal,
       balanceDue: current.balanceDue + extraTotal,
       extensionStatus: "extension_confirmed",
@@ -48,7 +51,7 @@ export async function confirmRentalExtensionForTenant(home: string, actorId: str
       action: "rental.extension.confirmed",
       entityType: "rental",
       entityId: rentalId,
-      intent: `Manager extended return to ${newReturnDate.toISOString()}; ${extraDays} paid days and ${extraTotal} AED added`,
+      intent: `Manager extended return to ${newReturnDate.toISOString()}; ${extraDays} calendar days extended, ${extraPricedDays} paid days and ${extraTotal} AED added`,
     });
   });
 }

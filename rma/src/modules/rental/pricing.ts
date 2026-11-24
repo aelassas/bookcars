@@ -2,6 +2,14 @@ import type { Channel } from "@/platform/db/rental-extras";
 
 export type CustomerType = "tourist" | "resident";
 
+export function rentalPricingDays(totalDays: number): number {
+  return totalDays >= 28 && totalDays <= 31 ? 30 : totalDays;
+}
+
+export function rentalAdditionalPricingDays(currentTotalDays: number, nextTotalDays: number): number {
+  return rentalPricingDays(nextTotalDays) - rentalPricingDays(currentTotalDays);
+}
+
 export function defaultDeposit(customerType: CustomerType, tierDeposit?: number | null) {
   return customerType === "resident" ? 0 : tierDeposit ?? 1500;
 }

@@ -21,6 +21,7 @@ type ReturnRow = {
     returnDate: Date | null;
     status: string;
     dailyRate: number;
+    totalDays: number;
     balanceDue: number;
     /** Present on upcoming rows — drives the fines badge (checked? how much?). */
     returnChecklist?: { fines?: { checked: boolean; amount?: number | null } | null } | null;
@@ -126,6 +127,7 @@ export default function ReturnsToday({
             id: returnRental.rental.id,
             returnDate: returnRental.rental.returnDate,
             dailyRate: returnRental.rental.dailyRate,
+            totalDays: returnRental.rental.totalDays,
             balanceDue: returnRental.rental.balanceDue,
           }}
           onClose={() => setReturnRental(null)}

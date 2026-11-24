@@ -289,6 +289,7 @@ export default function RentalsList({
             id: returnRental.rental.id,
             returnDate: returnRental.rental.returnDate,
             dailyRate: returnRental.rental.dailyRate,
+            totalDays: returnRental.rental.totalDays,
             balanceDue: returnRental.rental.balanceDue,
             dailyMileageLimitKm: returnRental.rental.dailyMileageLimitKm,
             startOdometer: returnRental.rental.startOdometer,

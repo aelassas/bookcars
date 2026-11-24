@@ -27,6 +27,21 @@ describe("return charges", () => {
       dailyRate: 500,
     })).toEqual({ extraDays: 0, lateFee: 0, extraChargeAmount: 0, totalExtra: 0 });
   });
+
+  it("normalizes late fees to the 30-day monthly price", () => {
+    expect(calculateReturnCharges({
+      returnDate: new Date("2026-11-10T12:00:00Z"),
+      actualReturnDate: new Date("2026-11-13T12:00:00Z"),
+      dailyRate: 500,
+      totalDays: 28,
+    })).toEqual({ extraDays: 3, lateFee: 0, extraChargeAmount: 0, totalExtra: 0 });
+    expect(calculateReturnCharges({
+      returnDate: new Date("2026-11-10T12:00:00Z"),
+      actualReturnDate: new Date("2026-11-14T12:00:00Z"),
+      dailyRate: 500,
+      totalDays: 28,
+    })).toEqual({ extraDays: 4, lateFee: 1000, extraChargeAmount: 0, totalExtra: 1000 });
+  });
 });
 
 describe("customer rating", () => {

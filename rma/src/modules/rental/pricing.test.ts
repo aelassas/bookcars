@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveRentalPricing } from "./pricing";
+import { rentalAdditionalPricingDays, rentalPricingDays, resolveRentalPricing } from "./pricing";
 
 describe("rental pricing", () => {
   it("uses the matching tier by default", () => {
@@ -36,5 +36,16 @@ describe("rental pricing", () => {
 
   it.each([0, -1, 1.5, NaN])("rejects invalid manual rate %s", (manualDailyRate) => {
     expect(() => resolveRentalPricing({ totalDays: 2, channel: "b2c", tierDailyRate: 500, manualDailyRate })).toThrow("positive whole number");
+  });
+
+  it("charges every 28–31 day rental as 30 days without changing actual rental days", () => {
+    expect([27, 28, 29, 30, 31, 32].map(rentalPricingDays)).toEqual([27, 30, 30, 30, 30, 32]);
+  });
+
+  it("charges extensions only for days outside the normalized monthly period", () => {
+    expect(rentalAdditionalPricingDays(28, 31)).toBe(0);
+    expect(rentalAdditionalPricingDays(28, 32)).toBe(2);
+    expect(rentalAdditionalPricingDays(30, 31)).toBe(0);
+    expect(rentalAdditionalPricingDays(30, 32)).toBe(2);
   });
 });

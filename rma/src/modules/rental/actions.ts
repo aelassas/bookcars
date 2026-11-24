@@ -20,7 +20,7 @@ import { isBookingBasis } from "./booking";
 import { parseTarsDocumentNumber } from "@/platform/integrations/tars/handoff";
 import { calculateMileageUsage } from "./mileage";
 import { assertValidCustomerRating, calculateReturnCharges } from "./return-charges";
-import { resolveRentalPricing, type CustomerType } from "./pricing";
+import { resolveRentalPricing, rentalPricingDays, type CustomerType } from "./pricing";
 
 function daysBetween(a: Date, b: Date) {
   const ms = b.getTime() - a.getTime();
@@ -176,6 +176,7 @@ export async function processReturn(
       returnDate: current.returnDate,
       actualReturnDate,
       dailyRate: current.dailyRate,
+      totalDays: current.totalDays,
       extraChargeAmount: data.extraChargeAmount ?? 0,
     });
 
@@ -625,7 +626,7 @@ export async function moveRentalDates(
     if (clashLegacy.length > 0) return { ok: false, error: "Overlaps an imported (sheet) booking" };
 
     const totalDays = Math.max(1, Math.round((returnDate.getTime() - start.getTime()) / 86_400_000));
-    const total = r.dailyRate * totalDays + (r.deposit ?? 0);
+    const total = r.dailyRate * rentalPricingDays(totalDays) + (r.deposit ?? 0);
     // Keep the amount already paid fixed and re-derive the debt — before this,
     // a drag changed `total` but left `balanceDue` stale.
     const alreadyPaid = r.total - r.balanceDue;
@@ -803,7 +804,7 @@ async function createRentalFromQuoteImpl(
       manualDailyRate: data.manualDailyRate,
       manualDeposit: data.manualDeposit,
     });
-    const subtotal = dailyRate * totalDays;
+    const subtotal = dailyRate * rentalPricingDays(totalDays);
     const total = subtotal + deposit;
 
     // 3) Deal → rental link: validate the deal and inherit its lead linkage.
@@ -867,8 +868,8 @@ async function createRentalFromQuoteImpl(
       // Mention the deal only when it was actually linked (sales/home path) —
       // on the rent path the column stays NULL and the audit must not claim it.
       intent: pricedFromTier
-        ? `Created rental from live quote: ${dailyRate} AED × ${totalDays}d (${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`
-        : `Created rental with CUSTOM rate: ${dailyRate} AED × ${totalDays}d (${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`,
+        ? `Created rental from live quote: ${dailyRate} AED × ${rentalPricingDays(totalDays)}d priced (actual ${totalDays}d, ${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`
+        : `Created rental with CUSTOM rate: ${dailyRate} AED × ${rentalPricingDays(totalDays)}d priced (actual ${totalDays}d, ${channel}, ${customerType}) + deposit ${deposit} AED = ${total} AED${linkedDealId ? ` — from deal ${linkedDealId}` : ""}`,
     });
 
     if (tenantSlug) {
