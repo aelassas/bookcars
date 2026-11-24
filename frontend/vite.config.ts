@@ -14,7 +14,7 @@ export default ({ mode }: { mode: string }) => {
   return defineConfig({
     // Keep Vite's regenerable optimizer cache on C: so the nearly-full D: project
     // drive can still serve the app without moving source or Docker data.
-    cacheDir: path.resolve(process.env.TEMP || 'C:/Temp', 'safarrent-vite-cache-frontend'),
+    cacheDir: path.resolve(configDir, 'node_modules/.vite-cache'),
     // Emotion's isolated entry imports this CommonJS package. Include it by its
     // package name so Vite 8/Rolldown rewrites the CJS default import to ESM.
     optimizeDeps: {
@@ -80,17 +80,17 @@ return null
 
     server: {
       host: '0.0.0.0',
-      port: Number.parseInt(process.env.VITE_PORT || '3002', 10),
-      watch: {
-        usePolling: true,
-        interval: 500,
-      },
-      hmr: {
-        protocol: 'ws',
-        // Let Vite use the hostname the browser used. This keeps phone HMR on the laptop LAN IP.
-        host: process.env.VITE_HMR_HOST || undefined,
-        port: Number.parseInt(process.env.VITE_HMR_PORT || '8080', 10),
-        clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '8080', 10),
+      port: Number.parseInt(process.env.VITE_PORT || '8080', 10),
+      strictPort: true,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:4002',
+          changeOrigin: true,
+        },
+        '/cdn': {
+          target: 'http://localhost:4002',
+          changeOrigin: true,
+        },
       },
     },
 

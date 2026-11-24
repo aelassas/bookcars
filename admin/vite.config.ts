@@ -14,7 +14,7 @@ export default ({ mode }: { mode: string }) => {
   return defineConfig({
     // Keep Vite's regenerable optimizer cache on C: so the nearly-full D: project
     // drive can still serve the app without moving source or Docker data.
-    cacheDir: path.resolve(process.env.TEMP || 'C:/Temp', 'safarrent-vite-cache-admin'),
+    cacheDir: path.resolve(configDir, 'node_modules/.vite-cache'),
     // Emotion ships an isolated HNRS entry that imports this CommonJS module.
     // Prebundle Emotion and its CommonJS dependency so the browser receives ESM.
     optimizeDeps: {
@@ -66,15 +66,16 @@ export default ({ mode }: { mode: string }) => {
     server: {
       host: '0.0.0.0',
       port: Number.parseInt(process.env.VITE_PORT || '3001', 10),
-      watch: {
-        usePolling: true,
-        interval: 500,
-      },
-      hmr: {
-        protocol: 'ws',
-        host: process.env.VITE_HMR_HOST || undefined,
-        port: Number.parseInt(process.env.VITE_HMR_PORT || '3001', 10),
-        clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || '3001', 10),
+      strictPort: true,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:4002',
+          changeOrigin: true,
+        },
+        '/cdn': {
+          target: 'http://localhost:4002',
+          changeOrigin: true,
+        },
       },
     },
     build: {

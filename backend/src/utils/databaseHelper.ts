@@ -19,6 +19,8 @@ import * as databaseTTLHelper from './databaseTTLHelper'
 import * as databaseLangHelper from './databaseLangHelper'
 import * as settingController from '../controllers/settingController'
 
+let mongoMemoryServer: { getUri: () => Promise<string>, stop: () => Promise<void> } | null = null
+
 /**
  * Tracks the current database connection status to prevent redundant connections.
  * Set to true after a successful connection is established via `connect()`,
@@ -54,9 +56,25 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
   mongoose.set('autoIndex', process.env.NODE_ENV !== 'production')
   mongoose.Promise = globalThis.Promise
 
+  let effectiveUri = uri
+
+  // If no DB URI is configured, auto-start an embedded in-memory MongoDB
+  if (!effectiveUri || effectiveUri.trim() === '') {
+    try {
+      const { MongoMemoryServer } = await import('mongodb-memory-server')
+      logger.info('No BC_DB_URI configured — starting embedded in-memory MongoDB…')
+      mongoMemoryServer = await MongoMemoryServer.create({ instance: { storageEngine: 'wiredTiger' } })
+      effectiveUri = await mongoMemoryServer.getUri()
+      logger.info(`In-memory MongoDB started at ${effectiveUri}`)
+    } catch (err) {
+      logger.error('Failed to start in-memory MongoDB:', err instanceof Error ? err.message : err)
+      return false
+    }
+  }
+
   try {
-    await mongoose.connect(uri, options)
-    await mongoose.connection.asPromise() // Explicitly wait for connection to be open
+    await mongoose.connect(effectiveUri, options)
+    await mongoose.connection.asPromise()
     logger.info('Database connected')
     isConnected = true
     return true
@@ -76,6 +94,10 @@ export const connect = async (uri: string, ssl: boolean, debug: boolean): Promis
 export const close = async (force = false): Promise<void> => {
   await mongoose.connection.close(force)
   isConnected = false
+  if (mongoMemoryServer) {
+    await mongoMemoryServer.stop()
+    mongoMemoryServer = null
+  }
   logger.info('Database connection closed')
 }
 

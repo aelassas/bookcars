@@ -233,7 +233,7 @@ export const X_ACCESS_TOKEN = 'x-access-token'
  *
  * @type {string}
  */
-export const JWT_SECRET = __env__('BC_JWT_SECRET', true)
+export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'safarrent-bolt-demo-jwt-secret-2026-very-long')
 
 /**
  * JWT expiration in seconds. Default is 86400 seconds (1 day).
@@ -254,35 +254,35 @@ export const TOKEN_EXPIRE_AT = Number.parseInt(__env__('BC_TOKEN_EXPIRE_AT', fal
  *
  * @type {string}
  */
-export const SMTP_HOST = __env__('BC_SMTP_HOST', true)
+export const SMTP_HOST = __env__('BC_SMTP_HOST', false)
 
 /**
  * SMTP port.
  *
  * @type {number}
  */
-export const SMTP_PORT = Number.parseInt(__env__('BC_SMTP_PORT', true), 10)
+export const SMTP_PORT = Number.parseInt(__env__('BC_SMTP_PORT', false, '587'), 10)
 
 /**
  * SMTP username.
  *
  * @type {string}
  */
-export const SMTP_USER = __env__('BC_SMTP_USER', true)
+export const SMTP_USER = __env__('BC_SMTP_USER', false)
 
 /**
  * SMTP password.
  *
  * @type {string}
  */
-export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
+export const SMTP_PASS = __env__('BC_SMTP_PASS', false)
 
 /**
  * SMTP from email.
  *
  * @type {string}
  */
-export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
+export const SMTP_FROM = __env__('BC_SMTP_FROM', false, 'no-reply@safarrent.pk')
 
 /**
  * Recipient for public contact and newsletter submissions.
@@ -311,84 +311,84 @@ export const CDN_ROOT = __env__('BC_CDN_ROOT', false, '/var/www/cdn')
  *
  * @type {string}
  */
-export const CDN_USERS = __env__('BC_CDN_USERS', true)
+export const CDN_USERS = __env__('BC_CDN_USERS', false, '/home/project/backend/cdn/safarrent/users')
 
 /**
  * Users' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', true)
+export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', false, '/home/project/backend/cdn/safarrent/temp/users')
 
 /**
  * Cars' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_CARS = __env__('BC_CDN_CARS', true)
+export const CDN_CARS = __env__('BC_CDN_CARS', false, '/home/project/backend/cdn/safarrent/cars')
 
 /**
  * Cars' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
+export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', false, '/home/project/backend/cdn/safarrent/temp/cars')
 
 /**
  * Locations' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', true)
+export const CDN_LOCATIONS = __env__('BC_CDN_LOCATIONS', false, '/home/project/backend/cdn/safarrent/locations')
 
 /**
  * Locations' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', true)
+export const CDN_TEMP_LOCATIONS = __env__('BC_CDN_TEMP_LOCATIONS', false, '/home/project/backend/cdn/safarrent/temp/locations')
 
 /**
  * Contracts' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', true)
+export const CDN_CONTRACTS = __env__('BC_CDN_CONTRACTS', false, '/home/project/backend/cdn/safarrent/contracts')
 
 /**
  * Contracts' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', true)
+export const CDN_TEMP_CONTRACTS = __env__('BC_CDN_TEMP_CONTRACTS', false, '/home/project/backend/cdn/safarrent/temp/contracts')
 
 /**
  * Licenses' cdn folder path.
  *
  * @type {string}
  */
-export const CDN_LICENSES = __env__('BC_CDN_LICENSES', true)
+export const CDN_LICENSES = __env__('BC_CDN_LICENSES', false, '/home/project/backend/cdn/safarrent/licenses')
 
 /**
  * Licenses' temp cdn folder path.
  *
  * @type {string}
  */
-export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', true)
+export const CDN_TEMP_LICENSES = __env__('BC_CDN_TEMP_LICENSES', false, '/home/project/backend/cdn/safarrent/temp/licenses')
 
 /**
  * Admin host.
  *
  * @type {string}
  */
-export const ADMIN_HOST = __env__('BC_ADMIN_HOST', true)
+export const ADMIN_HOST = __env__('BC_ADMIN_HOST', false, 'http://localhost:3001')
 
 /**
  * Frontend host.
  *
  * @type {string}
  */
-export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', true)
+export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', false, 'http://localhost:8080')
 
 /**
  * Default language. Default is en. Available options: en, fr, es.

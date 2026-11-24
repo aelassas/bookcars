@@ -34,11 +34,11 @@ const createTransporter = async (): Promise<nodemailer.Transporter> => {
           pass: testAccount.pass,
         },
       }
-    } else {
+    } else if (env.SMTP_HOST) {
       transporterOptions = {
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
-        secure: env.SMTP_PORT === 465, // true for 465 (Implicit TLS), false for other ports (STARTTLS)
+        secure: env.SMTP_PORT === 465,
         auth: {
           user: env.SMTP_USER,
           pass: env.SMTP_PASS,
@@ -47,13 +47,16 @@ const createTransporter = async (): Promise<nodemailer.Transporter> => {
         maxConnections: 5, // Max simultaneous connections to the server
         maxMessages: 100, // Max messages to send per connection
       }
+    } else {
+      transporterOptions = { jsonTransport: true }
     }
 
     const transporter = nodemailer.createTransport(transporterOptions)
-    
-    // Verify connection on startup to catch config errors early
-    await transporter.verify()
-    
+
+    if (env.SMTP_HOST) {
+      await transporter.verify()
+    }
+
     return transporter
   })()
 

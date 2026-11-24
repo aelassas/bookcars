@@ -55,7 +55,7 @@ const start = async (): Promise<void> => {
       process.exit(1)
     }
 
-    if (env.FYP_DEMO_MODE && process.env.NODE_ENV === 'development') {
+    if (env.FYP_DEMO_MODE) {
       const carCount = await mongoose.connection.collection('Car').countDocuments()
       if (carCount === 0) {
         logger.info('FYP demo mode: Car collection is empty. Running Pakistani demo seeder.')

@@ -341,7 +341,7 @@ export const getBookingIntakeProvider = (): BookingIntakeProvider => {
   if (provider === 'ollama') {
     return ollamaProvider
   }
-  if (provider === 'mock' && process.env.NODE_ENV === 'test') {
+  if (provider === 'mock') {
     return testProvider
   }
   throw new Error(`Unsupported AI provider: ${provider}`)

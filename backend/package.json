@@ -42,6 +42,7 @@
     "i18n-js": "^4.5.4",
     "ioredis": "^6.0.0",
     "jose": "^6.2.15",
+    "mongodb-memory-server": "^11.4.0",
     "mongoose": "^9.11.4",
     "multer": "^2.5.0",
     "nanoid": "^6.0.2",
