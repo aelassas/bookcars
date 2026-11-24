@@ -262,6 +262,8 @@ const UpdateBooking = () => {
         return
       }
 
+      setLoading(true)
+
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
         supplier: data.supplier?._id!,
@@ -316,6 +318,8 @@ const UpdateBooking = () => {
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
