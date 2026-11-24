@@ -191,3 +191,13 @@ Commits `75ea6487` and `64c0dc0c` add open-ended rentals using the existing `ren
 - Production rows marked after review: `cb6f6cb3-8f7a-456b-877e-e1c42620c34d` (C 82118), `e383a5fe-82a0-4892-b80a-3a076e084e9a` (E 35092), and `da875d96-fa26-4659-9a06-8273a84cabff` (Y 70946). Each has an audit event.
 - Migration backup: `/root/rma-backups/pre-long-term-0090-20261121-145059.sql.gz` (gzip integrity checked).
 - A transactional overlap test was rejected by `rental_no_overlap_active`. Production browser verification showed all three rentals as `Long-term`; the E 35092 detail reads `Dates 2026-05-16 → open-ended` and `Status long-term`. The temporary browser user was removed afterward.
+
+## 8. Monthly pricing normalized to 30 days
+
+Commit `dc797498` normalizes pricing for actual rental durations of 28–31 days to **30 paid days**.
+
+- `rental.total_days` remains the actual duration for calendar display and mileage. The 150 km/day allowance and the 4,500 km monthly allowance are unchanged.
+- `rentalPricingDays()` is shared by creation, live quotes, rescheduling, rental financials and the contract PDF subtotal.
+- Extensions inside the normalized window add no extra charge. For example, extending 28 to 31 days adds zero; extending 28 to 32 adds two paid days.
+- Late fees use the same normalized delta. Existing financial rows were not backfilled; the rule applies to new and subsequently changed operations.
+- Validation: 32 targeted tests passed, including 28/30/31-day pricing, extension deltas and late fees. Local and production Next.js builds passed.
