@@ -16,3 +16,4 @@
 # Local CDN file storage (runtime data)
 /cdn/
 frontend/public/safarrent-hero-4k.mp4
+.env
