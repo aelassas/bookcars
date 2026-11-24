@@ -273,9 +273,12 @@ event.currentTarget.play().catch(() => {})
                         onClick={() => {
                           const matchedLoc = locations.find((l) => (l.name || '').toLowerCase().includes((tripDraft.extractedData.pickupLocation || '').toLowerCase()))
                           const pickupId = matchedLoc?._id || (locations[0]?._id)
+                          // Prefer the dates the parser extracted; fall back to a 3-day window from tomorrow.
+                          const parsedFrom = tripDraft.extractedData.startDate ? new Date(`${tripDraft.extractedData.startDate}T10:00:00`) : null
+                          const parsedTo = tripDraft.extractedData.endDate ? new Date(`${tripDraft.extractedData.endDate}T10:00:00`) : null
                           const now = new Date()
-                          const fromDate = new Date(now.setDate(now.getDate() + 1))
-                          const toDate = new Date(now.setDate(now.getDate() + 4))
+                          const fromDate = parsedFrom || new Date(now.setDate(now.getDate() + 1))
+                          const toDate = parsedTo || new Date(now.setDate(now.getDate() + 4))
                           navigate('/search', {
                             state: {
                               pickupLocationId: pickupId,

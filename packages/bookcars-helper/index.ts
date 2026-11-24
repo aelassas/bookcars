@@ -505,6 +505,8 @@ export const getAllFuelPolicies = () => [
   bookcarsTypes.FuelPolicy.LikeForLike,
   bookcarsTypes.FuelPolicy.FullToFull,
   bookcarsTypes.FuelPolicy.FullToEmpty,
+  bookcarsTypes.FuelPolicy.TankToTank,
+  bookcarsTypes.FuelPolicy.SameToSame,
 ]
 
 /**

@@ -22,6 +22,7 @@ import SocialLogin from '@/components/SocialLogin'
 import Footer from '@/components/Footer'
 import { schema, FormFields } from '@/models/SignInForm'
 import PasswordInput from '@/components/PasswordInput'
+import QuickDemoFill, { DEMO_PASSWORD, DemoAccount } from '@/components/QuickDemoFill'
 
 import '@/assets/css/signin.css'
 
@@ -72,6 +73,14 @@ const SignIn = () => {
     } catch {
       signinError()
     }
+  }
+
+  // One-click demo sign-in: fills the seeded demo credentials and submits the form.
+  const fillDemoAccount = (account: DemoAccount) => {
+    clearErrors()
+    setValue('email', account.email, { shouldValidate: true })
+    setValue('password', DEMO_PASSWORD, { shouldValidate: true })
+    void handleSubmit(onSubmit)()
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
@@ -160,6 +169,8 @@ const SignIn = () => {
             </div>
 
             <SocialLogin />
+
+            <QuickDemoFill onSelect={fillDemoAccount} disabled={isSubmitting} />
 
             <div className="signin-buttons">
               <Button variant="outlined" color="primary" onClick={() => navigate('/sign-up')} className="btn-margin btn-margin-bottom">

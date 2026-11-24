@@ -19,7 +19,9 @@ import * as databaseTTLHelper from './databaseTTLHelper'
 import * as databaseLangHelper from './databaseLangHelper'
 import * as settingController from '../controllers/settingController'
 
-let mongoMemoryServer: { getUri: () => Promise<string>, stop: () => Promise<void> } | null = null
+type MemoryServer = { getUri: () => string | Promise<string>, stop: () => Promise<unknown> }
+
+let mongoMemoryServer: MemoryServer | null = null
 
 /**
  * Tracks the current database connection status to prevent redundant connections.

@@ -114,12 +114,15 @@ async function run() {
   }
 
   const customerSpecs = [
-    ['demo-customer@safarrent.local','FYP Demo Customer','Islamabad','35202-1234567-1'], ['demo-customer-lahore@safarrent.local','Lahore Demo Customer','Lahore','35202-7654321-2'], ['demo-customer-isb@safarrent.local','Islamabad Demo Customer','Islamabad','61101-1234567-3'], ['demo-customer-khi@safarrent.local','Karachi Demo Customer','Karachi','42101-7654321-4']
+    ['demo-customer@safarrent.local','FYP Demo Customer','Islamabad','35202-1234567-1'], ['demo-customer-lahore@safarrent.local','Lahore Demo Customer','Lahore','35202-7654321-2'], ['demo-customer-isb@safarrent.local','Islamabad Demo Customer','Islamabad','61101-1234567-3'], ['demo-customer-khi@safarrent.local','Karachi Demo Customer','Karachi','42101-7654321-4'],
+    // Left unverified so the admin KYC queue and the self-drive KYC gate can be demonstrated.
+    ['demo-customer-new@safarrent.local','New Demo Customer','Islamabad','','PENDING']
   ]
   const customers = {}
-  for (const [email, name, location, cnic] of customerSpecs) {
+  for (const [email, name, location, cnic, kycStatus] of customerSpecs) {
     let user = await User.findOne({ email })
-    const fields = { fullName: name, email, phone: '03005550201', password: await hashDemoPassword(), location, type: 'user', active: true, verified: true, verifiedAt: new Date(), cnicNumber: cnic, drivingLicenseNumber: 'PK-DL-DEMO-001', kycStatus: 'VERIFIED', payLater: true }
+    const pendingKyc = kycStatus === 'PENDING'
+    const fields = { fullName: name, email, phone: '03005550201', password: await hashDemoPassword(), location, type: 'user', active: true, verified: true, verifiedAt: new Date(), cnicNumber: cnic || undefined, drivingLicenseNumber: pendingKyc ? undefined : 'PK-DL-DEMO-001', kycStatus: kycStatus || 'VERIFIED', payLater: true }
     if (!user) user = await User.create(fields)
 
     customers[email] = user

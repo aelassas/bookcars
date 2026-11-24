@@ -104,6 +104,7 @@ const env = {
 
   APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST,
+  ADMIN_HOST: String(import.meta.env.VITE_BC_ADMIN_HOST || ''),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),

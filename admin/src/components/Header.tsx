@@ -653,6 +653,27 @@ return true
               </Button>
             )}
 
+            {env.FRONTEND_HOST && (
+              <Button
+                variant="outlined"
+                size="small"
+                href={env.FRONTEND_HOST}
+                title="Open the Customer Storefront"
+                sx={{
+                  borderColor: 'var(--sr-border, #CBD5E1)',
+                  color: 'var(--sr-text, #334155)',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: 12,
+                  borderRadius: '8px',
+                  height: 32,
+                  display: { xs: 'none', md: 'inline-flex' }
+                }}
+              >
+                Customer Storefront
+              </Button>
+            )}
+
             <ThemeToggle />
 
             {/* Notifications */}
