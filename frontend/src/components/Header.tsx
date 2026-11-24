@@ -75,6 +75,8 @@ const Header = ({
   const navigate = useNavigate()
   const location = useLocation()
   const isHome = location.pathname === '/'
+  // On the auth screens the header must not repeat the sign-in / sign-up calls to action.
+  const isAuthPage = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password', '/activate'].includes(location.pathname)
 
   const { user } = useUserContext() as UserContextType
   const { notificationCount } = useNotificationContext() as NotificationContextType
@@ -540,8 +542,8 @@ const Header = ({
                     </Button>
                   )}
                 </div>
-                {!hideSignin && !isSignedIn && isLoaded && <span className="header-actions-divider" aria-hidden="true" />}
-                {!hideSignin && !isSignedIn && isLoaded && (
+                {!hideSignin && !isSignedIn && isLoaded && !isAuthPage && <span className="header-actions-divider" aria-hidden="true" />}
+                {!hideSignin && !isSignedIn && isLoaded && !isAuthPage && (
                   <div className="header-auth-actions">
                     <Button
                       variant="contained"
@@ -613,7 +615,7 @@ const Header = ({
           </AppBar>
         </div>
 
-        <nav className="sr-mobile-bottom-nav" aria-label="Primary navigation">
+        {!isAuthPage && <nav className="sr-mobile-bottom-nav" aria-label="Primary navigation">
           <button type="button" aria-current={isHome ? 'page' : undefined} onClick={() => navigate('/')}>
             <ExploreIcon fontSize="small" /><span>Explore</span>
           </button>
@@ -629,7 +631,7 @@ const Header = ({
           <button type="button" aria-current={location.pathname === '/settings' ? 'page' : undefined} onClick={() => navigate(isSignedIn ? '/settings' : '/sign-in')}>
             <ProfileNavIcon fontSize="small" /><span>Profile</span>
           </button>
-        </nav>
+        </nav>}
 
         {renderMobileMenu}
         {renderMenu}

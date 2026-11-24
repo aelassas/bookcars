@@ -729,7 +729,7 @@ html, body, #root { background: var(--sr-ink); }
 .header-home .sr-desktop-nav .MuiButton-root { color: #f8fafc; }
 .sr-desktop-nav .MuiButton-root:hover { background: rgba(5, 150, 105, .09); }
 .sr-mobile-bottom-nav { display: none; }
-@media (max-width: 1100px) { .sr-desktop-nav { display: none; } }
+@media (max-width: 1320px) { .sr-desktop-nav { display: none; } }
 @media (max-width: 767px) {
   #root { padding-bottom: 68px; }
   .sr-mobile-bottom-nav {

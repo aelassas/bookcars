@@ -59,6 +59,31 @@
   }
 }
 
+/* Narrow consoles keep the bar to one row: secondary actions move into the drawer. */
+.admin-topbar-role {
+  display: flex;
+  align-items: center;
+}
+
+.admin-drawer-role {
+  display: none;
+  padding: 0 4px 10px;
+}
+
+@media only screen and (max-width: 900px) {
+  .admin-topbar-role {
+    display: none;
+  }
+
+  .admin-drawer-role {
+    display: flex;
+  }
+
+  #root .admin-add-vehicle {
+    display: none;
+  }
+}
+
 /* Device width is less than or equal to 960px */
 @media only screen and (max-width: 960px) {
   .header {

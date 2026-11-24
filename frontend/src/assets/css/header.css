@@ -54,10 +54,11 @@ html[data-theme='dark'] .header {
 .header-desktop {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
   justify-content: flex-end;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -65,7 +66,7 @@ html[data-theme='dark'] .header {
 .header-auth-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .header-preferences { flex: 0 0 auto; }
@@ -80,6 +81,34 @@ html[data-theme='dark'] .header {
 
 .header-mobile {
   display: none;
+}
+
+/* The role switch stays in the drawer on phones; the app bar must not carry it twice. */
+@media only screen and (width <=960px) {
+  .sr-role-switch-nav {
+    display: none;
+  }
+}
+
+/* Between tablet and wide desktop the segmented labels give way so the bar never overflows. */
+@media only screen and (width <=1420px) {
+  .sr-role-switch-nav .sr-role-switch-text {
+    display: none;
+  }
+
+  .sr-role-switch-nav .sr-role-switch-item {
+    padding: 6px 10px;
+  }
+}
+
+#root .header .toolbar {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+#root .header .toolbar > .logo {
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .header .btn {
@@ -143,7 +172,7 @@ html[data-theme='dark'] .header {
 #root .header .header-desktop .MuiButton-root.btn-auth {
   min-width: 0;
   height: 42px;
-  padding: 0 18px;
+  padding: 0 16px;
   border-radius: 9999px;
   box-shadow: none !important;
   font-size: 13px;

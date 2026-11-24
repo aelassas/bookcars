@@ -534,6 +534,9 @@ return true
 
       {/* Footer Utility links */}
       <Box sx={{ p: 1.5, borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box className="admin-drawer-role">
+          <RoleSwitchNav />
+        </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1 }}>
           <Button size="small" onClick={() => handleNavClick('/about')} sx={{ color: 'var(--sr-muted)', fontSize: 11, minWidth: 'auto', p: 0.5, textTransform: 'none' }}>
             About
@@ -605,23 +608,25 @@ return true
             </Box>
           )}
 
-          {/* Quick Context Title on large screens */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'var(--sr-text)', letterSpacing: '-0.01em' }}>
-              Rental Management
-            </Typography>
-            <Chip
-              label="Operations"
-              size="small"
-              sx={{
-                bgcolor: 'rgba(5, 150, 105, 0.1)',
-                color: 'var(--sr-emerald)',
-                fontWeight: 600,
-                fontSize: 11,
-                height: 22
-              }}
-            />
-          </Box>
+          {/* Quick Context Title on large screens — only meaningful inside the console. */}
+          {isSignedIn && (
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'var(--sr-text)', letterSpacing: '-0.01em' }}>
+                Rental Management
+              </Typography>
+              <Chip
+                label="Operations"
+                size="small"
+                sx={{
+                  bgcolor: 'rgba(5, 150, 105, 0.1)',
+                  color: 'var(--sr-emerald)',
+                  fontWeight: 600,
+                  fontSize: 11,
+                  height: 22
+                }}
+              />
+            </Box>
+          )}
 
           <Box sx={{ flexGrow: 1 }} />
 
@@ -654,7 +659,9 @@ return true
               </Button>
             )}
 
-            <RoleSwitchNav />
+            <Box className="admin-topbar-role">
+              <RoleSwitchNav />
+            </Box>
 
             <ThemeToggle />
 
