@@ -170,6 +170,8 @@ const CreateCar = () => {
         }
       }
 
+      setLoading(true)
+
       const payload: bookcarsTypes.CreateCarPayload = {
         loggedUser: user!._id!,
         name: data.name,
@@ -223,6 +225,8 @@ const CreateCar = () => {
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 

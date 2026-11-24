@@ -38,6 +38,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
 import { Option, Supplier } from '@/models/common'
 import { schema, FormFields } from '@/models/BookingForm'
+import Backdrop from '@/components/SimpleBackdrop'
 
 import '@/assets/css/create-booking.css'
 
@@ -50,6 +51,7 @@ const CreateBooking = () => {
   const [minDate, setMinDate] = useState<Date>()
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -142,6 +144,7 @@ const CreateBooking = () => {
     }
 
     try {
+      setLoading(true)
       // use bookcarsHelper.calculatePrice
       const price = await bookcarsHelper.calculateTotalPrice(carObj, from!, to!, carObj.supplier.priceChangeRate || 0, options)
       booking.price = price
@@ -158,6 +161,8 @@ const CreateBooking = () => {
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -449,6 +454,8 @@ const CreateBooking = () => {
           </form>
         </Paper>
       </div>
+
+      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )
 }

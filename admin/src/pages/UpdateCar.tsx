@@ -178,6 +178,8 @@ const UpdateCar = () => {
         }
       }
 
+      setLoading(true)
+
       const payload: bookcarsTypes.UpdateCarPayload = {
         loggedUser: user!._id!,
         _id: car._id,
@@ -232,6 +234,8 @@ const UpdateCar = () => {
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
