@@ -1,0 +1,14 @@
+import { chromium } from "playwright";
+const browser = await chromium.launch({ headless: true, channel: "chrome" });
+const ctx = await browser.newContext({ userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36" });
+const page = await ctx.newPage();
+page.on("console", (m) => console.log("[console]", m.type(), m.text().slice(0, 200)));
+page.on("pageerror", (e) => console.log("[pageerror]", String(e).slice(0, 300)));
+page.on("requestfailed", (r) => console.log("[reqfail]", r.url().slice(0, 120), r.failure()?.errorText));
+page.on("framenavigated", (f) => { if (f === page.mainFrame()) console.log("[nav]", f.url()); });
+await page.goto("https://tars.rta.ae/apps/business/en/rentals", { waitUntil: "networkidle", timeout: 90_000 }).catch(e => console.log("goto err", String(e).slice(0,200)));
+await page.waitForTimeout(10000);
+console.log("final:", page.url());
+console.log("body text:", (await page.locator("body").innerText().catch(() => "?")).slice(0, 500));
+await page.screenshot({ path: "/tmp/tars-debug.png", fullPage: true });
+await browser.close();

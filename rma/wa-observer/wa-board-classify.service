@@ -1,0 +1,17 @@
+[Unit]
+Description=Classify inbox threads onto the board via DeepSeek (RMA CRM)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+Environment=NODE_ENV=production
+Environment=BOARD_LOOKBACK_HOURS=24
+Environment=BOARD_MAX_THREADS=200
+# DeepSeek speaks the OpenAI dialect; the runner only needs these three.
+# QWEN_API_KEY and DATABASE_URL come from the EnvironmentFile (root-only,
+# never in git).
+Environment=QWEN_BASE_URL=https://api.deepseek.com/chat/completions
+Environment=QWEN_MODEL=deepseek-chat
+EnvironmentFile=/opt/rma-crm/wa-observer/secrets.env
+ExecStart=/usr/bin/npx tsx scripts/run-board-classify.ts

@@ -1,0 +1,19 @@
+[Unit]
+Description=WhatsApp observer line wa-%i (RMA CRM)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/rma-crm/wa-observer
+ExecStart=/usr/bin/node /opt/rma-crm/wa-observer/observe.mjs %i
+Environment=NODE_ENV=production
+Environment=WA_OBSERVER_DIR=/opt/rma-crm/wa-observer
+# Ban protection: WhatsApp flags rapid reconnect loops. A failed worker waits
+# 5 minutes before systemd brings it back — the same delay the /lines page
+# enforces as its relink cooldown.
+Restart=on-failure
+RestartSec=300
+
+[Install]
+WantedBy=multi-user.target

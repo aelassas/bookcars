@@ -1,0 +1,412 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1780144828445,
+      "tag": "0000_red_viper",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780145265878,
+      "tag": "0001_complex_paladin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780147668931,
+      "tag": "0002_old_nightmare",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1780259776157,
+      "tag": "0003_shiny_midnight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1780262096345,
+      "tag": "0004_fearless_war_machine",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780262778686,
+      "tag": "0005_smooth_loki",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780299350605,
+      "tag": "0006_slim_revanche",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1780321969230,
+      "tag": "0007_add_whatsapp_webhook_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1780488552906,
+      "tag": "0008_shocking_goblin_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1780736025432,
+      "tag": "0009_curious_marvel_zombies",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1780756702441,
+      "tag": "0010_gray_bastion",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1780854305079,
+      "tag": "0011_mature_sphinx",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1780857600000,
+      "tag": "0012_history_triggers",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1780857700000,
+      "tag": "0013_materialized_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1780857800000,
+      "tag": "0014_history_rls",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1781337280844,
+      "tag": "0015_ai_provider_config",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1781337517289,
+      "tag": "0016_tenant_saas_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1781338295605,
+      "tag": "0017_platform_admin",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1781339317019,
+      "tag": "0018_support_tickets_grants",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1781359616551,
+      "tag": "0019_tenant_branding",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1781361032987,
+      "tag": "0020_tenant_billing_service_hours",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1781591118801,
+      "tag": "0021_modules_and_documents",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1781678632404,
+      "tag": "0022_message_outbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1781678927860,
+      "tag": "0023_payment_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1781680783238,
+      "tag": "0024_return_inspection",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1781715736465,
+      "tag": "0025_outstanding_wong",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1781876591113,
+      "tag": "0026_tenant_onboarded_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1781876691113,
+      "tag": "0027_fix_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1781878173848,
+      "tag": "0028_companies_and_scoping",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1781882803068,
+      "tag": "0029_payment_two_step",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1781882903068,
+      "tag": "0030_resync_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1781942134368,
+      "tag": "0031_lease_payment_two_step",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1781942234368,
+      "tag": "0032_search_doc",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1782385505584,
+      "tag": "0033_organic_thor_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1782388631337,
+      "tag": "0034_parched_black_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1782389033397,
+      "tag": "0035_resync_history_step2",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1782392443378,
+      "tag": "0036_striped_boomerang",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1782392443712,
+      "tag": "0037_resync_history_booking",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1784272887938,
+      "tag": "0038_must_change_password",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1784359287938,
+      "tag": "0039_telegram_otp",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1784445687938,
+      "tag": "0040_telegram_premium",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1784532087938,
+      "tag": "0041_vehicle_timeline",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1784618487938,
+      "tag": "0042_vehicle_external_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1784704887938,
+      "tag": "0043_vehicle_brand_key",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1784791287938,
+      "tag": "0044_history_by_name",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1784877687938,
+      "tag": "0045_drop_plateless_kaiten_vehicles",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1784964087938,
+      "tag": "0046_deal_last_activity",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1785050487938,
+      "tag": "0047_onboarding_application",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1785136887938,
+      "tag": "0048_deal_stage_detail",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1784646661455,
+      "tag": "0049_vehicle_kaiten_detail",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1784646721455,
+      "tag": "0050_intel_extraction",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1784646781455,
+      "tag": "0051_deal_intent",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1784646841455,
+      "tag": "0052_phone_match_keys",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1784646901455,
+      "tag": "0053_deal_source_modified",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1784646961455,
+      "tag": "0054_message_extid_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1784647021455,
+      "tag": "0055_message_from_pn",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1784647081455,
+      "tag": "0056_notification",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1784647141455,
+      "tag": "0057_card_dismissal",
+      "breakpoints": true
+    }
+  ]
+}

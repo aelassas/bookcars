@@ -1,0 +1,14 @@
+{
+  "name": "wa-observer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "WhatsApp line observer for RMA CRM — one process per line slug, driven by the /lines page contract",
+  "scripts": {
+    "start": "node observe.mjs"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc.6",
+    "pino": "^9.5.0"
+  }
+}

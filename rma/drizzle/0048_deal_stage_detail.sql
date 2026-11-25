@@ -1,0 +1,22 @@
+-- 0048_deal_stage_detail.sql
+--
+-- FUNNEL FIDELITY — mirror Azat's Bitrix "Отдел Продаж" funnel (category 6)
+-- stage-for-stage instead of collapsing all 1,524 of his open deals into the
+-- single coarse `inquiry` bucket.
+--
+-- Adds ONE nullable column to the existing `deal` table: `stage_detail`, the
+-- exact Bitrix funnel-stage NAME (e.g. "Выявление потребности", "КП
+-- отправлено", "Прогрев КП"). The sync resolves it per-category from
+-- crm.dealcategory.stage.list and writes the human-readable name here; the
+-- kanban groups cards by it. The coarse `stage` column is untouched — it still
+-- drives won/lost/closed logic — so this change is purely additive.
+--
+-- `deal` already carries tenant_id and its RLS triad (created in 0002 /
+-- tightened by the FORCE-RLS pass), so adding a nullable column needs no new
+-- policy and does not affect the boot guard.
+--
+-- Written by hand and idempotent: this box has had migrations applied
+-- manually before, and the drizzle snapshot chain is only refreshed for
+-- generate-time diffing (see 0047's note). Safe to run more than once.
+
+ALTER TABLE deal ADD COLUMN IF NOT EXISTS stage_detail text;

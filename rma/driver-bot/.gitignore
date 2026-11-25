@@ -1,0 +1,5 @@
+.env
+company-contracts/
+generated-docs/
+observed-*.jsonl
+storage/

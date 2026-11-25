@@ -1,0 +1,11 @@
+[Unit]
+Description=Create leads from inbound WhatsApp messages (RMA CRM)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+Environment=NODE_ENV=production
+# DATABASE_URL lives in secrets.env (root-only, never in git) alongside QWEN_API_KEY.
+EnvironmentFile=/opt/rma-crm/wa-observer/secrets.env
+ExecStart=/usr/bin/npx tsx scripts/run-wa-lead-intake.ts --commit

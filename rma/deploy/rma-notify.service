@@ -1,0 +1,9 @@
+[Unit]
+Description=RMA CRM operational notifications
+After=network.target docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/rma-crm/platform
+EnvironmentFile=/etc/rma-crm-notify.env
+ExecStart=/usr/bin/npx tsx scripts/run-service-reminders.ts

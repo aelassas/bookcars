@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OnWheels Car Rental — Dubai</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; color: #111; background: #fafafa; line-height: 1.5; }
+  header { background: #0a7a2f; color: #fff; padding: 36px 24px; }
+  header .wrap { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  header .brand { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  header .tag { font-size: 14px; opacity: 0.9; }
+  header .contact { font-size: 14px; }
+  header .contact a { color: #fff; text-decoration: none; margin-left: 12px; }
+  .hero { background: linear-gradient(180deg, #0a7a2f 0%, #086a28 100%); color: #fff; padding: 60px 24px 90px; text-align: center; }
+  .hero h1 { font-size: 42px; margin-bottom: 14px; font-weight: 800; }
+  .hero p { font-size: 18px; opacity: 0.95; max-width: 640px; margin: 0 auto; }
+  .hero .cta { margin-top: 32px; display: inline-block; background: #fff; color: #0a7a2f; padding: 14px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 16px; }
+  .section { max-width: 1100px; margin: -40px auto 0; padding: 0 24px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 32px; margin-bottom: 24px; }
+  h2 { font-size: 22px; margin-bottom: 18px; }
+  .fleet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .veh { border: 1px solid #e5e5e5; border-radius: 8px; padding: 14px; background: #fff; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }
+  .veh:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-color: #0a7a2f; }
+  .veh .model { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .veh .plate { color: #666; font-size: 12px; margin-bottom: 8px; }
+  .veh .price { color: #0a7a2f; font-weight: 700; font-size: 18px; }
+  .veh .price span { font-size: 12px; color: #666; font-weight: 400; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  form .full { grid-column: span 2; }
+  label { display: block; font-size: 13px; color: #333; margin-bottom: 4px; font-weight: 600; }
+  input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: #0a7a2f; }
+  button { background: #0a7a2f; color: #fff; border: none; padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; }
+  button:hover { background: #086a28; }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  .msg { padding: 14px 18px; border-radius: 8px; margin-top: 12px; font-size: 14px; display: none; }
+  .msg.ok { background: #eef7ee; border: 1px solid #0a7a2f; color: #0a7a2f; display: block; }
+  .msg.err { background: #fff6e5; border: 1px solid #b8860b; color: #a06000; display: block; }
+  footer { text-align: center; padding: 40px 24px; color: #888; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div>
+      <div class="brand">OnWheels</div>
+      <div class="tag">Car Rental Dubai · Alfa Apex · Motion Drive</div>
+    </div>
+    <div class="contact">
+      WhatsApp: <a href="https://wa.me/971565088850">+971 56 508 8850</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Premium rentals, zero drama</h1>
+  <p>From a Suzuki Swift at 95 AED/day to a Rolls Royce Phantom — 148 vehicles, delivered to your hotel, insured, GPS-tracked. Pay by card, cash, Deposit Free.</p>
+  <a href="#inquiry" class="cta">Book a car →</a>
+</section>
+
+<main class="section">
+
+  <div class="card">
+    <h2>Available this week</h2>
+    <div class="fleet-grid" id="fleet"></div>
+  </div>
+
+  <div class="card" id="inquiry">
+    <h2>Tell us what you need</h2>
+    <form id="leadForm">
+      <div>
+        <label>Your name *</label>
+        <input name="name" required placeholder="John Smith">
+      </div>
+      <div>
+        <label>WhatsApp / Phone *</label>
+        <input name="phone" required placeholder="+971 55 123 4567">
+      </div>
+      <div>
+        <label>Pick-up date</label>
+        <input name="startDate" type="date">
+      </div>
+      <div>
+        <label>Return date</label>
+        <input name="endDate" type="date">
+      </div>
+      <div class="full">
+        <label>Which car? (plate or model)</label>
+        <input name="carPlate" placeholder="e.g. BB42728 or Mercedes G63">
+      </div>
+      <div class="full">
+        <label>Anything else?</label>
+        <textarea name="note" rows="3" placeholder="Delivery address, special requests, etc."></textarea>
+      </div>
+      <div class="full">
+        <button type="submit" id="submitBtn">Send inquiry</button>
+        <div id="msg" class="msg"></div>
+      </div>
+    </form>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 OnWheels Car Rental L.L.C · Dubai, UAE · onwheelsrent.ae
+</footer>
+
+<script>
+  const CRM_BASE = 'https://parrot.tail4de2d7.ts.net:10000';
+  const TENANT = 'onwheels';
+
+  // Show curated top-10 vehicles — mix of segments to showcase fleet depth
+  const topCars = [
+    { plate: 'BB42728', model: 'Mercedes G63 AMG', price: 1092 },
+    { plate: 'F58961', model: 'Land Rover Defender', price: 600 },
+    { plate: 'EE70913', model: 'BMW X7', price: 678 },
+    { plate: 'CC57679', model: 'Audi Q7', price: 400 },
+    { plate: 'W30625', model: 'Hyundai Palisade', price: 285 },
+    { plate: 'N53984', model: 'Mini Cooper S', price: 280 },
+    { plate: 'DD39161', model: 'Hyundai Elantra', price: 220 },
+    { plate: 'R36894', model: 'Honda Civic', price: 175 },
+    { plate: 'AA29591', model: 'Kia Rio', price: 125 },
+    { plate: 'B46086', model: 'Suzuki Swift', price: 95 },
+  ];
+  const fleetEl = document.getElementById('fleet');
+  topCars.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'veh';
+    d.innerHTML = `<div class="model">${c.model}</div><div class="plate">${c.plate}</div><div class="price">${c.price} AED <span>/day</span></div>`;
+    d.onclick = () => { document.querySelector('input[name=carPlate]').value = c.plate + ' ' + c.model; location.hash = '#inquiry'; };
+    fleetEl.appendChild(d);
+  });
+
+  const form = document.getElementById('leadForm');
+  const msg = document.getElementById('msg');
+  const btn = document.getElementById('submitBtn');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true; btn.textContent = 'Sending…';
+    msg.className = 'msg'; msg.textContent = '';
+    const fd = Object.fromEntries(new FormData(form));
+    fd.tenantSlug = TENANT;
+    try {
+      const r = await fetch(`${CRM_BASE}/api/public/lead`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(fd),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        msg.className = 'msg ok';
+        msg.textContent = '✓ Got it. We\'ll WhatsApp you within a few minutes.';
+        form.reset();
+      } else {
+        msg.className = 'msg err';
+        msg.textContent = 'Error: ' + (d.error || 'try again');
+      }
+    } catch (err) {
+      msg.className = 'msg err';
+      msg.textContent = 'Network error — please WhatsApp us: +971 56 508 8850';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send inquiry';
+    }
+  });
+</script>
+</body>
+</html>

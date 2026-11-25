@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the WhatsApp observer importer every minute
+
+[Timer]
+OnBootSec=30
+OnUnitActiveSec=60
+AccuracySec=10
+
+[Install]
+WantedBy=timers.target
