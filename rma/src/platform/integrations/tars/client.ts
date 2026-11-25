@@ -129,6 +129,13 @@ export interface TarsRental {
   attachments?: { label?: string; url?: string; hash?: string }[];
 }
 
+export function selectTarsContractAttachment(rental: TarsRental): { label?: string; url?: string; hash?: string } | null {
+  const attachments = (rental.attachments ?? []).filter((attachment) => attachment.url);
+  const labelled = attachments.filter((attachment) => /contract|agreement/i.test(attachment.label ?? ""));
+  const pdfs = attachments.filter((attachment) => /\.pdf(?:$|[?#])/i.test(attachment.url ?? ""));
+  return labelled.find((attachment) => pdfs.includes(attachment)) ?? labelled[0] ?? (pdfs.length === 1 ? pdfs[0] : null);
+}
+
 export interface TarsAgency {
   did: string;
   sourceKey?: string;
@@ -234,6 +241,42 @@ export class TarsClient {
       if (out.size >= hits || out.size === before) break;
     }
     return [...out.values()];
+  }
+
+  async getRentalByDocumentNumber(documentNumber: string): Promise<TarsRental> {
+    const rentals = await this.listRentals({ size: 100, q: documentNumber });
+    const rental = rentals.find((item) => item.documentNumber === documentNumber);
+    if (!rental) throw new Error(`TARS contract ${documentNumber} was not found`);
+    return rental;
+  }
+
+  async downloadContract(documentNumber: string): Promise<{ bytes: Buffer; filename: string }> {
+    const rental = await this.getRentalByDocumentNumber(documentNumber);
+    const attachment = selectTarsContractAttachment(rental);
+    if (!attachment?.url) throw new Error(`TARS contract ${documentNumber} has no unambiguous contract PDF attachment`);
+    const url = new URL(attachment.url, this.baseUrl);
+    if (url.origin !== new URL(this.baseUrl).origin || url.protocol !== "https:") {
+      throw new Error("TARS contract attachment must use the authenticated TARS host");
+    }
+    const res = await fetch(url, {
+      method: "GET",
+      redirect: "manual",
+      signal: AbortSignal.timeout(this.timeoutMs),
+      headers: { "User-Agent": TARS_UA, Accept: "application/pdf,application/octet-stream", Cookie: this.cookieHeader },
+    });
+    if (res.status === 401 || res.status === 403 || res.status >= 300 && res.status < 400) {
+      throw new TarsSessionExpiredError(`TARS contract download: HTTP ${res.status} — session expired or unauthorized`);
+    }
+    if (!res.ok) throw new Error(`TARS contract download: HTTP ${res.status}`);
+    const declaredSize = Number(res.headers.get("content-length") ?? 0);
+    if (declaredSize > 15 * 1024 * 1024) throw new Error("TARS contract PDF is larger than 15 MB");
+    const bytes = Buffer.from(await res.arrayBuffer());
+    if (bytes.length === 0 || bytes.length > 15 * 1024 * 1024 || bytes.subarray(0, 5).toString() !== "%PDF-") {
+      throw new Error("TARS attachment is not a valid PDF");
+    }
+    const filename = decodeURIComponent(url.pathname.split("/").pop() || `tars-${documentNumber}.pdf`)
+      .replace(/[^A-Za-z0-9.-]/g, "_").slice(-100);
+    return { bytes, filename: filename.endsWith(".pdf") ? filename : `tars-${documentNumber}.pdf` };
   }
 
   // ---- internals -----------------------------------------------------------

@@ -48,6 +48,9 @@ const ALLOWLIST = new Map<string, string>([
   // JIVO_WEBHOOK_TOKEN (query or path segment) before touching anything.
   ["api/webhooks/jivo/route.ts", "auth lives in jivo/handler.ts (shared token)"],
   ["api/webhooks/jivo/[token]/route.ts", "auth lives in jivo/handler.ts (shared token)"],
+  // Public fleet photos are static website assets; the filename allowlist and
+  // public/ root prevent private-file access, exactly like Next public storage.
+  ["site-cars/[filename]/route.ts", "sanitized public image assets only"],
 ]);
 
 function walk(dir: string, out: string[] = []): string[] {

@@ -15,6 +15,9 @@ export interface EditableVehicle {
   model: string;
   year?: number | null;
   plate: string;
+  colour?: string | null;
+  vin?: string | null;
+  registrationExpiry?: string | null;
   dailyRate: number;
   weeklyRate: number;
   monthlyRate: number;
@@ -120,6 +123,9 @@ export function EditVehicleModal({
         model: String(fd.get("model")).trim(),
         year: Number(fd.get("year")) || null,
         plate: String(fd.get("plate")).trim(),
+        colour: String(fd.get("colour") ?? "").trim() || null,
+        vin: String(fd.get("vin") ?? "").trim() || null,
+        registrationExpiry: String(fd.get("registrationExpiry") ?? "") || null,
         dailyRate: Number(fd.get("dailyRate")) || 0,
         weeklyRate: Number(fd.get("weeklyRate")) || 0,
         monthlyRate: Number(fd.get("monthlyRate")) || 0,
@@ -172,6 +178,16 @@ export function EditVehicleModal({
             <Label>{t(lang, "vehicle.plate")} *</Label>
             <Input name="plate" required defaultValue={vehicle.plate} className="w-full" />
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div><Label>Colour</Label><Input name="colour" defaultValue={vehicle.colour ?? ""} className="w-full" /></div>
+          <div><Label>Registration expiry</Label><Input name="registrationExpiry" type="date" defaultValue={vehicle.registrationExpiry ?? ""} className="w-full" /></div>
+        </div>
+
+        <div>
+          <Label>VIN / chassis number</Label>
+          <Input name="vin" defaultValue={vehicle.vin ?? ""} minLength={17} maxLength={17} className="w-full" />
         </div>
 
         <div className="grid grid-cols-3 gap-3">

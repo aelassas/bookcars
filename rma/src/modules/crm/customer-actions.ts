@@ -27,10 +27,15 @@ export async function createCustomer(tenantId: string, data: CustomerInput) {
         notes: input.notes || null,
         dateOfBirth: input.dateOfBirth || null,
         nationality: input.nationality || null,
+        address: input.address || null,
         emiratesId: input.emiratesId || null,
+        emiratesIdIssue: input.emiratesIdIssue || null,
         emiratesIdExpiry: input.emiratesIdExpiry || null,
         passportNumber: input.passportNumber || null,
+        passportIssue: input.passportIssue || null,
+        passportExpiry: input.passportExpiry || null,
         driverLicenseNumber: input.driverLicenseNumber || null,
+        driverLicenseIssue: input.driverLicenseIssue || null,
         driverLicenseExpiry: input.driverLicenseExpiry || null,
       })
       .returning();
@@ -59,7 +64,11 @@ export async function updateCustomer(tenantId: string, id: string, data: Partial
       .set({
         ...input,
         ...(input.dateOfBirth !== undefined ? { dateOfBirth: input.dateOfBirth || null } : {}),
+        ...(input.emiratesIdIssue !== undefined ? { emiratesIdIssue: input.emiratesIdIssue || null } : {}),
         ...(input.emiratesIdExpiry !== undefined ? { emiratesIdExpiry: input.emiratesIdExpiry || null } : {}),
+        ...(input.passportIssue !== undefined ? { passportIssue: input.passportIssue || null } : {}),
+        ...(input.passportExpiry !== undefined ? { passportExpiry: input.passportExpiry || null } : {}),
+        ...(input.driverLicenseIssue !== undefined ? { driverLicenseIssue: input.driverLicenseIssue || null } : {}),
         ...(input.driverLicenseExpiry !== undefined ? { driverLicenseExpiry: input.driverLicenseExpiry || null } : {}),
         updatedAt: new Date(),
       })

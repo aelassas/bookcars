@@ -30,6 +30,8 @@ import { readFileSync } from "node:fs";
 import { TarsClient, TarsSessionExpiredError, type TarsRental, type TarsVehicle } from "../src/platform/integrations/tars/client";
 import { ensureSession } from "../src/platform/integrations/tars/session";
 import { buildPlan, loadExisting, applyPlan, type SyncPlan, type ExistingState } from "../src/platform/integrations/tars/sync";
+import { syncTarsRentalContract } from "../src/modules/rental/contract-documents";
+import { withDrizzleTenant } from "../src/platform/tenancy/rls";
 
 const args = process.argv.slice(2);
 const COMMIT = args.includes("--commit");
@@ -59,7 +61,7 @@ function loadSamples(): { vehicles: TarsVehicle[]; rentals: TarsRental[] } {
   return { vehicles: v.data ?? [], rentals: r.data ?? [] };
 }
 
-async function fetchLive(): Promise<{ vehicles: TarsVehicle[]; rentals: TarsRental[] }> {
+async function fetchLive(): Promise<{ vehicles: TarsVehicle[]; rentals: TarsRental[]; client: TarsClient }> {
   const fetchAll = async () => {
     const session = await ensureSession();
     const client = new TarsClient({ orgDid: ORG_DID, cookieHeader: session.cookieHeader, baseUrl: BASE_URL });
@@ -67,7 +69,7 @@ async function fetchLive(): Promise<{ vehicles: TarsVehicle[]; rentals: TarsRent
     console.log(`[tars-sync] agency: ${agency.name?.en ?? ORG_DID}`);
     const vehicles = await client.listVehicles();
     const rentals = await client.listRentals({ size: 500 });
-    return { vehicles, rentals };
+    return { vehicles, rentals, client };
   };
   try {
     return await fetchAll();
@@ -117,7 +119,7 @@ function printPlan(plan: SyncPlan, offline: boolean): void {
 async function main() {
   console.log(`[tars-sync] tenant slug "${TENANT_SLUG}" · org ${ORG_DID} · ${COMMIT ? "COMMIT" : "dry-run"}`);
 
-  const { vehicles, rentals } = FROM_SAMPLES ? loadSamples() : await fetchLive();
+  const { vehicles, rentals, client } = FROM_SAMPLES ? { ...loadSamples(), client: null } : await fetchLive();
 
   // Tenant + existing state — optional in dry-run (the box DB is not always
   // reachable from a workstation); REQUIRED for --commit.
@@ -161,11 +163,28 @@ async function main() {
 
   if (COMMIT && tenantId) {
     const counts = await applyPlan(tenantId, plan);
+    let contractsSynced = 0;
+    if (client) {
+      const { rental } = await import("../src/platform/db/schema");
+      const { eq } = await import("drizzle-orm");
+      for (const item of plan.rentals) {
+        try {
+          const [row] = await withDrizzleTenant(tenantId, (tx) => tx.select({ id: rental.id, contractUrl: rental.contractUrl }).from(rental)
+            .where(eq(rental.tarsDocumentNumber, item.mapped.documentNumber)).limit(1));
+          if (!row || row.contractUrl) continue;
+          const result = await syncTarsRentalContract({ tenantId, rentalId: row.id, actorId: null, client });
+          if (result.created) contractsSynced++;
+        } catch (error) {
+          counts.skipped.push(`contract PDF ${item.mapped.documentNumber}: ${error instanceof Error ? error.message : error}`);
+        }
+      }
+    }
     console.log(
       `\n─── applied ───\n` +
         `  vehicles: +${counts.vehiclesInserted} / ~${counts.vehiclesUpdated}\n` +
         `  customers: +${counts.customersInserted} / ~${counts.customersUpdated}\n` +
         `  rentals:   +${counts.rentalsInserted} / ~${counts.rentalsUpdated}\n` +
+        `  PDFs:      +${contractsSynced}\n` +
         (counts.skipped.length ? `  skipped:   ${counts.skipped.length}\n` : ""),
     );
   } else {

@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, and, desc } from "drizzle-orm";
-import { document } from "@/platform/db/schema";
+import { document, rental } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { canManageDocumentsForTenant, requireRoleForTenant } from "@/platform/auth/authorization";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
@@ -24,12 +24,16 @@ export async function getDocuments(
 
 export async function deleteDocument(tenantId: string, documentId: string) {
   await requireRoleForTenant(tenantId, ["tenant_admin", "sales"]);
-  const [existing] = await db.select({ entityType: document.entityType }).from(document).where(eq(document.id, documentId)).limit(1);
+  const [existing] = await db.select({ entityType: document.entityType, category: document.category, publicUrl: document.publicUrl }).from(document).where(eq(document.id, documentId)).limit(1);
   if (!existing) return null;
   const storageTenantId = existing.entityType === "rental" ? await requireFleetHomeTenantId() : tenantId;
   return withDrizzleTenant(storageTenantId, async (tx) => {
     const rows = await tx.delete(document).where(eq(document.id, documentId)).returning();
     const row = Array.isArray(rows) ? rows[0] : rows;
+    if (row && existing.entityType === "rental" && ["contract", "rental_contract"].includes(existing.category)) {
+      await tx.update(rental).set({ contractUrl: null, updatedAt: new Date() })
+        .where(and(eq(rental.id, row.entityId), eq(rental.contractUrl, existing.publicUrl)));
+    }
     return row ?? null;
   });
 }

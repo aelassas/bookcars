@@ -698,6 +698,7 @@ export const vehicle = tenantTable(
     // the car — chassis number and registration (mulkiya) expiry. The TARS
     // sync (integrations/tars) matches on VIN first, then normalized plate.
     vin: text("vin"),
+    colour: text("colour"),
     registrationExpiry: date("registration_expiry"),
     websitePublished: boolean("website_published").notNull().default(false),
     websiteCategory: text("website_category"),
@@ -745,9 +746,14 @@ export const customer = tenantTable(
     emiratesId: text("emirates_id"),
     dateOfBirth: date("date_of_birth"),
     nationality: text("nationality"),
+    address: text("address"),
     passportNumber: text("passport_number"),
+    passportIssue: date("passport_issue"),
+    passportExpiry: date("passport_expiry"),
     driverLicenseNumber: text("driver_license_number"),
+    driverLicenseIssue: date("driver_license_issue"),
     driverLicenseExpiry: date("driver_license_expiry"),
+    emiratesIdIssue: date("emirates_id_issue"),
     emiratesIdExpiry: date("emirates_id_expiry"),
     documentsReviewedAt: timestamp("documents_reviewed_at", { withTimezone: true }),
     documentsReviewedBy: uuid("documents_reviewed_by").references(() => user.id),
@@ -1023,6 +1029,7 @@ export const rental = tenantTable(
     notes: text("notes"),
     dailyMileageLimitKm: integer("daily_mileage_limit_km"),
     startOdometer: integer("start_odometer"),
+    startFuelLevel: integer("start_fuel_level"),
     // Return inspection fields
     finalOdometer: integer("final_odometer"),
     fuelLevel: integer("fuel_level"), // 0-100

@@ -50,6 +50,7 @@ import {
 
 type Rental = {
   id: string;
+  customerId: string;
   startDate: Date | null;
   returnDate: Date | null;
   actualReturnDate: Date | null;
@@ -70,6 +71,7 @@ type Rental = {
   notes: string | null;
   dailyMileageLimitKm: number | null;
   startOdometer: number | null;
+  startFuelLevel?: number | null;
   extensionStatus: string;
   returnReminderSentAt: Date | null;
   customerResponseAt: Date | null;
@@ -529,8 +531,11 @@ export function RentalDetail({
         <div className="p-4">
           <ContractSection
             rentalId={r.id}
-            tenantId={tenantId}
+            tenantSlug={tenantSlug}
+            customerId={r.customerId}
             contractUrl={r.contractUrl}
+            tarsDocumentNumber={r.tarsDocumentNumber}
+            customerDocumentsReviewed={customerDocumentsReviewed}
             canGenerate={canConfirm}
           />
           {tenantSlug === "rma" && r.startDate && r.returnDate && (
@@ -547,6 +552,8 @@ export function RentalDetail({
                 vehiclePlate={vehiclePlate}
                 vehicleVin={vehicleVin}
                 vehicleOdometer={vehicleOdometer}
+                startOdometer={r.startOdometer}
+                startFuelPercent={r.startFuelLevel ?? null}
                 startAt={r.startDate.toISOString()}
                 returnAt={r.returnDate.toISOString()}
                 canManage={canConfirm}

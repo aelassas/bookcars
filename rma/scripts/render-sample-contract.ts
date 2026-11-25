@@ -1,57 +1,47 @@
-// scripts/render-sample-contract.ts
-// Renders the rental contract with realistic dummy data for visual review.
-//   npx tsx scripts/render-sample-contract.ts
-// Writes /tmp/sample-contract.pdf.
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { buildRentalContractPdf, type RentalContractPdfData } from "../src/lib/pdf/rental-contract";
 
-const start = new Date("2026-07-18T10:30:00Z");
-const end = new Date("2026-07-25T10:30:00Z");
-
 const sample: RentalContractPdfData = {
-  reference: "RNT-2026-0417",
-  companyName: "Cardiwan Rent a Car LLC",
-  companySlug: "cardiwan",
-
-  customerName: "Ahmed Karim Haddad",
-  customerPhone: "+971 50 412 7788",
-  customerDob: new Date("1991-03-14T00:00:00Z"),
-  customerNationality: "Lebanese",
-  customerEid: "784-1991-4471203-9",
-  customerPassport: "LR2214877",
-  customerLicenseNumber: "DXB-1188342",
-  customerLicenseIssue: new Date("2022-09-01T00:00:00Z"),
-  customerLicenseExpiry: new Date("2027-09-01T00:00:00Z"),
-
-  vehicleMake: "Nissan",
-  vehicleModel: "Sunny 1.6 SV",
-  vehiclePlate: "DXB J 48219",
-  vehicleYear: 2024,
-  vehicleColour: "White",
-  exitOdometer: 41250,
-  exitFuelPercent: 100,
-  returnOdometer: null,
-  returnFuelPercent: null,
-
-  startDate: start,
-  returnDate: end,
-  totalDays: 7,
-  dailyRate: 130,
+  reference: "36ACBA19",
+  companyName: "RMA Car Rental LLC S.O.C",
+  customerName: "Tom Alain Daniel",
+  customerPhone: "+971585613085",
+  customerDob: "1990-01-02",
+  customerNationality: "French",
+  customerAddress: "Dubai",
+  customerEid: "784199012345671",
+  customerEidIssue: "2024-01-01",
+  customerEidExpiry: "2028-01-01",
+  customerPassport: "P1234567",
+  customerPassportIssue: "2022-01-01",
+  customerPassportExpiry: "2032-01-01",
+  customerLicenseNumber: "1234567",
+  customerLicenseIssue: "2022-01-01",
+  customerLicenseExpiry: "2030-01-01",
+  vehicleMake: "Mercedes-Benz",
+  vehicleModel: "CLA250",
+  vehiclePlate: "GG 31235",
+  vehicleYear: 2025,
+  vehicleColour: "Black",
+  exitOdometer: 8115,
+  exitFuelPercent: 70,
+  startDate: new Date("2026-11-16T14:30:00Z"),
+  returnDate: new Date("2026-12-02T14:30:00Z"),
+  totalDays: 16,
+  dailyRate: 285,
   deposit: 1500,
-  rentalSubtotal: 910,
-  address: "Al Quoz Industrial 3, Warehouse 12, Dubai",
-
-  exitRemarks: "Minor scratch on rear left bumper, noted at handover.",
-  returnRemarks: null,
+  rentalSubtotal: 4560,
+  dailyKmLimit: "150",
 };
 
-async function main(): Promise<void> {
+async function main() {
   const pdf = await buildRentalContractPdf(sample);
-  await writeFile("/tmp/sample-contract.pdf", pdf);
-  console.log(`wrote /tmp/sample-contract.pdf (${pdf.length} bytes)`);
+  await mkdir("tmp/pdfs", { recursive: true });
+  await writeFile("tmp/pdfs/rma-contract-preview.pdf", pdf);
+  console.log(`wrote tmp/pdfs/rma-contract-preview.pdf (${pdf.length} bytes)`);
 }
 
-main().catch((err) => {
-  console.error(err);
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
 });

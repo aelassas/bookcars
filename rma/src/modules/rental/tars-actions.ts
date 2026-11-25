@@ -112,6 +112,8 @@ export async function reviewTarsSubmission(tenantId: string, tenantSlug: string,
     const hash = hashTarsSubmissionPackage(value);
     const now = new Date();
     await tx.update(rental).set({
+      startOdometer: input.odometer,
+      startFuelLevel: input.fuelPercent,
       tarsSubmissionStatus: "awaiting_confirmation",
       tarsSubmissionHash: hash,
       tarsSubmissionPayload: value,
