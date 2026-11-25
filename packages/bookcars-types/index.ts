@@ -627,6 +627,7 @@ export interface DateBasedPrice {
 export interface Car {
   deliveryLocations?: string[]
   interCityDeliveryBadge?: string
+  hubDeliveryBadge?: string
   _id: string
   name: string
   licensePlate?: string

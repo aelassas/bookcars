@@ -75,10 +75,18 @@ async function run() {
     ['Suzuki Alto VXR 660cc','karachi','sindh',660,4200,8000,'CITY_ONLY','Mini'],['Suzuki Cultus VXL','karachi','sindh',1000,5500,10000,'HIGHWAY_INTERCITY','Mini'],['Suzuki WagonR VXL','karachi','sindh',1000,5900,11000,'HIGHWAY_INTERCITY','Mini'],['Toyota Yaris ATIV','multan','lahore',1300,7800,14000,'HIGHWAY_INTERCITY','Midi'],['Toyota Corolla GLi','faisalabad','lahore',1300,9200,16000,'HIGHWAY_INTERCITY','Midi'],['Honda Civic RS','sialkot','lahore',1500,13500,22000,'HIGHWAY_INTERCITY','Midi'],['Toyota Fortuner Legender','gilgit','karakoram',2800,30000,45000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota Land Cruiser Prado TX','hunza','karakoram',2800,36000,55000,'NORTHERN_MOUNTAINS','Maxi'],['Toyota HiAce Grand Cabin','skardu','karakoram',2800,24000,35000,'NORTHERN_MOUNTAINS','Maxi'],['Kia Sportage AWD','swat','karakoram',2000,17000,28000,'NORTHERN_MOUNTAINS','Midi']
   ]
   cars.push(['Demo Review: Toyota Yaris ATIV','lahore','lahore',1300,8000,14000,'HIGHWAY_INTERCITY','Midi'], ['Demo Review: Kia Sportage AWD','islamabad','margalla',2000,16500,26000,'NORTHERN_MOUNTAINS','Midi'])
+
+  // Approved inventory for every hub shown as a quick-search pill.
+  cars.push(
+    ['Toyota Corolla Altis','peshawar','margalla',1800,10500,17000,'HIGHWAY_INTERCITY','Midi'],
+    ['Suzuki Cultus VXL','murree','margalla',1000,6500,11000,'NORTHERN_MOUNTAINS','Mini'],
+    ['Toyota Fortuner Legender','naran','karakoram',2800,29000,42000,'NORTHERN_MOUNTAINS','Maxi']
+  )
   const carMap = {}
   for (let i = 0; i < cars.length; i++) {
     const [name, locKey, supplierKey, engineCc, dailyPrice, deposit, terrain, range] = cars[i]
-    const listingStatus = i >= 24 ? 'PENDING_REVIEW' : 'APPROVED'
+    // Only the two "Demo Review" fixtures await admin approval.
+    const listingStatus = name.startsWith('Demo Review:') ? 'PENDING_REVIEW' : 'APPROVED'
     const plate = `SR-DEMO-${String(i + 1).padStart(2, '0')}`
     const fields = { name, licensePlate: plate, registrationPlate: plate, engineCc, supplier: suppliers[supplierKey]._id, locations: [locations[locKey]._id], dailyPrice, hourlyPrice: Math.round(dailyPrice / 9), deposit, securityDepositPkr: deposit, available: true, fullyBooked: false, comingSoon: false, minimumAge: 21, terrainCapability: terrain, selfDriveAvailable: true, withDriverAvailable: true, driverDailyAllowancePkr: 2500, outOfCitySurchargePkr: 1500, listingStatus, complianceNotes: listingStatus === 'APPROVED' ? 'Synthetic approved demo listing.' : 'Demo vehicle awaiting admin compliance approval.', reviewedBy: listingStatus === 'APPROVED' ? admin._id : undefined, reviewedAt: listingStatus === 'APPROVED' ? new Date() : undefined, fuelPolicy: 'TANK_TO_TANK', type: engineCc === 2800 ? 'diesel' : 'gasoline', gearbox: 'automatic', aircon: true, seats: terrain === 'NORTHERN_MOUNTAINS' && /Fortuner|Prado|HiAce/.test(name) ? 7 : 5, doors: 4, mileage: -1, cancellation: 0, amendments: 0, theftProtection: 0, collisionDamageWaiver: 0, fullInsurance: 0, additionalDriver: 0, blockOnPay: false, rating: 4.7 + (i % 3) * 0.1, range: String(range).toLowerCase() }
     let car = await Car.findOne({ licensePlate: plate })

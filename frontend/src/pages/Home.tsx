@@ -34,6 +34,7 @@ import {
   ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material'
 import L from 'leaflet'
+import { addDays } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '@/config/env.config'
@@ -272,13 +273,13 @@ event.currentTarget.play().catch(() => {})
                         sx={{ mt: 1.5, bgcolor: '#107487', '&:hover': { bgcolor: '#047857' }, textTransform: 'none', fontWeight: 700 }}
                         onClick={() => {
                           const matchedLoc = locations.find((l) => (l.name || '').toLowerCase().includes((tripDraft.extractedData.pickupLocation || '').toLowerCase()))
-                          const pickupId = matchedLoc?._id || (locations[0]?._id)
-                          // Prefer the dates the parser extracted; fall back to a 3-day window from tomorrow.
+                          const pickupId = matchedLoc?._id || (locations[0]?._id) || ''
+                          // Prefer the dates the parser extracted; fall back to tomorrow → +3 days.
                           const parsedFrom = tripDraft.extractedData.startDate ? new Date(`${tripDraft.extractedData.startDate}T10:00:00`) : null
                           const parsedTo = tripDraft.extractedData.endDate ? new Date(`${tripDraft.extractedData.endDate}T10:00:00`) : null
-                          const now = new Date()
-                          const fromDate = parsedFrom || new Date(now.setDate(now.getDate() + 1))
-                          const toDate = parsedTo || new Date(now.setDate(now.getDate() + 4))
+                          const fromDate = parsedFrom || addDays(new Date(), 1)
+                          const toDate = parsedTo || addDays(fromDate, 3)
+                          const wantsDriver = /driver|chauffeur/i.test(tripDraft.extractedData.rentalType || '')
                           navigate('/search', {
                             state: {
                               pickupLocationId: pickupId,
@@ -286,6 +287,7 @@ event.currentTarget.play().catch(() => {})
                               from: fromDate,
                               to: toDate,
                               pickupPlace: tripDraft.extractedData.pickupLocation || '',
+                              rentalMode: wantsDriver ? bookcarsTypes.RentalMode.WithDriver : undefined,
                             }
                           })
                         }}

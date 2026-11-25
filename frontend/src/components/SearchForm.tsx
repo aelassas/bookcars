@@ -8,20 +8,17 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
-  TextField,
-  Stack,
 } from '@mui/material'
-import { MyLocation } from '@mui/icons-material'
 import { addHours } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '@/lang/common'
 import { strings } from '@/lang/search-form'
 import * as UserService from '@/services/UserService'
-import * as LocationService from '@/services/LocationService'
-import LocationSelectList from '@/components/LocationSelectList'
+import HubSelect, { HubPills } from '@/components/HubSelect'
 import DateTimePicker from '@/components/DateTimePicker'
-import { schema, FormFields, LocationField } from '@/models/SearchForm'
+import { schema, FormFields } from '@/models/SearchForm'
+import { ALL_PAKISTAN_HUBS_ID, DEFAULT_HUB_NAME, findHubByName, loadHubs } from '@/utils/hubs'
 import { useSetting } from '@/context/SettingContext'
 
 import '@/assets/css/search-form.css'
@@ -48,38 +45,35 @@ const SearchForm = ({
 }: SearchFormProps) => {
   const navigate = useNavigate()
 
-  const nearestPickupPoint = async (latitude: number, longitude: number) => {
-    const points = await LocationService.getLocationsWithPosition()
-    const distanceKm = (lat: number, lon: number) => {
-      const radians = (value: number) => value * Math.PI / 180
-      const dLat = radians(lat - latitude)
-      const dLon = radians(lon - longitude)
-      const a = Math.sin(dLat / 2) ** 2
-        + Math.cos(radians(latitude)) * Math.cos(radians(lat)) * Math.sin(dLon / 2) ** 2
-      return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    }
-    const nearest = points
-      .filter((point) => Number.isFinite(point.latitude) && Number.isFinite(point.longitude))
-      .map((point) => ({ point, distance: distanceKm(point.latitude!, point.longitude!) }))
-      .sort((a, b) => a.distance - b.distance)[0]
-
-    return nearest && nearest.distance <= 50 ? nearest.point : undefined
-  }
-
   const { settings } = useSetting()
   const searchSettings = settings || DEFAULT_SEARCH_SETTINGS
 
-  const [pickupLocationId, setPickupLocationId] = useState('')
-  const [dropOffLocationId, setDropOffLocationId] = useState('')
+  const [pickupLocationId, setPickupLocationId] = useState<string>(__pickupLocation || '')
+  const [dropOffLocationId, setDropOffLocationId] = useState<string>(__dropOffLocation || __pickupLocation || '')
   const [minTime, setMinTime] = useState<Date | null>(null)
   const [maxTime, setMaxTime] = useState<Date | null>(null)
   const [minDate, setMinDate] = useState<Date | null>(null)
   const [fromMinDate, setFromMinDate] = useState<Date | null>(null)
   const [ranges, setRanges] = useState(bookcarsHelper.getAllRanges())
-  const [pickupPlace, setPickupPlace] = useState('')
-  const [pickupCoordinates, setPickupCoordinates] = useState<{ latitude: number; longitude: number; name: string }>()
-  const [placeError, setPlaceError] = useState('')
   const [rentalMode, setRentalMode] = useState<bookcarsTypes.RentalMode>(bookcarsTypes.RentalMode.SelfDrive)
+
+  // Start every search on the Islamabad hub (or "All Pakistan Hubs" from the pills).
+  useEffect(() => {
+    if (pickupLocationId) {
+      return
+    }
+    let active = true
+    loadHubs().then((hubs) => {
+      const defaultHub = findHubByName(hubs, DEFAULT_HUB_NAME) || hubs[0]
+      if (active && defaultHub) {
+        setPickupLocationId(defaultHub._id)
+        setDropOffLocationId(defaultHub._id)
+      }
+    })
+    return () => {
+      active = false
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (searchSettings) {
@@ -100,7 +94,6 @@ const SearchForm = ({
   }, [searchSettings])
 
   const {
-    register,
     handleSubmit,
     control,
     setValue,
@@ -112,33 +105,36 @@ const SearchForm = ({
     mode: 'onSubmit',
     defaultValues: {
       sameLocation: true,
+      pickupLocation: null,
+      dropOffLocation: null,
     }
   })
 
   const from = useWatch({ control, name: 'from' })
   const to = useWatch({ control, name: 'to' })
-  const pickupLocation = useWatch({ control, name: 'pickupLocation' })
-  const dropOffLocation = useWatch({ control, name: 'dropOffLocation' })
   const sameLocation = useWatch({ control, name: 'sameLocation' })
 
+  // Default window: pickup tomorrow, return three days later.
   useEffect(() => {
     if (searchSettings) {
       const _from = new Date()
-      if (searchSettings.minPickupHours < 72) {
-        _from.setDate(_from.getDate() + 3)
-      } else {
-        _from.setDate(_from.getDate() + Math.ceil(searchSettings.minPickupHours / 24) + 1)
-      }
+      _from.setDate(_from.getDate() + 1)
       _from.setHours(10)
       _from.setMinutes(0)
       _from.setSeconds(0)
       _from.setMilliseconds(0)
 
+      const earliestPickup = addHours(new Date(), searchSettings.minPickupHours)
+      if (_from.getTime() < earliestPickup.getTime()) {
+        _from.setTime(earliestPickup.getTime())
+      }
+
       const _to = new Date(_from)
-      if (searchSettings.minRentalHours < 72) {
-        _to.setDate(_to.getDate() + 3)
-      } else {
-        _to.setDate(_to.getDate() + Math.ceil(searchSettings.minRentalHours / 24) + 1)
+      _to.setDate(_to.getDate() + 3)
+
+      const earliestReturn = addHours(_from, searchSettings.minRentalHours)
+      if (_to.getTime() < earliestReturn.getTime()) {
+        _to.setTime(earliestReturn.getTime())
       }
 
       let __minDate = new Date()
@@ -149,35 +145,6 @@ const SearchForm = ({
       setValue('to', _to)
     }
   }, [searchSettings]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const init = async () => {
-      if (__pickupLocation) {
-        const location = await LocationService.getLocation(__pickupLocation) as LocationField
-        setValue('pickupLocation', location)
-        setPickupLocationId(__pickupLocation)
-        if (sameLocation) {
-          setValue('dropOffLocation', location)
-          setDropOffLocationId(__pickupLocation)
-        } else {
-          setValue('sameLocation', dropOffLocationId === __pickupLocation)
-        }
-      }
-    }
-    init()
-  }, [__pickupLocation]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const init = async () => {
-      if (__dropOffLocation) {
-        const location = await LocationService.getLocation(__dropOffLocation) as LocationField
-        setValue('dropOffLocation', location)
-        setDropOffLocationId(__dropOffLocation)
-        setValue('sameLocation', pickupLocationId === __dropOffLocation)
-      }
-    }
-    init()
-  }, [__dropOffLocation]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setRanges(__ranges || bookcarsHelper.getAllRanges())
@@ -264,25 +231,11 @@ const SearchForm = ({
     return null
   }
 
-  const handlePickupLocationChange = async (values: bookcarsTypes.Option[]) => {
-    setPickupPlace('')
-    setPickupCoordinates(undefined)
-    setPlaceError('')
-    const _pickupLocationId = (values.length > 0 && values[0]._id) || ''
-    setPickupLocationId(_pickupLocationId)
-
-    if (_pickupLocationId) {
-      const location = await LocationService.getLocation(_pickupLocationId) as LocationField
-      setValue('pickupLocation', location)
-      if (sameLocation) {
-        setValue('dropOffLocation', location)
-      }
-    } else {
-      setValue('pickupLocation', null)
-    }
+  const handlePickupLocationChange = (hubId: string) => {
+    setPickupLocationId(hubId)
 
     if (sameLocation) {
-      setDropOffLocationId(_pickupLocationId)
+      setDropOffLocationId(hubId)
     }
   }
 
@@ -297,19 +250,11 @@ const SearchForm = ({
     }
   }
 
-  const handleDropOffLocationChange = async (values: bookcarsTypes.Option[]) => {
-    const _dropOffLocationId = (values.length > 0 && values[0]._id) || ''
-    setDropOffLocationId(_dropOffLocationId)
-
-    if (_dropOffLocationId) {
-      const location = await LocationService.getLocation(_dropOffLocationId) as LocationField
-      setValue('dropOffLocation', location)
-    } else {
-      setValue('dropOffLocation', null)
-    }
+  const handleDropOffLocationChange = (hubId: string) => {
+    setDropOffLocationId(hubId)
   }
 
-  const onSubmit = async (data: FormFields) => {
+  const onSubmit = (data: FormFields) => {
     const valid = validateTimes()
     if (!valid) {
       return
@@ -319,59 +264,13 @@ const SearchForm = ({
       return
     }
 
-    let resolvedCoordinates = pickupCoordinates
-    if (!resolvedCoordinates && pickupPlace.trim()) {
-      try {
-        const place = await LocationService.resolvePlace(pickupPlace.trim())
-        resolvedCoordinates = { ...place, name: place.name || pickupPlace.trim() }
-      } catch (err) {
-        setPlaceError('We could not find that place. Try a Pakistani city or use your current location.')
-        return
-      }
-    }
+    const selectedDropOffId = sameLocation ? pickupLocationId : dropOffLocationId
 
-    if (resolvedCoordinates) {
-      let nearestPoint
-      try {
-        nearestPoint = await nearestPickupPoint(resolvedCoordinates.latitude, resolvedCoordinates.longitude)
-      } catch (err) {
-        setPlaceError('Pickup locations could not be loaded. Please try again.')
-        return
-      }
-      if (!nearestPoint) {
-        setPlaceError('There are no SafarRent pickup points within 50 km yet. Choose a listed pickup city instead.')
-        return
-      }
-
-      if (!sameLocation && (!data.dropOffLocation || !dropOffLocationId)) {
-        return
-      }
-      navigate('/search', {
-        state: {
-          pickupLocationId: nearestPoint._id,
-          dropOffLocationId: sameLocation ? nearestPoint._id : dropOffLocationId,
-          pickupCoordinates: {
-            latitude: resolvedCoordinates.latitude,
-            longitude: resolvedCoordinates.longitude,
-          },
-          pickupPlace: resolvedCoordinates.name,
-          from: data.from,
-          to: data.to,
-          ranges,
-          rentalMode,
-        },
-      })
-      return
-    }
-
-    if (!data.pickupLocation || !data.dropOffLocation) {
-      return
-    }
-
-    setTimeout(navigate, 0, '/search', {
+    // An empty hub id means "All Pakistan Hubs"; the API then returns every approved vehicle.
+    navigate('/search', {
       state: {
-        pickupLocationId: pickupLocationId,
-        dropOffLocationId: dropOffLocationId,
+        pickupLocationId: pickupLocationId || ALL_PAKISTAN_HUBS_ID,
+        dropOffLocationId: selectedDropOffId || ALL_PAKISTAN_HUBS_ID,
         from: data.from,
         to: data.to,
         ranges,
@@ -411,88 +310,26 @@ const SearchForm = ({
       {/* Locations Row */}
       <div className="home-search-locations-row">
         <FormControl fullWidth className="pickup-location">
-          <LocationSelectList
-            {...register('pickupLocation')}
-            label={commonStrings.PICK_UP_LOCATION}
-            hidePopupIcon
-            init
-            required={!pickupPlace && !pickupCoordinates}
-            variant="outlined"
-            value={pickupLocation as bookcarsTypes.Location}
+          <HubSelect
+            label="Pickup hub"
+            value={pickupLocationId}
             onChange={handlePickupLocationChange}
           />
         </FormControl>
 
-        <FormControl fullWidth className="pickup-place">
-          <Stack direction="row" spacing={1} alignItems="flex-start">
-            <TextField
-              fullWidth
-              label="Search any place in Pakistan"
-              placeholder="Enter a city or area"
-              value={pickupPlace}
-              onChange={(event) => {
-                setPickupPlace(event.target.value)
-                setPickupCoordinates(undefined)
-                setPlaceError('')
-                if (event.target.value) {
-                  setPickupLocationId('geo')
-                  setValue('pickupLocation', null)
-                  if (sameLocation) {
-                    setDropOffLocationId('geo')
-                    setValue('dropOffLocation', null)
-                  }
-                }
-              }}
-              variant="outlined"
-            />
-            <Button
-              type="button"
-              variant="outlined"
-              startIcon={<MyLocation />}
-              sx={{ whiteSpace: 'nowrap', minWidth: '160px', height: '56px' }}
-              onClick={() => {
-                if (!navigator.geolocation) {
-                  setPlaceError('Location access is not available in this browser.')
-                  return
-                }
-                navigator.geolocation.getCurrentPosition(
-                  ({ coords }) => {
-                    setPickupCoordinates({ latitude: coords.latitude, longitude: coords.longitude, name: 'Your current location' })
-                    setPickupPlace('Current location')
-                    setPickupLocationId('')
-                    setValue('pickupLocation', null)
-                    if (sameLocation) {
-                      setDropOffLocationId('')
-                      setValue('dropOffLocation', null)
-                    }
-                    setPlaceError('')
-                  },
-                  () => setPlaceError('Allow location access or enter a city to search nearby cars.'),
-                  { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
-                )
-              }}
-            >
-              Use my location
-            </Button>
-          </Stack>
-          <FormHelperText error={!!placeError}>{placeError || (pickupCoordinates ? `${pickupCoordinates.name} selected. Searching approved vehicles within 50 km.` : 'Searches approved vehicles near registered pickup points (within 50 km).')}</FormHelperText>
-        </FormControl>
-
         {!sameLocation && (
           <FormControl fullWidth className="drop-off-location">
-            <LocationSelectList
-              {...register('dropOffLocation')}
-              label={commonStrings.DROP_OFF_LOCATION}
-              hidePopupIcon
-              init
-              value={dropOffLocation as bookcarsTypes.Location}
-              required
-              variant="outlined"
+            <HubSelect
+              label="Drop-off hub"
+              value={dropOffLocationId}
               onChange={handleDropOffLocationChange}
             />
           </FormControl>
         )}
       </div>
+
+      {/* Quick city pills */}
+      <HubPills value={pickupLocationId} onChange={handlePickupLocationChange} />
 
       {/* Dates & Search CTA Row */}
       <div className="home-search-dates-row">

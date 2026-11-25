@@ -29,6 +29,8 @@ import Map from '@/components/Map'
 // import Progress from '@/components/Progress'
 import ViewOnMapButton from '@/components/ViewOnMapButton'
 import MapDialog from '@/components/MapDialog'
+import HubSelect, { HubPills } from '@/components/HubSelect'
+import { ALL_PAKISTAN_HUBS, ALL_PAKISTAN_HUBS_ID, DEFAULT_HUB_NAME, findHubByName } from '@/utils/hubs'
 
 import '@/assets/css/search.css'
 
@@ -130,6 +132,28 @@ const Search = () => {
     setSupplierIds(newSuppliers)
   }
 
+  const handleHubSelect = async (hubId: string, hub?: bookcarsTypes.Location) => {
+    setSupplierIds(allSuppliersIds)
+    setPickupCoordinates(undefined)
+    setSearchedPlace('')
+
+    if (!hubId) {
+      setPickupLocation(ALL_PAKISTAN_HUBS)
+      setDropOffLocation(ALL_PAKISTAN_HUBS)
+      return
+    }
+
+    const location = hub || (await LocationService.getLocation(hubId))
+    if (!location) {
+      return
+    }
+
+    setPickupLocation(location)
+    if (!dropOffLocation || dropOffLocation._id === pickupLocation?._id) {
+      setDropOffLocation(location)
+    }
+  }
+
   const handleRatingFilterChange = (value: number) => {
     setRating(value)
   }
@@ -172,24 +196,21 @@ const Search = () => {
 
   const onLoad = async (user?: bookcarsTypes.User) => {
     let state = location.state
+
     if (!state) {
-      // Direct visits still open a usable search with a real pickup hub.
-      try {
-        const hubs = await LocationService.getLocationsWithPosition()
-        if (!hubs.length) {
- setLoading(false); setNoMatch(true); return 
-}
-        const start = new Date()
-        start.setDate(start.getDate() + 1)
-        start.setHours(10, 0, 0, 0)
-        const end = new Date(start)
-        end.setDate(end.getDate() + 3)
-        state = { pickupLocationId: hubs[0]._id, dropOffLocationId: hubs[0]._id, from: start, to: end }
-      } catch (error) {
-        helper.error(error)
-        setLoading(false)
-        setNoMatch(true)
-        return
+      // Direct visits open on the Islamabad hub with tomorrow → +3 days.
+      const hubs = await LocationService.getLocationsWithPosition()
+      const defaultHub = findHubByName(hubs, DEFAULT_HUB_NAME) || hubs[0]
+      const start = new Date()
+      start.setDate(start.getDate() + 1)
+      start.setHours(10, 0, 0, 0)
+      const end = new Date(start)
+      end.setDate(end.getDate() + 3)
+      state = {
+        pickupLocationId: defaultHub?._id || ALL_PAKISTAN_HUBS_ID,
+        dropOffLocationId: defaultHub?._id || ALL_PAKISTAN_HUBS_ID,
+        from: start,
+        to: end,
       }
     }
 
@@ -199,33 +220,37 @@ const Search = () => {
     const { from: _from } = state
     const { to: _to } = state
 
-    if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
+    if (!_from || !_to) {
       setLoading(false)
       setNoMatch(true)
       return
     }
 
-    let _pickupLocation
-    let _dropOffLocation
+    let _pickupLocation: bookcarsTypes.Location = ALL_PAKISTAN_HUBS
+    let _dropOffLocation: bookcarsTypes.Location = ALL_PAKISTAN_HUBS
     try {
-      _pickupLocation = await LocationService.getLocation(pickupLocationId)
+      if (pickupLocationId) {
+        const resolvedPickup = await LocationService.getLocation(pickupLocationId)
 
-      if (!_pickupLocation) {
-        setLoading(false)
-        setNoMatch(true)
-        return
-      }
+        if (!resolvedPickup) {
+          setLoading(false)
+          setNoMatch(true)
+          return
+        }
 
-      if (dropOffLocationId !== pickupLocationId) {
-        _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
-      } else {
-        _dropOffLocation = _pickupLocation
-      }
+        _pickupLocation = resolvedPickup
 
-      if (!_dropOffLocation) {
-        setLoading(false)
-        setNoMatch(true)
-        return
+        if (dropOffLocationId && dropOffLocationId !== pickupLocationId) {
+          const resolvedDropOff = await LocationService.getLocation(dropOffLocationId)
+          if (!resolvedDropOff) {
+            setLoading(false)
+            setNoMatch(true)
+            return
+          }
+          _dropOffLocation = resolvedDropOff
+        } else {
+          _dropOffLocation = resolvedPickup
+        }
       }
 
       const payload: bookcarsTypes.GetCarsPayload = {
@@ -294,6 +319,14 @@ const Search = () => {
             <div className="col-1 filter-rail">
               {!loading && (
                 <>
+                  <div className="search-hub-select">
+                    <HubSelect
+                      label="Pickup hub"
+                      value={pickupLocation._id || ALL_PAKISTAN_HUBS_ID}
+                      onChange={handleHubSelect}
+                    />
+                  </div>
+
                   <CarFilter
                     key={[pickupLocation._id, dropOffLocation._id, from.getTime(), to.getTime()].join('-')}
                     className="filter"
@@ -353,6 +386,10 @@ const Search = () => {
                   </div>
                 </div>
               )}
+
+              <div className="search-hub-pills">
+                <HubPills value={pickupLocation._id || ALL_PAKISTAN_HUBS_ID} onChange={handleHubSelect} />
+              </div>
 
               <div className="feed-toolbar">
                 <span className="feed-meta">Showing available listings with PKR pricing</span>

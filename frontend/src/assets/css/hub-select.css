@@ -1,0 +1,63 @@
+.hub-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.hub-pill {
+  border: 1px solid var(--sr-border, rgba(15, 23, 42, 0.18));
+  background: var(--sr-surface-raised, #ffffff);
+  color: var(--sr-text, #0f172a);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  font-family: var(--sr-font-heading, inherit);
+}
+
+.hub-pill:hover {
+  border-color: #059669;
+  color: #047857;
+}
+
+.hub-pill.active {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+}
+
+.hub-pill:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Dark hero search dock */
+form.home-search-form .hub-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(245, 245, 247, 0.25);
+  color: #f5f5f7;
+}
+
+form.home-search-form .hub-pill:hover {
+  border-color: #d4af37;
+  color: #ffffff;
+}
+
+form.home-search-form .hub-pill.active {
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #0f172a;
+}
+
+.search-hub-select {
+  margin-bottom: 16px;
+}
+
+.search-hub-pills {
+  margin-bottom: 12px;
+}

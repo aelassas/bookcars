@@ -18,8 +18,7 @@ import User from '../models/User'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import * as mailHelper from '../utils/mailHelper'
-import Location from '../models/Location'
-import { getPickupLocationIds } from '../utils/searchLocation'
+import { getHubDeliveryName, getPickupLocationIds, isNorthernDestination } from '../utils/searchLocation'
 
 /**
  * Create a Car.
@@ -1023,11 +1022,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     }
     const locationIds = await getPickupLocationIds(body)
     const pickupLabel = String((body as any).pickupLabel || (body as any).pickupLocationName || '')
-    const resolvedPickupLocations = locationIds.length > 0
-      ? await Location.find({ _id: { $in: locationIds } }).populate<{ values: Array<{ value: string }> }>('values').lean()
-      : []
-    const resolvedPickupText = resolvedPickupLocations.flatMap((location) => location.values.map((value) => value.value)).join(' ')
-    const northernDestination = /\b(Hunza|Skardu|Swat|Naran|Gilgit|Murree|Northern|Naran Kaghan)\b/i.test(`${pickupLabel} ${resolvedPickupText}`)
+    const northernDestination = await isNorthernDestination(pickupLabel, locationIds)
     const {
       carType,
       gearbox,
@@ -1081,7 +1076,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       $match.$and!.push({ $or: [{ comingSoon: false }, { comingSoon: null }] })
     }
 
-    if (fuelPolicy) {
+    if (Array.isArray(fuelPolicy) && fuelPolicy.length > 0) {
       $match.$and!.push({ fuelPolicy: { $in: fuelPolicy } })
     }
 
@@ -1097,14 +1092,12 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
     }
 
-    if (mileage) {
+    // Empty selections mean "no restriction", never an impossible filter.
+    if (Array.isArray(mileage) && mileage.length > 0) {
       if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
         $match.$and!.push({ mileage: { $gt: -1 } })
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
-      } else if (mileage.length === 0) {
-        res.json([{ resultData: [], pageInfo: [] }])
-        return
       }
     }
 
@@ -1112,7 +1105,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       $match.$and!.push({ deposit: { $lte: deposit } })
     }
 
-    if (ranges) {
+    if (Array.isArray(ranges) && ranges.length > 0) {
       $match.$and!.push({ range: { $in: ranges } })
     }
 
@@ -1158,9 +1151,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       }
       : { verified: true }
 
-    const data = await Car.aggregate(
-      [
-        { $match },
+    const buildPipeline = (match: mongoose.QueryFilter<bookcarsTypes.Car>): mongoose.PipelineStage[] => [
+        { $match: match },
         {
           $lookup: {
             from: 'User',
@@ -1363,18 +1355,52 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         //     ],
         //   },
         // },
-      ],
-      { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
-    )
+    ]
+
+    let data = await Car.aggregate(buildPipeline($match), { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } })
+
+    const hubDeliveryBadge = `Available via ${await getHubDeliveryName(locationIds)} Hub Delivery`
 
     if (Array.isArray(data) && data[0]?.resultData) {
       data[0].resultData = data[0].resultData.map((car: any) => {
-        if (locationIds.length && !car.locations?.some((id: mongoose.Types.ObjectId) => locationIds.some((requested) => requested.equals(id)))) {
-          car.interCityDeliveryBadge = `Available via ${car.supplier.location || car.supplier.fullName} Hub with Inter-City${northernDestination ? ' / Northern' : ''} Delivery`
+        const local = !locationIds.length
+          || car.locations?.some((id: mongoose.Types.ObjectId) => locationIds.some((requested) => requested.equals(id)))
+        if (!local) {
+          car.hubDeliveryBadge = hubDeliveryBadge
         }
         return car
       })
     }
+
+    // Zero exact local matches (remote northern destinations, empty cities) must never
+    // dead-end the search: offer eligible hub-delivery vehicles and label the cards.
+    const exactPageInfo = Array.isArray(data) && Array.isArray(data[0]?.pageInfo) ? data[0].pageInfo : []
+    const exactTotalRecords = exactPageInfo.length > 0 ? exactPageInfo[0].totalRecords : 0
+    if (exactTotalRecords === 0) {
+      const fallbackMatch: mongoose.QueryFilter<bookcarsTypes.Car> = {
+        $and: [
+          { listingStatus: bookcarsTypes.ListingStatus.Approved },
+          { supplier: { $in: suppliers } },
+          {
+            terrainCapability: {
+              $in: northernDestination
+                ? [bookcarsTypes.TerrainCapability.NorthernMountains]
+                : [bookcarsTypes.TerrainCapability.NorthernMountains, bookcarsTypes.TerrainCapability.HighwayIntercity],
+            },
+          },
+          ...(body.rentalMode === bookcarsTypes.RentalMode.SelfDrive ? [{ selfDriveAvailable: true }] : body.rentalMode === bookcarsTypes.RentalMode.WithDriver ? [{ withDriverAvailable: true }] : []),
+          { available: true },
+          { fullyBooked: { $in: [false, null] } },
+          { $or: [{ comingSoon: false }, { comingSoon: null }] },
+        ],
+      }
+      const fallbackData = await Car.aggregate(buildPipeline(fallbackMatch), { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } })
+      if (Array.isArray(fallbackData) && fallbackData[0]?.resultData?.length > 0) {
+        fallbackData[0].resultData = fallbackData[0].resultData.map((car: any) => ({ ...car, hubDeliveryBadge }))
+        data = fallbackData
+      }
+    }
+
     res.json(data)
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('ERROR')} ${req.query.s}`, err)

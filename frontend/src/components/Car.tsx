@@ -270,7 +270,9 @@ const Car = ({
               {car.selfDriveAvailable ? <span>Self-Drive</span> : null}
               {car.withDriverAvailable ? <span>With Driver</span> : null}
             </div>
-            {car.interCityDeliveryBadge && <div className="sr-delivery-badge">{car.interCityDeliveryBadge}</div>}
+            {(car.hubDeliveryBadge || car.interCityDeliveryBadge) && (
+              <div className="sr-delivery-badge">{car.hubDeliveryBadge || car.interCityDeliveryBadge}</div>
+            )}
             {!hidePrice && (
               <div className="price">
                 <span className="price-days">{helper.getDays(language, days)}</span>
@@ -415,8 +417,9 @@ const Car = ({
                         state: {
                           carId: car._id,
                           rentalMode,
-                          pickupLocationId: pickupLocation,
-                          dropOffLocationId: dropOffLocation,
+                          // "All Pakistan Hubs" searches carry no id: book against the car's own hub.
+                          pickupLocationId: pickupLocation || (car.locations?.[0] as unknown as string),
+                          dropOffLocationId: dropOffLocation || pickupLocation || (car.locations?.[0] as unknown as string),
                           from,
                           to
                         }

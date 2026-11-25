@@ -275,7 +275,7 @@ const CarList = ({
               </div>
             </div>
           )
-          : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
+          : ((from && to) || hidePrice) // || (hidePrice && booking))
           && (
             <>
               {totalRecords > 0 && (

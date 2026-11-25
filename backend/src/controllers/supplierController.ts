@@ -17,7 +17,6 @@ import DateBasedPrice from '../models/DateBasedPrice'
 import * as helper from '../utils/helper'
 import * as logger from '../utils/logger'
 import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
-import Location from '../models/Location'
 import { getPickupLocationIds } from '../utils/searchLocation'
 
 /**
@@ -453,11 +452,13 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
     const $match: mongoose.QueryFilter<bookcarsTypes.Car> = {
       $and: [
         { listingStatus: bookcarsTypes.ListingStatus.Approved },
-        // { locations: pickupLocation },
-        { locations: { $in: locationIds } },
-        { type: { $in: carType } },
-        { gearbox: { $in: gearbox } },
-        { fuelPolicy: { $in: fuelPolicy } },
+        // Omitted or unresolved pickup areas mean "all Pakistan", never no results.
+        ...(locationIds.length
+          ? [{ $or: [{ locations: { $in: locationIds } }, { deliveryLocations: { $in: locationIds } }] }]
+          : []),
+        ...(Array.isArray(carType) && carType.length ? [{ type: { $in: carType } }] : []),
+        ...(Array.isArray(gearbox) && gearbox.length ? [{ gearbox: { $in: gearbox } }] : []),
+        ...(Array.isArray(fuelPolicy) && fuelPolicy.length ? [{ fuelPolicy: { $in: fuelPolicy } }] : []),
         { available: true },
         { fullyBooked: { $in: [false, null] } },
       ],
@@ -475,14 +476,12 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       }
     }
 
-    if (mileage) {
+    // Empty selections mean "no restriction", never an impossible filter.
+    if (Array.isArray(mileage) && mileage.length > 0) {
       if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
         $match.$and!.push({ mileage: { $gt: -1 } })
       } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
         $match.$and!.push({ mileage: -1 })
-      } else if (mileage.length === 0) {
-        res.json([])
-        return
       }
     }
 
@@ -490,7 +489,7 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       $match.$and!.push({ deposit: { $lte: deposit } })
     }
 
-    if (ranges) {
+    if (Array.isArray(ranges) && ranges.length > 0) {
       $match.$and!.push({ range: { $in: ranges } })
     }
 
@@ -680,6 +679,26 @@ export const getFrontendSuppliers = async (req: Request, res: Response) => {
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
+
+    if (data.length === 0) {
+      // Mirror the hub-delivery fallback of the car search so the page can still list vehicles.
+      const fallbackSupplierIds = await Car.distinct('supplier', {
+        listingStatus: bookcarsTypes.ListingStatus.Approved,
+        available: true,
+        fullyBooked: { $in: [false, null] },
+      })
+      if (fallbackSupplierIds.length > 0) {
+        const fallbackSuppliers = await User.find({
+          _id: { $in: fallbackSupplierIds },
+          type: bookcarsTypes.UserType.Supplier,
+          active: true,
+          blacklisted: false,
+        }).select('_id fullName avatar').lean()
+        res.json(fallbackSuppliers.map(({ _id, fullName, avatar }) => ({ _id, fullName, avatar })))
+        return
+      }
+    }
+
     res.json(data)
   } catch (err) {
     logger.error(`[supplier.getFrontendSuppliers] ${i18n.t('ERROR')}`, err)
