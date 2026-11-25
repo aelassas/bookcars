@@ -1,5 +1,20 @@
 # Releases
 
+## [BookCars 9.8](https://github.com/aelassas/bookcars/releases/tag/v9.8) – 2026-11-25
+
+* fix(security): enforce ownership checks on push tokens, email notifications, and licenses ([GHSA-fpmm-c2rm-5wx7](https://github.com/aelassas/bookcars/security/advisories/GHSA-fpmm-c2rm-5wx7), reported by @kats1123)
+* fix(security): enforce ownership checks on supplier contracts and location images ([GHSA-mj62-frmg-wjvc](https://github.com/aelassas/bookcars/security/advisories/GHSA-mj62-frmg-wjvc), reported by @kats1123)
+* fix(admin): show saving overlay when creating or updating bookings and cars
+* fix(admin,frontend): use fixed positioning for overlay backdrop
+
+### Assets
+- [bookcars-9.8.apk](https://github.com/aelassas/bookcars/releases/download/v9.8/bookcars-9.8.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.8/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.8)
+
 ## [BookCars 9.7](https://github.com/aelassas/bookcars/releases/tag/v9.7) – 2026-11-22
 
 * fix(security): enforce supplier ownership checks on car creation, car updates, and booking updates by @carfeii ([GHSA-jp68-gx5m-hw75](https://github.com/aelassas/bookcars/security/advisories/GHSA-jp68-gx5m-hw75))
