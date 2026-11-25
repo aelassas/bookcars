@@ -322,7 +322,6 @@ export const getSuppliers = async (req: Request, res: Response) => {
         {
           $match: {
             type: bookcarsTypes.UserType.Supplier,
-            avatar: { $ne: null },
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -394,7 +393,6 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
             active: true,
             verified: true,
             blacklisted: false,
-            avatar: { $ne: null },
           },
         },
         { $sort: { fullName: 1, _id: 1 } },

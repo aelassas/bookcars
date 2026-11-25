@@ -73,6 +73,14 @@ const getDuration = (text: string): number | null => {
   return parsed && parsed > 0 ? Math.min(parsed, 30) : null
 }
 
+/**
+ * Self-drive intent, including the negated-phrasing variants ("without driver",
+ * Roman Urdu "bina driver") that must never fall through to the chauffeur rule.
+ */
+const selfDrivePattern = /\b(?:self[-\s]?drive|without\s+(?:a\s+)?driver|no\s+driver|bina\s+driver|baghair\s+driver|driver\s+ke\s+baghair|khud\s+(?:drive|chalana))\b/i
+
+const isSelfDrive = (text: string): boolean => selfDrivePattern.test(text)
+
 const getRentalType = (text: string): BookingIntakeRentalType => {
   if (/\b(?:airport|terminal)\b/i.test(text)) {
     return 'airport-transfer'
@@ -83,11 +91,11 @@ const getRentalType = (text: string): BookingIntakeRentalType => {
   if (/\b(?:intercity|inter-city|to another city)\b/i.test(text)) {
     return 'intercity'
   }
+  if (isSelfDrive(text)) {
+    return 'self-drive'
+  }
   if (/\b(?:with driver|chauffeur|driver)\b/i.test(text)) {
     return 'chauffeur'
-  }
-  if (/\b(?:self[- ]?drive|without driver)\b/i.test(text)) {
-    return 'self-drive'
   }
   return null
 }
@@ -116,8 +124,8 @@ export const extractBookingIntake = (originalRequest: string): BookingIntakeData
   const startDate = getDate(text) || normalizeRelativeDate(text) || (duration ? addDays(karachiToday(), 1) : null)
   const endDate = startDate && duration ? addDays(startDate, duration) : null
   const rentalType = getRentalType(text)
-  const chauffeurRequired = rentalType === 'chauffeur' || /\bchauffeur\b|\bwith driver\b/i.test(text)
-  const rentalMode = /\bself[- ]?drive\b|\bwithout driver\b/i.test(text)
+  const chauffeurRequired = !isSelfDrive(text) && (rentalType === 'chauffeur' || /\bchauffeur\b|\bwith driver\b/i.test(text))
+  const rentalMode = isSelfDrive(text)
     ? bookcarsTypes.RentalMode.SelfDrive
     : chauffeurRequired ? bookcarsTypes.RentalMode.WithDriver : null
   const missingFields: string[] = []
