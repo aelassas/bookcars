@@ -2210,7 +2210,7 @@ describe('POST /api/create-license', () => {
 
 describe('POST /api/update-license/:id', () => {
   it('should update a license', async () => {
-    const token = await testHelper.signinAsUser()
+    const token = await testHelper.generateToken(USER1_ID)
 
     // test success (no initial license)
     let user = await User.findById(USER1_ID)
@@ -2283,14 +2283,12 @@ describe('POST /api/update-license/:id', () => {
       .set(env.X_ACCESS_TOKEN, token)
       .attach('file', LICENSE1_PATH)
     expect(res.statusCode).toBe(400)
-
-    await testHelper.signout(token)
   })
 })
 
 describe('POST /api/delete-license/:id', () => {
   it('should delete a license', async () => {
-    const token = await testHelper.signinAsUser()
+    const token = await testHelper.generateToken(USER1_ID)
 
     // test success
     let user = await User.findById(USER1_ID)
@@ -2349,8 +2347,6 @@ describe('POST /api/delete-license/:id', () => {
       .post('/api/delete-license/invalid-id')
       .set(env.X_ACCESS_TOKEN, token)
     expect(res.statusCode).toBe(400)
-
-    await testHelper.signout(token)
   })
 })
 
@@ -2639,5 +2635,200 @@ describe('POST /api/send-email', () => {
       .post('/api/send-email')
       .set('Origin', 'https://unknown.com')
     expect(res.statusCode).toBe(500)
+  })
+})
+
+describe('Push token, email notification, and license authorization security', () => {
+  const supplierEmail = testHelper.GetRandomEmail()
+  const managedCustomerEmail = testHelper.GetRandomEmail()
+  const victimCustomerEmail = testHelper.GetRandomEmail()
+  const attackerCustomerEmail = testHelper.GetRandomEmail()
+  let supplierId: string
+  let managedCustomerId: string
+  let victimCustomerId: string
+  let attackerCustomerId: string
+
+  beforeAll(async () => {
+    supplierId = await testHelper.createSupplier(supplierEmail, 'License & Push Auth Supplier')
+
+    const managedCustomer = new User({
+      email: managedCustomerEmail,
+      fullName: 'Managed Customer',
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      supplier: supplierId,
+      verified: true,
+      active: true,
+    })
+    await managedCustomer.save()
+    managedCustomerId = managedCustomer._id.toString()
+
+    const victimCustomer = new User({
+      email: victimCustomerEmail,
+      fullName: 'Victim Customer',
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      enableEmailNotifications: true,
+      verified: true,
+      active: true,
+    })
+    await victimCustomer.save()
+    victimCustomerId = victimCustomer._id.toString()
+
+    const attackerCustomer = new User({
+      email: attackerCustomerEmail,
+      fullName: 'Attacker Customer',
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+      verified: true,
+      active: true,
+    })
+    await attackerCustomer.save()
+    attackerCustomerId = attackerCustomer._id.toString()
+  })
+
+  afterAll(async () => {
+    for (const id of [managedCustomerId, victimCustomerId, attackerCustomerId]) {
+      const user = await User.findById(id)
+      if (user?.license) {
+        const licensePath = path.join(env.CDN_LICENSES, user.license)
+        if (await helper.pathExists(licensePath)) {
+          await asyncFs.unlink(licensePath)
+        }
+      }
+    }
+    await PushToken.deleteMany({ user: { $in: [managedCustomerId, victimCustomerId, attackerCustomerId] } })
+    await User.deleteMany({ _id: { $in: [managedCustomerId, victimCustomerId, attackerCustomerId] } })
+    await testHelper.deleteSupplier(supplierId)
+  })
+
+  it('prevents cross-user and supplier access to push token endpoints', async () => {
+    const victimToken = await testHelper.generateToken(victimCustomerId)
+    const attackerToken = await testHelper.generateToken(attackerCustomerId)
+    const supplierToken = await testHelper.generateToken(supplierId)
+    const victimPushToken = `ExponentPushToken[${nanoid()}]`
+
+    // Victim registers own push token
+    let res = await request(app)
+      .post(`/api/create-push-token/${victimCustomerId}/${victimPushToken}`)
+      .set(env.X_ACCESS_TOKEN, victimToken)
+    expect(res.statusCode).toBe(200)
+
+    // Attacker customer and unrelated supplier cannot read, replace, or delete victim's push token
+    for (const callerToken of [attackerToken, supplierToken]) {
+      res = await request(app)
+        .get(`/api/push-token/${victimCustomerId}`)
+        .set(env.X_ACCESS_TOKEN, callerToken)
+      expect(res.statusCode).toBe(403)
+
+      res = await request(app)
+        .post(`/api/delete-push-token/${victimCustomerId}`)
+        .set(env.X_ACCESS_TOKEN, callerToken)
+      expect(res.statusCode).toBe(403)
+
+      res = await request(app)
+        .post(`/api/create-push-token/${victimCustomerId}/ExponentPushToken[attacker]`)
+        .set(env.X_ACCESS_TOKEN, callerToken)
+      expect(res.statusCode).toBe(403)
+    }
+
+    // Victim's token remains intact
+    res = await request(app)
+      .get(`/api/push-token/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, victimToken)
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toBe(victimPushToken)
+
+    // Victim can delete own push token
+    res = await request(app)
+      .post(`/api/delete-push-token/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, victimToken)
+    expect(res.statusCode).toBe(200)
+    expect(await PushToken.findOne({ user: victimCustomerId })).toBeNull()
+  })
+
+  it('prevents users and suppliers from changing another user email notifications setting', async () => {
+    const victimToken = await testHelper.generateToken(victimCustomerId)
+    const attackerToken = await testHelper.generateToken(attackerCustomerId)
+    const supplierToken = await testHelper.generateToken(supplierId)
+
+    for (const callerToken of [attackerToken, supplierToken]) {
+      const res = await request(app)
+        .post('/api/update-email-notifications')
+        .set(env.X_ACCESS_TOKEN, callerToken)
+        .send({ _id: victimCustomerId, enableEmailNotifications: false })
+      expect(res.statusCode).toBe(403)
+      expect((await User.findById(victimCustomerId))?.enableEmailNotifications).toBe(true)
+    }
+
+    // Victim can update own setting
+    const res = await request(app)
+      .post('/api/update-email-notifications')
+      .set(env.X_ACCESS_TOKEN, victimToken)
+      .send({ _id: victimCustomerId, enableEmailNotifications: false })
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(victimCustomerId))?.enableEmailNotifications).toBe(false)
+  })
+
+  it('enforces ownership and supplier-managed boundaries on update-license and delete-license', async () => {
+    const victimToken = await testHelper.generateToken(victimCustomerId)
+    const attackerToken = await testHelper.generateToken(attackerCustomerId)
+    const supplierToken = await testHelper.generateToken(supplierId)
+
+    // Victim uploads own license
+    let res = await request(app)
+      .post(`/api/update-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, victimToken)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(200)
+    const victimLicense = res.body as string
+
+    // Another customer cannot overwrite or delete victim's license
+    res = await request(app)
+      .post(`/api/update-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, attackerToken)
+      .attach('file', LICENSE2_PATH)
+    expect(res.statusCode).toBe(403)
+    expect((await User.findById(victimCustomerId))?.license).toBe(victimLicense)
+
+    res = await request(app)
+      .post(`/api/delete-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, attackerToken)
+    expect(res.statusCode).toBe(403)
+    expect((await User.findById(victimCustomerId))?.license).toBe(victimLicense)
+
+    // Supplier cannot overwrite or delete an unmanaged customer's license
+    res = await request(app)
+      .post(`/api/update-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .attach('file', LICENSE2_PATH)
+    expect(res.statusCode).toBe(403)
+
+    res = await request(app)
+      .post(`/api/delete-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+    expect(res.statusCode).toBe(403)
+    expect((await User.findById(victimCustomerId))?.license).toBe(victimLicense)
+
+    // Supplier CAN manage license for a customer linked to that supplier
+    res = await request(app)
+      .post(`/api/update-license/${managedCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+      .attach('file', LICENSE1_PATH)
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(managedCustomerId))?.license).toBeTruthy()
+
+    res = await request(app)
+      .post(`/api/delete-license/${managedCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, supplierToken)
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(managedCustomerId))?.license).toBeNull()
+
+    // Victim can delete own license
+    res = await request(app)
+      .post(`/api/delete-license/${victimCustomerId}`)
+      .set(env.X_ACCESS_TOKEN, victimToken)
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(victimCustomerId))?.license).toBeNull()
   })
 })
