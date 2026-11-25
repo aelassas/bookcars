@@ -41,6 +41,7 @@ export default async function RentalDetailPage({ params }: Props) {
         vehiclePlate={data.vehiclePlate ?? ""}
         vehicleVin={data.vehicleVin}
         vehicleOdometer={data.vehicleOdometer}
+        vehiclePhotos={data.vehiclePhotos}
         liveVehicleOdometer={data.liveVehicleOdometer}
         liveVehicleOdometerAt={data.liveVehicleOdometerAt}
         odometerPhotos={data.odometerPhotos}

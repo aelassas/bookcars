@@ -8,6 +8,7 @@ import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { rentalPricingDays } from "./pricing";
 import { getLiveVehicleOdometer } from "@/modules/fleet/telemetry";
+import type { WebsiteCarPhoto } from "@/modules/fleet/website";
 
 export async function getRentals(tenantId: string) {
   await canManageRentalsForTenant(tenantId);
@@ -79,6 +80,7 @@ export type RentalWithDetails = {
   vehicleModel: string | null;
   vehicleVin: string | null;
   vehicleOdometer: number | null;
+  vehiclePhotos: WebsiteCarPhoto[];
   liveVehicleOdometer: number | null;
   liveVehicleOdometerAt: Date | null;
   odometerPhotos: RentalOdometerPhoto[];
@@ -105,6 +107,7 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
         vehicleVin: vehicle.vin,
         vehicleImei: vehicle.imei,
         vehicleOdometer: vehicle.odometer,
+        vehiclePhotos: vehicle.photos,
       })
       .from(rental)
       .innerJoin(customer, eq(rental.customerId, customer.id))
@@ -129,6 +132,7 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
     return {
       ...row,
       vehicleOdometer: live ? Math.max(row.vehicleOdometer ?? 0, live.odometerKm) : row.vehicleOdometer,
+      vehiclePhotos: row.vehiclePhotos ?? [],
       liveVehicleOdometer: live?.odometerKm ?? null,
       liveVehicleOdometerAt: Number.isFinite(liveTimestamp) ? new Date(liveTimestamp) : null,
       odometerPhotos: photoRows.filter((photo) => photo.mimeType.startsWith("image/")).map((photo) => ({

@@ -8,13 +8,8 @@ function fmt(d: Date | null) {
 }
 
 /**
- * The Kaiten side of a car's profile — everything the sync now carries through
- * from the fleet's source-of-truth board: showroom photos, the verbatim sales
- * spec, the board column it lives in, the hand currently holding it, and a live
- * "free / booked" line read from the same calendar the availability board uses.
- *
- * Server component: photos are public files.kaiten.ru URLs, so a plain <img>
- * loads them and no client JS is needed.
+ * Vehicle gallery, optional Kaiten sales details and live availability.
+ * Photos may come from Kaiten or the website gallery and use public URLs.
  */
 export function VehicleKaitenPanel({
   photos,
@@ -37,7 +32,7 @@ export function VehicleKaitenPanel({
     <section className="mt-6 rounded-card border border-line bg-surface shadow-card">
       <div className="flex flex-wrap items-center gap-3 border-b border-line-soft px-4 py-2.5">
         <span className="text-xs font-semibold uppercase tracking-wider text-ink-2">
-          Car finder · Kaiten
+          Vehicle gallery
         </span>
         {kaitenColumn && <Badge tone="neutral">{kaitenColumn}</Badge>}
         <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
@@ -96,7 +91,7 @@ export function VehicleKaitenPanel({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-ink-3">No photos on the Kaiten card.</p>
+            <p className="text-sm text-ink-3">No vehicle photos.</p>
           )}
         </div>
 
@@ -108,7 +103,7 @@ export function VehicleKaitenPanel({
           {hasNotes ? (
             <p className="whitespace-pre-line text-sm leading-relaxed text-ink-2">{notes}</p>
           ) : (
-            <p className="text-sm text-ink-3">No description on the Kaiten card.</p>
+            <p className="text-sm text-ink-3">No vehicle description.</p>
           )}
         </div>
       </div>

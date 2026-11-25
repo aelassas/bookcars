@@ -22,6 +22,7 @@ import { RentalExtensionPanel } from "@/components/rental/RentalExtensionPanel";
 import type { rentalCharge } from "@/platform/db/schema";
 import type { TarsSubmissionPackage } from "@/platform/integrations/tars/submission";
 import type { RentalOdometerPhoto } from "@/modules/rental/queries";
+import type { WebsiteCarPhoto } from "@/modules/fleet/website";
 import { startRental, completeRental, cancelRental, resolveDeposit } from "@/modules/rental/actions";
 import { confirmPayment, rejectPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
@@ -44,6 +45,7 @@ import {
   StickyNote,
   FileText,
   Star,
+  Images,
 } from "lucide-react";
 
 type Rental = {
@@ -127,6 +129,7 @@ export function RentalDetail({
   vehiclePlate,
   vehicleVin,
   vehicleOdometer,
+  vehiclePhotos,
   liveVehicleOdometer,
   liveVehicleOdometerAt,
   odometerPhotos,
@@ -151,6 +154,7 @@ export function RentalDetail({
   vehiclePlate: string;
   vehicleVin: string | null;
   vehicleOdometer: number | null;
+  vehiclePhotos: WebsiteCarPhoto[];
   liveVehicleOdometer: number | null;
   liveVehicleOdometerAt: Date | null;
   odometerPhotos: RentalOdometerPhoto[];
@@ -395,6 +399,20 @@ export function RentalDetail({
           </Button>
         </div>
       </div>
+
+      {vehiclePhotos.length > 0 && (
+        <Card className="mb-5">
+          <CardHeader title="Vehicle photos" count={vehiclePhotos.length} icon={<Images className="h-3.5 w-3.5" />} />
+          <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+            {vehiclePhotos.map((photo) => (
+              <a key={photo.url} href={photo.url} target="_blank" rel="noreferrer" className="overflow-hidden rounded-field border border-line bg-sunken">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photo.url} alt={photo.name || vehicleLabel} loading="lazy" className="aspect-4/3 w-full object-cover" />
+              </a>
+            ))}
+          </div>
+        </Card>
+      )}
 
       <div className="grid gap-5 md:grid-cols-3">
         <Card>
