@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRecognizedCustomerData } from "./recognition";
+import { parseRecognizedCustomerData, parseRecognizedVehicleData } from "./recognition";
 
 describe("parseRecognizedCustomerData", () => {
   it("keeps readable customer fields and normalizes Emirates ID", () => {
@@ -27,5 +27,28 @@ describe("parseRecognizedCustomerData", () => {
 
   it("rejects a non-object response", () => {
     expect(() => parseRecognizedCustomerData(null)).toThrow("invalid data");
+  });
+});
+
+
+describe("parseRecognizedVehicleData", () => {
+  it("keeps reviewed Mulkiya fields and normalizes the VIN", () => {
+    expect(parseRecognizedVehicleData({
+      vin: "w1k5j4gb3sn518889",
+      plate: "GG 31235",
+      colour: "Black",
+      year: "2025",
+      registrationExpiry: "2027-11-30",
+    })).toEqual({
+      vin: "W1K5J4GB3SN518889",
+      plate: "GG 31235",
+      colour: "Black",
+      year: "2025",
+      registrationExpiry: "2027-11-30",
+    });
+  });
+
+  it("drops guessed invalid VINs, years and dates", () => {
+    expect(parseRecognizedVehicleData({ vin: "NOT-A-VIN", year: "25", registrationExpiry: "30/11/2027" })).toEqual({});
   });
 });

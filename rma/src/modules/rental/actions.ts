@@ -96,7 +96,6 @@ export async function confirmTarsUpload(
       .where(eq(rental.id, rentalId))
       .limit(1);
     if (!current) throw new Error("Rental not found");
-    if (!current.contractUrl) throw new Error("Generate the rental contract before recording the TARS upload");
     if (current.tarsDocumentNumber && current.tarsDocumentNumber !== normalizedDocument) {
       throw new Error(`This rental is already linked to TARS document ${current.tarsDocumentNumber}`);
     }

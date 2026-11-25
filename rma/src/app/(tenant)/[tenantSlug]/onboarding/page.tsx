@@ -74,6 +74,7 @@ export default async function RentalOnboardingPage({ params }: { params: Promise
                     customerName={customer.name} customerEmiratesId={customer.emiratesId}
                     customerDocumentsReviewed={Boolean(customer.documentsReviewedAt)}
                     vehiclePlate={vehicle.plate} vehicleVin={vehicle.vin} vehicleOdometer={vehicle.odometer}
+                    startOdometer={rental.startOdometer} startFuelPercent={rental.startFuelLevel}
                     startAt={rental.startDate.toISOString()} returnAt={rental.returnDate.toISOString()} canManage
                     autoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
                     autoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}

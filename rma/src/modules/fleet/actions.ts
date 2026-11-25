@@ -20,6 +20,9 @@ export interface UpdateVehicleInput {
   model?: string;
   year?: number | null;
   plate?: string;
+  colour?: string | null;
+  vin?: string | null;
+  registrationExpiry?: string | null;
   dailyRate?: number;
   weeklyRate?: number;
   monthlyRate?: number;
@@ -70,6 +73,13 @@ export async function updateVehicle(
       throw new Error("Invalid next service date");
     }
   }
+  if (data.registrationExpiry !== undefined && data.registrationExpiry !== null && Number.isNaN(new Date(data.registrationExpiry).getTime())) {
+    throw new Error("Invalid registration expiry");
+  }
+  if (data.vin) {
+    const vin = data.vin.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+    if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin)) throw new Error("VIN must contain 17 valid characters");
+  }
   if (data.status !== undefined && !EDITABLE_VEHICLE_STATUSES.includes(data.status)) {
     throw new Error(`Status must be one of: ${EDITABLE_VEHICLE_STATUSES.join(", ")}`);
   }
@@ -79,6 +89,9 @@ export async function updateVehicle(
   if (data.model !== undefined) set.model = data.model.trim();
   if (data.year !== undefined) set.year = data.year;
   if (data.plate !== undefined) set.plate = data.plate.trim();
+  if (data.colour !== undefined) set.colour = data.colour?.trim() || null;
+  if (data.vin !== undefined) set.vin = data.vin ? data.vin.replace(/[^A-Za-z0-9]/g, "").toUpperCase() : null;
+  if (data.registrationExpiry !== undefined) set.registrationExpiry = data.registrationExpiry || null;
   if (data.dailyRate !== undefined) set.dailyRate = data.dailyRate;
   if (data.weeklyRate !== undefined) set.weeklyRate = data.weeklyRate;
   if (data.monthlyRate !== undefined) set.monthlyRate = data.monthlyRate;

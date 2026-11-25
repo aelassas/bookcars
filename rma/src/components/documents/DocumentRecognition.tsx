@@ -4,32 +4,50 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label } from "@/components/ui";
 import { applyRecognizedCustomerData, recognizeCustomerDocument } from "@/modules/documents/customer-document-actions";
-import type { RecognizedCustomerData } from "@/modules/documents/recognition";
+import { applyRecognizedVehicleData } from "@/modules/documents/vehicle-document-actions";
+import type { RecognizedCustomerData, RecognizedVehicleData } from "@/modules/documents/recognition";
 
-const FIELDS: Array<{ key: keyof RecognizedCustomerData; label: string; type?: string }> = [
+type RecognitionData = RecognizedCustomerData & RecognizedVehicleData;
+const CUSTOMER_FIELDS: Array<{ key: keyof RecognitionData; label: string; type?: string }> = [
   { key: "name", label: "Full name" },
   { key: "phone", label: "Phone" },
   { key: "email", label: "Email", type: "email" },
   { key: "dateOfBirth", label: "Date of birth", type: "date" },
   { key: "nationality", label: "Nationality" },
+  { key: "address", label: "Home address" },
   { key: "emiratesId", label: "Emirates ID" },
+  { key: "emiratesIdIssue", label: "Emirates ID issue date", type: "date" },
   { key: "emiratesIdExpiry", label: "Emirates ID expiry", type: "date" },
   { key: "passportNumber", label: "Passport number" },
+  { key: "passportIssue", label: "Passport issue date", type: "date" },
+  { key: "passportExpiry", label: "Passport expiry", type: "date" },
   { key: "driverLicenseNumber", label: "Driving licence number" },
+  { key: "driverLicenseIssue", label: "Licence issue date", type: "date" },
   { key: "driverLicenseExpiry", label: "Licence expiry", type: "date" },
 ];
+const VEHICLE_FIELDS: Array<{ key: keyof RecognitionData; label: string; type?: string }> = [
+  { key: "vin", label: "VIN / chassis number" },
+  { key: "plate", label: "Plate number" },
+  { key: "make", label: "Make" },
+  { key: "model", label: "Model" },
+  { key: "year", label: "Model year" },
+  { key: "colour", label: "Colour" },
+  { key: "registrationExpiry", label: "Registration expiry", type: "date" },
+];
 
-export function DocumentRecognition({ tenantId, documentId, status, data, error, onUpdated }: {
+export function DocumentRecognition({ tenantId, documentId, entityType, status, data, error, onUpdated }: {
   tenantId: string;
   documentId: string;
+  entityType: "customer" | "vehicle";
   status: string;
-  data: RecognizedCustomerData | null;
+  data: RecognitionData | null;
   error: string | null;
   onUpdated: () => void;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const fields = entityType === "vehicle" ? VEHICLE_FIELDS : CUSTOMER_FIELDS;
 
   async function retry() {
     setBusy(true);
@@ -49,9 +67,10 @@ export function DocumentRecognition({ tenantId, documentId, status, data, error,
     setBusy(true);
     setLocalError(null);
     const fd = new FormData(event.currentTarget);
-    const reviewed = Object.fromEntries(FIELDS.map(({ key }) => [key, String(fd.get(key) ?? "").trim()]));
+    const reviewed = Object.fromEntries(fields.map(({ key }) => [key, String(fd.get(key) ?? "").trim()]));
     try {
-      await applyRecognizedCustomerData(tenantId, documentId, reviewed);
+      if (entityType === "vehicle") await applyRecognizedVehicleData(tenantId, documentId, reviewed);
+      else await applyRecognizedCustomerData(tenantId, documentId, reviewed);
       router.refresh();
       onUpdated();
     } catch (e) {
@@ -73,16 +92,16 @@ export function DocumentRecognition({ tenantId, documentId, status, data, error,
       {status === "processing" && <p className="mt-1 text-xs text-slate-500">Reading the document…</p>}
       {status === "review_required" && data && (
         <form onSubmit={apply} className="mt-3 space-y-3">
-          <p className="text-xs text-slate-600">Check every field against the document. Only completed fields are saved to the customer.</p>
+          <p className="text-xs text-slate-600">Check every field against the document. Only completed fields are saved.</p>
           <div className="grid gap-2 sm:grid-cols-2">
-            {FIELDS.map(({ key, label, type }) => (
+            {fields.map(({ key, label, type }) => (
               <div key={key}>
                 <Label htmlFor={`${documentId}-${key}`}>{label}</Label>
                 <Input id={`${documentId}-${key}`} name={key} type={type ?? "text"} defaultValue={data[key] ?? ""} className="w-full" />
               </div>
             ))}
           </div>
-          <Button type="submit" size="sm" disabled={busy}>{busy ? "Saving…" : "Confirm & save to customer"}</Button>
+          <Button type="submit" size="sm" disabled={busy}>{busy ? "Saving…" : `Confirm & save to ${entityType}`}</Button>
         </form>
       )}
     </div>

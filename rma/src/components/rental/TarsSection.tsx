@@ -21,6 +21,8 @@ interface Props {
   vehiclePlate: string;
   vehicleVin: string | null;
   vehicleOdometer: number | null;
+  startOdometer: number | null;
+  startFuelPercent: number | null;
   startAt: string;
   returnAt: string;
   canManage: boolean;
@@ -41,8 +43,8 @@ export function TarsSection(props: Props) {
   const [signatureConfirmed, setSignatureConfirmed] = useState(false);
   const [agreementNumber, setAgreementNumber] = useState(props.initialSubmission?.handoff.agreementNumber ?? props.rentalId.slice(0, 8).toUpperCase());
   const [location, setLocation] = useState(props.initialSubmission?.handoff.rental.location ?? "Dubai");
-  const [odometer, setOdometer] = useState(props.initialSubmission?.handoff.rental.odometer.toString() ?? props.vehicleOdometer?.toString() ?? "");
-  const [fuelPercent, setFuelPercent] = useState(props.initialSubmission?.handoff.rental.fuelPercent.toString() ?? "50");
+  const [odometer, setOdometer] = useState(props.initialSubmission?.handoff.rental.odometer.toString() ?? props.startOdometer?.toString() ?? props.vehicleOdometer?.toString() ?? "");
+  const [fuelPercent, setFuelPercent] = useState(props.initialSubmission?.handoff.rental.fuelPercent.toString() ?? props.startFuelPercent?.toString() ?? "");
   const [documentNumber, setDocumentNumber] = useState(props.tarsDocumentNumber ?? "");
   const [uploadedDocument, setUploadedDocument] = useState(props.tarsDocumentNumber);
   const [downloaded, setDownloaded] = useState(false);
@@ -55,8 +57,7 @@ export function TarsSection(props: Props) {
 
   const filename = `tars-${props.rentalId.slice(0, 8)}.json`;
   const missing = [
-    !props.contractUrl && "Generate or upload the signed contract PDF",
-    !props.customerEmiratesId && "Add the customer's Emirates ID",
+    props.autoEnabled && !props.customerEmiratesId && "Add the customer's Emirates ID",
     props.autoEnabled && !props.customerDocumentsReviewed && "Review the customer's documents",
     !props.vehicleVin && "Add the vehicle VIN",
   ].filter(Boolean) as string[];

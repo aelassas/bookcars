@@ -18,10 +18,15 @@ export type EditableCustomer = {
   notes: string | null;
   dateOfBirth?: string | null;
   nationality?: string | null;
+  address?: string | null;
   emiratesId?: string | null;
+  emiratesIdIssue?: string | null;
   emiratesIdExpiry?: string | null;
   passportNumber?: string | null;
+  passportIssue?: string | null;
+  passportExpiry?: string | null;
   driverLicenseNumber?: string | null;
+  driverLicenseIssue?: string | null;
   driverLicenseExpiry?: string | null;
 };
 
@@ -56,10 +61,15 @@ export function CreateCustomerModal({
         notes: String(fd.get("notes") || ""),
         dateOfBirth: String(fd.get("dateOfBirth") || ""),
         nationality: String(fd.get("nationality") || ""),
+        address: String(fd.get("address") || ""),
         emiratesId: String(fd.get("emiratesId") || ""),
+        emiratesIdIssue: String(fd.get("emiratesIdIssue") || ""),
         emiratesIdExpiry: String(fd.get("emiratesIdExpiry") || ""),
         passportNumber: String(fd.get("passportNumber") || ""),
+        passportIssue: String(fd.get("passportIssue") || ""),
+        passportExpiry: String(fd.get("passportExpiry") || ""),
         driverLicenseNumber: String(fd.get("driverLicenseNumber") || ""),
+        driverLicenseIssue: String(fd.get("driverLicenseIssue") || ""),
         driverLicenseExpiry: String(fd.get("driverLicenseExpiry") || ""),
       };
       const saved = customer
@@ -122,12 +132,21 @@ export function CreateCustomerModal({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div><Label htmlFor={`${fieldId}-emiratesId`}>Emirates ID</Label><Input id={`${fieldId}-emiratesId`} name="emiratesId" defaultValue={customer?.emiratesId ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-emiratesIdIssue`}>Emirates ID issue date</Label><Input id={`${fieldId}-emiratesIdIssue`} name="emiratesIdIssue" type="date" defaultValue={customer?.emiratesIdIssue ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-emiratesIdExpiry`}>Emirates ID expiry</Label><Input id={`${fieldId}-emiratesIdExpiry`} name="emiratesIdExpiry" type="date" defaultValue={customer?.emiratesIdExpiry ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-passportNumber`}>Passport number</Label><Input id={`${fieldId}-passportNumber`} name="passportNumber" defaultValue={customer?.passportNumber ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-passportIssue`}>Passport issue date</Label><Input id={`${fieldId}-passportIssue`} name="passportIssue" type="date" defaultValue={customer?.passportIssue ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-passportExpiry`}>Passport expiry</Label><Input id={`${fieldId}-passportExpiry`} name="passportExpiry" type="date" defaultValue={customer?.passportExpiry ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-driverLicenseNumber`}>Driving licence number</Label><Input id={`${fieldId}-driverLicenseNumber`} name="driverLicenseNumber" defaultValue={customer?.driverLicenseNumber ?? ""} className="w-full" /></div>
+          <div><Label htmlFor={`${fieldId}-driverLicenseIssue`}>Licence issue date</Label><Input id={`${fieldId}-driverLicenseIssue`} name="driverLicenseIssue" type="date" defaultValue={customer?.driverLicenseIssue ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-driverLicenseExpiry`}>Licence expiry</Label><Input id={`${fieldId}-driverLicenseExpiry`} name="driverLicenseExpiry" type="date" defaultValue={customer?.driverLicenseExpiry ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-nationality`}>Nationality</Label><Input id={`${fieldId}-nationality`} name="nationality" defaultValue={customer?.nationality ?? ""} className="w-full" /></div>
           <div><Label htmlFor={`${fieldId}-dateOfBirth`}>Date of birth</Label><Input id={`${fieldId}-dateOfBirth`} name="dateOfBirth" type="date" defaultValue={customer?.dateOfBirth ?? ""} className="w-full" /></div>
+        </div>
+
+        <div>
+          <Label htmlFor={`${fieldId}-address`}>Home address</Label>
+          <Input id={`${fieldId}-address`} name="address" defaultValue={customer?.address ?? ""} className="w-full" autoComplete="street-address" />
         </div>
 
         <div>
