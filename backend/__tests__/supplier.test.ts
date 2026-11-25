@@ -1143,3 +1143,42 @@ describe('POST /api/delete-temp-contract/:image', () => {
     await testHelper.signout(token)
   })
 })
+
+describe('Contract authorization security', () => {
+  it('prevents a supplier from updating or deleting another supplier contract while allowing own contract management', async () => {
+    const supplier1Token = await testHelper.generateToken(SUPPLIER1_ID)
+    const supplier2Token = await testHelper.generateToken(SUPPLIER2_ID)
+
+    // Supplier 2 uploads own contract
+    let res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER2_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, supplier2Token)
+      .attach('file', CONTRACT1_PATH)
+    expect(res.statusCode).toBe(200)
+    const supplier2Contract = res.body as string
+    expect(supplier2Contract).toBeTruthy()
+
+    // Supplier 1 cannot overwrite Supplier 2's contract
+    res = await request(app)
+      .post(`/api/update-contract/${SUPPLIER2_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, supplier1Token)
+      .attach('file', CONTRACT2_PATH)
+    expect(res.statusCode).toBe(403)
+    expect((await User.findById(SUPPLIER2_ID))?.contracts?.find((c) => c.language === 'en')?.file).toBe(supplier2Contract)
+
+    // Supplier 1 cannot delete Supplier 2's contract
+    res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER2_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, supplier1Token)
+    expect(res.statusCode).toBe(403)
+    expect((await User.findById(SUPPLIER2_ID))?.contracts?.find((c) => c.language === 'en')?.file).toBe(supplier2Contract)
+    expect(await helper.pathExists(path.join(env.CDN_CONTRACTS, supplier2Contract))).toBe(true)
+
+    // Supplier 2 can delete own contract
+    res = await request(app)
+      .post(`/api/delete-contract/${SUPPLIER2_ID}/en`)
+      .set(env.X_ACCESS_TOKEN, supplier2Token)
+    expect(res.statusCode).toBe(200)
+    expect((await User.findById(SUPPLIER2_ID))?.contracts?.find((c) => c.language === 'en')?.file).toBeNull()
+  })
+})

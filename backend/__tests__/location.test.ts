@@ -745,3 +745,68 @@ describe('DELETE /api/delete-location/:id', () => {
     await testHelper.signout(token)
   })
 })
+
+describe('Location image authorization security', () => {
+  it('prevents a supplier from updating or deleting images of admin or other supplier locations', async () => {
+    const otherSupplierName = testHelper.getSupplierName()
+    const otherSupplierId = await testHelper.createSupplier(`${otherSupplierName}@test.bookcars.ma`, otherSupplierName)
+    const ownerSupplierToken = await testHelper.generateToken(SUPPLIER_ID)
+    const otherSupplierToken = await testHelper.generateToken(otherSupplierId)
+    const userToken = await testHelper.generateToken(testHelper.getUserId())
+
+    const supplierLocationId = await testHelper.createLocation('supplier-loc-en', 'supplier-loc-fr', countryId)
+    const supplierLocation = await Location.findById(supplierLocationId)
+    expect(supplierLocation).not.toBeNull()
+    supplierLocation!.supplier = new mongoose.Types.ObjectId(SUPPLIER_ID)
+    await supplierLocation!.save()
+
+    try {
+      // Owner supplier can upload image to own location
+      let res = await request(app)
+        .post(`/api/update-location-image/${supplierLocationId}`)
+        .set(env.X_ACCESS_TOKEN, ownerSupplierToken)
+        .attach('image', IMAGE1_PATH)
+      expect(res.statusCode).toBe(200)
+      const ownerImage = res.body as string
+      expect(ownerImage).toBeTruthy()
+
+      // Other supplier and regular user cannot replace or delete owner supplier's location image
+      for (const callerToken of [otherSupplierToken, userToken]) {
+        res = await request(app)
+          .post(`/api/update-location-image/${supplierLocationId}`)
+          .set(env.X_ACCESS_TOKEN, callerToken)
+          .attach('image', IMAGE2_PATH)
+        expect(res.statusCode).toBe(403)
+        expect((await Location.findById(supplierLocationId))?.image).toBe(ownerImage)
+
+        res = await request(app)
+          .post(`/api/delete-location-image/${supplierLocationId}`)
+          .set(env.X_ACCESS_TOKEN, callerToken)
+        expect(res.statusCode).toBe(403)
+        expect((await Location.findById(supplierLocationId))?.image).toBe(ownerImage)
+      }
+
+      // Supplier cannot update or delete image on an admin-owned location (PARENT_LOCATION_ID has no supplier)
+      res = await request(app)
+        .post(`/api/update-location-image/${PARENT_LOCATION_ID}`)
+        .set(env.X_ACCESS_TOKEN, ownerSupplierToken)
+        .attach('image', IMAGE1_PATH)
+      expect(res.statusCode).toBe(403)
+
+      res = await request(app)
+        .post(`/api/delete-location-image/${PARENT_LOCATION_ID}`)
+        .set(env.X_ACCESS_TOKEN, ownerSupplierToken)
+      expect(res.statusCode).toBe(403)
+
+      // Owner supplier can delete own location image
+      res = await request(app)
+        .post(`/api/delete-location-image/${supplierLocationId}`)
+        .set(env.X_ACCESS_TOKEN, ownerSupplierToken)
+      expect(res.statusCode).toBe(200)
+      expect((await Location.findById(supplierLocationId))?.image).toBeNull()
+    } finally {
+      await testHelper.deleteLocation(supplierLocationId)
+      await testHelper.deleteSupplier(otherSupplierId)
+    }
+  })
+})

@@ -876,6 +876,20 @@ export const updateContract = async (req: Request, res: Response) => {
       throw new Error('Language not valid')
     }
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (
+      !sessionUser
+      || sessionUser.type === bookcarsTypes.UserType.User
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== id)
+    ) {
+      logger.error(`[supplier.updateContract] Unauthorized attempt to update contract for supplier ${id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot update this supplier contract')
+      return
+    }
+    // end of security check
+
     const supplier = await User.findOne({ _id: id, type: bookcarsTypes.UserType.Supplier })
 
     if (supplier) {
@@ -934,6 +948,21 @@ export const deleteContract = async (req: Request, res: Response) => {
     if (language.length !== 2) {
       throw new Error('Language not valid')
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (
+      !sessionUser
+      || sessionUser.type === bookcarsTypes.UserType.User
+      || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== id)
+    ) {
+      logger.error(`[supplier.deleteContract] Unauthorized attempt to delete contract for supplier ${id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot delete this supplier contract')
+      return
+    }
+    // end of security check
+    
     const supplier = await User.findOne({ _id: id, type: bookcarsTypes.UserType.Supplier })
 
     if (supplier) {
