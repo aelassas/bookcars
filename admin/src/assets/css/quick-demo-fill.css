@@ -1,7 +1,7 @@
 /* Quick demo fill (sign-in helper) */
 .quick-demo-fill {
   margin-top: 18px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--sr-border);
   padding-top: 14px;
 }
 
@@ -14,7 +14,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--sr-muted);
   margin-bottom: 10px;
 }
 
@@ -24,9 +24,9 @@
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: #b45309;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
+  color: var(--sr-accent-text);
+  background: var(--sr-gold-soft);
+  border: 1px solid var(--sr-gold);
   border-radius: 999px;
   padding: 2px 8px;
   white-space: nowrap;
@@ -44,15 +44,15 @@
   align-items: flex-start;
   gap: 2px;
   text-transform: none;
-  border-color: #cbd5e1;
-  color: #0f172a;
+  border-color: var(--sr-border);
+  color: var(--sr-text);
   padding: 8px 10px;
   line-height: 1.2;
 }
 
 .quick-demo-fill-grid .quick-demo-fill-btn.MuiButton-root:hover {
-  border-color: #064e3b;
-  background: #ecfdf5;
+  border-color: var(--sr-emerald);
+  background: var(--sr-emerald-soft);
 }
 
 .quick-demo-fill-label {
@@ -63,10 +63,10 @@
 .quick-demo-fill-detail {
   font-size: 11px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--sr-muted);
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .quick-demo-fill-grid {
     grid-template-columns: 1fr;
   }

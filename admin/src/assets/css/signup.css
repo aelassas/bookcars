@@ -11,6 +11,7 @@ div.signup {
 .signup-form-title {
   text-align: center;
   text-transform: capitalize;
+  margin: 0 0 24px;
   color: var(--sr-text);
 }
 
@@ -30,7 +31,7 @@ div.signup {
 @media only screen and (width <=960px) {
   .signup-form {
     width: 350px;
-    padding: 30px;
+    padding: 24px;
   }
 
   .recaptcha {
@@ -44,7 +45,7 @@ div.signup {
 @media only screen and (width >=960px) {
   .signup-form {
     width: 550px;
-    padding: 30px;
+    padding: 32px;
   }
 
   .recaptcha {

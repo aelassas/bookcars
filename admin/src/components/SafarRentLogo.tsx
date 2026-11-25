@@ -34,7 +34,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ filter: 'drop-shadow(0 4px 12px rgba(5, 150, 105, 0.28))' }}
+        style={{ filter: 'drop-shadow(0 4px 12px rgba(16, 116, 135, 0.3))' }}
       >
         <defs>
           <linearGradient id="adminEmeraldMint" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -42,8 +42,8 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
             <stop offset="100%" stopColor="#F08A12" />
           </linearGradient>
           <linearGradient id="adminMintGlow" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10B981" />
-            <stop offset="100%" stopColor="#34D399" />
+            <stop offset="0%" stopColor="#107487" />
+            <stop offset="100%" stopColor="#58C7D6" />
           </linearGradient>
         </defs>
 
@@ -55,7 +55,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
           height="44"
           rx="13"
           fill="#0B1120"
-          stroke="rgba(16, 185, 129, 0.3)"
+          stroke="rgba(16, 116, 135, 0.45)"
           strokeWidth="1.5"
         />
 
@@ -82,7 +82,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
         />
 
         {/* Location Pin Dot */}
-        <circle cx="37" cy="15" r="2.5" fill="#10B981" />
+        <circle cx="37" cy="15" r="2.5" fill="#107487" />
         <circle cx="37" cy="15" r="1.2" fill="#0B1120" />
       </svg>
 
@@ -109,7 +109,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
                 letterSpacing: '0.06em',
                 color: isLight ? '#ffb84f' : 'var(--sr-emerald)',
                 background: 'var(--sr-emerald-soft)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
+                border: '1px solid rgba(16, 116, 135, 0.45)',
                 padding: '2px 6px',
                 borderRadius: 999,
                 textTransform: 'uppercase',
@@ -134,7 +134,7 @@ export const SafarRentLogo: React.FC<SafarRentLogoProps> = ({
           >
             Operations
           </span>
-          <span aria-hidden="true" style={{ width: 1, height: 9, background: 'rgba(5, 150, 105, 0.4)' }} />
+          <span aria-hidden="true" style={{ width: 1, height: 9, background: 'rgba(16, 116, 135, 0.5)' }} />
           <span
             style={{
               fontSize: 8 * current.textScale,

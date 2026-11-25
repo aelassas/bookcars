@@ -4,7 +4,7 @@ import {
   Paper,
   FormControl,
   InputLabel,
-  Input,
+  OutlinedInput,
   Button,
   FormHelperText,
 } from '@mui/material'
@@ -137,9 +137,11 @@ const SignIn = () => {
           <Paper className={`signin-form ${visible ? '' : 'hidden'}`} elevation={10}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-              <FormControl fullWidth margin="dense" error={!!errors.email}>
+              <FormControl fullWidth margin="dense" variant="outlined" error={!!errors.email}>
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input
+                <OutlinedInput
+                  id="email"
+                  label={commonStrings.EMAIL}
                   {...register('email')}
                   onChange={(e) => {
                     if (errors.email) {
@@ -156,6 +158,7 @@ const SignIn = () => {
 
               <PasswordInput
                 label={commonStrings.PASSWORD}
+                variant="outlined"
                 {...register('password')}
                 error={!!errors.password}
                 helperText={errors.password?.message}

@@ -8,10 +8,22 @@ div.signin {
   transform: translate3d(0, 0, 0);
 }
 
+/* The card chrome (surface, border, radius, shadow) comes from the shared theme. */
+.signin-form {
+  display: block;
+  width: 350px;
+  max-width: 100%;
+  padding: 24px;
+}
+
+.signin-form form {
+  width: 100%;
+}
+
 .signin-form-title {
   text-align: center;
   text-transform: capitalize;
-  margin-top: 35px;
+  margin: 0 0 24px;
   color: var(--sr-text);
 }
 
@@ -34,7 +46,11 @@ div.signin div.stay-connected {
 }
 
 div.signin div.stay-connected input[type='checkbox'] {
-  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  accent-color: var(--sr-emerald);
+  cursor: pointer;
 }
 
 div.signin div.stay-connected label {
@@ -47,16 +63,20 @@ div.signin div.forgot-password {
   margin-top: 15px;
 }
 
+div.signin div.forgot-password .btn-lnk {
+  color: var(--sr-emerald) !important;
+  text-decoration: none !important;
+}
+
+div.signin div.forgot-password .btn-lnk:hover {
+  text-decoration: underline !important;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
   .signin-form {
-    align-items: center;
-    justify-content: center;
-    display: flex;
     width: 350px;
-    border: 1px solid rgb(0 0 0 / 12%);
-    padding: 15px;
   }
 }
 
@@ -64,11 +84,7 @@ div.signin div.forgot-password {
 
 @media only screen and (width >=960px) {
   .signin-form {
-    align-items: center;
-    justify-content: center;
-    display: flex;
     width: 380px;
-    border: 1px solid rgb(0 0 0 / 12%);
-    padding: 15px;
+    padding: 32px;
   }
 }

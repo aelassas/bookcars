@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Input,
+  OutlinedInput,
   InputLabel,
   FormControl,
   FormHelperText,
@@ -82,10 +82,12 @@ const SignUp = () => {
           <h1 className="signup-form-title">{strings.SIGN_UP_HEADING}</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" variant="outlined">
                 <InputLabel htmlFor="full-name">{commonStrings.FULL_NAME}</InputLabel>
-                <Input
+                <OutlinedInput
+                  id="full-name"
                   type="text"
+                  label={commonStrings.FULL_NAME}
                   {...register('fullName')}
                   autoComplete="off"
                   onChange={(e) => {
@@ -94,10 +96,12 @@ const SignUp = () => {
                   required
                 />
               </FormControl>
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" variant="outlined">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input
+                <OutlinedInput
+                  id="email"
                   type="text"
+                  label={commonStrings.EMAIL}
                   {...register('email')}
                   autoComplete="off"
                   onChange={(e) => {
@@ -113,7 +117,7 @@ const SignUp = () => {
 
               <PasswordInput
                 label={commonStrings.PASSWORD}
-                variant="standard"
+                variant="outlined"
                 {...register('password')}
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -134,7 +138,7 @@ const SignUp = () => {
 
               <PasswordInput
                 label={commonStrings.CONFIRM_PASSWORD}
-                variant="standard"
+                variant="outlined"
                 {...register('confirmPassword')}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
