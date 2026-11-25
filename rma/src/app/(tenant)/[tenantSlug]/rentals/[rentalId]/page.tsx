@@ -25,6 +25,7 @@ export default async function RentalDetailPage({ params }: Props) {
   if (!data) notFound();
 
   const canConfirm = (t.roles ?? []).some((r) => ["sales", "sales_manager", "general_manager", "tenant_admin", "platform_admin"].includes(r));
+  const canEditPayments = (t.roles ?? []).some((r) => ["tenant_admin", "platform_admin"].includes(r));
 
   return (
     <main className="p-6">
@@ -40,12 +41,18 @@ export default async function RentalDetailPage({ params }: Props) {
         vehiclePlate={data.vehiclePlate ?? ""}
         vehicleVin={data.vehicleVin}
         vehicleOdometer={data.vehicleOdometer}
+        liveVehicleOdometer={data.liveVehicleOdometer}
+        liveVehicleOdometerAt={data.liveVehicleOdometerAt}
+        odometerPhotos={data.odometerPhotos}
         payments={data.payments}
         charges={data.charges.map((charge) => ({ charge, customerName: data.customerName ?? "Customer", plate: data.vehiclePlate ?? "—" }))}
         actorId={session.user.id}
         canConfirm={canConfirm}
+        canEditPayments={canEditPayments}
         tarsAutoEnabled={process.env.TARS_AUTO_SUBMIT_ENABLED === "true"}
         tarsAutoDryRun={process.env.TARS_AUTO_SUBMIT_DRY_RUN !== "false"}
+        tarsAutoCloseEnabled={process.env.TARS_AUTO_CLOSE_ENABLED === "true"}
+        tarsAutoCloseDryRun={process.env.TARS_AUTO_CLOSE_DRY_RUN !== "false"}
       />
 
       {/* Car panel additions (slice 2): the return close-out + a jump to the

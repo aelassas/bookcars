@@ -1,12 +1,13 @@
 "use server";
 
-import { rental, customer, vehicle, payment, rentalCharge } from "@/platform/db/schema";
+import { rental, customer, vehicle, payment, rentalCharge, document } from "@/platform/db/schema";
 import { quoteRental, type Channel } from "@/platform/db/rental-extras";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
-import { eq, desc, sql, and, ne, lte, gte, or } from "drizzle-orm";
+import { eq, desc, sql, and, ne, lte, gte, or, inArray } from "drizzle-orm";
 import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { rentalPricingDays } from "./pricing";
+import { getLiveVehicleOdometer } from "@/modules/fleet/telemetry";
 
 export async function getRentals(tenantId: string) {
   await canManageRentalsForTenant(tenantId);
@@ -54,6 +55,19 @@ export async function getRentalById(tenantId: string, id: string) {
   });
 }
 
+export type RentalOdometerPhoto = {
+  id: string;
+  filename: string;
+  createdAt: Date;
+  odometer: number | null;
+};
+
+function odometerMetadata(value: unknown): number | null {
+  if (!value || typeof value !== "object" || !("odometer" in value)) return null;
+  const reading = (value as { odometer?: unknown }).odometer;
+  return typeof reading === "number" && Number.isInteger(reading) && reading >= 0 ? reading : null;
+}
+
 export type RentalWithDetails = {
   rental: typeof rental.$inferSelect;
   customerName: string | null;
@@ -65,6 +79,9 @@ export type RentalWithDetails = {
   vehicleModel: string | null;
   vehicleVin: string | null;
   vehicleOdometer: number | null;
+  liveVehicleOdometer: number | null;
+  liveVehicleOdometerAt: Date | null;
+  odometerPhotos: RentalOdometerPhoto[];
   payments: (typeof payment.$inferSelect)[];
   charges: (typeof rentalCharge.$inferSelect)[];
 };
@@ -86,6 +103,7 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
         vehicleMake: vehicle.make,
         vehicleModel: vehicle.model,
         vehicleVin: vehicle.vin,
+        vehicleImei: vehicle.imei,
         vehicleOdometer: vehicle.odometer,
       })
       .from(rental)
@@ -96,14 +114,32 @@ export async function getRentalWithDetails(tenantId: string, id: string): Promis
 
     if (!row) return null;
 
-    const payments = await tx
-      .select()
-      .from(payment)
-      .where(eq(payment.rentalId, id))
-      .orderBy(desc(payment.createdAt));
-
-    const charges = await tx.select().from(rentalCharge).where(eq(rentalCharge.rentalId, id)).orderBy(desc(rentalCharge.occurredAt));
-    return { ...row, payments, charges };
+    const [payments, charges, photoRows] = await Promise.all([
+      tx.select().from(payment).where(eq(payment.rentalId, id)).orderBy(desc(payment.createdAt)),
+      tx.select().from(rentalCharge).where(eq(rentalCharge.rentalId, id)).orderBy(desc(rentalCharge.occurredAt)),
+      tx.select({ id: document.id, filename: document.filename, mimeType: document.mimeType, recognizedData: document.recognizedData, createdAt: document.createdAt })
+        .from(document).where(and(
+          eq(document.entityType, "rental"),
+          eq(document.entityId, id),
+          inArray(document.category, ["inspection", "odometer"]),
+        )).orderBy(desc(document.createdAt)),
+    ]);
+    const live = await getLiveVehicleOdometer({ vin: row.vehicleVin, imei: row.vehicleImei, plate: row.vehiclePlate });
+    const liveTimestamp = live?.lastFixAt ? Date.parse(live.lastFixAt) : NaN;
+    return {
+      ...row,
+      vehicleOdometer: live ? Math.max(row.vehicleOdometer ?? 0, live.odometerKm) : row.vehicleOdometer,
+      liveVehicleOdometer: live?.odometerKm ?? null,
+      liveVehicleOdometerAt: Number.isFinite(liveTimestamp) ? new Date(liveTimestamp) : null,
+      odometerPhotos: photoRows.filter((photo) => photo.mimeType.startsWith("image/")).map((photo) => ({
+        id: photo.id,
+        filename: photo.filename,
+        createdAt: photo.createdAt,
+        odometer: odometerMetadata(photo.recognizedData),
+      })),
+      payments,
+      charges,
+    };
   });
 }
 

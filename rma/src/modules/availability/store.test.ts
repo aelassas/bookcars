@@ -9,7 +9,7 @@ import { agentAvailability } from "@/platform/db/schema";
 import { hasTestDatabase, resetPool } from "@/test/db";
 import { listAvailability, loadPhoneOverrides, setAvailability, setSchedule } from "./store";
 
-const KEY = "__test-phone-agent";
+const KEY = "__test phone agent";
 
 describe.skipIf(!hasTestDatabase())("availability store — phone override round-trip", () => {
   afterAll(async () => {

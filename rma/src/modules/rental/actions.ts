@@ -39,7 +39,7 @@ export async function startRental(tenantId: string, actorId: string | undefined,
   const trustedActorId = await requireAuth();
   const home = await requireFleetHomeTenantId();
   return withDrizzleTenant(home, async (tx) => {
-    const [current] = await tx.select({ status: rental.status, vehicleId: rental.vehicleId }).from(rental).where(eq(rental.id, id)).limit(1);
+    const [current] = await tx.select({ status: rental.status, vehicleId: rental.vehicleId }).from(rental).where(eq(rental.id, id)).for("update").limit(1);
     if (!current) throw new Error("Rental not found");
     if (current.status !== "reserved") throw new Error(`Cannot start rental with status ${current.status}`);
     const [currentVehicle] = await tx.select({ odometer: vehicle.odometer }).from(vehicle).where(eq(vehicle.id, current.vehicleId)).limit(1);
@@ -65,7 +65,12 @@ export async function startRental(tenantId: string, actorId: string | undefined,
       intent: "Rental started, vehicle handed over",
     });
 
-    if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals`);
+      revalidatePath(`/${tenantSlug}/rentals/${id}`);
+      revalidatePath(`/${tenantSlug}/operations`);
+      revalidatePath(`/${tenantSlug}/fleet/availability`);
+    }
     return row;
   });
 }
@@ -151,17 +156,22 @@ export async function processReturn(
   // Shared fleet: rental + vehicle + audit rows live in fleet-home.
   const home = await requireFleetHomeTenantId();
   return withDrizzleTenant(home, async (tx) => {
-    const [current] = await tx.select().from(rental).where(eq(rental.id, id)).limit(1);
+    const [current] = await tx.select().from(rental).where(eq(rental.id, id)).for("update").limit(1);
     if (!current) throw new Error("Rental not found");
     if (current.status !== "active") throw new Error(`Cannot process return for rental with status ${current.status}`);
 
     const actualReturnDate = data.actualReturnDate ?? new Date();
     if (Number.isNaN(actualReturnDate.getTime())) throw new Error("Invalid actual return date");
+    if (actualReturnDate < current.startDate) throw new Error("Actual return cannot be before the rental start");
+    if (actualReturnDate.getTime() > Date.now() + 5 * 60_000) throw new Error("Actual return cannot be in the future");
     if (data.fuelLevel !== undefined && (!Number.isInteger(data.fuelLevel) || data.fuelLevel < 0 || data.fuelLevel > 100)) {
       throw new Error("Fuel level must be a whole number from 0 to 100");
     }
     if (data.finalOdometer !== undefined && (!Number.isInteger(data.finalOdometer) || data.finalOdometer < 0)) {
       throw new Error("Final odometer must be a non-negative integer");
+    }
+    if (current.tarsDocumentNumber && (data.finalOdometer === undefined || data.fuelLevel === undefined)) {
+      throw new Error("Final odometer and fuel level are required to close a TARS rental");
     }
     if (current.startOdometer != null && data.finalOdometer != null && data.finalOdometer < current.startOdometer) {
       throw new Error("Final odometer cannot be lower than the starting odometer");
@@ -217,7 +227,12 @@ export async function processReturn(
       intent: `Vehicle returned. Late fee ${lateFee} AED, extra charges ${manualExtra} AED.${mileage ? ` Mileage ${mileage.drivenKm}/${mileage.allowedKm} km; excess ${mileage.excessKm} km.` : ""}`,
     });
 
-    if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals`);
+      revalidatePath(`/${tenantSlug}/rentals/${id}`);
+      revalidatePath(`/${tenantSlug}/operations`);
+      revalidatePath(`/${tenantSlug}/fleet/availability`);
+    }
     return row;
   });
 }
@@ -244,6 +259,7 @@ export async function completeRental(
       .select({ status: rental.status, balanceDue: rental.balanceDue })
       .from(rental)
       .where(eq(rental.id, id))
+      .for("update")
       .limit(1);
     if (!current) throw new Error("Rental not found");
     if (current.status !== "returned") throw new Error(`Cannot complete rental with status ${current.status}`);
@@ -273,7 +289,12 @@ export async function completeRental(
         : "Rental completed",
     });
 
-    if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals`);
+      revalidatePath(`/${tenantSlug}/rentals/${id}`);
+      revalidatePath(`/${tenantSlug}/operations`);
+      revalidatePath(`/${tenantSlug}/fleet/availability`);
+    }
     return row;
   });
 }
@@ -285,7 +306,7 @@ export async function cancelRental(tenantId: string, actorId: string | undefined
   const trustedActorId = await requireAuth();
   const home = await requireFleetHomeTenantId();
   return withDrizzleTenant(home, async (tx) => {
-    const [current] = await tx.select({ status: rental.status, vehicleId: rental.vehicleId }).from(rental).where(eq(rental.id, id)).limit(1);
+    const [current] = await tx.select({ status: rental.status, vehicleId: rental.vehicleId }).from(rental).where(eq(rental.id, id)).for("update").limit(1);
     if (!current) throw new Error("Rental not found");
     if (!["reserved", "active"].includes(current.status)) throw new Error(`Cannot cancel rental with status ${current.status}`);
 
@@ -309,7 +330,12 @@ export async function cancelRental(tenantId: string, actorId: string | undefined
       intent: "Rental cancelled",
     });
 
-    if (tenantSlug) revalidatePath(`/${tenantSlug}/rentals`);
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals`);
+      revalidatePath(`/${tenantSlug}/rentals/${id}`);
+      revalidatePath(`/${tenantSlug}/operations`);
+      revalidatePath(`/${tenantSlug}/fleet/availability`);
+    }
     return row;
   });
 }

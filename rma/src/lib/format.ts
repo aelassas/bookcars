@@ -35,6 +35,12 @@ export function formatDateTime(value: Date | string | null | undefined): string 
   return DATETIME.format(d).replace(",", " ·");
 }
 
+export function toDateTimeLocalValue(value: Date | string): string {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
+}
+
 // "AED 21,140,154". Accepts number | string (Drizzle returns numeric/sum
 // columns as strings in PG to preserve precision) | null. We coerce here
 // once so callers don't have to remember.

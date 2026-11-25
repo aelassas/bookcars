@@ -3,8 +3,9 @@
 import { useState, useMemo } from "react";
 import { Star } from "lucide-react";
 import { processReturn } from "@/modules/rental/actions";
+import { closeTarsContract } from "@/modules/rental/tars-actions";
 import { calculateReturnCharges } from "@/modules/rental/return-charges";
-import { formatDate, formatCurrency } from "@/lib/format";
+import { formatDateTime, formatCurrency, toDateTimeLocalValue } from "@/lib/format";
 import { Button, Input, Label, Textarea } from "@/components/ui";
 import { Modal, ModalFooter, ModalError, ModalCancel } from "@/components/ui/Modal";
 
@@ -15,6 +16,8 @@ export function ProcessReturnModal({
   rental,
   onClose,
   onReturned,
+  tarsAutoCloseEnabled = false,
+  tarsAutoCloseDryRun = true,
 }: {
   tenantId: string;
   tenantSlug: string;
@@ -30,12 +33,20 @@ export function ProcessReturnModal({
   };
   onClose: () => void;
   onReturned?: () => void;
+  tarsAutoCloseEnabled?: boolean;
+  tarsAutoCloseDryRun?: boolean;
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [closeInTars, setCloseInTars] = useState(false);
+  const [location, setLocation] = useState("JVC");
 
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const expectedReturn = rental.returnDate ? rental.returnDate.toISOString().slice(0, 10) : today;
+  const expectedReturn = useMemo(() => {
+    const now = new Date();
+    const expected = rental.returnDate ?? now;
+    return toDateTimeLocalValue(expected > now ? now : expected);
+  }, [rental.returnDate]);
 
   const [actualReturnDate, setActualReturnDate] = useState(expectedReturn);
   const [customerRating, setCustomerRating] = useState(0);
@@ -59,17 +70,33 @@ export function ProcessReturnModal({
     e.preventDefault();
     setSubmitting(true);
     setError(null);
+    setNotice(null);
 
     const fd = new FormData(e.currentTarget);
     try {
+      const actualReturnDate = new Date(String(fd.get("actualReturnDate")));
+      const finalOdometer = String(fd.get("finalOdometer")) === "" ? undefined : Number(fd.get("finalOdometer"));
+      const fuelLevel = String(fd.get("fuelLevel")) === "" ? undefined : Number(fd.get("fuelLevel"));
+      if (closeInTars) {
+        const result = await closeTarsContract(tenantId, tenantSlug, rental.id, {
+          actualReturnDate,
+          finalOdometer: finalOdometer!,
+          fuelLevel: fuelLevel!,
+          location,
+        });
+        if (result.status === "dry_run") {
+          setNotice(`TARS closure reviewed; nothing was submitted and the CRM rental is still active.\n${result.summary}`);
+          return;
+        }
+      }
       await processReturn(
         tenantId,
         actorId,
         rental.id,
         {
-          actualReturnDate: new Date(String(fd.get("actualReturnDate"))),
-          finalOdometer: String(fd.get("finalOdometer")) === "" ? undefined : Number(fd.get("finalOdometer")),
-          fuelLevel: String(fd.get("fuelLevel")) === "" ? undefined : Number(fd.get("fuelLevel")),
+          actualReturnDate,
+          finalOdometer,
+          fuelLevel,
           damageNotes: String(fd.get("damageNotes") || ""),
           customerRating: customerRating || undefined,
           extraChargeAmount: Number(extraCharge) || 0,
@@ -96,7 +123,7 @@ export function ProcessReturnModal({
             <Label>Actual Return Date *</Label>
             <Input
               name="actualReturnDate"
-              type="date"
+              type="datetime-local"
               required
               value={actualReturnDate}
               onChange={(e) => setActualReturnDate(e.target.value)}
@@ -105,7 +132,7 @@ export function ProcessReturnModal({
           </div>
           <div>
             <Label>Expected Return</Label>
-            <div className="mt-2 text-sm text-ink-2 tnum">{formatDate(rental.returnDate)}</div>
+            <div className="mt-2 text-sm text-ink-2 tnum">{formatDateTime(rental.returnDate)}</div>
           </div>
         </div>
 
@@ -125,11 +152,11 @@ export function ProcessReturnModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label>Final Odometer (km)</Label>
-            <Input name="finalOdometer" type="number" min={0} className="w-full" />
+            <Input name="finalOdometer" type="number" min={0} required className="w-full" />
           </div>
           <div>
             <Label>Fuel Level (%)</Label>
-            <Input name="fuelLevel" type="number" min={0} max={100} className="w-full" />
+            <Input name="fuelLevel" type="number" min={0} max={100} required className="w-full" />
           </div>
         </div>
 
@@ -201,10 +228,19 @@ export function ProcessReturnModal({
           </div>
         </div>
 
+        {tarsAutoCloseEnabled && <div className="space-y-3 rounded-field border border-line-soft p-3">
+          <label className="flex items-start gap-2 text-sm text-ink-2">
+            <input type="checkbox" className="mt-1" checked={closeInTars} onChange={(event) => setCloseInTars(event.target.checked)} />
+            <span>{tarsAutoCloseDryRun ? "Review this exact closure in TARS without submitting it" : "Close the contract in TARS before marking it returned in CRM"}</span>
+          </label>
+          {closeInTars && <div><Label>TARS return location</Label><Input required value={location} onChange={(event) => setLocation(event.target.value)} /></div>}
+        </div>}
+        {notice && <pre role="status" className="max-h-48 overflow-auto whitespace-pre-wrap rounded-field bg-success-soft p-3 text-xs text-success">{notice}</pre>}
+
         <ModalFooter>
           <ModalCancel>Cancel</ModalCancel>
           <Button type="submit" disabled={submitting}>
-            {submitting ? "Processing..." : "Confirm Return"}
+            {submitting ? "Processing..." : closeInTars && tarsAutoCloseDryRun ? "Review TARS closure" : closeInTars ? "Close in TARS & return" : "Confirm Return"}
           </Button>
         </ModalFooter>
       </form>

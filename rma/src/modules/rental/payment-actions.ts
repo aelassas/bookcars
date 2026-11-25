@@ -1,14 +1,14 @@
 "use server";
 
-import { eq, and, sql } from "drizzle-orm";
-import { rental, payment, task, auditEvent } from "@/platform/db/schema";
+import { eq, and, ne, sql } from "drizzle-orm";
+import { rental, payment, task, auditEvent, rentalCharge } from "@/platform/db/schema";
 import { withDrizzleTenant } from "@/platform/tenancy/rls";
 import { assertNotPreviewMode } from "@/platform/tenancy/guard";
 import { revalidatePath } from "next/cache";
 import { canManageRentalsForTenant } from "./policies";
 import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 import { requireRoleForTenant, requireAuth } from "@/platform/auth/authorization";
-import { assertValidPayment, availablePaymentBalance } from "./payment-rules";
+import { assertValidChargePayment, assertValidPayment, availablePaymentBalance, editablePaymentBalance } from "./payment-rules";
 
 // STEP 1 — sales records a payment ("payment received + amount"). Status =
 // pending; balance is NOT reduced yet. Two follow-up tasks are opened: sales
@@ -126,6 +126,112 @@ export async function rejectPayment(tenantId: string, paymentId: string, tenantS
 
     if (tenantSlug) { revalidatePath(`/${tenantSlug}/rentals/${p.rentalId}`); revalidatePath(`/${tenantSlug}/security`); }
     return rejected;
+  });
+}
+
+export async function updatePayment(
+  tenantId: string,
+  paymentId: string,
+  data: { amount: number; method: string; notes?: string },
+  tenantSlug?: string,
+) {
+  await requireRoleForTenant(tenantId, ["tenant_admin", "platform_admin"]);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  return withDrizzleTenant(home, async (tx) => {
+    const [located] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
+    if (!located) throw new Error("Payment not found");
+    const [r] = await tx.select().from(rental).where(eq(rental.id, located.rentalId)).for("update").limit(1);
+    if (!r) throw new Error("Rental not found");
+    const [existing] = await tx.select().from(payment).where(eq(payment.id, paymentId)).for("update").limit(1);
+    if (!existing) throw new Error("Payment not found");
+
+    if (existing.rentalChargeId) {
+      assertValidChargePayment(data.amount, data.method);
+      if (data.amount !== Number(existing.amount)) throw new Error("A charge payment amount must match its linked charge");
+    } else {
+      const [pending] = await tx.select({ total: sql<number>`coalesce(sum(${payment.amount}), 0)::int` }).from(payment)
+        .where(and(eq(payment.rentalId, existing.rentalId), eq(payment.status, "pending"), ne(payment.id, paymentId)));
+      assertValidPayment(data.amount, editablePaymentBalance({
+        balanceDue: r.balanceDue,
+        currentAmount: Number(existing.amount),
+        currentStatus: existing.status,
+        otherPendingTotal: Number(pending?.total ?? 0),
+      }), data.method);
+    }
+
+    const rows = await tx.update(payment).set({
+      amount: data.amount,
+      method: data.method,
+      notes: data.notes?.trim() || null,
+    }).where(eq(payment.id, paymentId)).returning();
+    const updated = Array.isArray(rows) ? rows[0] : rows;
+    const balanceAdjustment = existing.status === "confirmed" && !existing.rentalChargeId
+      ? Number(existing.amount) - data.amount
+      : 0;
+    if (balanceAdjustment !== 0) {
+      await tx.update(rental).set({ balanceDue: r.balanceDue + balanceAdjustment, updatedAt: new Date() }).where(eq(rental.id, r.id));
+    }
+    await tx.insert(auditEvent).values({
+      tenantId: home,
+      actorId,
+      action: "payment.updated",
+      entityType: "payment",
+      entityId: paymentId,
+      intent: `Updated ${existing.status} payment: ${existing.amount} AED ${existing.method} → ${data.amount} AED ${data.method}; ${
+        existing.rentalChargeId ? "charge and rental balance unchanged" : balanceAdjustment === 0 ? "rental balance unchanged" : `rental balance adjusted by ${balanceAdjustment} AED`
+      }`,
+    });
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals/${existing.rentalId}`);
+      revalidatePath(`/${tenantSlug}/security`);
+      revalidatePath(`/${tenantSlug}/collections`);
+    }
+    return updated;
+  });
+}
+
+export async function deletePayment(tenantId: string, paymentId: string, tenantSlug?: string) {
+  await requireRoleForTenant(tenantId, ["tenant_admin", "platform_admin"]);
+  await assertNotPreviewMode(tenantId);
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  return withDrizzleTenant(home, async (tx) => {
+    const [located] = await tx.select().from(payment).where(eq(payment.id, paymentId)).limit(1);
+    if (!located) throw new Error("Payment not found");
+    const [r] = await tx.select().from(rental).where(eq(rental.id, located.rentalId)).for("update").limit(1);
+    if (!r) throw new Error("Rental not found");
+    const [existing] = await tx.select().from(payment).where(eq(payment.id, paymentId)).for("update").limit(1);
+    if (!existing) throw new Error("Payment not found");
+
+    if (existing.status === "confirmed") {
+      if (existing.rentalChargeId) {
+        await tx.update(rentalCharge).set({ status: "unpaid", paidAt: null, updatedAt: new Date() }).where(eq(rentalCharge.id, existing.rentalChargeId));
+      } else {
+        await tx.update(rental).set({ balanceDue: r.balanceDue + Number(existing.amount), updatedAt: new Date() }).where(eq(rental.id, r.id));
+      }
+    }
+    await tx.delete(payment).where(eq(payment.id, paymentId));
+    await tx.update(task).set({ status: "done", updatedAt: new Date() }).where(and(eq(task.externalId, `payment:${paymentId}`), eq(task.status, "open")));
+    await tx.insert(auditEvent).values({
+      tenantId: home,
+      actorId,
+      action: "payment.deleted",
+      entityType: "payment",
+      entityId: paymentId,
+      intent: `Deleted ${existing.status} payment ${existing.amount} AED ${existing.method}; ${
+        existing.status !== "confirmed" ? "balance unchanged" : existing.rentalChargeId
+          ? "charge reopened; engine state unchanged"
+          : "rental balance increased by the deleted amount"
+      }`,
+    });
+    if (tenantSlug) {
+      revalidatePath(`/${tenantSlug}/rentals/${existing.rentalId}`);
+      revalidatePath(`/${tenantSlug}/security`);
+      revalidatePath(`/${tenantSlug}/collections`);
+    }
+    return { deleted: true as const };
   });
 }
 

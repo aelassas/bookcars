@@ -39,9 +39,9 @@ describe.skipIf(!hasTestDatabase())("permanent vehicle deletion", () => {
 
     const { vehicleId, rentalId, documentId } = await withDrizzleTenant(tenantId, async (tx) => {
       const customerRows = await tx.insert(customer).values({ tenantId, name: "Delete Test Customer" }).returning({ id: customer.id });
-      const customerId = Array.isArray(customerRows) ? customerRows[0].id : customerRows.id;
+      const customerId = customerRows[0].id;
       const vehicleRows = await tx.insert(vehicle).values({ tenantId, make: "Test", model: "Delete", plate: `TEST ${suffix.slice(0, 8)}` }).returning({ id: vehicle.id });
-      const id = Array.isArray(vehicleRows) ? vehicleRows[0].id : vehicleRows.id;
+      const id = vehicleRows[0].id;
       const rentalRows = await tx.insert(rental).values({
         tenantId,
         customerId,
@@ -53,7 +53,7 @@ describe.skipIf(!hasTestDatabase())("permanent vehicle deletion", () => {
         total: 0,
         status: "completed",
       }).returning({ id: rental.id });
-      const currentRentalId = Array.isArray(rentalRows) ? rentalRows[0].id : rentalRows.id;
+      const currentRentalId = rentalRows[0].id;
       const chargeRows = await tx.insert(rentalCharge).values({
         tenantId,
         rentalId: currentRentalId,
@@ -64,7 +64,7 @@ describe.skipIf(!hasTestDatabase())("permanent vehicle deletion", () => {
         occurredAt: new Date(),
         amount: 10,
       }).returning({ id: rentalCharge.id });
-      const chargeId = Array.isArray(chargeRows) ? chargeRows[0].id : chargeRows.id;
+      const chargeId = chargeRows[0].id;
       await tx.insert(payment).values({ tenantId, rentalId: currentRentalId, rentalChargeId: chargeId, amount: 10 });
       await tx.insert(engineBlock).values({ tenantId, rentalChargeId: chargeId, vehicleId: id, liveStateCheckedAt: new Date() });
       const documentRows = await tx.insert(document).values({
@@ -77,7 +77,7 @@ describe.skipIf(!hasTestDatabase())("permanent vehicle deletion", () => {
         storageKey: `test/${suffix}.txt`,
         publicUrl: `/test/${suffix}`,
       }).returning({ id: document.id });
-      const currentDocumentId = Array.isArray(documentRows) ? documentRows[0].id : documentRows.id;
+      const currentDocumentId = documentRows[0].id;
       await tx.insert(vehicleTimelineEvent).values({
         tenantId,
         vehicleId: id,

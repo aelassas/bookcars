@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertValidChargePayment, assertValidPayment, availablePaymentBalance } from "./payment-rules";
+import { assertValidChargePayment, assertValidPayment, availablePaymentBalance, editablePaymentBalance } from "./payment-rules";
 
 describe("payment validation", () => {
   it("accepts a bank transfer within the outstanding balance", () => {
@@ -25,8 +25,18 @@ describe("payment validation", () => {
     expect(() => assertValidPayment(3780, availablePaymentBalance(3780, 3780), "bank_transfer")).toThrow("available balance of 0");
   });
 
+  it("includes the edited confirmed payment and excludes other pending payments from its available balance", () => {
+    expect(editablePaymentBalance({ balanceDue: 2280, currentAmount: 3780, currentStatus: "confirmed", otherPendingTotal: 500 })).toBe(5560);
+    expect(editablePaymentBalance({ balanceDue: 2280, currentAmount: 1000, currentStatus: "pending", otherPendingTotal: 500 })).toBe(1780);
+  });
+
+  it("accepts crypto as a payment method", () => {
+    expect(() => assertValidPayment(100, 1000, "crypto")).not.toThrow();
+    expect(() => assertValidChargePayment(4.2, "crypto")).not.toThrow();
+  });
+
   it("rejects an unsupported method", () => {
-    expect(() => assertValidPayment(100, 1000, "crypto")).toThrow("Unsupported payment method");
-    expect(() => assertValidChargePayment(4.2, "crypto")).toThrow("Unsupported payment method");
+    expect(() => assertValidPayment(100, 1000, "paypal")).toThrow("Unsupported payment method");
+    expect(() => assertValidChargePayment(4.2, "paypal")).toThrow("Unsupported payment method");
   });
 });

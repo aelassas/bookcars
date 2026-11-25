@@ -52,6 +52,7 @@ export interface MappedRental {
   startDate: Date;
   returnDate: Date;
   totalDays: number;
+  startOdometer: number | null;
   vehicleVin: string;
   customer: MappedCustomer;
   /** Embedded vehicle snapshot — full TarsVehicle, for orphan-contract cars. */
@@ -152,6 +153,11 @@ export function mapTarsRental(r: TarsRental): MappedRental | null {
 
   const totalDays = Math.max(1, Math.round((returnDate.getTime() - startDate.getTime()) / 86_400_000));
   const kind = (r.kind ?? "").toUpperCase();
+  const readings = detail.readings ?? [];
+  const odometer = readings[readings.length - 1]?.odometer?.value;
+  const startOdometer = typeof odometer === "number" && Number.isFinite(odometer) && odometer >= 0
+    ? Math.round(odometer)
+    : null;
 
   return {
     documentNumber: r.documentNumber,
@@ -160,6 +166,7 @@ export function mapTarsRental(r: TarsRental): MappedRental | null {
     startDate,
     returnDate,
     totalDays,
+    startOdometer,
     vehicleVin: vin,
     customer: mapTarsDriverToCustomer(driver),
     vehicleSnapshot: detail.vehicle ?? null,
@@ -201,6 +208,7 @@ export interface ExistingRentalRow {
   returnDate: Date;
   status: string;
   tarsDocumentNumber: string | null;
+  extensionStatus?: string | null;
 }
 
 export interface ExistingState {
@@ -229,6 +237,7 @@ export interface RentalPlanItem {
   action: PlanAction;
   mapped: MappedRental;
   existingId: string | null;
+  preserveLocalExtension: boolean;
 }
 
 export interface SyncPlan {
@@ -349,6 +358,7 @@ export function buildPlan(
       action: action(existingRental),
       mapped,
       existingId: existingRental?.id ?? null,
+      preserveLocalExtension: ["extension_confirmed", "long_term"].includes(existingRental?.extensionStatus ?? ""),
     });
   }
 
@@ -397,6 +407,7 @@ export async function loadExisting(tenantId: string): Promise<ExistingState> {
         returnDate: rental.returnDate,
         status: rental.status,
         tarsDocumentNumber: rental.tarsDocumentNumber,
+        extensionStatus: rental.extensionStatus,
       })
       .from(rental),
   }));
@@ -515,10 +526,16 @@ export async function applyPlan(tenantId: string, plan: SyncPlan): Promise<SyncC
         channel: m.channel,
         updatedAt: new Date(),
         ...(m.status ? { status: m.status } : {}),
+        ...(m.startOdometer !== null ? { startOdometer: m.startOdometer } : {}),
       };
       try {
         if (item.existingId) {
-          await tx.update(rental).set({ ...data, tarsDocumentNumber: m.documentNumber }).where(eq(rental.id, item.existingId));
+          const updateData = item.preserveLocalExtension
+            ? { customerId, vehicleId, startDate: m.startDate, channel: m.channel, updatedAt: data.updatedAt,
+                ...(m.status ? { status: m.status } : {}),
+                ...(m.startOdometer !== null ? { startOdometer: m.startOdometer } : {}) }
+            : data;
+          await tx.update(rental).set({ ...updateData, tarsDocumentNumber: m.documentNumber }).where(eq(rental.id, item.existingId));
           counts.rentalsUpdated++;
         } else {
           await tx.insert(rental).values({

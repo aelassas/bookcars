@@ -1,10 +1,8 @@
-import { spawnSync } from "node:child_process";
 import { readFileSync, statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import { parseTarsHandoff, type TarsHandoff } from "../src/platform/integrations/tars/handoff";
+import { evaluateTars as evaluate, tarsBrowser as browser } from "./tars-browser";
 
-const SESSION = "rma-tars";
-const CLI = process.env.TARS_AGENT_BROWSER_CLI ?? resolve(process.cwd(), "node_modules", ".bin", "agent-browser");
 const ORG_DID = process.env.TARS_ORG_DID ?? "did:rta:51646245";
 const EMPLOYEE_USER_ID = process.env.TARS_EMPLOYEE_USER_ID ?? "rmacarrental";
 
@@ -49,24 +47,6 @@ function finishAutomaticSubmission(handoff: TarsHandoff, submit: boolean, dryRun
   const documentNumber = findExistingDocument(handoff);
   if (!documentNumber) throw new Error("TARS submission outcome unknown: the agreement was not found after Submit; reconciliation is required before retrying");
   return { status: "succeeded", documentNumber, summary: summary.slice(0, 4000) };
-}
-
-function browser(args: string[], input?: string): string {
-  const result = spawnSync(CLI, ["--session", SESSION, "--session-name", SESSION, ...args], {
-    input,
-    encoding: "utf8",
-    timeout: 45_000,
-    maxBuffer: 10 * 1024 * 1024,
-  });
-  if (result.status !== 0) {
-    throw new Error((result.stderr || result.stdout || result.error?.message || "agent-browser failed").trim());
-  }
-  return result.stdout.trim();
-}
-
-function evaluate<T>(script: string): T {
-  const output = browser(["eval", "--stdin"], script);
-  return JSON.parse(output) as T;
 }
 
 function waitForStep(name: string): void {

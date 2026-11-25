@@ -1,8 +1,18 @@
-export const PAYMENT_METHODS = ["cash", "card", "bank_transfer", "other"] as const;
+export const PAYMENT_METHODS = ["cash", "card", "bank_transfer", "crypto", "other"] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 export function availablePaymentBalance(balanceDue: number, pendingTotal: number) {
   return Math.max(0, balanceDue - pendingTotal);
+}
+
+export function editablePaymentBalance(input: {
+  balanceDue: number;
+  currentAmount: number;
+  currentStatus: string;
+  otherPendingTotal: number;
+}) {
+  const confirmedAmount = input.currentStatus === "confirmed" ? input.currentAmount : 0;
+  return availablePaymentBalance(input.balanceDue + confirmedAmount, input.otherPendingTotal);
 }
 
 function assertPaymentMethod(method: string) {

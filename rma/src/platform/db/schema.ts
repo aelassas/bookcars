@@ -1130,7 +1130,7 @@ export const payment = tenantTable(
     rentalId: uuid("rental_id").notNull().references(() => rental.id, { onDelete: "cascade" }),
     rentalChargeId: uuid("rental_charge_id").references(() => rentalCharge.id),
     amount: money("amount").notNull(),
-    method: text("method").notNull().default("cash"), // cash | card | bank_transfer | other
+    method: text("method").notNull().default("cash"), // cash | card | bank_transfer | crypto | other
     notes: text("notes"),
     // Two-step confirmation: sales records (pending) → sales confirms (posted).
     status: text("status").notNull().default("pending"), // pending | confirmed | rejected

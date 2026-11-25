@@ -7,6 +7,7 @@ import { uploadDocument } from "@/platform/storage/upload";
 import { auth } from "@/platform/auth";
 import { canManageDocumentsForTenant } from "@/platform/auth/authorization";
 import { runDocumentRecognition } from "./recognition-service";
+import { requireFleetHomeTenantId } from "@/modules/fleet/fleet-home";
 
 export async function uploadDocumentForEntity(
   tenantId: string,
@@ -15,19 +16,25 @@ export async function uploadDocumentForEntity(
     entityId: string;
     category: string;
     file: File;
+    odometer?: number;
   }
 ) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
   await canManageDocumentsForTenant(tenantId);
+  if (data.odometer !== undefined && (
+    !Number.isInteger(data.odometer) || data.odometer < 0 || !data.file.type.startsWith("image/") ||
+    data.entityType !== "rental" || !["inspection", "odometer"].includes(data.category)
+  )) throw new Error("Enter a valid odometer reading for a rental inspection photo");
 
+  const storageTenantId = data.entityType === "rental" ? await requireFleetHomeTenantId() : tenantId;
   const uploaded = await uploadDocument(data.file);
 
-  const row = await withDrizzleTenant(tenantId, async (tx) => {
+  const row = await withDrizzleTenant(storageTenantId, async (tx) => {
     const rows = await tx
       .insert(document)
       .values({
-        tenantId,
+        tenantId: storageTenantId,
         entityType: data.entityType,
         entityId: data.entityId,
         category: data.category,
@@ -37,11 +44,12 @@ export async function uploadDocumentForEntity(
         storageKey: uploaded.key,
         publicUrl: uploaded.url,
         uploadedBy: session.user.id,
+        recognizedData: data.odometer === undefined ? null : { odometer: data.odometer },
       })
       .returning();
     const r = Array.isArray(rows) ? rows[0] : rows;
     await tx.insert(auditEvent).values({
-      tenantId,
+      tenantId: storageTenantId,
       actorId: session.user.id,
       action: "document.create",
       entityType: "document",

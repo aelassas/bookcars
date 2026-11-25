@@ -20,6 +20,7 @@ import {
   type TarsSubmissionPackage,
 } from "@/platform/integrations/tars/submission";
 import { canManageRentalsForTenant } from "./policies";
+import { parseTarsClosure, type TarsClosure } from "@/platform/integrations/tars/closure";
 
 const execFileAsync = promisify(execFile);
 const CUSTOMER_DOCUMENT_CATEGORIES = ["id", "license", "passport", "international_license"];
@@ -34,6 +35,10 @@ export interface TarsReviewInput {
 
 function autoSubmissionEnabled(): boolean {
   return process.env.TARS_AUTO_SUBMIT_ENABLED === "true";
+}
+
+function autoCloseEnabled(): boolean {
+  return process.env.TARS_AUTO_CLOSE_ENABLED === "true";
 }
 
 function refresh(tenantSlug: string, rentalId: string): void {
@@ -269,4 +274,96 @@ export async function submitTarsApplication(tenantId: string, tenantSlug: string
     }
   }
   throw new Error("TARS submission stopped unexpectedly");
+}
+
+
+export interface TarsClosureActionInput {
+  actualReturnDate: Date;
+  finalOdometer: number;
+  fuelLevel: number;
+  location: string;
+}
+
+async function runBrowserClosure(value: TarsClosure, dryRun: boolean) {
+  const closurePath = path.join(tmpdir(), `rma-tars-close-${Date.now()}-${Math.random().toString(36).slice(2)}.json`);
+  await writeFile(closurePath, JSON.stringify(value), { mode: 0o600 });
+  const args = [path.join(process.cwd(), "scripts", "tars-close.ts"), closurePath, "--json", dryRun ? "--dry-run" : "--submit"];
+  try {
+    const { stdout } = await execFileAsync(path.join(process.cwd(), "node_modules", ".bin", "tsx"), args, {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      env: process.env,
+      timeout: 240_000,
+      maxBuffer: 2 * 1024 * 1024,
+    });
+    return parseTarsRunnerResult(stdout);
+  } catch (error) {
+    const failure = error as { stderr?: string; stdout?: string; message?: string };
+    throw new Error((failure.stderr || failure.stdout || failure.message || "TARS closure runner failed").trim().slice(0, 1000));
+  } finally {
+    await unlink(closurePath).catch(() => {});
+  }
+}
+
+export async function closeTarsContract(tenantId: string, tenantSlug: string, rentalId: string, input: TarsClosureActionInput) {
+  await canManageRentalsForTenant(tenantId);
+  await assertNotPreviewMode(tenantId);
+  if (!autoCloseEnabled()) throw new Error("Automatic TARS closure is disabled by the feature flag");
+  const actorId = await requireAuth();
+  const home = await requireFleetHomeTenantId();
+  const dryRun = process.env.TARS_AUTO_CLOSE_DRY_RUN !== "false";
+
+  const closure = await withDrizzleTenant(home, async (tx) => {
+    const [row] = await tx.select({ rental, vin: vehicle.vin }).from(rental)
+      .innerJoin(vehicle, eq(vehicle.id, rental.vehicleId))
+      .where(eq(rental.id, rentalId)).limit(1);
+    if (!row) throw new Error("Rental not found");
+    if (row.rental.status !== "active") throw new Error("Only an active rental can be closed in TARS");
+    if (!row.rental.tarsDocumentNumber) throw new Error("Link the rental to a TARS document before closing it");
+    if (!row.vin) throw new Error("Vehicle VIN is required for TARS closure");
+    return parseTarsClosure({
+      version: 1,
+      rentalId,
+      documentNumber: row.rental.tarsDocumentNumber,
+      vehicleVin: row.vin,
+      startAt: row.rental.startDate.toISOString(),
+      actualReturnAt: input.actualReturnDate.toISOString(),
+      startOdometer: row.rental.startOdometer,
+      finalOdometer: input.finalOdometer,
+      fuelPercent: input.fuelLevel,
+      location: input.location,
+    });
+  });
+
+  try {
+    const result = await runBrowserClosure(closure, dryRun);
+    await withDrizzleTenant(home, async (tx) => {
+      await tx.insert(auditEvent).values({
+        tenantId: home,
+        actorId,
+        action: result.status === "succeeded" ? "rental.tars.closed" : "rental.tars.close_dry_run_completed",
+        entityType: "rental",
+        entityId: rentalId,
+        intent: result.status === "succeeded"
+          ? `TARS contract ${closure.documentNumber} closed with odometer ${closure.finalOdometer} and fuel ${closure.fuelPercent}%`
+          : `Reviewed TARS closure ${closure.documentNumber}; no return was submitted`,
+      });
+    });
+    refresh(tenantSlug, rentalId);
+    revalidatePath(`/${tenantSlug}/operations`);
+    return result;
+  } catch (error) {
+    const message = (error instanceof Error ? error.message : "TARS closure failed").slice(0, 500);
+    await withDrizzleTenant(home, async (tx) => {
+      await tx.insert(auditEvent).values({
+        tenantId: home,
+        actorId,
+        action: "rental.tars.close_failed",
+        entityType: "rental",
+        entityId: rentalId,
+        intent: `TARS closure ${closure.documentNumber} failed: ${message}`,
+      });
+    });
+    throw error;
+  }
 }

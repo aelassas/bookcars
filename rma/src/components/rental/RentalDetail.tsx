@@ -7,9 +7,6 @@ import {
   CardHeader,
   Badge,
   Button,
-  Table,
-  TH,
-  TD,
   cx,
   type BadgeTone,
 } from "@/components/ui";
@@ -19,9 +16,12 @@ import { DocumentPanel } from "@/components/documents/DocumentPanel";
 import { ContractSection } from "@/components/rental/ContractSection";
 import { TarsSection } from "@/components/rental/TarsSection";
 import { ChargesBoard } from "@/components/rental/ChargesBoard";
+import { PaymentHistory } from "@/components/rental/PaymentHistory";
+import { OdometerPhotoPanel } from "@/components/rental/OdometerPhotoPanel";
 import { RentalExtensionPanel } from "@/components/rental/RentalExtensionPanel";
 import type { rentalCharge } from "@/platform/db/schema";
 import type { TarsSubmissionPackage } from "@/platform/integrations/tars/submission";
+import type { RentalOdometerPhoto } from "@/modules/rental/queries";
 import { startRental, completeRental, cancelRental, resolveDeposit } from "@/modules/rental/actions";
 import { confirmPayment, rejectPayment } from "@/modules/rental/payment-actions";
 import { BOOKING_BASIS_LABEL } from "@/modules/rental/booking";
@@ -127,12 +127,18 @@ export function RentalDetail({
   vehiclePlate,
   vehicleVin,
   vehicleOdometer,
+  liveVehicleOdometer,
+  liveVehicleOdometerAt,
+  odometerPhotos,
   payments: initialPayments,
   charges,
   actorId,
   canConfirm = false,
+  canEditPayments = false,
   tarsAutoEnabled,
   tarsAutoDryRun,
+  tarsAutoCloseEnabled,
+  tarsAutoCloseDryRun,
 }: {
   tenantId: string;
   tenantSlug: string;
@@ -145,12 +151,18 @@ export function RentalDetail({
   vehiclePlate: string;
   vehicleVin: string | null;
   vehicleOdometer: number | null;
+  liveVehicleOdometer: number | null;
+  liveVehicleOdometerAt: Date | null;
+  odometerPhotos: RentalOdometerPhoto[];
   payments: Payment[];
   charges: Array<{ charge: typeof rentalCharge.$inferSelect; customerName: string; plate: string }>;
   actorId?: string;
   canConfirm?: boolean;
+  canEditPayments?: boolean;
   tarsAutoEnabled: boolean;
   tarsAutoDryRun: boolean;
+  tarsAutoCloseEnabled: boolean;
+  tarsAutoCloseDryRun: boolean;
 }) {
   const [r, setR] = useState<Rental>(initialRental);
   const [payments] = useState<Payment[]>(initialPayments);
@@ -314,6 +326,8 @@ export function RentalDetail({
           }}
           onClose={() => setShowReturnModal(false)}
           onReturned={() => window.location.reload()}
+          tarsAutoCloseEnabled={tarsAutoCloseEnabled}
+          tarsAutoCloseDryRun={tarsAutoCloseDryRun}
         />
       )}
 
@@ -395,6 +409,9 @@ export function RentalDetail({
             <Row label="Daily rate" value={formatCurrency(r.dailyRate)} />
             {r.customerType && <Row label="Renter" value={r.customerType === "resident" ? "Local / UAE resident" : "Tourist"} />}
             <Row label="Daily mileage limit" value={r.dailyMileageLimitKm != null ? `${r.dailyMileageLimitKm} km` : "Unlimited"} />
+            <Row label="Contract start odometer" value={r.startOdometer === null ? "Not recorded" : `${r.startOdometer.toLocaleString()} km`} />
+            <Row label="Current mileage" value={vehicleOdometer === null ? "—" : `${vehicleOdometer.toLocaleString()} km`} />
+            <Row label="Pilot device" value={liveVehicleOdometer === null ? "No matching reading" : <span title={liveVehicleOdometerAt ? `Last GPS fix: ${liveVehicleOdometerAt.toLocaleString()}` : undefined}>{liveVehicleOdometer.toLocaleString()} km</span>} />
             {mileage && (
               <>
                 <Row label="Mileage used" value={`${mileage.drivenKm} / ${mileage.allowedKm} km`} />
@@ -475,8 +492,13 @@ export function RentalDetail({
       </div>
 
       <Card className="mt-5">
+        <CardHeader title="Odometer photos" count={odometerPhotos.length} icon={<Gauge className="h-3.5 w-3.5" />} />
+        <div className="p-4"><OdometerPhotoPanel tenantId={tenantId} rentalId={r.id} photos={odometerPhotos} canManage={canConfirm} /></div>
+      </Card>
+
+      <Card className="mt-5">
         <CardHeader title="Return reminder & extension" icon={<Calendar className="h-3.5 w-3.5" />} />
-        <div className="p-4"><RentalExtensionPanel tenantId={tenantId} tenantSlug={tenantSlug} rentalId={r.id} status={r.extensionStatus} returnDate={r.returnDate!} reminderSentAt={r.returnReminderSentAt} response={r.customerResponse} responseAt={r.customerResponseAt} active={r.status === "active" || r.status === "reserved"} /></div>
+        <div className="p-4"><RentalExtensionPanel tenantId={tenantId} tenantSlug={tenantSlug} rentalId={r.id} status={r.extensionStatus} returnDate={r.returnDate!} reminderSentAt={r.returnReminderSentAt} response={r.customerResponse} responseAt={r.customerResponseAt} active={r.status === "active" || r.status === "reserved"} dailyRate={r.dailyRate} totalDays={r.totalDays} total={r.total} balanceDue={r.balanceDue} /></div>
       </Card>
 
       <Card className="mt-5">
@@ -580,54 +602,16 @@ export function RentalDetail({
         {payments.length === 0 ? (
           <p className="p-4 text-sm text-ink-3">No payments recorded.</p>
         ) : (
-          <Table>
-            <thead>
-              <tr>
-                <TH>Date</TH>
-                <TH>Method</TH>
-                <TH>Status</TH>
-                <TH className="text-right">Amount</TH>
-                <TH></TH>
-              </tr>
-            </thead>
-            <tbody>
-              {payments.map((p) => (
-                <tr key={p.id} className="transition-colors hover:bg-sunken/50">
-                  <TD className="whitespace-nowrap tnum">{formatDate(p.createdAt)}</TD>
-                  <TD className="capitalize">{p.method.replaceAll("_", " ")}</TD>
-                  <TD>
-                    {p.status === "confirmed" ? (
-                      <Badge tone="success">confirmed</Badge>
-                    ) : p.status === "rejected" ? (
-                      <Badge tone="danger">rejected</Badge>
-                    ) : (
-                      <Badge tone="warning">pending confirmation</Badge>
-                    )}
-                  </TD>
-                  <TD
-                    className={cx(
-                      "text-right font-medium tnum",
-                      p.status === "confirmed" ? "text-success" : "text-warn"
-                    )}
-                  >
-                    {formatCurrency(p.amount)}
-                  </TD>
-                  <TD className="text-right">
-                    {p.status === "pending" && canConfirm && (
-                      <div className="flex justify-end gap-2">
-                        <Button size="sm" onClick={() => handleConfirm(p.id)} disabled={busy}>
-                          Confirm &amp; post
-                        </Button>
-                        <Button size="sm" variant="secondary" onClick={() => handleReject(p.id)} disabled={busy}>
-                          Reject
-                        </Button>
-                      </div>
-                    )}
-                  </TD>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <PaymentHistory
+            tenantId={tenantId}
+            tenantSlug={tenantSlug}
+            payments={payments}
+            canConfirm={canConfirm}
+            canEditPayments={canEditPayments}
+            busy={busy}
+            onConfirm={handleConfirm}
+            onReject={handleReject}
+          />
         )}
       </Card>
 

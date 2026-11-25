@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TarsRental, TarsVehicle } from "./client";
-import { buildPlan, type ExistingState } from "./sync";
+import { buildPlan, mapTarsRental, type ExistingState } from "./sync";
 
 function car(vin: string, model: string): TarsVehicle {
   return {
@@ -52,6 +52,7 @@ describe("TARS vehicle identity", () => {
         expectedReturnDate: "2026-11-24T14:30:00Z",
         vehicle,
         drivers: [{ name: { en: { firstName: "Test", lastName: "Driver" } } }],
+        readings: [{ odometer: { value: 8115, unit: "kms" } }],
       }],
     };
     const existing = state([
@@ -71,11 +72,13 @@ describe("TARS vehicle identity", () => {
       returnDate: new Date("2026-11-24T00:00:00Z"),
       status: "active",
       tarsDocumentNumber: null,
+      extensionStatus: "extension_confirmed",
     });
 
+    expect(mapTarsRental(rental)?.startOdometer).toBe(8115);
     const plan = buildPlan([], [rental], existing);
 
     expect(plan.rentals).toHaveLength(1);
-    expect(plan.rentals[0]).toMatchObject({ action: "update", existingId: "rental-1" });
+    expect(plan.rentals[0]).toMatchObject({ action: "update", existingId: "rental-1", preserveLocalExtension: true });
   });
 });
