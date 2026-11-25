@@ -2025,7 +2025,6 @@ export const deleteUsers = async (req: Request, res: Response) => {
         }
         // end of security check
 
-
         await User.deleteOne({ _id: id })
 
         if (user.avatar) {

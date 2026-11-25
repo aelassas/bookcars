@@ -27,19 +27,19 @@ import stripeAPI from '../payment/stripe'
 import { BOOKING_RESERVATION_STATUSES } from '../utils/bookingReservationHelper'
 
 /**
- * In-process per-property async mutex.
- * Serialises concurrent checkout requests for the same property so that
+ * In-process per-car async mutex.
+ * Serialises concurrent checkout requests for the same car so that
  * the overlap-check and booking.save() are atomic from the application's
  * perspective. This is sufficient for a single-process Node server and
  * for the standalone (non-replica-set) MongoDB used in development and
  * tests. In a multi-process deployment a distributed lock (e.g. Redis
  * SET NX) would be required in addition.
  */
-const propertyLocks = new Map<string, Promise<void>>()
+const carLocks = new Map<string, Promise<void>>()
 
-async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise<T> {
-  // Wait for any outstanding operation on this property to finish
-  const previous = propertyLocks.get(propertyId) ?? Promise.resolve()
+async function withCarLock<T>(carId: string, fn: () => Promise<T>): Promise<T> {
+  // Wait for any outstanding operation on this car to finish
+  const previous = carLocks.get(carId) ?? Promise.resolve()
 
   let resolve!: () => void
   const current = new Promise<void>((res) => {
@@ -48,7 +48,7 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
 
   // Store reference to the chained promise tail
   const tail = previous.then(() => current)
-  propertyLocks.set(propertyId, tail)
+  carLocks.set(carId, tail)
 
   await previous
   try {
@@ -56,8 +56,8 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
   } finally {
     resolve()
     // Clean up map entry if no newer request replaced this tail
-    if (propertyLocks.get(propertyId) === tail) {
-      propertyLocks.delete(propertyId)
+    if (carLocks.get(carId) === tail) {
+      carLocks.delete(carId)
     }
   }
 }
@@ -348,7 +348,7 @@ export const checkout = async (req: Request, res: Response) => {
       Location.find({ _id: { $in: carObj.locations } }),
     ])
     if (!supplier || supplier.type !== bookcarsTypes.UserType.Supplier || supplier.blacklisted || !locations || locations.length === 0) {
-      res.status(400).send('Invalid property relationships')
+      res.status(400).send('Invalid car relationships')
       return
     }
 
@@ -656,7 +656,7 @@ export const checkout = async (req: Request, res: Response) => {
     bookingData.price = expectedBasePriceInBaseCurrency
     const booking = new Booking(bookingData)
 
-    // Save the booking inside the per-property lock when exclusive
+    // Save the booking inside the per-car lock when exclusive
     // availability is required, so the conflict check + save are
     // effectively atomic in a single-process Node deployment.
     if (carObj.blockOnPay) {
