@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  FormHelperText,
+  Button,
+  Paper,
+} from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '@/services/UserService'
 import Layout from '@/components/Layout'
@@ -55,50 +62,53 @@ const ForgotPassword = () => {
     <Layout onLoad={onLoad} strict={false}>
       <div className="forgot-password">
         <Paper className={`forgot-password-form ${visible ? '' : 'hidden'}`} elevation={10}>
-          <h1 className="forgot-password-title">{strings.RESET_PASSWORD_HEADING}</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h1 className="forgot-password-title">{strings.RESET_PASSWORD_HEADING}</h1>
 
-          <div className={sent ? 'hidden' : ''}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl fullWidth margin="dense">
-                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                <Input
-                  {...register('email')}
-                  onChange={() =>{
-                    if (errors.email) {
-                      clearErrors('email')
-                    }
-                  }}
-                  type="text"
-                  error={!!errors.email}
-                  autoComplete="off"
-                  required
-                />
-                <FormHelperText error={!!errors.email}>
-                  {errors.email?.message || ''}
-                </FormHelperText>
-              </FormControl>
+            {!sent ? (
+              <>
+                <p className="forgot-password-subtitle">{strings.RESET_PASSWORD}</p>
 
-              <div className="buttons">
-                <Button type="submit" className="btn-primary" variant="contained" disabled={isSubmitting}>
-                  {strings.RESET}
-                </Button>
-                <Button variant="outlined" onClick={() => navigate('/')}>
-                  {commonStrings.CANCEL}
-                </Button>
-              </div>
-            </form>
-          </div>
+                <FormControl fullWidth margin="dense" variant="outlined" error={!!errors.email}>
+                  <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
+                  <OutlinedInput
+                    id="email"
+                    label={commonStrings.EMAIL}
+                    {...register('email')}
+                    onChange={() => {
+                      if (errors.email) {
+                        clearErrors('email')
+                      }
+                    }}
+                    autoComplete="email"
+                    required
+                  />
+                  <FormHelperText error={!!errors.email}>
+                    {errors.email?.message || ''}
+                  </FormHelperText>
+                </FormControl>
 
-          {sent && (
-            <div>
-              <span>{strings.EMAIL_SENT}</span>
-              <p>
-                <Button variant="text" onClick={() => navigate('/')} className="btn-lnk">
-                  {commonStrings.GO_TO_HOME}
-                </Button>
-              </p>
-            </div>
-          )}
+                <div className="buttons">
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                    {strings.RESET}
+                  </Button>
+                  <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                    {commonStrings.CANCEL}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="forgot-password-sent">{strings.EMAIL_SENT}</p>
+
+                <div className="buttons">
+                  <Button variant="contained" className="btn-primary" onClick={() => navigate('/')}>
+                    {commonStrings.GO_TO_HOME}
+                  </Button>
+                </div>
+              </>
+            )}
+          </form>
         </Paper>
       </div>
     </Layout>

@@ -105,60 +105,58 @@ const ResetPassword = () => {
 
   return (
     <Layout onLoad={onLoad} strict={false}>
-      <div className={visible ? '' : 'hidden'}>
-        <div className="reset-password">
-          <Paper className="reset-password-form" elevation={10}>
-            <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
+      <div className={`reset-password ${visible ? '' : 'hidden'}`}>
+        <Paper className="reset-password-form" elevation={10}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h1 className="reset-password-form-title">{rpStrings.RESET_PASSWORD_HEADING}</h1>
 
-              <PasswordInput
-                label={commonStrings.PASSWORD}
-                variant="standard"
-                {...register('password')}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                onChange={(e) => {
-                  if (errors.password) {
-                    clearErrors('password')
-                  }
-                  setValue('password', e.target.value)
-                }}
-                required
-                autoComplete="new-password"
-              />
+            <PasswordInput
+              label={commonStrings.PASSWORD}
+              variant="outlined"
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              onChange={(e) => {
+                if (errors.password) {
+                  clearErrors('password')
+                }
+                setValue('password', e.target.value)
+              }}
+              required
+              autoComplete="new-password"
+            />
 
-              <PasswordInput
-                label={commonStrings.CONFIRM_PASSWORD}
-                variant="standard"
-                {...register('confirmPassword')}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword?.message}
-                onChange={(e) => {
-                  if (errors.confirmPassword) {
-                    clearErrors('confirmPassword')
-                  }
-                  setValue('confirmPassword', e.target.value)
-                }}
-                required
-                inputProps={{
-                  autoComplete: 'new-password',
-                  form: {
-                    autoComplete: 'off',
-                  },
-                }}
-              />
+            <PasswordInput
+              label={commonStrings.CONFIRM_PASSWORD}
+              variant="outlined"
+              {...register('confirmPassword')}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+              onChange={(e) => {
+                if (errors.confirmPassword) {
+                  clearErrors('confirmPassword')
+                }
+                setValue('confirmPassword', e.target.value)
+              }}
+              required
+              inputProps={{
+                autoComplete: 'new-password',
+                form: {
+                  autoComplete: 'off',
+                },
+              }}
+            />
 
-              <div className="buttons">
-                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" variant="contained" disabled={isSubmitting}>
-                  {commonStrings.SAVE}
-                </Button>
-                <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
-                  {commonStrings.CANCEL}
-                </Button>
-              </div>
-            </form>
-          </Paper>
-        </div>
+            <div className="buttons">
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                {commonStrings.SAVE}
+              </Button>
+              <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                {commonStrings.CANCEL}
+              </Button>
+            </div>
+          </form>
+        </Paper>
       </div>
 
       {errors.root && <Error />}

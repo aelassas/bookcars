@@ -2,14 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Button,
-  Paper,
-  Box,
-  Typography
+  Paper
 } from '@mui/material'
-import {
-  VpnKey as KeyIcon,
-  LockReset as ResetIcon
-} from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as bookcarsTypes from ':bookcars-types'
@@ -112,130 +106,61 @@ const ResetPassword = () => {
 
   return (
     <Layout onLoad={onLoad} strict={false}>
-      <div className={visible ? '' : 'hidden'}>
-        <Box
-          className="reset-password"
-          sx={{
-            minHeight: '80vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 6,
-            px: 2,
-            background: 'linear-gradient(180deg, rgba(11, 17, 32, 0.03) 0%, transparent 100%)'
-          }}
-        >
-          <Paper
-            elevation={12}
-            sx={{
-              width: '100%',
-              maxWidth: 460,
-              borderRadius: '20px',
-              p: { xs: 3, sm: 4.5 },
-              border: '1px solid var(--sr-border, #E2E8F0)',
-              background: 'var(--sr-surface, #FFFFFF)',
-              boxShadow: '0 20px 40px rgba(11, 17, 32, 0.08)'
-            }}
-          >
-            {/* Header Icon */}
-            <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Box
-                sx={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: '16px',
-                  bgcolor: 'rgba(5, 150, 105, 0.1)',
-                  color: 'var(--sr-emerald)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mb: 2
-                }}
-              >
-                <ResetIcon sx={{ fontSize: 30 }} />
-              </Box>
-              <Typography variant="h5" sx={{ fontWeight: 800, color: 'var(--sr-text, #0B1120)', letterSpacing: '-0.02em', mb: 0.5 }}>
-                {rpStrings.RESET_PASSWORD_HEADING}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Choose a strong, unique password with at least 6 characters.
-              </Typography>
-            </Box>
+      <div className={`reset-password ${visible ? '' : 'hidden'}`}>
+        <Paper className="reset-password-form" elevation={10}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h1 className="reset-password-form-title">{rpStrings.RESET_PASSWORD_HEADING}</h1>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <PasswordInput
-                label={commonStrings.PASSWORD}
-                variant="standard"
-                {...register('password')}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                onChange={(e) => {
-                  if (errors.password) {
-                    clearErrors('password')
-                  }
-                  setValue('password', e.target.value)
-                }}
-                required
-                autoComplete="new-password"
-              />
+            <PasswordInput
+              label={commonStrings.PASSWORD}
+              variant="outlined"
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              onChange={(e) => {
+                if (errors.password) {
+                  clearErrors('password')
+                }
+                setValue('password', e.target.value)
+              }}
+              required
+              autoComplete="new-password"
+            />
 
-              <PasswordInput
-                label={commonStrings.CONFIRM_PASSWORD}
-                variant="standard"
-                {...register('confirmPassword')}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword?.message}
-                onChange={(e) => {
-                  if (errors.confirmPassword) {
-                    clearErrors('confirmPassword')
-                  }
-                  setValue('confirmPassword', e.target.value)
-                }}
-                required
-                inputProps={{
-                  autoComplete: 'new-password',
-                  form: {
-                    autoComplete: 'off',
-                  },
-                }}
-              />
+            <PasswordInput
+              label={commonStrings.CONFIRM_PASSWORD}
+              variant="outlined"
+              {...register('confirmPassword')}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+              onChange={(e) => {
+                if (errors.confirmPassword) {
+                  clearErrors('confirmPassword')
+                }
+                setValue('confirmPassword', e.target.value)
+              }}
+              required
+              inputProps={{
+                autoComplete: 'new-password',
+                form: {
+                  autoComplete: 'off',
+                },
+              }}
+            />
 
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 3.5 }}>
-                <Button
-                  type="submit"
-                  className="btn-primary"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  sx={{
-                    bgcolor: '#107487',
-                    '&:hover': { bgcolor: '#047857' },
-                    fontWeight: 700,
-                    py: 1.2,
-                    textTransform: 'none',
-                    borderRadius: '10px'
-                  }}
-                >
-                  {commonStrings.SAVE}
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => navigate('/')}
-                  sx={{
-                    textTransform: 'none',
-                    borderRadius: '10px',
-                    borderColor: 'var(--sr-border, #CBD5E1)',
-                    color: 'var(--sr-text, #334155)'
-                  }}
-                >
-                  {commonStrings.CANCEL}
-                </Button>
-              </Box>
-            </form>
-          </Paper>
-        </Box>
-
-        <Footer />
+            <div className="buttons">
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" disabled={isSubmitting}>
+                {commonStrings.SAVE}
+              </Button>
+              <Button variant="outlined" color="primary" className="btn-margin-bottom" onClick={() => navigate('/')}>
+                {commonStrings.CANCEL}
+              </Button>
+            </div>
+          </form>
+        </Paper>
       </div>
+
+      <Footer />
 
       {errors.root && <Error />}
 

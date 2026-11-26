@@ -30,6 +30,7 @@ import { strings } from '@/lang/cars'
 import Badge from '@/components/Badge'
 import * as UserService from '@/services/UserService'
 import * as PaymentService from '@/services/PaymentService'
+import { carPhoto } from '@/config/carImages'
 
 import DoorsIcon from '@/assets/img/car-door.png'
 import DistanceIcon from '@/assets/img/distance-icon.png'
@@ -180,7 +181,7 @@ const Car = ({
   // must never break the whole search results route.
   const carImage = car.image && env.CDN_CARS
     ? bookcarsHelper.joinURL(env.CDN_CARS, car.image)
-    : undefined
+    : carPhoto(car)
   const supplierAvatar = car.supplier?.avatar && env.CDN_USERS
     ? bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)
     : undefined
