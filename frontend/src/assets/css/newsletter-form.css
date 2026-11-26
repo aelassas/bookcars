@@ -14,3 +14,22 @@ form.newsletter-form div.form .btn {
   padding: 0 30px;
   min-width: 120px;
 }
+
+/* The footer is always dark: keep browser autofill on the same field surface
+   so the email and its floating label stay legible. */
+form.newsletter-form input:-webkit-autofill,
+form.newsletter-form input:-webkit-autofill:hover,
+form.newsletter-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f5f6f8;
+  -webkit-box-shadow: 0 0 0 100px var(--sr-surface-raised, #252e3c) inset;
+  caret-color: #f5f6f8;
+  transition: background-color 9999s ease-out 0s;
+}
+
+form.newsletter-form .MuiInputLabel-root {
+  color: var(--sr-muted, #bcc4ce);
+}
+
+form.newsletter-form .MuiInputLabel-root.Mui-focused {
+  color: var(--sr-accent-text, #ffc16a);
+}

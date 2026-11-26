@@ -36,22 +36,27 @@
   cursor: default;
 }
 
-/* Dark hero search dock */
+/* Quick city pills sit on the themed search card, so follow its tokens. */
 form.home-search-form .hub-pill {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(245, 245, 247, 0.25);
-  color: #f5f5f7;
+  background: var(--sr-surface-raised, #f0f3f6);
+  border-color: var(--sr-border, #dce1e8);
+  color: var(--sr-text, #171b24);
 }
 
 form.home-search-form .hub-pill:hover {
-  border-color: #d4af37;
-  color: #ffffff;
+  border-color: var(--sr-gold, #ffa62b);
+  color: var(--sr-accent-text, #995000);
 }
 
 form.home-search-form .hub-pill.active {
-  background: #d4af37;
-  border-color: #d4af37;
-  color: #0f172a;
+  background: var(--sr-gold, #ffa62b);
+  border-color: var(--sr-gold, #ffa62b);
+  color: var(--sr-on-gold, #171b24);
+}
+
+form.home-search-form .hub-pill:disabled {
+  color: var(--sr-muted, #596273);
+  opacity: 0.55;
 }
 
 .search-hub-select {

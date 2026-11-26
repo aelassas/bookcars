@@ -758,3 +758,9 @@ html, body, #root { background: var(--sr-ink); }
 }
 #root .signin-form form { width: 100%; }
 #root :is(.signup-form-title, .signin-form-title) { text-align: start; margin-top: 0; }
+
+/* Keyboard focus follows the brand accent instead of the cool cyan ring,
+   which clashed with the orange buttons and field outlines. */
+html[data-app] #root :focus-visible {
+  outline-color: var(--sr-gold, #ffa62b);
+}

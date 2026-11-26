@@ -136,61 +136,66 @@ form.home-search-form .btn-search {
   }
 }
 
-/* Dark SafarRent search surface: force readable labels over MUI's light defaults. */
+/* The search card uses the themed surface, so its controls follow the theme
+   tokens instead of hardcoded dark-hero colours (which vanished on light). */
 form.home-search-form .MuiInputLabel-root,
-form.home-search-form .MuiInputLabel-root.Mui-focused,
 form.home-search-form .MuiFormControlLabel-label,
 form.home-search-form .chk-same-location,
 form.home-search-form .MuiFormHelperText-root:not(.Mui-error) {
-  color: #f5f5f7 !important;
+  color: var(--sr-muted, #596273) !important;
+}
+
+form.home-search-form .MuiInputLabel-root.Mui-focused {
+  color: var(--sr-accent-text, #995000) !important;
 }
 
 form.home-search-form .MuiOutlinedInput-root,
-form.home-search-form .MuiInputBase-root {
-  color: #f5f5f7 !important;
-  background: rgba(255, 255, 255, .045) !important;
+form.home-search-form .MuiInputBase-root,
+form.home-search-form .MuiPickersInputBase-root {
+  color: var(--sr-text, #171b24) !important;
+  background: var(--sr-surface-raised, #f0f3f6) !important;
 }
 
 form.home-search-form .MuiOutlinedInput-input,
 form.home-search-form .MuiInputBase-input {
-  color: #f5f5f7 !important;
-  -webkit-text-fill-color: #f5f5f7 !important;
+  color: var(--sr-text, #171b24) !important;
+  -webkit-text-fill-color: var(--sr-text, #171b24) !important;
 }
 
 /* MUI X DateTimePicker uses segmented contenteditable fields instead of a
    native input. Color those sections explicitly; input color alone leaves
-   the date/time digits black in dark mode. */
-form.home-search-form .MuiPickersInputBase-root,
+   the date/time digits unreadable. */
 form.home-search-form .MuiPickersInputBase-sectionsContainer,
 form.home-search-form .MuiPickersSectionList-root,
 form.home-search-form .MuiPickersSectionList-section,
 form.home-search-form .MuiPickersSectionList-sectionContent,
 form.home-search-form .MuiPickersSectionList-sectionSeparator {
-  color: #f5f5f7 !important;
-  -webkit-text-fill-color: #f5f5f7 !important;
+  color: var(--sr-text, #171b24) !important;
+  -webkit-text-fill-color: var(--sr-text, #171b24) !important;
 }
 
-form.home-search-form .MuiPickersInputBase-root {
-  background: rgba(255, 255, 255, .045) !important;
-}
-
-form.home-search-form .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(245, 245, 247, .25) !important;
+form.home-search-form .MuiOutlinedInput-notchedOutline,
+form.home-search-form .MuiPickersOutlinedInput-notchedOutline {
+  border-color: var(--sr-border, #dce1e8) !important;
 }
 
 form.home-search-form .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
 form.home-search-form .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #d4af37 !important;
+  border-color: var(--sr-gold, #ffa62b) !important;
 }
 
 form.home-search-form .MuiSvgIcon-root {
-  color: #d4af37 !important;
+  color: var(--sr-muted, #596273) !important;
 }
 
 form.home-search-form .chk-same-location .MuiCheckbox-root {
-  color: rgba(245, 245, 247, .75) !important;
+  color: var(--sr-muted, #596273) !important;
 }
 
 form.home-search-form .chk-same-location .MuiCheckbox-root.Mui-checked {
-  color: #d4af37 !important;
+  color: var(--sr-accent-text, #995000) !important;
+}
+
+form.home-search-form .chk-same-location .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root {
+  color: var(--sr-accent-text, #995000) !important;
 }

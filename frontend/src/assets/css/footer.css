@@ -100,6 +100,12 @@ div.footer section.payment {
   padding: 10px 0;
 }
 
+/* The payment label sat at the dimmest end of the footer palette. */
+html[data-app] #root .footer .footer-payments > span {
+  color: #e3e9f1;
+  font-weight: 600;
+}
+
 div.footer section.payment div.payment-text {
   display: flex;
   flex-direction: column;

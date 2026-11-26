@@ -302,3 +302,9 @@ html[data-theme] .MuiDrawer-paper .MuiListItemText-primary,
 html[data-theme] .MuiDrawer-paper .MuiListItemText-secondary { color: var(--sr-text); }
 html[data-theme] #root .header .MuiAppBar-root .MuiIconButton-root,
 html[data-theme] #root .header .MuiAppBar-root .MuiIconButton-root .MuiSvgIcon-root { color: var(--sr-text); }
+
+/* Keyboard focus follows the brand accent instead of the cool cyan ring,
+   which clashed with the orange buttons and field outlines. */
+html[data-app] #root :focus-visible {
+  outline-color: var(--sr-gold, #ffa62b);
+}
