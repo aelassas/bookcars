@@ -1015,7 +1015,7 @@ export const rental = tenantTable(
     // from (matches price_tier.channel), and the signed rental-agreement PDF
     // (left NULL at create; filled by the contract/driver-bot step).
     channel: text("channel").notNull().default("b2c"), // b2c | b2b
-    customerType: text("customer_type"), // tourist | resident (0084); NULL on historic rentals
+    customerType: text("customer_type"), // tourist | resident | owner (internal use); NULL on historic rentals
     contractUrl: text("contract_url"),
     startDate: timestamp("start_date", { withTimezone: true }).notNull(),
     returnDate: timestamp("return_date", { withTimezone: true }).notNull(),

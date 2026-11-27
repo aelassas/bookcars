@@ -740,8 +740,8 @@ async function createRentalFromQuoteImpl(
   if (!data.customerId) throw new Error("Customer is required");
   if (!data.vehicleId) throw new Error("Vehicle is required");
   const channel: Channel = data.channel === "b2b" ? "b2b" : "b2c";
-  if (data.customerType !== undefined && data.customerType !== "tourist" && data.customerType !== "resident") {
-    throw new Error("Customer type must be tourist or resident");
+  if (data.customerType !== undefined && !["tourist", "resident", "owner"].includes(data.customerType)) {
+    throw new Error("Customer type must be tourist, resident or owner");
   }
   const customerType: CustomerType = data.customerType ?? "tourist";
   if (data.dailyMileageLimitKm !== undefined && (!Number.isInteger(data.dailyMileageLimitKm) || data.dailyMileageLimitKm <= 0)) {

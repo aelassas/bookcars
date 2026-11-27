@@ -24,6 +24,15 @@ describe("rental pricing", () => {
     expect(resolveRentalPricing({ totalDays: 2, channel: "b2c", tierDailyRate: 300, customerType: "resident", manualDeposit: 750 }).deposit).toBe(750);
   });
 
+  it("uses zero rate and deposit for owner internal use, even if a tier or manual amount exists", () => {
+    expect(resolveRentalPricing({ totalDays: 2, channel: "b2c", customerType: "owner", tierDailyRate: 300, tierDeposit: 1500 })).toEqual({
+      dailyRate: 0, deposit: 0, pricedFromTier: false,
+    });
+    expect(resolveRentalPricing({ totalDays: 2, channel: "b2c", customerType: "owner", manualDailyRate: 300, manualDeposit: 1500 })).toEqual({
+      dailyRate: 0, deposit: 0, pricedFromTier: false,
+    });
+  });
+
   it("keeps the custom fallback when no tier exists", () => {
     expect(resolveRentalPricing({ totalDays: 2, channel: "b2c", manualDailyRate: 300, manualDeposit: 0 })).toEqual({
       dailyRate: 300, deposit: 0, pricedFromTier: false,

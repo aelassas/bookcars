@@ -86,6 +86,14 @@ export function CreateRentalModal({
     }
     let cancelled = false;
     const t = setTimeout(() => {
+      if (customerType === "owner") {
+        if (!cancelled) {
+          setQuote({ status: "none", error: "" });
+          setDailyRate("0");
+          setDeposit("0");
+        }
+        return;
+      }
       getRentalQuote(tenantId, vehicleId, startDate, returnDate, channel)
         .then((res) => {
           if (cancelled) return;
@@ -157,9 +165,10 @@ export function CreateRentalModal({
     : Math.max(1, Math.ceil((new Date(returnDate).getTime() - new Date(startDate).getTime()) / 86_400_000) || 1);
   const rentalSubtotal = Number(dailyRate || 0) * quoteDays;
   const confirmTotal = rentalSubtotal + Number(deposit || 0);
+  const ownerUse = customerType === "owner";
   const canSubmit =
     (quote.status === "ok" || quote.status === "none") &&
-    Number.isInteger(Number(dailyRate)) && Number(dailyRate) > 0 &&
+    Number.isInteger(Number(dailyRate)) && (ownerUse ? Number(dailyRate) === 0 : Number(dailyRate) > 0) &&
     deposit !== "" && Number.isInteger(Number(deposit)) && Number(deposit) >= 0;
 
   return (
@@ -247,10 +256,11 @@ export function CreateRentalModal({
               required
               className="w-full"
               value={customerType}
-              onChange={(e) => setCustomerType(e.target.value === "resident" ? "resident" : "tourist")}
+              onChange={(e) => setCustomerType(["tourist", "resident", "owner"].includes(e.target.value) ? e.target.value as CustomerType : "tourist")}
             >
               <option value="tourist">Tourist</option>
               <option value="resident">Local / UAE resident</option>
+              <option value="owner">Owner / internal use</option>
             </Select>
           </div>
         </div>
@@ -258,7 +268,7 @@ export function CreateRentalModal({
         <div
           className={cx(
             "space-y-3 rounded-field border px-3 py-2.5 text-sm",
-            quote.status === "ok"
+            quote.status === "ok" || ownerUse
               ? "border-success-line bg-success-soft"
               : quote.status === "none"
                 ? "border-warn-line bg-warn-soft"
@@ -267,10 +277,11 @@ export function CreateRentalModal({
         >
           {quote.status === "idle" && <span className="text-ink-3">Pick a vehicle and dates to see the live quote.</span>}
           {quote.status === "loading" && <span className="text-ink-3">Quoting…</span>}
-          {quote.status === "none" && <div className="font-medium text-ink">{quote.error}. Enter a custom daily rate.</div>}
+          {quote.status === "none" && !ownerUse && <div className="font-medium text-ink">{quote.error}. Enter a custom daily rate.</div>}
+          {ownerUse && <div className="font-medium text-ink">Owner / internal use — no daily rate or deposit.</div>}
           {(quote.status === "ok" || quote.status === "none") && (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              {!ownerUse && <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Daily rate (AED) *</Label>
                   <Input name="dailyRate" type="number" min={1} step={1} required className="w-full" placeholder="0" value={dailyRate} onChange={(e) => setDailyRate(e.target.value)} />
@@ -279,13 +290,13 @@ export function CreateRentalModal({
                   <Label>Deposit (AED) *</Label>
                   <Input name="deposit" type="number" min={0} step={1} required className="w-full" placeholder="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} />
                 </div>
-              </div>
+              </div>}
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                 <span className="text-ink-2 tnum">Rent {formatCurrency(rentalSubtotal)} ({quoteDays} day{quoteDays === 1 ? "" : "s"})</span>
                 <span className="text-ink-2 tnum">Deposit {formatCurrency(Number(deposit || 0))}</span>
                 <span className="ml-auto font-semibold text-ink tnum">Total incl. deposit {formatCurrency(confirmTotal)}</span>
               </div>
-              <p className="text-xs text-ink-3">Tier prices load automatically. Both amounts are editable; tourist deposit defaults to AED 1,500 and local/UAE resident to AED 0.</p>
+              {!ownerUse && <p className="text-xs text-ink-3">Tier prices load automatically. Both amounts are editable; tourist deposit defaults to AED 1,500 and local/UAE resident to AED 0.</p>}
             </>
           )}
         </div>

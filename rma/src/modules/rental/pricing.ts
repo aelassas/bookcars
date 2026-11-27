@@ -1,6 +1,6 @@
 import type { Channel } from "@/platform/db/rental-extras";
 
-export type CustomerType = "tourist" | "resident";
+export type CustomerType = "tourist" | "resident" | "owner";
 
 export function rentalPricingDays(totalDays: number): number {
   return totalDays >= 28 && totalDays <= 31 ? 30 : totalDays;
@@ -11,7 +11,7 @@ export function rentalAdditionalPricingDays(currentTotalDays: number, nextTotalD
 }
 
 export function defaultDeposit(customerType: CustomerType, tierDeposit?: number | null) {
-  return customerType === "resident" ? 0 : tierDeposit ?? 1500;
+  return customerType === "resident" || customerType === "owner" ? 0 : tierDeposit ?? 1500;
 }
 
 export function resolveRentalPricing({
@@ -31,6 +31,7 @@ export function resolveRentalPricing({
   manualDailyRate?: number;
   manualDeposit?: number;
 }) {
+  if (customerType === "owner") return { dailyRate: 0, deposit: 0, pricedFromTier: false };
   if (manualDailyRate !== undefined && (!Number.isInteger(manualDailyRate) || manualDailyRate <= 0)) {
     throw new Error("Daily rate must be a positive whole number");
   }

@@ -426,8 +426,8 @@ export function RentalDetail({
               <Row label="Actual return" value={formatDate(r.actualReturnDate)} valueClass="text-info" />
             )}
             <Row label="Duration" value={`${r.totalDays} days`} />
-            <Row label="Daily rate" value={formatCurrency(r.dailyRate)} />
-            {r.customerType && <Row label="Renter" value={r.customerType === "resident" ? "Local / UAE resident" : "Tourist"} />}
+            {r.customerType !== "owner" && <Row label="Daily rate" value={formatCurrency(r.dailyRate)} />}
+            {r.customerType && <Row label="Renter" value={r.customerType === "owner" ? "Owner / internal use" : r.customerType === "resident" ? "Local / UAE resident" : "Tourist"} />}
             <Row label="Daily mileage limit" value={r.dailyMileageLimitKm != null ? `${r.dailyMileageLimitKm} km` : "Unlimited"} />
             <Row label="Contract start odometer" value={r.startOdometer === null ? "Not recorded" : `${r.startOdometer.toLocaleString()} km`} />
             <Row label="Current mileage" value={vehicleOdometer === null ? "—" : `${vehicleOdometer.toLocaleString()} km`} />
