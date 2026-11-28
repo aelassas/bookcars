@@ -105,7 +105,7 @@ const FaqList = () => {
         <Typography variant="h4" sx={{ fontWeight: 800, color: 'var(--sr-text, #0B1120)', letterSpacing: '-0.02em', mb: 1 }}>
           {strings.FAQ_TITLE}
         </Typography>
-        <Typography color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', fontSize: 14 }}>
+        <Typography sx={{ maxWidth: 600, mx: 'auto', fontSize: 14, color: 'var(--sr-muted)' }}>
           Everything you need to know about escrow locks, CNIC verification, self-drive handover, and northern route clearance.
         </Typography>
       </Box>
@@ -204,7 +204,7 @@ const FaqList = () => {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 4 }}>
         {filteredFaqs.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '12px' }}>
-            <Typography color="text.secondary">No answers found matching &quot;{keyword}&quot;. Contact our 24/7 team below.</Typography>
+            <Typography sx={{ color: 'var(--sr-muted)' }}>No answers found matching &quot;{keyword}&quot;. Contact our 24/7 team below.</Typography>
           </Box>
         ) : (
           filteredFaqs.map((faq) => (
@@ -225,7 +225,7 @@ const FaqList = () => {
                   {faq.question}
                 </Typography>
               </AccordionSummary>
-              <AccordionDetails sx={{ pt: 0, pb: 2.5, px: 2.5, color: 'text.secondary', fontSize: '14px', lineHeight: 1.7 }}>
+              <AccordionDetails sx={{ pt: 0, pb: 2.5, px: 2.5, color: 'var(--sr-muted)', fontSize: '14px', lineHeight: 1.7 }}>
                 {faq.answer}
               </AccordionDetails>
             </Accordion>
@@ -251,7 +251,7 @@ const FaqList = () => {
           <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'var(--sr-text, #0B1120)' }}>
             Still have questions about your trip?
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{ color: 'var(--sr-muted)' }}>
             Our 24/7 WhatsApp dispatch team is ready to help with itinerary planning and supplier coordination.
           </Typography>
         </Box>

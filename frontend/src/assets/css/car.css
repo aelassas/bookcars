@@ -126,8 +126,14 @@ div.car-container article div.car .car-img {
   letter-spacing: 0.03em;
 }
 
+.badge-available {
+  background: rgba(4, 120, 87, 0.94);
+  color: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
 .badge-self-drive {
-  background: rgba(5, 150, 105, 0.9);
+  background: rgba(4, 120, 87, 0.94);
   color: #ffffff;
   border: 1px solid rgba(16, 185, 129, 0.4);
 }
@@ -139,7 +145,7 @@ div.car-container article div.car .car-img {
 }
 
 .badge-hill-route {
-  background: rgba(217, 119, 6, 0.9);
+  background: rgba(180, 83, 9, 0.95);
   color: #ffffff;
   border: 1px solid rgba(245, 158, 11, 0.5);
 }
