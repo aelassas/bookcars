@@ -334,6 +334,7 @@ return
       //
       let _customerId: string | undefined
       let _sessionId: string | undefined
+      let _clientSecret: string | null = null
       if (!payLater) {
         if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.Stripe) {
           const name = bookcarsHelper.truncateString(`${env.WEBSITE_NAME} - ${car.name}`, StripeService.ORDER_NAME_MAX_LENGTH)
@@ -350,7 +351,8 @@ return
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
           const res = await StripeService.createCheckoutSession(payload)
-          setClientSecret(res.clientSecret)
+          // The payment form is shown only after the booking has been created
+          _clientSecret = res.clientSecret
           _sessionId = res.sessionId
           _customerId = res.customerId
         } else {
@@ -388,6 +390,9 @@ return
         } else if (env.PAYMENT_GATEWAY === bookcarsTypes.PaymentGateway.PayPal) {
           // Set payPalLoaded ONLY AFTER bookingId is set
           setPayPalLoaded(true)
+        } else {
+          // Set clientSecret ONLY AFTER the booking has been created
+          setClientSecret(_clientSecret)
         }
       } else {
         helper.error()

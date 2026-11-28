@@ -21,7 +21,12 @@ const SimpleBackdrop = ({ progress, text }: SimpleBackdropProps) => (
         color: '#fff',
         zIndex: 1402,
         // height: window.innerHeight,
-        // marginTop: `${document.documentElement.scrollTop - marginTop}px`
+        // marginTop: `${document.documentElement.scrollTop - marginTop}px`,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
       }}
     >
       {progress && <CircularProgress color="inherit" sx={{ marginRight: 5 }} />}

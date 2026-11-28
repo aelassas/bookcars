@@ -1434,6 +1434,250 @@ describe('Security Regression Tests - Issue #28 Checkout Payment Binding', () =>
       await stripeAPI.customers.del(customerId)
     }
   })
+
+  it('should capture the payment of a paid checkout even if a notification fails', async () => {
+    const from = new Date(2025, 8, 1)
+    const to = new Date(2025, 8, 4)
+    const car = await Car.findById(CAR1_ID)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      car!.toObject() as unknown as bookcarsTypes.Car,
+      from,
+      to,
+      0,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+
+    // Authorized (manual capture) payment, as after the mobile payment sheet
+    const paymentIntentId = `pi_test_${nanoid()}`
+    const customerId = `cus_test_${nanoid()}`
+    const retrieveSpy = jest.spyOn(stripeAPI.paymentIntents, 'retrieve').mockResolvedValue({
+      id: paymentIntentId,
+      status: 'requires_capture',
+      amount: helper.toCents(expectedBasePrice),
+      currency: env.BASE_CURRENCY.toLowerCase(),
+      customer: customerId,
+    } as never)
+    const captureSpy = jest.spyOn(stripeAPI.paymentIntents, 'capture').mockResolvedValue({
+      id: paymentIntentId,
+      status: 'succeeded',
+    } as never)
+    // The supplier notification, sent before the capture on main, fails
+    const notificationSaveSpy = jest.spyOn(Notification.prototype, 'save').mockRejectedValueOnce(new Error('Notification store unavailable'))
+    const driverCustomerId = (await User.findById(DRIVER1_ID))?.customerId
+    const carTrips = car!.trips
+
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from,
+        to,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: expectedBasePrice,
+        additionalDriver: false,
+      },
+      payLater: false,
+      paymentIntentId,
+      customerId,
+    }
+
+    try {
+      const res = await request(app)
+        .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+        .send(payload)
+
+      // The booking is saved as paid, so the payment is captured and the checkout succeeds
+      expect(res.statusCode).toBe(200)
+      expect(notificationSaveSpy).toHaveBeenCalled()
+      expect(captureSpy).toHaveBeenCalledWith(paymentIntentId)
+      const booking = await Booking.findOne({ paymentIntentId })
+      expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Paid)
+    } finally {
+      retrieveSpy.mockRestore()
+      captureSpy.mockRestore()
+      notificationSaveSpy.mockRestore()
+      const booking = await Booking.findOne({ paymentIntentId })
+      if (booking) {
+        await testHelper.deleteNotifications(booking._id.toString())
+      }
+      await Booking.deleteMany({ paymentIntentId })
+      await Car.updateOne({ _id: CAR1_ID }, { trips: carTrips })
+      await User.updateOne({ _id: DRIVER1_ID }, driverCustomerId ? { customerId: driverCustomerId } : { $unset: { customerId: '' } })
+    }
+  })
+
+  it('should confirm a mobile checkout paid as a deposit or in full like a regular payment', async () => {
+    const from = new Date(2025, 8, 10)
+    const to = new Date(2025, 8, 13)
+    const car = await Car.findById(CAR1_ID)
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
+      car!.toObject() as unknown as bookcarsTypes.Car,
+      from,
+      to,
+      0,
+      {
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+      }
+    )
+    const carTrips = car!.trips
+    const driver = await User.findById(DRIVER1_ID)
+    const driverCustomerId = driver?.customerId
+    const supplierCounter = (await NotificationCounter.findOne({ user: SUPPLIER_ID }))?.count
+
+    const options = [
+      { isDeposit: true, isPayedInFull: false, status: bookcarsTypes.BookingStatus.Deposit },
+      { isDeposit: false, isPayedInFull: true, status: bookcarsTypes.BookingStatus.PaidInFull },
+    ]
+
+    // mailHelper builds its own transporter, so the spy goes on the shared nodemailer Mail prototype
+    const sendMail = jest.spyOn(Object.getPrototypeOf(testTransporter), 'sendMail').mockResolvedValue({ messageId: 'test' } as never)
+
+    try {
+      for (const [index, option] of options.entries()) {
+        sendMail.mockClear()
+        const amount = helper.getPaymentAmount(expectedBasePrice, car!.deposit, 0, option.isDeposit, option.isPayedInFull)
+        const paymentIntentId = `pi_test_${nanoid()}`
+        const customerId = `cus_test_${nanoid()}`
+        const retrieveSpy = jest.spyOn(stripeAPI.paymentIntents, 'retrieve').mockResolvedValue({
+          id: paymentIntentId,
+          status: 'requires_capture',
+          amount: helper.toCents(amount),
+          currency: env.BASE_CURRENCY.toLowerCase(),
+          customer: customerId,
+        } as never)
+        const captureSpy = jest.spyOn(stripeAPI.paymentIntents, 'capture').mockResolvedValue({
+          id: paymentIntentId,
+          status: 'succeeded',
+        } as never)
+
+        const payload: bookcarsTypes.CheckoutPayload = {
+          booking: {
+            supplier: SUPPLIER_ID,
+            car: CAR1_ID,
+            driver: DRIVER1_ID,
+            pickupLocation: LOCATION_ID,
+            dropOffLocation: LOCATION_ID,
+            from,
+            to,
+            status: bookcarsTypes.BookingStatus.Pending,
+            cancellation: false,
+            amendments: false,
+            theftProtection: false,
+            collisionDamageWaiver: false,
+            fullInsurance: false,
+            price: amount,
+            additionalDriver: false,
+            isDeposit: option.isDeposit,
+            isPayedInFull: option.isPayedInFull,
+          },
+          payLater: false,
+          paymentIntentId,
+          customerId,
+        }
+
+        try {
+          const res = await request(app)
+            .post('/api/checkout')
+            .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+            .send(payload)
+
+          expect(res.statusCode).toBe(200)
+          expect(captureSpy).toHaveBeenCalledWith(paymentIntentId)
+          const booking = await Booking.findOne({ paymentIntentId })
+          expect(booking?.status).toBe(option.status)
+          // The driver gets the booking confirmation email
+          expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
+            to: driver!.email,
+            subject: expect.stringContaining(booking!._id.toString()),
+          }))
+          // The supplier is notified of the paid booking and the car trip is counted, as for a regular payment
+          expect(await Notification.exists({ user: SUPPLIER_ID, booking: booking!._id })).toBeTruthy()
+          expect((await Car.findById(CAR1_ID))?.trips).toBe(carTrips + index + 1)
+        } finally {
+          retrieveSpy.mockRestore()
+          captureSpy.mockRestore()
+          const booking = await Booking.findOne({ paymentIntentId })
+          if (booking) {
+            await testHelper.deleteNotifications(booking._id.toString())
+            await Notification.deleteMany({ user: SUPPLIER_ID, booking: booking._id })
+          }
+          await Booking.deleteMany({ paymentIntentId })
+        }
+      }
+    } finally {
+      sendMail.mockRestore()
+      await Car.updateOne({ _id: CAR1_ID }, { trips: carTrips })
+      await User.updateOne({ _id: DRIVER1_ID }, driverCustomerId ? { customerId: driverCustomerId } : { $unset: { customerId: '' } })
+      if (supplierCounter === undefined) {
+        await NotificationCounter.deleteMany({ user: SUPPLIER_ID })
+      } else {
+        await NotificationCounter.updateOne({ user: SUPPLIER_ID }, { count: supplierCounter })
+      }
+    }
+  })
+
+  it('should reject a checkout with an unknown pick-up location before saving the booking', async () => {
+    const from = new Date(2025, 9, 1)
+    const to = new Date(2025, 9, 4)
+    const payload: bookcarsTypes.CheckoutPayload = {
+      booking: {
+        supplier: SUPPLIER_ID,
+        car: CAR1_ID,
+        driver: DRIVER1_ID,
+        pickupLocation: testHelper.GetRandromObjectIdAsString(),
+        dropOffLocation: LOCATION_ID,
+        from,
+        to,
+        status: bookcarsTypes.BookingStatus.Pending,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 0,
+        additionalDriver: false,
+      },
+      payLater: true,
+    }
+
+    try {
+      const res = await request(app)
+        .post('/api/checkout')
+        .set(env.X_ACCESS_TOKEN, DRIVER1_TOKEN)
+        .send(payload)
+
+      expect(res.statusCode).toBe(400)
+      expect(res.text).toBe('Invalid pick-up or drop-off location')
+      expect(await Booking.exists({ car: CAR1_ID, driver: DRIVER1_ID, from, to })).toBeNull()
+    } finally {
+      const bookings = await Booking.find({ car: CAR1_ID, driver: DRIVER1_ID, from, to })
+      for (const booking of bookings) {
+        await testHelper.deleteNotifications(booking._id.toString())
+      }
+      await Booking.deleteMany({ car: CAR1_ID, driver: DRIVER1_ID, from, to })
+    }
+  })
 })
 
 // ---------------------------------------------------------------------------
@@ -2422,5 +2666,153 @@ describe('Security Regression Tests - Issue #124', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.driver).toBeDefined()
     expect(res.body.driver.password).toBeUndefined()
+  })
+
+  it("should prevent Supplier A from creating a booking for Supplier B's car", async () => {
+    const carB = await Car.findOne({ supplier: supplierBId })
+    expect(carB).not.toBeNull()
+
+    const payload: bookcarsTypes.UpsertBookingPayload = {
+      booking: {
+        supplier: supplierBId,
+        car: carB!._id.toString(),
+        driver: DRIVER1_ID,
+        pickupLocation: LOCATION_ID,
+        dropOffLocation: LOCATION_ID,
+        from: new Date(2027, 2, 1),
+        to: new Date(2027, 2, 8),
+        status: bookcarsTypes.BookingStatus.Paid,
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        price: 100,
+        additionalDriver: false,
+      },
+    }
+
+    // Supplier A attempts to book Supplier B's car (with supplierBId)
+    let res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierAToken)
+      .send(payload)
+    expect(res.statusCode).toBe(403)
+
+    // Supplier A attempts to book Supplier B's car (even with own supplierAId)
+    payload.booking.supplier = supplierAId
+    res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierAToken)
+      .send(payload)
+    expect(res.statusCode).toBe(403)
+
+    // Supplier B can create a booking for own car (and supplier is enforced to supplierBId)
+    payload.booking.supplier = supplierAId // spoofed supplier ID is overridden
+    res = await request(app)
+      .post('/api/create-booking')
+      .set(env.X_ACCESS_TOKEN, supplierBToken)
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    expect(res.body.supplier).toBe(supplierBId)
+
+    await Booking.deleteOne({ _id: res.body._id })
+  })
+
+  it("should prevent Supplier A from moving a booking onto Supplier B's car or into Supplier B's account", async () => {
+    const carB = await Car.findOne({ supplier: supplierBId })
+    expect(carB).not.toBeNull()
+
+    const carA = new Car({
+      name: 'Supplier A Car',
+      supplier: supplierAId,
+      minimumAge: 21,
+      locations: [LOCATION_ID],
+      dailyPrice: 100,
+      deposit: 500,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      seats: 5,
+      doors: 4,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: -1,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 0,
+      collisionDamageWaiver: 0,
+      fullInsurance: 0,
+      additionalDriver: 0,
+      range: bookcarsTypes.CarRange.Midi,
+      multimedia: [],
+      rating: 5,
+    })
+    await carA.save()
+
+    const bookingA = new Booking({
+      supplier: supplierAId,
+      car: carA._id,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: new Date(2027, 3, 1),
+      to: new Date(2027, 3, 5),
+      status: bookcarsTypes.BookingStatus.Reserved,
+      price: 400,
+    })
+    await bookingA.save()
+
+    try {
+      const payload: bookcarsTypes.UpsertBookingPayload = {
+        booking: {
+          _id: bookingA._id.toString(),
+          supplier: supplierBId,
+          car: carB!._id.toString(),
+          driver: DRIVER1_ID,
+          pickupLocation: LOCATION_ID,
+          dropOffLocation: LOCATION_ID,
+          from: new Date(2027, 3, 1),
+          to: new Date(2027, 3, 5),
+          status: bookcarsTypes.BookingStatus.Reserved,
+          cancellation: false,
+          amendments: false,
+          theftProtection: false,
+          collisionDamageWaiver: false,
+          fullInsurance: false,
+          price: 400,
+          additionalDriver: false,
+        },
+      }
+
+      // Supplier A attempts to retarget own booking onto Supplier B's car and supplier B
+      let res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(403)
+
+      // Even with supplierAId in payload, targeting Supplier B's car is rejected
+      payload.booking.supplier = supplierAId
+      res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(403)
+
+      // Updating own booking on own car succeeds and forces supplier to supplierAId
+      payload.booking.car = carA._id.toString()
+      payload.booking.supplier = supplierBId // spoofed supplier ID is overridden
+      res = await request(app)
+        .put('/api/update-booking')
+        .set(env.X_ACCESS_TOKEN, supplierAToken)
+        .send(payload)
+      expect(res.statusCode).toBe(200)
+      expect(res.body.supplier).toBe(supplierAId)
+      expect(res.body.car).toBe(carA._id.toString())
+    } finally {
+      await Booking.deleteOne({ _id: bookingA._id })
+      await carA.deleteOne()
+    }
   })
 })

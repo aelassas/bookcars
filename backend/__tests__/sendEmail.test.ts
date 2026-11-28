@@ -16,15 +16,18 @@ describe('POST /api/send-email', () => {
   let redisEval: jest.Mock
   let previousContactEmail: string | undefined
   let previousRecaptchaSecret: string | undefined
+  let previousRecaptchaMinScore: string | undefined
   let previousNodeEnv: string | undefined
 
   beforeEach(async () => {
     jest.resetModules()
     previousContactEmail = process.env.BC_CONTACT_EMAIL
     previousRecaptchaSecret = process.env.BC_RECAPTCHA_SECRET
+    previousRecaptchaMinScore = process.env.BC_RECAPTCHA_MIN_SCORE
     previousNodeEnv = process.env.NODE_ENV
     process.env.BC_CONTACT_EMAIL = 'contact@example.com'
     process.env.BC_RECAPTCHA_SECRET = 'test-secret'
+    process.env.BC_RECAPTCHA_MIN_SCORE = '0.5'
 
     verificationResponse = { success: true, action: 'submit', score: 0.9 }
     verificationError = false
@@ -92,6 +95,12 @@ describe('POST /api/send-email', () => {
       delete process.env.NODE_ENV
     } else {
       process.env.NODE_ENV = previousNodeEnv
+    }
+    
+    if (previousRecaptchaMinScore === undefined) {
+      delete process.env.BC_RECAPTCHA_MIN_SCORE
+    } else {
+      process.env.BC_RECAPTCHA_MIN_SCORE = previousRecaptchaMinScore
     }
   })
 

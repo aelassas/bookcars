@@ -949,6 +949,20 @@ export const updateImage = async (req: Request, res: Response) => {
     const location = await Location.findById(id)
 
     if (location) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+      if (
+        !sessionUser
+        || sessionUser.type === bookcarsTypes.UserType.User
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && location.supplier?.toString() !== sessionUserId)
+      ) {
+        logger.error(`[location.updateImage] Unauthorized attempt to update image for location ${location._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this location image')
+        return
+      }
+      // end of security check
+
       if (location.image) {
         const image = path.join(env.CDN_LOCATIONS, location.image)
         if (await helper.pathExists(image)) {
@@ -1000,6 +1014,20 @@ export const deleteImage = async (req: Request, res: Response) => {
     const location = await Location.findById(id)
 
     if (location) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+      if (
+        !sessionUser
+        || sessionUser.type === bookcarsTypes.UserType.User
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && location.supplier?.toString() !== sessionUserId)
+      ) {
+        logger.error(`[location.deleteImage] Unauthorized attempt to delete image for location ${location._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this location image')
+        return
+      }
+      // end of security check
+
       if (location.image) {
         const image = path.join(env.CDN_LOCATIONS, location.image)
         if (await helper.pathExists(image)) {

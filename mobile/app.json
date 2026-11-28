@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "SafarRent",
-    "version": "1.0.0",
-    "scheme": "safarrent",
-    "slug": "safarrent",
+    "name": "BookCars",
+    "version": "9.9.0",
+    "scheme": "bookcars",
+    "slug": "bookcars",
     "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "versionCode": 1,
+      "versionCode": 990,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
@@ -19,7 +19,7 @@
       "backgroundColor": "#0F0F10"
     },
     "ios": {
-      "buildNumber": "1.0.0",
+      "buildNumber": "9.9.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       "bundleIdentifier": "pk.safarrent.mobile"

@@ -2,7 +2,7 @@
   "name": "safarrent-admin",
   "description": "SafarRent operations portal",
   "private": true,
-  "version": "9.3.0",
+  "version": "9.9.0",
   "type": "module",
   "scripts": {
     "install:dependencies": "cd ../packages/currency-converter && npm i && cd ../bookcars-helper && npm i",

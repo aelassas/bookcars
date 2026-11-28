@@ -583,16 +583,24 @@ export const deleteTokens = async (req: Request, res: Response) => {
   const { userId } = req.params as { userId: string }
 
   try {
-    const result = await Token.deleteMany({
-      user: new mongoose.Types.ObjectId(userId),
-    })
-
-    if (result.deletedCount > 0) {
-      res.sendStatus(200)
+    if (!helper.isValidObjectId(userId)) {
+      res.status(400).send(i18n.t('ERROR'))
       return
     }
 
-    res.sendStatus(400)
+    const sessionUserId = req.user?._id
+    const sessionUserType = req.user?.type
+    if (!sessionUserId || (sessionUserId !== userId && sessionUserType !== bookcarsTypes.UserType.Admin)) {
+      logger.error(`[user.deleteTokens] Forbidden: user ${sessionUserId} tried to delete tokens of user ${userId}`)
+      res.status(403).send('Forbidden')
+      return
+    }
+
+    await Token.deleteMany({
+      user: new mongoose.Types.ObjectId(userId),
+    })
+
+    res.sendStatus(200)
   } catch (err) {
     logger.error(`[user.deleteTokens] ${i18n.t('ERROR')} ${userId}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
@@ -627,9 +635,6 @@ export const resend = async (req: Request, res: Response) => {
         && !(type === bookcarsTypes.AppType.Admin && user.type === bookcarsTypes.UserType.User)
         && !(type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
       ) {
-        user.active = false
-        await user.save()
-
         const token = new Token({ user: user._id, token: helper.generateToken() })
         await token.save()
 
@@ -675,21 +680,38 @@ export const resend = async (req: Request, res: Response) => {
  * @returns {unknown}
  */
 export const activate = async (req: Request, res: Response) => {
-  const { body }: { body: bookcarsTypes.ActivatePayload } = req
-  const { userId } = body
+  const { body }: { body: Partial<bookcarsTypes.ActivatePayload> } = req
+
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    res.status(400).send(i18n.t('ERROR'))
+    return
+  }
+
+  const { userId, token: rawToken, password } = body
 
   try {
-    if (!helper.isValidObjectId(userId)) {
-      throw new Error('body.userId is not valid')
+    if (
+      typeof userId !== 'string'
+      || !helper.isValidObjectId(userId)
+      || typeof rawToken !== 'string'
+      || rawToken.trim().length === 0
+      || typeof password !== 'string'
+      || password.length < 6
+    ) {
+      res.status(400).send(i18n.t('ERROR'))
+      return
     }
 
-    const user = await User.findById(userId)
+    const userObjectId = new mongoose.Types.ObjectId(userId)
+    const user = await User.findById(userObjectId)
 
     if (user) {
-      const token = await Token.findOne({ user: userId, token: body.token })
+      const token = await Token.findOneAndDelete({
+        user: userObjectId,
+        token: String(rawToken),
+      })
 
       if (token) {
-        const { password } = body
         const passwordHash = await authHelper.hashPassword(password)
         user.password = passwordHash
 
@@ -698,6 +720,8 @@ export const activate = async (req: Request, res: Response) => {
         user.expireAt = undefined
         await user.save()
 
+        await Token.deleteMany({ user: userObjectId })
+
         res.sendStatus(200)
         return
       }
@@ -705,7 +729,7 @@ export const activate = async (req: Request, res: Response) => {
 
     res.sendStatus(204)
   } catch (err) {
-    logger.error(`[user.activate] ${i18n.t('ERROR')} ${userId}`, err)
+    logger.error(`[user.activate] ${i18n.t('ERROR')} ${String(userId)}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -969,6 +993,16 @@ export const getPushToken = async (req: Request, res: Response) => {
       throw new Error('userId is not valid')
     }
 
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser._id.toString() !== userId)) {
+      logger.error(`[user.getPushToken] Unauthorized attempt to get push token for user ${userId} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot access this push token')
+      return
+    }
+    // end of security check
+
     const pushToken = await PushToken.findOne({ user: userId })
     if (pushToken) {
       res.json(pushToken.token)
@@ -998,6 +1032,16 @@ export const createPushToken = async (req: Request, res: Response) => {
     if (!helper.isValidObjectId(userId)) {
       throw new Error('userId is not valid')
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser._id.toString() !== userId)) {
+      logger.error(`[user.createPushToken] Unauthorized attempt to create push token for user ${userId} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot create a push token for another user')
+      return
+    }
+    // end of security check
 
     const exist = await PushToken.exists({ user: userId })
 
@@ -1034,6 +1078,16 @@ export const deletePushToken = async (req: Request, res: Response) => {
     if (!helper.isValidObjectId(userId)) {
       throw new Error('userId is not valid')
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser._id.toString() !== userId)) {
+      logger.error(`[user.deletePushToken] Unauthorized attempt to delete push token for user ${userId} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot delete another user\'s push token')
+      return
+    }
+    // end of security check
 
     await PushToken.deleteMany({ user: userId })
     res.sendStatus(200)
@@ -1392,6 +1446,16 @@ export const updateEmailNotifications = async (req: Request, res: Response) => {
       res.sendStatus(204)
       return
     }
+
+    // begin of security check
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && !sessionUser._id.equals(user._id))) {
+      logger.error(`[user.updateEmailNotifications] Unauthorized attempt to update email notifications for user ${_id} by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot update email notifications for another user')
+      return
+    }
+    // end of security check
 
     const { enableEmailNotifications } = body
     user.enableEmailNotifications = enableEmailNotifications
@@ -2020,7 +2084,6 @@ export const deleteUsers = async (req: Request, res: Response) => {
         }
         // end of security check
 
-
         await User.deleteOne({ _id: id })
 
         if (user.avatar) {
@@ -2336,6 +2399,27 @@ export const updateLicense = async (req: Request, res: Response) => {
     const user = await User.findOne({ _id: id, type: bookcarsTypes.UserType.User })
 
     if (user) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+      const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+      const isAuthorizedSupplierUser = !!sessionUser
+        && sessionUser.type === bookcarsTypes.UserType.Supplier
+        && user.supplier?.equals(sessionUser._id)
+      const isAuthorized = !!sessionUser && (
+        isAdmin
+        || (sessionUser.type === bookcarsTypes.UserType.User && isSelf)
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && isAuthorizedSupplierUser)
+      )
+
+      if (!isAuthorized) {
+        logger.error(`[user.updateLicense] Unauthorized attempt to update license for user ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this user license')
+        return
+      }
+      // end of security check
+
       if (user.license) {
         const licenseFile = path.join(env.CDN_LICENSES, user.license)
         if (await helper.pathExists(licenseFile)) {
@@ -2388,6 +2472,27 @@ export const deleteLicense = async (req: Request, res: Response) => {
     const user = await User.findOne({ _id: id, type: bookcarsTypes.UserType.User })
 
     if (user) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+      const isSelf = !!sessionUser && sessionUser._id.equals(user._id)
+      const isAdmin = !!sessionUser && sessionUser.type === bookcarsTypes.UserType.Admin
+      const isAuthorizedSupplierUser = !!sessionUser
+        && sessionUser.type === bookcarsTypes.UserType.Supplier
+        && user.supplier?.equals(sessionUser._id)
+      const isAuthorized = !!sessionUser && (
+        isAdmin
+        || (sessionUser.type === bookcarsTypes.UserType.User && isSelf)
+        || (sessionUser.type === bookcarsTypes.UserType.Supplier && isAuthorizedSupplierUser)
+      )
+
+      if (!isAuthorized) {
+        logger.error(`[user.deleteLicense] Unauthorized attempt to delete license for user ${id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this user license')
+        return
+      }
+      // end of security check
+
       if (user.license) {
         const licenseFile = path.join(env.CDN_LICENSES, user.license)
         if (await helper.pathExists(licenseFile)) {

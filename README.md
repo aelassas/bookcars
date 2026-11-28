@@ -28,7 +28,7 @@ AI trip intake returns a draft. It does not confirm availability, price, or a bo
 
 The data model includes PKR pricing, Pakistani mobile and CNIC validation, self-drive and with-driver modes, trip scope and terrain capability, fuel policy, payment state fields, and a vehicle handover checklist. Existing legacy fields remain where application compatibility requires them; production migrations must preserve and reconcile existing data.
 
-## Current limitations
+BookCars supports 8 languages (English, French, Spanish, German, Portuguese, Italian, Chinese, and Japanese) and [134 currencies](https://github.com/aelassas/bookcars/wiki/Add-New-Currency), and you can [add a new language](https://github.com/aelassas/bookcars/wiki/Add-New-Language) by following the guide. The platform is protected against common web attacks (XSS, CSRF, MITM, and DDoS) and secured with JWT authentication, HttpOnly cookies, TLS encryption, Redis-backed rate limiting, Google reCAPTCHA on public forms, and request validation. It includes error monitoring with [Sentry](https://github.com/aelassas/bookcars/wiki/Setup-Sentry), and is easy to deploy with [Docker](https://github.com/aelassas/bookcars/wiki/Installing-(Docker)).
 
 - FYP supplier and customer records are synthetic; no real supplier has approved fulfillment.
 - Payment credentials, provider callbacks, refunds, and settlement reconciliation are not configured.

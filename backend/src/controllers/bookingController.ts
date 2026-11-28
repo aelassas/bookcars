@@ -1,4 +1,4 @@
-import mongoose,{ HydratedDocument } from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
@@ -117,19 +117,19 @@ export const updateHandoverChecklist = async (req: Request, res: Response) => {
 }
 
 /**
- * In-process per-property async mutex.
- * Serialises concurrent checkout requests for the same property so that
+ * In-process per-car async mutex.
+ * Serialises concurrent checkout requests for the same car so that
  * the overlap-check and booking.save() are atomic from the application's
  * perspective. This is sufficient for a single-process Node server and
  * for the standalone (non-replica-set) MongoDB used in development and
  * tests. In a multi-process deployment a distributed lock (e.g. Redis
  * SET NX) would be required in addition.
  */
-const propertyLocks = new Map<string, Promise<void>>()
+const carLocks = new Map<string, Promise<void>>()
 
-async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise<T> {
-  // Wait for any outstanding operation on this property to finish
-  const previous = propertyLocks.get(propertyId) ?? Promise.resolve()
+async function withCarLock<T>(carId: string, fn: () => Promise<T>): Promise<T> {
+  // Wait for any outstanding operation on this car to finish
+  const previous = carLocks.get(carId) ?? Promise.resolve()
 
   let resolve!: () => void
   const current = new Promise<void>((res) => {
@@ -138,7 +138,7 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
 
   // Store reference to the chained promise tail
   const tail = previous.then(() => current)
-  propertyLocks.set(propertyId, tail)
+  carLocks.set(carId, tail)
 
   await previous
   try {
@@ -146,8 +146,8 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
   } finally {
     resolve()
     // Clean up map entry if no newer request replaced this tail
-    if (propertyLocks.get(propertyId) === tail) {
-      propertyLocks.delete(propertyId)
+    if (carLocks.get(carId) === tail) {
+      carLocks.delete(carId)
     }
   }
 }
@@ -164,16 +164,43 @@ async function withCarLock<T>(propertyId: string, fn: () => Promise<T>): Promise
 export const create = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
-    const carId = typeof body.booking.car === 'string' ? body.booking.car : body.booking.car?._id
-    if (!carId || !helper.isValidObjectId(carId)) {
-      res.status(400).json({ message: 'A valid vehicle is required.' })
+    if (!body?.booking || typeof body.booking !== 'object') {
+      res.status(400).send(i18n.t('ERROR') + 'Booking missing')
       return
     }
-    const car = await Car.findById(carId).select('listingStatus')
-    if (!car || car.listingStatus !== bookcarsTypes.ListingStatus.Approved) {
-      res.status(409).json({ message: 'This vehicle is not approved for booking.' })
+
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser.type !== bookcarsTypes.UserType.Supplier)) {
+      logger.error(`[booking.create] Unauthorized attempt to create booking by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot create a booking')
       return
     }
+
+    const carId = typeof body.booking.car === 'string' ? body.booking.car : String(body.booking.car || '')
+    if (!helper.isValidObjectId(carId)) {
+      res.status(400).send(i18n.t('ERROR') + 'Invalid car')
+      return
+    }
+
+    const car = await Car.findById(carId)
+    if (!car) {
+      res.status(400).send(i18n.t('ERROR') + 'Car not found')
+      return
+    }
+
+    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+      if (car.supplier?.toString() !== sessionUser._id.toString()) {
+        logger.error(`[booking.create] Unauthorized attempt by supplier ${sessionUserId} to book car ${car._id} owned by ${car.supplier}`)
+        res.status(403).send('Forbidden: You cannot create a booking for another supplier\'s car')
+        return
+      }
+      body.booking.supplier = sessionUser._id.toString()
+    } else if (body.booking.supplier && body.booking.supplier.toString() !== car.supplier?.toString()) {
+      res.status(400).send(i18n.t('ERROR') + 'Invalid supplier')
+      return
+    }
+
     if (body.booking.additionalDriver) {
       const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
@@ -425,7 +452,7 @@ export const checkout = async (req: Request, res: Response) => {
       Location.find({ _id: { $in: carObj.locations } }),
     ])
     if (!supplier || supplier.type !== bookcarsTypes.UserType.Supplier || supplier.blacklisted || !locations || locations.length === 0) {
-      res.status(400).send('Invalid property relationships')
+      res.status(400).send('Invalid car relationships')
       return
     }
 
@@ -434,28 +461,20 @@ export const checkout = async (req: Request, res: Response) => {
       return
     }
 
-    // Recompute the quote from server-owned vehicle pricing and route rules.
-    const rentalMode = bookingInput.rentalMode || bookcarsTypes.RentalMode.WithDriver
-    const tripScope = bookingInput.tripScope || bookcarsTypes.TripScope.IntraCity
-    if (!Object.values(bookcarsTypes.RentalMode).includes(rentalMode)
-      || !Object.values(bookcarsTypes.TripScope).includes(tripScope)) {
-      res.status(400).json({ message: 'Invalid rental mode or trip scope.' })
+    // Pick-up and drop-off locations must exist before the booking is saved
+    const { pickupLocation, dropOffLocation } = bookingInput
+    if (
+      typeof pickupLocation !== 'string' || !helper.isValidObjectId(pickupLocation)
+      || typeof dropOffLocation !== 'string' || !helper.isValidObjectId(dropOffLocation)
+      || !(await Location.exists({ _id: pickupLocation }))
+      || !(await Location.exists({ _id: dropOffLocation }))
+    ) {
+      res.status(400).send('Invalid pick-up or drop-off location')
       return
     }
-    if (rentalMode === bookcarsTypes.RentalMode.SelfDrive && !carObj.selfDriveAvailable) {
-      res.status(409).json({ message: 'This vehicle is not offered for self-drive.' })
-      return
-    }
-    if (rentalMode === bookcarsTypes.RentalMode.WithDriver && !carObj.withDriverAvailable) {
-      res.status(409).json({ message: 'This vehicle is not offered with a driver.' })
-      return
-    }
-    if (tripScope === bookcarsTypes.TripScope.NorthernTour
-      && carObj.terrainCapability !== bookcarsTypes.TerrainCapability.NorthernMountains) {
-      res.status(409).json({ message: 'This vehicle is not approved for northern mountain routes.' })
-      return
-    }
-    const baseRentPKR = bookcarsHelper.calculateTotalPrice(
+
+    // Calculate expected total price
+    const expectedBasePrice = bookcarsHelper.calculateTotalPrice(
       carObj as unknown as bookcarsTypes.Car,
       fromDate,
       toDate,
@@ -835,7 +854,7 @@ user.drivingLicenseNumber = body.drivingLicenseNumber || undefined
     }
     const booking = new Booking(bookingData)
 
-    // Save the booking inside the per-property lock when exclusive
+    // Save the booking inside the per-car lock when exclusive
     // availability is required, so the conflict check + save are
     // effectively atomic in a single-process Node deployment.
     if (carObj.blockOnPay) {
@@ -877,68 +896,18 @@ user.drivingLicenseNumber = body.drivingLicenseNumber || undefined
       : body.paymentIntentId
         ? bookcarsTypes.BookingStatus.Paid
         : bookcarsTypes.BookingStatus.Void
-    if (guestUser) {
-      if (status === bookcarsTypes.BookingStatus.Paid || body.payLater) {
+    if (guestUser && (status === bookcarsTypes.BookingStatus.Paid || body.payLater)) {
+      try {
         guestUser.expireAt = undefined
         await guestUser.save()
-      }
-
-      const token = new Token({ user: user._id, token: helper.generateToken() })
-      await token.save()
-
-      const mailOptions: SendMailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
-        html: `<p>
-          ${i18n.t('HELLO')}${user.fullName},<br><br>
-          ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-          ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${i18n.t('REGARDS')}<br>
-          </p>`,
-      }
-      await mailHelper.sendMail(mailOptions)
-    } else if (paymentIntentCustomerId) {
-      user.customerId = paymentIntentCustomerId
-      await user.save()
-    }
-
-    if (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId) {
-      const car = await Car.findById(booking.car)
-      if (!car) {
-        throw new Error(`Car ${booking.car} not found`)
-      }
-      car.trips += 1
-      await car.save()
-    }
-
-    if (body.payLater || (booking.status === bookcarsTypes.BookingStatus.Paid && body.paymentIntentId && body.customerId)) {
-      // Mark car as fully booked
-      // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
-      //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
-      // }
-
-      // Send confirmation email to customer
-      if (!(await confirm(user, supplier, booking, body.payLater))) {
-        res.sendStatus(400)
-        return
-      }
-
-      // Notify supplier
-      i18n.locale = supplier.language
-      let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-      await notify(user, booking._id.toString(), supplier, message)
-
-      // Notify admin
-      const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
-      if (admin) {
-        i18n.locale = admin.language
-        message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-        await notify(user, booking._id.toString(), admin, message)
+      } catch (guestErr) {
+        logger.error(`[booking.checkout] Booking ${booking._id.toString()} saved, but clearing the guest account expiry failed`, guestErr)
       }
     }
 
-    // CAPTURE FUNDS once the booking is successfully persisted
+    // CAPTURE FUNDS once the booking is successfully persisted,
+    // before the emails and notifications below, so that a booking saved
+    // as paid is not left with an uncaptured payment if one of them fails
     const { paymentIntentId } = body
     if (paymentIntentId) {
       try {
@@ -951,6 +920,75 @@ user.drivingLicenseNumber = body.drivingLicenseNumber || undefined
         res.status(500).send('Booking saved, but payment capture failed. Please contact support.')
         return
       }
+    }
+
+    // The booking is saved (and its payment captured): a failing email or
+    // notification is logged and does not turn the checkout into an error
+    try {
+      if (guestUser) {
+        const token = new Token({ user: user._id, token: helper.generateToken() })
+        await token.save()
+
+        const mailOptions: SendMailOptions = {
+          from: env.SMTP_FROM,
+          to: user.email,
+          subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
+          html: `<p>
+            ${i18n.t('HELLO')}${user.fullName},<br><br>
+            ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
+            ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+            ${i18n.t('REGARDS')}<br>
+            </p>`,
+        }
+        await mailHelper.sendMail(mailOptions)
+      } else if (paymentIntentCustomerId) {
+        user.customerId = paymentIntentCustomerId
+        await user.save()
+      }
+
+      // A payment intent booking is saved as Paid, Deposit or PaidInFull
+      // depending on the payment option: all three are paid bookings
+      const paidWithPaymentIntent = !!body.paymentIntentId && !!body.customerId && [
+        bookcarsTypes.BookingStatus.Paid,
+        bookcarsTypes.BookingStatus.Deposit,
+        bookcarsTypes.BookingStatus.PaidInFull,
+      ].includes(booking.status)
+
+      if (paidWithPaymentIntent) {
+        const car = await Car.findById(booking.car)
+        if (!car) {
+          throw new Error(`Car ${booking.car} not found`)
+        }
+        car.trips += 1
+        await car.save()
+      }
+
+      if (body.payLater || paidWithPaymentIntent) {
+        // Mark car as fully booked
+        // if (env.MARK_CAR_AS_FULLY_BOOKED_ON_CHECKOUT) {
+        //   await Car.updateOne({ _id: booking.car }, { fullyBooked: false })
+        // }
+
+        // Send confirmation email to customer
+        if (!(await confirm(user, supplier, booking, body.payLater))) {
+          logger.error(`[booking.checkout] Confirmation email not sent for booking ${booking._id.toString()}`)
+        }
+
+        // Notify supplier
+        i18n.locale = supplier.language
+        let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+        await notify(user, booking._id.toString(), supplier, message)
+
+        // Notify admin
+        const admin = !!env.ADMIN_EMAIL && (await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin }))
+        if (admin) {
+          i18n.locale = admin.language
+          message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+          await notify(user, booking._id.toString(), admin, message)
+        }
+      }
+    } catch (notifyErr) {
+      logger.error(`[booking.checkout] Booking ${booking._id.toString()} saved, but sending emails or notifications failed`, notifyErr)
     }
 
     res.status(200).send({ bookingId: booking._id.toString() })
@@ -1117,6 +1155,30 @@ export const update = async (req: Request, res: Response) => {
       if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && sessionUserId !== booking.supplier?.toString())) {
         logger.error(`[booking.update] Unauthorized attempt to update booking ${booking._id.toString()} by user ${sessionUserId}`)
         res.status(403).send('Forbidden: You cannot update booking information')
+        return
+      }
+
+      const targetCarId = typeof body.booking.car === 'string' ? body.booking.car : String(body.booking.car || '')
+      if (!helper.isValidObjectId(targetCarId)) {
+        res.status(400).send(i18n.t('ERROR') + 'Invalid car')
+        return
+      }
+
+      const targetCar = await Car.findById(targetCarId)
+      if (!targetCar) {
+        res.status(400).send(i18n.t('ERROR') + 'Car not found')
+        return
+      }
+
+      if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+        if (targetCar.supplier?.toString() !== sessionUser._id.toString()) {
+          logger.error(`[booking.update] Unauthorized attempt by supplier ${sessionUserId} to assign booking ${booking._id.toString()} to car ${targetCar._id} owned by ${targetCar.supplier}`)
+          res.status(403).send('Forbidden: You cannot assign a booking to another supplier\'s car')
+          return
+        }
+        body.booking.supplier = sessionUser._id.toString()
+      } else if (body.booking.supplier && body.booking.supplier.toString() !== targetCar.supplier?.toString()) {
+        res.status(400).send(i18n.t('ERROR') + 'Invalid supplier')
         return
       }
       // end of security check

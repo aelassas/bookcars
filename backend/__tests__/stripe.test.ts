@@ -901,3 +901,114 @@ describe('POST /api/create-payment-intent', () => {
     expect(res.body).toStrictEqual({})
   })
 })
+
+describe('POST /api/check-checkout-session/:sessionId (failing notification)', () => {
+  it('should confirm a paid session when a notification fails', async () => {
+    const baseCurrency = env.BASE_CURRENCY.toLowerCase()
+    const sessionId = nanoid()
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+    const from = new Date()
+    from.setDate(from.getDate() + 1)
+    const to = new Date(from)
+    to.setDate(to.getDate() + 3)
+
+    const supplierName = nanoid()
+    const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+    const driver = new User({
+      fullName: 'driver',
+      email: testHelper.GetRandomEmail(),
+      language: testHelper.LANGUAGE,
+      type: bookcarsTypes.UserType.User,
+    })
+    await driver.save()
+
+    const car = new Car({
+      name: 'BMW X1',
+      supplier: supplierId,
+      minimumAge: 21,
+      locations: [testHelper.GetRandromObjectId()],
+      dailyPrice: 78,
+      deposit: 950,
+      available: true,
+      type: bookcarsTypes.CarType.Diesel,
+      gearbox: bookcarsTypes.GearboxType.Automatic,
+      aircon: true,
+      image: undefined,
+      seats: 6,
+      doors: 5,
+      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+      mileage: 1000,
+      cancellation: 0,
+      amendments: 0,
+      theftProtection: 9,
+      collisionDamageWaiver: 12,
+      fullInsurance: 20,
+      additionalDriver: 20,
+      range: bookcarsTypes.CarRange.Midi,
+      rating: 4,
+      multimedia: [
+        bookcarsTypes.CarMultimedia.AndroidAuto,
+      ],
+    })
+    await car.save()
+
+    const locationId = await testHelper.createLocation('location en', 'location fr', testHelper.GetRandromObjectIdAsString())
+
+    const booking = new Booking({
+      supplier: supplierId,
+      car: car._id.toString(),
+      driver: driver._id.toString(),
+      pickupLocation: locationId,
+      dropOffLocation: locationId,
+      from,
+      to,
+      status: bookcarsTypes.BookingStatus.Void,
+      expireAt,
+      cancellation: true,
+      amendments: true,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      price: 312,
+      additionalDriver: true,
+      sessionId,
+    })
+
+    const notificationSaveSpy = jest.spyOn(Notification.prototype, 'save')
+    try {
+      await booking.save()
+
+      jest.resetModules()
+      await jest.unstable_mockModule('../src/payment/stripe.js', () => ({
+        default: {
+          checkout: {
+            sessions: {
+              retrieve: jest.fn(() => Promise.resolve({ payment_status: 'paid', amount_total: 31200, currency: baseCurrency, payment_intent: 'pi_test' })),
+            },
+          },
+        },
+      }))
+
+      // the session is paid and the booking is saved as paid, then the supplier notification fails
+      notificationSaveSpy.mockRejectedValueOnce(new Error('Notification store unavailable'))
+
+      const res = await request(app)
+        .post(`/api/check-checkout-session/${sessionId}`)
+      expect(notificationSaveSpy).toHaveBeenCalled()
+      expect(res.statusCode).toBe(200)
+
+      const paidBooking = await Booking.findById(booking._id)
+      expect(paidBooking?.status).toBe(bookcarsTypes.BookingStatus.Paid)
+      expect(paidBooking?.expireAt).toBeFalsy()
+    } finally {
+      notificationSaveSpy.mockRestore()
+      await testHelper.deleteNotifications(booking._id.toString())
+      await booking.deleteOne()
+      await car.deleteOne()
+      await driver.deleteOne()
+      await testHelper.deleteLocation(locationId)
+      await testHelper.deleteSupplier(supplierId)
+    }
+  })
+})

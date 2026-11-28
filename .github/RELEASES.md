@@ -1,5 +1,98 @@
 # Releases
 
+## [BookCars 9.8](https://github.com/aelassas/bookcars/releases/tag/v9.8) – 2026-11-25
+
+* fix(security): enforce ownership checks on push tokens, email notifications, and licenses ([GHSA-fpmm-c2rm-5wx7](https://github.com/aelassas/bookcars/security/advisories/GHSA-fpmm-c2rm-5wx7), reported by @kats1123)
+* fix(security): enforce ownership checks on supplier contracts and location images ([GHSA-mj62-frmg-wjvc](https://github.com/aelassas/bookcars/security/advisories/GHSA-mj62-frmg-wjvc), reported by @kats1123)
+* fix(admin): show saving overlay when creating or updating bookings and cars
+* fix(admin,frontend): use fixed positioning for overlay backdrop
+
+### Assets
+- [bookcars-9.8.apk](https://github.com/aelassas/bookcars/releases/download/v9.8/bookcars-9.8.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.8/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.8)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.8)
+
+## [BookCars 9.7](https://github.com/aelassas/bookcars/releases/tag/v9.7) – 2026-11-22
+
+* fix(security): enforce supplier ownership checks on car creation, car updates, and booking updates by @carfeii ([GHSA-jp68-gx5m-hw75](https://github.com/aelassas/bookcars/security/advisories/GHSA-jp68-gx5m-hw75))
+
+### Assets
+- [bookcars-9.7.apk](https://github.com/aelassas/bookcars/releases/download/v9.7/bookcars-9.7.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.7/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.7)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.7)
+
+## [BookCars 9.6](https://github.com/aelassas/bookcars/releases/tag/v9.6) – 2026-11-20
+
+* fix(security): enforce supplier ownership checks on booking creation and car image endpoints by @kats1123 ([GHSA-9xq3-vxmc-7mrj](https://github.com/aelassas/bookcars/security/advisories/GHSA-9xq3-vxmc-7mrj))
+
+### Assets
+- [bookcars-9.6.apk](https://github.com/aelassas/bookcars/releases/download/v9.6/bookcars-9.6.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.6/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.6)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.6)
+
+## [BookCars 9.5](https://github.com/aelassas/bookcars/releases/tag/v9.5) – 2026-11-17
+
+* fix(security): prevent NoSQL operator injection in /api/activate by @destinyfkrr ([GHSA-59w5-463c-8j6g](https://github.com/aelassas/bookcars/security/advisories/GHSA-59w5-463c-8j6g))
+* ci(loc.yml): replace apt-get with npm for cloc installation
+
+### Assets
+- [bookcars-9.5.apk](https://github.com/aelassas/bookcars/releases/download/v9.5/bookcars-9.5.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.5/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.5)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.5)
+
+## [BookCars 9.4](https://github.com/aelassas/bookcars/releases/tag/v9.4) – 2026-11-11
+
+* feat(backend): export `BC_RECAPTCHA_MIN_SCORE` in env config
+* fix(backend): capture the checkout payment before sending emails by @5eBeKs (#143)
+* fix(backend): don't fail a paid PayPal or Stripe order when an email fails by @5eBeKs (#145)
+* fix(backend): confirm mobile bookings paid as a deposit or in full by @5eBeKs (#147)
+* fix(backend): replace deprecated new option with returnDocument in findOneAndUpdate
+* fix(backend): adjust reCAPTCHA score threshold for non-production environments
+
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v9.3...v9.4
+
+### Assets
+- [bookcars-9.4.apk](https://github.com/aelassas/bookcars/releases/download/v9.4/bookcars-9.4.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.4/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.4)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.4)
+
+## [BookCars 9.3](https://github.com/aelassas/bookcars/releases/tag/v9.3) – 2026-11-08
+
+#### What's Changed
+* fix(backend): check payments against the chosen payment option (#136)
+* fix(helper): charge per-day options for the rental days shown at checkout (#141)
+* fix(frontend): Web checkout shows the Stripe payment form even when the booking request fails (#139)
+* fix(mobile): check the driver against the car minimum age before payment (#138)
+
+#### New Contributors
+* @5eBeKs made their first contribution in https://github.com/aelassas/bookcars/pull/136
+
+**Full Changelog**: https://github.com/aelassas/bookcars/compare/v9.2...v9.3
+
+### Assets
+- [bookcars-9.3.apk](https://github.com/aelassas/bookcars/releases/download/v9.3/bookcars-9.3.apk) (114.54 MB)
+- [bookcars-db.zip](https://github.com/aelassas/bookcars/releases/download/v9.3/bookcars-db.zip) (8.64 MB)
+
+### Source Code
+- [Source code (zip)](https://api.github.com/repos/aelassas/bookcars/zipball/v9.3)
+- [Source code (tar)](https://api.github.com/repos/aelassas/bookcars/tarball/v9.3)
+
 ## [BookCars 9.2](https://github.com/aelassas/bookcars/releases/tag/v9.2) – 2026-11-05
 
 * feat(admin, frontend, mobile): add German, Portuguese, Italian, Chinese (simplified) and Japanese language support

@@ -1,7 +1,7 @@
 {
-  "name": "safarrent",
-  "version": "9.3.0",
-  "description": "Pakistan-focused car rental marketplace prototype",
+  "name": "bookcars",
+  "version": "9.9.0",
+  "description": "Car Rental Booking System",
   "keywords": [
     "mongodb",
     "typescript",

@@ -33,6 +33,19 @@ export const create = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.CreateCarPayload } = req
 
   try {
+    const sessionUserId = req.user?._id
+    const sessionUser = sessionUserId ? await User.findById(sessionUserId) : null
+    if (!sessionUser || (sessionUser.type !== bookcarsTypes.UserType.Admin && sessionUser.type !== bookcarsTypes.UserType.Supplier)) {
+      logger.error(`[car.create] Unauthorized attempt to create car by user ${sessionUserId}`)
+      res.status(403).send('Forbidden: You cannot create a car')
+      return
+    }
+
+    if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
+      body.supplier = sessionUser._id.toString()
+      body.loggedUser = sessionUser._id.toString()
+    }
+
     if (!body.image) {
       throw new Error('Image not found in payload')
     }
@@ -203,9 +216,9 @@ export const update = async (req: Request, res: Response) => {
       // begin of security check
       const sessionUserId = req.user?._id
       const sessionUser = await User.findById(sessionUserId)
-      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+      if (!sessionUser || sessionUser.type === bookcarsTypes.UserType.User || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
         logger.error(`[car.update] Unauthorized attempt to update car ${car._id} by user ${sessionUserId}`)
-        res.status(403).send('Forbidden: You cannot update this location')
+        res.status(403).send('Forbidden: You cannot update this car')
         return
       }
       if (sessionUser.type === bookcarsTypes.UserType.Supplier) {
@@ -259,9 +272,9 @@ export const update = async (req: Request, res: Response) => {
         blockOnPay,
       } = body
 
-      if (sessionUser.type === bookcarsTypes.UserType.Admin) {
-        car.supplier = new mongoose.Types.ObjectId(supplier)
-      }
+      car.supplier = sessionUser.type === bookcarsTypes.UserType.Supplier
+        ? sessionUser._id
+        : new mongoose.Types.ObjectId(supplier)
       car.minimumAge = minimumAge
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
@@ -535,6 +548,16 @@ export const updateImage = async (req: Request, res: Response) => {
     const car = await Car.findById(id)
 
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.updateImage] Unauthorized attempt to update image of car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot update this car image')
+        return
+      }
+      // end of security check
+
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await helper.pathExists(image)) {
@@ -583,6 +606,16 @@ export const deleteImage = async (req: Request, res: Response) => {
     const car = await Car.findById(id)
 
     if (car) {
+      // begin of security check
+      const sessionUserId = req.user?._id
+      const sessionUser = await User.findById(sessionUserId)
+      if (!sessionUser || (sessionUser.type === bookcarsTypes.UserType.Supplier && car.supplier?.toString() !== sessionUserId)) {
+        logger.error(`[car.deleteImage] Unauthorized attempt to delete image of car ${car._id} by user ${sessionUserId}`)
+        res.status(403).send('Forbidden: You cannot delete this car image')
+        return
+      }
+      // end of security check
+
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await helper.pathExists(image)) {

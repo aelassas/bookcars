@@ -56,7 +56,8 @@ export const checkToken = (userId: string, email: string, token: string): Promis
 export const deleteTokens = (userId: string): Promise<number> =>
   axiosInstance
     .delete(
-      `/api/delete-tokens/${encodeURIComponent(userId)}`
+      `/api/delete-tokens/${encodeURIComponent(userId)}`,
+      { withCredentials: true }
     )
     .then((res) => res.status)
 

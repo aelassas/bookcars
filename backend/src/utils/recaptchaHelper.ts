@@ -23,5 +23,11 @@ export const verifyRecaptchaToken = async (token: string, ip: string): Promise<b
   )
 
   const { success, action, score } = result.data
-  return success === true && action === 'submit' && typeof score === 'number' && score >= 0.5
+
+  return (
+    success === true &&
+    action === 'submit' &&
+    typeof score === 'number' &&
+    score >= env.RECAPTCHA_MIN_SCORE
+  )
 }

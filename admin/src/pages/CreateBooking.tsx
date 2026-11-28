@@ -46,6 +46,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DatePicker from '@/components/DatePicker'
 import { Option, Supplier } from '@/models/common'
 import { schema, FormFields } from '@/models/BookingForm'
+import Backdrop from '@/components/SimpleBackdrop'
 
 import '@/assets/css/create-booking.css'
 
@@ -94,10 +95,7 @@ const CreateBooking = () => {
   const [minDate, setMinDate] = useState<Date>()
   const [fromError, setFromError] = useState(false)
   const [toError, setToError] = useState(false)
-  // UI-only extras
-  const [driverMode, setDriverMode] = useState<'self' | 'chauffeur'>('self')
-  const [paymentMethod, setPaymentMethod] = useState<string>('JazzCash')
-  const [escrowStatus, setEscrowStatus] = useState<string>('deposit_locked')
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -225,6 +223,7 @@ setValue('dropOffLocation', dropOff as Option)
     }
 
     try {
+      setLoading(true)
       // use bookcarsHelper.calculatePrice
       const price = await bookcarsHelper.calculateTotalPrice(carObj, from!, to!, carObj.supplier.priceChangeRate || 0, options)
       booking.price = price
@@ -248,6 +247,8 @@ setValue('dropOffLocation', dropOff as Option)
       }
     } catch (err) {
       helper.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -655,8 +656,10 @@ setValue('status', value)
               </Button>
             </Box>
           </form>
-        </Box>
-      </Box>
+        </Paper>
+      </div>
+
+      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Layout>
   )
 }
